@@ -1,0 +1,320 @@
+* MAX498 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 250MHz -3dB BW, Avcl= +2
+* Drives 50 ohm or 75 ohm Load
+* Dual +/-5V Supply Operation
+* Available in 28-Pin SO  (MAX498)
+*              24-Pin SO  (MAX499)
+*
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________________
+* MAX498         Quad, 250MHz -3dB BW, Gain=+2        
+* MAX499         Triple, 250MHz -3dB BW, Gain=+2        
+*
+*
+*   ////////////// MAX498 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX498 DATA SHEET       <====
+*
+* connections:      input
+*                   |   ground
+*                   |   |     positive power supply
+*                   |   |     |   negative power supply
+*                   |   |     |   |   output
+*                   |   |     |   |   |
+*                   |   |     |   |   |
+.SUBCKT  MAX498    201 1000  99  50 40
+ISUPP 99 0 38MA
+ISUPN 50 0 -36MA
+rfeedback 40 1 400
+RFEEDBACK2 1 0 400
+rground 1000 0 .00001
+*** INPUT STAGE
+I101 99  205 230U
+I202  204 50 230U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+C201   206 99 .4p
+*was .63
+R202  204  207 633
+C202   207 50 .4P
+*was .63
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 1UA
+IB202 99  202 1UA
+VOS200 203 201 0V
+CIN201 201  0 .5P
+CIN202 202  0 .5P
+*
+RGM 2 220 380
+VGM 202 220 0V
+*** VGM SENSES THE CURRENT THROUGH VGM
+*** INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .3P
+*was .63
+R2  4  7 633
+C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 99  2 1UA
+VOS 3 1 0V
+**************SECOND STAGE**************
+*
+********************Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.4
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.4
+*neg swing
+EH  99 98 99 49 1
+*G1  98 15 POLY(2) 99 2 50 202 0 1.58E-3 1.58E-3
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+*** ***********************  1st pole here with r5, and c3
+C3 98 15 .272P 
+***************POLE STAGE*************** 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*C4 98 20 .5P
+*
+***************POLE STAGE*************** 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-5
+R17 98 23 100K
+*C7  98 23 .246P
+*
+**************OUTPUT STAGE**************
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 10
+*r35 was 12
+V5  33 40 -.2V
+D5  23 33 DX
+V6  40 34 -.2V
+D6  34 23 DX
+*CF1 40  2 5P
+*** was 2.1pf
+*
+***************MODELS USED**************
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+*
+*   ////////////// MAX499 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX499 DATA SHEET       <====
+*
+* connections:      input
+*                   |   ground
+*                   |   |     positive power supply
+*                   |   |     |   negative power supply
+*                   |   |     |   |   output
+*                   |   |     |   |   |
+*                   |   |     |   |   |
+.SUBCKT  MAX499    201 1000  99  50 40
+ISUPP 99 0 38MA
+ISUPN 50 0 -36MA
+rfeedback 40 1 400
+RFEEDBACK2 1 0 400
+rground 1000 0 .00001
+*** INPUT STAGE
+I101 99  205 230U
+I202  204 50 230U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+C201   206 99 .4p
+*was .63
+R202  204  207 633
+C202   207 50 .4P
+*was .63
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 1UA
+IB202 99  202 1UA
+VOS200 203 201 0V
+CIN201 201  0 .5P
+CIN202 202  0 .5P
+*
+RGM 2 220 380
+VGM 202 220 0V
+*** VGM SENSES THE CURRENT THROUGH VGM
+*** INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .3P
+*was .63
+R2  4  7 633
+C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 99  2 1UA
+VOS 3 1 0V
+**************SECOND STAGE**************
+*
+********************Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.4
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.4
+*neg swing
+EH  99 98 99 49 1
+*G1  98 15 POLY(2) 99 2 50 202 0 1.58E-3 1.58E-3
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+*** ***********************  1st pole here with r5, and c3
+C3 98 15 .272P 
+***************POLE STAGE*************** 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*C4 98 20 .5P
+*
+***************POLE STAGE*************** 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-5
+R17 98 23 100K
+*C7  98 23 .246P
+*
+**************OUTPUT STAGE**************
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 10
+*r35 was 12
+V5  33 40 -.2V
+D5  23 33 DX
+V6  40 34 -.2V
+D6  34 23 DX
+*CF1 40  2 5P
+*** was 2.1pf
+*
+***************MODELS USED**************
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+
+
+

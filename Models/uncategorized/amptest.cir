@@ -1,0 +1,26 @@
+Test amplifier using an opamp macro model
+
+* -- Import the macro model
+.lib lm324.mod
+
+* -- This is the circuit for testing - a non-inverting amp
+X1 1 2 3 4 5 LM324/NS
+VPOS 3 0 DC 10V
+VNEG 0 4 DC 10V
+
+VIN 1 0 AC SIN(0 0.1 1000 0 0)
+
+R1 2 0 1Meg
+RFB 5 2 10k
+R2 2 0 1k
+
+.TRAN 5u 3m 
+
+* -- Commands to run circuit and generate a plot
+
+*#run
+*#plot v(5) v(1)
+
+.END
+
+

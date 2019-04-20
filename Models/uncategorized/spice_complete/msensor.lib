@@ -1,0 +1,1804 @@
+.SUBCKT MPX12_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 5.5m
+.PARAM TCVfss -0.19E-2
+.PARAM Tn 25
+.PARAM Voff 20m
+.PARAM TCVoff 0.015m
+.PARAM Vsnom 3
+.PARAM Zin 460
+.PARAM Zoutp 560
+.PARAM Zoutn 546
+
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin} TC = 0.0024    
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} TC = 0.0024
+ROUT- 9 4 {Zoutn} TC = 0.0024
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage.
+* It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)          The voltage at the internal supply voltage node 
+*                       of the sensor model.
+* Voff = 20 mV          Zero pressure offset at 25C and 3V excitation 
+*                       voltage.
+* SENS = 3.5 mV/kPa     Pressure sensitivity at 25C and 3V excitation 
+*                       voltage.
+* TCVfss = -0.19 %/C   Based on current process (depth of sensor element 
+*                       and doping).
+* TCVoff = 0.015 mV/C  Due to CTE mismatches and thermal package stresses.
+* TCR = 0.24 %/C       Based on current process (sensor element resistivity).
+* Tn = 25C             Reference temperature used in data sheet 
+*                       specifications.
+* P = V(10,6)           The voltage (represents pressure) at the internal
+*                       pressure node of the sensor model.
+* Zin = 459            Input Impedance of sensor at 25C.
+* Zoutp = 579          Output Impedance of sensor at 25C.
+* Zoutn = 622          Output Impedance of sensor at 25C.
+* Vsnom = 3 V           Nominal supply (excitation) voltage for data sheet 
+*                       specifications.
+*
+.SUBCKT MPX10_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 3.5m
+.PARAM TCVfss -0.19E-2
+.PARAM Tn 25
+.PARAM Voff 20m
+.PARAM TCVoff 0.015m
+.PARAM Vsnom 3
+.PARAM Zin 459
+.PARAM Zoutp 579
+.PARAM Zoutn 622
+
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response 
+* of 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is 
+* almost 100% at dc.  The users should change this value to the source 
+* resistance of the voltage source they are using in order to see the
+* electrical response time.  RS2 = Zin. The value of the input resistance,
+* Zin, is chosen based on the data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin} TC = 0.0024    
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} TC = 0.0024
+ROUT- 9 4 {Zoutn} TC = 0.0024
+*
+* A typical value for the common mode voltage, Ecom, is half of the 
+* excitation voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) +
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) +
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)          The voltage at the internal supply voltage node of the
+*                       sensor model.
+* Voff = 20 mV          Zero pressure offset at 25C and 3V excitation 
+*                       voltage.
+* SENS = 86 µV/kPa      Pressure sensitivity at 25C and 3V excitation 
+*                       voltage.
+* TCVfss = -0.18 %/C   Based on current process (depth of sensor element and 
+*                       doping).
+* TCVoff = 0.015 mV/C  Due to CTE mismatches and thermal package stresses.
+* TCR = 0.37 %/C       Based on current process (sensor element resistivity).
+* Tn = 25C             Reference temperature used in data sheet 
+*                       specifications.
+* P = V(10,6)           The voltage (represents pressure) at the internal 
+*                       pressure node of the sensor model.
+* Zin = 410            Input Impedance of sensor at 25C.
+* Zoutp = 681          Output Impedance of sensor at 25C.
+* Zoutn = 726          Output Impedance of sensor at 25C.
+* Vsnom = 3 V           Nominal supply (excitation) voltage for data sheet 
+*                       specifications.
+*
+.SUBCKT MPX700_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.086m
+.PARAM TCVfss -0.18E-2
+.PARAM Tn 25
+.PARAM Voff 20m
+.PARAM TCVoff 0.015m
+.PARAM Vsnom 3
+.PARAM Zin 410
+.PARAM Zoutp 681
+.PARAM Zoutn 726
+
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin} TC = 0.0037    
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} TC = 0.0037
+ROUT- 9 4 {Zoutn} TC = 0.0037
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) +
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS                                      
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.8 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.01176 %/C    Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.01176 mV/C    Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 1600               Input Impedance of sensor at 25C.
+* Zoutp = 1800             Output Impedance of sensor at 25C.
+* Zoutn = 800              Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX2052_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.8m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1600
+.PARAM Zoutp 1800
+.PARAM Zoutn 800
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Offset = -0.1518    Voff/Vsnom at 25C & 5.1 V excitation voltage.
+* SENS = 54 mV/kPa    Pressure sensitivity at 25C & 5.1 V excitation voltage.
+* Perror = 1.5 kPa    Pressure error obtained from data book, 1.5 kPa
+* Error = V(11)       Error term for Vout
+* Vs = V(3,2)         Supply Voltage
+* Vsnom = 5.1 V       Nominal DC Supply Voltage
+* P = V(12,8)         The voltage (represents pressure) at the internal
+*                     pressure node of the sensor model.
+*
+.SUBCKT MPX4100_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 54m
+.PARAM Offset -0.1518
+.PARAM Vsnom 5.1
+.PARAM Perror 1.5
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response 
+* of 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Offset})+v(11)}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Offset = -0.095          Voff/Vs at 25C and 5.0 V excitation voltage.
+* SENS = 45 mV/kPa         Pressure sensitivity at 25C & 5.0 V excitation 
+*                          voltage.
+* Perror = 2.5 kPa         Pressure error obtained from data book, 2.5 kPa
+* Error = V(11)            Error term for Vout
+* Vs = V(3,2)              Supply Voltage
+* Vsnom = 5.0 V            Nominal DC Supply Voltage
+* P = V(12,8)              The voltage (represents pressure) at the internal
+*                          pressure node of the sensor model.
+*
+.SUBCKT MPX5100A_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 45m
+.PARAM Offset -0.095
+.PARAM Vsnom 5.0
+.PARAM Perror 2.5
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response 
+* of 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Offset})+v(11)}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)           The voltage at the internal supply voltage node of 
+*                        the sensor model.
+* Voff = 20 mV           Zero pressure offset at 25C and 3V excitation 
+*                        voltage.
+* SENS = 5.5 mV/kPa      Pressure sensitivity at 25C and 3V excitation 
+*                        voltage.
+* TCVfss = -0.19 %/C    Based on current process (depth of sensor element 
+*                        and doping).
+* TCVoff = 0.015 mV/C   Due to CTE mismatches and thermal package 
+*                        stresses.
+* TCR = 0.24 %/C        Based on current process (sensor element 
+*                        resistivity).
+* Tn = 25C              Reference temperature used in data sheet 
+*                        specifications.
+* P = V(10,6)            The voltage (represents pressure) at the internal 
+*                        pressure node of the sensor model.
+* Zin = 460             Input Impedance of sensor at 25C.
+* Zoutp = 560           Output Impedance of sensor at 25C.
+* Zoutn = 546           Output Impedance of sensor at 25C.
+* Vsnom = 3 V            Nominal supply (excitation) voltage for data sheet 
+*                        specifications.
+*
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)            The voltage at the internal supply voltage node of 
+*                         the sensor model.
+* Voff = 0 mV             Zero pressure offset at 25C and 10V excitation 
+*                         voltage.
+* SENS = 2.5 mV/kPa       Pressure sensitivity at 25C and 10V excitation 
+*                         voltage.
+* TCVfss = -0.01176 %/C  Based on current process (depth of sensor element 
+*                         and doping).
+* TCVoff = 0.01176 mV/C  Due to CTE mismatches and thermal package stresses.
+* Tn = 25C               Reference temperature used in data sheet 
+*                         specifications.
+* P = V(10,6)             The voltage (represents pressure) at the internal 
+*                         pressure node of the sensor model.
+* Zin = 1800             Input Impedance of sensor at 25C.
+* Zoutp = 2200           Output Impedance of sensor at 25C.
+* Zoutn = 1400           Output Impedance of sensor at 25C.
+* Vsnom = 10 V            Nominal supply (excitation) voltage for data sheet 
+*                         specifications.
+*
+.SUBCKT MPX2010_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 2.5m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1800
+.PARAM Zoutp 2200
+.PARAM Zoutn 1400
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.4 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.01176 %/C    Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.01176 mV/C    Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 1800               Input Impedance of sensor at 25C.
+* Zoutp = 2200             Output Impedance of sensor at 25C.
+* Zoutn = 850              Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX2100_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.4m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1800
+.PARAM Zoutp 2200
+.PARAM Zoutn 850
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Offset = -0.10941      Voff/Vsnom at 25C and 5.1 V excitation voltage
+* SENS = 54 mV/kPa       Pressure sensitivity at 25C and 5.1 V excitation 
+*                        voltage.
+* P = V(12,8)            The voltage (represents pressure) at the internal 
+*                        pressure node of the sensor model.
+* Perror = 1.5 kPa       Pressure error obtained from data book, 1.5 kPa
+* Error = V(11)          Error term for Vout
+* Vs = V(3,2)            Supply Voltage
+* Vsnom = 5.1 V          Nominal DC Supply Voltage
+*
+.SUBCKT MPX4101_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 54m
+.PARAM Offset -0.10941
+.PARAM Vsnom 5.1
+.PARAM Perror 1.5
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Offset})+v(11)}
+*
+.ENDS
+*$
+
+*
+* Parameter Comments
+* ------------------
+* Offset = 0.04            Voff/Vs at 25C & 5.0 V excitation voltage.
+* SENS = 45 mV/kPa         Pressure sensitivity at 25C & 5.0 V excitation 
+*                          voltage.
+* Perror = 2.5 kPa         Pressure error obtained from data book, 2.5 kPa
+* Error = V(11)            Error term for Vout
+* Vs = V(3,2)              Supply Voltage
+* Vsnom = 5.0 V            Nominal DC Supply Voltage
+* P = V(12,8)              The voltage (represents pressure) at the internal
+*                          pressure node of the sensor model.
+*
+.SUBCKT MPX5100D_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 45m
+.PARAM Offset 0.04
+.PARAM Vsnom 5.0
+.PARAM Perror 2.5
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response
+* of 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Offset})+v(11)}
+*
+.ENDS
+*$
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)          The voltage at the internal supply voltage node of the
+*                       sensor model.
+* Voff = 20 mV          Zero pressure offset at 25C and 3V excitation 
+*                       voltage.
+* SENS = 1.2 mV/kPa     Pressure sensitivity at 25C and 3V excitation 
+			voltage.
+* TCVfss = -0.19 %/C   Based on current process (depth of sensor element 
+*                       and doping).
+* TCVoff = 0.015 mV/C  Due to CTE mismatches and thermal package stresses.
+* TCR = 0.24 %/C       Based on current process (sensor element resistivity).
+* Tn = 25C             Reference temperature used in data sheet 
+*                       specifications.
+* P = V(10,6)           The voltage (represents pressure) at the internal 
+*                       pressure node of the sensor model.
+* Zin = 450            Input Impedance of sensor at 25C.
+* Zoutp = 847          Output Impedance of sensor at 25C.
+* Zoutn = 953          Output Impedance of sensor at 25C.
+* Vsnom = 3 V           Nominal supply (excitation) voltage for data sheet 
+*                       specifications.
+*
+.SUBCKT MPX50_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 1.2m
+.PARAM TCVfss -0.19E-2
+.PARAM Tn 25
+.PARAM Voff 20m
+.PARAM TCVoff 0.015m
+.PARAM Vsnom 3
+.PARAM Zin 450
+.PARAM Zoutp 847
+.PARAM Zoutn 953
+
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin} TC = 0.0024    
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} TC = 0.0024
+ROUT- 9 4 {Zoutn} TC = 0.0024
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage.It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)             The voltage at the internal supply voltage node of 
+*                          the sensor model.
+* Voff = 0 mV              Zero pressure offset at 25C and 10V excitation 
+*                          voltage.
+* SENS = 2.5 mV/kPa        Pressure sensitivity at 25C and 10V excitation 
+*                          voltage.
+* TCVfss = -0.01176 %/C   Based on current process (depth of sensor element and doping).
+* TCVoff = 0.01176 mV/C   Due to CTE mismatches and thermal package stresses.
+* Tn = 25C                Reference temperature used in data sheet 
+*                          specifications.
+* P = V(10,6)              The voltage (represents pressure) at the internal 
+*                          pressure node of the sensor model.
+* Zin = 1800              Input Impedance of sensor at 25C.
+* Zoutp = 2200            Output Impedance of sensor at 25C.
+* Zoutn = 1400            Output Impedance of sensor at 25C.
+* Vsnom = 10 V             Nominal supply (excitation) voltage for data sheet 
+*                          specifications.
+*
+.SUBCKT MPX2012_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 2.5m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1800
+.PARAM Zoutp 2200
+.PARAM Zoutn 1400
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.4 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.01176 %/C    Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.01176 mV/C    Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 1800               Input Impedance of sensor at 25C.
+* Zoutp = 2200             Output Impedance of sensor at 25C.
+* Zoutn = 850              Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX2101_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.4m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1800
+.PARAM Zoutp 2200
+.PARAM Zoutn 850
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Offset = -0.095       Voff/Vs at 25C and 5.1 V excitation voltage.
+* SENS = 45.9 mV/kPa    Pressure sensitivity at 25C and 5.1 V excitation 
+*                       voltage.
+* P = V(12,8)           The voltage (represents pressure) at the internal 
+*                       pressure node of the sensor model.
+* Perror = 1.5 kPa      Pressure error obtained from data book, 2.5 kPa
+* Error = V(11)         Error term for Vout
+* Vs = V(3,2)           Supply Voltage
+* Vsnom = 5.1 V         Nominal DC Supply Voltage
+*
+.SUBCKT MPX4115_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 45.9m
+.PARAM Offset -0.095
+.PARAM Vsnom 5.1
+.PARAM Perror 1.5
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Offset})+v(11)}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)               The voltage at the internal supply voltage node 
+*                            of the sensor model.
+* Voff = 0 mV                Zero pressure offset at 25C and 10V excitation 
+*                            voltage.
+* SENS = 0.8 mV/kPa          Pressure sensitivity at 25C and 10V excitation 
+*                            voltage.
+* TCVfss = -0.01176 %/C     Based on current process (depth of sensor element 
+*                            and doping).
+* TCVoff = 0.01176 mV/C     Due to CTE mismatches and thermal package 
+*                            stresses.
+* Tn = 25C                  Reference temperature used in data sheet 
+*                            specifications.
+* P = V(10,6)                The voltage (represents pressure) at the internal 
+*                            pressure node of the sensor model.
+* Zin = 10 k                Input Impedance of sensor at 25C.
+* Zoutp = 3.70 k            Output Impedance of sensor at 25C.
+* Zoutn = 3100              Output Impedance of sensor at 25C.
+* Vsnom = 10 V               Nominal supply (excitation) voltage for data 
+*                            sheet specifications.
+*
+.SUBCKT MPX7050_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.8m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 10K
+.PARAM Zoutp 3.70K
+.PARAM Zoutn 3100
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)           The voltage at the internal supply voltage node of 
+*                        the sensor model.
+* Voff = 20 mV           Zero pressure offset at 25C and 3V excitation 
+*                        voltage.
+* SENS = 0.6 mV/kPa      Pressure sensitivity at 25C and 3V excitation 
+*                        voltage.
+* TCVfss = -0.19 %/C    Based on current process (depth of sensor element 
+*                        and doping).
+* TCVoff = 0.015 mV/C   Due to CTE mismatches and thermal package stresses.
+* TCR = 0.24 %/C        Based on current process (sensor element 
+*                        resistivity).
+* Tn = 25C              Reference temperature used in data sheet 
+*                        specifications.
+* P = V(10,6)            The voltage (represents pressure) at the internal 
+*                        pressure node of the sensor model.
+* Zin = 456             Input Impedance of sensor at 25C.
+* Zoutp = 707           Output Impedance of sensor at 25C.
+* Zoutn = 826           Output Impedance of sensor at 25C.
+* Vsnom = 3 V            Nominal supply (excitation) voltage for data sheet 
+*                        specifications.
+.SUBCKT MPX100_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.6m
+.PARAM TCVfss -0.19E-2
+.PARAM Tn 25
+.PARAM Voff 20m
+.PARAM TCVoff 0.015m
+.PARAM Vsnom 3
+.PARAM Zin 456
+.PARAM Zoutp 707
+.PARAM Zoutn 826
+
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1 
+RS2 1 11 {Zin} TC = 0.0024    
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} TC = 0.0024
+ROUT- 9 4 {Zoutn} TC = 0.0024
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage.
+* It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) +
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS                                      
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)             The voltage at the internal supply voltage node of 
+*                          the sensor model.
+* Voff = 0 mV              Zero pressure offset at 25C and 10V excitation 
+*                          voltage.
+* SENS = 0.8 mV/kPa        Pressure sensitivity at 25C and 10V excitation 
+*                          voltage.
+* TCVfss = -0.01176 %/C   Based on current process (depth of sensor element 
+*                          and doping).
+* TCVoff = 0.01176 mV/C   Due to CTE mismatches and thermal package stresses.
+* Tn = 25C                Reference temperature used in data sheet 
+*                          specifications.
+* P = V(10,6)              The voltage (represents pressure) at the internal 
+*                          pressure node of the sensor model.
+* Zin = 1600              Input Impedance of sensor at 25C.
+* Zoutp = 1800            Output Impedance of sensor at 25C.
+* Zoutn = 800             Output Impedance of sensor at 25C.
+* Vsnom = 10 V             Nominal supply (excitation) voltage for data sheet 
+*                          specifications.
+*
+.SUBCKT MPX2050_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.8m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1600
+.PARAM Zoutp 1800
+.PARAM Zoutn 800
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage.It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.2 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.0023529 %/C  Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.0023529 mV/C  Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 1900               Input Impedance of sensor at 25C.
+* Zoutp = 2200             Output Impedance of sensor at 25C.
+* Zoutn = 850              Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX2200_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.2m
+.PARAM TCVfss -0.0023529E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.0023529m
+.PARAM Vsnom 10
+.PARAM Zin 1900
+.PARAM Zoutp 2200
+.PARAM Zoutn 850
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation voltage.
+* It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Offset = -0.04         Voff/Vs at 25C and 5.1 V excitation voltage.
+* SENS = 20.4 mV/kPa     Pressure sensitivity at 25C and 5.1 V excitation 
+*                        voltage.
+* P = V(12,8)            The voltage (represents pressure) at the internal 
+*                        pressure node of the sensor model.
+* Perror = 3.45 kPa      Pressure error obtained from data book, 3.45 kPa
+* Error = V(11)          Error term for Vout
+* Vs = V(3,2)            Supply Voltage
+* Vsnom = 5.1 V          Nominal DC Supply Voltage
+*
+.SUBCKT MPX4250_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 20.4m
+.PARAM Offset -0.04
+.PARAM Vsnom 5.1
+.PARAM Perror 3.45
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Offset})+v(11)}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.4 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.01176 %/C    Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.01176 mV/C    Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 10 k               Input Impedance of sensor at 25C.
+* Zoutp = 4.40 k           Output Impedance of sensor at 25C.
+* Zoutn = 3500             Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX7100_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.4m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 10K
+.PARAM Zoutp 4.40K
+.PARAM Zoutn 3500
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)          The voltage at the internal supply voltage node of 
+*                       the sensor model.
+* Voff = 20 mV          Zero pressure offset at 25C and 3V excitation 
+*                       voltage.
+* SENS = 0.3 mV/kPa     Pressure sensitivity at 25C and 3V excitation 
+*                       voltage.
+* TCVfss = -0.19 %/C   Based on current process (depth of sensor element 
+*                       and doping).
+* TCVoff = 0.015 mV/C  Due to CTE mismatches and thermal package stresses.
+* TCR = 0.24 %/C       Based on current process (sensor element resistivity).
+* Tn = 25C             Reference temperature used in data sheet 
+*                       specifications.
+* P = V(10,6)           The voltage (represents pressure) at the internal 
+*                       pressure node of the sensor model.
+* Zin = 460            Input Impedance of sensor at 25C.
+* Zoutp = 800          Output Impedance of sensor at 25C.
+* Zoutn = 910          Output Impedance of sensor at 25C.
+* Vsnom = 3 V           Nominal supply (excitation) voltage for data sheet 
+*                       specifications.
+*
+.SUBCKT MPX200_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.3m
+.PARAM TCVfss -0.19E-2
+.PARAM Tn 25
+.PARAM Voff 20m
+.PARAM TCVoff 0.015m
+.PARAM Vsnom 3
+.PARAM Zin 460
+.PARAM Zoutp 800
+.PARAM Zoutn 910
+
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin} TC = 0.0024    
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} TC = 0.0024
+ROUT- 9 4 {Zoutn} TC = 0.0024
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage.
+* It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS 
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.8 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.01176 %/C    Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.01176 mV/C    Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 1600               Input Impedance of sensor at 25C.
+* Zoutp = 1800             Output Impedance of sensor at 25C.
+* Zoutn = 800              Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX2051_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.8m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 1600
+.PARAM Zoutp 1800
+.PARAM Zoutn 800
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage. It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.2 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.0023529 %/C  Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.0023529 mV/C  Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 1900               Input Impedance of sensor at 25C.
+* Zoutp = 2200             Output Impedance of sensor at 25C.
+* Zoutn = 850              Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX2201_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.2m
+.PARAM TCVfss -0.0023529E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.0023529m
+.PARAM Vsnom 10
+.PARAM Zin 1900
+.PARAM Zoutp 2200
+.PARAM Zoutn 850
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation voltage.
+* It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Offset = Voff/Vsnom    Voff/Vs at 25C and 5.0 V excitation voltage.
+* Voff = 0.2 V           Zero Pressure Offset at 25C and 5.0 V excitation 
+*                        voltage.
+* SENS = 90 mV/kPa       Pressure sensitivity at 25C and 5.0 V excitation 
+*                        voltage.
+* P = V(12,8)            The voltage (represents pressure) at the internal 
+*                        pressure node of the sensor model.
+* Perror = 1.25 kPa      Pressure error obtained from data book, 1.25 kPa
+* Error = V(11)          Error term for Vout
+* Vs = V(3,2)            Supply Voltage
+* Vsnom = 5.0 V          Nominal DC Supply Voltage
+*
+.SUBCKT MPX5050_MC 1 2 3 7 8
+*
+* Define Parameter values
+* 
+.PARAM SENS 90m
+.PARAM Voff 0.2
+.PARAM Vsnom 5.0
+.PARAM Perror 1.25
+*
+* Tmult() function
+*
+etmult 9 0 table {TEMP} = (-40,-3) (0,-1.4) (10,1) (85,1) (125,3)
+rtmult 9 0 1meg
+*
+* Sensitivity adjustment
+*
+evs 10 0 value = {v(3) * {SENS}/{Vsnom}}
+rvs 10 0 1meg
+*
+* Final error voltage expression
+*
+Error 11 0 value = {{Perror} * v(9) * v(10)}
+rError 11 0 1meg
+
+rs 3 2 1meg
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 7 12 1                                    
+RP2 12 8 1000G                
+CP  12 8 0.45mF        
+*
+* Output       
+* 
+Eout 1 2 value = {v(3,2)*(v(12,8)*{SENS}/{Vsnom}+{Voff}/{Vsnom})+v(11)}
+*
+.ENDS
+*$
+*
+* Parameter Comments
+* ------------------
+* Vs = V(11,1)              The voltage at the internal supply voltage node of 
+*                           the sensor model.
+* Voff = 0 mV               Zero pressure offset at 25C and 10V excitation 
+*                           voltage.
+* SENS = 0.2 mV/kPa         Pressure sensitivity at 25C and 10V excitation 
+*                           voltage.
+* TCVfss = -0.01176 %/C    Based on current process (depth of sensor element 
+*                           and doping).
+* TCVoff = 0.01176 mV/C    Due to CTE mismatches and thermal package 
+*                           stresses.
+* Tn = 25C                 Reference temperature used in data sheet 
+*                           specifications.
+* P = V(10,6)               The voltage (represents pressure) at the internal 
+*                           pressure node of the sensor model.
+* Zin = 10 k               Input Impedance of sensor at 25C.
+* Zoutp = 4.5 k            Output Impedance of sensor at 25C.
+* Zoutn = 3.5 k            Output Impedance of sensor at 25C.
+* Vsnom = 10 V              Nominal supply (excitation) voltage for data sheet 
+*                           specifications.
+*
+.SUBCKT MPX7200_MC 1 2 3 4 5 6
+*
+* Define Parameter values
+* 
+.PARAM SENS 0.2m
+.PARAM TCVfss -0.01176E-2
+.PARAM Tn 25
+.PARAM Voff 0
+.PARAM TCVoff 0.01176m
+.PARAM Vsnom 10
+.PARAM Zin 10K
+.PARAM Zoutp 4.50K
+.PARAM Zoutn 3.50K
+*
+* Pressure Input
+* --------------
+* An arbitrary small number of 1 is chosen for RP1 for easy multiplication.
+* An arbitrary large number of 1000G is chosen for RP2.
+* CP = 0.45mF is based on the data sheet so that a mechanical time response of 
+* 1ms is achieved.
+*
+RP1 5 10 1                                   
+RP2 6 10 1000G               
+CP  6 10 0.45mF               
+*
+* Supply Input 
+* ------------
+* A small value of 1 is chosen for RS1 so that the supply voltage is almost 
+* 100% at dc.  The users should change this value to the source resistance of 
+* the voltage source they are using in order to see the electrical response 
+* time.
+* RS2 = Zin. The value of the input resistance, Zin, is chosen based on the 
+* data given by the data book.
+* A measured value of 20pF is assigned to CS.
+*
+RS1 3 11 1                                             
+RS2 1 11 {Zin}     
+CS  1 11 20pF
+*
+* Output
+*
+ROUT+ 7 2 {Zoutp} 
+ROUT- 9 4 {Zoutn} 
+*
+* A typical value for the common mode voltage, Ecom, is half of the excitation 
+* voltage.
+* It was modeled by splitting the output voltage source.
+*
+Ecom 8 0 value =   {V(11,1)/2} 
+Ediff+ 7 8 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+Ediff- 8 9 value = {({SENS} * (1+{TCVfss}*(TEMP-{Tn})) * V(10,6) + 
++                   ({Voff}+{TCVoff}*(TEMP-{Tn}))) * V(11,1)/{Vsnom}/2}
+*
+.ENDS
+*$

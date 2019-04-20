@@ -1,0 +1,5437 @@
+.SUBCKT RFD8P06LE_HA 2 1 3 ; REV 7/29/96
+*Term. Conn. **** D G S
+* Spice circuit model file for RFD8P06LE
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+CA 12 8 1.50e-9
+CB 15 14 1.50e-9
+CIN 6 8 6.30e-10
+DBODY 5 7 DBDMOD
+DBREAK 7 11 DBKMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+DPLCAP 10 6 DPLCAPMOD
+EBREAK 5 11 17 18 -67.9
+EDS 14 8 5 8 1
+EGS 13 8 6 8 1
+ESG 5 10 8 6 1
+EVTHRES 21 6 19 8 1
+EVTEMP 6 20 18 22 1
+IT 8 17 1
+LDRAIN 2 5 1e-10
+LGATE 1 9 2.92e-9
+LSOURCE 3 7 2.92e-9
+MSTRONG 16 6 8 8 MstrongMOD
+MMED 16 6 8 8 MmedMOD
+MWEAK 16 21 8 8 MweakMOD
+RBREAK 17 18 RBKMOD 1
+RDRAIN 50 16 RDSMOD 95e-3
+RGATE 9 20 2.89
+RIN 6 8 1e9
+RSCL1 5 51 RSCLMOD 1e-6
+RSCL2 5 50 1e3
+RSOURCE 8 7 RSourceMOD 97e-3
+RVTHRES 22 8 RVTHRESMOD 1
+RVTEMP 18 19 RVTEMPMOD 1
+S1A 6 12 13 8 S1AMOD
+S1B 13 12 13 8 S1BMOD
+S2A 6 15 14 13 S2AMOD
+S2B 13 15 14 13 S2BMOD
+VBAT 22 19 DC 1
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/26,7))}
+.MODEL DBDMOD D (IS=2.5e-12 RS=4e-2 IKF=0.01 N=0.97 TIKF=0.012 TRS1=0.8e-4 TRS2=-5e-6
++CJO=5.25e-10 VJ=0.75 M=0.41 TT=7.50e-8)
+.MODEL DBKMOD D (IKF=5 N=0.75 RS=0.245 TRS1=1e-3 TRS2=1.6e-4)
+.MODEL DESD1MOD D (BV=16.4 TBV1=-1.25e-3 TBV2=5.79e-7 RS=36 NBV=50 IBV=7e-6)
+.MODEL DESD2MOD D (BV=16.2 TBV1=-8.3e-4 TBV2=8.9e-7 NBV=50 IBV=7e-6)
+.MODEL DPLCAPMOD D (CJO=4.25e-10 IS=1e-30 N=10 VJ=0.499 M=0.561)
+.MODEL MSTRONGMOD PMOS (VTO=-1.91 KP=11.55 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MMEDMOD PMOS (VTO=-1.51 KP=0.95 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD PMOS (VTO=-1.18 KP=0.03 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.045e-3 TC2=-3.5e-7)
+.MODEL RDSMOD RES (TC1=0.92e-2 TC2=1.55e-5)
+.MODEL RSOURCEMOD RES (TC1=2e-3 TC2=0.5e-6)
+.MODEL RSCLMOD RES (TC1=2e-3 TC2=0)
+.MODEL RVTHRESMOD RES (TC1=-2.5e-3 TC2=0)
+.MODEL RVTEMPMOD RES (TC1=-1.55e-3 TC2=7.5e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=5.25 VOFF=1.75)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.75 VOFF=5.25)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=0.5 VOFF=-0.5)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-0.5 VOFF=0.5)
+.ENDS
+
+*The following is a list of Harris Power Mosfet PSPICE Compatible models
+*contained in this library file. In the case of a surface mount package variant
+*, designated by a suffix of "SM" or a prefix of "IRFR", use the base part
+*number for the subcircuit call function.
+*See the README.TXT file on the disk for license information.
+*
+* File revised on 9-20-1996
+*
+*IRFU9110        IRFU9120         IRFU9220         MCTA75P60E1      MCTV75P60E1
+*RF1K49086       RF1K49088        RF1K49090        RF1K49092N       RF1K49092P
+*RF1K49093       RF1K49156        RF1K49157        RF1S23N06LE      RF1S30N06LE
+*RF1S30P05       RF1S30P06        RF1S40N10LE      RF1S45N03L       RF1S45N06
+*RF1S45N06LE     RF1S50N06        RF1S50N06LE      RF1S60P03        RF1S70N03
+*RF1S70N06       RFA100N05E       RFD10P03L        RFD14N05         RFD14N05L
+*RFD14N06        RFD14N06L        RFD15P05         RFD15P06         RFD16N03L
+*RFD16N05        RFD16N05L        RFD16N06         RFD16N06LE       RFD3055
+*RFD3055LE       RFD3N08L         RFD7N10LE        RFD8P06E         RFF60P06
+*RFF70N06        RFG30P05         RFG30P06         RFG40N10LE       RFG45N06
+*RFG45N06LE      RFG50N06         RFG50N06LE       RFG60P03         RFG60P05E
+*RFG60P06E       RFG70N06         RFG75N05E        RFH75N05E        RFM15N06
+*RFP10P03L       RFP14N05         RFP14N05L        RFP14N06         RFP14N06L
+*RFP15N06        RFP15P05         RFP15P06         RFP23N06LE       RFP25N05
+*RFP25N06        RFP3055          RFP3055LE        RFP30N06LE       RFP30P05
+*RFP30P06        RFP40N10LE       RFP45N03L        RFP45N06         RFP45N06LE
+*RFP50N06        RFP50N06LE       RFP60P03         RFP70N03         RFP70N06
+*RFP7N10LE       RFP8P06E         RLD03N06CLE      RLP03N06CLE      RLP1N08LE
+*RFD15N06LE,SM   RF1K49211        RF1K49154
+.SUBCKT RF1K49088_HA 2 1 3 ; REV 7/21/94
+*Term. Conn. **** D G S
+*Spice circuit model file for the RF1K49088
+*For a detail specification see datasheet FN3952
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.081e-9
+Cb 15 14 1.13e-9
+Cin 6 8 0.673e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 34.1
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1.0e-9
+Lgate 1 9 1.233e-9
+Lsource 3 7 0.452e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.408e-3
+Rgate 9 20 3.33
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 20.0e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.211
+.MODEL DBDMOD D (IS=2.82e-13 RS=1.72e-2 TRS1=1.58e-3 TRS2=1.23e-7
++CJO=9.19e-10 TT=2.03e-8)
+.MODEL DBKMOD D (RS=2.65e-1 TRS1=5.00e-3 TRS2=7.09e-5)
+.MODEL DPLCAPMOD D (CJO=0.42e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.010 KP=15.01 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.02e-3 TC2=-1.98e-6)
+.MODEL RDSMOD RES (TC1=3.50e-3 TC2=3.70-6)
+.MODEL RVTOMOD RES (TC1=-2.53e-3 TC2=8.13e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.20 VOFF=-3.80)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=-6.20)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.40 VOFF=4.10)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.10 VOFF=-1.40)
+.ENDS
+.SUBCKT RF1K49090_HA 2 1 3 ; REV 8/29/94
+*Term. Conn. **** D G S
+*Spice circuit model file for the RF1K49090
+*For a detail specification see datasheet FN3985
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 9.77e-10
+Cb 15 14 9.19e-10
+Cin 6 8 7.81e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 14.89
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1.0e-9
+Lgate 1 9 1.233e-9
+Lsource 3 7 0.452e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 4.910e-3
+Rgate 9 20 2.74
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 5.00e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.3215
+.MODEL DBDMOD D (IS=7.00e-13 RS=2.15e-2 TRS1=0.50e-3 TRS2=3.68e-6
++CJO=1.28e-9 TT=1.80e-8)
+.MODEL DBKMOD D (RS=1.28e-1 TRS1=1.69e-3 TRS2=-2.0e-6)
+.MODEL DPLCAPMOD D (CJO=0.84e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.630 KP=11.55 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.15e-4 TC2=3.13e-7)
+.MODEL RDSMOD RES (TC1=7.00e-4 TC2=5.00-6)
+.MODEL RVTOMOD RES (TC1=-2.155e-3 TC2=-2.70e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.05 VOFF=-4.05)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.05 VOFF=-6.05)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.72 VOFF=4.28)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.28 VOFF=-0.72)
+.ENDS
+.SUBCKT RF1K49092N_HA 2 1 3 ; REV 10/24/94
+*Term. Conn. ****  D G S
+*Spice circuit model file for the N-Channel MOSFET in the RF1K49092
+*For a detail specification see datasheet FN3968
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 9.77e-10
+Cb 15 14 9.19e-10
+Cin 6 8 7.81e-10
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 14.89
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 6 8 1
+Evto 20 6 8 18 1
+It 8 17 1
+Ldrain 2 5 1.0e-9
+Lgate 1 9 1.233e-9
+Lsource 3 7 0.452e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 4.910e-3
+Rgate 9 20 2.74
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 5.00e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.3215
+.MODEL DBDMOD D (IS=7.00e-13 RS=2.15e-2 TRS1=0.50e-3 TRS2=3.68e-6
++CJO=1.28e-9 TT=1.80e-8)
+.MODEL DBKMOD D (RS=1.28e-1 TRS1=1.69e-3 TRS2=-2.0e-6)
+.MODEL DPLCAPMOD D (CJO=0.84e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.63 KP=11.55 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.15e-4 TC2=3.13e-7)
+.MODEL RDSMOD RES (TC1=-2.155e-3 TC2=-2.7e-6)
+.MODEL RVTOMOD RES (TC1=-1.820e-3 TC2=1.47e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.05 VOFF=-4.05)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.05 VOFF=-6.05)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.72 VOFF=4.28)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.28 VOFF=-0.72)
+.ENDS
+.SUBCKT RF1K49092P_HA 2 1 3 ; REV 10/24/94
+*Term. Conn. ****  D G S
+*Spice circuit model file for the P-Channel MOSFET in the RF1K49092
+*For a detail specification see datasheet FN3968
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.75e-10
+Cb 15 14 8.65e-10
+Cin 6 8 7.65e-10
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -23.75
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 6 8 1
+Evto 20 6 8 18 1
+It 8 17 1
+Ldrain 2 5 1.0e-9
+Lgate 1 9 1.233e-9
+Lsource 3 7 0.452e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 7.360e-3
+Rgate 9 20 1.00
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 4.56e-2
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.558
+.MODEL DBDMOD D (IS=3.00e-13 RS=4.40e-2 TRS1=1.00e-3 TRS2=-7.37e-6
++CJO=1.27e-9 TT=2.20e-8)
+.MODEL DBKMOD D (RS=7.84e-2 TRS1=-4.27e-3 TRS2=5.77e-5)
+.MODEL DPLCAPMOD D (CJO=2.85e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-2.1423 KP=9.206 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.61e-4 TC2=-1.09e-6)
+.MODEL RDSMOD RES (TC1=2.10e-3 TC2=6.99e-6)
+.MODEL RVTOMOD RES (TC1=-1.820e-3 TC2=1.47e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.47 VOFF=3.47)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.47 VOFF=5.47)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.05 VOFF=-3.95)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.95 VOFF=1.05)
+.ENDS
+.SUBCKT RF1K49093_HA 2 1 3 ; REV 10/24/94
+*Term. Conn. **** D G S
+*Spice circuit model file for the RF1K49093
+*For a detail specification see datasheet FN3969
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.75e-10
+Cb 15 14 8.65e-10
+Cin 6 8 7.65e-10
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -23.75
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 6 8 1
+Evto 20 6 8 18 1
+It 8 17 1
+Ldrain 2 5 1.0e-9
+Lgate 1 9 1.233e-9
+Lsource 3 7 0.452e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 7.360e-3
+Rgate 9 20 1.00
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 4.56e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.558
+.MODEL DBDMOD D (IS=3.00e-13 RS=4.40e-2 TRS1=1.00e-3 TRS2=-7.37e-6
++CJO=1.27e-9 TT=2.20e-8)
+.MODEL DBKMOD D (RS=7.84e-2 TRS1=-4.27e-3 TRS2=5.77e-5)
+.MODEL DPLCAPMOD D (CJO=2.85e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=-2.1423 KP=9.206 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.6115e-4 TC2=-1.09e-6)
+.MODEL RDSMOD RES (TC1=2.10e-3 TC2=6.99e-6)
+.MODEL RVTOMOD RES (TC1=-1.820e-3 TC2=1.47e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.47 VOFF=3.47)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.47 VOFF=5.47)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.05 VOFF=-3.95)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.95 VOFF=1.05)
+.ENDS
+.SUBCKT RFD16N05_HA 2 1 3 ; REV 10/31/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFD16N05, RFD16N05SM
+*For a detail specification see datasheet FN2267
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.788e-10
+Cb 15 14 1.875e-10
+Cin 6 8 8.33e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.89
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/94,7.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.56e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 0.40e-3
+Rgate 9 20 3.00
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 21.5e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.82
+.MODEL DBDMOD D (IS=2.50e-13 RS=7.10e-3 TRS1=3.04e-3 TRS2=-10.0e-6
++CJO=1.12e-9 TT=5.60e-8)
+.MODEL DBKMOD D (RS=2.51e-1 TRS1=-6.57e-4 TRS2=1.66e-6)
+.MODEL DPLCAPMOD D (CJO=6.10e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.96 KP=16.68 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.07e-3 TC2=-7.19e-7)
+.MODEL RDSMOD RES (TC1=5.45e-3 TC2=1.66e-5)
+.MODEL RSCLMOD RES (TC1=1.25e-3 TC2=17.0e-6)
+.MODEL RVTOMOD RES (TC1=-5.15e-3 TC2=-4.83e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.25 VOFF=-3.25)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.25 VOFF=-5.25)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.56 VOFF=5.56)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.56 VOFF=0.56)
+.ENDS
+.SUBCKT RFP25N05_HA 2 1 3 ; REV 8/19/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFP25N05
+*For a detail specification see datasheet FN2112
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.83e-9
+Cb 15 14 1.98e-9
+Cin 6 8 9.70e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.90
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/108,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.92e-9
+Lsource 3 7 4.50e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.10e-3
+Rgate 9 20 2.88
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 20.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.764
+.MODEL DBDMOD D (IS=2.32e-13 RS=5.72e-3 TRS1=2.56e-3 TRS2=-5.13e-6
++CJO=1.18e-9 TT=5.62e-8)
+.MODEL DBKMOD D (RS=2.00e-1 TRS1=3.33e-4 TRS2=2.68e-6)
+.MODEL DPLCAPMOD D (CJO=6.55e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.89 KP=15.03 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.04e-3 TC2=-1.04e-6)
+.MODEL RDSMOD RES (TC1=5.85e-3 TC2=1.77e-5)
+.MODEL RSCLMOD RES (TC1=2.00e-3 TC2=1.50e-5)
+.MODEL RVTOMOD RES (TC1=-5.35e-3 TC2=-3.77e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.04 VOFF=-3.04)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.04 VOFF=-5.04)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.02 VOFF=1.98)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.98 VOFF=-3.02)
+.ENDS
+.SUBCKT RFP25N06_HA 2 1 3 ; REV 8/19/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFP25N06
+*For a detail specification see datasheet FN1492
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.83e-9
+Cb 15 14 1.98e-9
+Cin 6 8 9.70e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.90
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/108,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.92e-9
+Lsource 3 7 4.50e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.10e-3
+Rgate 9 20 2.88
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 20.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.764
+.MODEL DBDMOD D (IS=2.32e-13 RS=5.72e-3 TRS1=2.56e-3 TRS2=-5.13e-6
++CJO=1.18e-9 TT=5.62e-8)
+.MODEL DBKMOD D (RS=2.00e-1 TRS1=3.33e-4 TRS2=2.68e-6)
+.MODEL DPLCAPMOD D (CJO=6.55e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.89 KP=15.03 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.04e-3 TC2=-1.04e-6)
+.MODEL RDSMOD RES (TC1=5.85e-3 TC2=1.77e-5)
+.MODEL RSCLMOD RES (TC1=2.00e-3 TC2=1.50e-5)
+.MODEL RVTOMOD RES (TC1=-5.35e-3 TC2=-3.77e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.04 VOFF=-3.04)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.04 VOFF=-5.04)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.02 VOFF=1.98)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.98 VOFF=-3.02)
+.ENDS
+.SUBCKT RFP30P06_HA 2 1 3 ; REV 12/15/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFP30P06
+*For a detail specification see datasheet FN2437
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.23e-9
+Cb 15 14 3.23e-9
+Cin 6 8 3.08e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -77.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.60e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 39.85e-3
+Rgate 9 20 2.34
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2.56e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.81
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/114,5))}
+.MODEL DBDMOD D (IS=4.70e-13 RS=1.31e-2 TRS1=1.39e-4 TRS2=-4.77e-6
++CJO=2.85e-9  TT=8.81e-8)
+.MODEL DBKMOD D (RS=2.23e-1 TRS1=1.97e-3 TRS2=-2.37e-5)
+.MODEL DPLCAPMOD D (CJO=0.78e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.75 KP=10.83 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.08e-4 TC2=-1.27e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=1.02e-5)
+.MODEL RSCLMOD RES (TC1=2.09e-3 TC2=5.88e-7)
+.MODEL RVTMOD RES (TC1=-2.99e-3 TC2=1.40e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.40 VOFF=1.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.40 VOFF=3.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.20 VOFF=-3.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=1.20)
+.ENDS
+.SUBCKT RFG30P06_HA 2 1 3 ; REV 12/15/94
+*Term. Conn.*****D G S
+*Spice model for the RFG30P06
+*For a detail specification see datasheet FN2437
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.23e-9
+Cb 15 14 3.23e-9
+Cin 6 8 3.08e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -77.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.60e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 39.85e-3
+Rgate 9 20 2.34
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2.56e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.81
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/114,5))}
+.MODEL DBDMOD D (IS=4.70e-13 RS=1.31e-2 TRS1=1.39e-4 TRS2=-4.77e-6
++CJO=2.85e-9  TT=8.81e-8)
+.MODEL DBKMOD D (RS=2.23e-1 TRS1=1.97e-3 TRS2=-2.37e-5)
+.MODEL DPLCAPMOD D (CJO=0.78e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.75 KP=10.83 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.08e-4 TC2=-1.27e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=1.02e-5)
+.MODEL RSCLMOD RES (TC1=2.09e-3 TC2=5.88e-7)
+.MODEL RVTMOD RES (TC1=-2.99e-3 TC2=1.40e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.40 VOFF=1.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.40 VOFF=3.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.20 VOFF=-3.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=1.20)
+.ENDS
+.SUBCKT RF1S30P06_HA 2 1 3 ; REV 12/15/94
+*Term. Conn.***** D G S
+*Spice model for the RF1S30P06, RF1S30P06SM
+*For a detail specification see datasheet FN2437
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.23e-9
+Cb 15 14 3.23e-9
+Cin 6 8 3.08e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -77.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.60e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 39.85e-3
+Rgate 9 20 2.34
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2.56e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.81
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/114,5))}
+.MODEL DBDMOD D (IS=4.70e-13 RS=1.31e-2 TRS1=1.39e-4 TRS2=-4.77e-6
++CJO=2.85e-9  TT=8.81e-8)
+.MODEL DBKMOD D (RS=2.23e-1 TRS1=1.97e-3 TRS2=-2.37e-5)
+.MODEL DPLCAPMOD D (CJO=0.78e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.75 KP=10.83 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.08e-4 TC2=-1.27e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=1.02e-5)
+.MODEL RSCLMOD RES (TC1=2.09e-3 TC2=5.88e-7)
+.MODEL RVTMOD RES (TC1=-2.99e-3 TC2=1.40e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.40 VOFF=1.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.40 VOFF=3.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.20 VOFF=-3.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=1.20)
+.ENDS
+.SUBCKT RFA100N05E_HA 6 1 4 5 3 2 ;   REV 10/30/90
+*Term. Conn.****** 2-Drain; 1-Gate; 4-Source1; 5-Source2
+*                  3-Drain Kelvin; 6-Source Kelvin
+*Spice model circuit file for the RFA100N05E
+*For a detail specification see datasheet FN2869
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.98e-9
+Cb 15 14 8.81e-9
+Cin 24 8 4.48e-9
+Dbody 7 21 DBDMOD
+Dbreak 21 11 DBKMOD
+Dplcap 10 21 DPLCAPMOD
+Ebreak 11 7 17 18 58.4
+Eds 14 8 21 8 1
+Egs 13 8 24 8 1
+Esg 24 10 24 8 1
+Evto 20 24 18 8 1
+It 8 17 1
+Ldkelvin 3 23 1e-9
+Ldrain 2 21 1e-9
+Lgate 1 9 5e-9
+Lskelvin 6 7 5e-9
+Lsource1 4 22 6e-9
+Lsource2 5 26 6e-9
+Mos1 16 24 8 8 MOSMOD M=0.99
+Mos2 16 25 8 8 MOSMOD M=0.01
+Rin 24 8 1e9
+Rbreak 17 18 RBKMOD 1
+Rdrain 21 16 RDSMOD 2.74e-3
+Rgate 9 20 1.2
+Rksource1 7 22 1.6e-3
+Rksource2 7 26 1.6e-3
+Rkdrain 23 21 0.33e-3
+Rsource 8 7 RDSMOD 1.2e-3
+Rvto 18 19 RVTMOD 1
+S1a 24 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 24 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 25 24 0.6
+.MODEL DBDMOD D (IS=2.23e-12 RS=2.28e-3 TRS1=2.98e-3 TRS2=2.2e-12
++CJO=7.55e-9 TT=4e-8)
+.MODEL DBKMOD D (RS=8e-2 TRS1=2.5e-3 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=2.14e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.48 KP=78.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.5e-4 TC2=-1.17e-6)
+.MODEL RDSMOD RES (TC1=5.2e-3 TC2=1.37e-5)
+.MODEL RVTMOD RES (TC1=-3.78e-3 TC2=-7.51e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.48 VOFF=-0.48)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.48 VOFF=-2.48)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RFD14N05_HA 2 1 3 ; REV 9/12/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFD14N05, RFD14N05SM
+*For a detail specification see datasheet FN2268
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.84e-10
+Cb 15 14 9.34e-10
+Cin 6 8 5.20e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 62.87
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/50,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.34e-9
+Lsource 3 7 3.79e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 2.20e-3
+Rgate 9 20 5.64
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 42.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.82
+.MODEL DBDMOD D (IS=1.50e-13 RS=10.9e-3 TRS1=2.30e-3 TRS2=-1.75e-5
++CJO=6.84e-10 TT=4.20e-8)
+.MODEL DBKMOD D (RS=4.15e-1 TRS1=3.73e-3 TRS2=-3.21e-5)
+.MODEL DPLCAPMOD D (CJO=26.2e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.91 KP=12.68 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.73e-4 TC2=2.12e-6)
+.MODEL RDSMOD RES (TC1=5.00e-3 TC2=2.53e-5)
+.MODEL RSCLMOD RES (TC1=2.05e-3 TC2=1.35e-5)
+.MODEL RVTOMOD RES (TC1=-4.44e-3 TC2=-6.45e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.29 VOFF=-3.29)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.29 VOFF=-5.29)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RFD14N06_HA 2 1 3 ; REV 9/12/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFD14N06, RFD14N06SM
+*For a detail specification see datasheet FN4002
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.84e-10
+Cb 15 14 9.34e-10
+Cin 6 8 5.20e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 62.87
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/50,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.34e-9
+Lsource 3 7 3.79e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 2.20e-3
+Rgate 9 20 5.64
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 42.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.82
+.MODEL DBDMOD D (IS=1.50e-13 RS=10.9e-3 TRS1=2.30e-3 TRS2=-1.75e-5
++CJO=6.84e-10 TT=4.20e-8)
+.MODEL DBKMOD D (RS=4.15e-1 TRS1=3.73e-3 TRS2=-3.21e-5)
+.MODEL DPLCAPMOD D (CJO=26.2e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.91 KP=12.68 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.73e-4 TC2=2.12e-6)
+.MODEL RDSMOD RES (TC1=5.00e-3 TC2=2.53e-5)
+.MODEL RSCLMOD RES (TC1=2.05e-3 TC2=1.35e-5)
+.MODEL RVTOMOD RES (TC1=-4.44e-3 TC2=-6.45e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.29 VOFF=-3.29)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.29 VOFF=-5.29)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RFP14N05_HA 2 1 3 ; REV 9/12/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFP14N05
+*For a detail specification see datasheet FN2268
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.84e-10
+Cb 15 14 9.34e-10
+Cin 6 8 5.20e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 62.87
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/50,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.34e-9
+Lsource 3 7 3.79e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 2.20e-3
+Rgate 9 20 5.64
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 42.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.82
+.MODEL DBDMOD D (IS=1.50e-13 RS=10.9e-3 TRS1=2.30e-3 TRS2=-1.75e-5
++CJO=6.84e-10 TT=4.20e-8)
+.MODEL DBKMOD D (RS=4.15e-1 TRS1=3.73e-3 TRS2=-3.21e-5)
+.MODEL DPLCAPMOD D (CJO=26.2e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.91 KP=12.68 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.73e-4 TC2=2.12e-6)
+.MODEL RDSMOD RES (TC1=5.00e-3 TC2=2.53e-5)
+.MODEL RSCLMOD RES (TC1=2.05e-3 TC2=1.35e-5)
+.MODEL RVTOMOD RES (TC1=-4.44e-3 TC2=-6.45e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.29 VOFF=-3.29)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.29 VOFF=-5.29)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RFP14N06_HA 2 1 3 ; REV 9/12/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFP14N06
+*For a detail specification see datasheet FN4002
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.84e-10
+Cb 15 14 9.34e-10
+Cin 6 8 5.20e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 62.87
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/50,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.34e-9
+Lsource 3 7 3.79e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 2.20e-3
+Rgate 9 20 5.64
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 42.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.82
+.MODEL DBDMOD D (IS=1.50e-13 RS=10.9e-3 TRS1=2.30e-3 TRS2=-1.75e-5
++CJO=6.84e-10 TT=4.20e-8)
+.MODEL DBKMOD D (RS=4.15e-1 TRS1=3.73e-3 TRS2=-3.21e-5)
+.MODEL DPLCAPMOD D (CJO=26.2e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.91 KP=12.68 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.73e-4 TC2=2.12e-6)
+.MODEL RDSMOD RES (TC1=5.00e-3 TC2=2.53e-5)
+.MODEL RSCLMOD RES (TC1=2.05e-3 TC2=1.35e-5)
+.MODEL RVTOMOD RES (TC1=-4.44e-3 TC2=-6.45e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.29 VOFF=-3.29)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.29 VOFF=-5.29)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RFD16N05L_HA 2 1 3 ; REV 4/8/92
+*Term. Conn. **** D G S
+*Spice model circuit file for RFD16N05L, RFD16N05LSM
+*For a detail specification see datasheet FN2269
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.33e-9
+Cb 15 14 3.11e-9
+Cin 6 8 1.21e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 70.9
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 1.38e-9
+Ldrain 2 5 1.0e-12
+Lsource 3 7 1.0e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rin 6 8 1e9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 27.38e-3
+Rgate 9 20 2.98
+Rsource 8 7 RDSMOD 0.614e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.448
+.MODEL DBDMOD D (IS=1.34e-13 RS=1.21e-2 TRS1=1.64e-3 TRS2=2.59e-6
++CJO=1.13e-9 TT=4.14e-8)
+.MODEL DBKMOD D (RS=8.82e-2 TRS1=-2.01e-3 TRS2=7.32e-10)
+.MODEL DPLCAPMOD D (CJO=0.522e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.054 KP=24.73 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.01e-3 TC2=5.21e-8)
+.MODEL RDSMOD RES (TC1=3.66e-3 TC2=1.46e-5)
+.MODEL RVTOMOD RES (TC1=-1.81e-3 TC2=1.41e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.25 VOFF=-2.25)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=-4.25)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.65 VOFF=4.35)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.35 VOFF=-0.65)
+.ENDS
+.SUBCKT RFD16N06LE_HA 2 1 3 ; REV 8/2/93
+*Term. Conn.****** D G S
+*Spice model circuit file for RFD16N06LE, RFD16N06LESM
+*For a detail specification see datasheet FN3628
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.364e-9
+Cb 15 14 3.41e-9
+Cin 6 8 1.317e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 75.5
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.9e-9
+Lsource 3 7 4.9e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 11.86e-3
+Rgate 9 20 2.52
+Rin 6 8 1e9
+Rscl1 5 51 RSLVCMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 26.0e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.5
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/93,7.6))}
+.MODEL DBDMOD D (IS=3.80e-13 RS=1.12e-2 TRS1=1.61e-3 TRS2=6.08e-6
++CJO=1.05e-9 TT=3.84e-8)
+.MODEL DBKMOD D (RS=1.44e-1 TRS1=6.59e-3 TRS2=9.71e-6)
+.MODEL DESD1MOD D(BV=13.5 TBV1=0 TBV2=0 RS=48.0 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D(BV=10.24 TBV1=-8.6756e-4 TBV2=7.425e-7 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=5.59e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.89 KP=113.0 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.12e-3 TC2=-9.59e-7)
+.MODEL RDSMOD RES (TC1=4.98e-3 TC2=1.34e-5)
+.MODEL RSLVCMOD RES (TC1=1.75e-3 TC2=3.75e-6)
+.MODEL RVTOMOD RES (TC1=-1.86e-3 TC2=-3.63e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.85 VOFF=-1.85)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.85 VOFF=-3.85)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.34 VOFF=2.76 )
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.76  VOFF=-2.34)
+.ENDS
+.SUBCKT RFD7N10LE_HA 2 1 3 ; REV 6/2/93
+*Term. Conn.***** D G S
+*Spice model circuit file for the RFD7N10LE, RFD7N10LESM
+*For a detail specification see datasheet FN3598
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.102e-9
+Cb 15 14 1.157e-9
+Cin 6 8 0.370e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD1MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 115.8
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 3.58e-9
+Lsource 3 7 3.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 136.9e-3
+Rgate 9 20 7.61
+Rin 6 8 1e9
+Rscl1 5 51 RSCLVMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 84.4e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.444
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/(15.5),7.25))}
+.MODEL DBDMOD D (IS=5.07e-14 RS=1.37e-2 TRS1=1.72e-3 TRS2=-1.59e-6
++CJO=2.57e-10 TT=3.84e-8)
+.MODEL DBKMOD D (RS=2.32e-1 TRS1=6.50e-4 TRS2=1.72e-6)
+.MODEL DESD1MOD D(BV=14.0 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D(BV=12.5 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=1.84e-8 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.045 KP=14.07 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.13e-3 TC2=4.74e-8)
+.MODEL RDSMOD RES (TC1=7.45e-3 TC2=2.68e-5)
+.MODEL RSCLVMOD RES (TC1=1.75e-3 TC2=0)
+.MODEL RVTOMOD RES (TC1=-2.73e-3 TC2=-5.46e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.35 VOFF=-1.75)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.75 VOFF=-4.35)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.75 VOFF=3.50)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.50 VOFF=-1.75)
+.ENDS
+.SUBCKT RFP7N10LE_HA 2 1 3 ; REV 6/2/93
+*Term. Conn.***** D G S
+*Spice model circuit file for RFP7N10LE
+*For a detail specification see datasheet FN3598
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.102e-9
+Cb 15 14 1.157e-9
+Cin 6 8 0.370e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD1MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 115.8
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 3.58e-9
+Lsource 3 7 3.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 136.9e-3
+Rgate 9 20 7.61
+Rin 6 8 1e9
+Rscl1 5 51 RSCLVMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 84.4e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.444
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/(15.5),7.25))}
+.MODEL DBDMOD D (IS=5.07e-14 RS=1.37e-2 TRS1=1.72e-3 TRS2=-1.59e-6
++CJO=2.57e-10 TT=3.84e-8)
+.MODEL DBKMOD D (RS=2.32e-1 TRS1=6.50e-4 TRS2=1.72e-6)
+.MODEL DESD1MOD D(BV=14.0 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D(BV=12.5 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=1.84e-8 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.045 KP=14.07 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.13e-3 TC2=4.74e-8)
+.MODEL RDSMOD RES (TC1=7.45e-3 TC2=2.68e-5)
+.MODEL RSCLVMOD RES (TC1=1.75e-3 TC2=0)
+.MODEL RVTOMOD RES (TC1=-2.73e-3 TC2=-5.46e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.35 VOFF=-1.75)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.75 VOFF=-4.35)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.75 VOFF=3.50)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.50 VOFF=-1.75)
+.ENDS
+.SUBCKT RFH75N05E_HA 2 1 3 ; REV 3/20/91
+*Term. Conn. **** D G S
+*Spice model circuit file for the RFH75N05E
+*For a detail specification see datasheet FN2275
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.98e-9
+Cb 15 14 8.81e-9
+Cin 6 8 4.48e-9
+Dbreak 5 11 DBKMOD
+Dbody 7 5 DBDMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 58.4
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5e-9
+Lsource 3 7 3e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 3.07e-3
+Rgate 9 20 1.2
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.6
+.MODEL DBDMOD D (IS=2.23e-12 RS=2.28e-3 TRS1=2.98e-3 TRS2=2.2e-12
++CJO=7.55e-9 TT=4e-8)
+.MODEL DBKMOD D (RS=8e-2 TRS1=2.5e-3 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=2.14e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.48 KP=78.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.5e-4 TC2=-1.17e-6)
+.MODEL RDSMOD RES (TC1=5.2e-3 TC2=1.37e-5)
+.MODEL RVTMOD RES (TC1=-3.78e-3 TC2=-7.51e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.48 VOFF=-0.48)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.48 VOFF=-2.48)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RFG75N05E_HA 2 1 3 ; REV 3/20/91
+*Term. Conn. **** D G S
+*Spice model circuit file for the RFG75N05E
+*For a detail specification see datasheet FN2275
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 8.98e-9
+Cb 15 14 8.81e-9
+Cin 6 8 4.48e-9
+Dbreak 5 11 DBKMOD
+Dbody 7 5 DBDMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 58.4
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5e-9
+Lsource 3 7 3e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 3.07e-3
+Rgate 9 20 1.2
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.6
+.MODEL DBDMOD D (IS=2.23e-12 RS=2.28e-3 TRS1=2.98e-3 TRS2=2.2e-12
++CJO=7.55e-9 TT=4e-8)
+.MODEL DBKMOD D (RS=8e-2 TRS1=2.5e-3 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=2.14e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.48 KP=78.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.5e-4 TC2=-1.17e-6)
+.MODEL RDSMOD RES (TC1=5.2e-3 TC2=1.37e-5)
+.MODEL RVTMOD RES (TC1=-3.78e-3 TC2=-7.51e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.48 VOFF=-0.48)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.48 VOFF=-2.48)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.25 VOFF=2.75)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.75 VOFF=-2.25)
+.ENDS
+.SUBCKT RLP03N06CLE_HA  2 1 3; REV 4/18/94
+*Term. Conn.******** D G S
+*Spice Model circuit file for the RLP03N06CLE
+*For a detail specification see datasheet FN3948
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.47e-10
+Cb 15 14 5.47e-10
+Cin 6 8 3.01e-10
+Dbreak 5 11 DBKMOD
+Dbody 7 5 DBDMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 20 17 18 66.5
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 2.96e-9
+Ldrain 2 5 1.0e-9
+Lsource 3 7 2.96e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Qcontrol 20 70 7 QMOD 1
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.123
+Rin 6 8 1e9
+Rgate 9 20 3200
+Rsource1 8 70 RDSMOD 1.12
+Rsource2 70 7 RSMOD 2.16
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.22
+.MODEL DESD1MOD D (BV= 13.54 TBV1=0 TBV2=0 RS=45.5 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV= 11.46 TBV1=-7.57e-4 TBV2=-3.0e-6 RS=0 TRS1=0 TRS2=0)
+.MODEL DBDMOD D (IS=7.97e-17 RS=1.82 TRS1=3.91e-3
++TRS2=1.24e-5 CJO=3.00e-10 TT=1.83e-7)
+.MODEL DBKMOD D (RS=3150 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=74.2e-12 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.67 KP=3.40 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL QMOD NPN (BF=5)
+.MODEL RDSMOD RES (TC1=6.80e-3 TC2=6.50e-6)
+.MODEL RSMOD RES (TC1=2.95e-3 TC2=-1.00e-6)
+.MODEL RBKMOD RES (TC1=4.00e-4 TC2=1.13e-8)
+.MODEL RVTOMOD RES (TC1=-2.23e-3 TC2=-1.95e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3 VOFF=-1)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1 VOFF=-3)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-2.85 VOFF=2.15)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=2.15 VOFF=-2.85)
+.ENDS
+.SUBCKT RLD03N06CLE_HA  2 1 3; REV 4/18/94
+*Term. Conn.******** D G S
+*Spice Model circuit file for the RLD03N06CLE, RLD03N06L3SM
+*For a detail specification see datasheet FN3948
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.47e-10
+Cb 15 14 5.47e-10
+Cin 6 8 3.01e-10
+Dbreak 5 11 DBKMOD
+Dbody 7 5 DBDMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 20 17 18 66.5
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 2.96e-9
+Ldrain 2 5 1.0e-9
+Lsource 3 7 2.96e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Qcontrol 20 70 7 QMOD 1
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.123
+Rin 6 8 1e9
+Rgate 9 20 3200
+Rsource1 8 70 RDSMOD 1.12
+Rsource2 70 7 RSMOD 2.16
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.22
+.MODEL DESD1MOD D (BV= 13.54 TBV1=0 TBV2=0 RS=45.5 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV= 11.46 TBV1=-7.57e-4 TBV2=-3.0e-6 RS=0 TRS1=0 TRS2=0)
+.MODEL DBDMOD D (IS=7.97e-17 RS=1.82 TRS1=3.91e-3
++TRS2=1.24e-5 CJO=3.00e-10 TT=1.83e-7)
+.MODEL DBKMOD D (RS=3150 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=74.2e-12 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.67 KP=3.40 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL QMOD NPN (BF=5)
+.MODEL RDSMOD RES (TC1=6.80e-3 TC2=6.50e-6)
+.MODEL RSMOD RES (TC1=2.95e-3 TC2=-1.00e-6)
+.MODEL RBKMOD RES (TC1=4.00e-4 TC2=1.13e-8)
+.MODEL RVTOMOD RES (TC1=-2.23e-3 TC2=-1.95e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3 VOFF=-1)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1 VOFF=-3)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-2.85 VOFF=2.15)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=2.15 VOFF=-2.85)
+.ENDS
+.SUBCKT RLP1N08LE_HA 2 1 3; REV 9/16/91
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RLP1N08LE
+*For a detail specification see datasheet FN2252
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 6.5e-10
+Cb 15 14 6.5e-10
+Cin 6 8 3.75e-10
+Dbreak 5 11 DBKMOD
+Dbody 7 5 DBDMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 107.3
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 9.5e-10
+Ldrain 2 5 2.5e-9
+Lsource 3 7 2.5e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDMOD 0.2
+Rin 6 8 1e9
+Rgate 9 20 4.48e3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.33
+Rsource 8 7 RSMOD 0.28;             * Current limiter parts *
+.MODEL RSMOD RES (TC1=3.2e-3)
+Qcontrol 20 8 7 QMOD 10
+.MODEL Qmod NPN (BF=5 VJE=.5)
+Desd 7 9 DESDMOD;                   * ESD protection diode *
+.MODEL DESDMOD D (BV= 7.185 TBV1=3.5e-4 TBV2=2.2e-6)
+.MODEL DBDMOD D (IS=9.91e-15 RS=3.01e-1 TRS1=3.79e-3
++TRS2=1.11e-6 CJO=4.32e-10 TT=2e-7)
+.MODEL DBKMOD D (RS=2.78 TRS1=-8.88e-3 TRS2=2.55e-5)
+.MODEL DPLCAPMOD D (CJO=2e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.7 KP=2.1 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RDMOD RES (TC1=7.54e-3 TC2=2.23e-5)
+.MODEL RBKMOD RES (TC1=1.11e-3 TC2=-6.83e-7)
+.MODEL RVTOMOD RES (TC1=-2.23e-3 TC2=-5.29e-7)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3 VOFF=-1)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1 VOFF=-3)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.65 VOFF=3.35)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=3.35 VOFF=-1.65)
+.ENDS
+.SUBCKT RFM15N06_HA 2 1 3; REV 1/07/91
+* Term. Conn.*** D G S
+*Spice model circuit file for the RFM15N06
+*For a detail specification see datasheet FN1478
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 9.14e-10
+Cb 15 14 5.81e-10
+Cin 6 8 4.44e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 102.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+Evto2 21 6 22 17 .74
+It 8 22 1
+Ldrain 2 5 1.0e-10
+Lgate 1 9 1.3244e-8
+Lsource 3 7 1.168e-8
+Mos 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 13.3e-3
+Rgate 9 20 20.43
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 34.82e-3
+Rvto 18 19 RVTOMOD 1
+Rvto2 22 17 RVTOMOD2 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+.MODEL DBDMOD D (IS=8.16e-13 RS=1.54e-2 TRS1=1.77e-3 TRS2=1.85e-5
++CJO=9.16e-10 TT=7e-8)
+.MODEL DBKMOD D (RS=3.83e-1 TRS1=7.81e-4 TRS2=-9.28e-6)
+.MODEL DPLCAPMOD D (CJO=4.90e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.46 KP=3.09 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.33e-4 TC2=-6.51e-7)
+.MODEL RDSMOD RES (TC1=6.5e-3 TC2=3.28e-5)
+.MODEL RVTOMOD RES (TC1=-4.30e-3 TC2=-3.77e-6)
+.MODEL RVTOMOD2 RES (TC1=0 TC2=0)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3.66 VOFF=-1.66)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.66 VOFF=-3.66)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=3.07 VOFF=8.07)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=8.07 VOFF=3.07)
+.ENDS
+.SUBCKT MCTA75P60E1_HA 1 2 3; REV 9/1/92
+*Terminal Conn.**** A G K
+*Spice model circuit file for the MCTA75P60E1
+*For a detail specification see datasheet FN3516
+*****************************************************************************
+*   For further discussion of this Spice model of the MCT (MOS Controlled   *
+*   Thyristor) consult the MCT User's Guide or the application note         *
+*   describing this model.                                                  *
+*   Nominal Temperature=150 deg.C                                           *
+*****************************************************************************
+RVP+  1 12 30e-6
+RLP  12 10 96.1e-6
+RVN   4  9 747e-6
+RVN+  8  7 2.5e-3
+RVP   5 11 31.7e-3
+VDROP 7 3  DC(0.18)
+QP    5 4 12 PNPSCR
+QN    4 5  8 NPNSCR
+MP   11 2 10 9 MOSON
+MN    9 2 1 10 MOSOFF
+.MODEL MOSOFF NMOS(VTO=2.0 L=0.5e-6 W=5.63 NSUB=1E18 UO=500 TOX=7e-8)
+.MODEL MOSON  PMOS(VTO=-2.0 L=5.0e-6 W=0.715 NSUB=8E13 UO=200 TOX=7e-8)
+.MODEL PNPSCR PNP(BF=9.1 VAF=2000 IKF=600 IS=1.14e-10 TF=42.9e-9 CJE=9.47e-9
++VJE=1.0 CJC=362e-12 MJC=0.5 VJC=0.96 NF=1.18 MJE=0.5)
+.MODEL NPNSCR NPN(BF=2.75 VAF=2000 IKF=600 IS=1.14e-10 TF=207e-9 CJE=1.25e-9
++VJE=0.66 CJC=362e-12 MJC=0.5 VJC=0.64 NF=1.18 MJE=0.5)
+.ENDS
+.SUBCKT MCTV75P60E1_HA 1 2 3; REV 9/1/92
+*Terminal Conn.**** A G K
+*Spice model circuit file for the MCTV75P60E1
+*For a detail specification see datasheet FN3516
+*****************************************************************************
+*   For further discussion of this Spice model of the MCT (MOS Controlled   *
+*   Thyristor) consult the MCT User's Guide or the application note         *
+*   describing this model.                                                  *
+*   Nominal Temperature=150 deg.C                                           *
+*****************************************************************************
+RVP+  1 12 30e-6
+RLP  12 10 96.1e-6
+RVN   4  9 747e-6
+RVN+  8  7 2.5e-3
+RVP   5 11 31.7e-3
+VDROP 7 3  DC(0.18)
+QP    5 4 12 PNPSCR
+QN    4 5  8 NPNSCR
+MP   11 2 10 9 MOSON
+MN    9 2 1 10 MOSOFF
+.MODEL MOSOFF NMOS(VTO=2.0 L=0.5e-6 W=5.63 NSUB=1E18 UO=500 TOX=7e-8)
+.MODEL MOSON  PMOS(VTO=-2.0 L=5.0e-6 W=0.715 NSUB=8E13 UO=200 TOX=7e-8)
+.MODEL PNPSCR PNP(BF=9.1 VAF=2000 IKF=600 IS=1.14e-10 TF=42.9e-9 CJE=9.47e-9
++VJE=1.0 CJC=362e-12 MJC=0.5 VJC=0.96 NF=1.18 MJE=0.5)
+.MODEL NPNSCR NPN(BF=2.75 VAF=2000 IKF=600 IS=1.14e-10 TF=207e-9 CJE=1.25e-9
++VJE=0.66 CJC=362e-12 MJC=0.5 VJC=0.64 NF=1.18 MJE=0.5)
+.ENDS
+.SUBCKT RFP10P03L_HA 2 1 3 ; REV 11/6/92
+*Term. Conn.***** D G S
+*Spice model circuit file for the RFP10P03L
+*For a detail specification see datasheet FN3515
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.42e-9
+Cb 15 14 1.3e-9
+Cin 6 8 6.7e-8
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -51.9
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 18 8 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 8.7e-12
+Ldrain 2 5 1e-9
+Lsource 3 7 7.6e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 79.08e-3
+Rgate 9 20 12.25
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 27.49e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.50
+.MODEL DBDMOD D (IS=1.14e-13 RS=2.86e-2 TRS1=6.29e-4 TRS2=-2.76e-6
++CJO=8.55e-10 TT=3.84e-8)
+.MODEL DBKMOD D (RS=3.32e-1 TRS1=5.50e-3 TRS2=-5.38e-5)
+.MODEL DPLCAPMOD D (CJO=4.3e-8 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-2.01 KP=5.3105 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=6.07e-4 TC2=3.30e-6)
+.MODEL RDSMOD RES (TC1=3.48e-3 TC2=8.83e-6)
+.MODEL RVTMOD RES (TC1=-1.51e-3 TC2=8.74e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.42 VOFF=2.42)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.42 VOFF=4.42)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.43 VOFF=-3.57)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.57 VOFF=1.43)
+.ENDS
+.SUBCKT RFD10P03L_HA 2 1 3 ; REV 11/6/92
+*Term. Conn.***** D G S
+*Spice model circuit file for the RFD10P03L, RFD10P03LSM
+*For a detail specification see datasheet FN3515
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.42e-9
+Cb 15 14 1.3e-9
+Cin 6 8 6.7e-8
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -51.9
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 18 8 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 8.7e-12
+Ldrain 2 5 1e-9
+Lsource 3 7 7.6e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 79.08e-3
+Rgate 9 20 12.25
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 27.49e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.50
+.MODEL DBDMOD D (IS=1.14e-13 RS=2.86e-2 TRS1=6.29e-4 TRS2=-2.76e-6
++CJO=8.55e-10 TT=3.84e-8)
+.MODEL DBKMOD D (RS=3.32e-1 TRS1=5.50e-3 TRS2=-5.38e-5)
+.MODEL DPLCAPMOD D (CJO=4.3e-8 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-2.01 KP=5.3105 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=6.07e-4 TC2=3.30e-6)
+.MODEL RDSMOD RES (TC1=3.48e-3 TC2=8.83e-6)
+.MODEL RVTMOD RES (TC1=-1.51e-3 TC2=8.74e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.42 VOFF=2.42)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.42 VOFF=4.42)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.43 VOFF=-3.57)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.57 VOFF=1.43)
+.ENDS
+.SUBCKT RFP15N06_HA 2 1 3; REV 01/07/91
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFP15N06
+*For a detail specification see datasheet FN1478
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 9.14e-10
+Cb 15 14 5.81e-10
+Cin 6 8 4.44e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 102.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+Evto2 21 6 22 17 .74
+It 8 22 1
+Ldrain 2 5 2.58e-9
+Lgate 1 9 9.5e-10
+Lsource 3 7 2.58e-9
+Mos 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 13.3e-3
+Rgate 9 20 20.43
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 34.82e-3
+Rvto 18 19 RVTOMOD 1
+Rvto2 22 17 RVTOMOD2 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+.MODEL DBDMOD D (IS=8.16e-13 RS=1.54e-2 TRS1=1.77e-3 TRS2=1.85e-5
++CJO=9.16e-10 TT=7e-8)
+.MODEL DBKMOD D (RS=3.83e-1 TRS1=7.81e-4 TRS2=-9.28e-6)
+.MODEL DPLCAPMOD D (CJO=4.90e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.46 KP=3.09 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.33e-4 TC2=-6.51e-7)
+.MODEL RDSMOD RES (TC1=6.5e-3 TC2=3.28e-5)
+.MODEL RVTOMOD RES (TC1=-4.30e-3 TC2=-3.77e-6)
+.MODEL RVTOMOD2 RES (TC1=0 TC2=0)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3.66 VOFF=-1.66)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.66 VOFF=-3.66)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=3.07 VOFF=8.07)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=8.07 VOFF=3.07)
+.ENDS
+.SUBCKT RFP15P06_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP15P06
+*For a detail specification see datasheet FN3988
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.60e-9
+Cb 15 14 1.47e-9
+Cin 6 8 1.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -73.00
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 6.73e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.69e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 63.6e-3
+Rgate 9 20 7.37
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 46.5e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.65
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/35,4))}
+.MODEL DBDMOD D (IS=1.27e-13 RS=1.62e-2 TRS1=1.35e-3 TRS2=-4.33e-6
++CJO=1.25e-9  TT=7.97e-8)
+.MODEL DBKMOD D (RS=2.54e-1 TRS1=4.54e-3 TRS2=-1.12e-5)
+.MODEL DPLCAPMOD D (CJO=285e-12 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.78 KP=6.97 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.15e-4 TC2=-4.0e-7)
+.MODEL RDSMOD RES (TC1=5.47e-3 TC2=1.37e-5)
+.MODEL RSCLMOD RES (TC1=1.9e-3 TC2=-7.5e-6)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-2.41e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.65 VOFF=1.65)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.65 VOFF=3.65)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.60 VOFF=-4.40)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.40 VOFF=0.60)
+.ENDS
+.SUBCKT RFG60P05E_HA 2 1 3 ; REV 9/20/94
+*Term. Conn.***** D G S
+*Spice model circuit file for the RFG60P05E
+*For a detail specification see datasheet FN2745
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.01e-8
+Cb 15 14 1.05e-8
+Cin 6 8 6.90e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -76.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 7.90e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.18e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 12.83e-3
+Rgate 9 20 1.50
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 3.25e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.83
+.MODEL DBDMOD D (IS=1.24e-12 RS=4.72e-3 TRS1=1.43e-3 TRS2=-4.91e-7
++CJO=6.98e-9  TT=1.50e-7)
+.MODEL DBKMOD D (RS=1.11e-1 TRS1=1.34e-3 TRS2=4.46e-12)
+.MODEL DPLCAPMOD D (CJO=15e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.71 KP=31.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.42e-4 TC2=0)
+.MODEL RDSMOD RES (TC1=5.85e-3 TC2=7.69e-6)
+.MODEL RVTMOD RES (TC1=-3.39e-3 TC2=1.07e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.60 VOFF=2.60)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.60 VOFF=4.60)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.16 VOFF=-3.84)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.84 VOFF=1.16)
+.ENDS
+.SUBCKT RFG60P06E_HA 2 1 3 ; REV 9/20/94
+*Term. Conn.***** D G S
+*Spice model circuit file for the RFG60P06E
+*For a detail specification see datasheet FN3989
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.01e-8
+Cb 15 14 1.05e-8
+Cin 6 8 6.90e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 5 11 17 18 -76.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 7.90e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.18e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 12.83e-3
+Rgate 9 20 1.50
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 3.25e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.83
+.MODEL DBDMOD D (IS=1.24e-12 RS=4.72e-3 TRS1=1.43e-3 TRS2=-4.91e-7
++CJO=6.98e-9  TT=1.50e-7)
+.MODEL DBKMOD D (RS=1.11e-1 TRS1=1.34e-3 TRS2=4.46e-12)
+.MODEL DPLCAPMOD D (CJO=15e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.71 KP=31.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.42e-4 TC2=0)
+.MODEL RDSMOD RES (TC1=5.85e-3 TC2=7.69e-6)
+.MODEL RVTMOD RES (TC1=-3.39e-3 TC2=1.07e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.60 VOFF=2.60)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.60 VOFF=4.60)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.16 VOFF=-3.84)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.84 VOFF=1.16)
+.ENDS
+.SUBCKT RFF60P06_HA 2 1 3 ; REV 9/20/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFF60P06
+*For a detail specification see datasheet FN3975
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.01e-8
+Cb 15 14 1.05e-8
+Cin 6 8 6.90e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 5 11 17 18 -76.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 7.90e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.18e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 12.83e-3
+Rgate 9 20 1.55
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 3.25e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.83
+.MODEL DBDMOD D (IS=1.24e-12 RS=4.72e-3 TRS1=1.43e-3 TRS2=-4.91e-7
++CJO=6.98e-9  TT=1.50e-7)
+.MODEL DBKMOD D (RS=1.11e-1 TRS1=1.34e-3 TRS2=4.46e-12)
+.MODEL DPLCAPMOD D (CJO=15e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.71 KP=31.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.42e-4 TC2=0)
+.MODEL RDSMOD RES (TC1=5.85e-3 TC2=7.69e-6)
+.MODEL RVTMOD RES (TC1=-3.39e-3 TC2=1.07e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.60 VOFF=2.60)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.60 VOFF=4.60)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.16 VOFF=-3.84)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.84 VOFF=1.16)
+.ENDS
+.SUBCKT RFD15P06_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFD15P06, RFD15P06SM
+*For a detail specification see datasheet FN3988
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.60e-9
+Cb 15 14 1.47e-9
+Cin 6 8 1.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -73.00
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 6.73e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.69e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 63.6e-3
+Rgate 9 20 7.37
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 46.5e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.65
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/35,4))}
+.MODEL DBDMOD D (IS=1.27e-13 RS=1.62e-2 TRS1=1.35e-3 TRS2=-4.33e-6
++CJO=1.25e-9  TT=7.97e-8)
+.MODEL DBKMOD D (RS=2.54e-1 TRS1=4.54e-3 TRS2=-1.12e-5)
+.MODEL DPLCAPMOD D (CJO=285e-12 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.78 KP=6.97 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.15e-4 TC2=-4.0e-7)
+.MODEL RDSMOD RES (TC1=5.47e-3 TC2=1.37e-5)
+.MODEL RSCLMOD RES (TC1=1.9e-3 TC2=-7.5e-6)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-2.41e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.65 VOFF=1.65)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.65 VOFF=3.65)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.60 VOFF=-4.40)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.40 VOFF=0.60)
+.ENDS
+.SUBCKT RFD15P05_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFD15P05, RFD15P05SM
+*For a detail specification see datasheet FN2387
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.60e-9
+Cb 15 14 1.47e-9
+Cin 6 8 1.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -73.00
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 6.73e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.69e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 63.6e-3
+Rgate 9 20 7.37
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 46.5e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.65
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/35,4))}
+.MODEL DBDMOD D (IS=1.27e-13 RS=1.62e-2 TRS1=1.35e-3 TRS2=-4.33e-6
++CJO=1.25e-9  TT=7.97e-8)
+.MODEL DBKMOD D (RS=2.54e-1 TRS1=4.54e-3 TRS2=-1.12e-5)
+.MODEL DPLCAPMOD D (CJO=285e-12 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.78 KP=6.97 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.15e-4 TC2=-4.0e-7)
+.MODEL RDSMOD RES (TC1=5.47e-3 TC2=1.37e-5)
+.MODEL RSCLMOD RES (TC1=1.9e-3 TC2=-7.5e-6)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-2.41e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.65 VOFF=1.65)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.65 VOFF=3.65)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.60 VOFF=-4.40)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.40 VOFF=0.60)
+.ENDS
+.SUBCKT RFP15P05_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP15P05
+*For a detail specification see datasheet FN2387
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.60e-9
+Cb 15 14 1.47e-9
+Cin 6 8 1.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -73.00
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 6.73e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.69e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 63.6e-3
+Rgate 9 20 7.37
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 46.5e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.65
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/35,4))}
+.MODEL DBDMOD D (IS=1.27e-13 RS=1.62e-2 TRS1=1.35e-3 TRS2=-4.33e-6
++CJO=1.25e-9  TT=7.97e-8)
+.MODEL DBKMOD D (RS=2.54e-1 TRS1=4.54e-3 TRS2=-1.12e-5)
+.MODEL DPLCAPMOD D (CJO=285e-12 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.78 KP=6.97 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.15e-4 TC2=-4.0e-7)
+.MODEL RDSMOD RES (TC1=5.47e-3 TC2=1.37e-5)
+.MODEL RSCLMOD RES (TC1=1.9e-3 TC2=-7.5e-6)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-2.41e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.65 VOFF=1.65)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.65 VOFF=3.65)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.60 VOFF=-4.40)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.40 VOFF=0.60)
+.ENDS
+
+.SUBCKT RFP3055_HA 2 1 3 ; REV 10/26/93
+*Term. Conn.*** D G S
+*Spice Model circuit file for the RFP3055
+*For a detail specification see datasheet FN3648
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 0.54e-9
+Cb 15 14 0.54e-9
+Cin 6 8 0.30e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 67.9
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/30,6.5))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.61e-9
+Lsource 3 7 4.61e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.0e-4
+Rgate 9 20 7.23
+Rin 6 8 1e9
+Rscl1 5 51 RSLVCMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 108e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.5
+.MODEL DBDMOD D (IS=4.33e-14 RS=2.78e-2 TRS1=1.10e-3 TRS2=5.19e-6
++CJO=3.94e-10 TT=7.63e-8)
+.MODEL DBKMOD D (RS=0.676e-1 TRS1=1.94e-3 TRS2=-1.09e-6)
+.MODEL DPLCAPMOD D (CJO=0.283e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=4.078 KP=12 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.06e-3 TC2=-1.92e-6)
+.MODEL RDSMOD RES (TC1=5.03e-3 TC2=1.53e-5)
+.MODEL RSLVCMOD RES (TC1=2.2e-3 TC2=-5e-6)
+.MODEL RVTOMOD RES (TC1=-5.02e-3 TC2=-9.16e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.50 VOFF=-3.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.50 VOFF=-6.50)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.5 VOFF=2.5)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.5 VOFF=-2.5)
+.ENDS
+.SUBCKT RFD3055_HA 2 1 3 ; REV 10/26/93
+*Term. Conn.*** D G S
+*Spice Model circuit file for the RFD3055, RFD3055SM
+*For a detail specification see datasheet FN3648
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 0.54e-9
+Cb 15 14 0.54e-9
+Cin 6 8 0.30e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 67.9
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/30,6.5))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.61e-9
+Lsource 3 7 4.61e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.0e-4
+Rgate 9 20 7.23
+Rin 6 8 1e9
+Rscl1 5 51 RSLVCMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 108e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.5
+.MODEL DBDMOD D (IS=4.33e-14 RS=2.78e-2 TRS1=1.10e-3 TRS2=5.19e-6
++CJO=3.94e-10 TT=7.63e-8)
+.MODEL DBKMOD D (RS=0.676e-1 TRS1=1.94e-3 TRS2=-1.09e-6)
+.MODEL DPLCAPMOD D (CJO=0.283e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=4.078 KP=12 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.06e-3 TC2=-1.92e-6)
+.MODEL RDSMOD RES (TC1=5.03e-3 TC2=1.53e-5)
+.MODEL RSLVCMOD RES (TC1=2.2e-3 TC2=-5e-6)
+.MODEL RVTOMOD RES (TC1=-5.02e-3 TC2=-9.16e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.50 VOFF=-3.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.50 VOFF=-6.50)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.5 VOFF=2.5)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.5 VOFF=-2.5)
+.ENDS
+.SUBCKT RFP30N06LE_HA 2 1 3 ; REV 6/2/93
+*Term. Conn.****** D G S
+*Spice model circuit file for the RFP30N06LE
+*For a detail specification see datasheet FN3629
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.34e-9
+Cb 15 14 3.44e-9
+Cin 6 8 1.343e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 75.39
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 7.22e-9
+Lsource 3 7 6.31e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 11.86e-3
+Rgate 9 20 2.52
+Rin 6 8 1e9
+Rscl1 5 51 RSLVCMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 26.6e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.5
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/89,7))}
+.MODEL DBDMOD D (IS=3.80e-13 RS=1.12e-2 TRS1=1.61e-3 TRS2=6.08e-6
++CJO=1.05e-9 TT=3.84e-8)
+.MODEL DBKMOD D (RS=1.82e-1 TRS1=7.50e-3 TRS2=-4.0e-5)
+.MODEL DESD1MOD D(BV=13.54 TBV1=0 TBV2=0 RS=45.5 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D(BV=11.46 TBV1=-7.576e-4 TBV2=-3.0e-6 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=0.591e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.94 KP=139.2 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.07e-3 TC2=-3.03e-7)
+.MODEL RDSMOD RES (TC1=5.38e-3 TC2=1.64e-5)
+.MODEL RSLVCMOD RES (TC1=1.75e-3 TC2=3.90e-6)
+.MODEL RVTOMOD RES (TC1=-2.15e-3 TC2=-5.43e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.05 VOFF=-1.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.50 VOFF=-4.05)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.20 VOFF=2.80 )
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.80  VOFF=-2.20)
+.ENDS
+.SUBCKT RFP45N06_HA 2 1 3 ; REV 1/18/93
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP45N06
+*For a detail specification see datasheet FN3574
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.49e-9
+Cb 15 14 3.80e-9
+Cin 6 8 2.00e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 66.5
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.65e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 3.58e-3
+Rgate 9 20 0.681
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 13.6e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.920
+.MODEL DBDMOD D (IS=8.2e-13 RS=7.86e-3 TRS1=2.26e-3 TRS2=2.90e-6
++CJO=2.07e-9 TT=5.72e-8)
+.MODEL DBKMOD D (RS=1.93e-1 TRS1=5.13e-4 TRS2=-2.15e-5)
+.MODEL DPLCAPMOD D (CJO=1.25e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.862 KP=55.57 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.12e-3 TC2=-5.18e-7)
+.MODEL RDSMOD RES (TC1=4.64e-3 TC2=1.58e-5)
+.MODEL RVTOMOD RES (TC1=-4.27e-3 TC2=-6.55e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.50 VOFF=-1.70)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.70 VOFF=-6.50)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.0 VOFF=2.0)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.0 VOFF=-3.0)
+.ENDS
+.SUBCKT RFG45N06_HA 2 1 3 ; REV 1/18/93
+*Term. Conn.*****D G S
+*Spice model circuit file for the RFG45N06
+*For a detail specification see datasheet FN3574
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.49e-9
+Cb 15 14 3.80e-9
+Cin 6 8 2.00e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 66.5
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.65e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 3.58e-3
+Rgate 9 20 0.681
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 13.6e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.920
+.MODEL DBDMOD D (IS=8.2e-13 RS=7.86e-3 TRS1=2.26e-3 TRS2=2.90e-6
++CJO=2.07e-9 TT=5.72e-8)
+.MODEL DBKMOD D (RS=1.93e-1 TRS1=5.13e-4 TRS2=-2.15e-5)
+.MODEL DPLCAPMOD D (CJO=1.25e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.862 KP=55.57 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.12e-3 TC2=-5.18e-7)
+.MODEL RDSMOD RES (TC1=4.64e-3 TC2=1.58e-5)
+.MODEL RVTOMOD RES (TC1=-4.27e-3 TC2=-6.55e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.50 VOFF=-1.70)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.70 VOFF=-6.50)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.0 VOFF=2.0)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.0 VOFF=-3.0)
+.ENDS
+.SUBCKT RFP50N06_HA 2 1 3 ; REV 2/22/93
+*Term. Conn.*****D G S
+*Spice model circuit file for the RFP50N06
+*For a detail specification see datasheet FN3575
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.68e-9
+Cb 15 14 3.625e-9
+Cin 6 8 1.98e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.59
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.65e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.00e-4
+Rgate 9 20 0.690
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 12.0e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.678
+.MODEL DBDMOD D (IS=9.851e-13 RS=4.91e-3 TRS1=2.07e-3 TRS2=2.51e-7
++CJO=2.05e-9 TT=4.33e-8)
+.MODEL DBKMOD D (RS=1.98e-1 TRS1=-2.35e-3 TRS2=-3.83e-6)
+.MODEL DPLCAPMOD D (CJO=1.42e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.65 KP=35 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.23e-3 TC2=-2.34e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=1.49e-5)
+.MODEL RVTOMOD RES (TC1=-5.03e-3 TC2=-5.16e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.75 VOFF=-2.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.50 VOFF=-6.75)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.7 VOFF=2.3)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.3 VOFF=-2.7)
+.ENDS
+.SUBCKT RFG50N06_HA 2 1 3 ; REV 2/22/93
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFG50N06
+*For a detail specification see datasheet FN3575
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.68e-9
+Cb 15 14 3.625e-9
+Cin 6 8 1.98e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.59
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.65e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.00e-4
+Rgate 9 20 0.690
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 12.0e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.678
+.MODEL DBDMOD D (IS=9.851e-13 RS=4.91e-3 TRS1=2.07e-3 TRS2=2.51e-7
++CJO=2.05e-9 TT=4.33e-8)
+.MODEL DBKMOD D (RS=1.98e-1 TRS1=-2.35e-3 TRS2=-3.83e-6)
+.MODEL DPLCAPMOD D (CJO=1.42e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.65 KP=35 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.23e-3 TC2=-2.34e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=1.49e-5)
+.MODEL RVTOMOD RES (TC1=-5.03e-3 TC2=-5.16e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.75 VOFF=-2.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.50 VOFF=-6.75)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.7 VOFF=2.3)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.3 VOFF=-2.7)
+.ENDS
+.SUBCKT RFP60P03_HA 2 1 3 ; REV 7/11/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP60P03
+*For a detail specification see datasheet FN3951
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.01e-9
+Cb 15 14 3.9e-9
+Cin 6 8 3.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -36.59
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-10
+Lsource 3 7 2.36e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.00e-4
+Rgate 9 20 3.25
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 11.28e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.92
+.MODEL DBDMOD D (IS=4.21e-13 RS=1.00e-2 TRS1=-2.69e-4 TRS2=-1.33e-6
++CJO=5.05e-9  TT=5.33e-8)
+.MODEL DBKMOD D (RS=3.80e-2 TRS1=-4.76e-4 TRS2=-4.17e-12)
+.MODEL DPLCAPMOD D (CJO=3.99e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.98 KP=16.27 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.05e-4 TC2=1.48e-6)
+.MODEL RDSMOD RES (TC1=2.80e-3 TC2=2.62e-6)
+.MODEL RVTMOD RES (TC1=-3.34e-3 TC2=1.46e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=6.40 VOFF=4.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.40 VOFF=6.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.43 VOFF=-3.57)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.57 VOFF=1.43)
+.ENDS
+.SUBCKT RFG60P03_HA 2 1 3 ; REV 7/11/94
+*Term. Conn.*****D G S
+*Spice model circuit file for the RFG60P03
+*For a detail specification see datasheet FN3951
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.01e-9
+Cb 15 14 3.9e-9
+Cin 6 8 3.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -36.59
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-10
+Lsource 3 7 2.36e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.00e-4
+Rgate 9 20 3.25
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 11.28e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.92
+.MODEL DBDMOD D (IS=4.21e-13 RS=1.00e-2 TRS1=-2.69e-4 TRS2=-1.33e-6
++CJO=5.05e-9  TT=5.33e-8)
+.MODEL DBKMOD D (RS=3.80e-2 TRS1=-4.76e-4 TRS2=-4.17e-12)
+.MODEL DPLCAPMOD D (CJO=3.99e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.98 KP=16.27 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.05e-4 TC2=1.48e-6)
+.MODEL RDSMOD RES (TC1=2.80e-3 TC2=2.62e-6)
+.MODEL RVTMOD RES (TC1=-3.34e-3 TC2=1.46e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=6.40 VOFF=4.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.40 VOFF=6.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.43 VOFF=-3.57)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.57 VOFF=1.43)
+.ENDS
+.SUBCKT RF1S60P03_HA 2 1 3 ; REV 7/11/94
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1S60P03, RF1S60P03SM
+*For a detail specification see datasheet FN3951
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.01e-9
+Cb 15 14 3.9e-9
+Cin 6 8 3.09e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -36.59
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-10
+Lsource 3 7 2.36e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.00e-4
+Rgate 9 20 3.25
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 11.28e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.92
+.MODEL DBDMOD D (IS=4.21e-13 RS=1.00e-2 TRS1=-2.69e-4 TRS2=-1.33e-6
++CJO=5.05e-9  TT=5.33e-8)
+.MODEL DBKMOD D (RS=3.80e-2 TRS1=-4.76e-4 TRS2=-4.17e-12)
+.MODEL DPLCAPMOD D (CJO=3.99e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.98 KP=16.27 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.05e-4 TC2=1.48e-6)
+.MODEL RDSMOD RES (TC1=2.80e-3 TC2=2.62e-6)
+.MODEL RVTMOD RES (TC1=-3.34e-3 TC2=1.46e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=6.40 VOFF=4.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.40 VOFF=6.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.43 VOFF=-3.57)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.57 VOFF=1.43)
+.ENDS
+.SUBCKT RFP70N03_HA 2 1 3 ; REV 9/16/92
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP70N03
+*For a detail specification see datasheet FN3404
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 6.09e-9
+Cb 15 14 6.05e-9
+Cin 6 8 3.40e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 35.4
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 3.10e-9
+Lsource 3 7 1.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 30.7e-6
+Rgate 9 20 .890
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 3.922e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.605
+.MODEL DBDMOD D (IS=7.91e-12 RS=3.87e-3 TRS1=2.71e-3 TRS2=2.50e-7
++CJO=4.84e-9 TT=4.51e-8)
+.MODEL DBKMOD D (RS=3.9e-2 TRS1=1.05e-4 TRS2=3.11e-5)
+.MODEL DPLCAPMOD D (CJO=4.8e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.46 KP=47 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.46e-4 TC2=-8.48e-7)
+.MODEL RDSMOD RES (TC1=2.23e-3 TC2=6.56e-6)
+.MODEL RVTMOD RES (TC1=-3.29e-3 TC2=-3.49e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-8.35 VOFF=-6.35)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.35 VOFF=-8.35)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.0 VOFF=3.0)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.0 VOFF=-2.0)
+.ENDS
+.SUBCKT RFP70N06_HA 2 1 3 ; REV 3/20/92
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP70N06
+*For a detail specification see datasheet FN3206
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.56e-9
+Cb 15 14 5.303e-9
+Cin 6 8 2.63e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.1
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 3.10e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 1.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 4.6593e-3
+Rgate 9 20 1.21
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 1.822e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.6977
+.MODEL DBDMOD D (IS=1.11e-12 RS=2.91e-3 TRS1=3.26e-3 TRS2=-5.07e-6
++CJO=3.12e-9 TT=6.18e-8)
+.MODEL DBKMOD D (RS=9.46e-2 TRS1=8.47e-3 TRS2=-1.31e-6)
+.MODEL DPLCAPMOD D (CJO=1.92e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.674 KP=38.507 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.55e-4 TC2=5.99e-8)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=2.37e-5)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-6.01e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.90 VOFF=-2.90)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.90 VOFF=-4.90)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.20 VOFF=4.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.80 VOFF=-3.20)
+.ENDS
+.SUBCKT RFG70N06_HA 2 1 3 ; REV 3/20/92
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFG70N06
+*For a detail specification see datasheet FN3206
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.56e-9
+Cb 15 14 5.303e-9
+Cin 6 8 2.63e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.1
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 3.10e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 1.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 4.6593e-3
+Rgate 9 20 1.21
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 1.822e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.6977
+.MODEL DBDMOD D (IS=1.11e-12 RS=2.91e-3 TRS1=3.26e-3 TRS2=-5.07e-6
++CJO=3.12e-9 TT=6.18e-8)
+.MODEL DBKMOD D (RS=9.46e-2 TRS1=8.47e-3 TRS2=-1.31e-6)
+.MODEL DPLCAPMOD D (CJO=1.92e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.674 KP=38.507 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.55e-4 TC2=5.99e-8)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=2.37e-5)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-6.01e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.90 VOFF=-2.90)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.90 VOFF=-4.90)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.20 VOFF=4.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.80 VOFF=-3.20)
+.ENDS
+.SUBCKT RFP8P06E_HA 2 1 3; REV 6/23/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP8P06E
+*For a detail specification see datasheet FN3937
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.42e-10
+Cb 15 14 8.04e-10
+Cin 6 8 6.00e-10
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Desd1 91 9 DESDMOD1
+Desd2 91 7 DESDMOD2
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -79.2
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 6 8 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 2.92e-9
+Ldrain 2 5 1e-10
+Lsource 3 7 2.92e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 95.20e-3
+Rgate 9 20 3.95
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 143.6e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.804
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/22,9))}
+.MODEL DBDMOD D (IS=4.15e-15 RS=5.54e-2 TRS1=-1.32e-3 TRS2=-2.48e-6
++CJO=6.06e-10 TT=7.54e-8)
+.MODEL DBKMOD D (RS=4.66e-1 TRS1=1.58e-3 TRS2=-7.49e-6)
+.MODEL DESDMOD1 D (BV=20.2 TBV1=-1.25e-3 TBV2=5.79e-7 RS=36 NBV=50 IBV=7e6)
+.MODEL DESDMOD2 D (BV=25.4 TBV1=-8.30e-4 TBV2=8.90e-7 NBV=50 IBV=7e6)
+.MODEL DPLCAPMOD D (CJO=2.49e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.824 KP=5.163 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.48e-4 TC2=-1.42e-7)
+.MODEL RDSMOD RES (TC1=5.40e-3 TC2=1.25e-5)
+.MODEL RSCLMOD RES (TC1=1.75e-3 TC2=3.90e-6)
+.MODEL RVTMOD RES (TC1=-3.55e-3 TC2=-3.43e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.10 VOFF=3.10)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.10 VOFF=5.10)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.10 VOFF=-2.90)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.90 VOFF=2.10)
+.ENDS
+.SUBCKT RFD8P06E_HA 2 1 3; REV 6/23/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFD8P06E, RFD8P06ESM
+*For a detail specification see datasheet FN3937
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.42e-10
+Cb 15 14 8.04e-10
+Cin 6 8 6.00e-10
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Desd1 91 9 DESDMOD1
+Desd2 91 7 DESDMOD2
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -79.2
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 6 8 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 2.92e-9
+Ldrain 2 5 1e-10
+Lsource 3 7 2.92e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 95.20e-3
+Rgate 9 20 3.95
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 143.6e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.804
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/22,9))}
+.MODEL DBDMOD D (IS=4.15e-15 RS=5.54e-2 TRS1=-1.32e-3 TRS2=-2.48e-6
++CJO=6.06e-10 TT=7.54e-8)
+.MODEL DBKMOD D (RS=4.66e-1 TRS1=1.58e-3 TRS2=-7.49e-6)
+.MODEL DESDMOD1 D (BV=20.2 TBV1=-1.25e-3 TBV2=5.79e-7 RS=36 NBV=50 IBV=7e6)
+.MODEL DESDMOD2 D (BV=25.4 TBV1=-8.30e-4 TBV2=8.90e-7 NBV=50 IBV=7e6)
+.MODEL DPLCAPMOD D (CJO=2.49e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.824 KP=5.163 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.48e-4 TC2=-1.42e-7)
+.MODEL RDSMOD RES (TC1=5.40e-3 TC2=1.25e-5)
+.MODEL RSCLMOD RES (TC1=1.75e-3 TC2=3.90e-6)
+.MODEL RVTMOD RES (TC1=-3.55e-3 TC2=-3.43e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.10 VOFF=3.10)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.10 VOFF=5.10)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.10 VOFF=-2.90)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.90 VOFF=2.10)
+.ENDS
+.SUBCKT IRFU9110_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the IRFU9110, IRFR9110
+*For a detail specification see datasheet FN4001
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.49e-10
+Cb 15 14 3.52e-10
+Cin 6 8 2.71e-10
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -131.4
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 2.90e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 2.90e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 497e-3
+Rgate 9 20 2.68
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 348e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.90
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/6.3,6))}
+.MODEL DBDMOD D (IS=1.23e-14 RS=8.74e-2 TRS1=-1.95e-3 TRS2=-9.30e-6
++CJO=3.72e-10  TT=1.45e-7)
+.MODEL DBKMOD D (RS=2.76 TRS1=8.39e-4 TRS2=-1.87e-5)
+.MODEL DPLCAPMOD D (CJO=1.31e-10 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.68 KP=0.98 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.25e-4 TC2=2.03e-6)
+.MODEL RDSMOD RES (TC1=6.95e-3 TC2=3.07e-5)
+.MODEL RSCLMOD RES (TC1=1.0e-3 TC2=0)
+.MODEL RVTMOD RES (TC1=3.46e-3 TC2=5.67e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.03 VOFF=3.03)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.03 VOFF=5.03)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.30 VOFF=-5.03)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.03 VOFF=-0.30)
+.ENDS
+.SUBCKT IRFU9120_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the IRFU9120, IRFR9120
+*For a detail specification see datasheet FN3987
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 618.9e-12
+Cb 15 14 633.9e-12
+Cin 6 8 441.1e-12
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -127.38
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 2.609e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 2.609e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 245.6e-3
+Rgate 9 20 2.69
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 123.96e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.77
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/13.2,6))}
+.MODEL DBDMOD D (IS=5.10e-14 RS=9.40e-2 TRS1=-2.20e-3 TRS2=-5.20e-6
++CJO=6.43e-10  TT=9.70e-8)
+.MODEL DBKMOD D (RS=1.45 TRS1=3.84e-4 TRS2=-9.83e-6)
+.MODEL DPLCAPMOD D (CJO=235e-12 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.49 KP=1.58 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.01e-3 TC2=1.05e-6)
+.MODEL RDSMOD RES (TC1=6.23e-3 TC2=1.23e-5)
+.MODEL RSCLMOD RES (TC1=2.05e-3 TC2=-0.35e-5)
+.MODEL RVTMOD RES (TC1=-3.46e-3 TC2=3.33e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=6.30 VOFF=4.30)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.30 VOFF=6.30)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.00 VOFF=-4.00)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.00 VOFF=1.00)
+.ENDS
+.SUBCKT RFD16N03L_HA 2 1 3 ; REV 12/12/94
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFD16N03L, RFD16N03LSM
+*For a detail specification see datasheet FN4013
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.55e-9
+Cb 15 14 2.64e-9
+Cin 6 8 1.45e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 33.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/176,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 3.40e-9
+Lsource 3 7 3.40e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 0.14e-3
+Rgate 9 20 0.89
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 10.31e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.583
+.MODEL DBDMOD D (IS=3.61e-13 RS=5.06e-3 TRS1=3.05e-3 TRS2=7.57e-6
++CJO=2.16e-9 TT=2.18e-8)
+.MODEL DBKMOD D (RS=1.66e-1 TRS1=-2.97e-3 TRS2=7.57e-6)
+.MODEL DPLCAPMOD D (CJO=0.96e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.313 KP=53.82 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.95e-4 TC2=-1.00e-7)
+.MODEL RDSMOD RES (TC1=3.92e-3 TC2=1.29e-5)
+.MODEL RSCLMOD RES (TC1=2.03e-3 TC2=0.45e-5)
+.MODEL RVTOMOD RES (TC1=-2.27e-3 TC2=-5.75e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.82 VOFF=-2.82)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.82 VOFF=-4.82)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.67 VOFF=2.33)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.33 VOFF=-2.67)
+.ENDS
+.SUBCKT RFP45N03L_HA 2 1 3 ; REV 11/22/94
+*Term. Conn.******D G S
+*Spice Model circuit file for the RFP45N03L
+*For a detail specification see datasheet FN4005
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.55e-9
+Cb 15 14 2.64e-9
+Cin 6 8 1.45e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 33.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/176,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.90e-9
+Lsource 3 7 4.90e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 0.14e-3
+Rgate 9 20 0.89
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 10.31e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.583
+.MODEL DBDMOD D (IS=3.61e-13 RS=5.06e-3 TRS1=3.05e-3 TRS2=7.57e-6
++CJO=2.16e-9 TT=2.18e-8)
+.MODEL DBKMOD D (RS=1.66e-1 TRS1=-2.97e-3 TRS2=7.57e-6)
+.MODEL DPLCAPMOD D (CJO=0.96e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.313 KP=53.82 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.95e-4 TC2=-1.00e-7)
+.MODEL RDSMOD RES (TC1=3.82e-3 TC2=1.17e-5)
+.MODEL RSCLMOD RES (TC1=2.03e-3 TC2=0.45e-5)
+.MODEL RVTOMOD RES (TC1=-2.27e-3 TC2=-5.75e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.82 VOFF=-2.82)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.82 VOFF=-4.82)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.67 VOFF=2.33)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.33 VOFF=-2.67)
+.ENDS
+.SUBCKT RF1S45N03L_HA  2 1 3 ; REV 11/22/94
+*Term. Conn.******* D G S
+*Spice Model circuit file for the RF1S45N03L, RF1S45N03LSM
+*For a detail specification see datasheet FN4005
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.55e-9
+Cb 15 14 2.64e-9
+Cin 6 8 1.45e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 33.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/176,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.90e-9
+Lsource 3 7 4.90e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 0.14e-3
+Rgate 9 20 0.89
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 10.31e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.583
+.MODEL DBDMOD D (IS=3.61e-13 RS=5.06e-3 TRS1=3.05e-3 TRS2=7.57e-6
++CJO=2.16e-9 TT=2.18e-8)
+.MODEL DBKMOD D (RS=1.66e-1 TRS1=-2.97e-3 TRS2=7.57e-6)
+.MODEL DPLCAPMOD D (CJO=0.96e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.313 KP=53.82 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.95e-4 TC2=-1.00e-7)
+.MODEL RDSMOD RES (TC1=3.82e-3 TC2=1.17e-5)
+.MODEL RSCLMOD RES (TC1=2.03e-3 TC2=0.45e-5)
+.MODEL RVTOMOD RES (TC1=-2.27e-3 TC2=-5.75e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.82 VOFF=-2.82)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.82 VOFF=-4.82)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.67 VOFF=2.33)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.33 VOFF=-2.67)
+.ENDS
+.SUBCKT RF1K49086_HA 2 1 3 ; REV 12/15/94
+*Term. Conn. *****D G S
+*Spice circuit circuit file model file for the RF1K49086
+*For a detail specification see datasheet FN3986
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.75e-9
+Cb 15 14 1.80e-9
+Cin 6 8 1.20e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 33.29
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1.0e-9
+Lgate 1 9 1.233e-9
+Lsource 3 7 0.452e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.000e-4
+Rgate 9 20 1.83
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 13.5e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.1000
+.MODEL DBDMOD D (IS=2.50e-13 RS=1.35e-2 TRS1=4.31e-5 TRS2=2.15e-5
++CJO=9.33e-10 TT=2.08e-8)
+.MODEL DBKMOD D (RS=1.14 TRS1=2.23e-3 TRS2=-8.91-6)
+.MODEL DPLCAPMOD D (CJO=7.99e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.15 KP=6.250 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.74e-4 TC2=1.13e-6)
+.MODEL RDSMOD RES (TC1=4.50e-3 TC2=-7.45e-7)
+.MODEL RVTOMOD RES (TC1=-4.16e-3 TC2=2.16e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-7.15 VOFF=-5.15)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.15 VOFF=-7.15)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.60 VOFF=2.40)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.40 VOFF=-2.60)
+.ENDS
+.SUBCKT RFP30P05_HA 2 1 3 ; REV 8/29/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFP30P05
+*For a detail specification see datasheet FN2436
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.23e-9
+Cb 15 14 3.23e-9
+Cin 6 8 3.08e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -77.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.60e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 39.85e-3
+Rgate 9 20 2.34
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2.56e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.81
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/114,5))}
+.MODEL DBDMOD D (IS=4.70e-13 RS=1.31e-2 TRS1=1.39e-4 TRS2=-4.77e-6
++CJO=2.85e-9  TT=8.81e-8)
+.MODEL DBKMOD D (RS=2.23e-1 TRS1=1.97e-3 TRS2=-2.37e-5)
+.MODEL DPLCAPMOD D (CJO=0.78e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.75 KP=10.83 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.08e-4 TC2=-1.27e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=-1.02e-5)
+.MODEL RSCLMOD RES (TC1=2.09e-3 TC2=5.88e-7)
+.MODEL RVTMOD RES (TC1=-2.99e-3 TC2=1.40e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.40 VOFF=1.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.40 VOFF=3.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.20 VOFF=-3.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=1.20)
+.ENDS
+.SUBCKT RFG30P05_HA 2 1 3 ; REV 8/29/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFG30P05
+*For a detail specification see datasheet FN2436
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.23e-9
+Cb 15 14 3.23e-9
+Cin 6 8 3.08e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -77.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.60e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 39.85e-3
+Rgate 9 20 2.34
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2.56e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.81
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/114,5))}
+.MODEL DBDMOD D (IS=4.70e-13 RS=1.31e-2 TRS1=1.39e-4 TRS2=-4.77e-6
++CJO=2.85e-9  TT=8.81e-8)
+.MODEL DBKMOD D (RS=2.23e-1 TRS1=1.97e-3 TRS2=-2.37e-5)
+.MODEL DPLCAPMOD D (CJO=0.78e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.75 KP=10.83 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.08e-4 TC2=-1.27e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=-1.02e-5)
+.MODEL RSCLMOD RES (TC1=2.09e-3 TC2=5.88e-7)
+.MODEL RVTMOD RES (TC1=-2.99e-3 TC2=1.40e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.40 VOFF=1.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.40 VOFF=3.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.20 VOFF=-3.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=1.20)
+.ENDS
+.SUBCKT RF1S30P05_HA 2 1 3 ; REV 8/29/94
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1S30P05, RF1S30P05SM
+*For a detail specification see datasheet FN2436
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.23e-9
+Cb 15 14 3.23e-9
+Cin 6 8 3.08e-9
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -77.30
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 4.92e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 4.60e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 39.85e-3
+Rgate 9 20 2.34
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 2.56e-3
+Rvto 18 19 RVTMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.81
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/114,5))}
+.MODEL DBDMOD D (IS=4.70e-13 RS=1.31e-2 TRS1=1.39e-4 TRS2=-4.77e-6
++CJO=2.85e-9  TT=8.81e-8)
+.MODEL DBKMOD D (RS=2.23e-1 TRS1=1.97e-3 TRS2=-2.37e-5)
+.MODEL DPLCAPMOD D (CJO=0.78e-9 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.75 KP=10.83 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.08e-4 TC2=-1.27e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=-1.02e-5)
+.MODEL RSCLMOD RES (TC1=2.09e-3 TC2=5.88e-7)
+.MODEL RVTMOD RES (TC1=-2.99e-3 TC2=1.40e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.40 VOFF=1.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.40 VOFF=3.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.20 VOFF=-3.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=1.20)
+.ENDS
+.SUBCKT RF1K49156_HA 2 1 3 ; REV 2/7/95
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1K49156
+*For a detail specification see datasheet FN4011
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.953e-9
+Cb 15 14 2.81e-9
+Cin 6 8 1.925e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 35.64
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 1.04e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 2.37e-10
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 2.43e-3
+Rgate 9 20 1.639
+Rin 6 8 1e9
+Rldrain 2 5 10
+Rlgate 1 9 10.4
+Rlsource 3 7 2.37
+Rsource 8 7 RDSMOD 15.8e-3
+Rvto 18 19 RVTOMOD 1
+Vto 21 6 0.453
+Vbat 8 19 DC 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+.MODEL DBDMOD D (IS=1.8e-12 RS=1.50e-2 TRS1=3.70e-3
++TRS2=-2.23e-5 CJO=2.63e-9 TT=2.44e-8)
+.MODEL DPLCAPMOD D (CJO=5.25e-10 IS=1e-30 N=10)
+.MODEL DBKMOD D (RS=4.15e-1 TRS1=6.50e-3 TRS2=-3.80e-5)
+.MODEL RDSMOD RES (TC1=3.62e-3 TC2=1.03e-5)
+.MODEL RVTOMOD RES (TC1=-1.85e-3 TC2=-6.00e-6)
+.MODEL RBKMOD RES (TC1=9.25e-4 TC2=5.61e-7)
+.MODEL MOSMOD NMOS (VTO=1.92 KP=136 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.55 VOFF=-2.55)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-2.55 VOFF=-4.55)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.25 VOFF=3.75)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=3.75 VOFF=-1.25)
+.ENDS
+.SUBCKT RF1K49157_HA 2 1 3 ;  REV 3/14/95
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1K49157
+*For a detail specification see datasheet FN4012
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.834e-9
+Cb 15 14 1.72e-9
+Cin 6 8 1.416e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBREAKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 34.89
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthresh 6 21 19 8 1
+Eztempco 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 1.04e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 2.37e-10
+Mos1 16 6 8 8 MSTRONGMOD M=0.99
+Mos2 16 21 8 8 MWEAKMOD M=0.01
+Rbreak 17 18 RBREAKMOD 1
+Rdrain 5 16 RDRAINMOD 4.39e-3
+Rgate 9 20 1.530
+Rin 6 8 1e9
+Rldrain 2 5 1.0
+Rlgate 1 9 1.04
+Rlsource 3 7 0.237
+Rsource 8 7 RSOURCEMOD 4.44e-3
+Rthresh 22 8 RTHRESHMOD 1
+Rztempco 18 19 RZTEMPCOMOD 1
+Vbat 22 19 DC 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+.MODEL DBDMOD D (IS=1.14e-12 RS=6.01e-3 TRS1=1.05e-4
++TRS2=-2.46e-5 CJO=2.62e-9 TT=2.44e-8)
+.MODEL DPLCAPMOD D (CJO=1.007e-9 IS=1e-30 N=10)
+.MODEL DBREAKMOD D (RS=4.89e-1 TRS1=2.11e-3 TRS2=-3.19e-6)
+.MODEL RDRAINMOD RES (TC1=8.08e-3 TC2=1.60e-5)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RTHRESHMOD RES (TC1=-6.40e-4 TC2=-8.10e-6)
+.MODEL RBREAKMOD RES (TC1=9.59e-4 TC2=-2.87e-7)
+.MODEL RZTEMPCOMOD RES (TC1=-2.43e-3 TC2=1.57e-6)
+.MODEL MSTRONGMOD NMOS (VTO=2.567 KP=33.21 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=2.0225 KP=33.21 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-6.47 VOFF=-4.47)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.47 VOFF=-6.47)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3.30 VOFF=1.70)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.70 VOFF=-3.30)
+.ENDS
+.SUBCKT RFP3055LE_HA 2 1 3 ; REV 1/30/95
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFP3055LE
+*For a detail specification see datasheet FN4044
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.68e-9
+Cb 15 14 1.78e-9
+Cin 6 8 0.769e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.28
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/31.7,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.60e-9
+Lsource 3 7 4.60e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 0.176e-3
+RLdrain 2 5 10
+Rgate 9 20 9.84
+RLgate 1 9 46
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 76.56e-3
+RLsource 3 7 46
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.516
+.MODEL DBDMOD D (IS=3.61e-13 RS=1.78e-2 TRS1=1.70e-2 TRS2=-4.69e-6
++CJO=3.88e-10 TT=3.60e-8)
+.MODEL DBKMOD D (RS=0.4731 TRS1=-2.19e-3 TRS2=4.70e-5)
+.MODEL DESD1MOD D (BV=13.5 NBV=17.5 IBV=2.5e-4 RS=22.2 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.86 NBV=22 IBV=2.5e-4 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=0.480e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.082 KP=18.36 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.06e-3 TC2=-6.22e-7)
+.MODEL RDSMOD RES (TC1=4.48e-3 TC2=1.77e-5)
+.MODEL RSCLMOD RES (TC1=3.55e-3 TC2=0.20e-5)
+.MODEL RVTOMOD RES (TC1=-1.85e-3 TC2=-4.13e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.40 VOFF=-2.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.40 VOFF=-4.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.85 VOFF=2.15)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.15 VOFF=-2.85)
+.ENDS
+.SUBCKT RFD3055LE_HA 2 1 3 ; REV 1/30/95
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFD3055LE, RFD3055LESM
+*For a detail specification see datasheet FN4044
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.68e-9
+Cb 15 14 1.78e-9
+Cin 6 8 0.769e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.28
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/31.7,6.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.60e-9
+Lsource 3 7 4.60e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 0.176e-3
+RLdrain 2 5 10
+Rgate 9 20 9.84
+RLgate 1 9 46
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 76.56e-3
+RLsource 3 7 46
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.516
+.MODEL DBDMOD D (IS=3.61e-13 RS=1.78e-2 TRS1=1.70e-2 TRS2=-4.69e-6
++CJO=3.88e-10 TT=3.60e-8)
+.MODEL DBKMOD D (RS=0.4731 TRS1=-2.19e-3 TRS2=4.70e-5)
+.MODEL DESD1MOD D (BV=13.5 NBV=17.5 IBV=2.5e-4 RS=22.2 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.86 NBV=22 IBV=2.5e-4 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=0.480e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=2.082 KP=18.36 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.06e-3 TC2=-6.22e-7)
+.MODEL RDSMOD RES (TC1=4.48e-3 TC2=1.77e-5)
+.MODEL RSCLMOD RES (TC1=3.55e-3 TC2=0.20e-5)
+.MODEL RVTOMOD RES (TC1=-1.85e-3 TC2=-4.13e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.40 VOFF=-2.40)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.40 VOFF=-4.40)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.85 VOFF=2.15)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.15 VOFF=-2.85)
+.ENDS
+.SUBCKT RF1S45N06_HA 2 1 3 ; REV 1/18/93
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1S45N06, RF1S45N06SM
+*For a detail specification see datasheet FN3574
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.49e-9
+Cb 15 14 3.80e-9
+Cin 6 8 2.00e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 66.5
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.65e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 3.58e-3
+Rgate 9 20 0.681
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 13.6e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.920
+.MODEL DBDMOD D (IS=8.2e-13 RS=7.86e-3 TRS1=2.26e-3 TRS2=2.90e-6
++CJO=2.07e-9 TT=5.72e-8)
+.MODEL DBKMOD D (RS=1.93e-1 TRS1=5.13e-4 TRS2=-2.15e-5)
+.MODEL DPLCAPMOD D (CJO=1.25e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.862 KP=55.57 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.12e-3 TC2=-5.18e-7)
+.MODEL RDSMOD RES (TC1=4.64e-3 TC2=1.58e-5)
+.MODEL RVTOMOD RES (TC1=-4.27e-3 TC2=-6.55e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.50 VOFF=-1.70)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.70 VOFF=-6.50)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.0 VOFF=2.0)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.0 VOFF=-3.0)
+.ENDS
+.SUBCKT RF1S50N06_HA 2 1 3 ; REV 2/22/93
+*Term. Conn.******D G S
+*Spice model circuit file for the RF1S50N06, RF1S50N06SM
+*For a detail specification see datasheet FN3575
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.68e-9
+Cb 15 14 3.625e-9
+Cin 6 8 1.98e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.59
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.65e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.00e-4
+Rgate 9 20 0.690
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 12.0e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.678
+.MODEL DBDMOD D (IS=9.851e-13 RS=4.91e-3 TRS1=2.07e-3 TRS2=2.51e-7
++CJO=2.05e-9 TT=4.33e-8)
+.MODEL DBKMOD D (RS=1.98e-1 TRS1=-2.35e-3 TRS2=-3.83e-6)
+.MODEL DPLCAPMOD D (CJO=1.42e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.65 KP=35 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.23e-3 TC2=-2.34e-6)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=1.49e-5)
+.MODEL RVTOMOD RES (TC1=-5.03e-3 TC2=-5.16e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.75 VOFF=-2.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.50 VOFF=-6.75)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.7 VOFF=2.3)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.3 VOFF=-2.7)
+.ENDS
+.SUBCKT RF1S70N03_HA 2 1 3 ; REV 9/16/92
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1S70N03, RF1S70N03SM
+*For a detail specification see datasheet FN3404
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 6.09e-9
+Cb 15 14 6.05e-9
+Cin 6 8 3.40e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 35.4
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 3.10e-9
+Lsource 3 7 1.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 30.7e-6
+Rgate 9 20 .890
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 3.922e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.605
+.MODEL DBDMOD D (IS=7.91e-12 RS=3.87e-3 TRS1=2.71e-3 TRS2=2.50e-7
++CJO=4.84e-9 TT=4.51e-8)
+.MODEL DBKMOD D (RS=3.9e-2 TRS1=1.05e-4 TRS2=3.11e-5)
+.MODEL DPLCAPMOD D (CJO=4.8e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.46 KP=47 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=8.46e-4 TC2=-8.48e-7)
+.MODEL RDSMOD RES (TC1=2.23e-3 TC2=6.56e-6)
+.MODEL RVTMOD RES (TC1=-3.29e-3 TC2=-3.49e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-8.35 VOFF=-6.35)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.35 VOFF=-8.35)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.0 VOFF=3.0)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.0 VOFF=-2.0)
+.ENDS
+.SUBCKT RF1S70N06_HA 2 1 3 ; REV 3/20/92
+*Term. Conn.***** D G S
+*Spice model circuit file for the RF1S70N06, RF1S70N06SM
+*For a detail specification see datasheet FN3206
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.56e-9
+Cb 15 14 5.303e-9
+Cin 6 8 2.63e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.1
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Lgate 1 9 3.10e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 1.82e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 4.6593e-3
+Rgate 9 20 1.21
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 1.822e-3
+Rvto 18 19 RVTMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.6977
+.MODEL DBDMOD D (IS=1.11e-12 RS=2.91e-3 TRS1=3.26e-3 TRS2=-5.07e-6
++CJO=3.12e-9 TT=6.18e-8)
+.MODEL DBKMOD D (RS=9.46e-2 TRS1=8.47e-3 TRS2=-1.31e-6)
+.MODEL DPLCAPMOD D (CJO=1.92e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.674 KP=38.507 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=9.55e-4 TC2=5.99e-8)
+.MODEL RDSMOD RES (TC1=5.01e-3 TC2=2.37e-5)
+.MODEL RVTMOD RES (TC1=-3.71e-3 TC2=-6.01e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.90 VOFF=-2.90)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.90 VOFF=-4.90)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.20 VOFF=4.80)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=4.80 VOFF=-3.20)
+.ENDS
+.SUBCKT IRFU9220_HA 2 1 3 ; REV 9/06/94
+*Term. Conn.**** D G S
+*Spice model circuit file for the IRFU9220, IRFR9220
+*For a detail specification see datasheet FN4015
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 723.0e-12
+Cb 15 14 733.0e-12
+Cin 6 8 517.0e-12
+Dbody 5 7 DBDMOD
+Dbreak 7 11 DBKMOD
+Dplcap 10 6 DPLCAPMOD
+Ebreak 5 11 17 18 -244.40
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 5 10 8 6 1
+Evto 20 6 8 18 1
+It 8 17 1
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Lgate 1 9 2.609e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 2.609e-9
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 1.194
+Rgate 9 20 2.17
+Rin 6 8 1e9
+Rsource 8 7 RDSMOD 90.10e-3
+Rvto 18 19 RVTOMOD 1
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 -0.77
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/4.60,6))}
+.MODEL DBDMOD D (IS=2.56e-14 RS=8.09e-2 TRS1=-2.45e-3 TRS2=-1.33e-5
++CJO=4.21e-10  TT=1.17e2)
+.MODEL DBKMOD D (RS=5.07 TRS1=-1.05e-3 TRS2=+1.28e-5)
+.MODEL DPLCAPMOD D (CJO=170e-12 IS=1e-30 N=10)
+.MODEL MOSMOD PMOS (VTO=-3.58 KP=1.38 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.10e-3 TC2=-2.73e-6)
+.MODEL RDSMOD RES (TC1=6.95e-3 TC2=2.23e-5)
+.MODEL RSCLMOD RES (TC1=2.40e-3 TC2=-1.50e-5)
+.MODEL RVTOMOD RES (TC1=-3.27e-3 TC2=-1.33e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.29 VOFF=3.29)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=3.29 VOFF=5.29)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.10 VOFF=-4.90)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.90 VOFF=0.10)
+.ENDS
+.SUBCKT RFP40N10LE_HA 2 1 3; REV 8/15/95
+*Term.Conn.******* G D S
+*Spice model circuit file for the RFP40N10LE
+*For a detail specification see datasheet FN4061
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 11.0e-9
+Cb 15 14 10.4e-9
+Cin 6 8 2.62e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 114.7
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 7.05e-9
+Ldrain 2 5 1.00e-9
+Lsource 3 7 3.79e-9
+RLgate 1 9 70.50
+RLdrain 2 5 10
+RLsource 3 7 37.90
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 19.13e-3
+Rgate 9 20 1.19
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 1e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*115),4))}
+.MODEL DbodyMOD D (IS=2.00e-12  RS=9.60e-3 TRS1=1.30e-3 TRS2=-1.16e-7
++ CJO=1.50e-9 TT=1.05e-7 M=0.50)
+.MODEL DbreakMOD D (RS=1.92e-1 TRS1=1.60e-3 TRS2=3.47e-6)
+.MODEL DESD1MOD D (BV=12.43 TBV1=0 TBV2=0 RS=57 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.45 TBV1=-1.50e-5 TBV2=1e-7 RS=0 TRS1=0 TRS2=0)
+.MODEL DplcapMOD D (CJO=1.25e-9 IS=1e-30 N=10 M=0.55)
+.MODEL MmedMOD NMOS (VTO=1.50 KP=0.40 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.19)
+.MODEL MstroMOD NMOS (VTO=1.83 KP=37.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.335 KP=0.08 IS=1e-30 N=10 TOX=1 L=1u W=1u
++ RG=11.9 RS=0.10)
+.MODEL RbreakMOD RES (TC1=1.04e-3 TC2=-6.00e-7)
+.MODEL RdrainMOD RES (TC1=7.33e-3 TC2=2e-5)
+.MODEL RSLCMOD RES (TC1=2.25e-3 TC2=0)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-0.80e-3 TC2=-2.5e-6)
+.MODEL RvtempMOD RES (TC1=-1.98e-3 TC2=1.38e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.25 VOFF=-1.25)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.25 VOFF=-4.25)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-0.35 VOFF=1.65)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.65 VOFF=-0.35)
+.ENDS
+.SUBCKT RFG40N10LE_HA 2 1 3; REV 8/15/95
+*Term.Conn.******* G D S
+*Spice model circuit file for the RFG40N10LE
+*For a detail specification see datasheet FN4061
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 11.0e-9
+Cb 15 14 10.4e-9
+Cin 6 8 2.62e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 114.7
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 7.05e-9
+Ldrain 2 5 1.00e-9
+Lsource 3 7 3.79e-9
+RLgate 1 9 70.50
+RLdrain 2 5 10
+RLsource 3 7 37.90
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 19.13e-3
+Rgate 9 20 1.19
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 1e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*115),4))}
+.MODEL DbodyMOD D (IS=2.00e-12  RS=9.60e-3 TRS1=1.30e-3 TRS2=-1.16e-7
++ CJO=1.50e-9 TT=1.05e-7 M=0.50)
+.MODEL DbreakMOD D (RS=1.92e-1 TRS1=1.60e-3 TRS2=3.47e-6)
+.MODEL DESD1MOD D (BV=12.43 TBV1=0 TBV2=0 RS=57 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.45 TBV1=-1.50e-5 TBV2=1e-7 RS=0 TRS1=0 TRS2=0)
+.MODEL DplcapMOD D (CJO=1.25e-9 IS=1e-30 N=10 M=0.55)
+.MODEL MmedMOD NMOS (VTO=1.50 KP=0.40 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.19)
+.MODEL MstroMOD NMOS (VTO=1.83 KP=37.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.335 KP=0.08 IS=1e-30 N=10 TOX=1 L=1u W=1u
++ RG=11.9 RS=0.10)
+.MODEL RbreakMOD RES (TC1=1.04e-3 TC2=-6.00e-7)
+.MODEL RdrainMOD RES (TC1=7.33e-3 TC2=2e-5)
+.MODEL RSLCMOD RES (TC1=2.25e-3 TC2=0)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-0.80e-3 TC2=-2.5e-6)
+.MODEL RvtempMOD RES (TC1=-1.98e-3 TC2=1.38e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.25 VOFF=-1.25)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.25 VOFF=-4.25)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-0.35 VOFF=1.65)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.65 VOFF=-0.35)
+.ENDS
+.SUBCKT RF1S40N10LE_HA 2 1 3; REV 8/15/95
+*Term.Conn.******** G D S
+*Spice model circuit file for the RF1S40N10LE, RF1S40N10LESM
+*For a detail specification see datasheet FN4061
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 11.0e-9
+Cb 15 14 10.4e-9
+Cin 6 8 2.62e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 114.7
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 7.05e-9
+Ldrain 2 5 1.00e-9
+Lsource 3 7 3.79e-9
+RLgate 1 9 70.50
+RLdrain 2 5 10
+RLsource 3 7 37.90
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 19.13e-3
+Rgate 9 20 1.19
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 1e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*115),4))}
+.MODEL DbodyMOD D (IS=2.00e-12  RS=9.60e-3 TRS1=1.30e-3 TRS2=-1.16e-7
++ CJO=1.50e-9 TT=1.05e-7 M=0.50)
+.MODEL DbreakMOD D (RS=1.92e-1 TRS1=1.60e-3 TRS2=3.47e-6)
+.MODEL DESD1MOD D (BV=12.43 TBV1=0 TBV2=0 RS=57 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.45 TBV1=-1.50e-5 TBV2=1e-7 RS=0 TRS1=0 TRS2=0)
+.MODEL DplcapMOD D (CJO=1.25e-9 IS=1e-30 N=10 M=0.55)
+.MODEL MmedMOD NMOS (VTO=1.50 KP=0.40 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.19)
+.MODEL MstroMOD NMOS (VTO=1.83 KP=37.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.335 KP=0.08 IS=1e-30 N=10 TOX=1 L=1u W=1u
++ RG=11.9 RS=0.10)
+.MODEL RbreakMOD RES (TC1=1.04e-3 TC2=-6.00e-7)
+.MODEL RdrainMOD RES (TC1=7.33e-3 TC2=2e-5)
+.MODEL RSLCMOD RES (TC1=2.25e-3 TC2=0)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-0.80e-3 TC2=-2.5e-6)
+.MODEL RvtempMOD RES (TC1=-1.98e-3 TC2=1.38e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.25 VOFF=-1.25)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.25 VOFF=-4.25)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-0.35 VOFF=1.65)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.65 VOFF=-0.35)
+.ENDS
+.SUBCKT RFD3N08L_HA 2 1 3; REV 5/10/95
+*Term. Conn. *** D G S
+*Spice Model circuit file for the RFD3N08L, RFD3N08LSM
+*For a detail specification see datasheet FN2836
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 4.10e-10
+Cb 15 14 4.25e-10
+Cin 6 8 1.10e-10
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 93.57
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthresh 6 21 19 8 1
+Eztempco 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 5.8e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 5.8e-9
+RLgate 1 9 58
+RLdrain 2 5 10
+RLsource 3 7 58
+Mstro 16 6 8 8 Mstrong M=0.80
+Mweak 16 21 8 8 Mweak M=0.20
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 174.2e-3
+Rgate 9 20 24.9
+Rin 6 8 1e9
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 200.2e-3
+Rthresh 22 8 RthreshMOD 1
+Rztempco 18 19 RztempcoMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*10),6))}
+.MODEL DbodyMOD D (IS=9.90e-14 RS=6.00e-2 TRS1=1.42e-3 TRS2=-3.58e-6
++ CJO=1.40e-10 TT=5.75e-8 M=0.40)
+.MODEL DbreakMOD D (RS=2.32 TRS1=1.03e-3 TRS2=-6.17e-11)
+.MODEL DplcapMOD D (CJO=1.13e-10 IS=1e-30 N=10 M=0.60)
+.MODEL Mstrong NMOS (VTO=1.773 KP=1.70 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL Mweak NMOS (VTO=1.496 KP=2.09 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RbreakMOD RES (TC1=8.19e-4 TC2=5.9e-7)
+.MODEL RdrainMOD RES (TC1=1.55e-2 TC2=8.58e-5)
+.MODEL RSLCMOD RES (TC1=0 TC2=0)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RthreshMOD RES (TC1=-5.0e-4 TC2=-6.0e-6)
+.MODEL RztempcoMOD RES (TC1=-1.19e-3 TC2=1.12e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-5.20 VOFF=-3.20)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3.20 VOFF=-5.20)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-0.60 VOFF=4.40)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=4.40 VOFF=-0.60)
+.ENDS
+.SUBCKT RF1S50N06LE_HA 2 1 3 ; REV 8/11/95
+*Term. Conn.******* D G S
+*Spice Model circuit file for the RF1S50N06LE, RF1S50N06LESM
+*For a detail specification see datasheet FN4072
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.00e-9
+Cb 15 14 7.00e-9
+Cin 6 8 1.85e-9
+DBODY 7 5 DBODYMOD
+DBREAK 5 11 DBREAKMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+DPLCAP 10 5 DPLCAPMOD
+EBREAK 11 7 17 18 65.3
+EDS 14 8 5 8 1
+EGS 13 8 6 8 1
+ESG 6 10 6 8 1
+EVTHRES 6 21 19 8 1
+EVTEMP 20 6 18 22 1
+IT 8 17 1
+LGATE 1 9 7.29e-9
+LDRAIN 2 5 1.00e-9
+LSOURCE 3 7 6.16e-9
+MMED 16 6 8 8 MMEDMOD
+MSTRO 16 6 8 8 MSTROMOD
+MWEAK 16 21 8 8 MWEAKMOD
+RLGATE 1 9 72.9
+RLDRAIN 2 5 10
+RLSOURCE 3 7 61.6
+RBREAK 17 18 RBREAKMOD 1
+RDRAIN 50 16 RDRAINMOD 3.95e-3
+RGATE 9 20 1.18
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1.00e3
+RSOURCE 8 7 RSOURCEMOD 8.00e-3
+RVTHRES 22 8 RVTHRESMOD 1
+RVTEMP 18 19 RVTEMPMOD 1
+S1A 6 12 13 8 S1AMOD
+S1B 13 12 13 8 S1BMOD
+S2A 6 15 14 13 S2AMOD
+S2B 13 15 14 13 S2BMOD
+VBAT 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*185),4.2))}
+.MODEL DBODYMOD D (IS=1.98e-12  RS=4.90e-3 TRS1=2.75e-3 TRS2=-4.08e-6
++ CJO=1.90e-9 TT=7.15e-8 M=0.49)
+.MODEL DBREAKMOD D (RS=1.26e-1 TRS1=2.75e-3 TRS2=-1.17e-5)
+.MODEL DESD1MOD D (BV=12.75 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.75 TBV1=0 TBV2=0 RS=54 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=1.36e-9 IS=1e-30 N=10 M=0.56)
+.MODEL MMEDMOD NMOS (VTO=1.56 KP=3.50 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.18)
+.MODEL MSTROMOD NMOS (VTO=1.88 KP=50.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=1.34 KP=0.08 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=11.8
++RS=0.10)
+.MODEL RBREAKMOD RES (TC1=9.02e-4 TC2=9.18e-7)
+.MODEL RDRAINMOD RES (TC1=1.41e-2 TC2=7.94e-5)
+.MODEL RSLCMOD RES (TC1=3.0e-3 TC2=2.0e-6)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RVTHRESMOD RES (TC1=-9.50e-4 TC2=-9.53e-6)
+.MODEL RVTEMPMOD RES (TC1=-1.54e-3 TC2=1.21e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.95 VOFF=-1.95)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.95 VOFF=-4.95)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.43 VOFF=1.57)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.57 VOFF=-1.43)
+.ENDS
+.SUBCKT RFG50N06LE_HA 2 1 3 ; REV 8/11/95
+*Term. Conn.****** D G S
+*Spice Model circuit file for the RFG50N06LE
+*For a detail specification see datasheet FN4072
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.00e-9
+Cb 15 14 7.00e-9
+Cin 6 8 1.85e-9
+DBODY 7 5 DBODYMOD
+DBREAK 5 11 DBREAKMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+DPLCAP 10 5 DPLCAPMOD
+EBREAK 11 7 17 18 65.3
+EDS 14 8 5 8 1
+EGS 13 8 6 8 1
+ESG 6 10 6 8 1
+EVTHRES 6 21 19 8 1
+EVTEMP 20 6 18 22 1
+IT 8 17 1
+LGATE 1 9 7.29e-9
+LDRAIN 2 5 1.00e-9
+LSOURCE 3 7 6.16e-9
+MMED 16 6 8 8 MMEDMOD
+MSTRO 16 6 8 8 MSTROMOD
+MWEAK 16 21 8 8 MWEAKMOD
+RLGATE 1 9 72.9
+RLDRAIN 2 5 10
+RLSOURCE 3 7 61.6
+RBREAK 17 18 RBREAKMOD 1
+RDRAIN 50 16 RDRAINMOD 3.95e-3
+RGATE 9 20 1.18
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1.00e3
+RSOURCE 8 7 RSOURCEMOD 8.00e-3
+RVTHRES 22 8 RVTHRESMOD 1
+RVTEMP 18 19 RVTEMPMOD 1
+S1A 6 12 13 8 S1AMOD
+S1B 13 12 13 8 S1BMOD
+S2A 6 15 14 13 S2AMOD
+S2B 13 15 14 13 S2BMOD
+VBAT 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*185),4.2))}
+.MODEL DBODYMOD D (IS=1.98e-12  RS=4.90e-3 TRS1=2.75e-3 TRS2=-4.08e-6
++ CJO=1.90e-9 TT=7.15e-8 M=0.49)
+.MODEL DBREAKMOD D (RS=1.26e-1 TRS1=2.75e-3 TRS2=-1.17e-5)
+.MODEL DESD1MOD D (BV=12.75 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.75 TBV1=0 TBV2=0 RS=54 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=1.36e-9 IS=1e-30 N=10 M=0.56)
+.MODEL MMEDMOD NMOS (VTO=1.56 KP=3.50 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.18)
+.MODEL MSTROMOD NMOS (VTO=1.88 KP=50.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=1.34 KP=0.08 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=11.8
++RS=0.10)
+.MODEL RBREAKMOD RES (TC1=9.02e-4 TC2=9.18e-7)
+.MODEL RDRAINMOD RES (TC1=1.41e-2 TC2=7.94e-5)
+.MODEL RSLCMOD RES (TC1=3.0e-3 TC2=2.0e-6)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RVTHRESMOD RES (TC1=-9.50e-4 TC2=-9.53e-6)
+.MODEL RVTEMPMOD RES (TC1=-1.54e-3 TC2=1.21e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.95 VOFF=-1.95)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.95 VOFF=-4.95)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.43 VOFF=1.57)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.57 VOFF=-1.43)
+.ENDS
+.SUBCKT RFP50N06LE_HA 2 1 3 ; REV 8/11/95
+*Term. Conn.****** D G S
+*Spice Model circuit file for the RFP50N06LE
+*For a detail specification see datasheet FN4072
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.00e-9
+Cb 15 14 7.00e-9
+Cin 6 8 1.85e-9
+DBODY 7 5 DBODYMOD
+DBREAK 5 11 DBREAKMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+DPLCAP 10 5 DPLCAPMOD
+EBREAK 11 7 17 18 65.3
+EDS 14 8 5 8 1
+EGS 13 8 6 8 1
+ESG 6 10 6 8 1
+EVTHRES 6 21 19 8 1
+EVTEMP 20 6 18 22 1
+IT 8 17 1
+LGATE 1 9 7.29e-9
+LDRAIN 2 5 1.00e-9
+LSOURCE 3 7 6.16e-9
+MMED 16 6 8 8 MMEDMOD
+MSTRO 16 6 8 8 MSTROMOD
+MWEAK 16 21 8 8 MWEAKMOD
+RLGATE 1 9 72.9
+RLDRAIN 2 5 10
+RLSOURCE 3 7 61.6
+RBREAK 17 18 RBREAKMOD 1
+RDRAIN 50 16 RDRAINMOD 3.95e-3
+RGATE 9 20 1.18
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1.00e3
+RSOURCE 8 7 RSOURCEMOD 8.00e-3
+RVTHRES 22 8 RVTHRESMOD 1
+RVTEMP 18 19 RVTEMPMOD 1
+S1A 6 12 13 8 S1AMOD
+S1B 13 12 13 8 S1BMOD
+S2A 6 15 14 13 S2AMOD
+S2B 13 15 14 13 S2BMOD
+VBAT 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*185),4.2))}
+.MODEL DBODYMOD D (IS=1.98e-12  RS=4.90e-3 TRS1=2.75e-3 TRS2=-4.08e-6
++ CJO=1.90e-9 TT=7.15e-8 M=0.49)
+.MODEL DBREAKMOD D (RS=1.26e-1 TRS1=2.75e-3 TRS2=-1.17e-5)
+.MODEL DESD1MOD D (BV=12.75 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D (BV=12.75 TBV1=0 TBV2=0 RS=54 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=1.36e-9 IS=1e-30 N=10 M=0.56)
+.MODEL MMEDMOD NMOS (VTO=1.56 KP=3.50 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.18)
+.MODEL MSTROMOD NMOS (VTO=1.88 KP=50.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=1.34 KP=0.08 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=11.8
++RS=0.10)
+.MODEL RBREAKMOD RES (TC1=9.02e-4 TC2=9.18e-7)
+.MODEL RDRAINMOD RES (TC1=1.41e-2 TC2=7.94e-5)
+.MODEL RSLCMOD RES (TC1=3.0e-3 TC2=2.0e-6)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RVTHRESMOD RES (TC1=-9.50e-4 TC2=-9.53e-6)
+.MODEL RVTEMPMOD RES (TC1=-1.54e-3 TC2=1.21e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.95 VOFF=-1.95)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.95 VOFF=-4.95)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.43 VOFF=1.57)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.57 VOFF=-1.43)
+.ENDS
+.SUBCKT RFF70N06_HA 2 1 3 ; REV 5/29/95
+*Term. Conn.**** D G S
+*Spice model circuit file for the RFF70N06
+*For a detail specification see datasheet FN4073
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 5.20e-9
+Cb 15 14 5.20e-9
+Cin 6 8 2.80e-9
+DBODY 7 5 DBDMOD
+DBREAK 5 11 DBREAKKMOD
+DPLCAP 10 5 DPLCAPMOD
+EBREAK 11 7 17 18 68.7
+EDS 14 8 5 8 1
+EGS 13 8 6 8 1
+ESG 6 10 6 8 1
+EVHRESH 6 21 19 8 1
+EZTEMPCO 20 6 18 22 1
+IT 8 17 1
+LGATE 1 9 6.04e-9
+LDRAIN 2 5 1e-9
+LSOURCE 3 7 2.24e-9
+MOS1 16 6 8 8 MSTRONGMOD M=0.99
+MOS2 16 21 8 8 MWEAKMOD M=0.01
+RBREAK 17 18 RBREAKMOD 1
+RDRAIN 5O 16 RDRAINMOD 8.03e-3
+RGATE 9 20 1.00
+RIN 6 8 1e9
+RLDRAIN 2 5 10
+RLGATE 1 9 60.4
+RLSOURCE 3 7 22.4
+RSCL1 5 51 RSCLMOD 1E-6
+RSCL2 5 50 1E3
+RSOURCE 8 7 RDSOURCEMOD 7.20E-3
+RTHRESH 18 19 RTHRESHMOD 1
+RZTEMPCO 18 19 RZTEMPCOMOD 1
+S1A 6 12 13 8 S1AMOD
+S1B 13 12 13 8 S1BMOD
+S2A 6 15 14 13 S2AMOD
+S2B 13 15 14 13 S2BMOD
+VBAT 22 19 DC 1
+ESCL 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/1E-6*250,3))}
+.MODEL DBDMOD D (IS=1.00e-12 RS=11.01e-3 TRS1=1.75e-3 TRS2=-0.06e-6
++CJO=2.70e-9 TT=7.82e-8 M=0.45)
+.MODEL DBREAKKMOD D (RS=88.00e-3 TRS1=1.50e-3 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=2.60e-9 IS=1e-30 N=10 M=0.70)
+.MODEL MSTRONGMOD NMOS (VTO=3.85 KP=47.20 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=3.09 KP=47.20 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBREAKMOD RES (TC1=1.00e-3 TC2=0)
+.MODEL RDRAINMOD RES (TC1=7.0e-3 TC2=1.90e-5)
+.MODEL RDSOURCEMOD RES (TC1=1e-3 TC2=1e-6)
+.MODEL RSCLMOD RES (TC1=0 TC2=0)
+.MODEL RTHRESHMOD RES (TC1=-3.01e-3 TC2=-1.00e-5)
+.MODEL RZTEMPCOMOD RES (TC1=-2.25e-3 TC2=-5.75e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-6.00 VOFF=-4.00)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.00 VOFF=-6.00)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.00 VOFF=2.00)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.00 VOFF=-2.00)
+.ENDS
+.SUBCKT RFD16N06_HA 2 1 3 ; REV 10/31/94
+*Term. Conn.**** D G S
+*Spice Model circuit file for the RFD16N06, RFD16N06SM
+*For a detail specification see datasheet FN4087
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.788e-10
+Cb 15 14 1.875e-10
+Cin 6 8 8.33e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 64.89
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/94,7.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.56e-9
+Lsource 3 7 4.13e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 0.40e-3
+Rgate 9 20 3.00
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 21.5e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.82
+.MODEL DBDMOD D (IS=2.50e-13 RS=7.10e-3 TRS1=3.04e-3 TRS2=-10.0e-6
++CJO=1.12e-9 TT=5.60e-8)
+.MODEL DBKMOD D (RS=2.51e-1 TRS1=-6.57e-4 TRS2=1.66e-6)
+.MODEL DPLCAPMOD D (CJO=6.10e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.96 KP=16.68 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.07e-3 TC2=-7.19e-7)
+.MODEL RDSMOD RES (TC1=5.45e-3 TC2=1.66e-5)
+.MODEL RSCLMOD RES (TC1=1.25e-3 TC2=17.0e-6)
+.MODEL RVTOMOD RES (TC1=-5.15e-3 TC2=-4.83e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.25 VOFF=-3.25)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.25 VOFF=-5.25)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=0.56 VOFF=5.56)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=5.56 VOFF=0.56)
+.ENDS
+.SUBCKT RFP23N06LE_HA 2 1 3 ; REV 9/27/95
+*Term. Conn.****** D G S
+*Spice Model circuit file for the RFP23N06LE
+*For a detail specification see datasheet FN4077
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.60e-9
+Cb 15 14 2.55e-9
+Cin 6 8 7.75e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 66.01
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 5.15e-9
+Ldrain 2 5 1.00e-9
+Lsource 3 7 5.15e-9
+RLgate 1 9 51.5
+RLdrain 2 5 10
+RLsource 3 7 51.5
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 15.0e-3
+Rgate 9 20 2.50
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1.00e3
+Rsource 8 7 RsourceMOD 20.0e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*78),7.5))}
+.MODEL DbodyMOD D (IS=3.18e-13  RS=9.14e-3 TRS1=1.84e-3 TRS2=9.51e-7
++ CJO=7.22e-10 TT=4.96e-8 M=0.44)
+.MODEL DbreakMOD D (RS=1.39e-1 TRS1=-5.20e-4 TRS2=-4.16e-6)
+.MODEL DESD1MOD D (BV=12.35 TBV1=0 TBV2=0 RS=45 TRS1=1.2e-6 TRS2=0)
+.MODEL DESD2MOD D (BV=12.36 TBV1=0 TBV2=0 RS=0 TRS1=1.2e-6 TRS2=0)
+.MODEL DplcapMOD D (CJO=5.00e-10 IS=1e-30 N=10 M=0.60)
+.MODEL MmedMOD NMOS (VTO=1.59 KP=1.75 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=2.50)
+.MODEL MstroMOD NMOS (VTO=1.90 KP=29.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.378 KP=0.075 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=25.0
++RS=0.10)
+.MODEL RbreakMOD RES (TC1=9.99e-4 TC2=7.71e-12)
+.MODEL RdrainMOD RES (TC1=1.27e-2 TC2=4.73e-5)
+.MODEL RSLCMOD RES (TC1=2.41-3 TC2=5.10e-6)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-1.11e-3 TC2=-4.33e-6)
+.MODEL RvtempMOD RES (TC1=-1.34e-3 TC2=1.12e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.70 VOFF=-1.70)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.70 VOFF=-4.70)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.20 VOFF=1.80)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.80 VOFF=-1.20)
+.ENDS
+.SUBCKT RF1S23N06LE_HA 2 1 3 ; REV 9/27/95
+*Term. Conn.******* D G S
+*Spice Model circuit file for the RF1S23N06LE, RF1S23N06LESM
+*For a detail specification see datasheet FN4077
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.60e-9
+Cb 15 14 2.55e-9
+Cin 6 8 7.75e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 66.01
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 5.15e-9
+Ldrain 2 5 1.00e-9
+Lsource 3 7 5.15e-9
+RLgate 1 9 51.5
+RLdrain 2 5 10
+RLsource 3 7 51.5
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 15.0e-3
+Rgate 9 20 2.50
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1.00e3
+Rsource 8 7 RsourceMOD 20.0e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*78),7.5))}
+.MODEL DbodyMOD D (IS=3.18e-13  RS=9.14e-3 TRS1=1.84e-3 TRS2=9.51e-7
++ CJO=7.22e-10 TT=4.96e-8 M=0.44)
+.MODEL DbreakMOD D (RS=1.39e-1 TRS1=-5.20e-4 TRS2=-4.16e-6)
+.MODEL DESD1MOD D (BV=12.35 TBV1=0 TBV2=0 RS=45 TRS1=1.2e-6 TRS2=0)
+.MODEL DESD2MOD D (BV=12.36 TBV1=0 TBV2=0 RS=0 TRS1=1.2e-6 TRS2=0)
+.MODEL DplcapMOD D (CJO=5.00e-10 IS=1e-30 N=10 M=0.60)
+.MODEL MmedMOD NMOS (VTO=1.59 KP=1.75 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=2.50)
+.MODEL MstroMOD NMOS (VTO=1.90 KP=29.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.378 KP=0.075 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=25.0
++ RS=0.10)
+.MODEL RbreakMOD RES (TC1=9.99e-4 TC2=7.71e-12)
+.MODEL RdrainMOD RES (TC1=1.27e-2 TC2=4.73e-5)
+.MODEL RSLCMOD RES (TC1=2.41-3 TC2=5.10e-6)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-1.11e-3 TC2=-4.33e-6)
+.MODEL RvtempMOD RES (TC1=-1.34e-3 TC2=1.12e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.70 VOFF=-1.70)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.70 VOFF=-4.70)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.20 VOFF=1.80)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.80 VOFF=-1.20)
+.ENDS
+.SUBCKT RF1S45N06LE_HA 2 1 3; REV 10/25/95
+*Term. Conn.******* D G S
+*Spice Model circuit file for the RF1S45N06LE, RF1S45N06LESM
+*For a detail specification see datasheet FN4076
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.50e-9
+Cb 15 14 7.50e-9
+Cin 6 8 1.90e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 67.53
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 7.29e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.16e-9
+RLgate 1 9 72.9
+RLdrain 2 5 10
+RLsource 3 7 61.6
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 8.02e-3
+Rgate 9 20 1.65
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 5.00e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*190),2.1))}
+.MODEL DbodyMOD D (IS=1.8e-12  RS=6.85e-3 TRS1=1.85e-3 TRS2=3.99e-6
++ CJO=1.72e-9 TT=77e-9 M=0.45)
+.MODEL DbreakMOD D (RS=1.1e-1 TRS1=1.79e-3 TRS2=-1.88e-5)
+.MODEL DESD1MOD D (BV=12.80 TBV1=0 TBV2=0 RS=43 TRS1=1.07e-6 TRS2=0)
+.MODEL DESD2MOD D (BV=12.85 TBV1=0 TBV2=0 RS=0 TRS1=1.07e-6 TRS2=0)
+.MODEL DplcapMOD D (CJO=1.69e-9 IS=1e-30 N=10 M=0.60)
+.MODEL MmedMOD NMOS (VTO=1.54 KP=2.50 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.65)
+.MODEL MstroMOD NMOS (VTO=1.877 KP=47.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.335 kp=0.10 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=16.5
++ RS=0.1)
+.MODEL RbreakMOD RES (TC1=9.94e-4 TC2=3.94e-7)
+.MODEL RdrainMOD RES (TC1=7.70e-3 TC2=3.17e-5)
+.MODEL RSLCMOD RES (TC1=1.16e-3 TC2=2.02e-5)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-7.89e-4 TC2=-9.45e-6)
+.MODEL RvtempMOD RES (TC1=-1.60e-3 TC2=1.24e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.80 VOFF=-1.80)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.80 VOFF=-4.80)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.10 VOFF=1.90)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.90 VOFF=-1.10)
+.ENDS
+.SUBCKT RFG45N06LE_HA 2 1 3; REV 10/25/95
+*Term. Conn.****** D G S
+*Spice Model circuit file for the RFG45N06LE
+*For a detail specification see datasheet FN4076
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.50e-9
+Cb 15 14 7.50e-9
+Cin 6 8 1.90e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 67.53
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 7.29e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.16e-9
+RLgate 1 9 72.9
+RLdrain 2 5 10
+RLsource 3 7 61.6
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 8.02e-3
+Rgate 9 20 1.65
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 5.00e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*190),2.1))}
+.MODEL DbodyMOD D (IS=1.8e-12  RS=6.85e-3 TRS1=1.85e-3 TRS2=3.99e-6
++ CJO=1.72e-9 TT=77e-9 M=0.45)
+.MODEL DbreakMOD D (RS=1.1e-1 TRS1=1.79e-3 TRS2=-1.88e-5)
+.MODEL DESD1MOD D (BV=12.80 TBV1=0 TBV2=0 RS=43 TRS1=1.07e-6 TRS2=0)
+.MODEL DESD2MOD D (BV=12.85 TBV1=0 TBV2=0 RS=0 TRS1=1.07e-6 TRS2=0)
+.MODEL DplcapMOD D (CJO=1.69e-9 IS=1e-30 N=10 M=0.60)
+.MODEL MmedMOD NMOS (VTO=1.54 KP=2.50 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.65)
+.MODEL MstroMOD NMOS (VTO=1.877 KP=47.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.335 kp=0.10 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=16.5
++ RS=0.1)
+.MODEL RbreakMOD RES (TC1=9.94e-4 TC2=3.94e-7)
+.MODEL RdrainMOD RES (TC1=7.70e-3 TC2=3.17e-5)
+.MODEL RSLCMOD RES (TC1=1.16e-3 TC2=2.02e-5)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-7.89e-4 TC2=-9.45e-6)
+.MODEL RvtempMOD RES (TC1=-1.60e-3 TC2=1.24e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.80 VOFF=-1.80)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.80 VOFF=-4.80)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.10 VOFF=1.90)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.90 VOFF=-1.10)
+.ENDS
+.SUBCKT RFP45N06LE_HA 2 1 3 ; REV 10/25/95
+*Term. Conn.****** D G S
+*Spice Model circuit file for the RFP45N06LE
+*For a detail specification see datasheet FN4076
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 7.50e-9
+Cb 15 14 7.50e-9
+Cin 6 8 1.90e-9
+Dbody 7 5 DbodyMOD
+Dbreak 5 11 DbreakMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DplcapMOD
+Ebreak 11 7 17 18 67.53
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 7.29e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 6.16e-9
+RLgate 1 9 72.9
+RLdrain 2 5 10
+RLsource 3 7 61.6
+Mmed 16 6 8 8 MmedMOD
+Mstro 16 6 8 8 MstroMOD
+Mweak 16 21 8 8 MweakMOD
+Rbreak 17 18 RbreakMOD 1
+Rdrain 50 16 RdrainMOD 8.02e-3
+Rgate 9 20 1.65
+RSLC1 5 51 RSLCMOD 1e-6
+RSLC2 5 50 1e3
+Rsource 8 7 RsourceMOD 5.00e-3
+Rvthres 22 8 RvthresMOD 1
+Rvtemp 18 19 RvtempMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+ESLC 51 50  VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*190),2.1))}
+.MODEL DbodyMOD D (IS=1.8e-12  RS=6.85e-3 TRS1=1.85e-3 TRS2=3.99e-6
++ CJO=1.72e-9 TT=77e-9 M=0.45)
+.MODEL DbreakMOD D (RS=1.1e-1 TRS1=1.79e-3 TRS2=-1.88e-5)
+.MODEL DESD1MOD D (BV=12.80 TBV1=0 TBV2=0 RS=43 TRS1=1.07e-6 TRS2=0)
+.MODEL DESD2MOD D (BV=12.85 TBV1=0 TBV2=0 RS=0 TRS1=1.07e-6 TRS2=0)
+.MODEL DplcapMOD D (CJO=1.69e-9 IS=1e-30 N=10 M=0.60)
+.MODEL MmedMOD NMOS (VTO=1.54 KP=2.50 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.65)
+.MODEL MstroMOD NMOS (VTO=1.877 KP=47.5 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MweakMOD NMOS (VTO=1.335 kp=0.10 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=16.5
++ RS=0.1)
+.MODEL RbreakMOD RES (TC1=9.94e-4 TC2=3.94e-7)
+.MODEL RdrainMOD RES (TC1=7.70e-3 TC2=3.17e-5)
+.MODEL RSLCMOD RES (TC1=1.16e-3 TC2=2.02e-5)
+.MODEL RsourceMOD RES (TC1=0 TC2=0)
+.MODEL RvthresMOD RES (TC1=-7.89e-4 TC2=-9.45e-6)
+.MODEL RvtempMOD RES (TC1=-1.60e-3 TC2=1.24e-6)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-4.80 VOFF=-1.80)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.80 VOFF=-4.80)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.10 VOFF=1.90)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.90 VOFF=-1.10)
+.ENDS
+.SUBCKT RFD14N05L_HA 2 1 3 ; REV 9/15/94
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFD14N05L, RFD14N05LSM
+*For a detail specification see datasheet FN2246
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.464e-9
+Cb 15 14 1.640e-9
+Cin 6 8 6.17e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/46.0,7.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.68e-9
+Lsource 3 7 5.35e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 33.1e-3
+Rgate 9 20 5.85
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 14.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.485
+.MODEL DBDMOD D (IS=2.23e-13 RS=1.15e-2 TRS1=1.64e-3 TRS2=7.89e-6
++CJO=6.83e-10 TT=3.68e-8)
+.MODEL DBKMOD D (RS=3.80e-1 TRS1=1.89e-3 TRS2=1.13e-5)
+.MODEL DPLCAPMOD D (CJO=25.7e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.935 KP=18.89 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.18e-4 TC2=1.53e-6)
+.MODEL RDSMOD RES (TC1=4.45e-3 TC2=2.90e-5)
+.MODEL RSCLMOD RES (TC1=2.80e-3 TC2=6.00e-6)
+.MODEL RVTOMOD RES (TC1=-1.70e-3 TC2=-2.00e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.55 VOFF=-1.55)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.55 VOFF=-3.55)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.55 VOFF=2.45)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.45 VOFF=-2.55)
+.ENDS
+.SUBCKT RFP14N05L_HA 2 1 3 ; REV 9/15/94
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFP14N05L
+*For a detail specification see datasheet FN2246
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.464e-9
+Cb 15 14 1.640e-9
+Cin 6 8 6.17e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/46.0,7.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.68e-9
+Lsource 3 7 5.35e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 33.1e-3
+Rgate 9 20 5.85
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 14.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.485
+.MODEL DBDMOD D (IS=2.23e-13 RS=1.15e-2 TRS1=1.64e-3 TRS2=7.89e-6
++CJO=6.83e-10 TT=3.68e-8)
+.MODEL DBKMOD D (RS=3.80e-1 TRS1=1.89e-3 TRS2=1.13e-5)
+.MODEL DPLCAPMOD D (CJO=25.7e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.935 KP=18.89 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.18e-4 TC2=1.53e-6)
+.MODEL RDSMOD RES (TC1=4.45e-3 TC2=2.90e-5)
+.MODEL RSCLMOD RES (TC1=2.80e-3 TC2=6.00e-6)
+.MODEL RVTOMOD RES (TC1=-1.70e-3 TC2=-2.00e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.55 VOFF=-1.55)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.55 VOFF=-3.55)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.55 VOFF=2.45)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.45 VOFF=-2.55)
+.ENDS
+.SUBCKT RFD14N06L_HA 2 1 3 ; REV 9/15/94
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFD14N06L, RFD14N06LSM
+*For a detail specification see datasheet FN4088
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.464e-9
+Cb 15 14 1.640e-9
+Cin 6 8 6.17e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/46.0,7.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.68e-9
+Lsource 3 7 5.35e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 33.1e-3
+Rgate 9 20 5.85
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 14.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.485
+.MODEL DBDMOD D (IS=2.23e-13 RS=1.15e-2 TRS1=1.64e-3 TRS2=7.89e-6
++CJO=6.83e-10 TT=3.68e-8)
+.MODEL DBKMOD D (RS=3.80e-1 TRS1=1.89e-3 TRS2=1.13e-5)
+.MODEL DPLCAPMOD D (CJO=25.7e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.935 KP=18.89 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.18e-4 TC2=1.53e-6)
+.MODEL RDSMOD RES (TC1=4.45e-3 TC2=2.90e-5)
+.MODEL RSCLMOD RES (TC1=2.80e-3 TC2=6.00e-6)
+.MODEL RVTOMOD RES (TC1=-1.70e-3 TC2=-2.00e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.55 VOFF=-1.55)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.55 VOFF=-3.55)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.55 VOFF=2.45)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.45 VOFF=-2.55)
+.ENDS
+.SUBCKT RFP14N06L_HA 2 1 3 ; REV 9/15/94
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RFP14N06L
+*For a detail specification see datasheet FN4088
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.464e-9
+Cb 15 14 1.640e-9
+Cin 6 8 6.17e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.35
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1E6/46.0,7.0))}
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 5.68e-9
+Lsource 3 7 5.35e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 33.1e-3
+Rgate 9 20 5.85
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 14.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.485
+.MODEL DBDMOD D (IS=2.23e-13 RS=1.15e-2 TRS1=1.64e-3 TRS2=7.89e-6
++CJO=6.83e-10 TT=3.68e-8)
+.MODEL DBKMOD D (RS=3.80e-1 TRS1=1.89e-3 TRS2=1.13e-5)
+.MODEL DPLCAPMOD D (CJO=25.7e-11 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.935 KP=18.89 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=7.18e-4 TC2=1.53e-6)
+.MODEL RDSMOD RES (TC1=4.45e-3 TC2=2.90e-5)
+.MODEL RSCLMOD RES (TC1=2.80e-3 TC2=6.00e-6)
+.MODEL RVTOMOD RES (TC1=-1.70e-3 TC2=-2.00e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.55 VOFF=-1.55)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.55 VOFF=-3.55)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.55 VOFF=2.45)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.45 VOFF=-2.55)
+.ENDS
+.SUBCKT RF1S30N06LE_HA 2 1 3 ; REV 6/2/93
+*Term. Conn.******* D G S
+*Spice model for the RF1S30N06LE, RF1S30N06LESM
+*For a detail specification see datasheet FN3629
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 3.34e-9
+Cb 15 14 3.44e-9
+Cin 6 8 1.343e-9
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 75.39
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 7.22e-9
+Lsource 3 7 6.31e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 50 16 RDSMOD 11.86e-3
+Rgate 9 20 2.52
+Rin 6 8 1e9
+Rscl1 5 51 RSLVCMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 26.6e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.5
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)*1e6/89,7))}
+.MODEL DBDMOD D (IS=3.80e-13 RS=1.12e-2 TRS1=1.61e-3 TRS2=6.08e-6
++CJO=1.05e-9 TT=3.84e-8)
+.MODEL DBKMOD D (RS=1.82e-1 TRS1=7.50e-3 TRS2=-4.0e-5)
+.MODEL DESD1MOD D(BV=13.54 TBV1=0 TBV2=0 RS=45.5 TRS1=0 TRS2=0)
+.MODEL DESD2MOD D(BV=11.46 TBV1=-7.576e-4 TBV2=-3.0e-6 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=0.591e-9 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=1.94 KP=139.2 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.07e-3 TC2=-3.03e-7)
+.MODEL RDSMOD RES (TC1=5.38e-3 TC2=1.64e-5)
+.MODEL RSLVCMOD RES (TC1=1.75e-3 TC2=3.90e-6)
+.MODEL RVTOMOD RES (TC1=-2.15e-3 TC2=-5.43e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.05 VOFF=-1.50)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.50 VOFF=-4.05)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-2.20 VOFF=2.80 )
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.80  VOFF=-2.20)
+.ENDS
+.SUBCKT RF1S25N06_HA 2 1 3 ; REV 8/19/94
+*Term. Conn.***** D G S
+*Spice Model circuit file for the RF1S25N06, RF1S25N06SM
+*For a detail specification see datasheet FN1492
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 1.83e-9
+Cb 15 14 1.98e-9
+Cin 6 8 9.70e-10
+Dbody 7 5 DBDMOD
+Dbreak 5 11 DBKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.90
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evto 20 6 18 8 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 4.92e-9
+Lsource 3 7 4.50e-9
+Mos1 16 6 8 8 MOSMOD M=0.99
+Mos2 16 21 8 8 MOSMOD M=0.01
+Rbreak 17 18 RBKMOD 1
+Rdrain 5 16 RDSMOD 1.10e-3
+Rgate 9 20 2.88
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RDSMOD 20.3e-3
+Rvto 18 19 RVTOMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 8 19 DC 1
+Vto 21 6 0.764
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1E-6*108),6.0))}
+.MODEL DBDMOD D (IS=2.32e-13 RS=5.72e-3 TRS1=2.56e-3 TRS2=-5.13e-6
++CJO=1.18e-9 TT=5.62e-8)
+.MODEL DBKMOD D (RS=2.00e-1 TRS1=3.33e-4 TRS2=2.68e-6)
+.MODEL DPLCAPMOD D (CJO=6.55e-10 IS=1e-30 N=10)
+.MODEL MOSMOD NMOS (VTO=3.89 KP=15.03 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL RBKMOD RES (TC1=1.04e-3 TC2=-1.04e-6)
+.MODEL RDSMOD RES (TC1=5.85e-3 TC2=1.77e-5)
+.MODEL RSCLMOD RES (TC1=2.00e-3 TC2=1.50e-5)
+.MODEL RVTOMOD RES (TC1=-5.35e-3 TC2=-3.77e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-5.04 VOFF=-3.04)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.04 VOFF=-5.04)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-3.02 VOFF=1.98)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.98 VOFF=-3.02)
+.ENDS
+.SUBCKT RF1K49211_HA 2 1 3 ; REV 6/26/96
+*Term. Conn.***** D G S
+*Spice Model circuit file for the following part: RF1K49211
+*For a detail specification see datasheet FN????
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.11e-9
+Cb 15 14 2.99e-9
+Cin 6 8 1.30e-9
+Dbody 7 5 DBODYMOD
+Dbreak 5 11 DBREAKMOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 15.81
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 1.04e-9
+Lsource 3 7 2.37e-10
+Mmed 16 6 8 8 MMEDMOD
+Mstro 16 6 8 8 MSTROMOD
+Mweak 16 21 8 8 MWEAKMOD
+Rbreak 17 18 RBREAKMOD 1
+Rdrain 50 16 RDRAINMOD 3.50e-3
+Rgate 9 20 1.57
+Rin 6 8 1e9
+RLdrain 2 5 10
+RLgate 1 9 10.4
+RLsource 3 7 2.37
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RSOURCEMOD 11.42e-3
+Rvtemp 18 19 RVTEMPMOD 1
+Rvthres 22 8 RVTHRESMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1E-6*170),3.0))}
+.MODEL DBODYMOD D (IS=1.36e-12 RS=1.65e-2 TRS1=3.88e-3 TRS2=-5.45e-6
++CJO=2.95e-9 TT=2.70e-8 M=0.43)
+.MODEL DBREAKMOD D (RS=2.75e-3 TRS1=-5.01e-4 TRS2=-1.60e-4)
+.MODEL DPLCAPMOD D (CJO=2.40e-9 IS=1e-30 N=10 M=0.55)
+.MODEL MMEDMOD NMOS (VTO=1.62 KP=1.5 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=1.57)
+.MODEL MSTROMOD NMOS (VTO=2.08 KP=96.0 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=1.402 KP=0.067 IS=1e-30 N=10 TOX=1 L=1u W=1u
++ RG=15.7 RS=0.1)
+.MODEL RBREAKMOD RES (TC1=8.51e-4 TC2=7.88e-7)
+.MODEL RDRAINMOD RES (TC1=1.55e-2 TC2=5.78e-5)
+.MODEL RSCLMOD RES (TC1=1.02e-4 TC2=1.07e-6)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RVTHRESMOD RES (TC1=-2.20e-3 TC2=-7.29e-6)
+.MODEL RVTEMPMOD RES (TC1=-5.10e-4 TC2=8.07e-7)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.10 VOFF=-1.10)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.10 VOFF=-4.10)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-0.05 VOFF=2.50)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=2.50 VOFF=-0.05)
+.ENDS
+.SUBCKT RFD15N06LE_HA 2 1 3 ; REV 5/13/95
+*Term. Conn.**** D G S
+*Spice model circuit for RFD15N06LE, RFD15N06LESM
+*For a detail specification see datasheet FN????
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 2.50e-9
+Cb 15 14 2.40e-9
+Cin 6 8 7.70e-10
+Dbody 7 5 DBODYMOD
+Dbreak 5 11 DBREAKMOD
+Desd1 91 9 DESD1MOD
+Desd2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 65.18
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+Evtemp 20 6 18 22 1
+It 8 17 1
+Ldrain 2 5 1e-9
+Lgate 1 9 2.77e-9
+Lsource 3 7 2.98e-9
+MMED 16 6 8 8 MMEDMOD
+MSTRO 16 6 8 8 MSTROMOD
+MWEAK 16 21 8 8 MWEAKMOD
+Rbreak 17 18 RBREAKMOD 1
+Rdrain 50 16 RDRAINMOD 14.52e-3
+Rgate 9 20 2.60
+RLDRAIN 2 5 10
+RLGATE 1 9 27.7
+RLSOURCE 3 7 29.8
+Rin 6 8 1e9
+Rscl1 5 51 RSCLMOD 1e-6
+Rscl2 5 50 1e3
+Rsource 8 7 RSOURCEMOD 20.05e-3
+Rvthres 22 8 RVTHRESMOD 1
+Rvtemp 18 19 RVTEMPMOD 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+Vbat 22 19 DC 1
+Escl 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*72),5.0))}
+.MODEL DBODYMOD D (IS=6.50e-13 RS=1.20e-2 TRS1=1.78e-3 TRS2=5.08e-6
++CJO=7.45e-10 TT=4.61e-8 M=0.46)
+.MODEL DBREAKMOD D (RS=1.28e-1 TRS1=-2.51e-3 TRS2=1.05e-5)
+.MODEL DESD1MOD D(BV=12.7 TBV1=0 TBV2=0 RS=35.0 TRS1=1.2e-6 TRS2=0)
+.MODEL DESD2MOD D(BV=12.7 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DPLCAPMOD D (CJO=4.32e-10 IS=1e-30 N=10 M=0.64)
+.MODEL MMEDMOD NMOS (VTO=1.60 KP=1.75 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=2.60)
+.MODEL MSTROMOD NMOS (VTO=1.93 KP=26.0 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MWEAKMOD NMOS (VTO=1.39 KP=0.09 IS=1e-30 N=10 TOX=1 L=1u W=1u
++ RG=26.0 RS=0.1)
+.MODEL RBREAKMOD RES (TC1=9.76e-4 TC2=5.11e-7)
+.MODEL RDRAINMOD RES (TC1=1.30e-2 TC2=4.49e-5)
+.MODEL RSCLMOD RES (TC1=3.00e-3 TC2=6.00e-6)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RVTHRESMOD RES (TC1=-1.43e-3 TC2=-6.72e-6)
+.MODEL RVTEMPMOD RES (TC1=-9.19e-4 TC2=1.02e-6)
+.MODEL S1AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-4.85 VOFF=-1.85)
+.MODEL S1BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.85 VOFF=-4.85)
+.MODEL S2AMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=-1.35 VOFF=1.65)
+.MODEL S2BMOD VSWITCH(RON=1e-5 ROFF=0.1 VON=1.65 VOFF=-1.35)
+.ENDS
+.SUBCKT RF1K49154_HA 2 1 3 ;  REV 2/2/96
+*Term. Conn.***** D G S
+* Spice model for the RF1K49154
+* Fpr a detail specifiaction see datasheet FN4143
+*************************************************************************
+*   For further discussion of this PSPICE PowerFET macromodel consult   *
+*    A New PSPICE Sub-circuit for the Power MOSFET Featuring Global     *
+*     Temperature Options by William J. Hepp and C. Frank Wheatley      *
+*NOM TEMP=25 deg C                                                      *
+*************************************************************************
+Ca 12 8 4.75e-10
+Cb 15 14 6.50e-10
+Cin 6 8 2.96e-10
+Dbody 7 5 DBODYMOD
+Dbreak 5 11 DBREAKMOD
+DESD1 91 9 DESD1MOD
+DESD2 91 7 DESD2MOD
+Dplcap 10 5 DPLCAPMOD
+Ebreak 11 7 17 18 63.185
+Eds 14 8 5 8 1
+Egs 13 8 6 8 1
+Esg 6 10 6 8 1
+Evthres 6 21 19 8 1
+EVTEMP 20 6 18 22 1
+It 8 17 1
+Lgate 1 9 1.08e-9
+Ldrain 2 5 1e-9
+Lsource 3 7 0.45e-9
+MMED 16 6 8 8 MMEDMOD
+MSTRO 16 6 8 8 MSTROMOD
+MWEAK 16 21 8 8 MWEAKMOD
+Rbreak 17 18 RBREAKMOD 1
+Rdrain 50 16 RDRAINMOD 4.35e-3
+Rgate 9 20 12.37
+Rin 6 8 1e9
+Rldrain 2 5 10.00
+Rlgate 1 9 10.80
+Rlsource 3 7 4.50
+RSCL1 5 51 RSCLMOD 1e-6
+RSCL2 5 50 1e3
+Rsource 8 7 RSOURCEMOD 78.0e-3
+Rvthres 22 8 RVTHRESMOD 1
+Rvtemp 18 19 RVTEMPMOD 1
+Vbat 22 19 DC 1
+S1a 6 12 13 8 S1AMOD
+S1b 13 12 13 8 S1BMOD
+S2a 6 15 14 13 S2AMOD
+S2b 13 15 14 13 S2BMOD
+ESLC 51 50 VALUE={(V(5,51)/ABS(V(5,51)))*(PWR(V(5,51)/(1e-6*35),5))}
+.MODEL DBODYMOD D (IS=1.20e-13 RS=2.66e-3 TRS1=1.65e-3 TRS2=5.29e-7
++ CJO=4.55e-10 TT=7.00e-8 M=0.475)
+.MODEL DPLCAPMOD D (CJO=2.59e-10 IS=1e-30 N=10)
+.MODEL DESD1MOD D(BV=26.35 TBV1=0 TBV2=0 RS=60 TRS1=5.18E-4 TRS2=-1.52E-6)
+.MODEL DESD2MOD D(BV=26.50 TBV1=0 TBV2=0 RS=0 TRS1=0 TRS2=0)
+.MODEL DBREAKMOD D (RS=2.23 TRS1=3.03e-3 TRS2=-1.64e-5)
+.MODEL RDRAINMOD RES (TC1=7.52e-2 TC2=2.27e-4)
+.MODEL RSOURCEMOD RES (TC1=0 TC2=0)
+.MODEL RSCLMOD RES (TC1=3.55e-3 TC2=1.0e-6)
+.MODEL RVTHRESMOD RES (TC1=-3.77e-3 TC2=-8.64e-6)
+.MODEL RBREAKMOD RES (TC1=9.12e-4 TC2=1.16e-6)
+.MODEL RVTEMPMOD RES (TC1=-2.20e-3 TC2=1.67e-6)
+.MODEL MSTROMOD NMOS (VTO=3.88 KP=7.00 IS=1e-30 N=10 TOX=1 L=1u W=1u)
+.MODEL MMEDMOD NMOS (VTO=3.20 KP=1.40 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=12.37)
+.MODEL MWEAKMOD NMOS (VTO=2.81 KP=0.069 IS=1e-30 N=10 TOX=1 L=1u W=1u RG=123.7
++ RS=0.1)
+.MODEL S1AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-6.80 VOFF=-3.80)
+.MODEL S1BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-3.80 VOFF=-6.80)
+.MODEL S2AMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=-1.70 VOFF=1.30)
+.MODEL S2BMOD VSWITCH (RON=1e-5 ROFF=0.1 VON=1.30 VOFF=-1.70)
+.ENDS
+
+

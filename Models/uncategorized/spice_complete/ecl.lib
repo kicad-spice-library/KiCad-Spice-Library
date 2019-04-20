@@ -1,0 +1,6710 @@
+* DIGITAL LIBRARY ECL10K and ECL100K
+*
+* The Global Setting DIGDRVZ may need to be set to a higher value
+* than the default value of 20K.  The input pulldown resistors of
+* each part are at 50K which would display a high impedance state
+* instead of a 0.  Setting the DIGDRVZ to 200K should solve this.
+*
+* ----------------------------------------------------------- 10100 ------
+*  Quad 2-Input Nor Gate With Strobe
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-3 to 3-4
+*  bss    12/16/96
+*
+.SUBCKT 10100  AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2 COMMON
++		AOUT BOUT COUT DOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2 COMMON
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nora(3,4) VCC1 VEE
++     AIN1 AIN2 COMMON BIN1 BIN2 COMMON CIN1 CIN2 COMMON
++		DIN1 DIN2 COMMON
++		AOUT_O BOUT_O COUT_O DOUT_O
++     DLY_10100 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O AOUT BOUT COUT DOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10100 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								 tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10100
+*
+*
+* ----------------------------------------------------------- 10101 ------
+*  Quad Or/Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-5 to 3-6
+*  bss    12/16/96
+*
+.SUBCKT 10101  AIN BIN CIN DIN COMMON
++		AOUT AOUTBAR BOUT BOUTBAR COUT COUTBAR DOUT DOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		AIN BIN CIN DIN COMMON
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(2,4) VCC1 VEE
++		AIN COMMON BIN COMMON CIN COMMON DIN COMMON
++		AOUT_O BOUT_O COUT_O DOUT_O
++     DLY_10101 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUT BOUT COUT DOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inva(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUTBAR BOUTBAR COUTBAR DOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10101 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10101
+*
+*
+* ----------------------------------------------------------- 10102 ------
+*  Quad 2-Input Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-7 to 3-8
+*  bss    12/18/96
+*
+.SUBCKT 10102  AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUTBAR BOUTBAR COUTBAR DOUT DOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nora(2,4) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUT_O BOUT_O COUT_O DOUT_O
++     DLY_10102 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUTBAR BOUTBAR COUTBAR DOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		DOUT_O DOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10102 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10102
+*
+*
+* ----------------------------------------------------------- 10103 ------
+*  Quad 2-Input Or Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-9 to 3-10
+*  bss    12/18/96
+*
+.SUBCKT 10103  AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUT BOUT COUT COUTBAR DOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(2,4) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUT_O BOUT_O COUT_O DOUT_O
++     DLY_10103 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUT BOUT COUT DOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		COUT_O COUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10103 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10103
+*
+*
+* ----------------------------------------------------------- 10104 ------
+*  Quad 2-Input And Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-11 to 3-12
+*  bss    12/18/96
+*
+.SUBCKT 10104  AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUT BOUT COUT DOUT DOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 anda(2,4) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUT_O BOUT_O COUT_O DOUT_O
++     DLY_10104 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUT BOUT COUT DOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		DOUT_O DOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10104 ugate (tplhMN=1ns tplhTY=2.7ns tplhMX=4ns 
++								tphlMN=1ns tphlTY=2.7ns tphlMX=4ns)
+
+.ENDS  10104
+*
+*
+* ----------------------------------------------------------- 10105 ------
+*  Triple 2-3-2 Input Or/Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-13 to 3-14
+*  bss    12/18/96
+*
+.SUBCKT 10105  AIN1 AIN2 BIN1 BIN2 BIN3 CIN1 CIN2
++		AOUT AOUTBAR BOUT BOUTBAR COUT COUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 BIN3 CIN1 CIN2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(2,2) VCC1 VEE
++		AIN1 AIN2 CIN1 CIN2
++		AOUT_O COUT_O
++     DLY_10105 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 or(3) VCC1 VEE
++		BIN1 BIN2 BIN3
++		BOUT_O
++     DLY_10105 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(3) VCC2 VEE
++		AOUT_O BOUT_O COUT_O
++		AOUT BOUT COUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 inva(3) VCC2 VEE
++		AOUT_O BOUT_O COUT_O
++		AOUTBAR BOUTBAR COUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10105 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10105
+*
+*
+* ----------------------------------------------------------- 10106 ------
+*  Triple 4-3-3 Input Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-15 to 3-16
+*  bss    12/18/96
+*
+.SUBCKT 10106  AIN1 AIN2 AIN3 AIN4 BIN1 BIN2 BIN3 CIN1 CIN2 CIN3
++		AOUT BOUT COUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		AIN1 AIN2 AIN3 AIN4 BIN1 BIN2 BIN3 CIN1 CIN2 CIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nora(3,2) VCC1 VEE
++		BIN1 BIN2 BIN3 CIN1 CIN2 CIN3
++		BOUT_O COUT_O
++     DLY_10106 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 nor(4) VCC1 VEE
++		AIN1 AIN2 AIN3 AIN4
++		AOUT_O
++     DLY_10106 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(3) VCC2 VEE
++		AOUT_O BOUT_O COUT_O
++		AOUT BOUT COUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10106 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10106
+*
+*
+* ----------------------------------------------------------- 10107 ------
+*  Triple 2-Input Exclusive Or/Exclusive Nor
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-17 to 3-18
+*  bss    12/18/96
+*
+.SUBCKT 10107  AIN1 AIN2 AOUT AOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(2) VCC1 VEE
++		AIN1 AIN2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 xor VCC1 VEE
++		AIN1 AIN2 AOUT_O
++     DLY_10107 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		AOUT_O AOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		AOUT_O AOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10107 ugate (tplhMN=1.1ns tplhTY=2.8ns tplhMX=3.7ns 
++								tphlMN=1.1ns tphlTY=2.8ns tphlMX=3.7ns)
+
+.ENDS  10107
+*
+*
+* ----------------------------------------------------------- 10109 ------
+*  Dual 4-5-Input Or/Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-19 to 3-20
+*  bss    12/18/96
+*
+.SUBCKT 10109  AIN1 AIN2 AIN3 AIN4 BIN1 BIN2 BIN3 BIN4 BIN5
++		AOUT AOUTBAR BOUT BOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		AIN1 AIN2 AIN3 AIN4 BIN1 BIN2 BIN3 BIN4 BIN5
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(4) VCC1 VEE
++		AIN1 AIN2 AIN3 AIN4
++		AOUT_O
++     DLY_10109 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 or(5) VCC1 VEE
++		BIN1 BIN2 BIN3 BIN4 BIN5
++		BOUT_O
++     DLY_10109 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(2) VCC2 VEE
++		AOUT_O BOUT_O
++		AOUT BOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 inva(2) VCC2 VEE
++		AOUT_O BOUT_O
++		AOUTBAR BOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10109 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10109
+*
+*
+* ----------------------------------------------------------- 10110 ------
+*  Dual 3-Input 3-Output Or Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-21 to 3-22
+*  bss    12/18/96
+*
+.SUBCKT 10110  AIN1 AIN2 AIN3 AOUT1 AOUT2 AOUT3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		AOUT_O
++     DLY_10110 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(3) VCC2 VEE
++		AOUT_O AOUT_O AOUT_O
++		AOUT1 AOUT2 AOUT3
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10110 ugate (tplhMN=1.4ns tplhTY=2.4ns tplhMX=3.5ns 
++								tphlMN=1.4ns tphlTY=2.4ns tphlMX=3.5ns)
+
+.ENDS  10110
+*
+*
+* ----------------------------------------------------------- 10111 ------
+*  Dual 3-Input 3-Output Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-23 to 3-24
+*  bss    12/18/96
+*
+.SUBCKT 10111  AIN1 AIN2 AIN3 AOUT1 AOUT2 AOUT3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nor(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		AOUT_O
++     DLY_10111 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(3) VCC2 VEE
++		AOUT_O AOUT_O AOUT_O
++		AOUT1 AOUT2 AOUT3
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10111 ugate (tplhMN=1.4ns tplhTY=2.4ns tplhMX=3.5ns 
++								tphlMN=1.4ns tphlTY=2.4ns tphlMX=3.5ns)
+
+.ENDS  10111
+*
+*
+* ----------------------------------------------------------- 10113 ------
+*  Quad Exclusive Or Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-25 to 3-26
+*  bss    12/18/96
+*
+.SUBCKT 10113  AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2 EBAR
++		AOUT BOUT COUT DOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2 EBAR
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inv VCC1 VEE
++		EBAR EBAR_B
++     DLY_10113A IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 xora(4) VCC1 VEE
++		AIN1 AIN2 BIN1 BIN2 CIN1 CIN2 DIN1 DIN2
++		AOUT_O BOUT_O COUT_O DOUT_O
++		DLY_10113B IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 anda(2,4) VCC2 VEE
++		EBAR_B AOUT_O EBAR_B BOUT_O EBAR_B COUT_O EBAR_B DOUT_O
++		AOUT BOUT COUT DOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10113A ugate (tplhMN=1.5ns tplhTY=3.4ns tplhMX=5ns 
++								tphlMN=1.5ns tphlTY=3.4ns tphlMX=5ns)
+
+.model DLY_10113B ugate (tplhMN=1.3ns tplhTY=2.6ns tplhMX=4.5ns 
++								tphlMN=1.3ns tphlTY=2.6ns tphlMX=4.5ns)
+
+.ENDS  10113
+*
+*
+* ----------------------------------------------------------- 10114 ------
+*  Triple Line Receiver
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-27 to 3-28
+*  bss    12/23/96
+*
+.SUBCKT 10114  AIN AINBAR AOUT AOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 inv VCC1 VEE
++		AINBAR AIN_I
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 or(2) VCC1 VEE
++		AIN AIN_I
++		AOUT_O
++		DLY_10114 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		AOUT_O
++		AOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		AOUT_O
++		AOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10114 ugate (tplhMN=1ns tplhTY=2.4ns tplhMX=4ns 
++								tphlMN=1ns tphlTY=2.4ns tphlMX=4ns)
+
+.ENDS  10114
+*
+*
+* ----------------------------------------------------------- 10115 ------
+*  Quad Line Receiver
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-29 to 3-30
+*  bss    12/23/96
+*
+.SUBCKT 10115  AIN AINBAR AOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 inv VCC1 VEE
++		AINBAR AIN_I
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 buf VCC1 VEE
++		AIN AIN_B
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 or(2) VCC1 VEE
++		AIN_B AIN_I
++		AOUT
++		DLY_10115 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10115 ugate (tplhMN=1ns tplhMX=2.9ns 
++								tphlMN=1ns tphlMX=2.9ns)
+
+.ENDS  10115
+*
+*
+* ----------------------------------------------------------- 10116 ------
+*  Triple Line Receiver
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-31 to 3-32
+*  bss    12/23/96
+*
+.SUBCKT 10116  AIN AINBAR AOUT AOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 inv VCC1 VEE
++		AINBAR AIN_I
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 or(2) VCC1 VEE
++		AIN AIN_I
++		AOUT_O
++		DLY_10116 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		AOUT_O
++		AOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		AOUT_O
++		AOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10116 ugate (tplhMN=1ns tplhTY=2ns tplhMX=2.9ns 
++								tphlMN=1ns tphlTY=2ns tphlMX=2.9ns)
+
+.ENDS  10116
+*
+*
+* ----------------------------------------------------------- 10117 ------
+*  Dual 2-Wide 2-3-Input Or-And/Or-And-Invert Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-33 to 3-34
+*  bss    12/18/96
+*
+.SUBCKT 10117  A1IN1 A1IN2 A2IN1 A2IN2 B1IN1 B1IN2 B2IN1 B2IN2 AB2IN
++		AOUT AOUTBAR BOUT BOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		A1IN1 A1IN2 A2IN1 A2IN2 B1IN1 B1IN2 B2IN1 B2IN2 AB2IN
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(2,2) VCC1 VEE
++		A1IN1 A1IN2 B1IN1 B1IN2 A1OUT B1OUT
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ora(3,2) VCC1 VEE
++		A2IN1 A2IN2 AB2IN B2IN1 B2IN2 AB2IN
++		A2OUT B2OUT
++		D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 anda(2,2) VCC1 VEE
++		A1OUT A2OUT B1OUT B2OUT
++		AOUT_O BOUT_O
++		DLY_10117 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 bufa(2) VCC2 VEE
++		AOUT_O BOUT_O
++		AOUT BOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 inva(2) VCC2 VEE
++		AOUT_O BOUT_O
++		AOUTBAR BOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10117 ugate (tplhMN=1.4ns tplhTY=2.3ns tplhMX=3.4ns 
++								tphlMN=1.4ns tphlTY=2.3ns tphlMX=3.4ns)
+
+.ENDS  10117
+*
+*
+* ----------------------------------------------------------- 10118 ------
+*  Dual 2-Wide 3-Input Or-And Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-35 to 3-36
+*  bss    12/19/96
+*
+.SUBCKT 10118  A1IN1 A1IN2 A1IN3 A2IN1 A2IN2 B1IN1 B1IN2 B1IN3
++		B2IN1 B2IN2 AB2IN AOUT BOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		A1IN1 A1IN2 A1IN3 A2IN1 A2IN2 B1IN1 B1IN2 B1IN3
++		B2IN1 B2IN2 AB2IN
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(3,4) VCC1 VEE
++		A1IN1 A1IN2 A1IN3 A2IN1 A2IN2 AB2IN B1IN1 B1IN2 B1IN3
++		B2IN1 B2IN2 AB2IN AOUT1 AOUT2 BOUT1 BOUT2
++     DLY_10118 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 anda(2,2) VCC2 VEE
++		AOUT1 AOUT2 BOUT1 BOUT2
++		AOUT BOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10118 ugate (tplhMN=1.4ns tplhTY=2.3ns tplhMX=3.4ns 
++								tphlMN=1.4ns tphlTY=2.3ns tphlMX=3.4ns)
+
+.ENDS  10118
+*
+*
+* ----------------------------------------------------------- 10119 ------
+*  4-Wide 4-3-3-3-Input Or-And Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-37 to 3-38
+*  bss    12/19/96
+*
+.SUBCKT 10119  A1IN1 A1IN2 A1IN3 A1IN4 A2IN1 A2IN2 A3IN1 A3IN2
++		A4IN1 A4IN2 A4IN3 A23IN AOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		A1IN1 A1IN2 A1IN3 A1IN4 A2IN1 A2IN2 A3IN1 A3IN2
++		A4IN1 A4IN2 A4IN3 A23IN
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(4) VCC1 VEE
++		A1IN1 A1IN2 A1IN3 A1IN4
++		OUT1
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ora(3,3) VCC1 VEE
++		A2IN1 A2IN2 A23IN A3IN1 A3IN2 A23IN A4IN1 A4IN2 A4IN3
++		OUT2 OUT3 OUT4
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 and(4) VCC2 VEE
++		OUT1 OUT2 OUT3 OUT4
++		AOUT
++		DLY_10119 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10119 ugate (tplhMN=1.4ns tplhTY=2.3ns tplhMX=3.4ns 
++								tphlMN=1.4ns tphlTY=2.3ns tphlMX=3.4ns)
+
+.ENDS  10119
+*
+*
+* ----------------------------------------------------------- 10121 ------
+*  4-Wide Or-And/Or-And-Invert Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-39 to 3-40
+*  bss    12/19/96
+*
+.SUBCKT 10121  A1IN1 A1IN2 A1IN3 A2IN1 A2IN2 A3IN1 A3IN2
++		A4IN1 A4IN2 A4IN3 A23IN AOUT AOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		A1IN1 A1IN2 A1IN3 A2IN1 A2IN2 A3IN1 A3IN2
++		A4IN1 A4IN2 A4IN3 A23IN
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(3,4) VCC1 VEE
++		A1IN1 A1IN2 A1IN3 A2IN1 A2IN2 A23IN A3IN1 A3IN2 A23IN 
++		A4IN1 A4IN2 A4IN3
++		OUT1 OUT2 OUT3 OUT4
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 and(4) VCC1 VEE
++		OUT1 OUT2 OUT3 OUT4
++		AOUT_O
++		DLY_10121 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 buf VCC2 VEE
++		AOUT_O
++		AOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 inv VCC2 VEE
++		AOUT_O
++		AOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10121 ugate (tplhMN=1.4ns tplhTY=2.3ns tplhMX=3.4ns 
++								tphlMN=1.4ns tphlTY=2.3ns tphlMX=3.4ns)
+
+.ENDS  10121
+*
+*
+* ----------------------------------------------------------- 10123 ------
+*  Triple 4-3-3 Input Bus Driver
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-41 to 3-42
+*  bss    12/23/96
+*
+.SUBCKT 10123  AIN1 AIN2 AIN3 AIN4 BIN1 BIN2 BIN3 CIN1 CIN2 CIN3
++		AOUT BOUT COUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		AIN1 AIN2 AIN3 AIN4 BIN1 BIN2 BIN3 CIN1 CIN2 CIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nor(4) VCC1 VEE
++		AIN1 AIN2 AIN3 AIN4
++		AOUT_O
++     DLY_10123 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 nora(3,2) VCC1 VEE
++		BIN1 BIN2 BIN3 CIN1 CIN2 CIN3
++		BOUT_O COUT_O
++     DLY_10123 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(3) VCC2 VEE
++		AOUT_O BOUT_O COUT_O
++		AOUT BOUT COUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10123 ugate (tplhMN=1.2ns tplhTY=3ns tplhMX=4.4ns 
++								tphlMN=1.2ns tphlTY=3ns tphlMX=4.4ns)
+
+.ENDS  10123
+*
+*
+* ----------------------------------------------------------- 10124 ------
+*  Quad TTL to MECL Translator
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-43 to 3-45
+*  bss    12/23/96
+*
+.SUBCKT 10124  AIN BIN CIN DIN COMMON AOUT AOUTBAR BOUT BOUTBAR
++		COUT COUTBAR DOUT DOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 anda(2,4) DPWR DGND
++		AIN COMMON BIN COMMON CIN COMMON DIN COMMON
++		AOUT_O BOUT_O COUT_O DOUT_O
++		DLY_10124 IO_S IO_LEVEL={IO_LEVEL}
+
+U2 bufa(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUT BOUT COUT DOUT
++     D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(4) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O
++		AOUTBAR BOUTBAR COUTBAR DOUTBAR
++     D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10124 ugate (tplhMN=1ns tplhTY=3.5ns tplhMX=6ns 
++								tphlMN=1ns tphlTY=3.5ns tphlMX=6ns)
+
+.ENDS  10124
+*
+*
+* ----------------------------------------------------------- 10125 ------
+*  Quad MECL to TTL Translator
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-46 to 3-48
+*  bss    12/23/96
+*
+.SUBCKT 10125  AIN AINBAR AOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 inv VCC1 VEE
++		AINBAR AIN_I
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 buf VCC1 VEE
++		AIN AIN_B
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 or(2) DPWR DGND
++		AIN_B AIN_I
++		AOUT
++		DLY_10125 IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10125 ugate (tplhMN=1ns tplhTY=4.5ns tplhMX=6ns 
++								tphlMN=1ns tphlTY=4.5ns tphlMX=6ns)
+
+.ENDS  10125
+*
+*
+* ----------------------------------------------------------- 10130 ------
+*  Dual Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-59 to 3-60
+*  bss    12/23/96
+*
+.SUBCKT 10130  S1 D1 R1 CE1BAR CBAR S2 D2 R2 CE2BAR
++		Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		S1 D1 R1 CE1BAR CBAR S2 D2 R2 CE2BAR
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nora(2,2) VCC1 VEE
++		CE1BAR CBAR CE2BAR CBAR
++		CLK1 CLK2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(2) VCC1 VEE
++		CLK1 CLK2 CLK1BAR CLK2BAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 nanda(2,4) VCC1 VEE
++		CLK1BAR R1 CLK2BAR R2 CLK1BAR S1 CLK2BAR S2
++		RESET1 RESET2 SET1 SET2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dltch(1) VCC2 VEE
++		SET1 RESET1 CLK1 D1 Q1 Q1BAR
++		DLY_10130 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dltch(1) VCC2 VEE
++		SET2 RESET2 CLK2 D2 Q2 Q2BAR
++		DLY_10130 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10130 ugff (tppcqlhMN=1ns tppcqlhTY=2.7ns tppcqlhMX=3.5ns
++		tppcqhlMN=1ns tppcqhlTY=2.7ns tppcqhlMX=3.5ns
++		tpgqlhMN=1ns tpgqlhMX=4ns tpgqhlMN=1ns tpgqhlMX=4ns
++		tpdqlhMN=1ns tpdqlhTY=2.5ns tpdqlhMX=3.5ns
++		tpdqhlMN=1ns tpdqhlTY=2.5ns tpdqhlMX=3.5ns
++		tsudgMN=2.5ns thdgMN=1.5ns)
+
+.ENDS  10130
+*
+*
+* ----------------------------------------------------------- 10131 ------
+*  Dual Type D Master-Slave Flip-Flop
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-61 to 3-62
+*  bss    12/24/96
+*
+.SUBCKT 10131  S1 D1 R1 CE1BAR CC S2 D2 R2 CE2BAR
++		Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		S1 D1 R1 CE1BAR CC S2 D2 R2 CE2BAR
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 bufa(2) VCC1 VEE
++		D1 D2
++		D1B D2B
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ora(2,2) VCC1 VEE
++		CE1BAR CC CE2BAR CC
++		CLK1 CLK2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inva(4) VCC1 VEE
++		S1 R1 S2 R2
++		S1BAR R1BAR S2BAR R2BAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dff(1) VCC2 VEE
++		S1BAR R1BAR CLK1 D1B Q1 Q1BAR
++		DLY_10131 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dff(1) VCC2 VEE
++		S2BAR R2BAR CLK2 D2B Q2 Q2BAR
++		DLY_10131 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10131 ueff (tppcqlhMN=1.8ns tppcqlhTY=2.8ns tppcqlhMX=4.3ns
++		tppcqhlMN=1.8ns tppcqhlTY=2.8ns tppcqhlMX=4.3ns
++		tpclkqlhMN=1.8ns tpclkqlhTY=3ns tpclkqlhMX=4.5ns
++		tpclkqhlMN=1.8ns tpclkqhlTY=3ns tpclkqhlMX=4.5ns
++		tsudclkMN=2.5ns thdclkMN=1.5ns)
+
+.ENDS  10131
+*
+*
+* ----------------------------------------------------------- 10132 ------
+*  Dual Multiplexer With Latch and Common Reset
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-63 to 3-64
+*  bss    12/30/96
+*
+.SUBCKT 10132  A D11 D12 D21 D22 CE0BAR CE1BAR CC R
++		Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		A D11 D12 D21 D22 CE0BAR CE1BAR CC R
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(2) VCC1 VEE
++		A R ABAR RBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ao(2,2) VCC1 VEE
++		ABAR D11 A D12
++		D1
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 ao(2,2) VCC1 VEE
++		ABAR D21 A D22
++		D2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 nora(2,2) VCC1 VEE
++		CE0BAR CC CE1BAR CC
++		CLK0 CLK1
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 ora(2,2) VCC1 VEE
++		CLK0 RBAR CLK1 RBAR
++		RESET1 RESET2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 dltch(1) VCC1 VEE
++		$D_HI RESET1 CLK0 D1 Q1_O Q1BAR_O
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U8 dltch(1) VCC1 VEE
++		$D_HI RESET2 CLK1 D2 Q2_O Q2BAR_O
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U9 pindly(4,0,9) VCC2 VEE
++		Q1_O Q1BAR_O Q2_O Q2BAR_O
++		A D11 D12 D21 D22 RESET1 RESET2 CLK0 CLK1
++		Q1 Q1BAR Q2 Q2BAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SELECT={CHANGED(A,0)}
++		DATA1={CHANGED(D11,0) | CHANGED(D12,0)}
++		DATA2={CHANGED(D21,0) | CHANGED(D22,0)}
++		R1={CHANGED_HL(RESET1,0)}
++		R2={CHANGED_HL(RESET2,0)}
++		CLOCK1={CHANGED_LH(CLK0,0)}
++		CLOCK2={CHANGED_LH(CLK1,0)}
++
++	PINDLY:
++		Q1 Q1BAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,4.6ns),
++				DATA1, DELAY(1ns,-1,3.3ns),
++				CLOCK1, DELAY(1ns,-1,5.7ns),
++				R1, DELAY(1ns,-1,3.8ns),
++				DELAY(2ns,-1,6.7ns))}
++
++		Q2 Q2BAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,4.6ns),
++				DATA2, DELAY(1ns,-1,3.3ns),
++				CLOCK2, DELAY(1ns,-1,5.7ns),
++				R2, DELAY(1ns,-1,3.8ns),
++				DELAY(2ns,-1,6.7ns))}
+
+U10 constraint(7) VCC1 VEE
++		A D11 D12 D21 D22 CLK0 CLK1
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(1)=A
++		SETUPTIME=3.5ns
++		HOLDTIME=1ns
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)=A
++		SETUPTIME=3.5ns
++		HOLDTIME=1ns
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(2)=D11 D12
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(2)=D21 D22
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
+
+.ENDS  10132
+*
+*
+* ----------------------------------------------------------- 10133 ------
+*  Quad Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-65 to 3-66
+*  bss    1/2/97
+*
+.SUBCKT 10133  D0 G0BAR D1 CE0BAR CC CE1BAR D2 G1BAR D3
++		Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		D0 G0BAR D1 CE0BAR CC CE1BAR D2 G1BAR D3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(2,2) VCC1 VEE
++		CE0BAR CC CE1BAR CC
++		CLK0 CLK1
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 dltch(2) VCC1 VEE
++		$D_HI $D_HI CLK0 D0 D1 $D_NC $D_NC Q0BAR Q1BAR
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dltch(2) VCC1 VEE
++		$D_HI $D_HI CLK1 D2 D3 $D_NC $D_NC Q2BAR Q3BAR
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 nora(2,4) VCC1 VEE
++		Q0BAR G0BAR Q1BAR G0BAR Q2BAR G1BAR Q3BAR G1BAR
++		Q0_O Q1_O Q2_O Q3_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 pindly(4,0,8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		D0 D1 D2 D3 G0BAR G1BAR CLK0 CLK1
++		Q0 Q1 Q2 Q3
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		ENAB1={CHANGED(G0BAR,0)}
++		ENAB2={CHANGED(G1BAR,0)}
++
++	PINDLY:
++		Q0 Q1 = {
++			CASE(
++				ENAB1, DELAY(1ns,2ns,3.1ns),
++				DELAY(1ns,4ns,5.4ns))}
++
++		Q2 Q3 = {
++			CASE(
++				ENAB2, DELAY(1ns,2ns,3.1ns),
++				DELAY(1ns,4ns,5.4ns))}
+
+U7 constraint(6) VCC1 VEE
++		D0 D1 D2 D3 CLK0 CLK1
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(2)=D0 D1
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(2)=D2 D3
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
+
+.ENDS  10133
+*
+*
+* ----------------------------------------------------------- 10134 ------
+*  Dual Multiplexer With Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-67 to 3-68
+*  bss    1/2/97
+*
+.SUBCKT 10134  A0 A1 D11 D12 D21 D22 CE0BAR CE1BAR CC
++		Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		A0 A1 D11 D12 D21 D22 CE0BAR CE1BAR CC
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(2) VCC1 VEE
++		A0 A1
++		A0BAR A1BAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 anda(2,4) VCC1 VEE
++		A0BAR D11 A0 D12 A1BAR D21 A1 D22
++		D1A D1B D2A D2B
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 ora(2,2) VCC1 VEE
++		D1A D1B D2A D2B
++		D1 D2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 nora(2,2) VCC1 VEE
++		CE0BAR CC CE1BAR CC
++		CLK1 CLK2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dltch(1) VCC1 VEE
++		$D_HI $D_HI CLK1 D1 Q1_O Q1BAR_O
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 dltch(1) VCC1 VEE
++		$D_HI $D_HI CLK2 D2 Q2_O Q2BAR_O
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U8 pindly(4,0,8) VCC2 VEE
++		Q1_O Q1BAR_O Q2_O Q2BAR_O
++		D11 D12 D21 D22 CLK1 CLK2 A0 A1
++		Q1 Q1BAR Q2 Q2BAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		ENAB1={CHANGED(A0,0)}
++		ENAB2={CHANGED(A1,0)}
++		DATA1={CHANGED(D11,0) | CHANGED(D12,0)}
++		DATA2={CHANGED(D21,0) | CHANGED(D22,0)}
++		CLOCK1={CHANGED_LH(CLK1,0)}
++		CLOCK2={CHANGED_LH(CLK2,0)}
++
++	PINDLY:
++		Q1 Q1BAR = {
++			CASE(
++				ENAB1, DELAY(1ns,-1,4.6ns),
++				DATA1, DELAY(1ns,-1,3.3ns),
++				CLOCK1, DELAY(1ns,-1,5.7ns),
++				DELAY(2ns,-1,6.7ns))}
++
++		Q2 Q2BAR = {
++			CASE(
++				ENAB2, DELAY(1ns,-1,4.6ns),
++				DATA2, DELAY(1ns,-1,3.3ns),
++				CLOCK2, DELAY(1ns,-1,5.7ns),
++				DELAY(2ns,-1,6.7ns))}
+
+U9 constraint(8) VCC1 VEE
++		D11 D12 D21 D22 CLK1 CLK2 A0 A1
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)=D11
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={A0 != '1}
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)=D12
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={A0 != '0}
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)=A0
++		SETUPTIME=3.5ns
++		HOLDTIME=1ns
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)=D21
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={A1 != '1}
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)=D22
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={A1 != '0}
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)=A1
++		SETUPTIME=3.5ns
++		HOLDTIME=1ns
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
+
+.ENDS  10134
+*
+*
+* ----------------------------------------------------------- 10135 ------
+*  Dual J-K Master-Slave Flip-Flop
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-69 to 3-70
+*  bss    1/2/97
+*
+.SUBCKT 10135  S1 J1BAR K1BAR R1 C S2 J2BAR K2BAR R2
++		Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		S1 J1BAR K1BAR R1 C S2 J2BAR K2BAR R2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(9) VCC1 VEE
++		S1 R1 S2 R2 J1BAR K1BAR J2BAR K2BAR C
++		S1BAR R1BAR S2BAR R2BAR J1 K1 J2 K2 CBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 jkff(1) VCC2 VEE
++		S1BAR R1BAR CBAR J1 K1 Q1 Q1BAR
++		DLY_10135 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 jkff(1) VCC2 VEE
++		S2BAR R2BAR CBAR J2 K2 Q2 Q2BAR
++		DLY_10135 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10135 ueff (tppcqlhMN=1.8ns tppcqlhTY=3ns tppcqlhMX=5ns
++		tppcqhlMN=1.8ns tppcqhlTY=3ns tppcqhlMX=5ns
++		tpclkqlhMN=1.8ns tpclkqlhTY=3ns tpclkqlhMX=4.5ns
++		tpclkqhlMN=1.8ns tpclkqhlTY=3ns tpclkqhlMX=4.5ns
++		tsudclkMN=2.5ns tsudclkTY=1ns thdclkMN=1.5ns thdclkTY=1ns)
+
+.ENDS  10135
+*
+*
+* ----------------------------------------------------------- 10136 ------
+*  Universal Hexadecimal Counter
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-71 to 3-75
+*  bss    1/2/97
+*  The flip-flops have been initialized in a reset state.
+*
+.SUBCKT 10136  S1 S2 CINBAR CLOCK D0 D1 D2 D3
++		Q0 Q1 Q2 Q3 COUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		S1 S2 CINBAR CLOCK D0 D1 D2 D3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,6) VCC1 VEE
++		S1 S2 CINBAR D0 D1 D2 D3 Q0BAR Q1BAR Q2BAR Q3BAR CLOCK
++		COUTBAR_O J0 J1 J2 J3 CLOCKBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLOCKBAR={~CLOCK}
++		J0A={((S2 & S1) | (CINBAR & (S2 | S1)))}
++		SOR={S1 | S2}
++		SNOR={~(S1 | S2)}
++		J0B={(D0 | SOR) ^ (SOR | Q0BAR)}
++		J0={~(J0A | J0B)}
++		J1A={(S1 | SNOR) ^ (SNOR | Q0BAR)}
++		J1B={(D1 | SOR) ^ (SOR | Q1BAR)}
++		J1={~(J0A | J1A | J1B)}
++		J2A={(S1 | SNOR) ^ (SNOR | Q1BAR)}
++		J2B={(D2 | SOR) ^ (SOR | Q2BAR)}
++		J2={~(J0A | J1A | J2A | J2B)}
++		J3A={(S1 | SNOR) ^ (SNOR | Q2BAR)}
++		J3B={(D3 | SOR) ^ (SOR | Q3BAR)}
++		J3={~(J0A | J1A | J2A | J3A | J3B)}
++		CA={(S1 | SNOR) ^ (SNOR | Q3BAR)}
++		COUTBAR_O={CA | J0A | J1A | J2A | J3A}
+
+.IC D(Q0_O)=0 D(Q1_O)=0 D(Q2_O)=0 D(Q3_O)=0
++	D(Q0BAR)=1 D(Q1BAR)=1 D(Q2BAR)=1 D(Q3BAR)=1
+
+U3 jkff(1) VCC1 VEE
++		$D_HI $D_HI CLOCKBAR
++		J0 J0
++		Q0_O Q0BAR
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 jkff(1) VCC1 VEE
++		$D_HI $D_HI CLOCKBAR
++		J1 J1
++		Q1_O Q1BAR
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 jkff(1) VCC1 VEE
++		$D_HI $D_HI CLOCKBAR
++		J2 J2
++		Q2_O Q2BAR
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 jkff(1) VCC1 VEE
++		$D_HI $D_HI CLOCKBAR
++		J3 J3
++		Q3_O Q3BAR
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 pindly(5,0,4) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O COUTBAR_O
++		CLOCK CINBAR S1 S2
++		Q0 Q1 Q2 Q3 COUTBAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLOCK1={CHANGED_LH(CLOCK,0)}
++		SELECT={CHANGED(S1,0) | CHANGED(S2,0)}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 = {
++			CASE(
++				CLOCK1, DELAY(1ns,3.3ns,4.5ns),
++				DELAY(2ns,4.3ns,5.5ns))}
++
++		COUTBAR = {
++			CASE(
++				CLOCK1, DELAY(2.5ns,7ns,10.5ns),
++				SELECT, DELAY(1.6ns,5ns,6.9ns),
++				CHANGED(CINBAR,0), DELAY(1.6ns,5ns,6.9ns),
++				DELAY(3.5ns,8ns,11.5ns))}
+
+U8 constraint(8) VCC1 VEE
++		D0 D1 D2 D3 S1 S2 CINBAR CLOCK
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(4)=D0 D1 D2 D3
++		SETUPTIME=3.5ns
++		WHEN={S1=='0 & S2=='0}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(2)=S1 S2
++		SETUPTIME=6ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(1)=CINBAR
++		SETUPTIME_LO=2.5ns
++		SETUPTIME_HI=1.5ns
+
+.ENDS  10136
+*
+*
+* ----------------------------------------------------------- 10137 ------
+*  Universal Decade Counter
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-76 to 3-79
+*  bss    1/3/97
+*  The flip-flops have been initialized in a reset state.
+*
+.SUBCKT 10137  S1 S2 CINBAR CLOCK D0 D1 D2 D3
++		Q0 Q1 Q2 Q3 COUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		S1 S2 CINBAR CLOCK D0 D1 D2 D3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+.IC D(Q0_O)=0 D(Q1_O)=0 D(Q2_O)=0 D(Q3_O)=0
++	D(Q0BAR)=1 D(Q1BAR)=1 D(Q2BAR)=1 D(Q3BAR)=1
+
+U2 jkff(4) VCC1 VEE
++		$D_HI $D_HI CLOCKBAR
++		J0 J1 J2 J3 K0 K1 K2 K3
++		Q0_O Q1_O Q2_O Q3_O Q0BAR Q1BAR Q2BAR Q3BAR
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 logicexp(15,10) VCC1 VEE
++		S1 S2 CINBAR D0 D1 D2 D3 Q0BAR Q1BAR Q2BAR Q3BAR CLOCK Q1_O Q2_O Q3_O
++		COUTBAR_O J0 J1 J2 J3 K0 K1 K2 K3 CLOCKBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLOCKBAR={~CLOCK}
++		T0A={((S2 & S1) | (CINBAR & (S2 | S1)))}
++		SOR={S1 | S2}
++		SNOR={~(S1 | S2)}
++		S1BAR={~S1}
++		T0B={(D0 | SOR) ^ (SOR | Q0BAR)}
++		J0={~(T0A | T0B)}
++		K0={~(T0A | T0B)}
++		T2O={SOR & (~((S1BAR | Q2_O) ^ Q3_O))}
++		T1A={(S1 | SNOR) ^ (SNOR | Q0BAR)}
++		T1B={(D1 | SOR) ^ (SOR | Q1BAR)}
++		J1={~(T2O | T0A | T1A | T1B)}
++		K1={~(T0A | T1A | T1B)}
++		K2A={(Q1BAR | SNOR) ^ (SNOR | S1)}
++		J2A={~((S1 | K2A) ^ (S1BAR | T2O))}
++		T2A={(D2 | SOR) ^ (SOR | Q2BAR)}
++		J2={~(J2A | T1A | T0A | T2A)}
++		K2={~(K2A | T1A | T0A | T2A)}
++		J3A={(Q2BAR | SNOR) ^ (SNOR | S1)}
++		T3A={(D3 | SOR) ^ (SOR | Q3BAR)}
++		J3={~(J3A | K2A | T3A | T0A | T1A)}
++		K3={~(T3A | T0A | T1A)}
++		CA={(SNOR | S1) ^ (SNOR | Q3BAR)}
++		COUTBAR_O={CA | T1A | T0A | Q2_O | Q1_O}
+
+U4 pindly(5,0,4) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O COUTBAR_O
++		CLOCK CINBAR S1 S2
++		Q0 Q1 Q2 Q3 COUTBAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLOCK1={CHANGED_LH(CLOCK,0)}
++		SELECT={CHANGED(S1,0) | CHANGED(S2,0)}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 = {
++			CASE(
++				CLOCK1, DELAY(1ns,3.3ns,4.5ns),
++				DELAY(2ns,4.3ns,5.5ns))}
++
++		COUTBAR = {
++			CASE(
++				CLOCK1, DELAY(2.5ns,7ns,10.5ns),
++				SELECT, DELAY(1.6ns,5ns,6.9ns),
++				CHANGED(CINBAR,0), DELAY(1.6ns,5ns,6.9ns),
++				DELAY(3.5ns,8ns,11.5ns))}
+
+U5 constraint(8) VCC1 VEE
++		D0 D1 D2 D3 S1 S2 CINBAR CLOCK
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(4)=D0 D1 D2 D3
++		SETUPTIME=3.5ns
++		WHEN={S1=='0 & S2=='0}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(2)=S1 S2
++		SETUPTIME=7.5ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(1)=CINBAR
++		SETUPTIME_LO=3.7ns
++		SETUPTIME_HI=1ns
+
+.ENDS  10137
+*
+*
+* ----------------------------------------------------------- 10138 ------
+*  Bi-Quinary Counter
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-80 to 3-81
+*  bss    1/3/97
+*
+.SUBCKT 10138  S0 S1 S2 S3 C1 C2 RESET
++		Q0 Q1 Q2 Q3 Q0BAR Q3BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		S0 S1 S2 S3 C1 C2 RESET
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(5) VCC1 VEE
++		S0 S1 S2 S3 RESET
++		S0BAR S1BAR S2BAR S3BAR RESETBAR
++		D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 dff(1) VCC1 VEE
++		S0BAR RESETBAR C1
++		Q0BAR_O
++		Q0_O Q0BAR_O
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dff(1) VCC1 VEE
++		S1BAR RESETBAR C2
++		D1
++		Q1_O Q1BAR_O
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dff(1) VCC1 VEE
++		S2BAR RESETBAR C3
++		D2
++		Q2_O Q2BAR_O
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dff(1) VCC1 VEE
++		S3BAR RESETBAR C2
++		D3
++		Q3_O Q3BAR_O
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 logicexp(6,4) VCC1 VEE
++		Q1_O Q1BAR_O Q2_O Q2BAR_O Q3_O C2
++		D1 D2 D3 C3
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		D1={~(Q1_O | Q3_O)}
++		D2={~(Q2_O)}
++		C3={Q1BAR_O | C2}
++		D3={~(Q2BAR_O | Q1BAR_O)}
+
+U8 pindly(6,0,8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q0BAR_O Q3BAR_O
++		C1 C2 C3 S0 S1 S2 S3 RESET
++		Q0 Q1 Q2 Q3 Q0BAR Q3BAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLOCK1={CHANGED_LH(C1,0)}
++		CLOCK2={CHANGED_LH(C2,0)}
++		CLOCK3={CHANGED_LH(C3,0)}
++
++	PINDLY:
++		Q0 Q0BAR = {
++			CASE(
++				CLOCK1, DELAY(1.5ns,3.5ns,4.8ns),
++				CHANGED_LH(RESET,0),DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S0,0),DELAY(1.5ns,-1,5ns),
++				DELAY(2.5ns,4.5ns,6ns))}
++
++		Q1 = {
++			CASE(
++				CLOCK2, DELAY(1.5ns,3.5ns,5ns),
++				CHANGED_LH(RESET,0),DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S1,0),DELAY(1.5ns,-1,5ns),
++				DELAY(2.5ns,4.5ns,6ns))}
++
++		Q2 = {
++			CASE(
++				CLOCK3, DELAY(1.5ns,3.5ns,5ns),
++				CHANGED_LH(RESET,0),DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S2,0),DELAY(1.5ns,-1,5ns),
++				DELAY(2.5ns,4.5ns,6ns))}
++
++		Q3 Q3BAR = {
++			CASE(
++				CLOCK2, DELAY(1.5ns,3.5ns,4.8ns),
++				CHANGED_LH(RESET,0),DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S3,0),DELAY(1.5ns,-1,5ns),
++				DELAY(2.5ns,4.5ns,6ns))}
+
+.ENDS  10138
+*
+*
+* ----------------------------------------------------------- 10141 ------
+*  Four-Bit Universal Shift Register
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-82 to 3-84
+*  bss    1/3/97
+*
+.SUBCKT 10141  S1 S2 DL DR D0 D1 D2 D3 C
++		Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		S1 S2 DL DR D0 D1 D2 D3 C
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,4) VCC1 VEE
++		S1 S2 DL DR D0 D1 D2 D3 Q0_O Q1_O Q2_O Q3_O
++		DIN0 DIN1 DIN2 DIN3
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		PARA={~S1 & ~S2}
++		SHIFTR={~S1 & S2}
++		SHIFTL={S1 & ~S2}
++		HOLD={S1 & S2}
++		DIN0={(PARA & D0) | (SHIFTR & Q1_O) | (SHIFTL & DL) | (HOLD & Q0_O)}
++		DIN1={(PARA & D1) | (SHIFTR & Q2_O) | (SHIFTL & Q0_O) | (HOLD & Q1_O)}
++		DIN2={(PARA & D2) | (SHIFTR & Q3_O) | (SHIFTL & Q1_O) | (HOLD & Q2_O)}
++		DIN3={(PARA & D3) | (SHIFTR & DR) | (SHIFTL & Q2_O) | (HOLD & Q3_O)}
+
+U3 dff(4) VCC1 VEE
++		$D_HI $D_HI C
++		DIN0 DIN1 DIN2 DIN3
++		Q0_O Q1_O Q2_O Q3_O $D_NC $D_NC $D_NC $D_NC
++     D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(4) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		Q0 Q1 Q2 Q3
++     DLY_10141 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 constraint(9) VCC1 VEE
++		D0 D1 D2 D3 DL DR S1 S2 C
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=C
++		DATA(4)=D0 D1 D2 D3
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={S1=='0 & S2=='0}
++
++	SETUP_HOLD:
++		CLOCK LH=C
++		DATA(1)=DL
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={S1=='1 & S2=='0}
++
++	SETUP_HOLD:
++		CLOCK LH=C
++		DATA(1)=DR
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		WHEN={S1=='0 & S2=='1}
++
++	SETUP_HOLD:
++		CLOCK LH=C
++		DATA(2)=S1 S2
++		SETUPTIME=5ns
+
+.model DLY_10141 ugate(tplhMN=1.8ns tplhTY=2.9ns tplhMX=3.8ns
++			tphlMN=1.8ns tphlTY=2.9ns tphlMX=3.8ns)
+
+.ENDS  10141
+*
+*
+* ----------------------------------------------------------- 10153 ------
+*  Quad Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-85 to 3-86
+*  bss    1/2/97
+*
+.SUBCKT 10153  D0 G0BAR D1 CE0BAR CC CE1BAR D2 G1BAR D3
++		Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		D0 G0BAR D1 CE0BAR CC CE1BAR D2 G1BAR D3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nora(2,2) VCC1 VEE
++		CE0BAR CC CE1BAR CC
++		CLK0 CLK1
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 dltch(2) VCC1 VEE
++		$D_HI $D_HI CLK0 D0 D1 $D_NC $D_NC Q0BAR Q1BAR
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dltch(2) VCC1 VEE
++		$D_HI $D_HI CLK1 D2 D3 $D_NC $D_NC Q2BAR Q3BAR
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 nora(2,4) VCC1 VEE
++		Q0BAR G0BAR Q1BAR G0BAR Q2BAR G1BAR Q3BAR G1BAR
++		Q0_O Q1_O Q2_O Q3_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 pindly(4,0,8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		D0 D1 D2 D3 G0BAR G1BAR CLK0 CLK1
++		Q0 Q1 Q2 Q3
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		ENAB1={CHANGED(G0BAR,0)}
++		ENAB2={CHANGED(G1BAR,0)}
++		CLOCK0={CHANGED_LH(CLK0,0)}
++		CLOCK1={CHANGED_LH(CLK1,0)}
++
++	PINDLY:
++		Q0 Q1 = {
++			CASE(
++				ENAB1, DELAY(1ns,2ns,3.1ns),
++				CLOCK0, DELAY(1ns,4ns,5.6ns),
++				DELAY(1ns,4ns,5.4ns))}
++
++		Q2 Q3 = {
++			CASE(
++				ENAB2, DELAY(1ns,2ns,3.1ns),
++				CLOCK1, DELAY(1ns,4ns,5.6ns),
++				DELAY(1ns,4ns,5.4ns))}
+
+U7 constraint(6) VCC1 VEE
++		D0 D1 D2 D3 CLK0 CLK1
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(2)=D0 D1
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		MESSAGE="Constraint violation versus CC and CE0BAR clock input."
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(2)=D2 D3
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
++		MESSAGE="Constraint violation versus CC and CE1BAR clock input."
+
+.ENDS  10153
+*
+*
+* ----------------------------------------------------------- 10154 ------
+*  Binary Counter
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-87 to 3-88
+*  bss    1/6/97
+*
+.SUBCKT 10154  S0 S1 S2 S3 CLOCK1 CLOCK2 RESET
++		Q0 Q1 Q2 Q3 Q0BAR Q3BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		S0 S1 S2 S3 CLOCK1 CLOCK2 RESET
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(5) VCC1 VEE
++		S0 S1 S2 S3 RESET
++		S0BAR S1BAR S2BAR S3BAR RESETBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 or(2) VCC1 VEE
++		CLOCK1 CLOCK2 CLOCK
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dff(1) VCC1 VEE
++		S0BAR RESETBAR CLOCK Q0BAR_O Q0_O Q0BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dff(1) VCC1 VEE
++		S1BAR RESETBAR Q0_O Q1BAR_O Q1_O Q1BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dff(1) VCC1 VEE
++		S2BAR RESETBAR Q1_O Q2BAR_O Q2_O Q2BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 dff(1) VCC1 VEE
++		S3BAR RESETBAR Q2_O Q3BAR_O Q3_O Q3BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U8 pindly(6,0,6) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q0BAR_O Q3BAR_O
++		S0 S1 S2 S3 RESET CLOCK
++		Q0 Q1 Q2 Q3 Q0BAR Q3BAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		RES={CHANGED_LH(RESET,0)}
++		CLK={CHANGED_LH(CLOCK,0)}
++
++	PINDLY:
++		Q0 Q0BAR = {
++			CASE(
++				CHANGED_LH(S0,0), DELAY(1.5ns,-1,5ns),
++				RES, DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(1.5ns,3.5ns,4.8ns),
++				DELAY(2.5ns,4.5ns,5.8ns))}
++
++		Q1 = {
++			CASE(
++				CHANGED_LH(S1,0), DELAY(1.5ns,-1,5ns),
++				RES, DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(2ns,6ns,9.2ns),
++				DELAY(3ns,7ns,10.2ns))}
++
++		Q2 = {
++			CASE(
++				CHANGED_LH(S2,0), DELAY(1.5ns,-1,5ns),
++				RES, DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(3ns,8.5ns,12ns),
++				DELAY(4ns,9.5ns,13ns))}
++
++		Q3 Q3BAR = {
++			CASE(
++				CHANGED_LH(S3,0), DELAY(1.5ns,-1,5ns),
++				RES, DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(4ns,11ns,14.5ns),
++				DELAY(5ns,12ns,15.5ns))}
+
+.ENDS  10154
+*
+*
+* ----------------------------------------------------------- 10158 ------
+*  Quad 2-Input Multiplexer (Non-Inverting)
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-89 to 3-90
+*  bss    1/6/97
+*
+.SUBCKT 10158  SELECT D01 D00 D11 D10 D21 D20 D31 D30
++		Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		SELECT D01 D00 D11 D10 D21 D20 D31 D30
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inv VCC1 VEE
++		SELECT
++		SELECTBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ao(2,2) VCC1 VEE
++		SELECT D00 SELECTBAR D01 
++		Q0_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 ao(2,2) VCC1 VEE
++		SELECT D10 SELECTBAR D11 
++		Q1_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 ao(2,2) VCC1 VEE
++		SELECT D20 SELECTBAR D21 
++		Q2_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 ao(2,2) VCC1 VEE
++		SELECT D30 SELECTBAR D31 
++		Q3_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 pindly(4,0,1) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		SELECT
++		Q0 Q1 Q2 Q3
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SEL={CHANGED(SELECT,0)}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 = {
++			CASE(
++				SEL, DELAY(2.4ns,3.2ns,4.5ns),
++				DELAY(1.2ns,2.5ns,3ns))}
+
+.ENDS  10158
+*
+*
+* ----------------------------------------------------------- 10159 ------
+*  Quad 2-Input Multiplexer (Inverting)
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-91 to 3-92
+*  bss    1/6/97
+*
+.SUBCKT 10159  SELECT D01 D00 D11 D10 D21 D20 D31 D30 ENABLE
++		Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		SELECT D01 D00 D11 D10 D21 D20 D31 D30 ENABLE
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inv VCC1 VEE
++		SELECT
++		SELECTBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 anda(2,8) VCC1 VEE
++		SELECT D00 SELECTBAR D01 SELECT D10 SELECTBAR D11
++		SELECT D20 SELECTBAR D21 SELECT D30 SELECTBAR D31
++		AND1A AND1B AND2A AND2B AND3A AND3B AND4A AND4B
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 nora(3,4) VCC1 VEE
++		AND1A AND1B ENABLE AND2A AND2B ENABLE
++		AND3A AND3B ENABLE AND4A AND4B ENABLE
++		Q0_O Q1_O Q2_O Q3_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 pindly(4,0,2) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		SELECT ENABLE
++		Q0 Q1 Q2 Q3
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SEL={CHANGED(SELECT,0)}
++		ENAB={CHANGED(ENABLE,0)}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 = {
++			CASE(
++				SEL, DELAY(1.5ns,3.2ns,5ns),
++				ENAB, DELAY(1.5ns,2.5ns,5ns),
++				DELAY(1.2ns,2.5ns,3.3ns))}
+
+.ENDS  10159
+*
+*
+* ----------------------------------------------------------- 10160 ------
+*  12-Bit Parity Generator-Checker
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-93 to 3-94
+*  bss    1/6/97
+*
+.SUBCKT 10160  IN1 IN2 IN3 IN4 IN5 IN6 IN7 IN8 IN9 IN10 IN11 IN12
++		OUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		IN1 IN2 IN3 IN4 IN5 IN6 IN7 IN8 IN9 IN10 IN11 IN12
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,1) VCC1 VEE
++		IN1 IN2 IN3 IN4 IN5 IN6 IN7 IN8 IN9 IN10 IN11 IN12
++		OUT_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		XOR1={IN1 ^ IN2}
++		XOR2={IN3 ^ IN4}
++		XOR3={IN5 ^ IN6}
++		XOR4={IN7 ^ IN8}
++		XOR5={IN9 ^ IN10}
++		XOR6={IN11 ^ IN12}
++		XOUT1={XOR1 ^ XOR2 ^ XOR3}
++		XOUT2={XOR4 ^ XOR5 ^ XOR6}
++		OUT_O={XOUT1 ^ XOUT2}
+
+U3 buf VCC2 VEE
++		OUT_O
++		OUT
++     DLY_10160 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10160 ugate(tplhMN=2ns tplhTY=5ns tplhMX=7.5ns
++			tphlMN=2ns tphlTY=5ns tphlMX=7.5ns)
+
+.ENDS  10160
+*
+*
+* ----------------------------------------------------------- 10161 ------
+*  Binary to 1-8 Decoder (Low)
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-95 to 3-97
+*  bss    1/6/97
+*
+.SUBCKT 10161  E0BAR E1BAR A B C Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		E0BAR E1BAR A B C
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(5,8) VCC1 VEE
++		E0BAR E1BAR A B C
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		Q0_O={E0BAR | E1BAR | A | B | C}
++		Q1_O={E0BAR | E1BAR | ~A | B | C}
++		Q2_O={E0BAR | E1BAR | A | ~B | C}
++		Q3_O={E0BAR | E1BAR | ~A | ~B | C}
++		Q4_O={E0BAR | E1BAR | A | B | ~C}
++		Q5_O={E0BAR | E1BAR | ~A | B | ~C}
++		Q6_O={E0BAR | E1BAR | A | ~B | ~C}
++		Q7_O={E0BAR | E1BAR | ~A | ~B | ~C}
+
+U3 bufa(8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     DLY_10161 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10161 ugate(tplhMN=1.5ns tplhTY=4ns tplhMX=6ns
++			tphlMN=1.5ns tphlTY=4ns tphlMX=6ns)
+
+.ENDS  10161
+*
+*
+* ----------------------------------------------------------- 10162 ------
+*  Binary to 1-8 Decoder (High)
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-98 to 3-99
+*  bss    1/6/97
+*
+.SUBCKT 10162  E0BAR E1BAR A B C Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		E0BAR E1BAR A B C
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(5,8) VCC1 VEE
++		E0BAR E1BAR A B C
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		Q0_O={~(E0BAR | E1BAR | A | B | C)}
++		Q1_O={~(E0BAR | E1BAR | ~A | B | C)}
++		Q2_O={~(E0BAR | E1BAR | A | ~B | C)}
++		Q3_O={~(E0BAR | E1BAR | ~A | ~B | C)}
++		Q4_O={~(E0BAR | E1BAR | A | B | ~C)}
++		Q5_O={~(E0BAR | E1BAR | ~A | B | ~C)}
++		Q6_O={~(E0BAR | E1BAR | A | ~B | ~C)}
++		Q7_O={~(E0BAR | E1BAR | ~A | ~B | ~C)}
+
+U3 bufa(8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     DLY_10162 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10162 ugate(tplhMN=1.5ns tplhTY=4ns tplhMX=6ns
++			tphlMN=1.5ns tphlTY=4ns tphlMX=6ns)
+
+.ENDS  10162
+*
+*
+* ----------------------------------------------------------- 10164 ------
+*  8-Line Multiplexer
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-100 to 3-102
+*  bss    1/7/97
+*
+.SUBCKT 10164  A B C ENABLE X0 X1 X2 X3 X4 X5 X6 X7 Z
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		A B C ENABLE X0 X1 X2 X3 X4 X5 X6 X7
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,1) VCC1 VEE
++		A B C ENABLE X0 X1 X2 X3 X4 X5 X6 X7
++		Z_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		OUT0={~(X0 | A | B | C)}
++		OUT1={~(X1 | ~A | B | C)}
++		OUT2={~(X2 | A | ~B | C)}
++		OUT3={~(X3 | ~A | ~B | C)}
++		OUT4={~(X4 | A | B | ~C)}
++		OUT5={~(X5 | ~A | B | ~C)}
++		OUT6={~(X6 | A | ~B | ~C)}
++		OUT7={~(X7 | ~A | ~B | ~C)}
++		OUT={OUT0 | OUT1 | OUT2 | OUT3 | OUT4 | OUT5 | OUT6 | OUT7}
++		Z_O={~(ENABLE | OUT)}
+
+U3 pindly(1,0,12) VCC2 VEE
++		Z_O
++		A B C ENABLE X0 X1 X2 X3 X4 X5 X6 X7
++		Z
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA={CHANGED(X0,0) | CHANGED(X1,0) | CHANGED(X2,0) | CHANGED(X3,0) |
++			CHANGED(X4,0) | CHANGED(X5,0) | CHANGED(X6,0) | CHANGED(X7,0)}
++		ENAB={CHANGED(ENABLE,0)}
++		SELECT={CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0)}
++
++	PINDLY:
++		Z = {
++			CASE(
++				SELECT, DELAY(2ns,4ns,6.2ns),
++				DATA, DELAY(1.5ns,3ns,4.7ns),
++				ENAB, DELAY(1ns,2ns,3.1ns),
++				DELAY(3ns,5ns,7.2ns))}
+
+.ENDS  10164
+*
+*
+* ----------------------------------------------------------- 10165 ------
+*  8-Input Priority Encoder
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-103 to 3-106
+*  bss    1/7/97
+*
+.SUBCKT 10165  C D0 D1 D2 D3 D4 D5 D6 D7 Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		C D0 D1 D2 D3 D4 D5 D6 D7
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(9,5) VCC1 VEE
++		C D0 D1 D2 D3 D4 D5 D6 D7
++		DIN0 DIN1 DIN2 DIN3 CLK
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		OR1={D2 | D3}
++		OR2={D4 | D5 | D6 | D7}
++		OR3={D6 | D7}
++		DIN0={(~D0 & D1) | (~D0 & ~D2 & D3) | (~D0 & ~D2 & ~D4 & D5) |
++			(~D0 & ~D2 & ~D4 & ~D6 & D7)}
++		DIN1={(~D0 & ~D1 & OR1) | (~D0 & ~D1 & ~D4 & ~D5 & OR3)}
++		DIN2={~D0 & ~D1 & ~D2 & OR2 & ~D3}
++		DIN3={D0 | D1 | D2 | D3 | D4 | D5 | D6 | D7}
++		CLK={~C}
+
+U3 dltch(4) VCC2 VEE
++		$D_HI $D_HI CLK DIN0 DIN1 DIN2 DIN3
++		Q0 Q1 Q2 Q3 $D_NC $D_NC $D_NC $D_NC
++		DLY_10165 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10165 ugff (tpgqlhMN=2ns tpgqlhMX=4ns tpgqhlMN=2ns tpgqhlMX=4ns
++		tpdqlhMN=3ns tpdqlhMX=7ns tpdqhlMN=3ns tpdqhlMX=7ns
++		tsudgMN=6ns thdgMN=1ns)
+
+.ENDS  10165
+*
+*
+* ----------------------------------------------------------- 10166 ------
+*  5-Bit Magnitude Comparator
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-107 to 3-109
+*  bss    1/7/97
+*
+.SUBCKT 10166  EBAR A0 A1 A2 A3 A4 B0 B1 B2 B3 B4 AGTB ALTB
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		EBAR A0 A1 A2 A3 A4 B0 B1 B2 B3 B4
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(11,2) VCC1 VEE
++		EBAR A0 A1 A2 A3 A4 B0 B1 B2 B3 B4
++		AGTB_O ALTB_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		XOR0={A0 ^ B0}
++		XOR1={A1 ^ B1}
++		XOR2={A2 ^ B2}
++		XOR3={A3 ^ B3}
++		XOR4={A4 ^ B4}
++		CHK0={A0 | ~B0}
++		CHK1={A1 | ~B1}
++		CHK2={A2 | ~B2}
++		CHK3={A3 | ~B3}
++		CHK4={A4 | ~B4}
++		NOR0={~(XOR4 | XOR1 | XOR2 | XOR3 | CHK0)}
++		NOR1={~(CHK1 | XOR4 | XOR3 | XOR2)}
++		NOR2={~(CHK2 | XOR4 | XOR3)}
++		NOR3={~(CHK3 | XOR4)}
++		NOR4={~CHK4}
++		NOR5={~(XOR4 | XOR3 | XOR2 | XOR1 | XOR0)}
++		OR0={NOR0 | NOR1 | NOR2 | NOR3 | NOR4}
++		AGTB_O={~(NOR5 | EBAR | OR0)}
++		ALTB_O={OR0 & ~EBAR}
+
+U3 pindly(2,0,11) VCC2 VEE
++		AGTB_O ALTB_O
++		EBAR A0 A1 A2 A3 A4 B0 B1 B2 B3 B4
++		AGTB ALTB
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA={CHANGED(A0,0) | CHANGED(A1,0) | CHANGED(A2,0) | CHANGED(A3,0) |
++			CHANGED(A4,0) | CHANGED(B1,0) | CHANGED(B2,0) | CHANGED(B3,0) |
++			CHANGED(B4,0) | CHANGED(B0,0)}
++		ENAB={CHANGED(EBAR,0)}
++
++	PINDLY:
++		AGTB ALTB = {
++			CASE(
++				DATA, DELAY(1ns,6ns,7.6ns),
++				ENAB, DELAY(1ns,2.5ns,3.6ns),
++				DELAY(2ns,7ns,8.6ns))}
+
+.ENDS  10166
+*
+*
+* ----------------------------------------------------------- 10168 ------
+*  Quad Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-110 to 3-111
+*  bss    1/7/97
+*
+.SUBCKT 10168  CC D0 D1 D2 D3 G0BAR G1BAR G2BAR G3BAR Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		CC D0 D1 D2 D3 G0BAR G1BAR G2BAR G3BAR
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 dltch(4) VCC1 VEE
++		$D_HI $D_HI CC D0 D1 D2 D3
++		$D_NC $D_NC $D_NC $D_NC Q0BAR Q1BAR Q2BAR Q3BAR
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 nora(2,4) VCC1 VEE
++		Q0BAR G0BAR Q1BAR G1BAR Q2BAR G2BAR Q3BAR G3BAR
++		Q0_O Q1_O Q2_O Q3_O
++		D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(4,0,9) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		CC D0 D1 D2 D3 G0BAR G1BAR G2BAR G3BAR
++		Q0 Q1 Q2 Q3
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLOCK={CHANGED_LH(CC,0)}
++
++	PINDLY:
++		Q0 = {
++			CASE(
++				CLOCK, DELAY(1ns,4ns,5.6ns),
++				CHANGED(D0,0), DELAY(1ns,3ns,5.4ns),
++				CHANGED(G0BAR,0), DELAY(1ns,2ns,3.1ns),
++				DELAY(2ns,5ns,6.6ns))}
++
++		Q1 = {
++			CASE(
++				CLOCK, DELAY(1ns,4ns,5.6ns),
++				CHANGED(D1,0), DELAY(1ns,3ns,5.4ns),
++				CHANGED(G1BAR,0), DELAY(1ns,2ns,3.1ns),
++				DELAY(2ns,5ns,6.6ns))}
++
++		Q2 = {
++			CASE(
++				CLOCK, DELAY(1ns,4ns,5.6ns),
++				CHANGED(D2,0), DELAY(1ns,3ns,5.4ns),
++				CHANGED(G2BAR,0), DELAY(1ns,2ns,3.1ns),
++				DELAY(2ns,5ns,6.6ns))}
++
++		Q3 = {
++			CASE(
++				CLOCK, DELAY(1ns,4ns,5.6ns),
++				CHANGED(D3,0), DELAY(1ns,3ns,5.4ns),
++				CHANGED(G3BAR,0), DELAY(1ns,2ns,3.1ns),
++				DELAY(2ns,5ns,6.6ns))}
+
+U5 constraint(5) VCC1 VEE
++		D0 D1 D2 D3 CC
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CC
++		DATA(4)=D0 D1 D2 D3
++		SETUPTIME=2.5ns
++		HOLDTIME=1ns
+
+.ENDS  10168
+*
+*
+* ----------------------------------------------------------- 10170 ------
+*  9 + 2-Bit Parity Generator-Checker
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-112 to 3-113
+*  bss    1/7/97
+*
+.SUBCKT 10170  HIGH LOW D0 D1 D2 D3 D4 D5 D6 D7 D8 A B
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		HIGH LOW D0 D1 D2 D3 D4 D5 D6 D7 D8
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(11,2) VCC1 VEE
++		HIGH LOW D0 D1 D2 D3 D4 D5 D6 D7 D8
++		A_O B_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		XOR0={D0 ^ D1 ^ D2}
++		XOR1={D3 ^ D4 ^ D5}
++		XOR2={D6 ^ D7 ^ D8}
++		A_O={XOR0 ^ XOR1 ^ XOR2}
++		B_O={A_O ^ HIGH ^ LOW}
+
+U3 pindly(2,0,11) VCC2 VEE
++		A_O B_O
++		HIGH LOW D0 D1 D2 D3 D4 D5 D6 D7 D8
++		A B
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA={CHANGED(D0,0) | CHANGED(D1,0) | CHANGED(D2,0) | CHANGED(D3,0) |
++			CHANGED(D4,0) | CHANGED(D5,0) | CHANGED(D6,0) | CHANGED(D7,0) |
++			CHANGED(D8,0)}
++		CONTROL={CHANGED(HIGH,0) | CHANGED(LOW,0)}
++
++	PINDLY:
++		A = {
++			CASE(
++				DATA, DELAY(2ns,4ns,6ns),
++				DELAY(3ns,5ns,7ns))}
++
++		B = {
++			CASE(
++				DATA, DELAY(4ns,6ns,8.8ns),
++				CONTROL, DELAY(1.5ns,2.5ns,4ns),
++				DELAY(5ns,7ns,9.8ns))}
+
+.ENDS  10170
+*
+*
+* ----------------------------------------------------------- 10171 ------
+*  Binary to 1-4-Decoder (Low)
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-114 to 3-115
+*  bss    1/7/97
+*
+.SUBCKT 10171  EBAR E0BAR E1BAR A B
++		Q00 Q01 Q02 Q03 Q10 Q11 Q12 Q13
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		EBAR E0BAR E1BAR A B
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(5,8) VCC1 VEE
++		EBAR E0BAR E1BAR A B
++		Q00_O Q01_O Q02_O Q03_O Q10_O Q11_O Q12_O Q13_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB0={E0BAR | EBAR}
++		ENAB1={E1BAR | EBAR}
++		Q03_O={ENAB0 | ~A | ~B}
++		Q13_O={ENAB1 | ~A | ~B}
++		Q02_O={ENAB0 | ~A | B}
++		Q12_O={ENAB1 | ~A | B}
++		Q01_O={ENAB0 | A | ~B}
++		Q11_O={ENAB1 | A | ~B}
++		Q00_O={ENAB0 | A | B}
++		Q10_O={ENAB1 | A | B}
+
+U3 pindly(8,0,5) VCC2 VEE
++		Q00_O Q01_O Q02_O Q03_O Q10_O Q11_O Q12_O Q13_O
++		EBAR E0BAR E1BAR A B
++		Q00 Q01 Q02 Q03 Q10 Q11 Q12 Q13
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		Q00 Q01 Q02 Q03 Q10 Q11 Q12 Q13 = {
++			CASE(
++				DELAY(1.5ns,4ns,6ns))}
+
+.ENDS  10171
+*
+*
+* ----------------------------------------------------------- 10172 ------
+*  Binary to 1-4-Decoder (High)
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-116 to 3-117
+*  bss    1/7/97
+*
+.SUBCKT 10172  EBAR E0BAR E1BAR A B
++		Q00 Q01 Q02 Q03 Q10 Q11 Q12 Q13
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		EBAR E0BAR E1BAR A B
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(5,8) VCC1 VEE
++		EBAR E0BAR E1BAR A B
++		Q00_O Q01_O Q02_O Q03_O Q10_O Q11_O Q12_O Q13_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB0={~E0BAR | EBAR}
++		ENAB1={~E1BAR | EBAR}
++		Q03_O={~(ENAB0 | ~A | ~B)}
++		Q13_O={~(ENAB1 | ~A | ~B)}
++		Q02_O={~(ENAB0 | ~A | B)}
++		Q12_O={~(ENAB1 | ~A | B)}
++		Q01_O={~(ENAB0 | A | ~B)}
++		Q11_O={~(ENAB1 | A | ~B)}
++		Q00_O={~(ENAB0 | A | B)}
++		Q10_O={~(ENAB1 | A | B)}
+
+U3 pindly(8,0,5) VCC2 VEE
++		Q00_O Q01_O Q02_O Q03_O Q10_O Q11_O Q12_O Q13_O
++		EBAR E0BAR E1BAR A B
++		Q00 Q01 Q02 Q03 Q10 Q11 Q12 Q13
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		Q00 Q01 Q02 Q03 Q10 Q11 Q12 Q13 = {
++			CASE(
++				DELAY(1.5ns,4ns,6ns))}
+
+.ENDS  10172
+*
+*
+* ----------------------------------------------------------- 10173 ------
+*  Quad 2-Input Multiplexer/Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-118 to 3-119
+*  bss    1/8/97
+*
+.SUBCKT 10173  SELECT D00 D01 D10 D11 D20 D21 D30 D31 CLOCK
++		Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		SELECT D00 D01 D10 D11 D20 D21 D30 D31 CLOCK
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(10,5) VCC1 VEE
++		SELECT D00 D01 D10 D11 D20 D21 D30 D31 CLOCK
++		D0 D1 D2 D3 CLOCKBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		SELBAR={~SELECT}
++		CLOCKBAR={~CLOCK}
++		D0={(SELECT & D00) | (SELBAR & D01)}
++		D1={(SELECT & D10) | (SELBAR & D11)}
++		D2={(SELECT & D20) | (SELBAR & D21)}
++		D3={(SELECT & D30) | (SELBAR & D31)}
+
+U3 dltch(4) VCC1 VEE
++		$D_HI $D_HI CLOCKBAR D0 D1 D2 D3
++		Q0_O Q1_O Q2_O Q3_O $D_NC $D_NC $D_NC $D_NC
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(4,0,10) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O
++		CLOCK SELECT D00 D01 D10 D11 D20 D21 D30 D31
++		Q0 Q1 Q2 Q3
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLK={CHANGED_HL(CLOCK,0)}
++		DATA0={CHANGED(D00,0) | CHANGED(D01,0)}
++		DATA1={CHANGED(D10,0) | CHANGED(D11,0)}
++		DATA2={CHANGED(D20,0) | CHANGED(D21,0)}
++		DATA3={CHANGED(D30,0) | CHANGED(D31,0)}
++
++	PINDLY:
++		Q0 = {
++			CASE(
++				CLK, DELAY(1.6ns,4.5ns,6.8ns),
++				CHANGED(SELECT,0), DELAY(1.3ns,3.5ns,5.7ns),
++				DATA0, DELAY(1ns,2.5ns,3.5ns),
++				DELAY(2.6ns,5.5ns,7.8ns))}
++
++		Q1 = {
++			CASE(
++				CLK, DELAY(1.6ns,4.5ns,6.8ns),
++				CHANGED(SELECT,0), DELAY(1.3ns,3.5ns,5.7ns),
++				DATA1, DELAY(1ns,2.5ns,3.5ns),
++				DELAY(2.6ns,5.5ns,7.8ns))}
++
++		Q2 = {
++			CASE(
++				CLK, DELAY(1.6ns,4.5ns,6.8ns),
++				CHANGED(SELECT,0), DELAY(1.3ns,3.5ns,5.7ns),
++				DATA2, DELAY(1ns,2.5ns,3.5ns),
++				DELAY(2.6ns,5.5ns,7.8ns))}
++
++		Q3 = {
++			CASE(
++				CLK, DELAY(1.6ns,4.5ns,6.8ns),
++				CHANGED(SELECT,0), DELAY(1.3ns,3.5ns,5.7ns),
++				DATA3, DELAY(1ns,2.5ns,3.5ns),
++				DELAY(2.6ns,5.5ns,7.8ns))}
+
+U5 constraint(10) VCC1 VEE
++		CLOCK SELECT D00 D01 D10 D11 D20 D21 D30 D31
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(8)=D00 D01 D10 D11 D20 D21 D30 D31
++		SETUPTIME=2ns
++		HOLDTIME=2.5ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(1)=SELECT
++		SETUPTIME=3ns
++		HOLDTIME=1.5ns
+
+.ENDS  10173
+*
+*
+* ----------------------------------------------------------- 10174 ------
+*  Dual 4 to 1 Multiplexer
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-120 to 3-121
+*  bss    1/8/97
+*
+.SUBCKT 10174  D00 D01 D02 D03 A B ENABLE D10 D11 D12 D13
++		Q0 Q1
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		D00 D01 D02 D03 A B ENABLE D10 D11 D12 D13
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(11,2) VCC1 VEE
++		D00 D01 D02 D03 A B ENABLE D10 D11 D12 D13
++		Q0_O Q1_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		NOR00={~(D00 | A | B)}
++		NOR01={~(D01 | ~A | B)}
++		NOR02={~(D02 | A | ~B)}
++		NOR03={~(D03 | ~A | ~B)}
++		NOR10={~(D10 | A | B)}
++		NOR11={~(D11 | ~A | B)}
++		NOR12={~(D12 | A | ~B)}
++		NOR13={~(D13 | ~A | ~B)}
++		Q0_O={~(NOR00 | NOR01 | NOR02 | NOR03 | ENABLE)}
++		Q1_O={~(NOR10 | NOR11 | NOR12 | NOR13 | ENABLE)}
+
+U3 pindly(2,0,11) VCC2 VEE
++		Q0_O Q1_O
++		D00 D01 D02 D03 A B ENABLE D10 D11 D12 D13
++		Q0 Q1
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA0={CHANGED(D00,0) | CHANGED(D01,0) | CHANGED(D02,0) |
++			CHANGED(D03,0)}
++		DATA1={CHANGED(D10,0) | CHANGED(D11,0) | CHANGED(D12,0) |
++			CHANGED(D13,0)}
++		SELECT={CHANGED(A,0) | CHANGED(B,0)}
++
++	PINDLY:
++		Q0 = {
++			CASE(
++				CHANGED(ENABLE,0), DELAY(1ns,2ns,3.1ns),
++				SELECT, DELAY(2ns,5ns,6.2ns),
++				DATA0, DELAY(1.5ns,3.5ns,4.7ns),
++				DELAY(3ns,6ns,7.2ns))}
++
++		Q1 = {
++			CASE(
++				CHANGED(ENABLE,0), DELAY(1ns,2ns,3.1ns),
++				SELECT, DELAY(2ns,5ns,6.2ns),
++				DATA1, DELAY(1.5ns,3.5ns,4.7ns),
++				DELAY(3ns,6ns,7.2ns))}
+
+.ENDS  10174
+*
+*
+* ----------------------------------------------------------- 10175 ------
+*  Quint Latch
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-122 to 3-123
+*  bss    1/8/97
+*
+.SUBCKT 10175  D0 D1 D2 D3 D4 C0BAR C1BAR RESET
++		Q0 Q1 Q2 Q3 Q4
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		D0 D1 D2 D3 D4 C0BAR C1BAR RESET
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(3,2) VCC1 VEE
++		C0BAR C1BAR RESET
++		CLOCK CLEAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLOCK={~(C0BAR | C1BAR)}
++		CLEAR={~(RESET & (C0BAR | C1BAR))}
+
+U3 dltch(5) VCC1 VEE
++		$D_HI CLEAR CLOCK D0 D1 D2 D3 D4
++		Q0_O Q1_O Q2_O Q3_O Q4_O $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_GFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(5,0,7) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O
++		CLOCK CLEAR D0 D1 D2 D3 D4
++		Q0 Q1 Q2 Q3 Q4
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLK={CHANGED_LH(CLOCK,0)}
++		CLR={CHANGED_HL(CLEAR,0)}
++
++	PINDLY:
++		Q0 = {
++			CASE(
++				CLK, DELAY(1ns,-1,4.3ns),
++				CLR, DELAY(1ns,-1,3.9ns),
++				CHANGED(D0,0), DELAY(1ns,-1,3.5ns),
++				DELAY(2ns,-1,5.3ns))}
++
++		Q1 = {
++			CASE(
++				CLK, DELAY(1ns,-1,4.3ns),
++				CLR, DELAY(1ns,-1,3.9ns),
++				CHANGED(D1,0), DELAY(1ns,-1,3.5ns),
++				DELAY(2ns,-1,5.3ns))}
++
++		Q2 = {
++			CASE(
++				CLK, DELAY(1ns,-1,4.3ns),
++				CLR, DELAY(1ns,-1,3.9ns),
++				CHANGED(D2,0), DELAY(1ns,-1,3.5ns),
++				DELAY(2ns,-1,5.3ns))}
++
++		Q3 = {
++			CASE(
++				CLK, DELAY(1ns,-1,4.3ns),
++				CLR, DELAY(1ns,-1,3.9ns),
++				CHANGED(D3,0), DELAY(1ns,-1,3.5ns),
++				DELAY(2ns,-1,5.3ns))}
++
++		Q4 = {
++			CASE(
++				CLK, DELAY(1ns,-1,4.3ns),
++				CLR, DELAY(1ns,-1,3.9ns),
++				CHANGED(D4,0), DELAY(1ns,-1,3.5ns),
++				DELAY(2ns,-1,5.3ns))}
+
+U5 constraint(6) VCC1 VEE
++		CLOCK D0 D1 D2 D3 D4
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLOCK
++		DATA(5)=D0 D1 D2 D3 D4
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
+
+.ENDS  10175
+*
+*
+* ----------------------------------------------------------- 10176 ------
+*  Hex D Master-Slave Flip-Flop
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-124 to 3-125
+*  bss    1/8/97
+*
+.SUBCKT 10176  D0 D1 D2 D3 D4 D5 CLOCK
++		Q0 Q1 Q2 Q3 Q4 Q5
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		D0 D1 D2 D3 D4 D5 CLOCK
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 dff(6) VCC1 VEE
++		$D_HI $D_HI CLOCK D0 D1 D2 D3 D4 D5 
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(6) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0 Q1 Q2 Q3 Q4 Q5
++		DLY_10176 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 constraint(7) VCC1 VEE
++		CLOCK D0 D1 D2 D3 D4 D5
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(6)=D0 D1 D2 D3 D4 D5
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
+
+.model DLY_10176 ugate (tplhMN=1.6ns tplhMX=4.5ns tphlMN=1.6ns tphlMX=4.5ns)
+
+.ENDS  10176
+*
+*
+* ----------------------------------------------------------- 10178 ------
+*  Binary Counter
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-126 to 3-127
+*  bss    1/8/97
+*
+.SUBCKT 10178  RESET S0 S1 S2 S3 CLOCK1 CLOCK2
++		Q0 Q0BAR Q1 Q2 Q3 Q3BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		RESET S0 S1 S2 S3 CLOCK1 CLOCK2
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(5) VCC1 VEE
++		RESET S0 S1 S2 S3 
++		RESETBAR S0BAR S1BAR S2BAR S3BAR
++		D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 or(2) VCC1 VEE
++		CLOCK1 CLOCK2 
++		CLOCK
++		D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dff(1) VCC1 VEE
++		S0BAR RESETBAR CLOCK Q0BAR_O Q0_O Q0BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dff(1) VCC1 VEE
++		S1BAR RESETBAR Q0BAR_O Q1BAR_O Q1_O Q1BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dff(1) VCC1 VEE
++		S2BAR RESETBAR Q1BAR_O Q2BAR_O Q2_O Q2BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 dff(1) VCC1 VEE
++		S3BAR RESETBAR Q2BAR_O Q3BAR_O Q3_O Q3BAR_O
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U8 pindly(6,0,6) VCC2 VEE
++		Q0_O Q0BAR_O Q1_O Q2_O Q3_O Q3BAR_O
++		CLOCK S0 S1 S2 S3 RESET
++		Q0 Q0BAR Q1 Q2 Q3 Q3BAR
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLK={CHANGED_LH(CLOCK,0)}
++		CLR={CHANGED_LH(RESET,0)}
++
++	PINDLY:
++		Q0 Q0BAR = {
++			CASE(
++				CLR, DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S0,0), DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(1.5ns,3.5ns,4.8ns),
++				DELAY(2.5ns,4.5ns,5.8ns))}
++
++		Q1 = {
++			CASE(
++				CLR, DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S1,0), DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(2ns,6ns,9.2ns),
++				DELAY(3ns,7ns,10.2ns))}
++
++		Q2 = {
++			CASE(
++				CLR, DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S2,0), DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(3ns,8.5ns,12ns),
++				DELAY(4ns,9.5ns,13ns))}
++
++		Q3 Q3BAR = {
++			CASE(
++				CLR, DELAY(1.5ns,-1,5ns),
++				CHANGED_LH(S3,0), DELAY(1.5ns,-1,5ns),
++				CLK, DELAY(4ns,11ns,14.5ns),
++				DELAY(5ns,12ns,15.5ns))}
+
+.ENDS  10178
+*
+*
+* ----------------------------------------------------------- 10181 ------
+*  4-Bit Arithmetic Logic Unit/Function Generator
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-128 to 3-131
+*  bss    1/9/97
+*  This part is not tested.  The truth table did not specify
+*	how GG PG and CN4 pins work.
+.SUBCKT 10181  S0 S1 S2 S3 A0 A1 A2 A3 B0 B1 B2 B3 CN M
++		F0 F1 F2 F3 GG PG CN4
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(14) VCC1 VEE
++		S0 S1 S2 S3 A0 A1 A2 A3 B0 B1 B2 B3 CN M
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(14,7) VCC1 VEE
++		S0 S1 S2 S3 A0 A1 A2 A3 B0 B1 B2 B3 CN M
++		F0_O F1_O F2_O F3_O GG_O PG_O CN4_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		NOR1={~(~(S3 | B0 | A0) | ~(S2 | A0 | ~B0))}
++		NOR2={~(~(~B0 | S1) | ~(S0 | B0) | ~A0)}
++		NOR3={~(~(S3 | B1 | A1) | ~(S2 | A1 | ~B1))}
++		NOR4={~(~(~B1 | S1) | ~(S0 | B1) | ~A1)}
++		NOR5={~(~(S3 | B2 | A2) | ~(S2 | A2 | ~B2))}
++		NOR6={~(~(~B2 | S1) | ~(S0 | B2) | ~A2)}
++		NOR7={~(~(S3 | B3 | A3) | ~(S2 | A3 | ~B3))}
++		NOR8={~(~(~B3 | S1) | ~(S0 | B3) | ~A3)}
++		XOR1={NOR1 ^ NOR2}
++		XOR2={NOR3 ^ NOR4}
++		XOR3={NOR5 ^ NOR6}
++		XOR4={NOR7 ^ NOR8}
++		F0_O={~(~(M | CN) ^ XOR1)}
++		OR1={~(M | NOR1) | ~(M | NOR2 | CN)}
++		F1_O={~(OR1 ^ XOR2)}
++		OR2={~(M | NOR3) | ~(M | NOR4 | NOR1) | ~(M | NOR2 | NOR4 | CN)}
++		F2_O={~(OR2 ^ XOR3)}
++		OR3={~(M | NOR5) | ~(M | NOR6 | NOR3) | ~(M | NOR6 | NOR4 | NOR1) |
++			~(M | NOR6 | NOR4 | NOR2 | CN)}
++		F3_O={~(OR3 ^ XOR4)}
++		PG_O={NOR2 | NOR4 | NOR6 | NOR8}
++		OR4={~NOR7 | ~(NOR5 | NOR8) | ~(NOR3 | NOR6 | NOR8) |
++			~(NOR1 | NOR4 | NOR6 | NOR8)}
++		GG_O={~OR4}
++		CN4_O={~(~(CN | NOR2 | NOR4 | NOR6 | NOR8) | OR4)}
+
+U3 pindly(7,0,14) VCC2 VEE
++		F0_O F1_O F2_O F3_O GG_O PG_O CN4_O
++		S0 S1 S2 S3 A0 A1 A2 A3 B0 B1 B2 B3 CN M
++		F0 F1 F2 F3 GG PG CN4
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		MODE={CHANGED(M,0)}
++		CARRY={CHANGED(CN,0)}
++		SELECT={CHANGED(S0,0) | CHANGED(S1,0) | CHANGED(S2,0) | CHANGED(S3,0)}
++		DATAA={CHANGED(A0,0) | CHANGED(A1,0) | CHANGED(A2,0) | CHANGED(A3,0)}
++		DATAB={CHANGED(B0,0) | CHANGED(B1,0) | CHANGED(B2,0) | CHANGED(B3,0)}
++
++	PINDLY:
++		F0 F1 F2 F3 = {
++			CASE(
++				SELECT, DELAY(3ns,6.5ns,10ns),
++				MODE, DELAY(3ns,6.5ns,10ns),
++				DATAB, DELAY(3ns,8ns,11ns),
++				DATAA, DELAY(3ns,6.5ns,10ns),
++				CARRY, DELAY(2ns,4.5ns,7ns),
++				DELAY(4ns,9ns,12ns))}
++
++		PG = {
++			CASE(
++				SELECT, DELAY(2ns,6ns,8ns),
++				DATAB, DELAY(2ns,6ns,7.5ns),
++				DATAA, DELAY(2ns,5ns,6.5ns),
++				DELAY(3ns,7ns,9ns))}
++
++		GG = {
++			CASE(
++				SELECT, DELAY(2ns,6ns,9ns),
++				DATAB, DELAY(2ns,6ns,8ns),
++				DATAA, DELAY(2ns,4.5ns,7ns),
++				DELAY(3ns,7ns,10ns))}
++
++		CN4 = {
++			CASE(
++				SELECT, DELAY(2ns,6ns,9ns),
++				DATAB, DELAY(2ns,6ns,8ns),
++				DATAA, DELAY(2ns,5ns,7ns),
++				CARRY, DELAY(1.1ns,3.1ns,5ns),
++				DELAY(3ns,7ns,10ns))}
+
+.ENDS  10181
+*
+*
+* ----------------------------------------------------------- 10186 ------
+*  Hex D Master-Slave Flip-Flop/With Reset
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-132 to 3-133
+*  bss    1/10/97
+*
+.SUBCKT 10186  D0 D1 D2 D3 D4 D5 CLOCK RESET
++		Q0 Q1 Q2 Q3 Q4 Q5
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		D0 D1 D2 D3 D4 D5 CLOCK RESET
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(2,1) VCC1 VEE
++		CLOCK RESET
++		CLEAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLEAR={~(~CLOCK & RESET)}
+
+U3 dff(6) VCC1 VEE
++		$D_HI CLEAR CLOCK D0 D1 D2 D3 D4 D5 
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_EFF IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(6,0,2) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		CLOCK CLEAR
++		Q0 Q1 Q2 Q3 Q4 Q5
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 Q4 Q5 = {
++			CASE(
++				CHANGED_LH(CLOCK,0), DELAY(1.6ns,3.5ns,4.5ns),
++				CHANGED_HL(CLEAR,0), DELAY(1.6ns,2.5ns,4.5ns),
++				DELAY(2.6ns,4.5ns,5.5ns))}
+
+U5 constraint(7) VCC1 VEE
++		CLOCK D0 D1 D2 D3 D4 D5
++		IO_10K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLOCK
++		DATA(6)=D0 D1 D2 D3 D4 D5
++		SETUPTIME=2.5ns
++		HOLDTIME=1.5ns
+
+.ENDS  10186
+*
+*
+* ----------------------------------------------------------- 10188 ------
+*  Hex Buffer With Enable
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-134 to 3-135
+*  bss    1/10/97
+*
+.SUBCKT 10188  AIN BIN CIN DIN EIN FIN COMMON
++		AOUT BOUT COUT DOUT EOUT FOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		AIN BIN CIN DIN EIN FIN COMMON
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inv VCC1 VEE
++     COMMON COMMONBAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 anda(2,6) VCC1 VEE
++     AIN COMMONBAR BIN COMMONBAR CIN COMMONBAR
++		DIN COMMONBAR EIN COMMONBAR FIN COMMONBAR
++		AOUT_O BOUT_O COUT_O DOUT_O EOUT_O FOUT_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(6,0,7) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O EOUT_O FOUT_O
++		AIN BIN CIN DIN EIN FIN COMMON
++		AOUT BOUT COUT DOUT EOUT FOUT
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		AOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(AIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		BOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(BIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		COUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(CIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		DOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(DIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		EOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(EIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		FOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(FIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
+
+.ENDS  10188
+*
+*
+* ----------------------------------------------------------- 10189 ------
+*  Hex Inverter With Enable
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-136 to 3-137
+*  bss    1/10/97
+*
+.SUBCKT 10189  AIN BIN CIN DIN EIN FIN COMMON
++		AOUT BOUT COUT DOUT EOUT FOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		AIN BIN CIN DIN EIN FIN COMMON
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nora(2,6) VCC1 VEE
++     AIN COMMON BIN COMMON CIN COMMON
++		DIN COMMON EIN COMMON FIN COMMON
++		AOUT_O BOUT_O COUT_O DOUT_O EOUT_O FOUT_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 pindly(6,0,7) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O EOUT_O FOUT_O
++		AIN BIN CIN DIN EIN FIN COMMON
++		AOUT BOUT COUT DOUT EOUT FOUT
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		AOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(AIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		BOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(BIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		COUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(CIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		DOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(DIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		EOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(EIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
++
++		FOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,-1,3.5ns),
++				CHANGED(FIN,0), DELAY(1ns,-1,2.9ns),
++				DELAY(2.1ns,-1,4.5ns))}
+
+.ENDS  10189
+*
+*
+* ----------------------------------------------------------- 10195 ------
+*  Hex Inverter/Buffer
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-143 to 3-144
+*  bss    1/10/97
+*
+.SUBCKT 10195  A B1 B2 B3 B4 B5 B6 Q1 Q2 Q3 Q4 Q5 Q6
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		A B1 B2 B3 B4 B5 B6
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nxora(6) VCC1 VEE
++     A B1 A B2 A B3 A B4 A B5 A B6
++		Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 pindly(6,0,7) VCC2 VEE
++		Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O
++		A B1 B2 B3 B4 B5 B6
++		Q1 Q2 Q3 Q4 Q5 Q6
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		Q1 = {
++			CASE(
++				CHANGED(A,0), DELAY(1.1ns,3.8ns,5ns),
++				CHANGED(B1,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.8ns,6ns))}
++
++		Q2 = {
++			CASE(
++				CHANGED(A,0), DELAY(1.1ns,3.8ns,5ns),
++				CHANGED(B2,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.8ns,6ns))}
++
++		Q3 = {
++			CASE(
++				CHANGED(A,0), DELAY(1.1ns,3.8ns,5ns),
++				CHANGED(B3,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.8ns,6ns))}
++
++		Q4 = {
++			CASE(
++				CHANGED(A,0), DELAY(1.1ns,3.8ns,5ns),
++				CHANGED(B4,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.8ns,6ns))}
++
++		Q5 = {
++			CASE(
++				CHANGED(A,0), DELAY(1.1ns,3.8ns,5ns),
++				CHANGED(B5,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.8ns,6ns))}
++
++		Q6 = {
++			CASE(
++				CHANGED(A,0), DELAY(1.1ns,3.8ns,5ns),
++				CHANGED(B6,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.8ns,6ns))}
+
+.ENDS  10195
+*
+*
+* ----------------------------------------------------------- 10197 ------
+*  Hex And Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-145 to 3-146
+*  bss    1/10/97
+*
+.SUBCKT 10197  AIN BIN CIN DIN EIN FIN COMMON
++		AOUT BOUT COUT DOUT EOUT FOUT
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		AIN BIN CIN DIN EIN FIN COMMON
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 anda(2,6) VCC1 VEE
++     AIN COMMON BIN COMMON CIN COMMON
++		DIN COMMON EIN COMMON FIN COMMON
++		AOUT_O BOUT_O COUT_O DOUT_O EOUT_O FOUT_O
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 pindly(6,0,7) VCC2 VEE
++		AOUT_O BOUT_O COUT_O DOUT_O EOUT_O FOUT_O
++		AIN BIN CIN DIN EIN FIN COMMON
++		AOUT BOUT COUT DOUT EOUT FOUT
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		AOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,3.5ns,5ns),
++				CHANGED(AIN,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.5ns,6ns))}
++
++		BOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,3.5ns,5ns),
++				CHANGED(BIN,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.5ns,6ns))}
++
++		COUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,3.5ns,5ns),
++				CHANGED(CIN,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.5ns,6ns))}
++
++		DOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,3.5ns,5ns),
++				CHANGED(DIN,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.5ns,6ns))}
++
++		EOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,3.5ns,5ns),
++				CHANGED(EIN,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.5ns,6ns))}
++
++		FOUT = {
++			CASE(
++				CHANGED(COMMON,0), DELAY(1.1ns,3.5ns,5ns),
++				CHANGED(FIN,0), DELAY(1.1ns,2.8ns,4ns),
++				DELAY(2.1ns,4.5ns,6ns))}
+
+.ENDS  10197
+*
+*
+* ----------------------------------------------------------- 10210 ------
+*  Dual 3-Input 3-Output Or Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-154 to 3-155
+*  bss    1/10/97
+*
+.SUBCKT 10210  AIN1 AIN2 AIN3 AOUT1 AOUT2 AOUT3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		AOUT_O
++     DLY_10210 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(3) VCC2 VEE
++		AOUT_O AOUT_O AOUT_O
++		AOUT1 AOUT2 AOUT3
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10210 ugate (tplhMN=1ns tplhTY=1.5ns tplhMX=2.5ns 
++								tphlMN=1ns tphlTY=1.5ns tphlMX=2.5ns)
+
+.ENDS  10210
+*
+*
+* ----------------------------------------------------------- 10211 ------
+*  Dual 3-Input 3-Output Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-156 to 3-157
+*  bss    1/10/97
+*
+.SUBCKT 10211  AIN1 AIN2 AIN3 AOUT1 AOUT2 AOUT3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nor(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		AOUT_O
++     DLY_10211 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(3) VCC2 VEE
++		AOUT_O AOUT_O AOUT_O
++		AOUT1 AOUT2 AOUT3
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10211 ugate (tplhMN=1ns tplhTY=1.5ns tplhMX=2.5ns 
++								tphlMN=1ns tphlTY=1.5ns tphlMX=2.5ns)
+
+
+.ENDS  10211
+*
+*
+* ----------------------------------------------------------- 10212 ------
+*  High Speed Dual 3-Input 3-Output Or/Nor Gate
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-158 to 3-159
+*  bss    1/13/97
+*
+.SUBCKT 10212  AIN1 AIN2 AIN3 AOUT1 AOUT2 AOUT3
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nor(3) VCC1 VEE
++		AIN1 AIN2 AIN3
++		AOUT_O
++     DLY_10212 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(2) VCC2 VEE
++		AOUT_O AOUT_O
++		AOUT2 AOUT3
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		AOUT_O
++		AOUT1
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10212 ugate (tplhMN=1ns tplhTY=1.5ns tplhMX=2.5ns 
++								tphlMN=1ns tphlTY=1.5ns tphlMX=2.5ns)
+
+
+.ENDS  10212
+*
+*
+* ----------------------------------------------------------- 10216 ------
+*  High Speed Triple Line Receiver
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-160 to 3-161
+*  bss    1/13/97
+*
+.SUBCKT 10216  AIN AINBAR AOUT AOUTBAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 inv VCC1 VEE
++		AINBAR AIN_I
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 or(2) VCC1 VEE
++		AIN AIN_I
++		AOUT_O
++		DLY_10216 IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		AOUT_O
++		AOUT
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		AOUT_O
++		AOUTBAR
++		D0_GATE IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10216 ugate (tplhMN=1ns tplhTY=1.8ns tplhMX=2.5ns 
++								tphlMN=1ns tphlTY=1.8ns tphlMX=2.5ns)
+
+.ENDS  10216
+*
+*
+* ----------------------------------------------------------- 10231 ------
+*  High Speed Dual Type D Master-Slave Flip-Flop
+*
+*  The MECL Data Book, 1993, Motorola Pages 3-162 to 3-163
+*  bss    1/13/97
+*
+.SUBCKT 10231  S1 D1 R1 CE1BAR CC S2 D2 R2 CE2BAR
++		Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_10K_VEE  VCC1=$G_ECL_10K_VCC1
++               VCC2=$G_ECL_10K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		S1 D1 R1 CE1BAR CC S2 D2 R2 CE2BAR
++		IO_10K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 bufa(2) VCC1 VEE
++		D1 D2
++		D1B D2B
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ora(2,2) VCC1 VEE
++		CE1BAR CC CE2BAR CC
++		CLK1 CLK2
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inva(4) VCC1 VEE
++		S1 R1 S2 R2
++		S1BAR R1BAR S2BAR R2BAR
++     D0_GATE IO_10K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dff(1) VCC2 VEE
++		S1BAR R1BAR CLK1 D1B Q1 Q1BAR
++		DLY_10231 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 dff(1) VCC2 VEE
++		S2BAR R2BAR CLK2 D2B Q2 Q2BAR
++		DLY_10231 IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_10231 ueff (tppcqlhMN=1.1ns tppcqlhTY=2ns tppcqlhMX=3.3ns
++		tppcqhlMN=1.1ns tppcqhlTY=2ns tppcqhlMX=3.3ns
++		tpclkqlhMN=1.5ns tpclkqlhTY=2ns tpclkqlhMX=3.3ns
++		tpclkqhlMN=1.5ns tpclkqhlTY=2ns tpclkqhlMX=3.3ns
++		tsudclkMN=1ns thdclkMN=.75ns)
+
+.ENDS  10231
+*
+*
+* ----------------------------------------------------------- 100117 ------
+*  Triple 2-Wide OA/OAI Gate
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-3 to 3-5
+*  bss    1/13/97
+*
+.SUBCKT 100117  EA D1A D2A D3A D4A OA OABAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		EA D1A D2A D3A D4A
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 oa(2,3) VCC1 VEE
++		EA $D_LO D1A D2A D3A D4A OA_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inv VCC1 VEE
++		OA_O OABAR_O
++		D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(2,0,5) VCC2 VEE
++		OA_O OABAR_O
++		EA D1A D2A D3A D4A
++		OA OABAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA={CHANGED(D1A,0) | CHANGED(D2A,0) | CHANGED(D3A,0) |
++				CHANGED(D4A,0)}
++
++	PINDLY:
++		OA OABAR = {
++			CASE(
++				DATA, DELAY(.9ns,-1,2.5ns),
++				CHANGED(EA,0), DELAY(.45ns,-1,1.3ns),
++				DELAY(1.9ns,-1,3.3ns))}
+
+.ENDS  100117
+*
+*
+* ----------------------------------------------------------- 100118 ------
+*  5-Wide 5,4,4,4,2 OA/OAI Gate
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-6 to 3-9
+*  bss    1/14/97
+*
+.SUBCKT 100118  D1A D2A D3A D4A D5A D1B D2B D3B D4B D1C D2C D3C D4C
++		D1D D2D D3D D4D D1E D2E O OBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(19) VCC1 VEE
++		D1A D2A D3A D4A D5A D1B D2B D3B D4B D1C D2C D3C D4C
++		D1D D2D D3D D4D D1E D2E
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(5) VCC1 VEE
++		D1A D2A D3A D4A D5A
++		OUTA
++     DLY_100118 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ora(4,3) VCC1 VEE
++		D1B D2B D3B D4B D1C D2C D3C D4C D1D D2D D3D D4D
++		OUTB OUTC OUTD
++     DLY_100118 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 or(2) VCC1 VEE
++		D1E D2E
++		OUTE
++     DLY_100118 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 and(5) VCC1 VEE
++		OUTA OUTB OUTC OUTD OUTE
++		O_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 buf VCC2 VEE
++		O_O O
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U7 inv VCC2 VEE
++		O_O OBAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100118 ugate (tplhMN=.95ns tplhMX=2.5ns 
++								tphlMN=.95ns tphlMX=2.5ns)
+
+.ENDS  100118
+*
+*
+* ----------------------------------------------------------- 100126 ------
+*  9-Bit Backplane Driver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-10 to 3-12
+*  bss    1/14/97
+*
+.SUBCKT 100126  D1 D2 D3 D4 D5 D6 D7 D8 D9
++		O1 O2 O3 O4 O5 O6 O7 O8 O9
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		D1 D2 D3 D4 D5 D6 D7 D8 D9
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 bufa(9) VCC1 VEE
++		D1 D2 D3 D4 D5 D6 D7 D8 D9
++		O1_O O2_O O3_O O4_O O5_O O6_O O7_O O8_O O9_O
++     DLY_100126 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 bufa(9) VCC2 VEE
++		O1_O O2_O O3_O O4_O O5_O O6_O O7_O O8_O O9_O
++		O1 O2 O3 O4 O5 O6 O7 O8 O9
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100126 ugate (tplhMN=1.05ns tplhMX=2.75ns 
++								tphlMN=1.05ns tphlMX=2.75ns)
+
+.ENDS  100126
+*
+*
+* ----------------------------------------------------------- 100130 ------
+*  Triple D Latch
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-13 to 3-18
+*  bss    1/15/97
+*
+.SUBCKT 100130  D0 D1 D2 E0BAR E1BAR E2BAR ECBAR MR MS
++		CD0 CD1 CD2 SD0 SD1 SD2 Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(15) VCC1 VEE
++		D0 D1 D2 E0BAR E1BAR E2BAR ECBAR MR MS
++		CD0 CD1 CD2 SD0 SD1 SD2
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,9) VCC1 VEE
++		E0BAR E1BAR E2BAR ECBAR MR MS CD0 CD1 CD2 SD0 SD1 SD2
++		CLK0 CLK1 CLK2 RESET0 RESET1 RESET2 SET0 SET1 SET2
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLK0={~(ECBAR | E0BAR)}
++		CLK1={~(ECBAR | E1BAR)}
++		CLK2={~(ECBAR | E2BAR)}
++		RESET0={~(MR | CD0)}
++		RESET1={~(MR | CD1)}
++		RESET2={~(MR | CD2)}
++		SET0={~(MS | SD0)}
++		SET1={~(MS | SD1)}
++		SET2={~(MS | SD2)}
+
+U3 dltch(1) VCC1 VEE
++		SET0 RESET0 CLK0 D0 Q0_O Q0BAR_O
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dltch(1) VCC1 VEE
++		SET1 RESET1 CLK1 D1 Q1_O Q1BAR_O
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dltch(1) VCC1 VEE
++		SET2 RESET2 CLK2 D2 Q2_O Q2BAR_O
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 pindly(6,0,15) VCC2 VEE
++		Q0_O Q0BAR_O Q1_O Q1BAR_O Q2_O Q2BAR_O
++		D0 D1 D2 ECBAR MS MR SD0 SD1 SD2 CD0 CD1 CD2
++		E0BAR E1BAR E2BAR
++		Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		COMMON={CHANGED_HL(ECBAR,0)}
++		SET={CHANGED_LH(MS,0)}
++		RESET={CHANGED_LH(MR,0)}
++
++	PINDLY:
++		Q0 Q0BAR = {
++			CASE(
++				SET, DELAY(1.1ns,-1,2.4ns),
++				CHANGED_LH(SD0,0), DELAY(.6ns,-1,1.75ns),
++				RESET, DELAY(1.1ns,-1,2.4ns),
++				CHANGED_LH(CD0,0), DELAY(.6ns,-1,1.75ns),
++				COMMON, DELAY(.75ns,-1,2ns),
++				CHANGED_HL(E0BAR,0), DELAY(.6ns,-1,1.75ns),
++				CHANGED(D0,0), DELAY(.5ns,-1,1.7ns),
++				DELAY(2.1ns,-1,3.4ns))}
++
++		Q1 Q1BAR = {
++			CASE(
++				SET, DELAY(1.1ns,-1,2.4ns),
++				CHANGED_LH(SD1,0), DELAY(.6ns,-1,1.75ns),
++				RESET, DELAY(1.1ns,-1,2.4ns),
++				CHANGED_LH(CD1,0), DELAY(.6ns,-1,1.75ns),
++				COMMON, DELAY(.75ns,-1,2ns),
++				CHANGED_HL(E1BAR,0), DELAY(.6ns,-1,1.75ns),
++				CHANGED(D1,0), DELAY(.5ns,-1,1.7ns),
++				DELAY(2.1ns,-1,3.4ns))}
++
++		Q2 Q2BAR = {
++			CASE(
++				SET, DELAY(1.1ns,-1,2.4ns),
++				CHANGED_LH(SD2,0), DELAY(.6ns,-1,1.75ns),
++				RESET, DELAY(1.1ns,-1,2.4ns),
++				CHANGED_LH(CD2,0), DELAY(.6ns,-1,1.75ns),
++				COMMON, DELAY(.75ns,-1,2ns),
++				CHANGED_HL(E2BAR,0), DELAY(.6ns,-1,1.75ns),
++				CHANGED(D2,0), DELAY(.5ns,-1,1.7ns),
++				DELAY(2.1ns,-1,3.4ns))}
+
+U7 constraint(18) VCC1 VEE
++		CLK0 CLK1 CLK2 ECBAR E0BAR E1BAR E2BAR D0 D1 D2
++		MS MR CD0 CD1 CD2 SD0 SD1 SD2
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(1)=D0
++		SETUPTIME=.7ns
++		HOLDTIME=.6ns
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)=D1
++		SETUPTIME=.7ns
++		HOLDTIME=.6ns
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)=D2
++		SETUPTIME=.7ns
++		HOLDTIME=.6ns
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(1)= SD0
++		SETUPTIME_LO=1.1ns
++		WHEN={MS=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(1)= CD0
++		SETUPTIME_LO=1.1ns
++		WHEN={MR=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)= SD1
++		SETUPTIME_LO=1.1ns
++		WHEN={MS=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)= CD1
++		SETUPTIME_LO=1.1ns
++		WHEN={MR=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)= SD2
++		SETUPTIME_LO=1.1ns
++		WHEN={MS=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)= CD2
++		SETUPTIME_LO=1.1ns
++		WHEN={MR=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(1)= MS
++		SETUPTIME_LO=1.9ns
++		WHEN={SD0=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)= MS
++		SETUPTIME_LO=1.9ns
++		WHEN={SD1=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)= MS
++		SETUPTIME_LO=1.9ns
++		WHEN={SD2=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK0
++		DATA(1)= MR
++		SETUPTIME_LO=1.9ns
++		WHEN={CD0=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK1
++		DATA(1)= MR
++		SETUPTIME_LO=1.9ns
++		WHEN={CD1=='0}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK2
++		DATA(1)= MR
++		SETUPTIME_LO=1.9ns
++		WHEN={CD2=='0}
++
++	WIDTH:
++		NODE=ECBAR
++		MIN_LO=2ns
++
++	WIDTH:
++		NODE=E0BAR
++		MIN_LO=2ns
++		WHEN={ECBAR=='0}
++
++	WIDTH:
++		NODE=E1BAR
++		MIN_LO=2ns
++		WHEN={ECBAR=='0}
++
++	WIDTH:
++		NODE=E2BAR
++		MIN_LO=2ns
++		WHEN={ECBAR=='0}
++
++	WIDTH:
++		NODE=MS
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=MR
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CD0
++		MIN_HI=2ns
++		WHEN={MR=='0}
++
++	WIDTH:
++		NODE=CD1
++		MIN_HI=2ns
++		WHEN={MR=='0}
++
++	WIDTH:
++		NODE=CD2
++		MIN_HI=2ns
++		WHEN={MR=='0}
++
++	WIDTH:
++		NODE=SD0
++		MIN_HI=2ns
++		WHEN={MS=='0}
++
++	WIDTH:
++		NODE=SD1
++		MIN_HI=2ns
++		WHEN={MS=='0}
++
++	WIDTH:
++		NODE=SD2
++		MIN_HI=2ns
++		WHEN={MS=='0}
+
+.ENDS  100130
+*
+*
+* ----------------------------------------------------------- 100135 ------
+*  Triple J-K Flip-Flop
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-19 to 3-24
+*  bss    1/15/97
+*
+.SUBCKT 100135  C0 S0 CP0 J0 K0 Q0 Q0BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		C0 S0 CP0 J0 K0
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inva(3) VCC1 VEE
++		C0 S0 CP0
++		C0BAR S0BAR CP0BAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 jkff(1) VCC1 VEE
++		S0BAR C0BAR CP0BAR J0 K0 Q0_O Q0BAR_O
++		DLY_100135 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(2) VCC2 VEE
++		Q0_O Q0BAR_O
++		Q0 Q0BAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100135 ueff (tppcqlhMN=.9ns tppcqlhMX=2ns
++		tppcqhlMN=.9ns tppcqhlMX=2ns tpclkqlhMN=.7ns tpclkqlhMX=2ns
++		tpclkqhlMN=.7ns tpclkqhlMX=2ns tsupcclkhMN=1.3ns
++		tsudclkMN=.7ns thdclkMN=.8ns twpclMN=2ns twclklMN=2ns)
+
+.ENDS  100135
+*
+*
+* ----------------------------------------------------------- 100156 ------
+*  Mask-Merge/Latch
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-32 to 3-37
+*  bss    1/16/97
+*
+.SUBCKT 100156  EBAR A0 A1 A2 A3 B0 B1 B2 B3 AM0 AM1 BM0 BM1
++		AS0 AS1 BS0 BS1 Q0 Q1 Q2 Q3
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(17) VCC1 VEE
++		EBAR A0 A1 A2 A3 B0 B1 B2 B3 AM0 AM1 BM0 BM1
++		AS0 AS1 BS0 BS1
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(17,5) VCC1 VEE
++		EBAR A0 A1 A2 A3 B0 B1 B2 B3 AM0 AM1 BM0 BM1
++		AS0 AS1 BS0 BS1
++		ENAB D0 D1 D2 D3
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB={~EBAR}
++		NORA1={~(~BS0 | ~BM0)}
++		NORA2={~(AS0 | AS1 | ~AM0)}
++		NORA3={~(~BS1 | ~BM0)}
++		NORA4={~(AS1 | ~AM0)}
++		NORA5={~(~BS1 | ~BS0 | ~BM0)}
++		NORA6={~(AS0 | ~AM0)}
++		MASK1={AM1 | BM1}
++		ORB1={(NORA1 | NORA2 | NORA3 | MASK1)}
++		ORB2={(NORA3 | NORA4 | MASK1)}
++		ORB3={(NORA4 | NORA5 | NORA6 | MASK1)}
++		ORB4={(AM0 | MASK1)}
++		D0={(A0 & ~ORB1) | (ORB1 & B0)}
++		D1={(A1 & ~ORB2) | (ORB2 & B1)}
++		D2={(A2 & ~ORB3) | (ORB3 & B2)}
++		D3={(A3 & ~ORB4) | (ORB4 & B3)}
+
+U3 dltch(4) VCC1 VEE
++		$D_HI $D_HI ENAB D0 D1 D2 D3
++		Q0_O Q1_O Q2_O Q3_O Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(8,0,17) VCC2 VEE
++		Q0_O Q0BAR_O Q1_O Q1BAR_O Q2_O Q2BAR_O Q3_O Q3BAR_O
++		EBAR A0 A1 A2 A3 B0 B1 B2 B3 AM0 AM1 BM0 BM1
++		AS0 AS1 BS0 BS1
++		Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR Q3 Q3BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		ENABLE={CHANGED_HL(EBAR,0)}
++		SELECT={CHANGED(BS1,0) | CHANGED(BS0,0) | CHANGED(AS1,0) |
++			CHANGED(AS0,0)}
++		MERGE={CHANGED(BM1,0) | CHANGED(BM0,0) | CHANGED(AM1,0) |
++			CHANGED(AM0,0)}
++
++	PINDLY:
++		Q0 Q0BAR = {
++			CASE(
++				ENABLE, DELAY(1ns,-1,2.4ns),
++				SELECT, DELAY(1.2ns,-1,3.7ns),
++				MERGE, DELAY(1.2ns,-1,3.7ns),
++				CHANGED(A0,0) | CHANGED(B0,0), DELAY(.5ns,-1,1.8ns),
++				DELAY(2.2ns,-1,4.7ns))}
++
++		Q1 Q1BAR = {
++			CASE(
++				ENABLE, DELAY(1ns,-1,2.4ns),
++				SELECT, DELAY(1.2ns,-1,3.7ns),
++				MERGE, DELAY(1.2ns,-1,3.7ns),
++				CHANGED(A1,0) | CHANGED(B1,0), DELAY(.5ns,-1,1.8ns),
++				DELAY(2.2ns,-1,4.7ns))}
++
++		Q2 Q2BAR = {
++			CASE(
++				ENABLE, DELAY(1ns,-1,2.4ns),
++				SELECT, DELAY(1.2ns,-1,3.7ns),
++				MERGE, DELAY(1.2ns,-1,3.7ns),
++				CHANGED(A2,0) | CHANGED(B2,0), DELAY(.5ns,-1,1.8ns),
++				DELAY(2.2ns,-1,4.7ns))}
++
++		Q3 Q3BAR = {
++			CASE(
++				ENABLE, DELAY(1ns,-1,2.4ns),
++				SELECT, DELAY(1.2ns,-1,3.7ns),
++				MERGE, DELAY(1.2ns,-1,3.7ns),
++				CHANGED(A3,0) | CHANGED(B3,0), DELAY(.5ns,-1,1.8ns),
++				DELAY(2.2ns,-1,4.7ns))}
+
+U5 constraint(17) VCC1 VEE
++		EBAR A0 A1 A2 A3 B0 B1 B2 B3 AM0 AM1 BM0 BM1
++		AS0 AS1 BS0 BS1
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=EBAR
++		DATA(8)= A0 A1 A2 A3 B0 B1 B2 B3
++		SETUPTIME=.8ns
++		HOLDTIME=2.1ns
++
++	SETUP_HOLD:
++		CLOCK LH=EBAR
++		DATA(8)= AM0 AM1 BM0 BM1 AS0 AS1 BS0 BS1
++		SETUPTIME=2.9ns
++		HOLDTIME=.8ns
++
++	WIDTH:
++		NODE=EBAR
++		MIN_LO=2ns
+
+.ENDS  100156
+*
+*
+* ----------------------------------------------------------- 100158 ------
+*  8-Bit Shift Matrix
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-38 to 3-45
+*  bss    1/20/97
+*
+.SUBCKT 100158  M S2 S1 S0 D0 D1 D2 D3 D4 D5 D6 D7
++		Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		M S2 S1 S0 D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,8) VCC1 VEE
++		M S2 S1 S0 D0 D1 D2 D3 D4 D5 D6 D7
++		Z0_O Z1_O Z2_O Z3_O Z4_O Z5_O Z6_O Z7_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		AIN={(~S0 & D0) | (S0 & D1)}
++		BIN={(~S0 & D1) | (S0 & D2)}
++		CIN={(~S0 & D2) | (S0 & D3)}
++		DIN={(~S0 & D3) | (S0 & D4)}
++		EIN={(~S0 & D4) | (S0 & D5)}
++		FIN={(~S0 & D5) | (S0 & D6)}
++		GIN={(~S0 & D6) | (S0 & D7)}
++		HIN={(~S0 & D7) | (S0 & D0 & M)}
++		SEL1={S1 & S2}
++		SEL2={~S1 & S2}
++		SEL3={S1 | S2}
++		SEL4={~SEL1 & ~SEL2 & SEL3}
++		Z0_O={(~SEL3 & AIN) | (SEL4 & CIN) | (SEL2 & EIN) |
++			(SEL1 & GIN)}
++		Z2_O={(~SEL3 & CIN) | (SEL4 & EIN) | (SEL2 & GIN) |
++			(SEL1 & AIN & M)}
++		Z4_O={(~SEL3 & EIN) | (SEL4 & GIN) | (SEL2 & AIN & M) |
++			(SEL1 & CIN & M)}
++		Z6_O={(~SEL3 & GIN) | (SEL4 & AIN & M) | (SEL2 & CIN & M) |
++			(SEL1 & EIN & M)}
++		Z1_O={(~SEL3 & BIN) | (SEL4 & DIN) | (SEL2 & FIN) |
++			(SEL1 & HIN)}
++		Z3_O={(~SEL3 & DIN) | (SEL4 & FIN) | (SEL2 & HIN) |
++			(SEL1 & BIN & M)}
++		Z5_O={(~SEL3 & FIN) | (SEL4 & HIN) | (SEL2 & BIN & M) |
++			(SEL1 & DIN & M)}
++		Z7_O={(~SEL3 & HIN) | (SEL4 & BIN & M) | (SEL2 & DIN & M) |
++			(SEL1 & FIN & M)}
+
+U3 pindly(8,0,12) VCC2 VEE
++		Z0_O Z1_O Z2_O Z3_O Z4_O Z5_O Z6_O Z7_O
++		M S2 S1 S0 D0 D1 D2 D3 D4 D5 D6 D7
++		Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA={CHANGED(D0,0) | CHANGED(D1,0) | CHANGED(D2,0) | CHANGED(D3,0) |
++			CHANGED(D4,0) | CHANGED(D5,0) | CHANGED(D6,0) | CHANGED(D7,0)}
++		SELECT={CHANGED(S0,0) | CHANGED(S1,0) | CHANGED(S2,0)}
++
++	PINDLY:
++		Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7 = {
++			CASE(
++				SELECT, DELAY(1.7ns,-1,4.2ns),
++				CHANGED(M,0), DELAY(1.25ns,-1,4.2ns),
++				DATA, DELAY(1.1ns,-1,2.7ns),
++				DELAY(2.7ns,-1,5.2ns))}
+
+.ENDS  100158
+*
+*
+* ----------------------------------------------------------- 100165 ------
+*  Universal Priority Encoder
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-46 to 3-51
+*  bss    1/21/97
+*
+.SUBCKT 100165  EBAR OEBAR M I0 I1 I2 I3 I4 I5 I6 I7
++		Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR Q3 Q3BAR GS1 GS2
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		EBAR OEBAR M I0 I1 I2 I3 I4 I5 I6 I7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 dltch(8) VCC1 VEE
++		$D_HI $D_HI ENAB I0 I1 I2 I3 I4 I5 I6 I7
++		O0 O1 O2 O3 O4 O5 O6 O7
++		$D_NC O1BAR $D_NC O3BAR $D_NC O5BAR $D_NC O7BAR
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 logicexp(15,11) VCC1 VEE
++		EBAR OEBAR M O0 O1 O2 O3 O4 O5 O6 O7 O1BAR O3BAR O5BAR O7BAR
++		ENAB Q0_O Q0BAR_O Q1_O Q1BAR_O Q2_O Q2BAR_O Q3_O Q3BAR_O
++		GS1_O GS2_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB={~EBAR}
++		AND1={(O0 | O1BAR) & (O0 | O2 | O3BAR)}
++		NAND1={~(~(O0 | O1) & (O2 | O3))}
++		NAND2={~(~(O0 | O1) & ~(O2 | O3))}
++		OR1={NAND2 | ~M | OEBAR}
++		OR2={~M | ~(O4 | O5 | O6 | O7)}
++		OR3={M | OEBAR}
++		AND2={(O4 | O5BAR) & (O4 | O6 | O7BAR)}
++		NAND3={~(~(O4 | O5) & ~(O6 | O7))}
++		NAND4={~(~(O4 | O5) & (O6 | O7))}
++		Q0BAR_O={(AND1 | OEBAR) & (OR1 | AND2)}
++		Q0_O={~Q0BAR_O}
++		Q1BAR_O={(NAND1 | OEBAR) & (OR1 | NAND4)}
++		Q1_O={~Q1BAR_O}
++		GS1_O={~(~(NAND2 | OEBAR) & OR2)}
++		GS2_O={OR3 | NAND3}
++		Q2BAR_O={(OR2 | OR1) & (AND2 | OR3)}
++		Q2_O={~Q2BAR_O}
++		Q3BAR_O={OR3 | NAND4}
++		Q3_O={~Q3BAR_O}
+
+U4 pindly(10,0,11) VCC2 VEE
++		Q0_O Q0BAR_O Q1_O Q1BAR_O Q2_O Q2BAR_O Q3_O Q3BAR_O
++		GS1_O GS2_O
++		I0 I1 I2 I3 I4 I5 I6 I7 OEBAR M EBAR
++		Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR Q3 Q3BAR GS1 GS2
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		ENABLE={CHANGED_HL(EBAR,0)}
++		DATA={CHANGED(I0,0) | CHANGED(I1,0) | CHANGED(I2,0) |
++			CHANGED(I3,0) | CHANGED(I4,0) | CHANGED(I5,0) |
++			CHANGED(I6,0) | CHANGED(I7,0)}
++		MODE={CHANGED(M,0)}
++		OUTENAB={CHANGED(OEBAR,0)}
++
++	PINDLY:
++		Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR Q3 Q3BAR = {
++			CASE(
++				ENABLE, DELAY(1.5ns,-1,4.6ns),
++				OUTENAB, DELAY(1ns,-1,3ns),
++				DATA, DELAY(1.1ns,-1,4.1ns),
++				MODE, DELAY(1ns,-1,3.6ns),
++				DELAY(2.5ns,-1,5.6ns))}
++
++		GS1 GS2 = {
++			CASE(
++				ENABLE, DELAY(1.5ns,-1,4.6ns),
++				OUTENAB, DELAY(1.1ns,-1,2.6ns),
++				DATA, DELAY(1.3ns,-1,3.9ns),
++				MODE, DELAY(1ns,-1,3.6ns),
++				DELAY(2.5ns,-1,5.6ns))}
+
+U5 constraint(9) VCC1 VEE
++		EBAR I0 I1 I2 I3 I4 I5 I6 I7
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=EBAR
++		DATA(8)= I0 I1 I2 I3 I4 I5 I6 I7
++		SETUPTIME=.9ns
++		HOLDTIME=1.2ns
++
++	WIDTH:
++		NODE=EBAR
++		MIN_LO=2ns
+
+.ENDS  100165
+*
+*
+* ----------------------------------------------------------- 100166 ------
+*  9-Bit Comparator
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-52 to 3-56
+*  bss    1/22/97
+*
+.SUBCKT 100166  A0 A1 A2 A3 A4 A5 A6 A7 A8 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		ALTB AEQB AGTB
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(18) VCC1 VEE
++		A0 A1 A2 A3 A4 A5 A6 A7 A8 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(18,3) VCC1 VEE
++		A0 A1 A2 A3 A4 A5 A6 A7 A8 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		ALTB_O AEQB_O AGTB_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		IN0A={~A0 & B0}
++		IN0B={A0 & ~B0}
++		IN1A={~A1 & B1}
++		IN1B={A1 & ~B1}
++		IN2A={~A2 & B2}
++		IN2B={A2 & ~B2}
++		IN3A={~A3 & B3}
++		IN3B={A3 & ~B3}
++		IN4A={~A4 & B4}
++		IN4B={A4 & ~B4}
++		IN5A={~A5 & B5}
++		IN5B={A5 & ~B5}
++		IN6A={~A6 & B6}
++		IN6B={A6 & ~B6}
++		IN7A={~A7 & B7}
++		IN7B={A7 & ~B7}
++		IN8A={~A8 & B8}
++		IN8B={A8 & ~B8}
++		OR1={IN0A | IN0B | IN1A | IN1B | IN2A | IN2B | IN3A | IN3B |
++			IN4A | IN4B | IN5A | IN5B | IN6A | IN6B | IN7A | IN7B |
++			IN8A | IN8B}
++		OUT0={IN0B & ~(IN1A | IN2A | IN3A | IN4A | IN5A | IN6A | IN7A | IN8A)}
++		OUT1={IN1B & ~(IN2A | IN3A | IN4A | IN5A | IN6A | IN7A | IN8A)}
++		OUT2={IN2B & ~(IN3A | IN4A | IN5A | IN6A | IN7A | IN8A)}
++		OUT3={IN3B & ~(IN4A | IN5A | IN6A | IN7A | IN8A)}
++		OUT4={IN4B & ~(IN5A | IN6A | IN7A | IN8A)}
++		OUT5={IN5B & ~(IN6A | IN7A | IN8A)}
++		OUT6={IN6B & ~(IN7A | IN8A)}
++		OUT7={IN7B & ~IN8A}
++		OUT8={IN8B}
++		ALTB_O={~(OUT0 | OUT1 | OUT2 | OUT3 | OUT4 | OUT5 | OUT6 | OUT7 |
++			OUT8 | ~OR1)}
++		AEQB_O={OR1}
++		AGTB_O={OUT0 | OUT1 | OUT2 | OUT3 | OUT4 | OUT5 | OUT6 | OUT7 | OUT8}
+
+U3 pindly(3,0,0) VCC2 VEE
++		ALTB_O AEQB_O AGTB_O
++		ALTB AEQB AGTB
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		ALTB AEQB AGTB = {
++			CASE(
++				DELAY(1.4ns,-1,3.5ns))}
+
+.ENDS  100166
+*
+*
+* ----------------------------------------------------------- 100175 ------
+*  Quint Latch 100K In/10K Out
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-57 to 3-62
+*  bss    1/22/97
+*
+.SUBCKT 100175  E1 E2 C D0 D1 D2 D3 D4 Q0 Q1 Q2 Q3 Q4
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(8) VCC1 VEE
++		E1 E2 C D0 D1 D2 D3 D4
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(3,2) VCC1 VEE
++		E1 E2 C
++		CLK CLRBAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLRBAR={~C}
++		CLK={~(E1 | E2)}
+
+U3 dltch(5) VCC1 VEE
++		$D_HI CLRBAR CLK D0 D1 D2 D3 D4
++		Q0_O Q1_O Q2_O Q3_O Q4_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(5,0,7) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O
++		CLK D0 D1 D2 D3 D4 C
++		Q0 Q1 Q2 Q3 Q4
++		IO_10K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLOCK={CHANGED_LH(CLK,0)}
++		CLEAR={CHANGED_LH(C,0)}
++
++	PINDLY:
++		Q0 = {
++			CASE(
++				CLEAR, DELAY(1.3ns,-1,3.2ns),
++				CLOCK, DELAY(1.2ns,-1,3.5ns),
++				CHANGED(D0,0), DELAY(1.1ns,-1,2.75ns),
++				DELAY(2.3ns,-1,4.5ns))}
++
++		Q1 = {
++			CASE(
++				CLEAR, DELAY(1.3ns,-1,3.2ns),
++				CLOCK, DELAY(1.2ns,-1,3.5ns),
++				CHANGED(D1,0), DELAY(1.1ns,-1,2.75ns),
++				DELAY(2.3ns,-1,4.5ns))}
++
++		Q2 = {
++			CASE(
++				CLEAR, DELAY(1.3ns,-1,3.2ns),
++				CLOCK, DELAY(1.2ns,-1,3.5ns),
++				CHANGED(D2,0), DELAY(1.1ns,-1,2.75ns),
++				DELAY(2.3ns,-1,4.5ns))}
++
++		Q3 = {
++			CASE(
++				CLEAR, DELAY(1.3ns,-1,3.2ns),
++				CLOCK, DELAY(1.2ns,-1,3.5ns),
++				CHANGED(D3,0), DELAY(1.1ns,-1,2.75ns),
++				DELAY(2.3ns,-1,4.5ns))}
++
++		Q4 = {
++			CASE(
++				CLEAR, DELAY(1.3ns,-1,3.2ns),
++				CLOCK, DELAY(1.2ns,-1,3.5ns),
++				CHANGED(D4,0), DELAY(1.1ns,-1,2.75ns),
++				DELAY(2.3ns,-1,4.5ns))}
+
+U5 constraint(6) VCC1 VEE
++		CLK D0 D1 D2 D3 D4
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=CLK
++		DATA(5)= D0 D1 D2 D3 D4
++		SETUPTIME=2.5ns
++		HOLDTIME=.5ns
++		MESSAGE="Constraint violation versus E1 and E2 clock input."
+
+.ENDS  100175
+*
+*
+* ----------------------------------------------------------- 100179 ------
+*  Carry Lookahead Generator
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-63 to 3-69
+*  bss    1/22/97
+*
+.SUBCKT 100179  CN P0 P1 P2 P3 P4 P5 P6 P7 G0 G1 G2 G3 G4 G5 G6 G7
++		CN2 CN4 CN6 CN8
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(17) VCC1 VEE
++		CN P0 P1 P2 P3 P4 P5 P6 P7 G0 G1 G2 G3 G4 G5 G6 G7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(17,4) VCC1 VEE
++		CN P0 P1 P2 P3 P4 P5 P6 P7 G0 G1 G2 G3 G4 G5 G6 G7
++		CN2_O CN4_O CN6_O CN8_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		NOR1={~(G0 | P1)}
++		NOR2={~(P0 | CN | P1)}
++		NOR3={~G1}
++		NOR4={~(P3 | G2)}
++		NOR5={~(P3 | P2 | G1)}
++		NOR6={~G3}
++		NOR7={~(P3 | P2 | P1 | G0)}
++		NOR8={~(P3 | P2 | P1 | P0 | CN)}
++		NOR9={~(P5 | G4)}
++		NOR10={~G5}
++		NOR11={~(P5 | P4 | G3)}
++		NOR12={~(P5 | P4 | P3 | G2)}
++		NOR13={~(P5 | P4 | P3 | P2 | G1)}
++		NOR14={~(P5 | P4 | P3 | P2 | P1 | G0)}
++		NOR15={~(P5 | P4 | P3 | P2 | P1 | P0 | CN)}
++		NOR16={~(G6 | P7)}
++		NOR17={~G7}
++		NOR18={~(G5 | P6 | P7)}
++		NOR19={~(G4 | P5 | P6 | P7)}
++		NOR20={~(G3 | P4 | P5 | P6 | P7)}
++		NOR21={~(G2 | P3 | P4 | P5 | P6 | P7)}
++		NOR22={~(G1 | P2 | P3 | P4 | P5 | P6 | P7)}
++		NOR23={~(G0 | P1 | P2 | P3 | P4 | P5 | P6 | P7)}
++		NOR24={~(CN | P0 | P1 | P2 | P3 | P4 | P5 | P6 | P7)}
++		CN2_O={~(NOR1 | NOR2 | NOR3)}
++		CN4_O={~(NOR4 | NOR5 | NOR6 | NOR7 | NOR8)}
++		CN6_O={~(NOR9 | NOR10 | NOR11 | NOR12 | NOR13 | NOR14 | NOR15)}
++		CN8_O={~(NOR16 | NOR17 | NOR18 | NOR19 | NOR20 | NOR21 | NOR22 |
++			NOR23 | NOR24)}
+
+U3 pindly(4,0,0) VCC2 VEE
++		CN2_O CN4_O CN6_O CN8_O
++		CN2 CN4 CN6 CN8
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		CN2 CN4 CN6 CN8 = {
++			CASE(
++				DELAY(1.1ns,-1,2.9ns))}
+
+.ENDS  100179
+*
+*
+* ----------------------------------------------------------- 100180 ------
+*  High-Speed 6-Bit Adder
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-70 to 3-74
+*  bss    1/23/97
+*
+.SUBCKT 100180  CNBAR A0 A1 A2 A3 A4 A5 B0 B1 B2 B3 B4 B5
++		F0 F1 F2 F3 F4 F5 PBAR GBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(13) VCC1 VEE
++		CNBAR A0 A1 A2 A3 A4 A5 B0 B1 B2 B3 B4 B5
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(13,8) VCC1 VEE
++		CNBAR A0 A1 A2 A3 A4 A5 B0 B1 B2 B3 B4 B5
++		F0_O F1_O F2_O F3_O F4_O F5_O PBAR_O GBAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CN={~CNBAR}
++		IN0A={B0 ^ A0}
++		IN0B={B0 & A0}
++		IN1A={B1 ^ A1}
++		IN1B={B1 & A1}
++		IN2A={B2 ^ A2}
++		IN2B={B2 & A2}
++		IN3A={B3 ^ A3}
++		IN3B={B3 & A3}
++		IN4A={B4 ^ A4}
++		IN4B={B4 & A4}
++		IN5A={B5 ^ A5}
++		IN5B={B5 & A5}
++		AND1={IN0A & CN}
++		AND2={CN & IN0A & IN1A}
++		AND3={IN0B & IN1A}
++		AND4={CN & IN0A & IN1A & IN2A}
++		AND5={IN0B & IN1A & IN2A}
++		AND6={IN1B & IN2A}
++		AND7={CN & IN0A & IN1A & IN2A & IN3A}
++		AND8={IN0B & IN1A & IN2A & IN3A}
++		AND9={IN1B & IN2A & IN3A}
++		AND10={IN2B & IN3A}
++		AND11={CN & IN0A & IN1A & IN2A & IN3A & IN4A}
++		AND12={IN0B & IN1A & IN2A & IN3A & IN4A}
++		AND13={IN1B & IN2A & IN3A & IN4A}
++		AND14={IN2B & IN3A & IN4A}
++		AND15={IN3B & IN4A}
++		PBAR_O={~(IN0A & IN1A & IN2A & IN3A & IN4A & IN5A)}
++		AND17={IN0B & IN1A & IN2A & IN3A & IN4A & IN5A}
++		AND18={IN1B & IN2A & IN3A & IN4A & IN5A}
++		AND19={IN2B & IN3A & IN4A & IN5A}
++		AND20={IN3B & IN4A & IN5A}
++		AND21={IN4B & IN5A}
++		F0_O={CN ^ IN0A}
++		F1_O={IN1A ^ (AND1 | IN0B)}
++		F2_O={IN2A ^ (AND2 | AND3 | IN1B)}
++		F3_O={IN3A ^ (AND4 | AND5 | AND6 | IN2B)}
++		F4_O={IN4A ^ (AND7 | AND8 | AND9| AND10 | IN3B)}
++		F5_O={IN5A ^ (AND11 | AND12 | AND13 | AND14 | AND15 | IN4B)}
++		GBAR_O={~(AND17 | AND18 | AND19 | AND20 | AND21 | IN5B)}
+
+U3 pindly(8,0,13) VCC2 VEE
++		F0_O F1_O F2_O F3_O F4_O F5_O PBAR_O GBAR_O
++		CNBAR A0 A1 A2 A3 A4 A5 B0 B1 B2 B3 B4 B5
++		F0 F1 F2 F3 F4 F5 PBAR GBAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		DATA={CHANGED(A0,0) | CHANGED(A1,0) | CHANGED(A2,0) |
++			CHANGED(A3,0) | CHANGED(A4,0) | CHANGED(A5,0) |
++			CHANGED(B0,0) | CHANGED(B1,0) | CHANGED(B2,0) |
++			CHANGED(B3,0) | CHANGED(B4,0) | CHANGED(B5,0)}
++
++	PINDLY:
++		F0 F1 F2 F3 F4 F5 = {
++			CASE(
++				DATA, DELAY(1.1ns,-1,4.6ns),
++				CHANGED(CNBAR,0), DELAY(1.1ns,-1,3.9ns),
++				DELAY(2.1ns,-1,5.6ns))}
++
++		PBAR = {
++			CASE(
++				DELAY(1ns,-1,3ns))}
++
++		GBAR = {
++			CASE(
++				DELAY(1.4ns,-1,3.8ns))}
+
+.ENDS  100180
+*
+*
+* ----------------------------------------------------------- 100183 ------
+*  2 X 8-Bit Recode Multiplier
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 3-90 to 3-101
+*  bss    2/10/97
+*
+.SUBCKT 100183  A0 A1 A2 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		F0 F1 F2 F3 F4 F5 F6 F7 F8BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		A0 A1 A2 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,9) VCC1 VEE
++		A0 A1 A2 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		F0_O F1_O F2_O F3_O F4_O F5_O F6_O F7_O F8BAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		INA1={~(A2 ^ A1)}
++		INA0={A1 ^ A0}
++		ENAB={INA1 & ~INA0}
++		F0IN={(INA0 & ~A2 & B1) | (INA0 & A2 & ~B1) |
++			(~INA0 & ~A2 & B0) | (~INA0 & A2 & ~B0)}
++		F1IN={(INA0 & ~A2 & B2) | (INA0 & A2 & ~B2) |
++			(~INA0 & ~A2 & B1) | (~INA0 & A2 & ~B1)}
++		F2IN={(INA0 & ~A2 & B3) | (INA0 & A2 & ~B3) |
++			(~INA0 & ~A2 & B2) | (~INA0 & A2 & ~B2)}
++		F3IN={(INA0 & ~A2 & B4) | (INA0 & A2 & ~B4) |
++			(~INA0 & ~A2 & B3) | (~INA0 & A2 & ~B3)}
++		F4IN={(INA0 & ~A2 & B5) | (INA0 & A2 & ~B5) |
++			(~INA0 & ~A2 & B4) | (~INA0 & A2 & ~B4)}
++		F5IN={(INA0 & ~A2 & B6) | (INA0 & A2 & ~B6) |
++			(~INA0 & ~A2 & B5) | (~INA0 & A2 & ~B5)}
++		F6IN={(INA0 & ~A2 & B7) | (INA0 & A2 & ~B7) |
++			(~INA0 & ~A2 & B6) | (~INA0 & A2 & ~B6)}
++		F7IN={(INA0 & ~A2 & B8) | (INA0 & A2 & ~B8) |
++			(~INA0 & ~A2 & B7) | (~INA0 & A2 & ~B7)}
++		F8IN={(INA0 & ~A2 & ~B8) | (INA0 & A2 & B8) |
++			(~INA0 & ~A2 & ~B8) | (~INA0 & A2 & B8)}
++		F0_O={~ENAB & F0IN}
++		F1_O={~ENAB & F1IN}
++		F2_O={~ENAB & F2IN}
++		F3_O={~ENAB & F3IN}
++		F4_O={~ENAB & F4IN}
++		F5_O={~ENAB & F5IN}
++		F6_O={~ENAB & F6IN}
++		F7_O={~ENAB & F7IN}
++		F8BAR_O={F8IN | ENAB}
+
+U3 pindly(9,0,12) VCC2 VEE
++		F0_O F1_O F2_O F3_O F4_O F5_O F6_O F7_O F8BAR_O
++		A0 A1 A2 B0 B1 B2 B3 B4 B5 B6 B7 B8
++		F0 F1 F2 F3 F4 F5 F6 F7 F8BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SELECT={CHANGED(A0,0) | CHANGED(A1,0) | CHANGED(A2,0)}
++		DATA={CHANGED(B0,0) | CHANGED(B1,0) | CHANGED(B2,0) |
++			CHANGED(B3,0) | CHANGED(B4,0) | CHANGED(B5,0) |
++			CHANGED(B6,0) | CHANGED(B7,0) | CHANGED(B8,0)}
++
++	PINDLY:
++		F0 F1 F2 F3 F4 F5 F6 F7 = {
++			CASE(
++				SELECT, DELAY(1.1ns,-1,3.8ns),
++				DATA, DELAY(.9ns,-1,2.15ns),
++				DELAY(2.1ns,-1,4.8ns))}
++
++		F8BAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,3.1ns),
++				DATA, DELAY(.9ns,-1,2ns),
++				DELAY(2ns,-1,4.1ns))}
+
+.ENDS  100183
+*
+*
+* ----------------------------------------------------------- 100301 ------
+*  Low Power Triple 5-Input Or/Nor Gate
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-6 to 2-10
+*  bss    2/10/97
+*
+.SUBCKT 100301  D1A D2A D3A D4A D5A OA OABAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		D1A D2A D3A D4A D5A
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(5) VCC1 VEE
++		D1A D2A D3A D4A D5A
++		OA_O
++     DLY_100301 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		OA_O
++		OA
++		D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inv VCC2 VEE
++		OA_O
++		OABAR
++		D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100301 ugate (tplhMN=.5ns tplhMX=1.15ns 
++								tphlMN=.5ns tphlMX=1.15ns)
+
+.ENDS  100301
+*
+*
+* ----------------------------------------------------------- 100302 ------
+*  Low Power Quint 2-Input Or/Nor Gate
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-11 to 2-15
+*  bss    2/10/97
+*
+.SUBCKT 100302  D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E E
++		OA OABAR OB OBBAR OC OCBAR OD ODBAR OE OEBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E E
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 ora(3,5) VCC1 VEE
++		D1A D2A E D1B D2B E D1C D2C E D1D D2D E D1E D2E E
++		OA_O OB_O OC_O OD_O OE_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(5) VCC1 VEE
++		OA_O OB_O OC_O OD_O OE_O
++		OABAR_O OBBAR_O OCBAR_O ODBAR_O OEBAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(10,0,11) VCC2 VEE
++		OA_O OB_O OC_O OD_O OE_O OABAR_O OBBAR_O OCBAR_O ODBAR_O OEBAR_O
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E E
++		OA OB OC OD OE OABAR OBBAR OCBAR ODBAR OEBAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		ENABLE={CHANGED(E,0)}
++		DATA1={CHANGED(D1A,0) | CHANGED(D2A,0)}
++		DATA2={CHANGED(D1B,0) | CHANGED(D2B,0)}
++		DATA3={CHANGED(D1C,0) | CHANGED(D2C,0)}
++		DATA4={CHANGED(D1D,0) | CHANGED(D2D,0)}
++		DATA5={CHANGED(D1E,0) | CHANGED(D2E,0)}
++
++	PINDLY:
++		OA OABAR = {
++			CASE(
++				ENABLE, DELAY(.7ns,-1,1.9ns),
++				DATA1, DELAY(.5ns,-1,1.15ns),
++				DELAY(1.7ns,-1,2.9ns))}
++
++		OB OBBAR = {
++			CASE(
++				ENABLE, DELAY(.7ns,-1,1.9ns),
++				DATA2, DELAY(.5ns,-1,1.15ns),
++				DELAY(1.7ns,-1,2.9ns))}
++
++		OC OCBAR = {
++			CASE(
++				ENABLE, DELAY(.7ns,-1,1.9ns),
++				DATA3, DELAY(.5ns,-1,1.15ns),
++				DELAY(1.7ns,-1,2.9ns))}
++
++		OD ODBAR = {
++			CASE(
++				ENABLE, DELAY(.7ns,-1,1.9ns),
++				DATA4, DELAY(.5ns,-1,1.15ns),
++				DELAY(1.7ns,-1,2.9ns))}
++
++		OE OEBAR = {
++			CASE(
++				ENABLE, DELAY(.7ns,-1,1.9ns),
++				DATA5, DELAY(.5ns,-1,1.15ns),
++				DELAY(1.7ns,-1,2.9ns))}
+
+.ENDS  100302
+*
+*
+* ----------------------------------------------------------- 100304 ------
+*  Low Power Quint And/Nand Gate
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-16 to 2-20
+*  bss    2/11/97
+*
+.SUBCKT 100304  D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E F
++		OA OABAR OB OBBAR OC OCBAR OD ODBAR OE OEBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 anda(2,5) VCC1 VEE
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E
++		OA_O OB_O OC_O OD_O OE_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(5) VCC1 VEE
++		OA_O OB_O OC_O OD_O OE_O
++		OABAR_O OBBAR_O OCBAR_O ODBAR_O OEBAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 nor(5) VCC1 VEE
++		OA_O OB_O OC_O OD_O OE_O
++		F_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 pindly(11,0,0) VCC2 VEE
++		OA_O OB_O OC_O OD_O OE_O OABAR_O OBBAR_O OCBAR_O ODBAR_O OEBAR_O F_O
++		OA OB OC OD OE OABAR OBBAR OCBAR ODBAR OEBAR F
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		OA OABAR OB OBBAR OC OCBAR OD ODBAR OE OEBAR = {
++			CASE(
++				DELAY(.4ns,-1,1.65ns))}
++
++		F = {
++			CASE(
++				DELAY(1ns,-1,2.6ns))}
+
+.ENDS  100304
+*
+*
+* ----------------------------------------------------------- 100307 ------
+*  Low Power Quint Exclusive Or/Nor Gate
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-21 to 2-25
+*  bss    2/11/97
+*
+.SUBCKT 100307  D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E F
++		OA OABAR OB OBBAR OC OCBAR OD ODBAR OE OEBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 xora(5) VCC1 VEE
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E
++		OA_O OB_O OC_O OD_O OE_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(5) VCC1 VEE
++		OA_O OB_O OC_O OD_O OE_O
++		OABAR_O OBBAR_O OCBAR_O ODBAR_O OEBAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 or(5) VCC1 VEE
++		OA_O OB_O OC_O OD_O OE_O
++		F_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 pindly(11,0,10) VCC2 VEE
++		OA_O OB_O OC_O OD_O OE_O OABAR_O OBBAR_O OCBAR_O ODBAR_O OEBAR_O F_O
++		D1A D2A D1B D2B D1C D2C D1D D2D D1E D2E
++		OA OB OC OD OE OABAR OBBAR OCBAR ODBAR OEBAR F
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		OA OABAR = {
++			CASE(
++				CHANGED(D2A,0), DELAY(.55ns,-1,1.8ns),
++				CHANGED(D1A,0), DELAY(.55ns,-1,1.6ns),
++				DELAY(1.55ns,-1,2.8ns))}
++
++		OB OBBAR = {
++			CASE(
++				CHANGED(D2B,0), DELAY(.55ns,-1,1.8ns),
++				CHANGED(D1B,0), DELAY(.55ns,-1,1.6ns),
++				DELAY(1.55ns,-1,2.8ns))}
++
++		OC OCBAR = {
++			CASE(
++				CHANGED(D2C,0), DELAY(.55ns,-1,1.8ns),
++				CHANGED(D1C,0), DELAY(.55ns,-1,1.6ns),
++				DELAY(1.55ns,-1,2.8ns))}
++
++		OD ODBAR = {
++			CASE(
++				CHANGED(D2D,0), DELAY(.55ns,-1,1.8ns),
++				CHANGED(D1D,0), DELAY(.55ns,-1,1.6ns),
++				DELAY(1.55ns,-1,2.8ns))}
++
++		OE OEBAR = {
++			CASE(
++				CHANGED(D2E,0), DELAY(.55ns,-1,1.8ns),
++				CHANGED(D1E,0), DELAY(.55ns,-1,1.6ns),
++				DELAY(1.55ns,-1,2.8ns))}
++
++		F = {
++			CASE(
++				DELAY(1.15ns,-1,2.75ns))}
+
+.ENDS  100307
+*
+*
+* ----------------------------------------------------------- 100310 ------
+*  Low Skew 2:8 Differential Clock Driver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-26 to 2-30
+*  bss    2/11/97
+*
+.SUBCKT 100310  CLKINA CLKINABAR CLKINB CLKINBBAR SEL
++		CLK0 CLK0BAR CLK1 CLK1BAR CLK2 CLK2BAR CLK3 CLK3BAR
++		CLK4 CLK4BAR CLK5 CLK5BAR CLK6 CLK6BAR CLK7 CLK7BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(1) VCC1 VEE
++		SEL
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(5,2) VCC1 VEE
++		CLKINA CLKINABAR CLKINB CLKINBBAR SEL
++		IN INBAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		IN={(~SEL & CLKINA) | (SEL & CLKINB)}
++		INBAR={(~SEL & CLKINABAR) | (SEL & CLKINBBAR)}
+
+U3 pindly(16,0,1) VCC2 VEE
++		IN IN IN IN IN IN IN IN
++		INBAR INBAR INBAR INBAR INBAR INBAR INBAR INBAR
++		SEL
++		CLK0 CLK1 CLK2 CLK3 CLK4 CLK5 CLK6 CLK7
++		CLK0BAR CLK1BAR CLK2BAR CLK3BAR CLK4BAR CLK5BAR CLK6BAR CLK7BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		CLK0 CLK0BAR CLK1 CLK1BAR CLK2 CLK2BAR CLK3 CLK3BAR
++		CLK4 CLK4BAR CLK5 CLK5BAR CLK6 CLK6BAR CLK7 CLK7BAR = {
++			CASE(
++				CHANGED(SEL,0), DELAY(.8ns,1.02ns,1.25ns),
++				DELAY(.82ns,.92ns,1.02ns))}
+
+.ENDS  100310
+*
+*
+* ----------------------------------------------------------- 100311 ------
+*  Low Skew 1:9 Differential Clock Driver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-31 to 2-35
+*  bss    2/11/97
+*
+.SUBCKT 100311  CLKIN CLKINBAR ENBAR
++		CLK0 CLK0BAR CLK1 CLK1BAR CLK2 CLK2BAR CLK3 CLK3BAR
++		CLK4 CLK4BAR CLK5 CLK5BAR CLK6 CLK6BAR CLK7 CLK7BAR
++		CLK8 CLK8BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(1) VCC1 VEE
++		ENBAR
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(3,2) VCC1 VEE
++		CLKIN CLKINBAR ENBAR
++		IN INBAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		EN={~ENBAR}
++		IN={EN & CLKIN}
++		INBAR={ENBAR | CLKINBAR}
+
+U3 pindly(18,0,1) VCC2 VEE
++		IN IN IN IN IN IN IN IN IN
++		INBAR INBAR INBAR INBAR INBAR INBAR INBAR INBAR INBAR
++		ENBAR
++		CLK0 CLK1 CLK2 CLK3 CLK4 CLK5 CLK6 CLK7 CLK8
++		CLK0BAR CLK1BAR CLK2BAR CLK3BAR CLK4BAR CLK5BAR CLK6BAR
++		CLK7BAR CLK8BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		CLK0 CLK0BAR CLK1 CLK1BAR CLK2 CLK2BAR CLK3 CLK3BAR
++		CLK4 CLK4BAR CLK5 CLK5BAR CLK6 CLK6BAR CLK7 CLK7BAR
++		CLK8 CLK8BAR = {
++			CASE(
++				CHANGED(ENBAR,0), DELAY(.8ns,1.05ns,1.25ns),
++				DELAY(.75ns,.86ns,.95ns))}
+
+.ENDS  100311
+*
+*
+* ----------------------------------------------------------- 100313 ------
+*  Low Power Quad Driver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-36 to 2-41
+*  bss    2/11/97
+*
+.SUBCKT 100313  DA DB DC DD E O1A O2A O1ABAR O2ABAR O1B O2B
++		O1BBAR O2BBAR O1C O2C O1CBAR O2CBAR O1D O2D O1DBAR O2DBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(5) VCC1 VEE
++		DA DB DC DD E
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 buf VCC1 VEE
++		E EBUF
++     DLY_100313A IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 ora(2,4) VCC1 VEE
++		DA EBUF DB EBUF DC EBUF DD EBUF
++		OA_O OB_O OC_O OD_O
++     DLY_100313B IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(8) VCC2 VEE
++		OA_O OA_O OB_O OB_O OC_O OC_O OD_O OD_O
++		O1A O2A O1B O2B O1C O2C O1D O2D
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 inva(8) VCC2 VEE
++		OA_O OA_O OB_O OB_O OC_O OC_O OD_O OD_O
++		O1ABAR O2ABAR O1BBAR O2BBAR
++		O1CBAR O2CBAR O1DBAR O2DBAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100313A ugate (tplhMN=.25ns tplhMX=.5ns 
++								tphlMN=.25ns tphlMX=.5ns)
+
+.model DLY_100313B ugate (tplhMN=.55ns tplhMX=1.3ns 
++								tphlMN=.55ns tphlMX=1.3ns)
+
+.ENDS  100313
+*
+*
+* ----------------------------------------------------------- 100314 ------
+*  Low Power Quint Differential Line Receiver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-42 to 2-47
+*  bss    2/12/97
+*
+.SUBCKT 100314  DA DABAR OA OABAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 logicexp(2,1) VCC1 VEE
++		DA DABAR
++		AOUT_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		AOUT_O={DA & ~DABAR}
+
+U2 buf VCC2 VEE
++		AOUT_O
++		OA
++		DLY_100314 IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inv VCC2 VEE
++		AOUT_O
++		OABAR
++		DLY_100314 IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100314 ugate (tplhMN=.65ns tplhMX=2ns 
++								tphlMN=.65ns tphlMX=2ns)
+
+.ENDS  100314
+*
+*
+* ----------------------------------------------------------- 100315 ------
+*  Low-Skew Quad Clock Driver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-48 to 2-53
+*  bss    2/12/97
+*
+.SUBCKT 100315  CLKIN CLKINBAR CLKSEL TCLK
++		CLK1 CLK1BAR CLK2 CLK2BAR CLK3 CLK3BAR CLK4 CLK4BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(2) VCC1 VEE
++		CLKSEL TCLK
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(4,1) VCC1 VEE
++		CLKIN CLKINBAR CLKSEL TCLK
++		OUT
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLK={CLKIN | ~CLKINBAR}
++		CLKA={CLK & ~CLKSEL}
++		CLKB={CLKSEL & TCLK}
++		OUT={CLKA | CLKB}
+
+U3 bufa(4) VCC1 VEE
++		OUT OUT OUT OUT
++		CLK1_O CLK2_O CLK3_O CLK4_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 inva(4) VCC1 VEE
++		OUT OUT OUT OUT
++		CLK1BAR_O CLK2BAR_O CLK3BAR_O CLK4BAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 pindly(8,0,4) VCC2 VEE
++		CLK1_O CLK2_O CLK3_O CLK4_O
++		CLK1BAR_O CLK2BAR_O CLK3BAR_O CLK4BAR_O
++		CLKIN CLKINBAR CLKSEL TCLK
++		CLK1 CLK2 CLK3 CLK4
++		CLK1BAR CLK2BAR CLK3BAR CLK4BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		CLKCHK={CHANGED(CLKIN,0) | CHANGED(CLKINBAR,0)}
++
++	PINDLY:
++		CLK1 CLK1BAR CLK2 CLK2BAR CLK3 CLK3BAR CLK4 CLK4BAR = {
++			CASE(
++				CHANGED(CLKSEL,0), DELAY(.8ns,-1,1.6ns),
++				CLKCHK & CLKSEL!='1, DELAY(.62ns,-1,.82ns),
++				CHANGED(TCLK,0), DELAY(.5ns,-1,1.2ns),
++				DELAY(1.8ns,-1,2.6ns))}
+
+.ENDS  100315
+*
+*
+* ----------------------------------------------------------- 100316 ------
+*  Low Power Quad Differential Line Driver with Cut-Off
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-54 to 2-60
+*  bss    2/12/97
+*
+*	The low state and the cut-off state both operate at high impedance.
+*	The I/O model this is currently using translates the high impedance
+*	state as the low state voltage of -1.705V.  To switch to the cut-off
+*	voltage of -1.95V, change the I/O model in the U4 gate from IO_100K_OUT
+*	to IO_100K_OUTZ.
+*
+.SUBCKT 100316  OE D1 D2 D3 D4 D1BAR D2BAR D3BAR D4BAR
++		Q1 Q2 Q3 Q4 Q1BAR Q2BAR Q3BAR Q4BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(1) VCC1 VEE
++		OE
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(8,8) VCC1 VEE
++		D1 D2 D3 D4 D1BAR D2BAR D3BAR D4BAR
++		Q1_O Q2_O Q3_O Q4_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		Q1_O={D1 | ~D1BAR}
++		Q2_O={D2 | ~D2BAR}
++		Q3_O={D3 | ~D3BAR}
++		Q4_O={D4 | ~D4BAR}
++		Q1BAR_O={~Q1_O}
++		Q2BAR_O={~Q2_O}
++		Q3BAR_O={~Q3_O}
++		Q4BAR_O={~Q4_O}
+
+U3 buf VCC1 VEE
++		OE OE_B
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(8,1,1) VCC2 VEE
++		Q1_O Q2_O Q3_O Q4_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O
++		OE
++		OE_B
++		Q1 Q2 Q3 Q4 Q1BAR Q2BAR Q3BAR Q4BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE HI=OE
++		Q1 Q2 Q3 Q4 Q1BAR Q2BAR Q3BAR Q4BAR = {
++			CASE(
++				CHANGED_LH(OE_B,0) & TRN_ZH, DELAY(1.8ns,-1,4.2ns),
++				CHANGED_HL(OE_B,0) & TRN_HZ, DELAY(1.2ns,-1,3.1ns),
++				DELAY(.65ns,-1,2.3ns))}
+
+.ENDS  100316
+*
+*
+* ----------------------------------------------------------- 100319 ------
+*  Low Power Hex Line Driver with Cut-Off
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-61 to 2-67
+*  bss    2/12/97
+*
+*	The low state and the cut-off state both operate at high impedance.
+*	The I/O model this is currently using translates the high impedance
+*	state as the low state voltage of -1.705V.  To switch to the cut-off
+*	voltage of -1.95V, change the I/O model in the U4 gate from IO_100K_OUT
+*	to IO_100K_OUTZ.
+*
+.SUBCKT 100319  OE D1 D2 D3 D4 D5 D6
++		Q1 Q2 Q3 Q4 Q5 Q6 Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR Q6BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(7) VCC1 VEE
++		OE D1 D2 D3 D4 D5 D6
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 bufa(7) VCC1 VEE
++		OE D1 D2 D3 D4 D5 D6
++		OE_B Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(6) VCC1 VEE
++		D1 D2 D3 D4 D5 D6
++		Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O Q6BAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(12,1,1) VCC2 VEE
++		Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O
++		Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O Q6BAR_O
++		OE
++		OE_B
++		Q1 Q2 Q3 Q4 Q5 Q6 Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR Q6BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE HI=OE
++		Q1 Q2 Q3 Q4 Q5 Q6 Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR Q6BAR = {
++			CASE(
++				CHANGED_LH(OE_B,0) & TRN_ZH, DELAY(1.8ns,-1,4.3ns),
++				CHANGED_HL(OE_B,0) & TRN_HZ, DELAY(1.2ns,-1,3.1ns),
++				DELAY(.65ns,-1,2.3ns))}
+
+.ENDS  100319
+*
+*
+* ----------------------------------------------------------- 100321 ------
+*  Low Power 9-Bit Inverter
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-68 to 2-72
+*  bss    2/12/97
+*
+.SUBCKT 100321  D1 O1BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(1) VCC1 VEE
++		D1
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 inv VCC1 VEE
++		D1
++		O1BAR_O
++     DLY_100321 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		O1BAR_O
++		O1BAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100321 ugate (tplhMN=.45ns tplhMX=1.45ns 
++								tphlMN=.45ns tphlMX=1.45ns)
+
+.ENDS  100321
+*
+*
+* ----------------------------------------------------------- 100322 ------
+*  Low Power 9-Bit Buffer
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-73 to 2-77
+*  bss    2/12/97
+*
+.SUBCKT 100322  D1 O1
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(1) VCC1 VEE
++		D1
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 buf VCC1 VEE
++		D1
++		O1_O
++     DLY_100322 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 buf VCC2 VEE
++		O1_O
++		O1
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100322 ugate (tplhMN=.45ns tplhMX=1.45ns 
++								tphlMN=.45ns tphlMX=1.45ns)
+
+.ENDS  100322
+*
+*
+* ----------------------------------------------------------- 100323 ------
+*  Low Power Hex Bus Driver
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-78 to 2-84
+*  bss    2/12/97
+*
+.SUBCKT 100323  D1 D2 D3 D4 D5 D6 E DE1 DE2 DE3
++		O1 O2 O3 O4 O5 O6
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		D1 D2 D3 D4 D5 D6 E DE1 DE2 DE3
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(10,6) VCC1 VEE
++		D1 D2 D3 D4 D5 D6 E DE1 DE2 DE3
++		O1_O O2_O O3_O O4_O O5_O O6_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		O1_O={D1 & (DE1 | E)}
++		O2_O={D2 & (DE1 | E)}
++		O3_O={D3 & (DE2 | E)}
++		O4_O={D4 & (DE2 | E)}
++		O5_O={D5 & (DE3 | E)}
++		O6_O={D6 & (DE3 | E)}
+
+U3 pindly(6,0,10) VCC2 VEE
++		O1_O O2_O O3_O O4_O O5_O O6_O
++		D1 D2 D3 D4 D5 D6 E DE1 DE2 DE3
++		O1 O2 O3 O4 O5 O6
++		IO_100K_OUTZ MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		O1 = {
++			CASE(
++				CHANGED(E,0) & TRN_LH, DELAY(1.8ns,-1,3.5ns),
++				CHANGED(E,0) & TRN_HL, DELAY(1.5ns,-1,2.9ns),
++				CHANGED(DE1,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(DE1,0) & TRN_HL, DELAY(1.6ns,-1,3ns),
++				CHANGED(D1,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(D1,0) & TRN_HL, DELAY(1.3ns,-1,2.7ns),
++				DELAY(2.9ns,-1,4.6ns))}
++
++		O2 = {
++			CASE(
++				CHANGED(E,0) & TRN_LH, DELAY(1.8ns,-1,3.5ns),
++				CHANGED(E,0) & TRN_HL, DELAY(1.5ns,-1,2.9ns),
++				CHANGED(DE1,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(DE1,0) & TRN_HL, DELAY(1.6ns,-1,3ns),
++				CHANGED(D2,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(D2,0) & TRN_HL, DELAY(1.3ns,-1,2.7ns),
++				DELAY(2.9ns,-1,4.6ns))}
++
++		O3 = {
++			CASE(
++				CHANGED(E,0) & TRN_LH, DELAY(1.8ns,-1,3.5ns),
++				CHANGED(E,0) & TRN_HL, DELAY(1.5ns,-1,2.9ns),
++				CHANGED(DE2,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(DE2,0) & TRN_HL, DELAY(1.6ns,-1,3ns),
++				CHANGED(D3,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(D3,0) & TRN_HL, DELAY(1.3ns,-1,2.7ns),
++				DELAY(2.9ns,-1,4.6ns))}
++
++		O4 = {
++			CASE(
++				CHANGED(E,0) & TRN_LH, DELAY(1.8ns,-1,3.5ns),
++				CHANGED(E,0) & TRN_HL, DELAY(1.5ns,-1,2.9ns),
++				CHANGED(DE2,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(DE2,0) & TRN_HL, DELAY(1.6ns,-1,3ns),
++				CHANGED(D4,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(D4,0) & TRN_HL, DELAY(1.3ns,-1,2.7ns),
++				DELAY(2.9ns,-1,4.6ns))}
++
++		O5 = {
++			CASE(
++				CHANGED(E,0) & TRN_LH, DELAY(1.8ns,-1,3.5ns),
++				CHANGED(E,0) & TRN_HL, DELAY(1.5ns,-1,2.9ns),
++				CHANGED(DE3,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(DE3,0) & TRN_HL, DELAY(1.6ns,-1,3ns),
++				CHANGED(D5,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(D5,0) & TRN_HL, DELAY(1.3ns,-1,2.7ns),
++				DELAY(2.9ns,-1,4.6ns))}
++
++		O6 = {
++			CASE(
++				CHANGED(E,0) & TRN_LH, DELAY(1.8ns,-1,3.5ns),
++				CHANGED(E,0) & TRN_HL, DELAY(1.5ns,-1,2.9ns),
++				CHANGED(DE3,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(DE3,0) & TRN_HL, DELAY(1.6ns,-1,3ns),
++				CHANGED(D6,0) & TRN_LH, DELAY(1.9ns,-1,3.6ns),
++				CHANGED(D6,0) & TRN_HL, DELAY(1.3ns,-1,2.7ns),
++				DELAY(2.9ns,-1,4.6ns))}
+
+.ENDS  100323
+*
+*
+* ----------------------------------------------------------- 100324 ------
+*  Low Power Hex TTL-to-ECL Translator
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-85 to 2-90
+*  bss    2/13/97
+*
+.SUBCKT 100324  E D0 D1 D2 D3 D4 D5 Q0 Q1 Q2 Q3 Q4 Q5
++		Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 anda(2,6) DPWR DGND
++		E D0 E D1 E D2 E D3 E D4 E D5
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++     DLY_100324 IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 bufa(6) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0 Q1 Q2 Q3 Q4 Q5
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 inva(6) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100324 ugate (tplhMN=.5ns tplhMX=2.9ns 
++								tphlMN=.5ns tphlMX=2.9ns)
+
+.ENDS  100324
+*
+*
+* ----------------------------------------------------------- 100325 ------
+*  Low Power Hex ECL-to-TTL Translator
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-91 to 2-97
+*  bss    2/13/97
+*
+.SUBCKT 100325  D0 D0BAR Q0
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(2) VCC1 VEE
++		D0 D0BAR
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(2,1) VCC1 VEE
++		D0 D0BAR
++		Q0_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		Q0_O={D0 & ~D0BAR}
+
+U3 buf DPWR DGND
++		Q0_O
++		Q0
++     DLY_100325 IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100325 ugate (tplhMN=.9ns tplhMX=3.7ns 
++								tphlMN=.9ns tphlMX=3.7ns)
+
+.ENDS  100325
+*
+*
+* ----------------------------------------------------------- 100331 ------
+*  Low Power Triple D Flip-Flop
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-126 to 2-135
+*  bss    2/13/97
+*
+.SUBCKT 100331  CP0 CP1 CP2 CPC D0 D1 D2 CD0 CD1 CD2 SD0 SD1 SD2
++		MR MS Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(15) VCC1 VEE
++		CP0 CP1 CP2 CPC D0 D1 D2 CD0 CD1 CD2 SD0 SD1 SD2 MR MS
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(12,9) VCC1 VEE
++		CP0 CP1 CP2 CPC CD0 CD1 CD2 SD0 SD1 SD2 MR MS
++		CLR0 CLR1 CLR2 SET0 SET1 SET2 CLK0 CLK1 CLK2
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		CLK0={CP0 | CPC}
++		CLK1={CP1 | CPC}
++		CLK2={CP2 | CPC}
++		CLR0={~(CD0 | MR)}
++		CLR1={~(CD1 | MR)}
++		CLR2={~(CD2 | MR)}
++		SET0={~(SD0 | MS)}
++		SET1={~(SD1 | MS)}
++		SET2={~(SD2 | MS)}
+
+U3 dff(1) VCC1 VEE
++		SET0 CLR0 CLK0 D0 Q0_O Q0BAR_O
++		D0_EFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 dff(1) VCC1 VEE
++		SET1 CLR1 CLK1 D1 Q1_O Q1BAR_O
++		D0_EFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 dff(1) VCC1 VEE
++		SET2 CLR2 CLK2 D2 Q2_O Q2BAR_O
++		D0_EFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U6 pindly(6,0,11) VCC2 VEE
++		Q0_O Q0BAR_O Q1_O Q1BAR_O Q2_O Q2BAR_O
++		CLK0 CLK1 CLK2 SD0 SD1 SD2 CD0 CD1 CD2 MS MR
++		Q0 Q0BAR Q1 Q1BAR Q2 Q2BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SETCOM={CHANGED_LH(MS,0) | CHANGED_LH(MR,0)}
++		ASYNCH0={CHANGED_LH(CD0,0) | CHANGED_LH(SD0,0)}
++		ASYNCH1={CHANGED_LH(CD1,0) | CHANGED_LH(SD1,0)}
++		ASYNCH2={CHANGED_LH(CD2,0) | CHANGED_LH(SD2,0)}
++
++	PINDLY:
++		Q0 Q0BAR = {
++			CASE(
++				SETCOM & CLK0!='1, DELAY(1.1ns,-1,2.6ns),
++				SETCOM & CLK0!='0, DELAY(1.1ns,-1,2.8ns),
++				ASYNCH0 & CLK0!='1, DELAY(.7ns,-1,1.7ns),
++				ASYNCH0 & CLK0!='0, DELAY(.7ns,-1,2ns),
++				CHANGED_LH(CLK0,0), DELAY(.75ns,-1,2ns),
++				DELAY(2.1ns,-1,3.8ns))}
++
++		Q1 Q1BAR = {
++			CASE(
++				SETCOM & CLK1!='1, DELAY(1.1ns,-1,2.6ns),
++				SETCOM & CLK1!='0, DELAY(1.1ns,-1,2.8ns),
++				ASYNCH1 & CLK1!='1, DELAY(.7ns,-1,1.7ns),
++				ASYNCH1 & CLK1!='0, DELAY(.7ns,-1,2ns),
++				CHANGED_LH(CLK1,0), DELAY(.75ns,-1,2ns),
++				DELAY(2.1ns,-1,3.8ns))}
++
++		Q2 Q2BAR = {
++			CASE(
++				SETCOM & CLK2!='1, DELAY(1.1ns,-1,2.6ns),
++				SETCOM & CLK2!='0, DELAY(1.1ns,-1,2.8ns),
++				ASYNCH2 & CLK2!='1, DELAY(.7ns,-1,1.7ns),
++				ASYNCH2 & CLK2!='0, DELAY(.7ns,-1,2ns),
++				CHANGED_LH(CLK2,0), DELAY(.75ns,-1,2ns),
++				DELAY(2.1ns,-1,3.8ns))}
+
+U7 constraint(18) VCC1 VEE
++		D0 D1 D2 CD0 CD1 CD2 SD0 SD1 SD2 MS MR CLK0 CLK1 CLK2
++		CP0 CP1 CP2 CPC
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLK0
++		DATA(1)= D0
++		SETUPTIME=.4ns
++		HOLDTIME=.5ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK1
++		DATA(1)= D1
++		SETUPTIME=.4ns
++		HOLDTIME=.5ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK2
++		DATA(1)= D2
++		SETUPTIME=.4ns
++		HOLDTIME=.5ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK0
++		DATA(2)= CD0 SD0
++		SETUPTIME_LO=1.3ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK1
++		DATA(2)= CD1 SD1
++		SETUPTIME_LO=1.3ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK2
++		DATA(2)= CD2 SD2
++		SETUPTIME_LO=1.3ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK0
++		DATA(2)= MS MR
++		SETUPTIME_LO=2.3ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK1
++		DATA(2)= MS MR
++		SETUPTIME_LO=2.3ns
++
++	SETUP_HOLD:
++		CLOCK LH=CLK2
++		DATA(2)= MS MR
++		SETUPTIME_LO=2.3ns
++
++	WIDTH:
++		NODE=CP0
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CP1
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CP2
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CPC
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CD0
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CD1
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=CD2
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=SD0
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=SD1
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=SD2
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=MR
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=MS
++		MIN_HI=2ns
+
+.ENDS  100331
+*
+*
+* ----------------------------------------------------------- 100341 ------
+*  Low Power 8-Bit Shift Register
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-152 to 2-160
+*  bss    2/14/97
+*
+.SUBCKT 100341  CP S0 S1 D0 D7 P0 P1 P2 P3 P4 P5 P6 P7
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(13) VCC1 VEE
++		CP S0 S1 D0 D7 P0 P1 P2 P3 P4 P5 P6 P7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(20,8) VCC1 VEE
++		S0 S1 D0 D7 P0 P1 P2 P3 P4 P5 P6 P7
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		D0IN D1IN D2IN D3IN D4IN D5IN D6IN D7IN
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		PL={~S0 & ~S1}
++		SL={S0 & ~S1}
++		SR={~S0 & S1}
++		HOLD={S0 & S1}
++		D0IN={(P0 & PL) | (SL & D0) | (SR & Q1_O) | (HOLD & Q0_O)}
++		D1IN={(P1 & PL) | (SL & Q0_O) | (SR & Q2_O) | (HOLD & Q1_O)}
++		D2IN={(P2 & PL) | (SL & Q1_O) | (SR & Q3_O) | (HOLD & Q2_O)}
++		D3IN={(P3 & PL) | (SL & Q2_O) | (SR & Q4_O) | (HOLD & Q3_O)}
++		D4IN={(P4 & PL) | (SL & Q3_O) | (SR & Q5_O) | (HOLD & Q4_O)}
++		D5IN={(P5 & PL) | (SL & Q4_O) | (SR & Q6_O) | (HOLD & Q5_O)}
++		D6IN={(P6 & PL) | (SL & Q5_O) | (SR & Q7_O) | (HOLD & Q6_O)}
++		D7IN={(P7 & PL) | (SL & Q6_O) | (SR & D7) | (HOLD & Q7_O)}
+
+U3 dff(8) VCC1 VEE
++		$D_HI $D_HI CP 
++		D0IN D1IN D2IN D3IN D4IN D5IN D6IN D7IN
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_EFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(8,0,0) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 = {
++			CASE(
++				DELAY(1ns,-1,2ns))}
+
+U5 constraint(13) VCC1 VEE
++		CP D0 D7 P0 P1 P2 P3 P4 P5 P6 P7 S0 S1
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CP
++		DATA(10)= D0 D7 P0 P1 P2 P3 P4 P5 P6 P7
++		SETUPTIME=.65ns
++		HOLDTIME=.8ns
++
++	SETUP_HOLD:
++		CLOCK LH=CP
++		DATA(2)= S0 S1
++		SETUPTIME=1.6ns
++		HOLDTIME=.6ns
++
++	WIDTH:
++		NODE=CP
++		MIN_HI=2ns
+
+.ENDS  100341
+*
+*
+* ----------------------------------------------------------- 100343 ------
+*  Low Power 8-Bit Latch
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-161 to 2-168
+*  bss    2/14/97
+*
+.SUBCKT 100343  EBAR LEBAR D0 D1 D2 D3 D4 D5 D6 D7
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		EBAR LEBAR D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(2,1) VCC1 VEE
++		LEBAR EBAR
++		ENAB
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB={~EBAR & ~LEBAR}
+
+U3 dltch(8) VCC1 VEE
++		$D_HI $D_HI ENAB 
++		D0 D1 D2 D3 D4 D5 D6 D7
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		DLY_100343 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100343 ugff (
++		tpgqlhMN=1.4ns tpgqlhMX=2.9ns tpgqhlMN=1.4ns tpgqhlMX=2.9ns
++		tpdqlhMN=.8ns tpdqlhMX=2ns tpdqhlMN=.8ns tpdqhlMX=2ns
++		tsudgMN=1ns thdgMN=.1ns twghMN=2ns)
+
+.ENDS  100343
+*
+*
+* ----------------------------------------------------------- 100344 ------
+*  Low Power 8-Bit Latch with Cut-Off Drivers
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-169 to 2-175
+*  bss    2/14/97
+*
+.SUBCKT 100344  EBAR LEBAR OENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		EBAR LEBAR OENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(3,3) VCC1 VEE
++		LEBAR EBAR OENBAR
++		ENAB OEN OEN_B
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB={~EBAR & ~LEBAR}
++		OEN={~OENBAR}
++		OEN_B={OEN}
+
+U3 dltch(8) VCC1 VEE
++		$D_HI $D_HI ENAB 
++		D0 D1 D2 D3 D4 D5 D6 D7
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(8,1,2) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		OEN
++		OEN_B ENAB
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE HI=OEN
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 = {
++			CASE(
++				CHANGED_LH(OEN_B,0) & TRN_ZH, DELAY(1.6ns,-1,4.2ns),
++				CHANGED_HL(OEN_B,0) & TRN_HZ, DELAY(1ns,-1,2.7ns),
++				CHANGED_LH(ENAB,0), DELAY(1.6ns,-1,3.1ns),
++				DELAY(.9ns,-1,2.1ns))}
+
+.ENDS  100344
+*
+*
+* ----------------------------------------------------------- 100350 ------
+*  Low Power Hex D-Latch
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-176 to 2-183
+*  bss    2/14/97
+*
+.SUBCKT 100350  EABAR EBBAR MR D0 D1 D2 D3 D4 D5
++		Q0 Q1 Q2 Q3 Q4 Q5 Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		EABAR EBBAR MR D0 D1 D2 D3 D4 D5
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(3,2) VCC1 VEE
++		EABAR EBBAR MR
++		ENAB MRBAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB={~EABAR & ~EBBAR}
++		MRBAR={~MR}
+
+U3 dltch(6) VCC1 VEE
++		$D_HI MRBAR ENAB 
++		D0 D1 D2 D3 D4 D5
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O
++		DLY_100350 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(12) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100350 ugff (tppcqlhMN=.9ns tppcqlhMX=2.1ns
++		tppcqhlMN=.9ns tppcqhlMX=2.1ns twpclMN=2ns
++		tpgqlhMN=.75ns tpgqlhMX=1.85ns tpgqhlMN=.75ns tpgqhlMX=1.85ns
++		tpdqlhMN=.5ns tpdqlhMX=1.4ns tpdqhlMN=.5ns tpdqhlMX=1.4ns
++		tsudgMN=1ns thdgMN=.4ns tsupcghMN=1.6ns twghMN=2ns)
+
+.ENDS  100350
+*
+*
+* ----------------------------------------------------------- 100351 ------
+*  Low Power Hex D Flip-Flop
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-184 to 2-191
+*  bss    2/17/97
+*
+.SUBCKT 100351  CPA CPB MR D0 D1 D2 D3 D4 D5
++		Q0 Q1 Q2 Q3 Q4 Q5 Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		CPA CPB MR D0 D1 D2 D3 D4 D5
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(3,2) VCC1 VEE
++		CPA CPB MR
++		ENAB MRBAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		ENAB={CPA | CPB}
++		MRBAR={~MR}
+
+U3 dff(6) VCC1 VEE
++		$D_HI MRBAR ENAB 
++		D0 D1 D2 D3 D4 D5
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O
++		DLY_100351 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(12) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_100351 ueff (tppcqlhMN=1.1ns tppcqlhMX=2.3ns
++		tppcqhlMN=1.1ns tppcqhlMX=2.3ns twpclMN=2ns tsupcclkhMN=1.6ns
++		tpclkqlhMN=.8ns tpclkqlhMX=2ns tpclkqhlMN=.8ns tpclkqhlMX=2ns
++		tsudclkMN=.4ns thdclkMN=.8ns twclkhMN=2ns)
+
+.ENDS  100351
+*
+*
+* ----------------------------------------------------------- 100352 ------
+*  Low Power 8-Bit Buffer with Cut-Off Drivers
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-192 to 2-197
+*  bss    2/17/97
+*
+*	The low state and the cut-off state both operate at high impedance.
+*	The I/O model this is currently using translates the high impedance
+*	state as the low state voltage of -1.705V.  To switch to the cut-off
+*	voltage of -1.95V, change the I/O model in the U3 gate from IO_100K_OUT
+*	to IO_100K_OUTZ.
+*
+.SUBCKT 100352  OENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(9) VCC1 VEE
++		OENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 bufa(9) VCC1 VEE
++		D0 D1 D2 D3 D4 D5 D6 D7 OENBAR
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O OENBAR_B
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 pindly(8,1,1) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		OENBAR
++		OENBAR_B
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE LO=OENBAR
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 = {
++			CASE(
++				CHANGED_HL(OENBAR_B,0) & TRN_ZH, DELAY(1.6ns,-1,4.2ns),
++				CHANGED_LH(OENBAR_B,0) & TRN_HZ, DELAY(1ns,-1,2.7ns),
++				DELAY(.7ns,-1,2ns))}
+
+.ENDS  100352
+*
+*
+* ----------------------------------------------------------- 100353 ------
+*  Low Power 8-Bit Register
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-198 to 2-206
+*  bss    2/18/97
+*
+.SUBCKT 100353  CP CENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(10) VCC1 VEE
++		CP CENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(17,8) VCC1 VEE
++		CENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		D0IN D1IN D2IN D3IN D4IN D5IN D6IN D7IN
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		D0IN={(D0 & ~CENBAR) | (Q0_O & CENBAR)}
++		D1IN={(D1 & ~CENBAR) | (Q1_O & CENBAR)}
++		D2IN={(D2 & ~CENBAR) | (Q2_O & CENBAR)}
++		D3IN={(D3 & ~CENBAR) | (Q3_O & CENBAR)}
++		D4IN={(D4 & ~CENBAR) | (Q4_O & CENBAR)}
++		D5IN={(D5 & ~CENBAR) | (Q5_O & CENBAR)}
++		D6IN={(D6 & ~CENBAR) | (Q6_O & CENBAR)}
++		D7IN={(D7 & ~CENBAR) | (Q7_O & CENBAR)}
+
+U3 dff(8) VCC1 VEE
++		$D_HI $D_HI CP 
++		D0IN D1IN D2IN D3IN D4IN D5IN D6IN D7IN
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		DLY_100353 IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 bufa(8) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     D0_GATE IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U5 constraint(10) VCC1 VEE
++		CENBAR CP D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CP
++		DATA(1)= CENBAR
++		SETUPTIME_HI=.4ns
++		SETUPTIME_LO=1.1ns
++
++	SETUP_HOLD:
++		CLOCK LH=CP
++		DATA(8)= D0 D1 D2 D3 D4 D5 D6 D7
++		SETUPTIME=1.1ns
++		HOLDTIME=.1ns
+
+.model DLY_100353 ueff (
++		tpclkqlhMN=1.4ns tpclkqlhMX=3ns tpclkqhlMN=1.4ns tpclkqhlMX=3ns
++		twclkhMN=2ns)
+
+.ENDS  100353
+*
+*
+* ----------------------------------------------------------- 100354 ------
+*  Low Power 8-Bit Register with Cut-Off Drivers
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-207 to 2-215
+*  bss    2/18/97
+*
+*	The low state and the cut-off state both operate at high impedance.
+*	The I/O model this is currently using translates the high impedance
+*	state as the low state voltage of -1.705V.  To switch to the cut-off
+*	voltage of -1.95V, change the I/O model in the U4 gate from IO_100K_OUT
+*	to IO_100K_OUTZ.
+*
+.SUBCKT 100354  CP CENBAR OENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(11) VCC1 VEE
++		CP CENBAR OENBAR D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(18,9) VCC1 VEE
++		CENBAR D0 D1 D2 D3 D4 D5 D6 D7 OENBAR
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		D0IN D1IN D2IN D3IN D4IN D5IN D6IN D7IN OENBAR_B
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		D0IN={(D0 & ~CENBAR) | (Q0_O & CENBAR)}
++		D1IN={(D1 & ~CENBAR) | (Q1_O & CENBAR)}
++		D2IN={(D2 & ~CENBAR) | (Q2_O & CENBAR)}
++		D3IN={(D3 & ~CENBAR) | (Q3_O & CENBAR)}
++		D4IN={(D4 & ~CENBAR) | (Q4_O & CENBAR)}
++		D5IN={(D5 & ~CENBAR) | (Q5_O & CENBAR)}
++		D6IN={(D6 & ~CENBAR) | (Q6_O & CENBAR)}
++		D7IN={(D7 & ~CENBAR) | (Q7_O & CENBAR)}
++		OENBAR_B={OENBAR}
+
+U3 dff(8) VCC1 VEE
++		$D_HI $D_HI CP 
++		D0IN D1IN D2IN D3IN D4IN D5IN D6IN D7IN
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_EFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(8,1,1) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++		OENBAR
++		OENBAR_B
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE LO=OENBAR
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 = {
++			CASE(
++				CHANGED_HL(OENBAR_B,0) & TRN_ZH, DELAY(1.6ns,-1,4.2ns),
++				CHANGED_LH(OENBAR_B,0) & TRN_HZ, DELAY(1ns,-1,2.7ns),
++				DELAY(1.4ns,-1,3ns))}
+
+U5 constraint(10) VCC1 VEE
++		CENBAR CP D0 D1 D2 D3 D4 D5 D6 D7
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CP
++		DATA(1)= CENBAR
++		SETUPTIME_HI=.4ns
++		SETUPTIME_LO=1.1ns
++
++	SETUP_HOLD:
++		CLOCK LH=CP
++		DATA(8)= D0 D1 D2 D3 D4 D5 D6 D7
++		SETUPTIME=1.1ns
++		HOLDTIME=.1ns
++
++	WIDTH:
++		NODE=CP
++		MIN_HI=2ns
+
+.ENDS  100354
+*
+*
+* ----------------------------------------------------------- 100355 ------
+*  Low Power Quad Multiplexer/Latch
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-216 to 2-225
+*  bss    2/18/97
+*
+.SUBCKT 100355  MR E1BAR E2BAR S0BAR S1 D0A D1A D0B D1B D0C D1C D0D D1D
++		QA QABAR QB QBBAR QC QCBAR QD QDBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(13) VCC1 VEE
++		MR E1BAR E2BAR S0BAR S1 D0A D1A D0B D1B D0C D1C D0D D1D
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(13,6) VCC1 VEE
++		MR E1BAR E2BAR S0BAR S1 D0A D1A D0B D1B D0C D1C D0D D1D
++		DA DB DC DD GATE MRBAR
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		DA={(D0A & ~S0BAR) | (D1A & S1)}
++		DB={(D0B & ~S0BAR) | (D1B & S1)}
++		DC={(D0C & ~S0BAR) | (D1C & S1)}
++		DD={(D0D & ~S0BAR) | (D1D & S1)}
++		MRBAR={~MR}
++		GATE={MRBAR & ~E2BAR & ~E1BAR}
+
+U3 dltch(4) VCC1 VEE
++		$D_HI MRBAR GATE 
++		DA DB DC DD
++		QA_O QB_O QC_O QD_O
++		QABAR_O QBBAR_O QCBAR_O QDBAR_O
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(8,0,13) VCC2 VEE
++		QA_O QB_O QC_O QD_O QABAR_O QBBAR_O QCBAR_O QDBAR_O
++		S0BAR S1 D0A D1A D0B D1B D0C D1C D0D D1D E1BAR E2BAR MR
++		QA QB QC QD QABAR QBBAR QCBAR QDBAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SELECT={CHANGED(S0BAR,0) | CHANGED(S1,0)}
++		CLEAR={CHANGED_LH(MR,0)}
++		ENABLE={CHANGED_HL(E1BAR,0) | CHANGED_HL(E2BAR,0)}
++
++	PINDLY:
++		QA QABAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,2.6ns),
++				ENABLE, DELAY(.8ns,-1,2ns),
++				CLEAR, DELAY(.8ns,-1,2.3ns),
++				CHANGED(D0A,0) | CHANGED(D1A,0), DELAY(.6ns,-1,1.9ns),
++				DELAY(2ns,-1,3.6ns))}
++
++		QB QBBAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,2.6ns),
++				ENABLE, DELAY(.8ns,-1,2ns),
++				CLEAR, DELAY(.8ns,-1,2.3ns),
++				CHANGED(D0B,0) | CHANGED(D1B,0), DELAY(.6ns,-1,1.9ns),
++				DELAY(2ns,-1,3.6ns))}
++
++		QC QCBAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,2.6ns),
++				ENABLE, DELAY(.8ns,-1,2ns),
++				CLEAR, DELAY(.8ns,-1,2.3ns),
++				CHANGED(D0C,0) | CHANGED(D1C,0), DELAY(.6ns,-1,1.9ns),
++				DELAY(2ns,-1,3.6ns))}
++
++		QD QDBAR = {
++			CASE(
++				SELECT, DELAY(1ns,-1,2.6ns),
++				ENABLE, DELAY(.8ns,-1,2ns),
++				CLEAR, DELAY(.8ns,-1,2.3ns),
++				CHANGED(D0D,0) | CHANGED(D1D,0), DELAY(.6ns,-1,1.9ns),
++				DELAY(2ns,-1,3.6ns))}
+
+U5 constraint(12) VCC1 VEE
++		GATE S0BAR S1 D0A D1A D0B D1B D0C D1C D0D D1D MR
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=GATE
++		DATA(2)= S0BAR S1
++		SETUPTIME=1.7ns
++
++	SETUP_HOLD:
++		CLOCK HL=GATE
++		DATA(1)= MR
++		SETUPTIME_LO=1.5ns
++
++	SETUP_HOLD:
++		CLOCK HL=GATE
++		DATA(8)= D0A D1A D0B D1B D0C D1C D0D D1D
++		SETUPTIME=.9ns
++		HOLDTIME=.4ns
++
++	WIDTH:
++		NODE=MR
++		MIN_HI=2ns
++
++	WIDTH:
++		NODE=GATE
++		MIN_HI=2ns
++		MESSAGE="E1BAR and E2BAR Input Width Error"
+
+.ENDS  100355
+*
+*
+* ----------------------------------------------------------- 100360 ------
+*  Low Power Dual Parity Checker/Generator
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-226 to 2-232
+*  bss    2/20/97
+*
+.SUBCKT 100360  I0A I1A I2A I3A I4A I5A I6A I7A IA
++		I0B I1B I2B I3B I4B I5B I6B I7B IB CBAR ZA ZB
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(18) VCC1 VEE
++		I0A I1A I2A I3A I4A I5A I6A I7A IA
++		I0B I1B I2B I3B I4B I5B I6B I7B IB
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(18,3) VCC1 VEE
++		I0A I1A I2A I3A I4A I5A I6A I7A IA
++		I0B I1B I2B I3B I4B I5B I6B I7B IB
++		CBAR_O ZA_O ZB_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		XOR1={I0A ^ I1A}
++		XOR2={I2A ^ I3A}
++		XOR3={I4A ^ I5A}
++		XOR4={I6A ^ I7A}
++		XOR5={I0B ^ I1B}
++		XOR6={I2B ^ I3B}
++		XOR7={I4B ^ I5B}
++		XOR8={I6B ^ I7B}
++		CBAR_O={XOR1 | XOR2 | XOR3 | XOR4 | XOR5 | XOR6 | XOR7 | XOR8}
++		ZA_O={~(IA ^ ((XOR3 ^ XOR4) ^ (XOR1 ^ XOR2)))}
++		ZB_O={~(IB ^ ((XOR7 ^ XOR8) ^ (XOR5 ^ XOR6)))}
+
+U3 pindly(3,0,2) VCC2 VEE
++		CBAR_O ZA_O ZB_O
++		IA IB
++		CBAR ZA ZB
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		ZA = {
++			CASE(
++				CHANGED(IA,0), DELAY(.6ns,-1,1.3ns),
++				DELAY(1.1ns,-1,2.75ns))}
++
++		ZB = {
++			CASE(
++				CHANGED(IB,0), DELAY(.6ns,-1,1.3ns),
++				DELAY(1.1ns,-1,2.75ns))}
++
++		CBAR = {
++			CASE(
++				DELAY(1.1ns,-1,2.8ns))}
+
+.ENDS  100360
+*
+*
+* ----------------------------------------------------------- 100363 ------
+*  Low Power Dual 8-Input Multiplexer
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-233 to 2-240
+*  bss    2/20/97
+*
+.SUBCKT 100363  S0 S1 S2 A0 A1 A2 A3 A4 A5 A6 A7
++		B0 B1 B2 B3 B4 B5 B6 B7 ZA ZB
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(19) VCC1 VEE
++		S0 S1 S2 A0 A1 A2 A3 A4 A5 A6 A7
++		B0 B1 B2 B3 B4 B5 B6 B7
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(19,2) VCC1 VEE
++		S0 S1 S2 A0 A1 A2 A3 A4 A5 A6 A7
++		B0 B1 B2 B3 B4 B5 B6 B7
++		ZA_O ZB_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		B0IN={~(B0 | S0 | S1 | S2)}
++		B1IN={~(B1 | ~S0 | S1 | S2)}
++		B2IN={~(B2 | S0 | ~S1 | S2)}
++		B3IN={~(B3 | ~S0 | ~S1 | S2)}
++		B4IN={~(B4 | S0 | S1 | ~S2)}
++		B5IN={~(B5 | ~S0 | S1 | ~S2)}
++		B6IN={~(B6 | S0 | ~S1 | ~S2)}
++		B7IN={~(B7 | ~S0 | ~S1 | ~S2)}
++		ZB_O={~(B0IN | B1IN | B2IN | B3IN | B4IN | B5IN | B6IN | B7IN)}
++		A0IN={~(A0 | S0 | S1 | S2)}
++		A1IN={~(A1 | ~S0 | S1 | S2)}
++		A2IN={~(A2 | S0 | ~S1 | S2)}
++		A3IN={~(A3 | ~S0 | ~S1 | S2)}
++		A4IN={~(A4 | S0 | S1 | ~S2)}
++		A5IN={~(A5 | ~S0 | S1 | ~S2)}
++		A6IN={~(A6 | S0 | ~S1 | ~S2)}
++		A7IN={~(A7 | ~S0 | ~S1 | ~S2)}
++		ZA_O={~(A0IN | A1IN | A2IN | A3IN | A4IN | A5IN | A6IN | A7IN)}
+
+U3 pindly(2,0,3) VCC2 VEE
++		ZA_O ZB_O
++		S0 S1 S2
++		ZA ZB
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SELECT={CHANGED(S0,0) | CHANGED(S1,0) | CHANGED(S2,0)}
++
++	PINDLY:
++		ZA ZB= {
++			CASE(
++				SELECT, DELAY(1.4ns,-1,2.7ns),
++				DELAY(.8ns,-1,1.7ns))}
+
+.ENDS  100363
+*
+*
+* ----------------------------------------------------------- 100364 ------
+*  Low Power 16-Input Multiplexer
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-241 to 2-247
+*  bss    2/21/97
+*
+.SUBCKT 100364  S0 S1 S2 S3 I0 I1 I2 I3 I4 I5 I6 I7 I8 I9
++		I10 I11 I12 I13 I14 I15 Z
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(20) VCC1 VEE
++		S0 S1 S2 S3 I0 I1 I2 I3 I4 I5 I6 I7 I8 I9
++		I10 I11 I12 I13 I14 I15
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(20,1) VCC1 VEE
++		S0 S1 S2 S3 I0 I1 I2 I3 I4 I5 I6 I7 I8 I9
++		I10 I11 I12 I13 I14 I15
++		Z_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		IN1={~(I0 | S0 | S1 | S2 | S3)}
++		IN2={~(I1 | ~S0 | S1 | S2 | S3)}
++		IN3={~(I2 | S0 | ~S1 | S2 | S3)}
++		IN4={~(I3 | ~S0 | ~S1 | S2 | S3)}
++		IN5={~(I4 | S0 | S1 | ~S2 | S3)}
++		IN6={~(I5 | ~S0 | S1 | ~S2 | S3)}
++		IN7={~(I6 | S0 | ~S1 | ~S2 | S3)}
++		IN8={~(I7 | ~S0 | ~S1 | ~S2 | S3)}
++		IN9={~(I8 | S0 | S1 | S2 | ~S3)}
++		IN10={~(I9 | ~S0 | S1 | S2 | ~S3)}
++		IN11={~(I10 | S0 | ~S1 | S2 | ~S3)}
++		IN12={~(I11 | ~S0 | ~S1 | S2 | ~S3)}
++		IN13={~(I12 | S0 | S1 | ~S2 | ~S3)}
++		IN14={~(I13 | ~S0 | S1 | ~S2 | ~S3)}
++		IN15={~(I14 | S0 | ~S1 | ~S2 | ~S3)}
++		IN16={~(I15 | ~S0 | ~S1 | ~S2 | ~S3)}
++		Z_O={~(IN16 | IN1 | IN2 | IN3 | IN4 | IN5 | IN6 | IN7 |
++			IN8 | IN9 | IN10 | IN11 | IN12 | IN13 | IN14 | IN15)}
+
+U3 pindly(1,0,4) VCC2 VEE
++		Z_O
++		S0 S1 S2 S3
++		Z
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SELECT1={CHANGED(S0,0) | CHANGED(S1,0)}
++		SELECT2={CHANGED(S2,0) | CHANGED(S3,0)}
++
++	PINDLY:
++		Z = {
++			CASE(
++				SELECT1, DELAY(1.4ns,-1,2.8ns),
++				SELECT2, DELAY(1ns,-1,2.2ns),
++				DELAY(.9ns,-1,2ns))}
+
+.ENDS  100364
+*
+*
+* ----------------------------------------------------------- 100370 ------
+*  Low Power Universal Demultiplexer/Decoder
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-248 to 2-255
+*  bss    2/21/97
+*
+.SUBCKT 100370  HA HB HC M A0A A1A A2A E1ABAR E2ABAR E1BBAR
++		E2BBAR A0B A1B Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(13) VCC1 VEE
++		HA HB HC M A0A A1A A2A E1ABAR E2ABAR E1BBAR
++		E2BBAR A0B A1B
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(13,8) VCC1 VEE
++		HA HB HC M A0A A1A A2A E1ABAR E2ABAR E1BBAR
++		E2BBAR A0B A1B
++		Z0_O Z1_O Z2_O Z3_O Z4_O Z5_O Z6_O Z7_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		H1={HA | HC}
++		H2={HB | HC}
++		ENABA={A2A | E2ABAR | E1ABAR}
++		ENABB={(M & ~A2A) | E1BBAR | E2BBAR}
++		IN0={A0A | ENABA | A1A}
++		IN1={ENABA | ~A0A | A1A}
++		IN2={A0A | ~A1A | ENABA}
++		IN3={~A1A | ENABA | ~A0A}
++		MIDA={(A0A & M) | (~M & A0B)}
++		MIDB={(A1A & M) | (~M & A1B)}
++		IN4={MIDA | MIDB | ENABB}
++		IN5={MIDB | ~MIDA | ENABB}
++		IN6={~MIDB | MIDA | ENABB}
++		IN7={~MIDB | ~MIDA | ENABB}
++		Z0_O={IN0 ^ H1}
++		Z1_O={IN1 ^ H1}
++		Z2_O={IN2 ^ H1}
++		Z3_O={IN3 ^ H1}
++		Z4_O={IN4 ^ H2}
++		Z5_O={IN5 ^ H2}
++		Z6_O={IN6 ^ H2}
++		Z7_O={IN7 ^ H2}
+
+U3 pindly(8,0,13) VCC2 VEE
++		Z0_O Z1_O Z2_O Z3_O Z4_O Z5_O Z6_O Z7_O
++		HA HB HC M A0A A1A A2A E1ABAR E2ABAR E1BBAR
++		E2BBAR A0B A1B
++		Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		H1IN={CHANGED(HA,0) | CHANGED(HC,0)}
++		H2IN={CHANGED(HB,0) | CHANGED(HC,0)}
++		DATA={CHANGED(A0A,0) | CHANGED(A1A,0) | CHANGED(A2A,0) |
++			CHANGED(A0B,0) | CHANGED(A1B,0)}
++		AENAB={CHANGED(E1ABAR,0) | CHANGED(E2ABAR,0)}
++		BENAB={CHANGED(E1BBAR,0) | CHANGED(E2BBAR,0)}
++
++	PINDLY:
++		Z0 Z1 Z2 Z3 = {
++			CASE(
++				CHANGED(M,0), DELAY(1.1ns,-1,2.7ns),
++				DATA, DELAY(.75ns,-1,2.2ns),
++				H1IN, DELAY(.75ns,-1,2.2ns),
++				AENAB, DELAY(.75ns,-1,1.85ns),
++				DELAY(2.1ns,-1,2.85ns))}
++
++		Z4 Z5 Z6 Z7 = {
++			CASE(
++				CHANGED(M,0), DELAY(1.1ns,-1,2.7ns),
++				DATA, DELAY(.75ns,-1,2.2ns),
++				H2IN, DELAY(.75ns,-1,2.2ns),
++				BENAB, DELAY(.75ns,-1,1.85ns),
++				DELAY(2.1ns,-1,2.85ns))}
+
+.ENDS  100370
+*
+*
+* ----------------------------------------------------------- 100371 ------
+*  Low Power Triple 4-Input Multiplexer with Enable
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-256 to 2-263
+*  bss    2/24/97
+*
+.SUBCKT 100371  EBAR S0 S1 I0A I1A I2A I3A I0B I1B I2B I3B
++		I0C I1C I2C I3C ZA ZABAR ZB ZBBAR ZC ZCBAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(15) VCC1 VEE
++		EBAR S0 S1 I0A I1A I2A I3A I0B I1B I2B I3B
++		I0C I1C I2C I3C
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 logicexp(15,6) VCC1 VEE
++		EBAR S0 S1 I0A I1A I2A I3A I0B I1B I2B I3B
++		I0C I1C I2C I3C
++		ZA_O ZABAR_O ZB_O ZBBAR_O ZC_O ZCBAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	LOGIC:
++		IN0A={~(I0A | S0 | S1)}
++		IN1A={~(I1A | ~S0 | S1)}
++		IN2A={~(I2A | S0 | ~S1)}
++		IN3A={~(I3A | ~S0 | ~S1)}
++		IN0B={~(I0B | S0 | S1)}
++		IN1B={~(I1B | ~S0 | S1)}
++		IN2B={~(I2B | S0 | ~S1)}
++		IN3B={~(I3B | ~S0 | ~S1)}
++		IN0C={~(I0C | S0 | S1)}
++		IN1C={~(I1C | ~S0 | S1)}
++		IN2C={~(I2C | S0 | ~S1)}
++		IN3C={~(I3C | ~S0 | ~S1)}
++		ZABAR_O={IN0A | IN1A | IN2A | IN3A | EBAR}
++		ZA_O={~ZABAR_O}
++		ZBBAR_O={IN0B | IN1B | IN2B | IN3B | EBAR}
++		ZB_O={~ZBBAR_O}
++		ZCBAR_O={IN0C | IN1C | IN2C | IN3C | EBAR}
++		ZC_O={~ZCBAR_O}
+
+U3 pindly(6,0,15) VCC2 VEE
++		ZA_O ZABAR_O ZB_O ZBBAR_O ZC_O ZCBAR_O
++		EBAR S0 S1 I0A I1A I2A I3A I0B I1B I2B I3B
++		I0C I1C I2C I3C
++		ZA ZABAR ZB ZBBAR ZC ZCBAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	BOOLEAN:
++		SELECT={CHANGED(S0,0) | CHANGED(S1,0)}
++		DATAA={CHANGED(I0A,0) | CHANGED(I1A,0) | CHANGED(I2A,0) |
++			CHANGED(I3A,0)}
++		DATAB={CHANGED(I0B,0) | CHANGED(I1B,0) | CHANGED(I2B,0) |
++			CHANGED(I3B,0)}
++		DATAC={CHANGED(I0C,0) | CHANGED(I1C,0) | CHANGED(I2C,0) |
++			CHANGED(I3C,0)}
++
++	PINDLY:
++		ZA ZABAR = {
++			CASE(
++				SELECT, DELAY(.9ns,-1,2.4ns),
++				CHANGED(EBAR,0), DELAY(.65ns,-1,2.3ns),
++				DATAA, DELAY(.45ns,-1,1.5ns),
++				DELAY(1.9ns,-1,3.4ns))}
++
++		ZB ZBBAR = {
++			CASE(
++				SELECT, DELAY(.9ns,-1,2.4ns),
++				CHANGED(EBAR,0), DELAY(.65ns,-1,2.3ns),
++				DATAB, DELAY(.45ns,-1,1.5ns),
++				DELAY(1.9ns,-1,3.4ns))}
++
++		ZC ZCBAR = {
++			CASE(
++				SELECT, DELAY(.9ns,-1,2.4ns),
++				CHANGED(EBAR,0), DELAY(.65ns,-1,2.3ns),
++				DATAC, DELAY(.45ns,-1,1.5ns),
++				DELAY(1.9ns,-1,3.4ns))}
+
+.ENDS  100371
+*
+*
+* ----------------------------------------------------------- 100391 ------
+*  Low Power Single Supply Hex TTL-to-ECL Translator
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-271 to 2-277
+*  bss    2/24/97
+*
+.SUBCKT 100391  E D0 D1 D2 D3 D4 D5 Q0 Q0BAR Q1 Q1BAR
++		Q2 Q2BAR Q3 Q3BAR Q4 Q4BAR Q5 Q5BAR
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 anda(2,6) DPWR DGND
++		D0 E D1 E D2 E D3 E D4 E D5 E
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		D0_GATE IO_STD IO_LEVEL={IO_LEVEL}
+
+U2 inva(6) VCC1 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 pindly(12,0,1) VCC2 VEE
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O
++		Q0BAR_O Q1BAR_O Q2BAR_O Q3BAR_O Q4BAR_O Q5BAR_O
++		E
++		Q0 Q1 Q2 Q3 Q4 Q5 Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR
++		IO_100K_OUT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	PINDLY:
++		Q0 Q1 Q2 Q3 Q4 Q5 Q0BAR Q1BAR Q2BAR Q3BAR Q4BAR Q5BAR = {
++			CASE(
++				CHANGED(E,0), DELAY(.45ns,-1,1.4ns),
++				DELAY(.35ns,-1,1.3ns))}
+
+.ENDS  100391
+*
+*
+* ----------------------------------------------------------- 100393 ------
+*  Low Power 9-Bit ECL-to-TTL Translator with Latches
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-279 to 2-283
+*  bss    2/24/97
+*
+.SUBCKT 100393  LE D0 D1 D2 D3 D4 D5 D6 D7 D8 OETTL OEECL
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		LE D0 D1 D2 D3 D4 D5 D6 D7 D8 OETTL OEECL
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 nor(2) VCC1 VEE
++		OETTL OEECL ENAB
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 dltch(9) VCC1 VEE
++		$D_HI $D_HI LE 
++		D0 D1 D2 D3 D4 D5 D6 D7 D8
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O Q8_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_GFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(9,1,12) DPWR DGND
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O Q8_O
++		ENAB
++		LE D0 D1 D2 D3 D4 D5 D6 D7 D8 OETTL OEECL
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8
++		IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE HI=ENAB
++		Q0 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D0,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q1 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D1,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q2 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D2,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q3 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D3,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q4 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D4,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q5 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D5,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q6 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D6,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q7 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D7,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
++
++		Q8 = {
++			CASE(
++				CHANGED_LH(OEECL,0) & TRN_HZ, DELAY(2.4ns,-1,6ns),
++				CHANGED_LH(OEECL,0) & TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				CHANGED_LH(OETTL,0) & TRN_HZ, DELAY(2ns,-1,6ns),
++				CHANGED_LH(OETTL,0) & TRN_LZ, DELAY(2ns,-1,5ns),
++				CHANGED_HL(OEECL,0) & TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				CHANGED_HL(OEECL,0) & TRN_ZL, DELAY(3.2ns,-1,8.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZH, DELAY(2ns,-1,5.5ns),
++				CHANGED_HL(OETTL,0) & TRN_ZL, DELAY(3.5ns,-1,8ns),
++				CHANGED(LE,0), DELAY(2.3ns,-1,5.6ns),
++				CHANGED(D8,0), DELAY(2.3ns,-1,4.8ns),
++				DELAY(4.5ns,-1,9.5ns))}
+
+U5 constraint(10) VCC1 VEE
++		LE D0 D1 D2 D3 D4 D5 D6 D7 D8
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK HL=LE
++		DATA(9)=D0 D1 D2 D3 D4 D5 D6 D7 D8
++		SETUPTIME=.7ns
++		HOLDTIME=1.3ns
++
++	WIDTH:
++		NODE=LE
++		MIN_LO=2ns
+
+.ENDS  100393
+*
+*
+* ----------------------------------------------------------- 100395 ------
+*  Low Power 9-Bit ECL-to-TTL Translator with Registers
+*
+*  The F100K ECL 300 Series Data Book, 1992, National Pages 2-284 to 2-288
+*  bss    2/24/97
+*
+.SUBCKT 100395  CP1 CP2 D0 D1 D2 D3 D4 D5 D6 D7 D8 OEBAR
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8
++     optional: VEE=$G_ECL_100K_VEE  VCC1=$G_ECL_100K_VCC1
++               VCC2=$G_ECL_100K_VCC2 DPWR=$G_DPWR DGND=$G_DGND
++     params: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 pulldn(12) VCC1 VEE
++		CP1 CP2 D0 D1 D2 D3 D4 D5 D6 D7 D8 OEBAR
++		IO_100K_PULLDN IO_LEVEL={IO_LEVEL}
+
+U2 or(2) VCC1 VEE
++		CP1 CP2 CLK
++     D0_GATE IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 dff(9) VCC1 VEE
++		$D_HI $D_HI CLK 
++		D0 D1 D2 D3 D4 D5 D6 D7 D8
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O Q8_O
++		$D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++		D0_EFF IO_100K_IN MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U4 pindly(9,1,0) DPWR DGND
++		Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O Q8_O
++		OEBAR
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8
++		IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++	TRISTATE:
++		ENABLE LO=OEBAR
++		Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8 = {
++			CASE(
++				TRN_HZ, DELAY(2.4ns,-1,5.6ns),
++				TRN_LZ, DELAY(3.2ns,-1,7.6ns),
++				TRN_ZH, DELAY(2.4ns,-1,5.6ns),
++				TRN_ZL, DELAY(3.2ns,-1,7.6ns),
++				TRN_LH, DELAY(2.3ns,-1,5ns),
++				TRN_HL, DELAY(3ns,-1,5.6ns),
++				DELAY(4.2ns,-1,8.6ns))}
+
+U5 constraint(10) VCC1 VEE
++		CLK D0 D1 D2 D3 D4 D5 D6 D7 D8
++		IO_100K_IN IO_LEVEL={IO_LEVEL}
++
++	SETUP_HOLD:
++		CLOCK LH=CLK
++		DATA(9)=D0 D1 D2 D3 D4 D5 D6 D7 D8
++		SETUPTIME=.5ns
++		HOLDTIME=1.5ns
++
++	WIDTH:
++		NODE=CLK
++		MIN_HI=2ns
++		MESSAGE="CP1 and CP2 Input Width Error"
+
+.ENDS  100395
+*
+*

@@ -1,0 +1,139 @@
+* AD712 SPICE Macro-model                   4/92, Rev. B
+*                                           JCB/JW/PMI
+*
+* Revision History:
+*     Rev B:  Convert model into ADSpice format
+*	         Add noise generators 
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws.  Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement.  Before using the macro-
+* models the licensee should read this license.  If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, load, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company.  The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models.  ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712    1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    6.631
+R4   6  50    6.631
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    2.5E-12
+EOS  60  1    POLY(1)  17 24  100E-6  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 12 HZ
+*
+R5   9  98    2.65E6
+C3   9  98    5.00E-9
+G1   98  9    5  6  1.51E-1
+V2   99  8    1.3
+V3   10 50    1.9
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 300 HZ
+*
+R11  16 17     1E6
+C8   16 17     5.318E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  9.975 9.975
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -95E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.14E-1  VTO=-2.000  IS=20E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS AD712

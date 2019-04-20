@@ -1,0 +1,276 @@
+* MAX4281 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 23MHz GBW
+* 300uA Supply Current
+* Rail-to-Rail Outputs Drive 1k ohm Load
+* 0.7 V/uS Slew Rate
+* MAX4281 - Available in 5-Pin SOT23 / 8-Pin SO
+* MAX4282 - Available in 8-Pin SO/uMAX
+* MAX4284 - Available in 14-Pin SO / 16-PIN QSOP
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________
+* MAX4281        Single OP AMP, Open Loop, Unity-Gain Stable
+* MAX4282        Dual OP AMP, Open Loop, Unity-Gain Stable
+* MAX4284        Quad OP AMP, Open Loop, Unity-Gain Stable
+*
+*
+*   ////////////// MAX4281 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4174 DATA SHEET       <====*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4281 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 10p
+I1 99 4 1E-3
+*1.4
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  52
+R2 6 50  52
+*EOS 1 9 POLY(1) 98 30  .7M 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+vos 1 9 0v
+Q1 5 2 109 QX
+Q2 6 9 110 QX
+RDEG1 110 4 .01
+RDEG2 109 4 .01
+*10
+* Second Pole 
+C4 5 6 .3nf
+***************SECOND STAGE******************
+IS 99 50 -1.1ma
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 17
+RD2 17 18 17
+RD3 18 19 17
+RD4 19 20 17
+CD1 17 98 17PF
+CD2 18 98 17PF
+CD3 19 98 17PF
+CD4 20 98 17PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 17.9E-3
+R4 12 98 55.7E6
+*C3 98 12 1.43e-9
+C3 98 12 1.33E-9
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .01E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 100E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 2v
+V4 36 35 -.2V
+* .3 before
+R16 34 35 40
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.0002U
+RL2 96 97 2
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 .1MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=1250000)
+.ENDS
+*
+*
+*
+*
+*   ////////////// MAX4282 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4174 DATA SHEET       <====**
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4282 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 10p
+I1 99 4 1E-3
+*1.4
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  52
+R2 6 50  52
+*EOS 1 9 POLY(1) 98 30  .7M 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+vos 1 9 0v
+Q1 5 2 109 QX
+Q2 6 9 110 QX
+RDEG1 110 4 .01
+RDEG2 109 4 .01
+*10
+* Second Pole 
+C4 5 6 .3nf
+***************SECOND STAGE******************
+IS 99 50 -1.1ma
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 17
+RD2 17 18 17
+RD3 18 19 17
+RD4 19 20 17
+CD1 17 98 17PF
+CD2 18 98 17PF
+CD3 19 98 17PF
+CD4 20 98 17PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 17.9E-3
+R4 12 98 55.7E6
+*C3 98 12 1.43e-9
+C3 98 12 1.33E-9
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .01E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 100E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 2v
+V4 36 35 -.2V
+* .3 before
+R16 34 35 40
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.0002U
+RL2 96 97 2
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 .1MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=1250000)
+.ENDS
+*
+*
+*
+*
+*   ////////////// MAX4284 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4174 DATA SHEET       <====**
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4284 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 10p
+I1 99 4 1E-3
+*1.4
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  52
+R2 6 50  52
+*EOS 1 9 POLY(1) 98 30  .7M 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+vos 1 9 0v
+Q1 5 2 109 QX
+Q2 6 9 110 QX
+RDEG1 110 4 .01
+RDEG2 109 4 .01
+*10
+* Second Pole 
+C4 5 6 .3nf
+***************SECOND STAGE******************
+IS 99 50 -1.1ma
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 17
+RD2 17 18 17
+RD3 18 19 17
+RD4 19 20 17
+CD1 17 98 17PF
+CD2 18 98 17PF
+CD3 19 98 17PF
+CD4 20 98 17PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 17.9E-3
+R4 12 98 55.7E6
+*C3 98 12 1.43e-9
+C3 98 12 1.33E-9
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .01E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 100E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 2v
+V4 36 35 -.2V
+* .3 before
+R16 34 35 40
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.0002U
+RL2 96 97 2
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 .1MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=1250000)
+.ENDS
+

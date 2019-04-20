@@ -1,0 +1,233 @@
+* file DIGSR:     CMOS digital shift register test case for SPICE
+*
+*
+*
+.options          acct   itl1=300   gmin=1e-11   abstol=1e-9
++                 limpts=205
+.width out=133
+*
+*
+.tran  0.2ns   40ns
+*
+**********************************************************************
+*
+*      Power supplies
+*
+*
+vd    100    0    dc 5.0
+vss   199    0    dc 0.0
+*
+rcc   100    199    1e6
+*
+**********************************************************************
+*
+*     Input wiggles  (piecewise linear waveforms)
+*
+*
+*
+vld    210  0     pwl(  0ns 5.0    1ns 5.0    3ns 0v    10ns 0v
+*
+vldb   220  0     pwl(  0ns 0v    1ns 0v    3ns 5.0    10ns 5.0 )
+*
+*
+vck    250  0     pwl(  0ns 5.0    3ns 5.0    6ns 0v     8ns 0v
++                      11ns 5.0   13ns 5.0   16ns 0v    18ns 0v
++                      21ns 5.0   23ns 5.0   26ns 0v    28ns 0v
++                      31ns 5.0   33ns 5.0   36ns 0v    38ns 0v )
+*
+vckb   260  0     pwl(  0ns 0v    3ns 0v    6ns 5.0     8ns 5.0
++                      11ns 0v   13ns 0v   16ns 5.0    18ns 5.0
++                      21ns 0v   23ns 0v   26ns 5.0    28ns 5.0
++                      31ns 0v   33ns 0v   36ns 5.0    38ns 5.0 )
+*
+*
+vdin   290  0     pwl(  0ns 0v    6ns 0v    8ns 5.0    16ns 5.0
++                      18ns 0v   26ns 0v   28ns 5.0    36ns 5.0
++                      38ns 0v   40ns 0v )
+*
+*
+*
+ra1a   210  0     100K
+ra2a   220  0     100K
+ra3a   250  0     100K
+ra4a   260  0     100K
+ra5a   290  0     100K
+*
+*
+.ic    v(301)=0.00
++      v(311)=5.00
++      v(321)=0.00
++      v(331)=5.00
++      v(341)=0.00
++      v(351)=0.00
++      v(361)=5.00
++      v(371)=0.00
++      v(381)=5.00
+*
+*
+**********************************************************************
+**********************************************************************
+**********************************************************************
+*
+*     Circuit Hookup  (definition and interconnection)
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+m900 290  250   301 100   p   w=5u    l=2u  ad=40p  pd=20u
+m901 290  260   301 199   n   w=5u    l=2u  ad=40p  pd=20u
+m902 199  220   301 100   p   w=5u    l=2u  ad=40p  pd=20u
+m903 199  210   301 199   n   w=5u    l=2u  ad=40p  pd=20u
+m904 302  301 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m905 302  301 199   199   n   w=15u   l=2u  ad=120p pd=30u
+m906 302  260   303 100   p   w=5u    l=2u  ad=40p  pd=20u
+m907 302  250   303 199   n   w=5u    l=2u  ad=40p  pd=20u
+m908 309  303 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m909 309  303 199   199   n   w=15u   l=2u  ad=120p pd=30u
+*
+*
+m910 309  250   311 100   p   w=5u    l=2u  ad=40p  pd=20u
+m911 309  260   311 199   n   w=5u    l=2u  ad=40p  pd=20u
+m912 100  220   311 100   p   w=5u    l=2u  ad=40p  pd=20u
+m913 100  210   311 199   n   w=5u    l=2u  ad=40p  pd=20u
+m914 312  311 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m915 312  311 199   199   n   w=15u   l=2u  ad=120p pd=30u
+m916 312  260   313 100   p   w=5u    l=2u  ad=40p  pd=20u
+m917 312  250   313 199   n   w=5u    l=2u  ad=40p  pd=20u
+m918 319  313 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m919 319  313 199   199   n   w=15u   l=2u  ad=120p pd=30u
+*
+*
+m920 319  250   321 100   p   w=9u    l=2u  ad=40p  pd=20u
+m921 319  260   321 199   n   w=9u    l=2u  ad=40p  pd=20u
+m922 199  220   321 100   p   w=4u    l=2u  ad=40p  pd=20u
+m923 199  210   321 199   n   w=20u   l=2u  ad=40p  pd=20u
+m924 322  321 100   100   p   w=70u   l=2u  ad=240p pd=45u
+m925 322  321 199   199   n   w=35u   l=2u  ad=120p pd=30u
+m926 322  260   323 100   p   w=5u    l=2u  ad=40p  pd=20u
+m927 322  250   323 199   n   w=5u    l=2u  ad=40p  pd=20u
+m928 329  323 100   100   p   w=20u   l=2u  ad=240p pd=45u
+m929 329  323 199   199   n   w=10u   l=2u  ad=120p pd=30u
+*
+*
+m930 329  250   331 100   p   w=5u    l=2u  ad=40p  pd=20u
+m931 329  260   331 199   n   w=5u    l=2u  ad=40p  pd=20u
+m932 100  220   331 100   p   w=5u    l=2u  ad=40p  pd=20u
+m933 100  210   331 199   n   w=5u    l=2u  ad=40p  pd=20u
+m934 332  331 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m935 332  331 199   199   n   w=15u   l=2u  ad=120p pd=30u
+m936 332  260   333 100   p   w=5u    l=2u  ad=40p  pd=20u
+m937 332  250   333 199   n   w=5u    l=2u  ad=40p  pd=20u
+m938 339  333 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m939 339  333 199   199   n   w=15u   l=2u  ad=120p pd=30u
+*
+*
+m940 339  250   341 100   p   w=5u    l=2u  ad=40p  pd=20u
+m941 339  260   341 199   n   w=5u    l=2u  ad=40p  pd=20u
+m942 199  220   341 100   p   w=5u    l=2u  ad=40p  pd=20u
+m943 199  210   341 199   n   w=5u    l=2u  ad=40p  pd=20u
+m944 342  341 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m945 342  341 199   199   n   w=15u   l=2u  ad=120p pd=30u
+m946 342  260   343 100   p   w=5u    l=2u  ad=40p  pd=20u
+m947 342  250   343 199   n   w=5u    l=2u  ad=40p  pd=20u
+m948 349  343 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m949 349  343 199   199   n   w=15u   l=2u  ad=120p pd=30u
+*
+*
+m950 349  250   351 100   p   w=9u    l=2u  ad=40p  pd=20u
+m951 349  260   351 199   n   w=9u    l=2u  ad=40p  pd=20u
+m952 199  220   351 100   p   w=4u    l=2u  ad=40p  pd=20u
+m953 199  210   351 199   n   w=20u   l=2u  ad=40p  pd=20u
+m954 352  351 100   100   p   w=70u   l=2u  ad=240p pd=45u
+m955 352  351 199   199   n   w=35u   l=2u  ad=120p pd=30u
+m956 352  260   353 100   p   w=5u    l=2u  ad=40p  pd=20u
+m957 352  250   353 199   n   w=5u    l=2u  ad=40p  pd=20u
+m958 359  353 100   100   p   w=20u   l=2u  ad=240p pd=45u
+m959 359  353 199   199   n   w=10u   l=2u  ad=120p pd=30u
+*
+*
+m960 359  250   361 100   p   w=9u    l=2u  ad=40p  pd=20u
+m961 359  260   361 199   n   w=9u    l=2u  ad=40p  pd=20u
+m962 100  220   361 100   p   w=4u    l=2u  ad=40p  pd=20u
+m963 100  210   361 199   n   w=20u   l=2u  ad=40p  pd=20u
+m964 362  361 100   100   p   w=70u   l=2u  ad=240p pd=45u
+m965 362  361 199   199   n   w=35u   l=2u  ad=120p pd=30u
+m966 362  260   363 100   p   w=5u    l=2u  ad=40p  pd=20u
+m967 362  250   363 199   n   w=5u    l=2u  ad=40p  pd=20u
+m968 369  363 100   100   p   w=20u   l=2u  ad=240p pd=45u
+m969 369  363 199   199   n   w=10u   l=2u  ad=120p pd=30u
+*
+*
+m970 369  250   371 100   p   w=5u    l=2u  ad=40p  pd=20u
+m971 369  260   371 199   n   w=5u    l=2u  ad=40p  pd=20u
+m972 199  220   371 100   p   w=5u    l=2u  ad=40p  pd=20u
+m973 199  210   371 199   n   w=5u    l=2u  ad=40p  pd=20u
+m974 372  371 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m975 372  371 199   199   n   w=15u   l=2u  ad=120p pd=30u
+m976 372  260   373 100   p   w=5u    l=2u  ad=40p  pd=20u
+m977 372  250   373 199   n   w=5u    l=2u  ad=40p  pd=20u
+m978 379  373 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m979 379  373 199   199   n   w=15u   l=2u  ad=120p pd=30u
+*
+*
+m980 379  250   381 100   p   w=5u    l=2u  ad=40p  pd=20u
+m981 379  260   381 199   n   w=5u    l=2u  ad=40p  pd=20u
+m982 100  220   381 100   p   w=5u    l=2u  ad=40p  pd=20u
+m983 100  210   381 199   n   w=5u    l=2u  ad=40p  pd=20u
+m984 382  381 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m985 382  381 199   199   n   w=15u   l=2u  ad=120p pd=30u
+m986 382  260   383 100   p   w=5u    l=2u  ad=40p  pd=20u
+m987 382  250   383 199   n   w=5u    l=2u  ad=40p  pd=20u
+m988 389  383 100   100   p   w=30u   l=2u  ad=240p pd=45u
+m989 389  383 199   199   n   w=15u   l=2u  ad=120p pd=30u
+*
+*
+*
+*
+**********************************************************************
+*
+*      Outputs (raw output from Spice)
+*
+*
+*
+*
+.print   tran  v(309)   v(319)   v(339)   v(349)
++              v(359)   v(369)   v(379)   v(389)
+*
+*
+*
+**********************************************************************
+*
+*   MOS model parameters for 2 micron CMOS
+*
+.model n nmos
++   level=2        vto=0.7        tox=400e-10
++   nsub=9e15      xj=0.15u       ld=0.20u
++   uo=666         ucrit=.65e5    uexp=0.123
++   vmax=5e4       neff=4.0       delta=1.4
++   rsh=36         cgso=200p      cgdo=200p
++   cj=200u        cjsw=500p      mj=0.75
++   mjsw=0.30      pb=0.80        nfs=1e11
+*
+*
+.model p pmos
++   level=2        vto=-0.70      tox=400e-10
++   nsub=7e15      xj=0.06u       ld=0.20u
++   uo=250         ucrit=.85e5    uexp=0.3
++   vmax=3e4       neff=2.65      delta=1.0
++   rsh=100        cgso=190p      cgdo=190p
++   cj=250u        cjsw=350p      mj=.55
++   mjsw=0.34      pb=0.80        nfs=1e11
+*
+**********************************************************************
+*
+*
+*
+*
+.end

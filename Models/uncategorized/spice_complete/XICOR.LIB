@@ -1,0 +1,177 @@
+**********
+* Copyright Intusoft 1996-1997
+* All Rights Reserved
+****************
+* Xicor - Digital Potentiometer Library
+* Date: 10/16/96
+*
+* The only function not modeled is the ability to move the wiper several 
+* positions (shorting out several resistor taps) before the Wiper is 
+* finally set. To force the model to only change the wiper every
+* 100us, set clk_delay=100u in the d_state model in the Analog_State subcircuit.
+*
+* The *DEFINE Vinit=50 in the Analog_State subcircuit defines the initial state of the
+* pot as well as the state that the pot will be set to when the Reset is thrown.
+* You can copy this subcircuit into your netlist (above the *SPICE_Net line) if
+* you want to make frequent changes.
+****************
+* Model Workings
+* A state machine (7 bit up/down counter) is used to keep track of the wiper position.
+* If Vupdn is 1 and Vinc goes low the state machine increments. If Vupdn is 0 the
+* state machine deccrements. The 7 bits of the state machine are weighted and summed in
+* Bdtoa as the voltage Vout.
+*
+* Two resistors are used to represent the position of wiper. The resistance ratio is set
+* By the output of the Bdtoa (Vout=Vpos). Rtot is the total resistance.
+* Taps is the total number of taps. 1U is used to keep the resistance from being set to 0
+* when the wiper hits its limits, which is not allowed in SPICE. 
+* SPICE would force the resistor then to 1K if not for the 1U
+*
+****************
+*SRC=X9312Z;X9312Z;Potentiometers;1 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9312Z 1    3     2    Vupdn Vinc Reset {Rtot=1K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9312W;X9312W;Potentiometers;10 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9312W 1    3     2    Vupdn Vinc Reset {Rtot=10K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9312U;X9312U;Potentiometers;50 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9312U 1    3     2    Vupdn Vinc Reset {Rtot=50K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9312T;X9312T;Potentiometers;100 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9312T 1    3     2    Vupdn Vinc Reset {Rtot=100K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9C102;X9C102;Potentiometers;1 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9C102 1    3     2    Vupdn Vinc Reset {Rtot=1K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9C103;X9C103;Potentiometers;10 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9C103 1    3     2    Vupdn Vinc Reset {Rtot=10K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9C503;X9C503;Potentiometers;50 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9C503 1    3     2    Vupdn Vinc Reset {Rtot=50K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9C104;X9C104;Potentiometers;100 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9C104 1    3     2    Vupdn Vinc Reset {Rtot=100K TAPS=100}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+****************
+*SRC=X9313Z;X9313Z;Potentiometers;1 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9313Z 1    3     2    Vupdn Vinc Reset {Rtot=1K TAPS=32}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State2
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+*****************
+*SRC=X9313W;X9313W;Potentiometers;10 kOhm Digital;
+*SYM=DPOT
+.SUBCKT X9313W 1    3     2    Vupdn Vinc Reset {Rtot=10K TAPS=32}
+*Connections  Top Wiper Bottom Vupdn Vinc Reset 
+XA Vinc Vupdn VPos Reset Analog_State2
+RTop 1 30 R= {Rtot} * ({TAPS-1} - V(Vpos)) / {TAPS-1} +1U
+RBot 30 2 R= {Rtot} * (V(Vpos) / {TAPS-1}) + 1U
+RWiper 30 3 40 ; Comment out and set node 3 to 30 to remove wiper resistance
+.ENDS
+*INCLUDE XICOR.LIB
+*****************
+.SUBCKT Analog_State 8    9     Vout 92
+*Connections         Vinc Vupdn Vpos Reset
+*DEFINE /Vinit=0
+Bdtoa Vout 0 V=V(1) + V(2)*2 + V(3)*4 + V(4)*8 + V(5)*16 + V(6)*32 + V(7)*64
+AState       [90]  ~80  91   [10 20 30 40 50 60 70] Counter
+*Connections Vupdn Vinc Reset d0 d1 d2 d3 d4 d5 d6
+.Model Counter d_state(clk_delay=1u reset_delay=100n state_file=bcnt7.txt 
++ reset_state= /Vinit)
+
+Ad2a [10 20 30 40 50 60 70] [1 2 3 4 5 6 7] D2A
+.Model D2A dac_bridge(out_low = 0 out_high = 1 out_undef = .5
++ t_rise = 1n t_fall = 1n)
+
+Aa2d [8 9 92] [80 90 91] A2D
+.Model A2D adc_bridge(in_low = 0.1 in_high = 0.9
++ rise_delay=1n fall_delay=1n)
+.ENDS
+*************
+.SUBCKT Analog_State2 8    9     Vout 92
+*Connections          Vinc Vupdn Vpos Reset
+*DEFINE /Vinit=0
+Bdtoa Vout 0 V=V(1) + V(2)*2 + V(3)*4 + V(4)*8 + V(5)*16 + V(6)*32 + V(7)*64
+AState       [90]  ~80  91   [10 20 30 40 50 60 70] Counter
+*Connections Vupdn Vinc Reset d0 d1 d2 d3 d4 d5 d6
+.Model Counter d_state(clk_delay=1u reset_delay=100n state_file=bcnt5.txt 
++ reset_state= /Vinit)
+
+Ad2a [10 20 30 40 50 60 70] [1 2 3 4 5 6 7] D2A
+.Model D2A dac_bridge(out_low = 0 out_high = 1 out_undef = .5
++ t_rise = 1n t_fall = 1n)
+
+Aa2d [8 9 92] [80 90 91] A2D
+.Model A2D adc_bridge(in_low = 0.1 in_high = 0.9
++ rise_delay=1n fall_delay=1n)
+.ENDS
+*************
+

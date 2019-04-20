@@ -1,0 +1,607 @@
+**********
+* Copyright Intusoft 1989-1997
+* All Rights Reserved
+**********
+* Tube Models (TRIO1/PENT1/HEAT1) created by
+* EXCEM
+* 12, Chemin des Hauts de Clairefontaine
+* 78580 MAULE
+* FRANCE
+* tel 33 (1) 34 75 13 65
+* fax 33 (1) 34 75 13 66
+* 
+*  Advertising corner: EXCEM provides worldwide services in the fields of
+*  Electronics R&D, with focus on RF, theoretical and practical EMC,
+*  electronic simulations and DSP. We also represent INTUSOFT in France.
+* 
+*  Among other things we manufacture a high-voltage wide-band tube
+*  amplifier for driving high impedance loads (e.g. short E-field antenna).
+*
+**********
+*SRC=12AU7A;T12AU7A;Tubes;Complex;250V 3W Triode
+*SYM=TRIODE1
+.SUBCKT T12AU7A   1     2      3    4    5
+*               Anode Grid Cathode  F    F'
+* COPYRIGHT EXCEM, 1993
+*
+X1 1 2 3 10 TRIO1 {SFS=0.7 VBIG=-0.9 VBIA=-1.3 MU=17 RMU=0.5 VMU=-20 SFMU=1.6 
++ K=827E-6 RK=0.08 VK=-20 SFK=1.6 SIGMAG=0.05 ALPHAG=5.2 SFG=3.5}
+*
+X2 4 5 10 HEAT1 {INOM=0.15 VNOM=6.3 LAMBDA=1 RCOOL=3 TCTE=10 TNOM=1150 INIT=100 
++ W=2.045 ISAT=0.099}
+*
+C2 1 2 1.5P
+C3 3 1 0.5P
+C4 2 3 1.6P 
+C5 3 4 4P
+C6 3 5 4P
+*
+.ENDS
+*INCLUDE VACUUM.LIB
+**********
+*SRC=12AU7A2;T12AU7A2;Tubes;Complex;Triode, No Heater
+*SYM=TRIODE1
+.SUBCKT T12AU7A2   1     2      3    4    5
+*                Anode Grid Cathode  F    F'
+* COPYRIGHT EXCEM, 1993 Triode without Heater Model
+*
+X1 1 2 3 10 TRIO1 {SFS=0.7 VBIG=-0.9 VBIA=-1.3 MU=17 RMU=0.5 VMU=-20 SFMU=1.6 
++ K=827E-6 RK=0.08 VK=-20 SFK=1.6 SIGMAG=0.05 ALPHAG=5.2 SFG=3.5}
+*
+RF 4 5 42
+VH 10 0 99m
+*
+C2 1 2 1.5P
+C3 3 1 0.5P
+C4 2 3 1.6P 
+C5 3 4 4P
+C6 3 5 4P
+*
+.ENDS
+*INCLUDE VACUUM.LIB
+**********
+*SRC=EL9000;EL9000;Tubes;Complex;Pentode
+*SYM=PENTODE1
+.SUBCKT EL9000    1     2     3     4      5    6 
+*               Anode Grid2 Grid1 Cathode  F    F'
+* COPYRIGHT EXCEM, 1993
+*
+X1 1 2 3 4 10 PENT1 {SFS=0.7 VBIG=-0.9 VBIA=-1.3 MUG2=17 MUA=15000 RMU=0.5 
++ VMU=-20 SFMU=1.6 K=5.4E-3 RK=0.08 VK=-20 SFK=1.6 SIGMA1=0.05 
++ ALPHA1=5.2 SFG1=3.5 SIGMA2=0.12 ALPHA2=0.06 SFG2=2.3 VCCR=0.58 SFVC=0.33}
+*
+X2 5 6 10 HEAT1 {INOM=0.15 VNOM=6.3 LAMBDA=1 RCOOL=3 TCTE=10 TNOM=1150 INIT=100 
++ W=2.045 ISAT=0.690}
+*
+C2 1 2 1.5P
+C3 3 1 0.5P
+C4 2 3 1.6P 
+C5 3 4 4P
+C6 3 5 4P
+*
+.ENDS
+*INCLUDE VACUUM.LIB
+**********
+*SRC=EL9000_2;EL9000_2;Tubes;Complex;Pentode, No Heater
+*SYM=PENTODE1
+.SUBCKT EL9000_2    1     2     3     4      5    6 
+*                 Anode Grid2 Grid1 Cathode  F    F'
+* COPYRIGHT EXCEM, 1993
+*
+X1 1 2 3 4 10 PENT1 {SFS=0.7 VBIG=-0.9 VBIA=-1.3 MUG2=17 MUA=15000 RMU=0.5 
++ VMU=-20 SFMU=1.6 K=5.4E-3 RK=0.08 VK=-20 SFK=1.6 SIGMA1=0.05 
++ ALPHA1=5.2 SFG1=3.5 SIGMA2=0.12 ALPHA2=0.06 SFG2=2.3 VCCR=0.58 SFVC=0.33}
+*
+RF 5 6 42
+VH 10 0 99m
+*
+C2 1 2 1.5P
+C3 3 1 0.5P
+C4 2 3 1.6P 
+C5 3 4 4P
+C6 3 5 4P
+*
+.ENDS
+*INCLUDE VACUUM.LIB
+**********
+*SRC=TRIODE;TRIO1;Tubes;Generic;Complex Triode
+*SYM=TRIO1
+.SUBCKT TRIO1    A  G  C  ISAT {SFS=??? VBIG=??? VBIA=??? MU=??? RMU=??? VMU=??? 
++ SFMU=??? K=??? RK=??? VK=??? SFK=??? SIGMAG=??? ALPHAG=??? SFG=???} 
+* COPYRIGHT EXCEM, 1993
+*
+* Forward and reverse conditions are treated in this triode model
+* as well as saturation.
+* The model describes only the static bahaviour of the triode, and
+* neglects secondary emission (that would occur at high VG and low VA).
+*
+* THE TRIODE'S 14 PARAMETERS ARE:
+*
+*     SFS     shape factor of the saturation law.
+*     VBIG    contact potential of the grid
+*             (the voltage above which grid may current start to flow).
+*     VBIA    contact potential of the anode.
+*     MU      amplification factor at slighly negative grid voltage.
+*     RMU     reduction factor for MU at very negative grid voltage.
+*     VMU     grid voltage for mid-range MU (negative).
+*     SFMU    shape factor for MU reduction law. 
+*     K       perveance at slightly negative grid voltage.
+*     RK      perveance reduction factor at very negative grid voltage.
+*     VK      grid voltage for mid-range perveance (negative).
+*     SFK     shape factor for perveance reduction law. 
+*     SIGMAG  effective cross-section of the grid relative to the anode.
+*     ALPHAG  grid current amplification factor.
+*     SFG     shape factor of the grid current law.
+*
+B1 15 0 V = V(G) - V(C) < -1P ?
++ {K} * (1+{RK} * ((V(G) - V(C)) / {VK})^{SFK}) / (1 + ((V(G) - V(C)) / {VK})^{SFK}) : {K}
+* V(15) is the effective perveance 
+B2 16 0 V = V(G) - V(C) < -1P ? {MU} * (1 + {RMU} * ((V(G) - V(C)) / {VMU})^{SFMU}) / 
++ (1 + ((V(G) - V(C)) / {VMU})^{SFMU}) : {MU}
+* V(16) is the effective MU
+B4 9 0 V = V(G) - V(C) - {VBIG} + (V(A) - V(C) - {VBIA}) / (V(16) + 1U)
+B6 10 0 V = V(9) > 0 ? V(15) * V(9)^1.5 / (V(ISAT) + 1P) : 0
+B7 12 0 V = V(10) < {SFS} ? V(10) * (V(ISAT) + 1P) :
++ (V(ISAT) + 1P) * ({SFS} + (V(10) - {SFS}) * {1-SFS} / ({1 - 2 * SFS} + V(10)))
+* B7 contains an arbitrary saturation law modeled by the shape factor SFS
+* to match the available data. SFS should be between 0 and 1. The
+* lower SFS the sloppier the saturation law.
+*
+B8 14 0 V = V(A) - V(C) > {VBIA + 0.1M} ? (V(A) - V(C) - {VBIA}) / {ALPHAG} : 2P
+B9 28 0 V = V(G) - V(C) > {VBIG + 0.1M} ? V(14) > 1P ? 
++ ((V(G) - V(C) - {VBIG} + {SIGMAG^(1/SFG)} * V(14)) / (V(G) - V(C) - {VBIG} + V(14)))^{SFG} : 0
+B10 8 0 V = V(G) - V(C) < 0 ? V(28) * (({VBIG+10U} + V(C) - V(G)) / {VBIG+10U}) : V(28)
+B15 G C I = V(8) * V(12)
+B17 A C I = (1 - V(8)) * V(12)
+.ENDS
+**********
+*SRC=PENTODE;PENT1;Tubes;Generic;Complex Pentode
+*SYM=PENT1
+.SUBCKT PENT1    A  G2  G1  C  ISAT {SFS=??? VBIG=??? VBIA=??? MUG2=??? MUA=??? RMU=??? VMU=??? SFMU=??? 
++ K=??? RK=??? VK=??? SFK=??? SIGMA1=??? ALPHA1=??? SFG1=??? SIGMA2=??? ALPHA2=??? SFG2=??? VCCR=??? SFVC=???}
+* 
+* COPYRIGHT EXCEM, 1993
+*
+* Forward and reverse conditions are treated in this model
+* as well as saturation.
+* The model describes only the static bahaviour of the pentode, and
+* neglects secondary emission. It is assumed that G2 is always very
+* positive with respect to the cathode.
+*
+*
+* THE PENTODE'S 20 PARAMETERS ARE:
+*
+*     SFS     shape factor of the saturation law.
+*     VBIG    contact potential of the grid G1
+*             (the voltage above which grid current may start to flow).
+*     VBIA    contact potential of the anode.
+*     MUG2    amplification factor for G2 at slighly negative G1 voltage.
+*     MUA     amplification factor for A at slightly negative G1 voltage.
+*     RMU     reduction factor for MU at very negative G1 voltage.
+*     VMU     grid voltage for mid-range MU (negative).
+*     SFMU    shape factor for MU reduction law.
+*     K       perveance at slightly negative G1 voltage.
+*     RK      perveance reduction factor at very negative G1 voltage.
+*     VK      grid voltage for mid-range perveance (negative).
+*     SFK     shape factor for perveance reduction law. 
+*     SIGMA1  effective cross-section of G1 relative to the anode and G2.
+*     ALPHA1  grid G1 current amplification factor.
+*     SFG1    shape factor of the grid G1 current law.
+*     SIGMA2  effective cross-section of G2 relative to the anode.
+*     ALPHA2  grid G2 current amplification factor.
+*     SFG2    shape factor of the grid G2 current law.
+*     VCCR    virtual cathode current ratio.
+*     SFVC    shape factor of the virtual cathode current law.
+*
+*
+B1 15 0 V = V(G1) - V(C) < -1U ?  {K} * (1 + {RK} * 
++ ((V(G1) - V(C)) / {VK})^{SFK}) / (1 + ((V(G1) - V(C)) / {VK})^{SFK}) : {K}
+* V(15) is the effective perveance 
+B2 16 0 V = V(G1) - V(C) < -1U ?  (1 + {RMU} * ((V(G1) - V(C)) / {VMU})^{SFMU}) / 
++ (1 + ((V(G1) - V(C)) / {VMU})^{SFMU}) : 1
+* V(16) is the factor used to establish both effective MU coefficients
+E1 17 0 16 0 {MUG2}
+E2 18 0 16 0 {MUA}
+* V(17) is the effective MUG2 and V(18) is the effective MUA
+B4 9 0 V = V(G1) - V(C) - {VBIG} + (V(A) - V(C) - {VBIA}) / (V(18) + 1U) + 
++ (V(G2) - V(C)) / (V(17) + 1U)
+B6 10 0 V = V(9) > 1P ? V(15) * V(9)^1.5 / (V(ISAT) + 1P) : 0
+B7 12 0 V = V(10) < {SFS} ? V(10) * (V(ISAT) + 1P) :
++ (V(ISAT) + 1P) * ({SFS} + (V(10) - {SFS}) * {1-SFS} / ({1 - 2 * SFS} + V(10)))
+* B7 contains an arbitrary saturation law modeled by the shape factor SFS
+* to match the available (?) data. SFS should be between 0 and 1. The
+* lower SFS the sloppier the saturation law.
+*
+B8 14 0 V = V(G2) - V(C) + {MUG2 / MUA} * (V(A) - V(C)) > 0.1M ?
++ V(G2) - V(C) + {MUG2 / MUA} * (V(A) - V(C)) / {ALPHA1} : 0.2M
+B9 28 0 V = V(G1) - V(C) > {VBIG + 10U} ? V(14) > 0.1M ? 
++ ((V(G1) - V(C) - {VBIG} + {SIGMA1^(1/SFG1)} * 
++ V(14)) / (V(G1) - V(C) - {VBIG} + V(14)))^{SFG1} : 0
+*
+B10 8 0 V = V(G1) - V(C) < 0 ? V(28) * (({VBIG+10U} + V(C) - V(G1)) / {VBIG+10U}) : V(28) 
+*
+B11 21 0 V = V(A) - V(C) > {VBIA + 0.1M} ? (V(A) - V(C) - {VBIA}) / {ALPHA2} : 0.2M
+B12 32 0 V = V(G2) - V(C) > {VBIG+10U} ? V(21) > 0.1M ? 
++ ((V(G2) - V(C) -{VBIG} + {SIGMA2^(1 / SFG2)} * 
++ V(21)) / (V(G2) - V(C) -{VBIG} + V(21)))^{SFG2} : 0
+*
+B13 22 0 V = V(G2) - V(C) < 0 ? V(32) * (({VBIG+10U} + V(C) - V(G2)) / {VBIG+10U}) : V(32)
+*
+B14 23 0 V = V(22) - {SIGMA2} > 1P ? V(12) * (1-{VCCR} * (V(22) - {SIGMA2})^{SFVC}) : V(12)
+* When the virtual cathode is present, this factor describes the
+* decrease in cathode current (see Terman p. 192).
+*
+B15 G1 C I = V(8) * V(23)
+R15 G1 C 100MEG
+B16 G2 C I = (1 - V(8)) * V(22) * V(23)
+R16 G2 C 100MEG
+B17 A C I = (1 - V(8)) * (1 - V(22)) * V(23)
+R17 A C 100MEG
+*
+.ENDS
+**********
+*SRC=HEATER;HEAT1;Tubes;Generic;Heater model
+*SYM=HEAT1
+.SUBCKT HEAT1  F  F' ISAT {INOM=??? VNOM=??? LAMBDA=??? RCOOL=??? TCTE=??? TNOM=??? INIT=??? W=??? ISAT=???}
+* 
+* COPYRIGHT EXCEM, 1993
+*
+* This model for the heater gives a voltage ISAT
+* that is an analog for the saturation current of the cathode.
+*
+*
+* THE HEATER'S 9 PARAMETERS ARE:
+*
+*     INOM    the nominal heater current, at nominal voltage.
+*     VNOM    the nominal heater voltage (causing nominal temperature)
+*     LAMBDA  temperature coefficient of the heater resistance.
+*             (normalized to the nominal temperature);
+*     RCOOL   resistance of the cold heater.
+*     TCTE    the time constant for the heater temperature.
+*     TNOM    the nominal heater temperature in K.
+*     INIT    initial heater temperature in % of TNOM.
+*     W       work function of the heater, in eV.
+*     ISAT    the saturation current at nominal heater voltage.
+*
+V1 F 4 0
+R1 5 4 0.01
+* Above the Debye temperature, the resistivity is nearly linear
+* with respect to temperature, see Ashcroft & Mermin p. 525 and p 461.
+B1 5 F' V = V(7) > 0 ? I(V1) * ({VNOM / INOM - RCOOL} * (1 + {LAMBDA} * (V(7) - 1)) + {RCOOL})
++ : I(V1) * {VNOM / INOM}
+* B1 delivers the power recieved by the heater
+B2 6 0 V = (V(F) - V(F')) * I(V1) > 0 ? (V(F) - V(F')) * I(V1) / {VNOM * INOM} : 1
+R2 6 7 1
+C1 7 0 {TCTE} IC = {INIT/100}
+* Only conductive dissipation is considered. Therfore, V(7) is a normalized temperature.
+* B4 contains the Richardson-Duschman law, with an exponential containing
+* B = W/k, the Bolzmann's constant is 0.8617e-4 eV/K
+* for Tungsten (see Ashcroft & Mermin p. 364) and W = 4.5 eV. It may
+* be 2.2 times lower for an oxide-coated cathode (see Terman p. 173).
+* B3 delivers the saturation current.
+E1 13 0 7 0 {TNOM}
+B3 ISAT 0 V = V(13) > 0 ? 
++ {ISAT} * V(7)^2 * EXPL(({W/0.8417E-4} * (1 / {TNOM} - 1 / (V(13) + 1))),5) : {ISAT}
+* The 1 Kelvin added to V(13) avoids convergence problems.
+.ENDS
+**********
+*SRC=TRIODEG;TRIODEG;Tubes;Generic;Simple Generic Triode
+*SYM=TRIODEG
+.SUBCKT TRIODEG 1    3     4 {KT=??? K1=??? K2=??? MU=??? CGP=??? CGC=??? CPC=???}
+*               Grid Plate Cathode
+* Generic Triode Model
+G1 6 4 POLY(2) 1 4 3 4
++ 0 {KT*K1} {KT*K1/MU} {KT*K2} {2*KT*K2/MU} {KT*K2/(MU^2)}
+Q1 3 4 6 NPN
+.MODEL NPN NPN
+D1 6 4 DIODE
+.MODEL DIODE D
+CGP 1 3 {CGP}
+CIN 1 4 {CGC}
+COUT 3 4 {CPC}
+R2 3 4 100MEG
+.ENDS
+**********
+*SRC=T6SN7;T6SN7;Tubes;Simple;450V 5W Simple 6SN7GTB
+*SYM=TRIODE
+.SUBCKT T6SN7    1    3     4    
+*                Grid Plate Cathode       
+* One Half - Medium Mu Twin Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 2.2428M 112.14U 81.677U 8.1677U 204.19N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 4.0000P 
+CIN 1 4 2.2000P 
+COUT 3 4 700.00F
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=12AX7WA;T12AX7WA;Tubes;Simple;330V 1W Triode
+*SYM=TRIODE
+.SUBCKT T12AX7WA 1    3     4    
+*                Grid Plate Cathode       
+* Manufacturer Tung-Sol, similar to RCA T12AX7A
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 2.7774M 27.774U 43.596U 871.91N 4.3596N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 1.7000P 
+CIN 1 4 1.8000P 
+COUT 3 4 460.00F
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=6AQ6;T6AQ6;Tubes;Simple;300V Triode
+*SYM=TRIODE
+.SUBCKT T6AQ6  1    3     4      
+*              Grid Plate Cathode
+* High Mu Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 4.7498M 67.854U 172.98U 4.9421U 35.301N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 1.8000P 
+CIN 1 4 1.7000P 
+COUT 3 4 1.5000P
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=6AV6;T6AV6;Tubes;Simple;330V .55W Triode
+*SYM=TRIODE
+.SUBCKT T6AV6  1    3     4       
+*              Grid Plate Cathode 
+* High Mu Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 2.0091M 20.091U 144.30U 2.8860U 14.430N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 2.0000P 
+CIN 1 4 2.2000P 
+COUT 3 4 800.00F
+R2 3 4 100MEG   
+.ENDS
+**********
+*SYM=TRIODE
+.SUBCKT T6AW8-A 1    3     4    
+*               Grid Plate Cathode       
+* High Mu Triode Section
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 4.0725M 58.179U 292.50U 8.3571U 59.694N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 2.2000P 
+CIN 1 4 3.2000P 
+COUT 3 4 1.8000P
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=6AW8-A;T6AW8-AP;Tubes;Simple;330V 1.1W Pentode/Triode
+*SYM=T6AW8-AP
+.SUBCKT T6AW8-AP  3     5     2     7        10     11      12
+*                 Grid1 Grid2 Plate Cathode  T_Grid T_Plate T_Cat
+* High-Mu Triode and Sharp Cutoff Pentode
+* Pentode Section
+X1 3 2 6 TRIOD#0
+X2 5 6 7 TRIOD#0
+*{MU=70 CGP=2.2P CGC=3.2P CPC=1.8P K1=7.770 K2=.0299 KT=3.25E-3}   
+*Interelectrode capacitances
+CG1P 3 2 .04P
+CG1C 3 7 10P
+CG1G2 3 5 10P
+CPC 2 7 3.6P
+CPG2 2 5 3.6P
+CCG2 7 5 .04P
+X3 10 11 12 T6AW8-A
+CG1TP 3 11 .07P
+CPTP 2 11 .13P
+.ENDS
+.SUBCKT T6AW8-A 1    3     4    
+*              Grid Plate Cathode       
+* High Mu Triode Section
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 4.0725M 58.179U 292.50U 8.3571U 59.694N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 2.2000P 
+CIN 1 4 3.2000P 
+COUT 3 4 1.8000P
+R2 3 4 100MEG   
+.ENDS   
+.SUBCKT TRIOD#0 1    3     4    
+*               Grid Plate Cathode       
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 25.252M 360.75U 97.175U 2.7764U 19.832N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=12AT7;T12AT7;Tubes;Simple;300V 2.5W Triode
+*SYM=TRIODE
+.SUBCKT T12AT7 1    3     4    
+*              Grid Plate Cathode       
+* One Half - High Mu Twin Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 6.0977M 101.63U 95.713U 3.1904U 26.587N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 1.5000P 
+CIN 1 4 2.2000P 
+COUT 3 4 500.00F
+R2 3 4 100MEG   
+.ENDS   
+**********
+.SUBCKT Old12AU7 1    3     4    
+*               Grid Plate Cathode       
+* One Half - Medium Mu Twin Triode, Same as 12AU7-A
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 3.1857M 163.37U 12.259U 1.2573U 32.239N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 1.5000P 
+CIN 1 4 1.6000P 
+COUT 3 4 500.00F
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=12AX7A;T12AX7A;Tubes;Simple;250V 1W Triode
+*SYM=TRIODE
+.SUBCKT T12AX7A 1    3     4    
+*               Grid Plate Cathode       
+* One Half - High Mu Twin Triode, Similar to 12AX7-A
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 1.1041M 11.041U 79.300U 1.5860U 7.9300N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 1.7000P 
+CIN 1 4 1.6000P 
+COUT 3 4 460.00F
+R2 3 4 100MEG   
+.ENDS   
+**********
+*SRC=GL-807;GL-807;Tubes;Simple;400V 25W Triode
+*SYM=TRIODE
+.SUBCKT GL-807 1    3     4    
+*             Grid Plate Cathode       
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 5.8275M 728.44U 22.425U 5.6062U 350.39N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 200.00F 
+CIN 1 4 7.0000P 
+COUT 3 4 8.7000P
+R2 3 4 100MEG   
+D4 1 10 DGRID
+.MODEL DGRID D (IS=138P RS=42M N=1.7 CJO=2P)
+RGRID 10 4 330
+.ENDS   
+**********
+*SRC=BW1185J2;BW1185J2;Tubes;Simple;16.8kV 120kW Triode
+*SYM=TRIODE
+.SUBCKT BW1185J2 1    3     4    
+*                Grid Plate Cathode      
+* R.F. Power Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 187.63M 4.5765M 78.277U 3.8184U 46.566N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 60.000P 
+CIN 1 4 185.00P 
+COUT 3 4 3.0000P
+R2 3 4 100MEG   
+D4 1 10 DGRID
+.MODEL DGRID D (IS=3.58U RS=42M N=2.33 CJO=10P)
+RGRID 10 4 100
+.ENDS   
+**********
+*SRC=BW1608F;BW1608F;Tubes;Simple;13kV 30kW Triode
+*SYM=TRIODE
+.SUBCKT BW1608F 1    3     4    
+*               Grid Plate Cathode      
+* R.F. Power Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 87.563M 2.1891M 36.529U 1.8265U 22.831N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 47.000P 
+CIN 1 4 126.00P 
+COUT 3 4 2.0000P
+R2 3 4 100MEG   
+D4 1 10 DGRID
+.MODEL DGRID D (IS=3.58U RS=45M N=2.53 CJO=10P)
+RGRID 10 4 125
+.ENDS   
+**********
+*SRC=BW1609;BW1609;Tubes;Simple;17kV 200kW Triode
+*SYM=TRIODE
+.SUBCKT BW1609  1    3     4    
+*               Grid Plate Cathode      
+* R.F. Power Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 187.63M 5.3610M 78.277U 4.4730U 63.900N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 92.000P 
+CIN 1 4 240.00P 
+COUT 3 4 4.5000P
+R2 3 4 100MEG   
+D4 1 10 DGRID
+.MODEL DGRID D (IS=7.58U RS=62M N=2.83 CJO=10P)
+RGRID 10 4 18.75
+.ENDS   
+**********
+*SRC=6AQ5-A;T6AQ5-A;Tubes;Simple;275V 10W Triode
+*SYM=TRIODE
+.SUBCKT T6AQ5-A 1    3     4    
+*               Grid Plate Cathode      
+* Beam Power Tube Connected as a Triode
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 3.8850M 408.95U 14.950U 3.1474U 165.65N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+CGP 1 3 400.00F 
+CIN 1 4 8.0000P 
+COUT 3 4 8.7000P
+R2 3 4 100MEG   
+D4 1 10 DGRID
+.MODEL DGRID D (IS=138P RS=42M N=1.7 CJO=2P)
+RGRID 10 4 150
+.ENDS   
+**********
+*SRC=12BY7A;T12BY7A;Tubes;Simple;330 V 6.5W Pentode
+*SYM=T12BY7A
+.SUBCKT T12BY7A   3     5     2     7     
+*                 Grid1 Grid2 Plate Cathode
+* Sharp Cutoff Pentode
+X1 3 2 6 TRIOD#0
+X2 5 6 0 TRIOD#0
+*{MU=40 CGP=2.2P CGC=3.2P CPC=1.8P K1=3.934 K2=.06175 KT=4.15E-3}   
+CG1P 3 2 .063P
+CG1C 3 7 10.2P
+CG1G2 3 5 10.2P
+CPC 2 7 3.5P
+CPG2 2 5 3.5P
+CCG2 7 5 .04P
+.ENDS
+.SUBCKT TRIOD#0 1    3     4    
+*               Grid Plate Cathode      
+G1 6 4 POLY(2) 1 4 3 4  
++ 0 16.326M 408.15U 256.26U 12.813U 160.16N     
+Q1 3 4 6 NPN    
+.MODEL NPN NPN  
+D1 6 4 DIODE    
+.MODEL DIODE D  
+R2 3 4 100MEG   
+.ENDS 
+**********

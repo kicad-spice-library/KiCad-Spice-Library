@@ -1,0 +1,230 @@
+**********
+* Library of National Semiconductor Corp. CURRENT-FEEDBACK  
+* Macromodels.  Version 2.5
+*
+* This library of macromodels is being supplied to users as
+* an aid to circuit designs.  While it reflects reasonably 
+* close similarity to the actual device in terms of
+* performance, it is not suggested as a replacement for
+* breadboarding.  Simulation should be used as a supplement
+* to traditional lab testing.
+*
+* Users should very carefully note the following factors
+* regarding these models:
+*
+* -- Model performance in general will reflect typical
+* baseline specs for a given device, and certain aspects of
+* performance may not be modeled fully.
+*
+* -- While reasonable care has been taken in their
+* preparation, we cannot be responsible for correct
+* application on any and all computer systems.
+*
+* -- Model users are hereby notified that these models are
+* supplied "as is", with no direct or implied responsibility
+* on the part of National Semiconductor for their operation
+* within a customer circuit or system.  Further, National
+* Semiconductor reserves the right to change these models
+* without prior notice.
+*
+* -- In all cases, the current data sheet information for a
+* given real device is your final design guideline, and is
+* the only actual performance guarantee.  For further
+* technical information, refer to individual device data
+* sheets.
+*
+*                  Modeled and tested                    *
+* Supply voltage dependant input offset voltage (Vos). 
+* Temperature dependant input offset voltage (TCVos). 
+* Supply voltage dependant input bias current (Ib+ & Ib- PSR). 
+* Temperature dependant input bias current (TCIb+ & TCIb-). 
+* Input voltage dependant input bias current (Ib- CMRR). 
+* Non-inverting input resistance.  
+* Asymmetrical output swing. 
+* Output short circuit current (Isc). 
+* Supply voltage dependant supply current. 
+* Quiescent and dynamic supply current. 
+* Input voltage dependant input slew rate. 
+* Input voltage dependant output slew rate. 
+* Multiple poles and zeros in open-loop transimpedance (Zt). 
+* Supply voltage dependant input buffer impedance. 
+* Supply voltage dependant open-loop voltage gain (Avol). 
+* Feedback resistance dependant bandwidth. 
+* Accurate small-signal pulse response. 
+* Large-signal pulse response. 
+* DC and AC common mode rejection ratio (CMRR). 
+* DC and AC power supply rejection ratio (PSRR). 
+* White and 1/f voltage noise (en). 
+* White and 1/f current noise (in). 
+*                  Modeled but not tested               *
+* Asymmetrical output slew rate. 
+* Input common mode input range. 
+* Supply voltage dependant input slew rate. 
+*                         Not modeled                   *
+* Third-order large signal effects.
+* Self heating effects.
+*
+* Your feedback and suggestions on these (and future) models
+* will be appreciated.
+*
+* Models developed by:
+* David Hindi
+* National Semiconductor       For information on the models, contact:
+* 2900 Semiconductor Dr.       Linear Applications    
+* Santa Clara, CA 95052        (408) 721-3877 
+* M/S C2500                     
+* FAX (408) 721-7321           For ordering information, contact:
+*                              Customer Response Center
+*                              (408) 721-4902
+**********
+*SRC=LM6181N;LM6181N;Opamps;NAT-"LMxxx";
+*SYM=NATOPAMP
+* LM6181 CURRENT FEEDBACK OP-AMP MACRO-MODEL
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6181N     1   2  99  50  40
+*
+* Features:                          (TYP.)
+*  High bandwidth =                   100MHz
+*  High slew rate =                 2000V/uS
+*  Current Feedback Topology
+* NOTE:  Due to the addition of PSRR effects, model must be operated
+*        with symetrical supply voltages.  To avoid this limitation 
+*        and disable the PSRR effects, see EOS below.
+*
+GI1 99  5 POLY(1) 99 50 243.75U 2.708E-6
+GI2  4 50 POLY(1) 99 50 243.75U 2.708E-6
+FI1 99  5 VA3 100
+FI2  4 50 VA4 100
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+GR1  5  6 5 6 2.38E-4
+*^4.2K noiseless resistor
+C1   6 99 .468P
+GR2  4  7 4 7 2.38E-4
+*^4.2K noiseless resistor
+C2   7 50 .468P
+GR3 99  8 99 8 1.58E-3
+*^633ohm noiseless resistor
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+GR4 50  9 50 9 1.58E-3
+*^633ohm noiseless resistor
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+DS1  3 12 DY
+VA3 12  5 0
+DS2 13  3 DY
+VA4  4 13 0
+GR6  1 99 1 99 5E-8
+*^20MEG noiseless resistor
+GR7  1 50 1 50 5E-8
+*^20MEG noiseless resistor
+GB1  1 99 POLY(2) 99 50 56  0 -1.2E-6 4E-8 1E-3
+FN1  1  0 V18 1
+GB2 99  2 POLY(3) 99 50 1 49 55 0 18.5E-6 -1.5E-7 -1E-7 -1E-6
+FN2  2  0 V17 1
+EOS  3  1 POLY(5) 99 50 45  0 47 0 57 0 59 61 -2.8E-3 9.3E-5 1 1 1 1
+*To run on asymetrical supplies, change to 0.................^.^
+CIN1 1  0 2P
+CIN2 2  0 3.75P
+*
+I3  99 50 4.47M
+R8  99 49 7.19K
+R9  49 50 7.19K
+V3  99 16 1.7
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.0
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+*Fp1 = 27.96 KHz
+R5  98 15 2.372MEG
+C3  98 15 2.4P
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+C4  98 20 .692P
+*
+*Fp=250 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+C5  98 21 .692P
+*
+*Fp=275 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+C6  98 22 .5787P
+*
+*Fp=500 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+C7  98 23 .3183P
+*
+G10  0 45 99 0 1.413E-4
+L3  44 45 26.53U
+R25 44  0 10
+G11  0 47 50 0 1.413E-4
+L4  46 47 2.27364U
+R26 46  0 10
+*
+I12  0 55 1
+*SPICE 2 syntax
+*R27  0 55 10  TC=3.453E-3 7.93E-5
+*R28  0 56 1.5 TC=9.303E-4 8.075E-5
+*R29  0 57 3.34 TC=3.111E-3
+*IsSpice3 syntax
+R27  0 55 10 RMOD1 
+.MODEL RMOD1 R TC1=3.453E-3 TC2=7.93E-5
+R28  0 56 1.5 RMOD2
+.MODEL RMOD2 R TC1=9.303E-4 TC2=8.075E-5
+R29  0 57 3.34 RMOD3
+.MODEL RMOD3 R TC1=3.111E-3
+I13  0 56 1E-3
+I14  0 57 1E-3
+*
+V15 58  0 .1
+D9  58 59 DN
+R30 59  0 726.4
+V16 60  0 .1
+D10 60 61 DN
+R31 61  0 726.4
+V17 62  0 0
+R32 62  0 73.6
+V18 63  0 0
+R33 63  0 1840
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 50
+V5  33 40 5.3V
+D5  23 33 DX
+V6  40 34 5.3V
+D6  34 23 DX
+CF1 40  2 2.1P
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=62.9 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=62.9 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=62.9 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=62.9 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+.ENDS
+**********

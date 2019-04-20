@@ -1,0 +1,175 @@
+*****
+* Library of SGS-THOMSON Transil models
+*
+* Date     : 9/11/98
+*
+* Models are only available for ambient temperature of 27°C
+*
+* UNIDIRECTIONAL TRANSIL
+*****
+.SUBCKT TRANSIL  Anode  Cathode  { IRM=1u VBRnom=12  VBRmax=13  IR=1m VCLmax=20  
++ Ipp=100  Cjof=1n ISF=1f  NF=1  RSF=1m  IKFF=1000}
+* IRM		Stand-off current at VRM
+* VBR		Breakdown voltage
+* IR		Reverse current at VBR
+* VCL		Clamping voltage
+* Ipp		Surge current
+* Cjo		junction capacitance at 0V
+* IS		Saturation current
+* N			Emission coefficient
+* RS		Serie résistance
+* IKF		High injection knee current
+Drev    A_int    Cathode    TRANSR
+Dfwd   Anode   Cathode    TRANSF
+Dr       A_int    Anode       DTRANS
+**** REVERSE BEHAVIOR ****
+.MODEL TRANSR D(RS={(VCLmax-VBRmax)/Ipp};ISR={IRM/2}   
++ BV={VBRnom}  IBV={IR}
++ Cjo=1p  M=.3333  VJ=.6;IKF=1000  
++ TT=1u );ISR=1n  
+**** FORWARD BEHAVIOR ****
+**** JUNCTION CAPACITANCE BEHAVIOR Cj(VR) ****
+.MODEL TRANSF D(
++ N={NF}  RS={RSF}  ;IKF={IKFF};ISR={ISF}  
++ Cjo={Cjof}  M=.3333  VJ=0.6  ;ISR=1.000E-21
++ BV=1000  IBV=100u  TT=1u )
+.MODEL DTRANS D(
++ N=.01  RS=1u  Cjo=1p;IKF=1000;ISR=1n    
++ M=.3333  VJ=.6  BV=1000  IBV=100u;ISR=1n  
++ TT=1u )
+.ENDS
+**** BIDIRECTIONAL TRANSIL ****
+**** PARAMETERS DESCRIPTION ****
+**** LOW VOLTAGES ****
+*****
+.SUBCKT TRANSILB   Anode1  Anode2 {IRM=1u VBRnom=12  VBRmax=13  IR=1m 
++ VCLmax=20  Ipp=100  Cjof=1n ISBF=1f  NBF=1}
+**** SCHEMATICS DESCRIPTION ****
+Drev1    A_int1     Cathode   TRANSR
+Dfwd1   Anode1    Cathode  TRANSBF
+Dr1       A_int1     Anode1    DTRANS
+Drev2    A_int2     Cathode   TRANSR
+Dfwd2   Anode2    Cathode   TRANSBF
+Dr2       A_int2     Anode2     DTRANS
+**** REVERSE BEHAVIOR ****
+.MODEL TRANSR D(
++ RS={(VCLmax-VBRmax)/Ipp};ISR={IRM/2}   
++ BV={VBRnom}  IBV={IR}
++ Cjo=1p  M=.3333  VJ=.6;IKF=1000  
++ TT=1u );ISR=1n  
+**** JUNCTION CAPACITANCE BEHAVIOR ****
+.MODEL TRANSBF D(
++ N={NBF}  RS=1u  ;IKF=1000;ISR={ISBF}  
++ Cjo={Cjof}  M=.3333  VJ=.6  ;ISR=1p
++ BV=1000  IBV=100u  TT=1u )
+.MODEL DTRANS D(
++ N=.01  RS=1u  Cjo=1p;IKF=1000;ISR=1n    
++ M=.3333  VJ=.6  BV=1000  IBV=100u;ISR=1n  
++ TT=1u )
+.ENDS
+**** HIGH VOLTAGES ****
+*****
+.SUBCKT TRANSILBHT   Anode1  Anode2 {IRM=1u VBRnom=12  VBRmax=13  IR=1m 
++ VCLmax=20  Ipp=100  Cjof=1n}
+**** SCHEMATICS DESCRIPTION ****
+Drev1    A_int1     Cathode   TRANSR
+Dfwd1   Anode1    Cathode  TRANSBF
+Dr1       A_int1     Anode1    DTRANS
+Drev2    A_int2     Cathode   TRANSR
+Dfwd2   Anode2    Cathode   TRANSBF
+Dr2       A_int2     Anode2     DTRANS
+**** REVERSE BEHAVIOR ****
+.MODEL TRANSR D(
++ RS={(VCLmax-VBRmax)/Ipp};ISR={IRM/2}   
++ BV={VBRnom}  IBV={IR}
++ Cjo=1p  M=.3333  VJ=.6;IKF=1000  
++ TT=1u );ISR=1p  
+**** JUNCTION CAPACITANCE BEHAVIOR ****
+.MODEL TRANSBF D(
++ N=1  RS=1m  ;IKF=1000;ISR=1p  
++ Cjo={Cjof}  M=.3333  VJ=.6  ;ISR=1p
++ BV=1000  IBV=100u  TT=1u )
+.MODEL DTRANS D(
++ N=1  RS=1m  Cjo=1p;IKF=1000;ISR=1p    
++ M=.3333  VJ=.6  BV=1000  IBV=100u;ISR=1p  
++ TT=1u )
+.ENDS
+**** TRANSILS MODELS ****
+****
+*	1.5KE FAMILY	*
+****
+*****
+*SRC=KE440A;KE440A;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT KE440A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=13  Cjof=360p
++ ISF=277.5f  NF=1.076  RSF=6.939m  };IKFF=17.55
+.ENDS
+*INCLUDE TRANSIL.LIB
+*****
+*SRC=KE440CA;KE440CA;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT KE440CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=13  Cjof=360p}
+.ENDS
+*INCLUDE TRANSIL.LIB
+****
+*				BZW04 FAMILY 				*
+*****
+*SRC=BZW04-376;BZW04-376;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT BZW04-376  Anode  Cathode
+X1  Anode  Cathode  TRANSIL {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=3  Cjof=70p
++ ISF=23.63f   NF=2.031  RSF=26.31m   };IKFF=49.83
+.ENDS
+*INCLUDE TRANSIL.LIB
+*****
+*SRC=BZW04-376B;BZW04-376B;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT BZW04-376B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=3  Cjof=70p}
+.ENDS
+*INCLUDE TRANSIL.LIB
+****
+*				BZW06 FAMILY				*
+*****
+*SRC=BZW06-376;BZW06-376;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT BZW06-376  Anode  Cathode
+X1  Anode  Cathode  TRANSIL {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p
++ ISF=27.04f   NF=2.032  RSF=27.38m   };IKFF=41.7
+.ENDS
+*INCLUDE TRANSIL.LIB
+*****
+*SRC=BZW06-376B;BZW06-376B;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT BZW06-376B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p}
+.ENDS
+*INCLUDE TRANSIL.LIB
+****
+*				P6KE FAMILY					*
+*****
+*SRC=P6KE440A;P6KE440A;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT P6KE440A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p
++ ISF=27.04f   NF=2.032  RSF=27.38m   };IKFF=41.7
+.ENDS
+*INCLUDE TRANSIL.LIB
+*****
+*SRC=P6KE440CA;P6KE440CA;TRANSIL;SGS-Thomson;
+*SYM=TRANSIL
+.SUBCKT P6KE440CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT {IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p}
+.ENDS
+*INCLUDE TRANSIL.LIB
+*****

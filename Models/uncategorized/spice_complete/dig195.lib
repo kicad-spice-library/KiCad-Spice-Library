@@ -1,0 +1,5450 @@
+* -------------------------------------------------------------------------
+*    Spectrum Software, all rights reserved, copywrite 1994,
+*    Micro-Cap V Digital Library
+*
+*    Parts in this library are modeled at ambient room temperature (TA=25øC)
+*    unless otherwise noted.
+*
+*    DIGITAL LIBRARY range 74195 - 74XXX
+*
+*
+* ----------------------------------------------------------- 74195 ------
+*  4-Bit Parallel Access Shift Register
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74195  CLK SH/LDBAR J KBAR CLRBAR A B C D QA QB QC QD QDBAR
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74195 LOGICEXP(13,9) DPWR DGND
++      CLK SH/LDBAR J KBAR CLRBAR A B C D QA_O QB_O QC_O qabar 
++      j0 j1 j2 j3 k0 k1 k2 k3 clock 
++      D0_GATE IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clock = {(~(CLK & CLRBAR))}
++      k0 = {~((SH/LDBAR & J & qabar) | (SH/LDBAR & KBAR & QA_O) | (~SH/LDBAR & A))}
++      k1 = {~((QA_O & SH/LDBAR) | (~SH/LDBAR & B))}
++      k2 = {~((QB_O & SH/LDBAR) | (~SH/LDBAR & C))}
++      k3 = {~((QC_O & SH/LDBAR) | (~SH/LDBAR & D))}
++      j0 = {(~k0)}
++      j1 = {(~k1)}
++      j2 = {(~k2)}
++      j3 = {(~k3)}
+
+Uf0  JKff(4)  DPWR DGND
++    $D_HI CLRBAR clock
++    j0 j1 j2 j3 k0 k1 k2 k3 
++    QA_O QB_O QC_O QD_O  qabar qbbar qcbar QDBAR_O
++    D0_EFF IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (5,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QDBAR_O
++    CLK CLRBAR
++    QA QB QC QD QDBAR
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK = {CHANGED_LH(CLK,0)}
++     CLEAR = {CHANGED_HL(CLRBAR,0)}
++
++    PINDLY:
++       QA QB QC QD QDBAR = {
++            CASE(
++                 CLEAR, DELAY(-1,19ns,30ns),
++                 CLOCK & TRN_LH, DELAY(-1,14ns,22ns),
++                 CLOCK & TRN_HL, DELAY(-1,17ns,26ns),
++                 DELAY(-1,20ns,31ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(9) DPWR DGND
++    CLRBAR CLK A B C D J KBAR SH/LDBAR
++    IO_STD IO_LEVEL={IO_LEVEL}
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 30MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 16ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 12ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(6) = A B C D J KBAR
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = CLRBAR
++        SETUPTIME_LO = 25ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = SH/LDBAR
++        SETUPTIME_LO = 25ns
++        SETUPTIME_HI = 10ns
+
+.ENDS 74195
+*
+*
+* ----------------------------------------------------------- 74AS195 ------
+*  4-Bit Parallel Access Shift Register
+*
+*  The AS/ALS Logic Data Book, 1986, TI Pages 2-235 to 2-239
+*  jds    5/20/94
+*
+.SUBCKT 74AS195  CLK SH/LDBAR J KBAR CLRBAR A B C D QA QB QC QD QDBAR
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74AS195 LOGICEXP(13,9) DPWR DGND
++      CLK SH/LDBAR J KBAR CLRBAR A B C D QA_O QB_O QC_O qabar 
++      j0 j1 j2 j3 k0 k1 k2 k3 clock 
++      D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clock = {(~(CLK & CLRBAR))}
++      k0 = {~((SH/LDBAR & J & qabar) | (SH/LDBAR & KBAR & QA_O) | (~SH/LDBAR & A)) }
++      k1 = { ~((QA_O & SH/LDBAR) |  (~SH/LDBAR & B)) }
++      k2 = { ~((QB_O & SH/LDBAR) |  (~SH/LDBAR & C)) }
++      k3 = { ~((QC_O & SH/LDBAR) |  (~SH/LDBAR & D)) }
++      j0 = {(~k0)}
++      j1 = {(~k1) }
++      j2 = {(~k2)}
++      j3 = {(~k3)}
+
+uf0  JKff(4)  DPWR DGND
++    $D_HI CLRBAR clock
++    j0 j1 j2 j3 k0 k1 k2 k3 
++    QA_O QB_O QC_O QD_O  qabar qbbar qcbar QDBAR_O
++    D0_EFF IO_AS00
+
+Udly PINDLY (5,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QDBAR_O
++    CLK CLRBAR
++    QA QB QC QD QDBAR
++    IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK = {CHANGED(CLK,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++
++    PINDLY:
++       QA QB QC QD QDBAR = {
++            CASE(
++                 CLEAR & TRN_LH, DELAY(4ns,-1,8ns),
++                 CLEAR & TRN_HL, DELAY(5ns,-1,11.5ns),
++                 CLOCK & TRN_LH, DELAY(3ns,-1,8.5ns),
++                 CLOCK & TRN_HL, DELAY(2.5ns,-1,10.5ns),
++                 DELAY(6ns,-1,12.5ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(9) DPWR DGND
++          CLRBAR CLK A B C D J KBAR SH/LDBAR
++          IO_AS00
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 70MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 4ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 4ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(6) = A B C D J KBAR
++        SETUPTIME = 3.5ns
++        HOLDTIME = 0.5ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = SH/LDBAR
++        SETUPTIME_HI = 8ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = CLRBAR
++        SETUPTIME_LO = 6ns
+
+.ENDS 74AS195
+
+* ------------------------------------------------------------74F195-------
+
+* 4 Bit Parallel Access Shift Register
+* Philips FAST TTL Data Handbook, 1992, pages 287 to 292
+* jat 7/9/96
+
+.SUBCKT 74F195 CP PEBAR J KBAR MRBAR D0 D1 D2 D3 Q0 Q1 Q2 Q3 Q3BAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(12,9) DPWR DGND
++ CP PEBAR J KBAR D0 D1 D2 D3 Q0O Q1O Q2O Q0BAR
++ CPBAR J0 K0 J1 K1 J2 K2 J3 K3
++ D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   CPBAR = {~CP}
++   J0 = {(~PEBAR & D0) | (Q0O & KBAR & PEBAR) | (PEBAR & J & Q0BAR)}
++   K0 = {~J0}
++   J1 = {(~PEBAR & D1) | (Q0O & PEBAR)}
++   K1 = {~J1}
++   J2 = {(~PEBAR & D2) | (Q1O & PEBAR)}
++   K2 = {~J2}
++   J3 = {(~PEBAR & D3) | (Q2O & PEBAR)}
++   K3 = {~J3}
+
+U2 JKFF(4) DPWR DGND
++ $D_HI MRBAR CPBAR
++ J0 J1 J2 J3 K0 K1 K2 K3
++ Q0O Q1O Q2O Q3O
++ Q0BAR $D_NC $D_NC Q3BARO
++ D0_EFF IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 PINDLY(5,0,2) DPWR DGND
++ Q0O Q1O Q2O Q3O Q3BARO
++ MRBAR CP
++ Q0 Q1 Q2 Q3 Q3BAR
++ IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ BOOLEAN:
++   RESET = {CHANGED_HL(MRBAR,0)}
++   EDGE = {CHANGED_LH(CP,0)}
++ PINDLY:
++   Q0 Q1 Q2 Q3 = {
++     CASE(
++       RESET & TRN_HL, DELAY(5NS,7.5NS,10.5NS),
++       EDGE & TRN_LH, DELAY(4NS,6.5NS,9.5NS),
++       EDGE & TRN_HL, DELAY(4NS,6.5NS,9NS),
++       DELAY(6NS,8.5NS,11.5NS))}
++   Q3BAR = {
++     CASE(
++       RESET & TRN_LH, DELAY(7NS,10NS,13.5NS),
++       EDGE & TRN_LH, DELAY(7NS,10NS,13NS),
++       EDGE & TRN_HL, DELAY(4.5NS,7NS,9NS),
++       DELAY(8NS,11NS,14.5NS))}
+
+U4 CONSTRAINT(9) DPWR DGND
++ J KBAR D0 D1 D2 D3 CP PEBAR MRBAR
++ IO_F IO_LEVEL={IO_LEVEL}
++ FREQ:
++   NODE = CP
++   MAXFREQ = 115MEG
++ WIDTH:
++   NODE = CP
++   MIN_HI = 6NS
++ WIDTH:
++   NODE = MRBAR
++   MIN_LO = 5NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(6) = D0 D1 D2 D3 J KBAR
++   SETUPTIME = 4NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = PEBAR
++   SETUPTIME_HI = 3NS
++   SETUPTIME_LO = 4NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = MRBAR
++   SETUPTIME_HI = 6NS
+
+.ENDS 74F195
+
+* ------------------------------------------------------------74F195A-------
+
+* 4 Bit Parallel Access Shift Register
+* Philips FAST TTL Data Handbook, 1992, pages 287 to 292
+* jat 7/9/96
+
+.SUBCKT 74F195A CP PEBAR J KBAR MRBAR D0 D1 D2 D3 Q0 Q1 Q2 Q3 Q3BAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(12,9) DPWR DGND
++ CP PEBAR J KBAR D0 D1 D2 D3 Q0O Q1O Q2O Q0BAR
++ CPBAR J0 K0 J1 K1 J2 K2 J3 K3
++ D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   CPBAR = {~CP}
++   J0 = {(~PEBAR & D0) | (Q0O & KBAR & PEBAR) | (PEBAR & J & Q0BAR)}
++   K0 = {~J0}
++   J1 = {(~PEBAR & D1) | (Q0O & PEBAR)}
++   K1 = {~J1}
++   J2 = {(~PEBAR & D2) | (Q1O & PEBAR)}
++   K2 = {~J2}
++   J3 = {(~PEBAR & D3) | (Q2O & PEBAR)}
++   K3 = {~J3}
+
+U2 JKFF(4) DPWR DGND
++ $D_HI MRBAR CPBAR
++ J0 J1 J2 J3 K0 K1 K2 K3
++ Q0O Q1O Q2O Q3O
++ Q0BAR $D_NC $D_NC Q3BARO
++ D0_EFF IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 PINDLY(5,0,2) DPWR DGND
++ Q0O Q1O Q2O Q3O Q3BARO
++ MRBAR CP
++ Q0 Q1 Q2 Q3 Q3BAR
++ IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ BOOLEAN:
++   RESET = {CHANGED_HL(MRBAR,0)}
++   EDGE = {CHANGED_LH(CP,0)}
++ PINDLY:
++   Q0 Q1 Q2 Q3 = {
++     CASE(
++       RESET & TRN_HL, DELAY(2NS,4NS,7NS),
++       EDGE & TRN_LH, DELAY(3NS,5NS,9.5NS),
++       EDGE & TRN_HL, DELAY(2.5NS,4NS,7NS),
++       DELAY(4NS,6NS,10.5NS))}
++   Q3BAR = {
++     CASE(
++       RESET & TRN_LH, DELAY(2.5NS,4.5NS,8NS),
++       EDGE & TRN_LH, DELAY(2NS,5.5NS,9.5NS),
++       EDGE & TRN_HL, DELAY(2NS,4NS,6.5NS),
++       DELAY(4.5NS,6.5NS,10.5NS))}
+
+U4 CONSTRAINT(9) DPWR DGND
++ J KBAR D0 D1 D2 D3 CP PEBAR MRBAR
++ IO_F IO_LEVEL={IO_LEVEL}
++ FREQ:
++   NODE = CP
++   MAXFREQ = 180MEG
++ WIDTH:
++   NODE = CP
++   MIN_HI = 4.5NS
++ WIDTH:
++   NODE = MRBAR
++   MIN_LO = 4.5NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(6) = D0 D1 D2 D3 J KBAR
++   SETUPTIME = 2.5NS
++   HOLDTIME_LO = 1NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = PEBAR
++   SETUPTIME_HI = 2NS
++   SETUPTIME_LO = 2.5NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = MRBAR
++   SETUPTIME_HI = 2.5NS
+
+.ENDS 74F195A
+
+* ----------------------------------------------------------- 74HC195 ------
+*  4-Bit Parallel Access Shift Register
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-285 to 2-289
+*  jds    5/20/94
+*
+.SUBCKT 74HC195  CLK SH/LDBAR J KBAR CLRBAR A B C D QA QB QC QD QDBAR
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74HC195 LOGICEXP(13,9) DPWR DGND
++      CLK SH/LDBAR J KBAR CLRBAR A B C D QA_O QB_O QC_O qabar 
++      j0 j1 j2 j3 k0 k1 k2 k3 clock 
++      D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clock = {(~(CLK & CLRBAR))}
++      k0 = {~((SH/LDBAR & J & qabar) | (SH/LDBAR & KBAR & QA_O) | (~SH/LDBAR & A)) }
++      k1 = { ~((QA_O & SH/LDBAR) |  (~SH/LDBAR & B)) }
++      k2 = { ~((QB_O & SH/LDBAR) |  (~SH/LDBAR & C)) }
++      k3 = { ~((QC_O & SH/LDBAR) |  (~SH/LDBAR & D)) }
++      j0 = {(~k0)}
++      j1 = {(~k1) }
++      j2 = {(~k2)}
++      j3 = {(~k3)}
+
+uf0  JKff(4)  DPWR DGND
++    $D_HI CLRBAR clock
++    j0 j1 j2 j3 k0 k1 k2 k3 
++    QA_O QB_O QC_O QD_O  qabar qbbar qcbar QDBAR_O
++    D0_EFF IO_HC
+
+Udly PINDLY (5,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QDBAR_O
++    CLK CLRBAR
++    QA QB QC QD QDBAR
++    IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK = {CHANGED(CLK,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++
++    PINDLY:
++       QA QB QC QD QDBAR = {
++            CASE(
++                 CLEAR, DELAY(-1,17ns,30ns),
++                 CLOCK, DELAY(-1,17ns,29ns),
++                 DELAY(-1,18ns,31ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(9) DPWR DGND
++          CLRBAR CLK A B C D J KBAR SH/LDBAR
++          IO_HC
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 31MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 16ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 16ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(7) = A B C D J KBAR SH/LDBAR 
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = CLRBAR
++        SETUPTIME_LO = 20ns
+
+.ENDS 74HC195
+
+* ------------------------------------------------------------74HCT195-------
+
+* 4 Bit Parallel Access Shift Register
+* Philips High-Speed CMOS Logic Family Data Handbook, 1994, pages 453 to 457
+* jat 9/10/96
+
+.SUBCKT 74HCT195 CP PEBAR J KBAR MRBAR D0 D1 D2 D3 Q0 Q1 Q2 Q3 Q3BAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(12,9) DPWR DGND
++ CP PEBAR J KBAR D0 D1 D2 D3 Q0O Q1O Q2O Q0BAR
++ CPBAR J0 K0 J1 K1 J2 K2 J3 K3
++ D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   CPBAR = {~CP}
++   J0 = {(~PEBAR & D0) | (Q0O & KBAR & PEBAR) | (PEBAR & J & Q0BAR)}
++   K0 = {~J0}
++   J1 = {(~PEBAR & D1) | (Q0O & PEBAR)}
++   K1 = {~J1}
++   J2 = {(~PEBAR & D2) | (Q1O & PEBAR)}
++   K2 = {~J2}
++   J3 = {(~PEBAR & D3) | (Q2O & PEBAR)}
++   K3 = {~J3}
+
+U2 JKFF(4) DPWR DGND
++ $D_HI MRBAR CPBAR
++ J0 J1 J2 J3 K0 K1 K2 K3
++ Q0O Q1O Q2O Q3O
++ Q0BAR $D_NC $D_NC Q3BARO
++ D0_EFF IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 PINDLY(5,0,2) DPWR DGND
++ Q0O Q1O Q2O Q3O Q3BARO
++ MRBAR CP
++ Q0 Q1 Q2 Q3 Q3BAR
++ IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ BOOLEAN:
++   RESET = {CHANGED_HL(MRBAR,0)}
++   EDGE = {CHANGED_LH(CP,0)}
++ PINDLY:
++   Q0 Q1 Q2 Q3 = {
++     CASE(
++       RESET & TRN_HL, DELAY(-1,15NS,30NS),
++       EDGE & TRN_LH, DELAY(-1,18NS,30NS),
++       EDGE & TRN_HL, DELAY(-1,18NS,30NS),
++       DELAY(-1,19NS,31NS))}
++   Q3BAR = {
++     CASE(
++       RESET & TRN_LH, DELAY(-1,15NS,30NS),
++       EDGE & TRN_LH, DELAY(-1,18NS,30NS),
++       EDGE & TRN_HL, DELAY(-1,18NS,30NS),
++       DELAY(-1,19NS,31NS))}
+
+U4 CONSTRAINT(9) DPWR DGND
++ J KBAR D0 D1 D2 D3 CP PEBAR MRBAR
++ IO_HCT IO_LEVEL={IO_LEVEL}
++ FREQ:
++   NODE = CP
++   MAXFREQ = 52MEG
++ WIDTH:
++   NODE = CP
++   MIN_HI = 6NS
++   MIN_LO = 6NS
++ WIDTH:
++   NODE = MRBAR
++   MIN_LO = 4NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(6) = D0 D1 D2 D3 KBAR PEBAR
++   SETUPTIME = 9NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = J
++   SETUPTIME = 12NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = MRBAR
++   SETUPTIME_HI = 6NS
+
+.ENDS 74HCT195
+
+* ----------------------------------------------------------- 74LS195A ------
+*  4-Bit Parallel Access Shift Register
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74LS195A  CLK SH/LDBAR J KBAR CLRBAR A B C D QA QB QC QD QDBAR
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74LS195A LOGICEXP(13,9) DPWR DGND
++      CLK SH/LDBAR J KBAR CLRBAR A B C D QA_O QB_O QC_O qabar 
++      j0 j1 j2 j3 k0 k1 k2 k3 clock 
++      D0_GATE IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clock = {(~(CLK & CLRBAR))}
++      k0 = {~((SH/LDBAR & J & qabar) | (SH/LDBAR & KBAR & QA_O) | (~SH/LDBAR & A)) }
++      k1 = { ~((QA_O & SH/LDBAR) |  (~SH/LDBAR & B)) }
++      k2 = { ~((QB_O & SH/LDBAR) |  (~SH/LDBAR & C)) }
++      k3 = { ~((QC_O & SH/LDBAR) |  (~SH/LDBAR & D)) }
++      j0 = {(~k0)}
++      j1 = {(~k1) }
++      j2 = {(~k2)}
++      j3 = {(~k3)}
+
+uf0  JKff(4)  DPWR DGND
++    $D_HI CLRBAR clock
++    j0 j1 j2 j3 k0 k1 k2 k3 
++    QA_O QB_O QC_O QD_O  qabar qbbar qcbar QDBAR_O
++    D0_EFF IO_STD
+
+Udly PINDLY (5,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QDBAR_O
++    CLK CLRBAR
++    QA QB QC QD QDBAR
++    IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK = {CHANGED(CLK,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++
++    PINDLY:
++       QA QB QC QD QDBAR = {
++            CASE(
++                 CLEAR, DELAY(-1,19ns,30ns),
++                 CLOCK & TRN_LH, DELAY(-1,14ns,22ns),
++                 CLOCK & TRN_HL, DELAY(-1,17ns,26ns),
++                 DELAY(-1,20ns,31ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(9) DPWR DGND
++          CLRBAR CLK A B C D J KBAR SH/LDBAR
++          IO_LS
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 30MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 16ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 12ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(6) = A B C D J KBAR
++        SETUPTIME = 15ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = CLRBAR
++        SETUPTIME_LO = 25ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = SH/LDBAR
++        SETUPTIME_LO = 25ns
+*        SETUPTIME_HI = 20ns
+
+.ENDS 74LS195A
+*
+*
+* ----------------------------------------------------------- 74S195 ------
+*  4-Bit Parallel Access Shift Register
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74S195  CLK SH/LDBAR J KBAR CLRBAR A B C D QA QB QC QD QDBAR
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74S195 LOGICEXP(13,9) DPWR DGND
++      CLK SH/LDBAR J KBAR CLRBAR A B C D QA_O QB_O QC_O qabar 
++      j0 j1 j2 j3 k0 k1 k2 k3 clock 
++      D0_GATE IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clock = {(~(CLK & CLRBAR))}
++      k0 = {~((SH/LDBAR & J & qabar) | (SH/LDBAR & KBAR & QA_O) | (~SH/LDBAR & A)) }
++      k1 = { ~((QA_O & SH/LDBAR) |  (~SH/LDBAR & B)) }
++      k2 = { ~((QB_O & SH/LDBAR) |  (~SH/LDBAR & C)) }
++      k3 = { ~((QC_O & SH/LDBAR) |  (~SH/LDBAR & D)) }
++      j0 = {(~k0)}
++      j1 = {(~k1) }
++      j2 = {(~k2)}
++      j3 = {(~k3)}
+
+uf0  JKff(4)  DPWR DGND
++    $D_HI CLRBAR clock
++    j0 j1 j2 j3 k0 k1 k2 k3 
++    QA_O QB_O QC_O QD_O  qabar qbbar qcbar QDBAR_O
++    D0_EFF IO_S
+
+Udly PINDLY (5,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QDBAR_O
++    CLK CLRBAR
++    QA QB QC QD QDBAR
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK = {CHANGED(CLK,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++
++    PINDLY:
++       QA QB QC QD QDBAR = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,12.5ns,18.5ns),
++                 CLOCK & TRN_LH, DELAY(-1,8ns,12ns),
++                 CLOCK & TRN_HL, DELAY(-1,11ns,16.5ns),
++                 DELAY(-1,13.5ns,19.5ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(9) DPWR DGND
++          CLRBAR CLK A B C D J KBAR SH/LDBAR
++          IO_S
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 70MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 7ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 12ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(6) = A B C D J KBAR
++        SETUPTIME = 5ns
++        HOLDTIME = 3ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = CLRBAR
++        SETUPTIME_LO = 9ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = SH/LDBAR
++        SETUPTIME_LO = 11ns
+*        SETUPTIME_HI = 6ns
+
+.ENDS 74S195
+*
+*
+* ----------------------------------------------------------- 74196 ------
+*  4-Bit Programmable Counter
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74196 CLK1 CLK2 LOADBAR CLRBAR A B C D QA QB QC QD
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74196 LOGICEXP (8,9) DPWR DGND
++      A B C D LOADBAR CLRBAR QB_O QC_O
++      s0 s1 s2 s3 r0 r1 r2 r3 j3
++      D0_GATE IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      s0 = {~(A & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r0 = {~(s0 & (~(LOADBAR & CLRBAR)))}
++      s1 = {~(B & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r1 = {~(s1 & (~(LOADBAR & CLRBAR)))}
++      s2 = {~(C & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r2 = {~(s2 & (~(LOADBAR & CLRBAR)))}
++      s3 = {~(D & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r3 = {~(s3 & (~(LOADBAR & CLRBAR)))}
++      j3 = {(QB_O & QC_O)}
+
+uf0  JKff(1)  DPWR DGND
++    s0 r0 CLK1
++    $D_HI $D_HI QA_O qabar
++    D0_EFF IO_STD
+
+uf1  JKff(1)  DPWR DGND
++    s1 r1 CLK2
++    qdbar qdbar QB_O qbbar
++    D0_EFF IO_STD
+
+uf2  JKff(1)  DPWR DGND
++    s2 r2 QB_O
++    $D_HI $D_HI QC_O qcbar
++    D0_EFF IO_STD
+
+uf3  JKff(1)  DPWR DGND
++    s3 r3 CLK2
++    j3 QD_O QD_O qdbar
++    D0_EFF IO_STD
+
+Udly PINDLY (4,0,8) DPWR DGND
++    QA_O QB_O QC_O QD_O 
++    CLK1 CLK2 CLRBAR A B C D LOADBAR 
++    QA QB QC QD
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CK1= {CHANGED(CLK1,0)}
++     CK2= {CHANGED(CLK2,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++     LOAD = { CHANGED(LOADBAR,0) }
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) | CHANGED(D,0) }
++
++    PINDLY:
++       QA = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK1 & TRN_LH, DELAY(-1,7ns,12ns),
++                 CK1 & TRN_HL, DELAY(-1,10ns,15ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
++       QB  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,12ns,18ns),
++                 CK2 & TRN_HL, DELAY(-1,14ns,21ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
++       QC  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,24ns,36ns),
++                 CK2 & TRN_HL, DELAY(-1,28ns,42ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
++       QD  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,14ns,21ns),
++                 CK2 & TRN_HL, DELAY(-1,12ns,18ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(8) DPWR DGND
++          CLRBAR LOADBAR CLK1 CLK2  A B C D
++          IO_STD
++
++      FREQ:
++         NODE = CLK1
++         MAXFREQ = 50MEG
++      FREQ:
++         NODE = CLK2
++         MAXFREQ = 25MEG
++      WIDTH:
++         NODE = CLK1
++         MIN_HI = 10ns
++      WIDTH:
++         NODE = CLK2
++         MIN_HI = 20ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 15ns
++      WIDTH:
++         NODE = LOADBAR
++         MIN_LO = 20ns
++      SETUP_HOLD:
++        CLOCK HL = LOADBAR
++        DATA(4) = A B C D 
++        SETUPTIME_HI = 10ns
++         SETUPTIME_LO = 15ns
++      SETUP_HOLD:
++        CLOCK HL = CLK1
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 20ns
++      SETUP_HOLD:
++        CLOCK HL = CLK2
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 20ns
+
+.ENDS 74196
+*
+*
+* ----------------------------------------------------------- 74LS196 ------
+*  4-Bit Programmable Counter
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74LS196 CLK1 CLK2 LOADBAR CLRBAR A B C D QA QB QC QD
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74LS196 LOGICEXP (8,9) DPWR DGND
++      A B C D LOADBAR CLRBAR QB_O QC_O
++      s0 s1 s2 s3 r0 r1 r2 r3 j3
++      D0_GATE IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      s0 = {~(A & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r0 = {~(s0 & (~(LOADBAR & CLRBAR)))}
++      s1 = {~(B & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r1 = {~(s1 & (~(LOADBAR & CLRBAR)))}
++      s2 = {~(C & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r2 = {~(s2 & (~(LOADBAR & CLRBAR)))}
++      s3 = {~(D & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r3 = {~(s3 & (~(LOADBAR & CLRBAR)))}
++      j3 = {(QB_O & QC_O)}
+
+uf0  JKff(1)  DPWR DGND
++    s0 r0 CLK1
++    $D_HI $D_HI QA_O qabar
++    D0_EFF IO_LS
+
+uf1  JKff(1)  DPWR DGND
++    s1 r1 CLK2
++    qdbar qdbar QB_O qbbar
++    D0_EFF IO_LS
+
+uf2  JKff(1)  DPWR DGND
++    s2 r2 QB_O
++    $D_HI $D_HI QC_O qcbar
++    D0_EFF IO_LS
+
+uf3  JKff(1)  DPWR DGND
++    s3 r3 CLK2
++    j3 QD_O QD_O qdbar
++    D0_EFF IO_LS
+
+Udly PINDLY (4,0,8) DPWR DGND
++    QA_O QB_O QC_O QD_O 
++    CLK1 CLK2 CLRBAR A B C D LOADBAR 
++    QA QB QC QD
++    IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CK1= {CHANGED(CLK1,0)}
++     CK2= {CHANGED(CLK2,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++     LOAD = { CHANGED(LOADBAR,0) }
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) | CHANGED(D,0) }
++
++    PINDLY:
++       QA = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK1 & TRN_LH, DELAY(-1,8ns,15ns),
++                 CK1 & TRN_HL, DELAY(-1,13ns,20ns),
++                 DATA & TRN_LH, DELAY(-1,20ns,30ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,27ns,41ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,35ns,52ns)
++                )
++            }
++       QB  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_LH, DELAY(-1,16ns,24ns),
++                 CK2 & TRN_HL, DELAY(-1,22ns,33ns),
++                 DATA & TRN_LH, DELAY(-1,20ns,30ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,27ns,41ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,35ns,52ns)
++                )
++            }
++       QC  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_LH, DELAY(-1,38ns,57ns),
++                 CK2 & TRN_HL, DELAY(-1,41ns,62ns),
++                 DATA & TRN_LH, DELAY(-1,20ns,30ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,27ns,41ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,42ns,63ns)
++                )
++            }
++       QD  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_LH, DELAY(-1,12ns,18ns),
++                 CK2 & TRN_HL, DELAY(-1,30ns,45ns),
++                 DATA & TRN_LH, DELAY(-1,20ns,30ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,27ns,41ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,35ns,52ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(8) DPWR DGND
++          CLRBAR LOADBAR CLK1 CLK2  A B C D
++          IO_LS
++
++      FREQ:
++         NODE = CLK1
++         MAXFREQ = 30MEG
++      FREQ:
++         NODE = CLK2
++         MAXFREQ = 15MEG
++      WIDTH:
++         NODE = CLK1
++         MIN_HI = 20ns
++      WIDTH:
++         NODE = CLK2
++         MIN_HI = 30ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 15ns
++      WIDTH:
++         NODE = LOADBAR
++         MIN_LO = 20ns
++      SETUP_HOLD:
++        CLOCK HL = LOADBAR
++        DATA(4) = A B C D 
++        SETUPTIME_HI = 10ns
++         SETUPTIME_LO = 15ns
++      SETUP_HOLD:
++        CLOCK HL = CLK1
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 30ns
++      SETUP_HOLD:
++        CLOCK HL = CLK2
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 50ns
+
+.ENDS 74LS196
+*
+*
+* ----------------------------------------------------------- 74S196 ------
+*  4-Bit Programmable Counter
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74S196 CLK1 CLK2 LOADBAR CLRBAR A B C D QA QB QC QD
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74S196 LOGICEXP (8,9) DPWR DGND
++      A B C D LOADBAR CLRBAR QB_O QC_O
++      s0 s1 s2 s3 r0 r1 r2 r3 j3
++      D0_GATE IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      s0 = {~(A & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r0 = {~(s0 & (~(LOADBAR & CLRBAR)))}
++      s1 = {~(B & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r1 = {~(s1 & (~(LOADBAR & CLRBAR)))}
++      s2 = {~(C & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r2 = {~(s2 & (~(LOADBAR & CLRBAR)))}
++      s3 = {~(D & CLRBAR & (~(LOADBAR & CLRBAR)))}
++      r3 = {~(s3 & (~(LOADBAR & CLRBAR)))}
++      j3 = {(QB_O & QC_O)}
+
+uf0  JKff(1)  DPWR DGND
++    s0 r0 CLK1
++    $D_HI $D_HI QA_O qabar
++    D0_EFF IO_S
+
+uf1  JKff(1)  DPWR DGND
++    s1 r1 CLK2
++    qdbar qdbar QB_O qbbar
++    D0_EFF IO_S
+
+uf2  JKff(1)  DPWR DGND
++    s2 r2 QB_O
++    $D_HI $D_HI QC_O qcbar
++    D0_EFF IO_S
+
+uf3  JKff(1)  DPWR DGND
++    s3 r3 CLK2
++    j3 QD_O QD_O qdbar
++    D0_EFF IO_S
+
+Udly PINDLY (4,0,8) DPWR DGND
++    QA_O QB_O QC_O QD_O 
++    CLK1 CLK2 CLRBAR A B C D LOADBAR 
++    QA QB QC QD
++    IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CK1= {CHANGED(CLK1,0)}
++     CK2= {CHANGED(CLK2,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++     LOAD = { CHANGED(LOADBAR,0) }
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) | CHANGED(D,0) }
++
++    PINDLY:
++       QA = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK1 & TRN_LH, DELAY(-1,6ns,10ns),
++                 CK1 & TRN_HL, DELAY(-1,5ns,10ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
++       QB  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,5ns,10ns),
++                 CK2 & TRN_HL, DELAY(-1,8ns,12ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
++       QC  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,12ns,18ns),
++                 CK2 & TRN_HL, DELAY(-1,16ns,24ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
++       QD  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,5ns,10ns),
++                 CK2 & TRN_HL, DELAY(-1,8ns,12ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(8) DPWR DGND
++          CLRBAR LOADBAR CLK1 CLK2  A B C D
++          IO_S
++
++      FREQ:
++         NODE = CLK1
++         MAXFREQ = 100MEG
++      FREQ:
++         NODE = CLK2
++         MAXFREQ = 50MEG
++      WIDTH:
++         NODE = CLK1
++         MIN_HI = 5ns
++      WIDTH:
++         NODE = CLK2
++         MIN_HI = 10ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 30ns
++      WIDTH:
++         NODE = LOADBAR
++         MIN_LO = 5ns
++      SETUP_HOLD:
++        CLOCK HL = LOADBAR
++        DATA(4) = A B C D 
++        SETUPTIME = 6ns
++         HOLDTIME = 3ns
++      SETUP_HOLD:
++        CLOCK HL = CLK1
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 12ns
++      SETUP_HOLD:
++        CLOCK HL = CLK2
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 12ns
+
+.ENDS 74S196
+*
+*
+* ----------------------------------------------------------- 74197 ------
+*  4-Bit Programmable Counter
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74197 CLK1 CLK2 LOADBAR CLRBAR A B C D QA QB QC QD
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74197 LOGICEXP(6,9) DPWR DGND
++      LOADBAR CLRBAR A B C D 
++      set0 set1 set2 set3 clr0 clr1 clr2 clr3 j0  
++      D0_GATE IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      i1 = { ~(CLRBAR & LOADBAR) }
++      set0 = { ~(CLRBAR & A & i1) }
++      set1 = { ~(CLRBAR & B & i1) }
++      set2 = { ~(CLRBAR & C & i1) }
++      set3 = { ~(CLRBAR & D & i1) }
++      clr0 = {~(set0 & i1) }
++      clr1 = {~(set1 & i1) }
++      clr2 = {~(set2 & i1) }
++      clr3 = {~(set3 & i1) }
++      j0 = {(CLRBAR & LOADBAR)}
+
+uf0  JKff(1)  DPWR DGND
++    set0 clr0 CLK1 j0 j0 QA_O qabar
++    D0_EFF IO_STD
+
+uf1  JKff(1)  DPWR DGND
++    set1 clr1 CLK2  j0 j0 QB_O qbbar
++    D0_EFF IO_STD
+
+uf2  JKff(1)  DPWR DGND
++    set2 clr2 QB_O j0 j0 QC_O qcbar
++    D0_EFF IO_STD
+
+uf3  JKff(1)  DPWR DGND
++    set3 clr3 QC_O j0 j0 QD_O qdbar
++    D0_EFF IO_STD
+
+Udly PINDLY (4,0,8) DPWR DGND
++    QA_O QB_O QC_O QD_O 
++    CLK1 CLK2 CLRBAR A B C D LOADBAR 
++    QA QB QC QD
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CK1= {CHANGED_HL(CLK1,0)}
++     CK2= {CHANGED_HL(CLK2,0)}
++     CLEAR = { CHANGED_HL(CLRBAR,0) }
++     LOAD = { CHANGED_HL(LOADBAR,0) }
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) | CHANGED(D,0) }
++
++    PINDLY:
++       QA = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK1 & TRN_LH, DELAY(-1,7ns,12ns),
++                 CK1 & TRN_HL, DELAY(-1,10ns,15ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
++       QB  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,12ns,18ns),
++                 CK2 & TRN_HL, DELAY(-1,14ns,21ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
++       QC  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,24ns,36ns),
++                 CK2 & TRN_HL, DELAY(-1,28ns,42ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,26ns,39ns)
++                )
++            }
++       QD  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,25ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,36ns,54ns),
++                 CK2 & TRN_HL, DELAY(-1,42ns,63ns),
++                 DATA & TRN_LH, DELAY(-1,16ns,24ns),
++                 DATA & TRN_HL, DELAY(-1,25ns,38ns),
++                 LOAD & TRN_LH, DELAY(-1,22ns,33ns),
++                 LOAD & TRN_HL, DELAY(-1,24ns,36ns),
++                 DELAY(-1,43ns,64ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(8) DPWR DGND
++          CLRBAR LOADBAR CLK1 CLK2  A B C D
++          IO_STD
++
++      FREQ:
++         NODE = CLK1
++         MAXFREQ = 50MEG
++      FREQ:
++         NODE = CLK2
++         MAXFREQ = 25MEG
++      WIDTH:
++         NODE = CLK1
++         MIN_HI = 10ns
++         MIN_LO = 10ns
++      WIDTH:
++         NODE = CLK2
++         MIN_HI = 20ns
++         MIN_LO = 20ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 15ns
++      WIDTH:
++         NODE = LOADBAR
++         MIN_LO = 20ns
++      SETUP_HOLD:
++        CLOCK HL = LOADBAR
++        DATA(4) = A B C D 
++        SETUPTIME_HI = 10ns
++        SETUPTIME_LO = 15ns
++      SETUP_HOLD:
++        CLOCK HL = CLK1
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 20ns
++      SETUP_HOLD:
++        CLOCK HL = CLK2
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 20ns
+
+.ENDS 74197
+*
+*
+* ----------------------------------------------------------- 74LS197 ------
+*  4-Bit Programmable Counter
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74LS197 CLK1 CLK2 LOADBAR CLRBAR A B C D QA QB QC QD
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74197 LOGICEXP(6,9) DPWR DGND
++      LOADBAR CLRBAR A B C D 
++      set0 set1 set2 set3 clr0 clr1 clr2 clr3 j0  
++      D0_GATE IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      i1 = { ~(CLRBAR & LOADBAR) }
++      set0 = { ~(CLRBAR & A & i1) }
++      set1 = { ~(CLRBAR & B & i1) }
++      set2 = { ~(CLRBAR & C & i1) }
++      set3 = { ~(CLRBAR & D & i1) }
++      clr0 = {~(set0 & i1) }
++      clr1 = {~(set1 & i1) }
++      clr2 = {~(set2 & i1) }
++      clr3 = {~(set3 & i1) }
++      j0 = {(CLRBAR & LOADBAR)}
+
+uf0  JKff(1)  DPWR DGND
++    set0 clr0 CLK1 j0 j0 QA_O qabar
++    D0_EFF IO_LS
+
+uf1  JKff(1)  DPWR DGND
++    set1 clr1 CLK2  j0 j0 QB_O qbbar
++    D0_EFF IO_LS
+
+uf2  JKff(1)  DPWR DGND
++    set2 clr2 QB_O j0 j0 QC_O qcbar
++    D0_EFF IO_LS
+
+uf3  JKff(1)  DPWR DGND
++    set3 clr3 QC_O j0 j0 QD_O qdbar
++    D0_EFF IO_LS
+
+Udly PINDLY (4,0,8) DPWR DGND
++    QA_O QB_O QC_O QD_O 
++    CLK1 CLK2 CLRBAR A B C D LOADBAR 
++    QA QB QC QD
++    IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CK1= {CHANGED_HL(CLK1,0)}
++     CK2= {CHANGED_HL(CLK2,0)}
++     CLEAR = { CHANGED_HL(CLRBAR,0) }
++     LOAD = { CHANGED_HL(LOADBAR,0) }
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) | CHANGED(D,0) }
++
++    PINDLY:
++       QA = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK1 & TRN_LH, DELAY(-1,8ns,15ns),
++                 CK1 & TRN_HL, DELAY(-1,14ns,21ns),
++                 DATA & TRN_LH, DELAY(-1,18ns,27ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,26ns,39ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,35ns,52ns)
++                )
++            }
++       QB  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_LH, DELAY(-1,12ns,19ns),
++                 CK2 & TRN_HL, DELAY(-1,23ns,35ns),
++                 DATA & TRN_LH, DELAY(-1,18ns,27ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,26ns,39ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,35ns,52ns)
++                )
++            }
++       QC  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_LH, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_HL, DELAY(-1,42ns,63ns),
++                 DATA & TRN_LH, DELAY(-1,18ns,27ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,26ns,39ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,35ns,52ns)
++                )
++            }
++       QD  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,34ns,51ns),
++                 CK2 & TRN_LH, DELAY(-1,55ns,78ns),
++                 CK2 & TRN_HL, DELAY(-1,63ns,95ns),
++                 DATA & TRN_LH, DELAY(-1,18ns,27ns),
++                 DATA & TRN_HL, DELAY(-1,29ns,44ns),
++                 LOAD & TRN_LH, DELAY(-1,26ns,39ns),
++                 LOAD & TRN_HL, DELAY(-1,30ns,45ns),
++                 DELAY(-1,64ns,96ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(8) DPWR DGND
++          CLRBAR LOADBAR CLK1 CLK2  A B C D
++          IO_LS
++
++      FREQ:
++         NODE = CLK1
++         MAXFREQ = 30MEG
++      FREQ:
++         NODE = CLK2
++         MAXFREQ = 15MEG
++      WIDTH:
++         NODE = CLK1
++         MIN_HI = 20ns
++         MIN_LO = 20ns
++      WIDTH:
++         NODE = CLK2
++         MIN_HI = 30ns
++         MIN_LO = 30ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 15ns
++      WIDTH:
++         NODE = LOADBAR
++         MIN_LO = 20ns
++      SETUP_HOLD:
++        CLOCK HL = LOADBAR
++        DATA(4) = A B C D 
++        SETUPTIME_HI = 10ns
++        SETUPTIME_LO = 15ns
++      SETUP_HOLD:
++        CLOCK HL = CLK1
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 30ns
++      SETUP_HOLD:
++        CLOCK HL = CLK2
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 50ns
+
+.ENDS 74LS197
+*
+*
+* ----------------------------------------------------------- 74S197 ------
+*  4-Bit Programmable Counter
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-655 to 2-662
+*  jds    5/20/94
+*
+.SUBCKT 74S197 CLK1 CLK2 LOADBAR CLRBAR A B C D QA QB QC QD
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74197 LOGICEXP(6,9) DPWR DGND
++      LOADBAR CLRBAR A B C D 
++      set0 set1 set2 set3 clr0 clr1 clr2 clr3 j0  
++      D0_GATE IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      i1 = { ~(CLRBAR & LOADBAR) }
++      set0 = { ~(CLRBAR & A & i1) }
++      set1 = { ~(CLRBAR & B & i1) }
++      set2 = { ~(CLRBAR & C & i1) }
++      set3 = { ~(CLRBAR & D & i1) }
++      clr0 = {~(set0 & i1) }
++      clr1 = {~(set1 & i1) }
++      clr2 = {~(set2 & i1) }
++      clr3 = {~(set3 & i1) }
++      j0 = {(CLRBAR & LOADBAR)}
+
+uf0  JKff(1)  DPWR DGND
++    set0 clr0 CLK1 j0 j0 QA_O qabar
++    D0_EFF IO_S
+
+uf1  JKff(1)  DPWR DGND
++    set1 clr1 CLK2  j0 j0 QB_O qbbar
++    D0_EFF IO_S
+
+uf2  JKff(1)  DPWR DGND
++    set2 clr2 QB_O j0 j0 QC_O qcbar
++    D0_EFF IO_S
+
+uf3  JKff(1)  DPWR DGND
++    set3 clr3 QC_O j0 j0 QD_O qdbar
++    D0_EFF IO_S
+
+Udly PINDLY (4,0,8) DPWR DGND
++    QA_O QB_O QC_O QD_O 
++    CLK1 CLK2 CLRBAR A B C D LOADBAR 
++    QA QB QC QD
++    IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CK1= {CHANGED_HL(CLK1,0)}
++     CK2= {CHANGED_HL(CLK2,0)}
++     CLEAR = { CHANGED_HL(CLRBAR,0) }
++     LOAD = { CHANGED_HL(LOADBAR,0) }
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) | CHANGED(D,0) }
++
++    PINDLY:
++       QA = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK1 & TRN_LH, DELAY(-1,5ns,10ns),
++                 CK1 & TRN_HL, DELAY(-1,6ns,10ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
++       QB  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,5ns,10ns),
++                 CK2 & TRN_HL, DELAY(-1,8ns,12ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
++       QC  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,12ns,18ns),
++                 CK2 & TRN_HL, DELAY(-1,15ns,22ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
++       QD  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,26ns,37ns),
++                 CK2 & TRN_LH, DELAY(-1,18ns,27ns),
++                 CK2 & TRN_HL, DELAY(-1,22ns,33ns),
++                 DATA & TRN_LH, DELAY(-1,7ns,12ns),
++                 DATA & TRN_HL, DELAY(-1,12ns,18ns),
++                 LOAD & TRN_LH, DELAY(-1,10ns,18ns),
++                 LOAD & TRN_HL, DELAY(-1,12ns,18ns),
++                 DELAY(-1,27ns,38ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(8) DPWR DGND
++          CLRBAR LOADBAR CLK1 CLK2  A B C D
++          IO_S
++
++      FREQ:
++         NODE = CLK1
++         MAXFREQ = 100MEG
++      FREQ:
++         NODE = CLK2
++         MAXFREQ = 50MEG
++      WIDTH:
++         NODE = CLK1
++         MIN_HI = 5ns
++         MIN_LO = 5ns
++      WIDTH:
++         NODE = CLK2
++         MIN_HI = 10ns
++         MIN_LO = 10ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 30ns
++      WIDTH:
++         NODE = LOADBAR
++         MIN_LO = 5ns
++      SETUP_HOLD:
++        CLOCK HL = LOADBAR
++        DATA(4) = A B C D 
++        SETUPTIME = 6ns
++         HOLDTIME = 3ns
++      SETUP_HOLD:
++        CLOCK HL = CLK1
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 12ns
++      SETUP_HOLD:
++        CLOCK HL = CLK2
++        DATA(2) = CLRBAR LOADBAR
++        SETUPTIME_LO = 12ns
+
+.ENDS 74S197
+*
+*
+* ----------------------------------------------------------- 74198 ------
+*  8-Bit Shift Register 
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-671 to 2-679
+*  jds    5/23/94
+*
+.SUBCKT 74198 CLK SR_SER SL_SER S0 S1 CLRBAR A B C D E F G H QA QB QC QD QE QF QG QH
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74198 LOGICEXP(21,17) DPWR DGND
++      A B C D E F G H SR_SER SL_SER S0 S1 CLK
++      QA_O QB_O QC_O QD_O QE_O QF_O QG_O QH_O
++      j0 j1 j2 j3 j4 j5 j6 j7 k0 k1 k2 k3 k4 k5 k6 k7 clkbar   
++      D0_GATE IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clkbar = { ~( CLK | ( ~S0 & ~S1) ) }
++      k0 = { ~( ( SR_SER & ~S1) | (~( ~S1 | ~S0 ) & A) | (~S0 & QB_O) ) }
++      k1 = { ~( ( QA_O & ~S1) | (~( ~S1 | ~S0 ) & B) | (~S0 & QC_O) ) }
++      k2 = { ~( ( QB_O & ~S1) | (~( ~S1 | ~S0 ) & C) | (~S0 & QD_O) ) }
++      k3 = { ~( ( QC_O & ~S1) | (~( ~S1 | ~S0 ) & D) | (~S0 & QE_O) ) }
++      k4 = { ~( ( QD_O & ~S1) | (~( ~S1 | ~S0 ) & E) | (~S0 & QF_O) ) }
++      k5 = { ~( ( QE_O & ~S1) | (~( ~S1 | ~S0 ) & F) | (~S0 & QG_O) ) }
++      k6 = { ~( ( QF_O & ~S1) | (~( ~S1 | ~S0 ) & G) | (~S0 & QH_O) ) }
++      k7 = { ~( ( QG_O & ~S1) | (~( ~S1 | ~S0 ) & H) | (~S0 & SL_SER) ) }
++      j0 = {(~k0 )}
++      j1 = {(~k1 )}
++      j2 = {(~k2 )}
++      j3 = {(~k3 )}
++      j4 = {(~k4 )}
++      j5 = {(~k5 )}
++      j6 = {(~k6 )}
++      j7 = {(~k7 )}
+
+uf0  JKff(8)  DPWR DGND
++    $D_HI CLRBAR clkbar
++     j0 j1 j2 j3 j4 j5 j6 j7 k0 k1 k2 k3 k4 k5 k6 k7 
++    QA_O QB_O QC_O QD_O QE_O QF_O QG_O QH_O
++    qabar qbbar qcbar qdbar qebar qfbar qgbar qhbar
++    D0_EFF IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (8,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QE_O QF_O QG_O QH_O
++    CLK CLRBAR 
++    QA QB QC QD QE QF QG QH
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK= {CHANGED(CLK,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++
++    PINDLY:
++       QA QB QC QD QE QF QG QH  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,23ns,35ns),
++                 CLOCK & TRN_LH, DELAY(-1,20ns,30ns),
++                 CLOCK & TRN_HL, DELAY(-1,17ns,26ns),
++                 DELAY(-1,24ns,36ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(12) DPWR DGND
++          CLRBAR CLK  A B C D E F G H S0 S1
++          IO_STD IO_LEVEL={IO_LEVEL}
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 25MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 20ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 20ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(8) = A B C D E F G H
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(2) = S0 S1
++        SETUPTIME = 30ns
+
+.ENDS 74198
+
+* ----------------------------------------------------------- 74F198 ------
+*  8-Bit Bidirectional Universal Shift Register 
+*  Philips FAST TTL Data Handbook, 1992, pages 293 to 298
+*  jat 7/9/96
+
+.SUBCKT 74F198 Cp DSR DSL S0 S1 MRBAR D0 D1 D2 D3 D4 D5 D6 D7 Q0 Q1 Q2 Q3 Q4
++ Q5 Q6 Q7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74F198 LOGICEXP(21,17) DPWR DGND
++      D0 D1 D2 D3 D4 D5 D6 D7 DSR DSL S0 S1 CP
++      Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++      j0 j1 j2 j3 j4 j5 j6 j7 k0 k1 k2 k3 k4 k5 k6 k7 clkbar   
++      D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clkbar = { ~( CP | ( ~S0 & ~S1) ) }
++      k0 = { ~( ( DSR & ~S1) | (~( ~S1 | ~S0 ) & D0) | (~S0 & Q1_O) ) }
++      k1 = { ~( ( Q0_O & ~S1) | (~( ~S1 | ~S0 ) & D1) | (~S0 & Q2_O) ) }
++      k2 = { ~( ( Q1_O & ~S1) | (~( ~S1 | ~S0 ) & D2) | (~S0 & Q3_O) ) }
++      k3 = { ~( ( Q2_O & ~S1) | (~( ~S1 | ~S0 ) & D3) | (~S0 & Q4_O) ) }
++      k4 = { ~( ( Q3_O & ~S1) | (~( ~S1 | ~S0 ) & D4) | (~S0 & Q5_O) ) }
++      k5 = { ~( ( Q4_O & ~S1) | (~( ~S1 | ~S0 ) & D5) | (~S0 & Q6_O) ) }
++      k6 = { ~( ( Q5_O & ~S1) | (~( ~S1 | ~S0 ) & D6) | (~S0 & Q7_O) ) }
++      k7 = { ~( ( Q6_O & ~S1) | (~( ~S1 | ~S0 ) & D7) | (~S0 & DSL) ) }
++      j0 = {(~k0 )}
++      j1 = {(~k1 )}
++      j2 = {(~k2 )}
++      j3 = {(~k3 )}
++      j4 = {(~k4 )}
++      j5 = {(~k5 )}
++      j6 = {(~k6 )}
++      j7 = {(~k7 )}
+
+uf0  JKff(8)  DPWR DGND
++    $D_HI MRBAR clkbar
++     j0 j1 j2 j3 j4 j5 j6 j7 k0 k1 k2 k3 k4 k5 k6 k7 
++    Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++    $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++    D0_EFF IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (8,0,2) DPWR DGND
++    Q0_O Q1_O Q2_O Q3_O Q4_O Q5_O Q6_O Q7_O
++    CP MRBAR 
++    Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++    IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK= {CHANGED_LH(CP,0)}
++     CLEAR = { CHANGED_HL(MRBAR,0) }
++
++    PINDLY:
++       Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(5NS,7.5ns,10ns),
++                 CLOCK & TRN_LH, DELAY(5NS,7.5ns,10ns),
++                 CLOCK & TRN_HL, DELAY(6NS,8.5ns,11ns),
++                 DELAY(7NS,9.5ns,12ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(14) DPWR DGND
++          MRBAR CP DSR DSL D0 D1 D2 D3 D4 D5 D6 D7 S0 S1
++          IO_F IO_LEVEL={IO_LEVEL}
++
++      FREQ:
++         NODE = CP
++         MAXFREQ = 95MEG
++      WIDTH:
++         NODE = CP
++         MIN_HI = 5ns
++         MIN_LO = 5ns
++      WIDTH:
++         NODE = MRBAR
++         MIN_LO = 5ns
++      SETUP_HOLD:
++        CLOCK LH = CP
++        DATA(8) = D0 D1 D2 D3 D4 D5 D6 D7
++        SETUPTIME_LO = 3ns
++        HOLDTIME_LO = 3ns
++      SETUP_HOLD:
++        CLOCK LH = CP
++        DATA(2) = S0 S1
++        SETUPTIME_HI = 9ns
++        SETUPTIME_LO = 6ns
++      SETUP_HOLD:
++        CLOCK LH = CP
++        DATA(2) = DSR DSL
++        SETUPTIME_LO = 3ns
++        HOLDTIME_LO = 2.5ns
++      SETUP_HOLD:
++        CLOCK LH = CP
++        DATA(1) = MRBAR
++        SETUPTIME_HI = 5ns
+
+.ENDS 74F198
+
+* ----------------------------------------------------------- 74199 ------
+*  8-Bit Shift Register 
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-671 to 2-679
+*  jds    5/23/94
+*
+.SUBCKT 74199 CLK CLK_INH SH/LDBAR J KBAR CLRBAR A B C D E F G H 
++  QA QB QC QD QE QF QG QH
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74199 LOGICEXP(22,17) DPWR DGND
++      A B C D E F G H J KBAR CLK_INH SH/LDBAR CLK qabar
++      QA_O QB_O QC_O QD_O QE_O QF_O QG_O QH_O
++      j0 j1 j2 j3 j4 j5 j6 j7 k0 k1 k2 k3 k4 k5 k6 k7 clkbar   
++      D0_GATE IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++      clkbar = { ~( CLK | CLK_INH) }
++      k0 = { ~( ( J & SH/LDBAR & qabar) | ( ~SH/LDBAR & A) | (KBAR & SH/LDBAR & QA_O) ) }
++      k1 = { ~( ( QA_O & SH/LDBAR) | (~SH/LDBAR & B) ) }
++      k2 = { ~( ( QB_O & SH/LDBAR) | (~SH/LDBAR & C) ) }
++      k3 = { ~( ( QC_O & SH/LDBAR) | (~SH/LDBAR & D) ) }
++      k4 = { ~( ( QD_O & SH/LDBAR) | (~SH/LDBAR & E) ) }
++      k5 = { ~( ( QE_O & SH/LDBAR) | (~SH/LDBAR & F) ) }
++      k6 = { ~( ( QF_O & SH/LDBAR) | (~SH/LDBAR & G) ) }
++      k7 = { ~( ( QG_O & SH/LDBAR) | (~SH/LDBAR & H) ) }
++      j0 = {(~k0 )}
++      j1 = {(~k1 )}
++      j2 = {(~k2 )}
++      j3 = {(~k3 )}
++      j4 = {(~k4 )}
++      j5 = {(~k5 )}
++      j6 = {(~k6 )}
++      j7 = {(~k7 )}
+
+uf0  JKff(8)  DPWR DGND
++    $D_HI CLRBAR clkbar
++     j0 j1 j2 j3 j4 j5 j6 j7 k0 k1 k2 k3 k4 k5 k6 k7 
++    QA_O QB_O QC_O QD_O QE_O QF_O QG_O QH_O
++    qabar qbbar qcbar qdbar qebar qfbar qgbar qhbar
++    D0_EFF IO_STD
+
+Udly PINDLY (8,0,2) DPWR DGND
++    QA_O QB_O QC_O QD_O QE_O QF_O QG_O QH_O
++    CLK CLRBAR 
++    QA QB QC QD QE QF QG QH
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     CLOCK= {CHANGED(CLK,0)}
++     CLEAR = { CHANGED(CLRBAR,0) }
++
++    PINDLY:
++       QA QB QC QD QE QF QG QH  = {
++            CASE(
++                 CLEAR & TRN_HL, DELAY(-1,23ns,35ns),
++                 CLOCK & TRN_LH, DELAY(-1,20ns,30ns),
++                 CLOCK & TRN_HL, DELAY(-1,17ns,26ns),
++                 DELAY(-1,24ns,36ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(13) DPWR DGND
++          CLRBAR CLK  A B C D E F G H SH/LDBAR J KBAR
++          IO_STD
++
++      FREQ:
++         NODE = CLK
++         MAXFREQ = 25MEG
++      WIDTH:
++         NODE = CLK
++         MIN_HI = 20ns
++      WIDTH:
++         NODE = CLRBAR
++         MIN_LO = 20ns
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(8) = A B C D E F G H
++        SETUPTIME = 20ns
++        WHEN={SH/LDBAR!='1}
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(2) = J KBAR
++        SETUPTIME = 20ns
++        WHEN={SH/LDBAR!='0}
++      SETUP_HOLD:
++        CLOCK LH = CLK
++        DATA(1) = SH/LDBAR
++        SETUPTIME = 30ns
+
+.ENDS 74199
+
+* ------------------------------------------------------------74F199-------
+
+* 8 Bit Parallel Access Shift Register
+* Philips FAST TTL Data Handbook, 1992, pages 299 to 304
+* jat 7/9/96
+
+.SUBCKT 74F199 CP PEBAR J KBAR MRBAR D0 D1 D2 D3 D4 D5 D6 D7 
++ Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 CEBAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(22,17) DPWR DGND
++ CP CEBAR PEBAR J KBAR D0 D1 D2 D3 D4 D5 D6 D7 Q0O Q1O Q2O Q3O Q4O Q5O
++ Q6O Q7O Q0BAR
++ CPBAR J0 K0 J1 K1 J2 K2 J3 K3 J4 J5 J6 J7 K4 K5 K6 K7
++ D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   CPBAR = {~CP | CEBAR}
++   J0 = {(~PEBAR & D0) | (Q0O & KBAR & PEBAR) | (PEBAR & J & Q0BAR)}
++   K0 = {~J0}
++   J1 = {(~PEBAR & D1) | (Q0O & PEBAR)}
++   K1 = {~J1}
++   J2 = {(~PEBAR & D2) | (Q1O & PEBAR)}
++   K2 = {~J2}
++   J3 = {(~PEBAR & D3) | (Q2O & PEBAR)}
++   K3 = {~J3}
++   J4 = {(~PEBAR & D4) | (Q3O & PEBAR)}
++   K4 = {~J4}
++   J5 = {(~PEBAR & D5) | (Q4O & PEBAR)}
++   K5 = {~J5}
++   J6 = {(~PEBAR & D6) | (Q5O & PEBAR)}
++   K6 = {~J6}
++   J7 = {(~PEBAR & D7) | (Q6O & PEBAR)}
++   K7 = {~J7}
+
+U2 JKFF(8) DPWR DGND
++ $D_HI MRBAR CPBAR
++ J0 J1 J2 J3 J4 J5 J6 J7 K0 K1 K2 K3 K4 K5 K6 K7
++ Q0O Q1O Q2O Q3O Q4O Q5O Q6O Q7O
++ Q0BAR $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC $D_NC
++ D0_EFF IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U3 PINDLY(8,0,2) DPWR DGND
++ Q0O Q1O Q2O Q3O Q4O Q5O Q6O Q7O
++ MRBAR CP
++ Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7
++ IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ BOOLEAN:
++   RESET = {CHANGED_HL(MRBAR,0)}
++   EDGE = {CHANGED_LH(CP,0)}
++ PINDLY:
++   Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 = {
++     CASE(
++       RESET & TRN_HL, DELAY(5.5NS,8NS,10.5NS),
++       EDGE & TRN_LH, DELAY(5.5NS,8NS,11NS),
++       EDGE & TRN_HL, DELAY(6.5NS,9.5NS,12.5NS),
++       DELAY(7.5NS,10.5NS,13.5NS))}
+
+U4 CONSTRAINT(14) DPWR DGND
++ J KBAR D0 D1 D2 D3 D4 D5 D6 D7 CEBAR CP PEBAR MRBAR
++ IO_F IO_LEVEL={IO_LEVEL}
++ FREQ:
++   NODE = CP
++   MAXFREQ = 95MEG
++ WIDTH:
++   NODE = CP
++   MIN_HI = 4.5NS
++ WIDTH:
++   NODE = MRBAR
++   MIN_LO = 4NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(8) = D0 D1 D2 D3 D4 D5 D6 D7
++   SETUPTIME_LO = 1.5NS
++   HOLDTIME_LO = 4.5NS
++   HOLDTIME_HI = 2NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(2) = J KBAR
++   SETUPTIME_LO = 2.5NS
++   HOLDTIME_LO = 3.5NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = PEBAR
++   SETUPTIME = 8NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = CEBAR
++   SETUPTIME_LO = 2.5NS
++   HOLDTIME_LO = 4.5NS
++ SETUP_HOLD:
++   CLOCK LH = CP
++   DATA(1) = MRBAR
++   SETUPTIME_HI = 5.5NS
+
+.ENDS 74F199
+
+* ----------------------------------------------------------- 74S226 ------
+*  4-Bit Parallel Latched Bus Transceiver
+*
+*  The TTL Logic Data Book, 1985, TI Pages 3-813 to 3-816
+*  jds    5/23/94
+*
+.SUBCKT 74S226 S1 S2 GAB GBA OCAB OCBA A1 A2 A3 A4 B1 B2 B3 B4
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74S226 LOGICEXP(12,11) DPWR DGND
++      S1 S2 GAB GBA  A1 A2 A3 A4 B1 B2 B3 B4
++      a1bar b1bar a2bar b2bar a3bar b3bar a4bar b4bar C1L C1R C2
++      D0_GATE IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++     a1bar = { (~A1)}
++     b1bar = { (~B1) }
++     a2bar = { (~A2)}
++     b2bar = { (~B2) }
++     a3bar = { (~A3)}
++     b3bar = { (~B3) }
++     a4bar = { (~A4)}
++     b4bar = { (~B4) }
++     C1L = { ~(GAB | ~S2) }
++     C1R = { ( ~( ~S1 &  S2) & ~( S1 & ~S2) & ~GBA ) }
++     C2 = { ~(S2 & S1) }
+ 
+ufa1 DLTCH(1) DPWR DGND
++    $D_HI $D_HI C1L
++     a1bar qa1 qa1bar  D0_GFF IO_S
+
+ufb1 DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++     qa1 qb1 qb1bar D0_GFF IO_S
+
+ufc1  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++     qd1 qc1 qc1bar  D0_GFF IO_S
+
+ufd1  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C1R
++     b1bar qd1 qd1bar D0_GFF IO_S
+
+ufa2 DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C1L
++     a2bar qa2 qa2bar D0_GFF IO_S
+
+ufb2 DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++    qa2 qb2 qb2bar D0_GFF IO_S
+
+ufc2  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++    qd2 qc2 qc2bar  D0_GFF IO_S
+
+ufd2  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C1R
++    b2bar qd2 qd2bar D0_GFF IO_S
+
+ufa3  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C1L
++     a3bar qa3 qa3bar D0_GFF IO_S
+
+ufb3 DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++    qa3 qb3 qb3bar  D0_GFF IO_S
+
+ufc3  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++    qd3 qc3 qc3bar  D0_GFF IO_S
+
+ufd3  DLTCH(1)  DPWR DGND
++     $D_HI $D_HI C1R
++     b3bar qd3 qd3bar D0_GFF IO_S
+
+ufa4  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C1L
++     a4bar qa4 qa4bar D0_GFF IO_S
+
+ufb4 DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++     qa4 qb4 qb4bar  D0_GFF IO_S
+
+ufc4  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C2
++     qd4 qc4 qc4bar  D0_GFF IO_S
+
+ufd4  DLTCH(1)  DPWR DGND
++    $D_HI $D_HI C1R
++     b4bar qd4 qd4bar  D0_GFF IO_S
+
+Udly PINDLY (8,2,12) DPWR DGND
++    qc1bar qb1bar qc2bar qb2bar qc3bar qb3bar qc4bar qb4bar
++    OCAB OCBA 
++    A1 A2 A3 A4 B1 B2 B3 B4 S1 S2 GBA GAB
++    A1 B1 A2 B2 A3 B3 A4 B4
++    IO_S MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATAA= {CHANGED(A1,0) | CHANGED(A2,0) | CHANGED(A3,0) | CHANGED(A4,0)}
++     DATAB= {CHANGED(B1,0) | CHANGED(B2,0) | CHANGED(B3,0) | CHANGED(B4,0)}
++     SELECT = { CHANGED(S2,0) | CHANGED(S1,0) }
++     STROBE = { CHANGED(GBA,0) | CHANGED(GAB,0) }
++
++    TRISTATE:
++       ENABLE HI = OCBA
++          A1 A2 A3 A4  = {
++            CASE(
++                 DATAB & TRN_LH, DELAY(-1,20ns,30ns),
++                 DATAB & TRN_HL, DELAY(-1,15ns,30ns),
++                 SELECT & TRN_LH, DELAY(-1,25ns,37ns),
++                 SELECT & TRN_HL, DELAY(-1,19ns,30ns),
++                 STROBE & TRN_LH, DELAY(-1,25ns,37ns),
++                 STROBE & TRN_HL, DELAY(-1,19ns,30ns),
++                 TRN_ZH,  DELAY(-1,12ns,20ns),
++                 TRN_ZL, DELAY(-1,12ns,20ns),
++                 TRN_HZ, DELAY(-1,10ns,15ns),
++                 TRN_LZ, DELAY(-1,10ns,15ns),
++                 DELAY(-1,24ns,36ns)
++                )
++            }
++    TRISTATE:
++       ENABLE HI = OCAB
++          B1 B2 B3 B4  = {
++            CASE(
++                 DATAA & TRN_LH, DELAY(-1,20ns,30ns),
++                 DATAA & TRN_HL, DELAY(-1,15ns,30ns),
++                 SELECT & TRN_LH, DELAY(-1,25ns,37ns),
++                 SELECT & TRN_HL, DELAY(-1,19ns,30ns),
++                 STROBE & TRN_LH, DELAY(-1,25ns,37ns),
++                 STROBE & TRN_HL, DELAY(-1,19ns,30ns),
++                 TRN_ZH,  DELAY(-1,12ns,20ns),
++                 TRN_ZL, DELAY(-1,12ns,20ns),
++                 TRN_HZ, DELAY(-1,10ns,15ns),
++                 TRN_LZ, DELAY(-1,10ns,15ns),
++                 DELAY(-1,24ns,36ns)
++                )
++            }
+
+
+Ucnstr CONSTRAINT(12) DPWR DGND
++           GAB GBA  A1 A2 A3 A4 B1 B2 B3 B4 S2 S1
++          IO_S
++
++      WIDTH:
++         NODE = GBA 
++         MIN_HI = 20ns
++      WIDTH:
++         NODE = GAB
++         MIN_HI = 20ns
++      SETUP_HOLD:
++        CLOCK LH = GBA
++        DATA(4) =  B1 B2 B3 B4
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK LH = GAB
++        DATA(4) = A1 A2 A3 A4
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK LH = S1
++        DATA(8) = A1 A2 A3 A4 B1 B2 B3 B4
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK HL= S1
++        DATA(8) = A1 A2 A3 A4 B1 B2 B3 B4
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK LH = S2
++        DATA(8) = A1 A2 A3 A4 B1 B2 B3 B4
++        SETUPTIME = 20ns
++      SETUP_HOLD:
++        CLOCK HL= S2
++        DATA(8) = A1 A2 A3 A4 B1 B2 B3 B4
++        SETUPTIME = 20ns
+
+.ENDS 74S226
+*
+*
+* ----------------------------------------------------------- 74ALS230 ------
+*  Octal Buffer and Line Driver
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-247 to 2-250
+*  jds    5/23/94
+*
+.SUBCKT 74ALS230 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4 2GBAR 2A1 2A2 2A3 2A4 2Y1 2Y2 2Y3 2Y4
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74ALS230 LOGICEXP(4,4) DPWR DGND
++     1A1 1A2 1A3 1A4 
++      1Y1_O 1Y2_O 1Y3_O 1Y4_O
++      D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    1Y1_O = { (~1A1)}
++    1Y2_O = { (~1A2)}
++    1Y3_O = { (~1A3)}
++    1Y4_O = { (~1A4)}
+
+Udly PINDLY (8,2,8) DPWR DGND
++    1Y1_O 1Y2_O 1Y3_O 1Y4_O 2A1 2A2 2A3 2A4
++    1GBAR 2GBAR
++    1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++    1Y1 1Y2 1Y3 1Y4 2Y1 2Y2 2Y3 2Y4
++    IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = {CHANGED(1A1,0) | CHANGED(1A2,0) | CHANGED(1A3,0) | CHANGED(1A4,0) |
++                      CHANGED(2A1,0) | CHANGED(2A2,0) | CHANGED(2A3,0) | CHANGED(2A4,0)}
++
++    TRISTATE:
++       ENABLE LO = 1GBAR
++          1Y1 1Y2 1Y3 1Y4  = {
++            CASE(
++                 DATA & TRN_LH, DELAY(-1,5ns,-1),
++                 DATA & TRN_HL, DELAY(-1,5ns,-1),
++                 TRN_ZH,  DELAY(-1,9ns,-1),
++                 TRN_ZL, DELAY(-1,10ns,-1),
++                 TRN_HZ, DELAY(-1,5ns,-1),
++                 TRN_LZ, DELAY(-1,6ns,-1),
++                 DELAY(-1,11ns,-1)
++                )
++            }
++    TRISTATE:
++       ENABLE LO = 2GBAR
++          2Y1 2Y2 2Y3 2Y4  = {
++            CASE(
++                 DATA & TRN_LH, DELAY(-1,5ns,-1),
++                 DATA & TRN_HL, DELAY(-1,5ns,-1),
++                 TRN_ZH,  DELAY(-1,9ns,-1),
++                 TRN_ZL, DELAY(-1,10ns,-1),
++                 TRN_HZ, DELAY(-1,5ns,-1),
++                 TRN_LZ, DELAY(-1,6ns,-1),
++                 DELAY(-1,11ns,-1)
++                )
++            }
+
+.ENDS  74ALS230
+*
+*
+* ----------------------------------------------------------- 74AS230 ------
+*  Octal Buffer and Line Driver
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-247 to 2-250
+*  jds    5/23/94
+*
+.SUBCKT 74AS230 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4 2GBAR 2A1 2A2 2A3 2A4 2Y1 2Y2 2Y3 2Y4
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74AS230 LOGICEXP(4,4) DPWR DGND
++     1A1 1A2 1A3 1A4 
++      1Y1_O 1Y2_O 1Y3_O 1Y4_O
++      D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    1Y1_O = { (~1A1)}
++    1Y2_O = { (~1A2)}
++    1Y3_O = { (~1A3)}
++    1Y4_O = { (~1A4)}
+
+Udly PINDLY (8,2,8) DPWR DGND
++    1Y1_O 1Y2_O 1Y3_O 1Y4_O 2A1 2A2 2A3 2A4
++    1GBAR 2GBAR
++    1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++    1Y1 1Y2 1Y3 1Y4 2Y1 2Y2 2Y3 2Y4
++    IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA1 = {CHANGED(1A1,0) | CHANGED(1A2,0) | CHANGED(1A3,0) | CHANGED(1A4,0) }
++     DATA2 = {CHANGED(2A1,0) | CHANGED(2A2,0) | CHANGED(2A3,0) | CHANGED(2A4,0) }
++
++    TRISTATE:
++       ENABLE LO = 1GBAR
++          1Y1 1Y2 1Y3 1Y4  = {
++            CASE(
++                 DATA1 & TRN_LH, DELAY(2.5ns,-1,6.5ns),
++                 DATA1 & TRN_HL, DELAY(2ns,-1,5.7ns),
++                 TRN_ZH,  DELAY(2ns,-1,6.4ns),
++                 TRN_ZL, DELAY(2ns,-1,8.5ns),
++                 TRN_HZ, DELAY(2ns,-1,5ns),
++                 TRN_LZ, DELAY(2ns,-1,9.5ns),
++                 DELAY(3.5ns,-1,10.5ns)
++                )
++            }
++    TRISTATE:
++       ENABLE LO = 2GBAR
++          2Y1 2Y2 2Y3 2Y4  = {
++            CASE(
++                 DATA2 & TRN_LH, DELAY(2.5ns,-1,6.2ns),
++                 DATA2 & TRN_HL, DELAY(2ns,-1,6.2ns),
++                 TRN_ZH,  DELAY(2ns,-1,9ns),
++                 TRN_ZL, DELAY(2ns,-1,7.5ns),
++                 TRN_HZ, DELAY(2ns,-1,6ns),
++                 TRN_LZ, DELAY(2ns,-1,9ns),
++                 DELAY(3.5ns,-1,10ns)
++                )
++            }
+
+
+.ENDS  74AS230
+*
+*
+* ----------------------------------------------------------- 74ALS231 ------
+*  Octal Buffer and Line Driver
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-247 to 2-250
+*  jds    5/23/94
+*
+.SUBCKT 74ALS231 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4 2G 2A1 2A2 2A3 2A4 
++   2Y1 2Y2 2Y3 2Y4
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74ALS231 LOGICEXP(8,8) DPWR DGND
++     1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++      1Y1_O 1Y2_O 1Y3_O 1Y4_O 2Y1_O 2Y2_O 2Y3_O  2Y4_O
++      D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    1Y1_O = { (~1A1)}
++    1Y2_O = { (~1A2)}
++    1Y3_O = { (~1A3)}
++    1Y4_O = { (~1A4)}
++    2Y1_O = { (~2A1)}
++    2Y2_O = { (~2A2)}
++    2Y3_O = { (~2A3)}
++    2Y4_O = { (~2A4)}
+
+Udly PINDLY (8,2,8) DPWR DGND
++    1Y1_O 1Y2_O 1Y3_O 1Y4_O 2Y1_O 2Y2_O 2Y3_O 2Y4_O
++    1GBAR 2G
++    1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++    1Y1 1Y2 1Y3 1Y4 2Y1 2Y2 2Y3 2Y4
++    IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA1 = {CHANGED(1A1,0) | CHANGED(1A2,0) | CHANGED(1A3,0) | CHANGED(1A4,0) }
++     DATA2 = {CHANGED(2A1,0) | CHANGED(2A2,0) | CHANGED(2A3,0) | CHANGED(2A4,0) }
++
++    TRISTATE:
++       ENABLE LO = 1GBAR
++          1Y1 1Y2 1Y3 1Y4  = {
++            CASE(
++                 DATA1 & TRN_LH, DELAY(-1,5ns,-1),
++                 DATA1 & TRN_HL, DELAY(-1,5ns,-1),
++                 TRN_ZH,  DELAY(-1,9ns,-1),
++                 TRN_ZL, DELAY(-1,10ns,-1),
++                 TRN_HZ, DELAY(-1,5ns,-1),
++                 TRN_LZ, DELAY(-1,6ns,-1),
++                 DELAY(-1,11ns,-1)
++                )
++            }
++    TRISTATE:
++       ENABLE HI = 2G
++          2Y1 2Y2 2Y3 2Y4  = {
++            CASE(
++                 DATA2 & TRN_LH, DELAY(-1,5ns,-1),
++                 DATA2 & TRN_HL, DELAY(-1,5ns,-1),
++                 TRN_ZH,  DELAY(-1,11ns,-1),
++                 TRN_ZL, DELAY(-1,12ns,-1),
++                 TRN_HZ, DELAY(-1,6ns,-1),
++                 TRN_LZ, DELAY(-1,7ns,-1),
++                 DELAY(-1,13ns,-1)
++                )
++            }
+
+.ENDS  74ALS231
+*
+*
+* ----------------------------------------------------------- 74AS231 ------
+*  Octal Buffer and Line Driver
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-247 to 2-250
+*  jds    5/23/94
+*
+.SUBCKT 74AS231 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4 2G 2A1 2A2 2A3 2A4 
++   2Y1 2Y2 2Y3 2Y4
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74AS231 LOGICEXP(8,8) DPWR DGND
++     1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++      1Y1_O 1Y2_O 1Y3_O 1Y4_O 2Y1_O 2Y2_O 2Y3_O  2Y4_O
++      D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    1Y1_O = { (~1A1)}
++    1Y2_O = { (~1A2)}
++    1Y3_O = { (~1A3)}
++    1Y4_O = { (~1A4)}
++    2Y1_O = { (~2A1)}
++    2Y2_O = { (~2A2)}
++    2Y3_O = { (~2A3)}
++    2Y4_O = { (~2A4)}
+
+Udly PINDLY (8,2,8) DPWR DGND
++    1Y1_O 1Y2_O 1Y3_O 1Y4_O 2Y1_O 2Y2_O 2Y3_O 2Y4_O
++    1GBAR 2G
++    1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++    1Y1 1Y2 1Y3 1Y4 2Y1 2Y2 2Y3 2Y4
++    IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA1 = {CHANGED(1A1,0) | CHANGED(1A2,0) | CHANGED(1A3,0) | CHANGED(1A4,0) }
++     DATA2 = {CHANGED(2A1,0) | CHANGED(2A2,0) | CHANGED(2A3,0) | CHANGED(2A4,0) }
++
++    TRISTATE:
++       ENABLE LO = 1GBAR
++          1Y1 1Y2 1Y3 1Y4  = {
++            CASE(
++                 DATA1 & TRN_LH, DELAY(2ns,-1,6.5ns),
++                 DATA1 & TRN_HL, DELAY(2ns,-1,5.7ns),
++                 TRN_ZH,  DELAY(2ns,-1,6.4ns),
++                 TRN_ZL, DELAY(2ns,-1,8.5ns),
++                 TRN_HZ, DELAY(2ns,-1,5ns),
++                 TRN_LZ, DELAY(2ns,-1,9.5ns),
++                 DELAY(3ns,-1,10.5ns)
++                )
++            }
++    TRISTATE:
++       ENABLE HI = 2G
++          2Y1 2Y2 2Y3 2Y4  = {
++            CASE(
++                 DATA2 & TRN_LH, DELAY(2ns,-1,6.5ns),
++                 DATA2 & TRN_HL, DELAY(2ns,-1,5.7ns),
++                 TRN_ZH,  DELAY(3ns,-1,6ns),
++                 TRN_ZL, DELAY(3ns,-1,9ns),
++                 TRN_HZ, DELAY(3ns,-1,6ns),
++                 TRN_LZ, DELAY(3ns,-1,7ns),
++                 DELAY(4ns,-1,10ns)
++                )
++            }
+
+.ENDS  74AS231
+*
+*
+* ----------------------------------------------------------- 74HC237 ------
+*  3-to-8 Line Decoder/Demultiplexer with Address Latch
+*
+*  The High Speed CMOS Logic, 1989,  TI, Pages 2-291 to 2-294
+*  jds    5/23/94
+*
+.SUBCKT 74HC237  GLBAR A B C G1 G2BAR Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74HC237 LOGICEXP(9,9) DPWR DGND
++      qa qabar qb qbbar qc qcbar G1 G2BAR GLBAR 
++      Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O latchgate
++      D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    latchgate = {(~GLBAR)}
++    en = { (G1 & ~G2BAR) }
++    Y0_O = { ( en & ((qabar & qbbar & qcbar) ^ GLBAR)) }
++    Y1_O = { ( en & ((qa & qbbar & qcbar) ^ GLBAR) ) }
++    Y2_O = { ( en & ((qabar & qb & qcbar) ^ GLBAR) ) }
++    Y3_O = { ( en & ((qa & qb & qcbar) ^ GLBAR) ) }
++    Y4_O = { ( en & ((qabar & qbbar & qc) ^ GLBAR) ) }
++    Y5_O = { ( en & ((qa & qbbar & qc ) ^ GLBAR) ) }
++    Y6_O = { ( en & ((qabar & qb & qc ) ^ GLBAR) ) }
++    Y7_O= { ( en & ((qa & qb & qc ) ^ GLBAR) ) }
+
+ufb3 DLTCH(3)  DPWR DGND
++    $D_HI $D_HI latchgate
++     A B C qa qb qc qabar qbbar qcbar
++     D0_GFF IO_HC
+
+
+Udly PINDLY (8,0,6) DPWR DGND
++    Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O
++    A B C G2BAR G1 GLBAR
++    Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++    IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) }
++     GATE = { CHANGED(GLBAR,0) }
++     OUTEN1 = { CHANGED(G1,0) }
++     OUTEN2 = { CHANGED(G2BAR,0) }
++
++    PINDLY:
++       Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  = {
++            CASE(
++                 DATA, DELAY(-1,23ns,38ns),
++                 OUTEN2, DELAY(-1,18ns,29ns),
++                 OUTEN1,  DELAY(-1,18ns,29ns),
++                 GATE, DELAY(-1,24ns,38ns),
++                 DELAY(3ns,-1,10.5ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(4) DPWR DGND
++          A B C GLBAR
++          IO_HC
++
++      WIDTH:
++         NODE = GLBAR 
++         MIN_LO = 16ns
++      SETUP_HOLD:
++        CLOCK LH = GLBAR
++        DATA(3) =  A B C
++        SETUPTIME = 15ns
++        HOLDTIME = 5ns
+
+.ENDS  74HC237
+*
+*
+* ----------------------------------------------------------- 74HCT237 ------
+*  3-to-8 Line Decoder/Demultiplexer w Address Latch
+*
+*  The High Speed CMOS Logic, 1989,  TI, Pages 2-291 to 2-294
+*  jds    5/23/94
+*
+.SUBCKT 74HCT237  GLBAR A B C G1 G2BAR Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74HCT237 LOGICEXP(9,9) DPWR DGND
++      qa qabar qb qbbar qc qcbar G1 G2BAR GLBAR 
++      Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O latchgate
++      D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    latchgate = {(~GLBAR)}
++    en = { (G1 & ~G2BAR) }
++    Y0_O = { ( en & ((qabar & qbbar & qcbar) ^ GLBAR)) }
++    Y1_O = { ( en & ((qa & qbbar & qcbar) ^ GLBAR) ) }
++    Y2_O = { ( en & ((qabar & qb & qcbar) ^ GLBAR) ) }
++    Y3_O = { ( en & ((qa & qb & qcbar) ^ GLBAR) ) }
++    Y4_O = { ( en & ((qabar & qbbar & qc) ^ GLBAR) ) }
++    Y5_O = { ( en & ((qa & qbbar & qc ) ^ GLBAR) ) }
++    Y6_O = { ( en & ((qabar & qb & qc ) ^ GLBAR) ) }
++    Y7_O= { ( en & ((qa & qb & qc ) ^ GLBAR) ) }
+
+ufb3 Dltch(3)  DPWR DGND
++    $D_HI $D_HI latchgate
++     A B C qa qb qc qabar qbbar qcbar
++     D0_gFF IO_HCT
+
+
+Udly PINDLY (8,0,6) DPWR DGND
++    Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O
++    A B C G2BAR G1 GLBAR
++    Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++    IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) }
++     GATE = { CHANGED(GLBAR,0) }
++     OUTEN1 = { CHANGED(G1,0) }
++     OUTEN2 = { CHANGED(G2BAR,0) }
++
++    PINDLY:
++       Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  = {
++            CASE(
++                 DATA, DELAY(-1,24ns,38ns),
++                 OUTEN2, DELAY(-1,19ns,29ns),
++                 OUTEN1,  DELAY(-1,19ns,29ns),
++                 GATE, DELAY(-1,29ns,42ns),
++                 DELAY(3ns,-1,10.5ns)
++                )
++            }
+
+Ucnstr CONSTRAINT(4) DPWR DGND
++          A B C GLBAR
++          IO_HCT
++
++      WIDTH:
++         NODE = GLBAR 
++         MIN_LO = 26ns
++      SETUP_HOLD:
++        CLOCK LH = GLBAR
++        DATA(3) =  A B C
++        SETUPTIME = 15ns
++        HOLDTIME = 5ns
+
+.ENDS  74HCT237
+*
+*
+* ----------------------------------------------------------- 74AC238* ------
+*  3-to-8 Line Decoder/Demultiplexer 
+*
+*  The Advanced CMOS Logic Data Book, 1993,  TI, Pages 2-259 to 2-266
+*  jds    5/24/94
+*
+*     *  The actual part number appearing in the data book is: 74AC11238
+*
+.SUBCKT 74AC238 A  B C G1 G2ABAR G2BBAR Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74AC238 LOGICEXP(6,8) DPWR DGND
++      G1 G2ABAR G2BBAR A B C 
++      Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O 
++      D0_GATE IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    en = { (G1 & ~G2ABAR & ~G2BBAR) }
++    Y0_O = { ( en & ~A & ~B & ~C ) }
++    Y1_O = { ( en & A & ~B & ~C ) }
++    Y2_O = { ( en & ~A & B & ~C ) }
++    Y3_O = { ( en & A & B & ~C ) }
++    Y4_O = { ( en & ~A & ~B & C ) }
++    Y5_O = { ( en & A & ~B & C ) }
++    Y6_O = { ( en & ~A & B & C ) }
++    Y7_O = { ( en & A & B & C ) }
+
+Udly PINDLY (8,0,6) DPWR DGND
++    Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O
++    A B C G2ABAR G2BBAR G1
++    Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++    IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) }
++     EN1 = { CHANGED(G1,0) }
++     EN2 = { CHANGED(G2ABAR,0) | CHANGED(G2BBAR,0) }
++
++    PINDLY:
++       Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  = {
++            CASE(
++                 DATA & TRN_LH, DELAY(1.5ns,5.4ns,7.3ns),
++                 DATA & TRN_HL, DELAY(1.5ns,6.3ns,8.6ns),
++                 EN1 & TRN_LH, DELAY(1.5ns,5.2ns,6.9ns),
++                 EN1 & TRN_HL, DELAY(1.5ns,6.5ns,8.5ns),
++                 EN2 & TRN_LH, DELAY(1.5ns,5.6ns,7.5ns),
++                 EN2 & TRN_HL, DELAY(1.5ns,7.2ns,9.3ns),
++                 DELAY(2.5ns,8.2ns,10.3ns)
++                )
++            }
+
+.ENDS  74AC238
+*
+*
+* ----------------------------------------------------------- 74ACT238* ------
+*  3-to-8 Line Decoder/Demultiplexer 
+*
+*  The Advanced CMOS Logic Data Book, 1993,  TI, Pages 2-259 to 2-266
+*  jds    5/24/94
+*
+*     *  The actual part number appearing in the data book is: 74ACT11238
+*
+.SUBCKT 74ACT238 A  B C G1 G2ABAR G2BBAR Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74ACT238 LOGICEXP(6,8) DPWR DGND
++      G1 G2ABAR G2BBAR A B C 
++      Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O 
++      D0_GATE IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    en = { (G1 & ~G2ABAR & ~G2BBAR) }
++    Y0_O = { ( en & ~A & ~B & ~C ) }
++    Y1_O = { ( en & A & ~B & ~C ) }
++    Y2_O = { ( en & ~A & B & ~C ) }
++    Y3_O = { ( en & A & B & ~C ) }
++    Y4_O = { ( en & ~A & ~B & C ) }
++    Y5_O = { ( en & A & ~B & C ) }
++    Y6_O = { ( en & ~A & B & C ) }
++    Y7_O = { ( en & A & B & C ) }
+
+Udly PINDLY (8,0,6) DPWR DGND
++    Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O
++    A B C G2ABAR G2BBAR G1
++    Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++    IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) }
++     EN1 = { CHANGED(G1,0) }
++     EN2 = { CHANGED(G2ABAR,0) | CHANGED(G2BBAR,0) }
++
++    PINDLY:
++       Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  = {
++            CASE(
++                 DATA & TRN_LH, DELAY(1.5ns,5ns,8.6ns),
++                 DATA & TRN_HL, DELAY(1.5ns,5.7ns,9.7ns),
++                 EN1 & TRN_LH, DELAY(1.5ns,6ns,8.4ns),
++                 EN1 & TRN_HL, DELAY(1.5ns,6.9ns,10.2ns),
++                 EN2 & TRN_LH, DELAY(1.5ns,5.9ns,9ns),
++                 EN2 & TRN_HL, DELAY(1.5ns,7.8ns,10.7ns),
++                 DELAY(2.5ns,8.8ns,11.7ns)
++                )
++            }
+
+.ENDS  74ACT238
+*
+*
+* ----------------------------------------------------------- 74HC238 ------
+*  3-to-8 Line Decoder/Demultiplexer 
+*
+*  The High Speed CMOS Logic, 1989,  TI, Pages 2-299 to 2-302
+*  jds    5/23/94
+*
+.SUBCKT 74HC238 A B C G1 G2ABAR G2BBAR Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74HC238 LOGICEXP(6,8) DPWR DGND
++      G1 G2ABAR G2BBAR A B C 
++      Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O 
++      D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    en = { (G1 & ~G2ABAR & ~G2BBAR) }
++    Y0_O = { ( en & ~A & ~B & ~C ) }
++    Y1_O = { ( en & A & ~B & ~C ) }
++    Y2_O = { ( en & ~A & B & ~C ) }
++    Y3_O = { ( en & A & B & ~C ) }
++    Y4_O = { ( en & ~A & ~B & C ) }
++    Y5_O = { ( en & A & ~B & C ) }
++    Y6_O = { ( en & ~A & B & C ) }
++    Y7_O = { ( en & A & B & C ) }
+
+Udly PINDLY (8,0,6) DPWR DGND
++    Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O
++    A B C G2ABAR G2BBAR G1
++    Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++    IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) }
++     EN = { CHANGED(G1,0) | CHANGED(G2ABAR,0) | CHANGED(G2BBAR,0) }
++
++    PINDLY:
++       Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  = {
++            CASE(
++                 DATA, DELAY(-1,20ns,36ns),
++                 EN, DELAY(-1,17ns,31ns),
++                 DELAY(-1,18ns,37ns)
++                )
++            }
+
+.ENDS  74HC238
+*
+*
+* ----------------------------------------------------------- 74HCT238 ------
+*  3-to-8 Line Decoder/Demultiplexer 
+*
+*  The High Speed CMOS Logic, 1989,  TI, Pages 2-303 to 2-306
+*  jds    5/24/94
+*
+.SUBCKT 74HCT238 A B C G1 G2ABAR G2BBAR Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74HCT238 LOGICEXP(6,8) DPWR DGND
++      G1 G2ABAR G2BBAR A B C 
++      Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O 
++      D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    en = { (G1 & ~G2ABAR & ~G2BBAR) }
++    Y0_O = { ( en & ~A & ~B & ~C ) }
++    Y1_O = { ( en & A & ~B & ~C ) }
++    Y2_O = { ( en & ~A & B & ~C ) }
++    Y3_O = { ( en & A & B & ~C ) }
++    Y4_O = { ( en & ~A & ~B & C ) }
++    Y5_O = { ( en & A & ~B & C ) }
++    Y6_O = { ( en & ~A & B & C ) }
++    Y7_O = { ( en & A & B & C ) }
+
+Udly PINDLY (8,0,6) DPWR DGND
++    Y0_O Y1_O Y2_O Y3_O Y4_O Y5_O Y6_O Y7_O
++    A B C G2ABAR G2BBAR G1
++    Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7
++    IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(A,0) | CHANGED(B,0) | CHANGED(C,0) }
++     EN = { CHANGED(G1,0) | CHANGED(G2ABAR,0) | CHANGED(G2BBAR,0) }
++
++    PINDLY:
++       Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  = {
++            CASE(
++                 DATA, DELAY(-1,21ns,36ns),
++                 EN, DELAY(-1,21ns,33ns),
++                 DELAY(-1,22ns,37ns)
++                )
++            }
+
+.ENDS  74HCT238
+*
+*
+* ----------------------------------------------------------- 74HC239 ------
+*  Dual 2-to-4 Line Decoder/Demultiplexer 
+*
+*  The High Speed CMOS Logic, 1989,  TI, Pages 2-307 to 2-309
+*  jds    5/24/94
+*
+.SUBCKT 74HC239 1A 1B 1GBAR 2A 2B 2GBAR 1Y0 1Y1 1Y2 1Y3 2Y0 2Y1 2Y2 2Y3
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: MNTYMXDLY=0 IO_LEVEL=0
+
+U74HC239 LOGICEXP(6,8) DPWR DGND
++      1A 1B 1GBAR 2A 2B 2GBAR
++      1Y0_O 1Y1_O 1Y2_O 1Y3_O 2Y0_O 2Y1_O 2Y2_O 2Y3_O 
++      D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    LOGIC:
++    1Y0_O = { ( ~1GBAR & ~1A & ~1B ) }
++    1Y1_O = { ( ~1GBAR & 1A & ~1B ) }
++    1Y2_O = { ( ~1GBAR & ~1A & 1B ) }
++    1Y3_O = { ( ~1GBAR & 1A & 1B ) }
++    2Y0_O = { ( ~2GBAR & ~2A & ~2B ) }
++    2Y1_O = { ( ~2GBAR & 2A & ~2B ) }
++    2Y2_O = { ( ~2GBAR & ~2A & 2B ) }
++    2Y3_O = { ( ~2GBAR & 2A & 2B ) }
+
+Udly PINDLY (8,0,6) DPWR DGND
++    1Y0_O 1Y1_O 1Y2_O 1Y3_O 2Y0_O 2Y1_O 2Y2_O 2Y3_O
++    1A 1B 1GBAR 2A 2B 2GBAR
++    1Y0 1Y1 1Y2 1Y3 2Y0 2Y1 2Y2 2Y3
++    IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     DATA = { CHANGED(1A,0) | CHANGED(1B,0) | CHANGED(2A,0) | CHANGED(2B,0) }
++     GEN = { CHANGED(1GBAR,0) | CHANGED(2GBAR,0) }
++
++    PINDLY:
++      1Y0 1Y1 1Y2 1Y3 2Y0 2Y1 2Y2 2Y3  = {
++            CASE(
++                 DATA, DELAY(-1,18ns,30ns),
++                 GEN, DELAY(-1,14ns,24ns),
++                 DELAY(-1,19ns,31ns)
++                )
++            }
+
+.ENDS  74HC239
+*
+*
+* ----------------------------------------------------------- 74AC240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FACT Advanced Logic Data Book, 1989, National Semiconductor 
+*  jds    5/24/94                                                           Pages 4-126 to 4-130
+*
+.SUBCKT 74AC240 OE1BAR I0 I1 I2 I3 O0BAR O1BAR O2BAR O3BAR
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0BAR O1BAR O2BAR O3BAR
++     DLY_MOD IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=4.5ns TPLHMX=6.5ns 
++                                             TPHLMN=1.5ns TPHLTY=4.5ns TPHLMX=6ns
++                                             TPZLMN=1.5ns TPZLTY=5.5ns  TPZLMX=8ns
++                                             TPZHMN=1.5ns TPZHTY=5ns  TPZHMX=7ns
++                                             TPLZMN=1.5ns  TPLZTY=6.5ns TPLZMX=9ns
++                                             TPHZMN=1.5ns TPHZTY=6.5ns TPHZMX=9ns)
+
+.ENDS 74AC240
+*
+*
+* ----------------------------------------------------------- 74ACT240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FACT Advanced Logic Data Book, 1989, National Semiconductor 
+*  jds    5/24/94                                                           Pages 4-126 to 4-130
+*
+.SUBCKT 74ACT240 OE1BAR I0 I1 I2 I3 O0BAR O1BAR O2BAR O3BAR
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0BAR O1BAR O2BAR O3BAR
++     DLY_MOD IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=6ns TPLHMX=8.5ns 
++                                             TPHLMN=1.5ns TPHLTY=5.5ns TPHLMX=7.5ns
++                                             TPZLMN=2ns TPZLTY=7ns  TPZLMX=9.5ns
++                                             TPZHMN=1.5ns TPZHTY=7ns  TPZHMX=8.5ns
++                                             TPLZMN=2.5ns  TPLZTY=6.5ns TPLZMX=10ns
++                                             TPHZMN=2ns TPHZTY=8ns TPHZMX=9.5ns)
+
+.ENDS 74ACT240
+
+*-------------------------------------------------------------74ALS240----
+
+* Octal Buffers and Line Drivers with Tri-State Outputs
+* Motorola Schottky TTL Logic Data Book, 1983, pages 5-65 to 5-67
+* jat 8/20/96
+
+.SUBCKT 74ALS240 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 INVA(4) DPWR DGND
++ 1A1 1A2 1A3 1A4
++ W X Y Z
++ D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 PINDLY(4,1,0) DPWR DGND
++ W X Y Z
++ 1GBAR
++ 1Y1 1Y2 1Y3 1Y4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = 1GBAR
++     1Y1 1Y2 1Y3 1Y4 = {
++       CASE(
++         TRN_ZH, DELAY(5NS,-1,20NS),
++         TRN_ZL, DELAY(5NS,-1,28NS),
++         TRN_HZ, DELAY(2NS,-1,13NS),
++         TRN_LZ, DELAY(3NS,-1,17NS),
++         TRN_LH, DELAY(3NS,-1,10NS),
++         TRN_HL, DELAY(2NS,-1,9NS),
++         DELAY(6NS,-1,29NS))}
+
+.ENDS 74ALS240
+
+* ----------------------------------------------------------- 74ALS240A ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-265 to 2-282
+*  jds    5/24/94
+*
+.SUBCKT 74ALS240A 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=6ns TPLHMX=-1
++                                             TPHLMN=-1 TPHLTY=5ns TPHLMX=-1
++                                             TPZLMN=-1 TPZLTY=10ns  TPZLMX=-1
++                                             TPZHMN=-1 TPZHTY=9ns  TPZHMX=-1
++                                             TPLZMN=-1  TPLZTY=7ns TPLZMX=-1
++                                             TPHZMN=-1 TPHZTY=6ns TPHZMX=-1)
+
+.ENDS 74ALS240A
+
+*-------------------------------------------------------------74ALS240A-1----
+
+* Octal Tri-State Bus Driver
+* National Advanced Bipolar Logic Data Book, 1995, pages 9-91 to 9-94
+* jat 8/21/96
+
+.SUBCKT 74ALS240A-1 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 INVA(4) DPWR DGND
++ 1A1 1A2 1A3 1A4
++ W X Y Z
++ D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 PINDLY(4,1,0) DPWR DGND
++ W X Y Z
++ 1GBAR
++ 1Y1 1Y2 1Y3 1Y4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = 1GBAR
++     1Y1 1Y2 1Y3 1Y4 = {
++       CASE(
++         TRN_ZH, DELAY(3NS,-1,13NS),
++         TRN_ZL, DELAY(3NS,-1,18NS),
++         TRN_HZ, DELAY(2NS,-1,10NS),
++         TRN_LZ, DELAY(3NS,-1,12NS),
++         TRN_LH, DELAY(2NS,-1,9NS),
++         TRN_HL, DELAY(2NS,-1,9NS),
++         DELAY(4NS,-1,19NS))}
+
+.ENDS 74ALS240A-1
+
+* ----------------------------------------------------------- 74AS240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-265 to 2-282
+*  jds    5/24/94
+*
+.SUBCKT 74AS240 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2ns TPLHTY=-1 TPLHMX=6.5ns
++                                             TPHLMN=2ns TPHLTY=-1 TPHLMX=5.7ns
++                                             TPZLMN=2ns TPZLTY=-1  TPZLMX=9ns
++                                             TPZHMN=2ns TPZHTY=-1  TPZHMX=6.4ns
++                                             TPLZMN=2ns  TPLZTY=-1 TPLZMX=9.5ns 
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=5ns)
+
+.ENDS 74AS240
+*
+*
+* ----------------------------------------------------------- 74F240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FAST Advanced Schottkty TTL Logic Data Book, 1988, National Semiconductor 
+*  jds    5/24/94                                                           Pages 4-187 to 4-190
+*
+.SUBCKT 74F240 OE1BAR I0 I1 I2 I3 O0BAR O1BAR O2BAR O3BAR
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0BAR O1BAR O2BAR O3BAR
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=3ns TPLHTY=5.1ns TPLHMX=7ns 
++                                             TPHLMN=2ns TPHLTY=3.5ns TPHLMX=4.7ns
++                                             TPZLMN=4ns TPZLTY=6.9ns  TPZLMX=9ns
++                                             TPZHMN=2ns TPZHTY=3.5ns  TPZHMX=7ns
++                                             TPLZMN=2ns  TPLZTY=6ns TPLZMX=8ns
++                                            TPHZMN=2ns TPHZTY=4ns TPHZMX=5.3ns)
+
+.ENDS 74F240
+*
+*
+* ----------------------------------------------------------- 74HC240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-311 to 2-316
+*  jds    5/24/94
+*
+.SUBCKT 74HC240 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=10ns TPLHMX=20ns 
++                                             TPHLMN=-1 TPHLTY=10ns TPHLMX=20ns
++                                             TPZLMN=-1 TPZLTY=15ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=30ns
++                                             TPLZMN=-1  TPLZTY=22ns TPLZMX=30ns
++                                             TPHZMN=-1 TPHZTY=22ns TPHZMX=30ns)
+
+.ENDS 74HC240
+
+*-------------------------------------------------------------74HC240A----
+
+* Octal 3-State Inverting Buffer/Line Driver/Line Receiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-228 to 5-231
+* jat 9/10/96
+
+.SUBCKT 74HC240A A1 A2 A3 A4 ENABA YA1 YA2 YA3 YA4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 INVA(4) DPWR DGND
++ A1 A2 A3 A4
++ YA1O YA2O YA3O YA4O
++ D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 PINDLY(4,1,0) DPWR DGND
++ YA1O YA2O YA3O YA4O
++ ENABA
++ YA1 YA2 YA3 YA4
++ IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = ENABA
++     YA1 YA2 YA3 YA4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,22NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,16NS),
++         DELAY(-1,-1,23NS))}
+
+.ENDS 74HC240A
+
+* ----------------------------------------------------------- 74HCT240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-317 to 2-320
+*  jds    5/24/94
+*
+.SUBCKT 74HCT240 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=13ns TPLHMX=25ns 
++                                             TPHLMN=-1 TPHLTY=13ns TPHLMX=25ns
++                                             TPZLMN=-1 TPZLTY=21ns  TPZLMX=35ns
++                                             TPZHMN=-1 TPZHTY=21ns  TPZHMX=35ns
++                                             TPLZMN=-1  TPLZTY=19ns TPLZMX=35ns
++                                             TPHZMN=-1 TPHZTY=19ns TPHZMX=35ns)
+
+.ENDS 74HCT240
+
+*-------------------------------------------------------------74HCT240A----
+
+* Octal 3-State Inverting Buffer/Line Driver/Line Receiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-232 to 5-235
+* jat 9/10/96
+
+.SUBCKT 74HCT240A A1 A2 A3 A4 ENABA YA1 YA2 YA3 YA4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 INVA(4) DPWR DGND
++ A1 A2 A3 A4
++ YA1O YA2O YA3O YA4O
++ D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 PINDLY(4,1,0) DPWR DGND
++ YA1O YA2O YA3O YA4O
++ ENABA
++ YA1 YA2 YA3 YA4
++ IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = ENABA
++     YA1 YA2 YA3 YA4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,25NS),
++         TRN_$Z, DELAY(-1,-1,28NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,20NS),
++         DELAY(-1,-1,29NS))}
+
+.ENDS 74HCT240A
+
+* ----------------------------------------------------------- 74LS240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-692 to 2-699
+*  jds    5/24/94
+*
+.SUBCKT 74LS240 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=9ns TPLHMX=14ns 
++                                             TPHLMN=-1 TPHLTY=12ns TPHLMX=18ns
++                                             TPZLMN=-1 TPZLTY=20ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=23ns
++                                             TPLZMN=-1  TPLZTY=10ns TPLZMX=20ns
++                                             TPHZMN=-1 TPHZTY=15ns TPHZMX=25ns)
+
+.ENDS 74LS240
+*
+*
+* ----------------------------------------------------------- 74S240 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-692 to 2-699
+*  jds    5/24/94
+*
+.SUBCKT 74S240 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_S_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_S_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=4.5ns TPLHMX=7ns 
++                                             TPHLMN=-1 TPHLTY=4.5ns TPHLMX=7ns
++                                             TPZLMN=-1 TPZLTY=10ns  TPZLMX=15ns
++                                             TPZHMN=-1 TPZHTY=6.5ns  TPZHMX=10ns
++                                             TPLZMN=-1  TPLZTY=10ns TPLZMX=15ns
++                                             TPHZMN=-1 TPHZTY=6ns TPHZMX=9ns)
+
+.ENDS 74S240
+*
+*
+* ----------------------------------------------------------- 74AC241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FACT Advanced Logic Data Book, 1989, National Semiconductor
+*  jds    5/24/94   Pages 4-130 to 4-134
+*
+.SUBCKT 74AC241 OE1BAR I0 I1 I2 I3 O0 O1 O2 O3
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0 O1 O2 O3
++     DLY_MOD IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=5ns TPLHMX=7ns
++                      TPHLMN=1.5ns TPHLTY=4.5ns TPHLMX=7ns
++                      TPZLMN=1.5ns TPZLTY=5.5ns  TPZLMX=9ns
++                      TPZHMN=1.5ns TPZHTY=5.5ns  TPZHMX=9ns
++                      TPLZMN=1.5ns  TPLZTY=6ns TPLZMX=10ns
++                      TPHZMN=1.5ns TPHZTY=6.5ns TPHZMX=10ns)
+
+.ENDS 74AC241
+*
+*
+* ----------------------------------------------------------- 74ACT241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FACT Advanced Logic Data Book, 1989, National Semiconductor
+*  jds    5/24/94    Pages 4-130 to 4-134
+*
+.SUBCKT 74ACT241 OE1BAR I0 I1 I2 I3 O0 O1 O2 O3
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0 O1 O2 O3
++     DLY_MOD IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=6.5ns TPLHMX=9ns
++                      TPHLMN=1.5ns TPHLTY=7ns TPHLMX=9ns
++                      TPZLMN=1.5ns TPZLTY=7ns  TPZLMX=10ns
++                      TPZHMN=1.5ns TPZHTY=6ns  TPZHMX=9ns
++                      TPLZMN=2ns  TPLZTY=7ns TPLZMX=10.5ns
++                      TPHZMN=1.5ns TPHZTY=8ns TPHZMX=10.5ns)
+
+.ENDS 74ACT241
+
+*-------------------------------------------------------------74ALS241----
+
+* Octal Buffers and Line Drivers with Tri-State Outputs
+* Motorola Schottky TTL Logic Data Book, 1983, pages 5-65 to 5-67
+* jat 8/20/96
+
+.SUBCKT 74ALS241 1GBAR 2G 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4 2A1 2A2 2A3 2A4
++ 2Y1 2Y2 2Y3 2Y4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(8,2,0) DPWR DGND
++ 1A1 1A2 1A3 1A4 2A1 2A2 2A3 2A4
++ 1GBAR 2G
++ 1Y1 1Y2 1Y3 1Y4 2Y1 2Y2 2Y3 2Y4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = 1GBAR
++     1Y1 1Y2 1Y3 1Y4 = {
++       CASE(
++         TRN_ZH, DELAY(7NS,-1,21NS),
++         TRN_ZL, DELAY(7NS,-1,21NS),
++         TRN_HZ, DELAY(2NS,-1,16NS),
++         TRN_LZ, DELAY(3NS,-1,20NS),
++         TRN_LH, DELAY(3NS,-1,12NS),
++         TRN_HL, DELAY(3NS,-1,10NS),
++         DELAY(8NS,-1,22NS))}
++ TRISTATE:
++   ENABLE HI = 2G
++     2Y1 2Y2 2Y3 2Y4 = {
++       CASE(
++         TRN_ZH, DELAY(7NS,-1,21NS),
++         TRN_ZL, DELAY(7NS,-1,21NS),
++         TRN_HZ, DELAY(2NS,-1,16NS),
++         TRN_LZ, DELAY(3NS,-1,20NS),
++         TRN_LH, DELAY(3NS,-1,12NS),
++         TRN_HL, DELAY(3NS,-1,10NS),
++         DELAY(8NS,-1,22NS))}
+
+.ENDS 74ALS241
+
+* ----------------------------------------------------------- 74ALS241A ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-265 to 2-282
+*  jds    5/24/94
+*
+.SUBCKT 74ALS241A 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=3ns TPLHTY=-1 TPLHMX=11ns
++                      TPHLMN=3ns TPHLTY=-1 TPHLMX=10ns
++                      TPZLMN=7ns TPZLTY=-1  TPZLMX=21ns
++                      TPZHMN=7ns TPZHTY=-1  TPZHMX=21ns
++                      TPLZMN=3ns  TPLZTY=-1 TPLZMX=15ns
++                      TPHZMN=2ns TPHZTY=-1 TPHZMX=10ns)
+
+.ENDS 74ALS241A
+*
+*
+* ----------------------------------------------------------- 74AS241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-265 to 2-282
+*  jds    5/24/94
+*
+.SUBCKT 74AS241 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2ns TPLHTY=-1 TPLHMX=6.2ns
++                      TPHLMN=2ns TPHLTY=-1 TPHLMX=6.2ns
++                      TPZLMN=2ns TPZLTY=-1  TPZLMX=7.5ns
++                      TPZHMN=2ns TPZHTY=-1  TPZHMX=9ns
++                      TPLZMN=2ns  TPLZTY=-1 TPLZMX=9ns
++                      TPHZMN=2ns TPHZTY=-1 TPHZMX=6ns)
+
+.ENDS 74AS241
+*
+*
+* ----------------------------------------------------------- 74F241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FAST Advanced Schottkty TTL Logic Data Book, 1988, National Semiconductor
+*  jds    5/24/94     Pages 4-187 to 4-190
+*
+.SUBCKT 74F241 OE1BAR I0 I1 I2 I3 O0 O1 O2 O3
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0 O1 O2 O3
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2.5ns TPLHTY=4ns TPLHMX=5.2ns
++                      TPHLMN=2.5ns TPHLTY=4ns TPHLMX=5.2ns
++                      TPZLMN=2ns TPZLTY=5.4ns  TPZLMX=7ns
++                      TPZHMN=2ns TPZHTY=4.3ns  TPZHMX=5.7ns
++                      TPLZMN=2ns  TPLZTY=4.5ns TPLZMX=6ns
++                      TPHZMN=2ns TPHZTY=4.5ns TPHZMX=6ns)
+
+.ENDS 74F241
+*
+*
+* ----------------------------------------------------------- 74HC241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-311 to 2-316
+*  jds    5/24/94
+*
+.SUBCKT 74HC241 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=12ns TPLHMX=23ns
++                      TPHLMN=-1 TPHLTY=12ns TPHLMX=23ns
++                      TPZLMN=-1 TPZLTY=17ns  TPZLMX=30ns
++                      TPZHMN=-1 TPZHTY=17ns  TPZHMX=30ns
++                      TPLZMN=-1  TPLZTY=18ns TPLZMX=30ns
++                      TPHZMN=-1 TPHZTY=18ns TPHZMX=30ns)
+
+.ENDS 74HC241
+
+*-------------------------------------------------------------74HC241A----
+
+* Octal 3-State Noninverting Buffer/Line Driver/Line Receiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-236 to 5-239
+* jat 9/10/96
+
+.SUBCKT 74HC241A ENABA ENABB A1 A2 A3 A4 B1 B2 B3 B4 YA1 YA2 YA3 YA4 YB1 YB2 YB3 YB4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(8,2,0) DPWR DGND
++ A1 A2 A3 A4 B1 B2 B3 B4
++ ENABA ENABB
++ YA1 YA2 YA3 YA4 YB1 YB2 YB3 YB4
++ IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = ENABA
++     YA1 YA2 YA3 YA4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,22NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,18NS),
++         DELAY(-1,-1,23NS))}
++ TRISTATE:
++   ENABLE HI = ENABB
++     YB1 YB2 YB3 YB4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,22NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,18NS),
++         DELAY(-1,-1,23NS))}
+
+.ENDS 74HC241A
+
+* ----------------------------------------------------------- 74HCT241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-317 to 2-320
+*  jds    5/24/94
+*
+.SUBCKT 74HCT241 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=13ns TPLHMX=25ns
++                      TPHLMN=-1 TPHLTY=13ns TPHLMX=25ns
++                      TPZLMN=-1 TPZLTY=21ns  TPZLMX=35ns
++                      TPZHMN=-1 TPZHTY=21ns  TPZHMX=35ns
++                      TPLZMN=-1  TPLZTY=19ns TPLZMX=35ns
++                      TPHZMN=-1 TPHZTY=19ns TPHZMX=35ns)
+
+.ENDS 74HCT241
+
+*-------------------------------------------------------------74HCT241A----
+
+* Octal 3-State Noninverting Buffer/Line Driver/Line Receiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-240 to 5-243
+* jat 9/10/96
+
+.SUBCKT 74HCT241A ENABA ENABB A1 A2 A3 A4 B1 B2 B3 B4 YA1 YA2 YA3 YA4 YB1 YB2 YB3 YB4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(8,2,0) DPWR DGND
++ A1 A2 A3 A4 B1 B2 B3 B4
++ ENABA ENABB
++ YA1 YA2 YA3 YA4 YB1 YB2 YB3 YB4
++ IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = ENABA
++     YA1 YA2 YA3 YA4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,26NS),
++         TRN_$Z, DELAY(-1,-1,30NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,23NS),
++         DELAY(-1,-1,31NS))}
++ TRISTATE:
++   ENABLE HI = ENABB
++     YB1 YB2 YB3 YB4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,26NS),
++         TRN_$Z, DELAY(-1,-1,30NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,23NS),
++         DELAY(-1,-1,31NS))}
+
+.ENDS 74HCT241A
+
+* ----------------------------------------------------------- 74LS241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-692 to 2-699
+*  jds    5/24/94
+*
+.SUBCKT 74LS241 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=12ns TPLHMX=18ns
++                      TPHLMN=-1 TPHLTY=12ns TPHLMX=18ns
++                      TPZLMN=-1 TPZLTY=20ns  TPZLMX=30ns
++                      TPZHMN=-1 TPZHTY=15ns  TPZHMX=23ns
++                      TPLZMN=-1  TPLZTY=10ns TPLZMX=20ns
++                      TPHZMN=-1 TPHZTY=15ns TPHZMX=25ns)
+
+.ENDS 74LS241
+*
+*
+* ----------------------------------------------------------- 74S241 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-692 to 2-699
+*  jds    5/24/94
+*
+.SUBCKT 74S241 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_S_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_S_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=6ns TPLHMX=9ns
++                      TPHLMN=-1 TPHLTY=6ns TPHLMX=9ns
++                      TPZLMN=-1 TPZLTY=10ns  TPZLMX=15ns
++                      TPZHMN=-1 TPZHTY=8ns  TPZHMX=12ns
++                      TPLZMN=-1  TPLZTY=10ns TPLZMX=15ns
++                      TPHZMN=-1 TPHZTY=6ns TPHZMX=9ns)
+
+.ENDS 74S241
+
+*-------------------------------------------------------------74ALS242----
+
+* Quadruple Bus Transceivers with Tri-State Outputs
+* Motorola Schottky TTL Logic Data Book, 1983, pages 5-68 to 5-70
+* jat 8/20/96
+
+.SUBCKT 74ALS242 A1 A2 A3 A4 B1 B2 B3 B4 GBA GABBAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 INVA(8) DPWR DGND
++ A1 A2 A3 A4 B1 B2 B3 B4
++ B1O B2O B3O B4O A1O A2O A3O A4O
++ D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 PINDLY(8,2,0) DPWR DGND
++ B1O B2O B3O B4O A1O A2O A3O A4O
++ GBA GABBAR
++ B1 B2 B3 B4 A1 A2 A3 A4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = GABBAR
++     B1 B2 B3 B4 = {
++       CASE(
++         TRN_ZH, DELAY(4NS,-1,22NS),
++         TRN_ZL, DELAY(7NS,-1,30NS),
++         TRN_HZ, DELAY(2NS,-1,16NS),
++         TRN_LZ, DELAY(4NS,-1,25NS),
++         TRN_LH, DELAY(3NS,-1,11NS),
++         TRN_HL, DELAY(2NS,-1,10NS),
++         DELAY(8NS,-1,31NS))}
++ TRISTATE:
++   ENABLE HI = GBA
++     A1 A2 A3 A4 = {
++       CASE(
++         TRN_ZH, DELAY(4NS,-1,22NS),
++         TRN_ZL, DELAY(7NS,-1,30NS),
++         TRN_HZ, DELAY(2NS,-1,16NS),
++         TRN_LZ, DELAY(4NS,-1,25NS),
++         TRN_LH, DELAY(3NS,-1,11NS),
++         TRN_HL, DELAY(2NS,-1,10NS),
++         DELAY(8NS,-1,31NS))}
+
+.ENDS 74ALS242
+
+* ----------------------------------------------------------- 74ALS242B ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-271 to 2-276
+*  jds    5/25/94
+*
+.SUBCKT 74ALS242B GABBAR GBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     GABBAR GAB
++     D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     GAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 inv3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     GBA
++     A1 A2 A3 A4
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=5ns TPLHMX=-1
++                                             TPHLMN=-1 TPHLTY=5ns TPHLMX=-1
++                                             TPZLMN=-1 TPZLTY=11ns  TPZLMX=-1
++                                             TPZHMN=-1 TPZHTY=10ns  TPZHMX=-1
++                                             TPLZMN=-1  TPLZTY=5ns TPLZMX=-1
++                                             TPHZMN=-1 TPHZTY=6ns TPHZMX=-1)
+
+.ENDS 74ALS242B
+
+*-------------------------------------------------------------74ALS242C----
+
+* Quad Tri-State Bidirectional Bus Driver
+* National Advanced Bipolar Logic Databook, 1990, pages 2-120 to 2-123
+* jat 8/21/96
+
+.SUBCKT 74ALS242C A1 A2 A3 A4 B1 B2 B3 B4 GBA GABBAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 INVA(8) DPWR DGND
++ A1 A2 A3 A4 B1 B2 B3 B4
++ B1O B2O B3O B4O A1O A2O A3O A4O
++ D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+U2 PINDLY(8,2,0) DPWR DGND
++ B1O B2O B3O B4O A1O A2O A3O A4O
++ GBA GABBAR
++ B1 B2 B3 B4 A1 A2 A3 A4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = GABBAR
++     B1 B2 B3 B4 = {
++       CASE(
++         TRN_ZH, DELAY(4NS,-1,18NS),
++         TRN_ZL, DELAY(7NS,-1,21NS),
++         TRN_HZ, DELAY(2NS,-1,14NS),
++         TRN_LZ, DELAY(2NS,-1,15NS),
++         TRN_LH, DELAY(2NS,-1,11NS),
++         TRN_HL, DELAY(2NS,-1,10NS),
++         DELAY(8NS,-1,22NS))}
++ TRISTATE:
++   ENABLE HI = GBA
++     A1 A2 A3 A4 = {
++       CASE(
++         TRN_ZH, DELAY(4NS,-1,18NS),
++         TRN_ZL, DELAY(7NS,-1,21NS),
++         TRN_HZ, DELAY(2NS,-1,14NS),
++         TRN_LZ, DELAY(2NS,-1,15NS),
++         TRN_LH, DELAY(2NS,-1,11NS),
++         TRN_HL, DELAY(2NS,-1,10NS),
++         DELAY(8NS,-1,22NS))}
+
+.ENDS 74ALS242C
+
+* ----------------------------------------------------------- 74AS242 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-271 to 2-276
+*  jds    5/25/94
+*
+.SUBCKT 74AS242 GABBAR GBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     GABBAR GAB
++     D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     GAB
++     B1 B2 B3 B4 
++     DLY_MODA IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 inv3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     GBA
++     A1 A2 A3 A4
++     DLY_MODB IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MODA utgate (TPLHMN=2ns TPLHTY=-1 TPLHMX=6.5ns
++                                             TPHLMN=2ns TPHLTY=-1 TPHLMX=5.7ns
++                                             TPZLMN=2ns TPZLTY=-1  TPZLMX=7.5ns
++                                             TPZHMN=2ns TPZHTY=-1  TPZHMX=5.5ns
++                                             TPLZMN=2ns  TPLZTY=-1 TPLZMX=9.5ns   
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=6.5ns)
+
+.model DLY_MODB utgate (TPLHMN=2ns TPLHTY=-1 TPLHMX=6.5ns
++                                             TPHLMN=2ns TPHLTY=-1 TPHLMX=5.7ns
++                                             TPZLMN=3ns TPZLTY=-1  TPZLMX=8ns
++                                             TPZHMN=3ns TPZHTY=-1  TPZHMX=6ns
++                                             TPLZMN=3ns  TPLZTY=-1 TPLZMX=10.5ns   
++                                             TPHZMN=3ns TPHZTY=-1 TPHZMX=6ns)
+
+.ENDS 74AS242
+*
+*
+* ----------------------------------------------------------- 74F242 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The F Logic Data Book, 1994, TI Pages 2-165 to 2-168
+*  jds    5/25/94
+*
+.SUBCKT 74F242 OEABBAR OEBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OEABBAR OEAB
++     D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     OEAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 inv3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     OEBA
++     A1 A2 A3 A4
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2.2ns TPLHTY=4.1ns TPLHMX=6.5ns
++                                             TPHLMN=1ns TPHLTY=2.6ns TPHLMX=4.5ns
++                                             TPZLMN=2.7ns TPZLTY=5.6ns  TPZLMX=7.5ns
++                                             TPZHMN=2.7ns TPZHTY=6.1ns  TPZHMX=9ns
++                                             TPLZMN=1.8ns  TPLZTY=6.6ns TPLZMX=9ns   
++                                             TPHZMN=2.7ns TPHZTY=5.6ns TPHZMX=9.5ns)
+
+.ENDS 74F242
+*
+*
+* ----------------------------------------------------------- 74HC242 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-321 to 2-326
+*  jds    5/25/94
+*
+.SUBCKT 74HC242 G1 G2 A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inva(2) DPWR DGND
++     G1 G2 G1i1 G2i1 
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 or(2) DPWR DGND
++     G1i1 G2i1 G1i2
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 nand(2) DPWR DGND
++     G1i1 G2i1 G2i2
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf3  nora(2,2) DPWR DGND
++     G1i2 EAB G2i2 EBA EBA EAB
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf4 inv3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     EAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf5 inv3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     EBA
++     A1 A2 A3 A4
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=12ns TPLHMX=20ns
++                                             TPHLMN=-1 TPHLTY=12ns TPHLMX=20ns
++                                             TPZLMN=-1 TPZLTY=21ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=21ns  TPZHMX=30ns
++                                             TPLZMN=-1  TPLZTY=23ns TPLZMX=30ns   
++                                             TPHZMN=-1 TPHZTY=23ns TPHZMX=30ns)
+
+.ENDS 74HC242
+*
+*
+* ----------------------------------------------------------- 74HCT242 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Family, 1989, Philips, Pages 497 to 501
+*  jds    5/26/94
+*
+.SUBCKT 74HCT242 OEBAR OE A0 A1 A2 A3 B0 B1 B2 B3 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inva(2) DPWR DGND
++     OEBAR OE G1i1 G2i1 
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 or(2) DPWR DGND
++     G1i1 G2i1 G1i2
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 nand(2) DPWR DGND
++     G1i1 G2i1 G2i2
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf3  nora(2,2) DPWR DGND
++     G1i2 EAB G2i2 EBA EBA EAB
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf4 inv3a(4) DPWR DGND
++     A0 A1 A2 A3 
++     EAB
++     B0 B1 B2 B3 
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf5 inv3a(4) DPWR DGND
++     B0 B1 B2 B3 
++     EBA
++     A0 A1 A2 A3
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=7ns TPLHMX=15ns
++                                             TPHLMN=-1 TPHLTY=9ns TPHLMX=18ns
++                                             TPZLMN=-1 TPZLTY=12ns  TPZLMX=26ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=30ns
++                                             TPLZMN=-1  TPLZTY=15ns TPLZMX=26ns   
++                                             TPHZMN=-1 TPHZTY=19ns TPHZMX=30ns)
+
+.ENDS 74HCT242
+*
+*
+* ----------------------------------------------------------- 74LS242 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-697 to 2-700
+*  jds    5/25/94
+*
+.SUBCKT 74LS242 GABBAR GBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     GABBAR GAB
++     D0_GATE IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 inv3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     GAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 inv3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     GBA
++     A1 A2 A3 A4
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=9ns TPLHMX=14ns
++                                             TPHLMN=-1 TPHLTY=12ns TPHLMX=18ns
++                                             TPZLMN=-1 TPZLTY=20ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=23ns
++                                             TPLZMN=-1  TPLZTY=10ns TPLZMX=20ns
++                                             TPHZMN=-1 TPHZTY=15ns TPHZMX=25ns)
+
+.ENDS 74LS242
+
+*-------------------------------------------------------------74ALS243----
+
+* Quadruple Bus Transceivers with Tri-State Outputs
+* Motorola Schottky TTL Logic Data Book, 1983, pages 5-68 to 5-70
+* jat 8/20/96
+
+.SUBCKT 74ALS243 A1 A2 A3 A4 B1 B2 B3 B4 GBA GABBAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(8,2,0) DPWR DGND
++ A1 A2 A3 A4 B1 B2 B3 B4
++ GBA GABBAR
++ B1 B2 B3 B4 A1 A2 A3 A4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = GABBAR
++     B1 B2 B3 B4 = {
++       CASE(
++         TRN_ZH, DELAY(7NS,-1,23NS),
++         TRN_ZL, DELAY(7NS,-1,24NS),
++         TRN_HZ, DELAY(2NS,-1,18NS),
++         TRN_LZ, DELAY(4NS,-1,25NS),
++         TRN_LH, DELAY(4NS,-1,11NS),
++         TRN_HL, DELAY(4NS,-1,11NS),
++         DELAY(8NS,-1,25NS))}
++ TRISTATE:
++   ENABLE HI = GBA
++     A1 A2 A3 A4 = {
++       CASE(
++         TRN_ZH, DELAY(7NS,-1,23NS),
++         TRN_ZL, DELAY(7NS,-1,24NS),
++         TRN_HZ, DELAY(2NS,-1,18NS),
++         TRN_LZ, DELAY(4NS,-1,25NS),
++         TRN_LH, DELAY(4NS,-1,11NS),
++         TRN_HL, DELAY(4NS,-1,11NS),
++         DELAY(8NS,-1,25NS))}
+
+.ENDS 74ALS243
+
+* ----------------------------------------------------------- 74ALS243A ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-271 to 2-276
+*  jds    5/25/94
+*
+.SUBCKT 74ALS243A GABBAR GBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     GABBAR GAB
++     D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     GAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 buf3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     GBA
++     A1 A2 A3 A4
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=4ns TPLHTY=-1 TPLHMX=11ns
++                                             TPHLMN=4ns TPHLTY=-1 TPHLMX=11ns
++                                             TPZLMN=7ns TPZLTY=-1  TPZLMX=20ns
++                                             TPZHMN=7ns TPZHTY=-1  TPZHMX=20ns
++                                             TPLZMN=3ns  TPLZTY=-1 TPLZMX=22ns
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=14ns)
+
+.ENDS 74ALS243A
+*
+*
+* ----------------------------------------------------------- 74AS243 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-271 to 2-276
+*  jds    5/25/94
+*
+.SUBCKT 74AS243 GABBAR GBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     GABBAR GAB
++     D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     GAB
++     B1 B2 B3 B4 
++     DLY_MODA IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 buf3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     GBA
++     A1 A2 A3 A4
++     DLY_MODB IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MODA utgate (TPLHMN=3ns TPLHTY=-1 TPLHMX=7.5ns
++                                             TPHLMN=3ns TPHLTY=-1 TPHLMX=6.5ns
++                                             TPZLMN=2ns TPZLTY=-1  TPZLMX=7.5ns
++                                             TPZHMN=2ns TPZHTY=-1  TPZHMX=9ns
++                                             TPLZMN=2ns  TPLZTY=-1 TPLZMX=9ns   
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=6.5ns)
+
+.model DLY_MODB utgate (TPLHMN=3ns TPLHTY=-1 TPLHMX=7.5ns
++                                             TPHLMN=3ns TPHLTY=-1 TPHLMX=6.5ns
++                                             TPZLMN=3ns TPZLTY=-1  TPZLMX=8.5ns
++                                             TPZHMN=3ns TPZHTY=-1  TPZHMX=10.5ns
++                                             TPLZMN=3ns  TPLZTY=-1 TPLZMX=11ns   
++                                             TPHZMN=3ns TPHZTY=-1 TPHZMX=7ns)
+
+.ENDS 74AS243
+*
+*
+* ----------------------------------------------------------- 74F243 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The F Logic Data Book, 1994, TI Pages 2-169 to 2-172
+*  jds    5/25/94
+*
+.SUBCKT 74F243 OEABBAR OEBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OEABBAR OEAB
++     D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     OEAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 buf3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     OEBA
++     A1 A2 A3 A4
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.7ns TPLHTY=3.6ns TPLHMX=5.2ns
++                                             TPHLMN=1.7ns TPHLTY=3.6ns TPHLMX=5.2ns
++                                             TPZLMN=1.2ns TPZLTY=5.4ns  TPZLMX=7.5ns
++                                             TPZHMN=1.2ns TPZHTY=3.9ns  TPZHMX=5.7ns
++                                             TPLZMN=2ns  TPLZTY=4.5ns TPLZMX=6ns   
++                                             TPHZMN=1.2ns TPHZTY=4.1ns TPHZMX=6ns)
+
+.ENDS 74F243
+*
+*
+* ----------------------------------------------------------- 74HC243 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-321 to 2-326
+*  jds    5/25/94
+*
+.SUBCKT 74HC243 G1 G2 A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inva(2) DPWR DGND
++     G1 G2 G1i1 G2i1 
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 or(2) DPWR DGND
++     G1i1 G2i1 G1i2
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 nand(2) DPWR DGND
++     G1i1 G2i1 G2i2
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf3  nora(2,2) DPWR DGND
++     G1i2 EAB G2i2 EBA EBA EAB
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf4 buf3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     EAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf5 buf3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     EBA
++     A1 A2 A3 A4
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=12ns TPLHMX=20ns
++                                             TPHLMN=-1 TPHLTY=12ns TPHLMX=20ns
++                                             TPZLMN=-1 TPZLTY=21ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=21ns  TPZHMX=30ns
++                                             TPLZMN=-1  TPLZTY=23ns TPLZMX=30ns   
++                                             TPHZMN=-1 TPHZTY=23ns TPHZMX=30ns)
+
+.ENDS 74HC243
+*
+*
+* ----------------------------------------------------------- 74HCT243 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Family, 1989, Philips, Pages 503 to 507
+*  jds    5/26/94
+*
+.SUBCKT 74HCT243 OEBAR OE A0 A1 A2 A3 B0 B1 B2 B3 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inva(2) DPWR DGND
++     OEBAR OE G1i1 G2i1 
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 or(2) DPWR DGND
++     G1i1 G2i1 G1i2
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 nand(2) DPWR DGND
++     G1i1 G2i1 G2i2
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf3  nora(2,2) DPWR DGND
++     G1i2 EAB G2i2 EBA EBA EAB
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf4 buf3a(4) DPWR DGND
++     A0 A1 A2 A3 
++     EAB
++     B0 B1 B2 B3 
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf5 buf3a(4) DPWR DGND
++     B0 B1 B2 B3 
++     EBA
++     A0 A1 A2 A3
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=6ns TPLHMX=15ns
++                                             TPHLMN=-1 TPHLTY=8ns TPHLMX=18ns
++                                             TPZLMN=-1 TPZLTY=14ns  TPZLMX=26ns
++                                             TPZHMN=-1 TPZHTY=18ns  TPZHMX=30ns
++                                             TPLZMN=-1  TPLZTY=18ns TPLZMX=28ns   
++                                             TPHZMN=-1 TPHZTY=22ns TPHZMX=33ns)
+
+.ENDS 74HCT243
+*
+*
+* ----------------------------------------------------------- 74LS243 ------
+*  Quad Bus Transceivers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-697 to 2-700
+*  jds    5/25/94
+*
+.SUBCKT 74LS243 GABBAR GBA A1 A2 A3 A4 B1 B2 B3 B4 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     GABBAR GAB
++     D0_GATE IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     A1 A2 A3 A4 
++     GAB
++     B1 B2 B3 B4 
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf2 buf3a(4) DPWR DGND
++     B1 B2 B3 B4 
++     GBA
++     A1 A2 A3 A4
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=9ns TPLHMX=14ns
++                                             TPHLMN=-1 TPHLTY=12ns TPHLMX=18ns
++                                             TPZLMN=-1 TPZLTY=20ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=23ns
++                                             TPLZMN=-1  TPLZTY=10ns TPLZMX=20ns
++                                             TPHZMN=-1 TPHZTY=15ns TPHZMX=25ns)
+
+.ENDS 74LS243
+*
+*
+* ----------------------------------------------------------- 74AC244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FACT Advanced Logic Data Book, 1989, National Semiconductor
+*  jds    5/24/94                                                           Pages 4-134 to 4-137
+*
+.SUBCKT 74AC244 OE1BAR I0 I1 I2 I3 O0BAR O1BAR O2BAR O3BAR
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0BAR O1BAR O2BAR O3BAR
++     DLY_MOD IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=5ns TPLHMX=7ns
++                                             TPHLMN=1.5ns TPHLTY=5ns TPHLMX=7ns
++                                             TPZLMN=1.5ns TPZLTY=5.5ns  TPZLMX=8ns
++                                             TPZHMN=1.5ns TPZHTY=5ns  TPZHMX=7ns
++                                             TPLZMN=2ns  TPLZTY=6.5ns TPLZMX=9ns
++                                             TPHZMN=2.5ns TPHZTY=6.5ns TPHZMX=9ns)
+
+.ENDS 74AC244
+*
+*
+* ----------------------------------------------------------- 74ACT244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FACT Advanced Logic Data Book, 1989, National Semiconductor
+*  jds    5/24/94                                                           Pages 4-134 to 4-137
+*
+.SUBCKT 74ACT244 OE1BAR I0 I1 I2 I3 O0BAR O1BAR O2BAR O3BAR
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0BAR O1BAR O2BAR O3BAR
++     DLY_MOD IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2ns TPLHTY=6.5ns TPLHMX=9ns
++                                             TPHLMN=2ns TPHLTY=7ns TPHLMX=9ns
++                                             TPZLMN=2ns TPZLTY=7ns  TPZLMX=9.5ns
++                                             TPZHMN=1.5ns TPZHTY=6ns  TPZHMX=8.5ns
++                                             TPLZMN=2.5ns  TPLZTY=7.5ns TPLZMX=10ns
++                                             TPHZMN=2ns TPHZTY=7ns TPHZMX=9.5ns)
+
+.ENDS 74ACT244
+
+*-------------------------------------------------------------74ALS244----
+
+* Octal Buffers and Line Drivers with Tri-State Outputs
+* Motorola Schottky TTL Logic Data Book, 1983, pages 5-71 to 5-73
+* jat 8/20/96
+
+.SUBCKT 74ALS244 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(4,1,0) DPWR DGND
++ 1A1 1A2 1A3 1A4
++ 1GBAR
++ 1Y1 1Y2 1Y3 1Y4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = 1GBAR
++     1Y1 1Y2 1Y3 1Y4 = {
++       CASE(
++         TRN_ZH, DELAY(7NS,-1,21NS),
++         TRN_ZL, DELAY(7NS,-1,21NS),
++         TRN_HZ, DELAY(2NS,-1,14NS),
++         TRN_LZ, DELAY(3NS,-1,17NS),
++         TRN_LH, DELAY(3NS,-1,11NS),
++         TRN_HL, DELAY(3NS,-1,10NS),
++         DELAY(8NS,-1,22NS))}
+
+.ENDS 74ALS244
+
+* ----------------------------------------------------------- 74ALS244A ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-265 to 2-282
+*  jds    5/24/94
+*
+.SUBCKT 74ALS244A 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=3ns TPLHTY=-1 TPLHMX=10ns
++                                             TPHLMN=3ns TPHLTY=-1 TPHLMX=10ns
++                                             TPZLMN=7ns TPZLTY=-1  TPZLMX=20ns
++                                             TPZHMN=7ns TPZHTY=-1  TPZHMX=20ns
++                                             TPLZMN=3ns  TPLZTY=-1 TPLZMX=13ns
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=10ns)
+
+.ENDS 74ALS244A
+
+*-------------------------------------------------------------74ALS244B-1----
+
+* Octal Tri-State Bus Driver
+* National Advanced Bipolar Logic Data Book, 1995, pages 9-95 to 9-97
+* jat 8/21/96
+
+.SUBCKT 74ALS244B-1 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(4,1,0) DPWR DGND
++ 1A1 1A2 1A3 1A4
++ 1GBAR
++ 1Y1 1Y2 1Y3 1Y4
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = 1GBAR
++     1Y1 1Y2 1Y3 1Y4 = {
++       CASE(
++         TRN_ZH, DELAY(3NS,-1,20NS),
++         TRN_ZL, DELAY(3NS,-1,20NS),
++         TRN_HZ, DELAY(2NS,-1,10NS),
++         TRN_LZ, DELAY(1NS,-1,13NS),
++         TRN_LH, DELAY(3NS,-1,10NS),
++         TRN_HL, DELAY(3NS,-1,10NS),
++         DELAY(4NS,-1,21NS))}
+
+.ENDS 74ALS244B-1
+
+* ----------------------------------------------------------- 74AS244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The ALS/AS Logic Data Book, 1986, TI Pages 2-265 to 2-282
+*  jds    5/24/94
+*
+.SUBCKT 74AS244 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2ns TPLHTY=-1 TPLHMX=6.2ns
++                                             TPHLMN=2ns TPHLTY=-1 TPHLMX=6.2ns
++                                             TPZLMN=2ns TPZLTY=-1  TPZLMX=7.5ns
++                                             TPZHMN=2ns TPZHTY=-1  TPZHMX=9ns
++                                             TPLZMN=2ns  TPLZTY=-1 TPLZMX=9ns
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=6ns)
+
+.ENDS 74AS244
+*
+*
+* ----------------------------------------------------------- 74F244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The FAST Advanced Schottkty TTL Logic Data Book, 1988, National Semiconductor
+*  jds    5/24/94                                                           Pages 4-187 to 4-190
+*
+.SUBCKT 74F244 OE1BAR I0 I1 I2 I3 O0BAR O1BAR O2BAR O3BAR
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     OE1BAR GEN
++     D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     I0 I1 I2 I3
++     GEN
++     O0BAR O1BAR O2BAR O3BAR
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2.5ns TPLHTY=4ns TPLHMX=5.2ns
++                                             TPHLMN=2.5ns TPHLTY=4ns TPHLMX=5.2ns
++                                             TPZLMN=2ns TPZLTY=5.4ns  TPZLMX=7ns
++                                             TPZHMN=2ns TPZHTY=4.3ns  TPZHMX=5.7ns
++                                             TPLZMN=2ns  TPLZTY=4.5ns TPLZMX=6ns
++                                             TPHZMN=2ns TPHZTY=4.5ns TPHZMX=6ns)
+
+.ENDS 74F244
+
+*-------------------------------------------------------------74F244B----
+
+* Octal Buffers with Tri-State
+* Philips FAST TTL Data Handbook, 1992, pages 330 to 334
+* jat 7/9/96
+
+.SUBCKT 74F244B IA0 IA1 IA2 IA3 YA0 YA1 YA2 YA3 OEABAR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(4,1,0) DPWR DGND
++ IA0 IA1 IA2 IA3
++ OEABAR
++ YA0 YA1 YA2 YA3
++ IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = OEABAR
++     YA0 YA1 YA2 YA3 = {
++       CASE(
++         TRN_ZH, DELAY(2NS,4NS,6NS),
++         TRN_ZL, DELAY(3NS,5.5NS,7.5NS),
++         TRN_$Z, DELAY(1.5NS,2.5NS,5.5NS),
++         TRN_LH, DELAY(2.5NS,4.5NS,5.7NS),
++         TRN_HL, DELAY(2.5NS,4.5NS,6NS),
++         DELAY(4NS,6.5NS,8.5NS))}
+
+.ENDS 74F244B
+
+* ----------------------------------------------------------- 74HC244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-327 to 2-330
+*  jds    5/24/94
+*
+.SUBCKT 74HC244 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=13ns TPLHMX=23ns
++                                             TPHLMN=-1 TPHLTY=13ns TPHLMX=23ns
++                                             TPZLMN=-1 TPZLTY=15ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=30ns
++                                             TPLZMN=-1  TPLZTY=15ns TPLZMX=30ns
++                                             TPHZMN=-1 TPHZTY=15ns TPHZMX=30ns)
+
+.ENDS 74HC244
+
+*-------------------------------------------------------------74HC244A----
+
+* Octal 3-State Noninverting Buffer/Line Driver/Line Receiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-244 to 5-247
+* jat 9/10/96
+
+.SUBCKT 74HC244A A1 A2 A3 A4 ENABA YA1 YA2 YA3 YA4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(4,1,0) DPWR DGND
++ A1 A2 A3 A4
++ ENABA
++ YA1 YA2 YA3 YA4
++ IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = ENABA
++     YA1 YA2 YA3 YA4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,22NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,18NS),
++         DELAY(-1,-1,23NS))}
+
+.ENDS 74HC244A
+
+* ----------------------------------------------------------- 74HCT244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-331 to 2-334
+*  jds    5/24/94
+*
+.SUBCKT 74HCT244 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=15ns TPLHMX=28ns
++                                             TPHLMN=-1 TPHLTY=15ns TPHLMX=28ns
++                                             TPZLMN=-1 TPZLTY=21ns  TPZLMX=35ns
++                                             TPZHMN=-1 TPZHTY=21ns  TPZHMX=35ns
++                                             TPLZMN=-1  TPLZTY=19ns TPLZMX=35ns
++                                             TPHZMN=-1 TPHZTY=19ns TPHZMX=35ns)
+
+.ENDS 74HCT244
+
+*-------------------------------------------------------------74HCT244A----
+
+* Octal 3-State Noninverting Buffer/Line Driver/Line Receiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-248 to 5-251
+* jat 9/10/96
+
+.SUBCKT 74HCT244A A1 A2 A3 A4 ENABA YA1 YA2 YA3 YA4
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 PINDLY(4,1,0) DPWR DGND
++ A1 A2 A3 A4
++ ENABA
++ YA1 YA2 YA3 YA4
++ IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE LO = ENABA
++     YA1 YA2 YA3 YA4 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,26NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,20NS),
++         DELAY(-1,-1,27NS))}
+
+.ENDS 74HCT244A
+
+* ----------------------------------------------------------- 74LS244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-692 to 2-699
+*  jds    5/24/94
+*
+.SUBCKT 74LS244 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=12ns TPLHMX=18ns
++                                             TPHLMN=-1 TPHLTY=12ns TPHLMX=18ns
++                                             TPZLMN=-1 TPZLTY=20ns  TPZLMX=30ns
++                                             TPZHMN=-1 TPZHTY=15ns  TPZHMX=23ns
++                                             TPLZMN=-1  TPLZTY=10ns TPLZMX=20ns
++                                             TPHZMN=-1 TPHZTY=15ns TPHZMX=25ns)
+
+.ENDS 74LS244
+*
+*
+* ----------------------------------------------------------- 74S244 ------
+*  Octal Buffers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-692 to 2-699
+*  jds    5/24/94
+*
+.SUBCKT 74S244 1GBAR 1A1 1A2 1A3 1A4 1Y1 1Y2 1Y3 1Y4
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+uf0 inv DPWR DGND
++     1GBAR GEN
++     D0_GATE IO_S_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(4) DPWR DGND
++     1A1 1A2 1A3 1A4
++     GEN
++     1Y1 1Y2 1Y3 1Y4
++     DLY_MOD IO_S_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=6ns TPLHMX=9ns
++                                             TPHLMN=-1 TPHLTY=6ns TPHLMX=9ns
++                                             TPZLMN=-1 TPZLTY=10ns  TPZLMX=15ns
++                                             TPZHMN=-1 TPZHTY=8ns  TPZHMX=12ns
++                                             TPLZMN=-1  TPLZTY=10ns TPLZMX=15ns
++                                             TPHZMN=-1 TPHZTY=6ns TPHZMX=9ns)
+
+.ENDS 74S244
+*
+*
+* ----------------------------------------------------------- 74AC245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The FACT Advanced CMOS Logic Data Book, 1994, National Semiconductor
+*  jds    5/26/94                                                            Pages 4-138 to 4-141
+*
+.SUBCKT 74AC245 OEBAR T/RBAR A0 A1 A2 A3 A4 A5 A6 A7 B0 B1 B2 B3 B4 B5 B6 B7
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74AC245 LOGICEXP(2,2) DPWR DGND
++     OEBAR T/RBAR
++     GAB GBA
++     D0_GATE IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~OEBAR}
++     GAB = {gen & T/RBAR}
++     GBA = {~(OEBAR | T/RBAR)}
+
+uf0 buf3a(8) DPWR DGND
++     A0 A1 A2 A3 A4 A5 A6 A7 
++     GAB
++     B0 B1 B2 B3 B4 B5 B6 B7
++     DLY_MOD IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B0 B1 B2 B3 B4 B5 B6 B7
++     GBA
++     A0 A1 A2 A3 A4 A5 A6 A7
++     DLY_MOD IO_AC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=3.5ns TPLHMX=6.5ns
++                                             TPHLMN=1.5ns TPHLTY=3.5ns TPHLMX=6.5ns
++                                             TPZLMN=1.5ns TPZLTY=5.5ns  TPZLMX=9ns
++                                             TPZHMN=1.5ns TPZHTY=5.0ns  TPZHMX=8.5ns
++                                             TPLZMN=1.5ns  TPLZTY=5.5ns TPLZMX=9ns
++                                             TPHZMN=1.5ns TPHZTY=5.5ns TPHZMX=9ns)
+
+.ENDS 74AC245
+*
+*
+* ----------------------------------------------------------- 74ACT245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The FACT Advanced CMOS Logic Data Book, 1994, National Semiconductor
+*  jds    5/26/94                                                            Pages 4-138 to 4-141
+*
+.SUBCKT 74ACT245 OEBAR T/RBAR A0 A1 A2 A3 A4 A5 A6 A7 B0 B1 B2 B3 B4 B5 B6 B7
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74ACT245 LOGICEXP(2,2) DPWR DGND
++     OEBAR T/RBAR
++     GAB GBA
++     D0_GATE IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~OEBAR}
++     GAB = {gen & T/RBAR}
++     GBA = {~(OEBAR | T/RBAR)}
+
+uf0 buf3a(8) DPWR DGND
++     A0 A1 A2 A3 A4 A5 A6 A7 
++     GAB
++     B0 B1 B2 B3 B4 B5 B6 B7
++     DLY_MOD IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B0 B1 B2 B3 B4 B5 B6 B7
++     GBA
++     A0 A1 A2 A3 A4 A5 A6 A7
++     DLY_MOD IO_ACT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.5ns TPLHTY=4ns TPLHMX=7.5ns
++                                             TPHLMN=1.5ns TPHLTY=4ns TPHLMX=8ns
++                                             TPZLMN=1.5ns TPZLTY=5.5ns  TPZLMX=10ns
++                                             TPZHMN=1.5ns TPZHTY=5ns  TPZHMX=10ns
++                                             TPLZMN=2ns  TPLZTY=5ns TPLZMX=10ns
++                                             TPHZMN=1.5ns TPHZTY=5.5ns TPHZMX=10ns)
+
+.ENDS 74ACT245
+
+*-------------------------------------------------------------74ALS245----
+
+* Octal Bus Transceivers with Tri-State Outputs
+* Motorola Schottky TTL Logic Data Book, 1983, pages 5-74 to 5-76
+* jat 8/20/96
+
+.SUBCKT 74ALS245 A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8 GBAR DIR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(2,2) DPWR DGND
++ DIR GBAR
++ AB BA
++ D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   AB = {DIR & ~GBAR}
++   BA = {~DIR & ~GBAR}
+
+U2 PINDLY(16,2,0) DPWR DGND
++ A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++ AB BA
++ B1 B2 B3 B4 B5 B6 B7 B8 A1 A2 A3 A4 A5 A6 A7 A8
++ IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE HI = AB
++     B1 B2 B3 B4 B5 B6 B7 B8 = {
++       CASE(
++         TRN_ZH, DELAY(8NS,-1,17NS),
++         TRN_ZL, DELAY(10NS,-1,20NS),
++         TRN_HZ, DELAY(3NS,-1,14NS),
++         TRN_LZ, DELAY(4NS,-1,20NS),
++         TRN_LH, DELAY(3NS,-1,12NS),
++         TRN_HL, DELAY(3NS,-1,12NS),
++         DELAY(11NS,-1,21NS))}
++ TRISTATE:
++   ENABLE HI = BA
++     A1 A2 A3 A4 A5 A6 A7 A8 = {
++       CASE(
++         TRN_ZH, DELAY(8NS,-1,17NS),
++         TRN_ZL, DELAY(10NS,-1,20NS),
++         TRN_HZ, DELAY(3NS,-1,14NS),
++         TRN_LZ, DELAY(4NS,-1,20NS),
++         TRN_LH, DELAY(3NS,-1,12NS),
++         TRN_HL, DELAY(3NS,-1,12NS),
++         DELAY(11NS,-1,21NS))}
+
+.ENDS 74ALS245
+
+* ----------------------------------------------------------- 74ALS245A ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The AS/ALS Logic Data Book, 1986, TI Pages 2-283 to 2-288
+*  jds    5/26/94
+*
+.SUBCKT 74ALS245A GBAR DIR A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74ALS245A LOGICEXP(2,2) DPWR DGND
++     GBAR DIR
++     GAB GBA
++     D0_GATE IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~GBAR}
++     GAB = {gen & DIR}
++     GBA = {~(GBAR | DIR)}
+
+uf0 buf3a(8) DPWR DGND
++     A1 A2 A3 A4 A5 A6 A7 A8
++     GAB
++     B1 B2 B3 B4 B5 B6 B7 B8
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B1 B2 B3 B4 B5 B6 B7 B8
++     GBA
++     A1 A2 A3 A4 A5 A6 A7 A8
++     DLY_MOD IO_ALS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=3ns TPLHTY=-1 TPLHMX=10ns
++                                             TPHLMN=3ns TPHLTY=-1 TPHLMX=10ns
++                                             TPZLMN=5ns TPZLTY=-1  TPZLMX=20ns
++                                             TPZHMN=5ns TPZHTY=-1  TPZHMX=20ns
++                                             TPLZMN=4ns  TPLZTY=-1 TPLZMX=15ns
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=10ns)
+
+.ENDS 74ALS245A
+*
+*
+* ----------------------------------------------------------- 74AS245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The AS/ALS Logic Data Book, 1986, TI Pages 2-283 to 2-288
+*  jds    5/26/94
+*
+.SUBCKT 74AS245 GBAR DIR A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74AS245 LOGICEXP(2,2) DPWR DGND
++     GBAR DIR
++     GAB GBA
++     D0_GATE IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~GBAR}
++     GAB = {gen & DIR}
++     GBA = {~(GBAR | DIR)}
+
+uf0 buf3a(8) DPWR DGND
++     A1 A2 A3 A4 A5 A6 A7 A8
++     GAB
++     B1 B2 B3 B4 B5 B6 B7 B8
++     DLY_MOD IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B1 B2 B3 B4 B5 B6 B7 B8
++     GBA
++     A1 A2 A3 A4 A5 A6 A7 A8
++     DLY_MOD IO_AS00 MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=2ns TPLHTY=-1 TPLHMX=7.5ns
++                                             TPHLMN=2ns TPHLTY=-1 TPHLMX=7ns
++                                             TPZLMN=2ns TPZLTY=-1  TPZLMX=8.5ns
++                                             TPZHMN=2ns TPZHTY=-1  TPZHMX=9ns
++                                             TPLZMN=2ns  TPLZTY=-1 TPLZMX=9.5ns
++                                             TPHZMN=2ns TPHZTY=-1 TPHZMX=5.5ns)
+
+.ENDS 74AS245
+*
+*
+* ----------------------------------------------------------- 74F245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The F Logic Data Book, 1994, TI Pages 2-177 to 2-180
+*  jds    5/26/94
+*
+.SUBCKT 74F245 OEBAR DIR A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74F245 LOGICEXP(2,2) DPWR DGND
++     OEBAR DIR
++     GAB GBA
++     D0_GATE IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~OEBAR}
++     GAB = {gen & DIR}
++     GBA = {~(OEBAR | DIR)}
+
+uf0 buf3a(8) DPWR DGND
++     A1 A2 A3 A4 A5 A6 A7 A8
++     GAB
++     B1 B2 B3 B4 B5 B6 B7 B8
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B1 B2 B3 B4 B5 B6 B7 B8
++     GBA
++     A1 A2 A3 A4 A5 A6 A7 A8
++     DLY_MOD IO_F MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=1.7ns TPLHTY=3.8ns TPLHMX=6ns
++                                             TPHLMN=1.7ns TPHLTY=4.2ns TPHLMX=6ns
++                                             TPZLMN=2.7ns TPZLTY=5.6ns  TPZLMX=8ns
++                                             TPZHMN=2.2ns TPZHTY=4.9ns  TPZHMX=7ns
++                                             TPLZMN=1.2ns  TPLZTY=4.6ns TPLZMX=6.5ns
++                                             TPHZMN=2.2ns TPHZTY=4.6ns TPHZMX=6.5ns)
+
+.ENDS 74F245
+*
+*
+* ----------------------------------------------------------- 74HC245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-335 to 2-338
+*  jds    5/26/94
+*
+.SUBCKT 74HC245 GBAR DIR A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74HC245 LOGICEXP(2,2) DPWR DGND
++     GBAR DIR
++     GAB GBA
++     D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~GBAR}
++     GAB = {gen & DIR}
++     GBA = {~(GBAR | DIR)}
+
+uf0 buf3a(8) DPWR DGND
++     A1 A2 A3 A4 A5 A6 A7 A8
++     GAB
++     B1 B2 B3 B4 B5 B6 B7 B8
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B1 B2 B3 B4 B5 B6 B7 B8
++     GBA
++     A1 A2 A3 A4 A5 A6 A7 A8
++     DLY_MOD IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=15ns TPLHMX=21ns
++                                             TPHLMN=-1 TPHLTY=15ns TPHLMX=21ns
++                                             TPZLMN=-1 TPZLTY=23ns  TPZLMX=46ns
++                                             TPZHMN=-1 TPZHTY=23ns  TPZHMX=46ns
++                                             TPLZMN=-1  TPLZTY=25ns TPLZMX=40ns
++                                             TPHZMN=-1 TPHZTY=25ns TPHZMX=40ns)
+
+.ENDS 74HC245
+
+*-------------------------------------------------------------74HC245A----
+
+* Octal Tri-State Noninverting Bus Transceiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-252 to 5-255
+* jat 9/10/96
+
+.SUBCKT 74HC245A A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8 OUTENAB DIR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(2,2) DPWR DGND
++ DIR OUTENAB
++ AB BA
++ D0_GATE IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   AB = {DIR & ~OUTENAB}
++   BA = {~DIR & ~OUTENAB}
+
+U2 PINDLY(16,2,0) DPWR DGND
++ A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++ AB BA
++ B1 B2 B3 B4 B5 B6 B7 B8 A1 A2 A3 A4 A5 A6 A7 A8
++ IO_HC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE HI = AB
++     B1 B2 B3 B4 B5 B6 B7 B8 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,22NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,15NS),
++         DELAY(-1,-1,23NS))}
++ TRISTATE:
++   ENABLE HI = BA
++     A1 A2 A3 A4 A5 A6 A7 A8 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,22NS),
++         TRN_$Z, DELAY(-1,-1,22NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,15NS),
++         DELAY(-1,-1,23NS))}
+
+.ENDS 74HC245A
+
+* ----------------------------------------------------------- 74HCT245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The High Speed CMOS Logic Data Book, 1989, TI Pages 2-339 to 2-342
+*  jds    5/26/94
+*
+.SUBCKT 74HCT245 GBAR DIR A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74HCT245 LOGICEXP(2,2) DPWR DGND
++     GBAR DIR
++     GAB GBA
++     D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~GBAR}
++     GAB = {gen & DIR}
++     GBA = {~(GBAR | DIR)}
+
+uf0 buf3a(8) DPWR DGND
++     A1 A2 A3 A4 A5 A6 A7 A8
++     GAB
++     B1 B2 B3 B4 B5 B6 B7 B8
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B1 B2 B3 B4 B5 B6 B7 B8
++     GBA
++     A1 A2 A3 A4 A5 A6 A7 A8
++     DLY_MOD IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=16ns TPLHMX=22ns
++                                             TPHLMN=-1 TPHLTY=16ns TPHLMX=22ns
++                                             TPZLMN=-1 TPZLTY=25ns  TPZLMX=46ns
++                                             TPZHMN=-1 TPZHTY=25ns  TPZHMX=46ns
++                                             TPLZMN=-1  TPLZTY=26ns TPLZMX=40ns
++                                             TPHZMN=-1 TPHZTY=26ns TPHZMX=40ns)
+
+.ENDS 74HCT245
+
+*-------------------------------------------------------------74HCT245A----
+
+* Octal Tri-State Noninverting Bus Transceiver
+* Motorola High-Speed CMOS Data, 1993, pages 5-256 to 5-259
+* jat 9/10/96
+
+.SUBCKT 74HCT245A A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8 OUTENAB DIR
++ OPTIONAL: DPWR=$G_DPWR DGND=$G_DGND
++ PARAMS: MNTYMXDLY=0 IO_LEVEL=0
+
+U1 LOGICEXP(2,2) DPWR DGND
++ DIR OUTENAB
++ AB BA
++ D0_GATE IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ LOGIC:
++   AB = {DIR & ~OUTENAB}
++   BA = {~DIR & ~OUTENAB}
+
+U2 PINDLY(16,2,0) DPWR DGND
++ A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++ AB BA
++ B1 B2 B3 B4 B5 B6 B7 B8 A1 A2 A3 A4 A5 A6 A7 A8
++ IO_HCT MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++ TRISTATE:
++   ENABLE HI = AB
++     B1 B2 B3 B4 B5 B6 B7 B8 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,30NS),
++         TRN_$Z, DELAY(-1,-1,32NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,22NS),
++         DELAY(-1,-1,33NS))}
++ TRISTATE:
++   ENABLE HI = BA
++     A1 A2 A3 A4 A5 A6 A7 A8 = {
++       CASE(
++         TRN_Z$, DELAY(-1,-1,30NS),
++         TRN_$Z, DELAY(-1,-1,32NS),
++         (TRN_LH | TRN_HL), DELAY(-1,-1,22NS),
++         DELAY(-1,-1,33NS))}
+
+.ENDS 74HCT245A
+
+* ----------------------------------------------------------- 74LS245 ------
+*  Octal Bus Transceivers With 3-State Outputs
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-701 to 2-703
+*  jds    5/26/94
+*
+.SUBCKT 74LS245 GBAR DIR A1 A2 A3 A4 A5 A6 A7 A8 B1 B2 B3 B4 B5 B6 B7 B8
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74LS245 LOGICEXP(2,2) DPWR DGND
++     GBAR DIR
++     GAB GBA
++     D0_GATE IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     gen = {~GBAR}
++     GAB = {gen & DIR}
++     GBA = {~(GBAR | DIR)}
+
+uf0 buf3a(8) DPWR DGND
++     A1 A2 A3 A4 A5 A6 A7 A8
++     GAB
++     B1 B2 B3 B4 B5 B6 B7 B8
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+uf1 buf3a(8) DPWR DGND
++     B1 B2 B3 B4 B5 B6 B7 B8
++     GBA
++     A1 A2 A3 A4 A5 A6 A7 A8
++     DLY_MOD IO_LS_ST MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+.model DLY_MOD utgate (TPLHMN=-1 TPLHTY=8ns TPLHMX=12ns
++                                             TPHLMN=-1 TPHLTY=8ns TPHLMX=12ns
++                                             TPZLMN=-1 TPZLTY=27ns  TPZLMX=40ns
++                                             TPZHMN=-1 TPZHTY=25ns  TPZHMX=40ns
++                                             TPLZMN=-1  TPLZTY=15ns TPLZMX=25ns
++                                             TPHZMN=-1 TPHZTY=15ns TPHZMX=28ns)
+
+.ENDS 74LS245
+*
+*
+* ----------------------------------------------------------- 74246 ------
+*  BCD-To-Seven Segment Decoder/Driver (Open Collector)
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-705 to 2-714
+*  jds    5/26/94
+*
+.SUBCKT 74246 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74246 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { (i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4)}
++     b_O = {(i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a)}
++     c_O = {(i3a & i4a) | (i1 & i2a & i3)}
++     d_O = {(i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a)}
++     e_O = { i1a | (i2 & i3a)}
++     f_O = {(i1a & i2a) | (i2a & i3) | (i1a & i3 & i4)}
++     g_O = {(i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR)}
++     rbi = {~(RBIBAR) }
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74246
+*
+*
+* ----------------------------------------------------------- 74247 ------
+*  BCD-To-Seven Segment Decoder/Driver (Open Collector)
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-705 to 2-714
+*  jds    5/26/94
+*
+.SUBCKT 74247 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74247 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { ((i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4))}
++     b_O = {((i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a))}
++     c_O = {((i3a & i4a) | (i1 & i2a & i3))}
++     d_O = {((i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a))}
++     e_O = { (i1a | (i2 & i3a))}
++     f_O = {((i1a & i2a) | (i2a & i3) | (i1a & i3 & i4))}
++     g_O = {((i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR))}
++     rbi = {~(RBIBAR) }
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74247
+*
+*
+* ----------------------------------------------------------- 74LS247 ------
+*  BCD-To-Seven Segment Decoder/Driver (open Collector)
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-705 to 2-714
+*  jds    5/26/94
+*
+.SUBCKT 74LS247 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74LS247 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_LS_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { (i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4)}
++     b_O = {(i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a)}
++     c_O = {(i3a & i4a) | (i1 & i2a & i3)}
++     d_O = {(i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a)}
++     e_O = { i1a | (i2 & i3a)}
++     f_O = {(i1a & i2a) | (i2a & i3) | (i1a & i3 & i4)}
++     g_O = {(i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR)}
++     rbi = {~(RBIBAR) }
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_LS_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_LS_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74LS247
+*
+*
+* ----------------------------------------------------------- 74248 ------
+*  BCD-To-Seven Segment Decoder/Driver
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-705 to 2-714
+*  jds    5/26/94
+*
+.SUBCKT 74248 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74248 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { ~((i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4))}
++     b_O = {~((i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a))}
++     c_O = {~((i3a & i4a) | (i1 & i2a & i3))}
++     d_O = {~((i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a))}
++     e_O = { ~(i1a | (i2 & i3a))}
++     f_O = {~((i1a & i2a) | (i2a & i3) | (i1a & i3 & i4))}
++     g_O = {~((i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR))}
++     rbi = {~(RBIBAR) }
+
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_STD MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74248
+*
+*
+* ----------------------------------------------------------- 74LS248 ------
+*  BCD-To-Seven Segment Decoder/Driver
+*
+*  The TTL Logic Data Book, 1988, TI Pages 2-705 to 2-714
+*  jds    5/26/94
+*
+.SUBCKT 74LS248 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74LS248 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { ~((i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4))}
++     b_O = {~((i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a))}
++     c_O = {~((i3a & i4a) | (i1 & i2a & i3))}
++     d_O = {~((i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a))}
++     e_O = { ~(i1a | (i2 & i3a))}
++     f_O = {~((i1a & i2a) | (i2a & i3) | (i1a & i3 & i4))}
++     g_O = {~((i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR))}
++     rbi = {~(RBIBAR) }
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_LS MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74LS248
+*
+*
+* ----------------------------------------------------------- 74249 ------
+*  BCD-To-Seven Segment Decoder/Driver (Open Collector)
+*
+*  The TTL Logic Data Book, 1985, TI Pages 3-829 to 3-842
+*  jds    5/26/94
+*
+.SUBCKT 74249 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74249 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { ~((i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4))}
++     b_O = {~((i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a))}
++     c_O = {~((i3a & i4a) | (i1 & i2a & i3))}
++     d_O = {~((i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a))}
++     e_O = { ~(i1a | (i2 & i3a))}
++     f_O = {~((i1a & i2a) | (i2a & i3) | (i1a & i3 & i4))}
++     g_O = {~((i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR))}
++     rbi = {~(RBIBAR) }
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_STD_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74249
+*
+*
+* ----------------------------------------------------------- 74LS249 ------
+*  BCD-To-Seven Segment Decoder/Driver (Open Collector)
+*
+*  The TTL Logic Data Book, 1985, TI Pages 3-829 to 3-842
+*  jds    5/26/94
+*
+.SUBCKT 74LS249 Ain Bin Cin Din RBOBAR RBIBAR LTBAR a b c d e f g 
++     optional:  DPWR=$G_DPWR DGND=$G_DGND
++     params:  MNTYMXDLY=0 IO_LEVEL=0
+
+U74LS249 LOGICEXP(7,12) DPWR DGND
++     Ain Bin Cin Din RBOBAR RBIBAR LTBAR 
++     a_O b_O c_O d_O e_O f_O g_O rbi i1 i2 i3 i4
++     D0_GATE IO_LS_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++  LOGIC:
++     i1 = {~(Ain & LTBAR)}
++     i2 = {~(Bin & LTBAR)}
++     i3 = {~(Cin & LTBAR)}
++     i4 = {~(Din)}
++     i1a = {~(i1 & RBOBAR)}
++     i2a = {~(i2 & RBOBAR)}
++     i3a = {~(i3 & RBOBAR)}
++     i4a = {~(i4 & RBOBAR)}
++     a_O = { ~((i2a & i4a) | (i1 & i2 & i3a) | (i1a & i2 & i3 & i4))}
++     b_O = {~((i2a & i4a) | (i1a & i2 & i3a) | (i1 & i2a & i3a))}
++     c_O = {~((i3a & i4a) | (i1 & i2a & i3))}
++     d_O = {~((i1a & i2 & i3 & i4) | (i1 & i2 & i3a) | (i1a & i2a & i3a))}
++     e_O = { ~(i1a | (i2 & i3a))}
++     f_O = {~((i1a & i2a) | (i2a & i3) | (i1a & i3 & i4))}
++     g_O = {~((i1a & i2a & i3a) | (i2 & i3 & i4 & LTBAR))}
++     rbi = {~(RBIBAR) }
+
+uf0 nand(6) DPWR DGND
++     i1 i2 i3 i4 rbi LTBAR
++     RBOBAR
++     D0_gate IO_LS_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
+
+Udly PINDLY (7,0,5) DPWR DGND
++    a_O b_O c_O d_O e_O f_O g_O 
++    Ain Bin Cin Din RBIBAR 
++    a b c d e f g
++    IO_LS_OC MNTYMXDLY={MNTYMXDLY} IO_LEVEL={IO_LEVEL}
++
++    BOOLEAN:
++     BLANK = { CHANGED(RBIBAR,0) }
++     DATA = { CHANGED(Ain,0) | CHANGED(Bin,0) | CHANGED(Cin,0) | CHANGED(Din,0) }
++
++    PINDLY:
++       a b c d e f g = {
++            CASE(
++                 BLANK & TRN_HL, DELAY(-1,-1,100ns),
++                 BLANK & TRN_LH, DELAY(-1,-1,100ns),
++                 DATA & TRN_HL, DELAY(-1,-1,100ns),
++                 DATA & TRN_LH, DELAY(-1,-1,100ns),
++                 DELAY(-1,-1,100ns)
++                )
++            }
+
+.ENDS 74LS249
+

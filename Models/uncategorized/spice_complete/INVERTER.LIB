@@ -1,0 +1,48 @@
+*********
+*SRC=Inverterx;Inverterx;Behavioral;Amplifiers;Inverter with smooth limits
+*SYM=inverterx
+.SUBCKT Inverterx IN OUT { Threshold=1.2 Width=.3 VHI=3.5 VLO=.35 }
+* Threshold is the Value V(IN) at which the output reaches its mid-point
+* Width is the transition region width in input units
+* VHI is the output hi limit
+* VLO is the output low limit
+*FAMILY = ANALOG
+*FAMILY = ANALOG
+B1 OUT 0 V={VHI-VLO}* ( V(IN)  < {Threshold - Width/2} ? 1 : v(IN) < {Threshold+Width/2} ? 
++  0.5 * (1+cos(3.14159* (V(IN) - {Threshold-Width/2})/{Width})) : 0 )
++ +{ VLO}
+.ENDS 
+*********
+*SRC=Bufferx;Bufferx;Behavioral;Amplifiers;Buffer with smooth limits
+*SYM=Bufferx
+.SUBCKT Bufferx IN OUT { Threshold=1.2 Width=.3 VHI=3.5 VLO=.35 }
+* Threshold is the Value V(IN) at wich the output reaches its mid point
+* Width is the transition region width in input units
+* VHI is the output hi limit
+* VLO is the output low limit
+*FAMILY = ANALOG
+*FAMILY = ANALOG
+B1 OUT 0 V={VHI-VLO}* ( V(IN)  < {Threshold - Width/2} ? 0 : v(IN) < {Threshold+Width/2} ? 
++  0.5 * (1-cos(3.14159* (V(IN) - {Threshold-Width/2})/{Width})) : 1 )
++ +{ VLO}
+.ENDS 
+************
+*SRC=Hanning;Hanning;Behavioral;Function Block;Hanning window with taper
+*SYM=Hanning
+.SUBCKT Hanning IN OUT { Taper=.1 Delay=0 Period=??? }
+* Period is the Time width of the window
+* Delay is the Time delay before beginning the window
+* Taper is the fraction of Period to apply the window on each side
+*       so that twice that amount is distorted
+*FAMILY = ANALOG
+*FAMILY = ANALOG
+B1 OUT 0 V=V(IN)* ( TIME  < {Delay} ? 0 :
++  TIME < {Delay + Taper*Period} ? 
++  0.5 * (1-cos(3.14159* (Time - {Delay})/{Period*Taper})) : 
++  TIME < {Delay + Period * (1-Taper)} ? 1 :
++  TIME < {Delay+Period} ?
++  0.5 * (1+cos(3.14159* (Time - {Delay + Period * (1-Taper)})/{Period*Taper}))
++  : 0 ) 
+.ENDS 
+************
+

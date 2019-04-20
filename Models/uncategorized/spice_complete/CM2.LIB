@@ -1,0 +1,700 @@
+**********
+* Copyright Intusoft 1994-1997
+* All Rights Reserved
+**********
+**********
+*SRC=D2A;D2A_Def;Bridges;Digital2Analog;Digital to Analog
+*SYM=d2a
+*HELP issyntax.hlp "Digital-to-Analog Node Bridge"
+*NAME=dac_bridge;A;A;[1][1]
+*FAMILY Din ANALOG
+*PARAM=out_low;analog output for 0 in;real;0;-;no;-;yes
+*PARAM=out_high;analog output for 1 in;real;1;-;no;-;yes
+*PARAM=out_undef;analog output for UNDEFINED;real;.5;-;no;-;yes
+*PARAM=t_rise;rise time;real;1N;1P -;no;-;yes
+*PARAM=t_fall;fall time;real;1N;1P -;no;-;yes
+*PARAM=input_load;input load (F);real;1P;-;no;-;yes
+.Model D2A_Def dac_bridge(out_low = 0.7 out_high = 3.5 out_undef = 2.2
++ input_load = 5.0e-12 t_rise = 50e-9 t_fall = 20e-9)
+**********
+*SRC=A2D;A2D_Def;Bridges;Analog2Digital;Analog to Digital
+*SYM=a2d
+*HELP issyntax.hlp "Analog-to-Digital Node Bridge"
+*NAME=adc_bridge;A;A;[1][1]
+*FAMILY ANALOG Dout 
+*PARAM=in_low;max. 0-valued A. input;real;.1;-;no;-;yes
+*PARAM=in_high;min. 1-valued A. input;real;.9;-;no;-;yes
+*PARAM=rise_delay;rise delay;real;1N;1P -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1N;1P -;no;-;yes
+.Model A2D_Def adc_bridge(in_low = 0.3 in_high = 3.5)
+**********
+*SRC=DVCO;DOsc_Def;VCOs;Digital VCO;Analog-in Digital-out
+*SYM=DVCO
+*HELP issyntax.hlp "Controlled Digital Oscillator"
+*NAME=d_osc;A;A;#2
+*FAMILY ANALOG Dout
+*PARAM=cntl_freq_array;control/freq array;real;-;-;yes;2 -;no
+*PARAM=duty_cycle;duty cycle;real;.5;1U .999999;no;-;yes
+*PARAM=init_phase;initial output phase;real;0;-180 360;no;-;yes
+*PARAM=rise_delay;rise delay;real;1N;0 -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1N;0 -;no;-;yes
+.Model DOsc_Def d_osc(cntl_freq_array = [0 1K 1 10k] 
++ duty_cycle = 0.4 init_phase = 180.0 rise_delay = 10e-9 fall_delay=8e-9)
+**********
+*SRC=DPWM;Dpwm_Def;PWM Models;Generic;Analog-in Digital-out
+*SYM=DVCO
+*NAME=d_pwm;A;A;#2
+*FAMILY ANALOG Dout
+*PARAM=cntl_pw_array;control/pulse width array;real;-;-;yes;2 -;no
+*PARAM=frequency;frequency;real;-;-;no;-;no
+*PARAM=rise_delay;rise delay;real;1N;0 -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1N;0 -;no;-;yes
+.Model Dpwm_Def d_pwm(cntl_pw_array = [0 1K 1 10k] 
++ frequency = 1meg rise_delay = 10e-9 fall_delay=8e-9)
+**********
+*SRC=MIDI_OSC;Midi_Def;VCOs;Midi Osc;Numerically Cntrld Osc
+*SYM=nco
+*NAME=nco;A;A;[7]#1
+*FAMILY Din Dout
+*PARAM=delay;output delay;real;1N;1F -;no;-;yes
+*PARAM=mult_factor;freq multiplier;real;1;1N -;no;-;yes
+.model Midi_Def NCO
+**********
+*SRC=D2R;D2R_Def;Bridges;Digital2Real;Digital to Real
+*SYM=d2real
+*HELP issyntax.hlp "Digital-to-Real Node Bridge"
+*NAME=d_to_real;A;A;#3
+*FAMILY Din Din Rout
+*PARAM=zero;value for 0;real;0;-;no;-;yes
+*PARAM=one;value for 1;real;1;-;no;-;yes
+*PARAM=delay;delay;real;1N;1F -;no;-;yes
+.model D2R_Def d_to_real
+**********
+*SRC=A2R;A2R_Def;Bridges;Analog2Real;Analog to Real
+*SYM=A2R
+*HELP issyntax.hlp "Analog2Real"
+*NAME=a_to_r2;A;A;#3
+*FAMILY ANALOG Din Rout
+*PARAM=gain;gain;real;1;-;no;-;yes
+*PARAM=clk_delay;clock delay;real;1N;1F -;no;-;yes
+.model A2R_Def a_to_r2
+**********
+*SRC=R2A;R2A_Def;Bridges;Real2Analog;Real to Analog
+*SYM=real2a
+*HELP issyntax.hlp "Real-to-Analog Node Bridge"
+*NAME=real_to_v;A;A;#2
+*FAMILY Rin ANALOG
+*PARAM=gain;gain;real;1;-;no;-;yes
+*PARAM=transition_time;output transition time;real;1N;1F -;no;-;yes
+.model R2A_Def real_to_v
+**********
+*SRC=REALZ;RZ_Def;Real;Generic;Z^-1 real unit delay
+*SYM=rdelay
+*HELP issyntax.hlp "Z-Transform Block (Real)"
+*NAME=real_delay;A;A;#3
+*FAMILY Rin Din Rout
+*PARAM=delay;delay from clk to out;real;1N;1F -;no;-;yes
+.model RZ_Def real_delay
+**********
+*SRC=REALG;RGa_Def;Real;Generic;Gain for real data
+*SYM=rgain
+*HELP issyntax.hlp "Gain Block (Real)"
+*NAME=real_gain;A;A;#2
+*FAMILY Rin Rout
+*PARAM=in_offset;input offset;real;0;-;no;-;yes
+*PARAM=gain;gain;real;1;-;no;-;yes
+*PARAM=out_offset;output offset;real;0;-;no;-;yes
+*PARAM=delay;delay;real;1N;-;no;-;yes
+*PARAM=ic;initial condition;real;0;-;no;-;yes
+.model RGa_Def Real_Gain
+**********
+*SRC=BUFFER;Buf_Def;Digital;Generic;One-bit-wide buffer
+*SYM=BUF
+*HELP issyntax.hlp "Buffer"
+*NAME=d_buffer;A;A;#2
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.Model Buf_Def d_buffer(rise_delay = 0.5e-9 TOL=5% fall_delay = 0.3e-9
++ input_load = 0.5e-12)
+**********
+*SRC=INVERTER;Inv_Def;Digital;Generic;One-bit-wide inverter
+*SYM=INV
+*HELP issyntax.hlp "Inverter"
+*NAME=d_inverter;A;A;#2
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.Model Inv_Def d_inverter(rise_delay = 0.5e-9 fall_delay = 0.3e-9
++ input_load = 0.5e-12)
+**********
+*SRC=XOR;Xor_Def;Digital;Generic;Exclusive-OR gate
+*SYM=XOR
+*HELP issyntax.hlp Xor
+*NAME=d_xor;a;a;[2]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Xor_Def d_xor(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=XNOR;Xnor_Def;Digital;Generic;Exclusive-NOR gate
+*SYM=XNOR
+*HELP issyntax.hlp Xnor
+*NAME=d_xnor;a;a;[2]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Xnor_Def d_xnor(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=OR2;Or2_Def;Digital;Generic;2 input OR gate
+*SYM=OR2
+*HELP issyntax.hlp Or
+*NAME=D_or;A;A;[2]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Or2_Def D_or(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=OR3;Or3_Def;Digital;Generic;3 input OR gate
+*SYM=OR3
+*HELP issyntax.hlp Or
+*NAME=D_or;A;A;[3]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Or3_Def D_or(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=OR4;Or4_Def;Digital;Generic;4 input OR gate
+*SYM=OR4
+*HELP issyntax.hlp Or
+*NAME=D_or;A;A;[4]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Or4_Def D_or(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=NOR2;Nor2_Def;Digital;Generic;2 input NOR gate
+*SYM=NOR2
+*HELP issyntax.hlp Nor
+*NAME=D_Nor;A;A;[2]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;inputload value (F);real;1p;-;no;-;yes
+.MODEL Nor2_Def D_Nor(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=NOR3;Nor3_Def;Digital;Generic;3 input NOR gate
+*SYM=NOR3
+*HELP issyntax.hlp Nor
+*NAME=D_Nor;A;A;[3]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Nor3_Def D_Nor(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=NOR4;Nor4_Def;Digital;Generic;4 input NOR gate
+*SYM=NOR4
+*HELP issyntax.hlp Nor
+*NAME=D_Nor;A;A;[4]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Nor4_Def D_Nor(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=AND2;And2_Def;Digital;Generic;2 input AND gate
+*SYM=AND2
+*HELP issyntax.hlp And
+*NAME=D_And;A;A;[2]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL And2_Def D_And(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=AND3;And3_Def;Digital;Generic;3 input AND gate
+*SYM=AND3
+*HELP issyntax.hlp And
+*NAME=D_And;A;A;[3]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL And3_Def D_And(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=AND4;And4_Def;Digital;Generic;4 input AND gate
+*SYM=AND4
+*HELP issyntax.hlp And
+*NAME=D_and;A;A;[4]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL And4_Def D_And(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=AND5;And5_Def;Digital;Generic;5 input AND gate
+*SYM=AND5
+*HELP issyntax.hlp And
+*NAME=D_and;A;A;[5]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL And5_Def D_And(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=NAND2;Nan2_Def;Digital;Generic;2 input NAND gate
+*SYM=NAND2
+*HELP issyntax.hlp Nand
+*NAME=D_Nand;A;A;[2]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Nan2_Def D_Nand(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=NAND3;Nan3_Def;Digital;Generic;3 input NAND gate
+*SYM=NAND3
+*HELP issyntax.hlp Nand
+*NAME=D_Nand;A;A;[3]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Nan3_Def D_Nand(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=NAND4;Nan4_Def;Digital;Generic;4 input NAND gate
+*SYM=NAND4
+*HELP issyntax.hlp Nand
+*NAME=D_Nand;A;A;[4]#1
+*FAMILY Din Dout
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load value (F);real;1p;-;no;-;yes
+.MODEL Nan4_Def D_Nand(Rise_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=TRISTATE;Tris_Def;Digital;Generic;Gate
+*SYM=Tristat
+*HELP issyntax.hlp Tristate
+*NAME=D_tristate;A;A;#3
+*PARAM=delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=enable_load;input load (F);real;1p;-;no;-;yes
+*PARAM=input_load;input load (F);real;1p;-;no;-;yes
+*FAMILY Din Din Dout
+.MODEL Tris_Def D_tristate(Delay=1N Enable_Load=1P Input_Load=1P)
+**********
+*SRC=OPENC;OpenC_Def;Digital;Generic;Open collector
+*SYM=Open_c
+*HELP issyntax.hlp "Open Collector"
+*NAME=D_open_c;A;A;#2
+*FAMILY Din Dout
+*PARAM=open_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load (F);real;1p;-;no;-;yes
+.MODEL OpenC_Def D_open_c(Open_Delay=1N Fall_Delay=1N Input_Load=1P)
+**********
+*SRC=OPENE;OpenE_Def;Digital;Generic;Open emitter
+*SYM=Open_e
+*HELP issyntax.hlp "Open Emitter" 
+*NAME=D_open_e;A;A;#2
+*FAMILY Din Dout
+*PARAM=open_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=input_load;input load (F);real;1p;-;no;-;yes
+.MODEL OpenE_Def D_open_e(Open_Delay=1N Rise_Delay=1N Input_Load=1P)
+**********
+*SRC=PULLUP;Pup_Def;Digital;Generic;Resistor
+*SYM=Pup
+*HELP issyntax.hlp Pullup
+*NAME=D_pullup;A;A;#1
+*PARAM=load;input load (F);real;1p;-;no;-;yes
+.MODEL Pup_Def D_pullup(Load=1P)
+**********
+*SRC=LOGIC0;L0_Def;Digital;Generic;Logic 0
+*SYM=Lzero
+*NAME=D_pulldown;A;A;#1
+*FAMILY Dout
+*PARAM=load;input load (F);real;1p;-;no;-;yes
+.MODEL L0_Def D_pulldown(Load=1P)
+**********
+*SRC=LOGIC1;L1_Def;Digital;Generic;Logic 1
+*SYM=Lone
+*NAME=D_pullup;A;A;#1
+*FAMILY Dout
+*PARAM=load;input load (F);real;1p;-;no;-;yes
+.MODEL L1_Def D_pullup(Load=1P)
+**********
+*SRC=PULLDOWN;Pdown_Def;Digital;Generic;Resistor
+*SYM=Pdown
+*HELP issyntax.hlp Pulldown
+*NAME=D_pulldown;A;A;#1
+*FAMILY Dout
+*PARAM=load;input load (F);real;1p;-;no;-;yes
+.MODEL Pdown_Def D_pulldown(Load=1P)
+**********
+*SRC=DFF;DFF_Def;Digital;Generic;D-flip flop
+*SYM=d_dff
+*HELP issyntax.hlp "D Flip Flop"
+*NAME=d_dff;A;A;#6
+*FAMILY Din Din Din Din Dout Dout
+*PARAM=clk_delay;clk delay;real;1n;1p -;no;-;yes
+*PARAM=nset_delay;nset delay;real;1n;1p -;no;-;yes
+*PARAM=nreset_delay;nreset delay;real;1n;1p -;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=ic;output initial state;int;0;-;no;-;yes
+*PARAM=data_load;delay from clk;real;1p;-;no;-;yes
+*PARAM=clk_load;delay from clk;real;1p;-;no;-;yes
+*PARAM=nset_load;delay from clk;real;1p;-;no;-;yes
+*PARAM=nreset_load;delay from clk;real;1p;-;no;-;yes
+.Model DFF_Def d_dff()
+**********
+*SRC=JKFF;JKFF_Def;Digital;Generic;JK-flip flop
+*SYM=d_jkff
+*HELP issyntax.hlp "JK Flip Flop"
+*NAME=d_jkff;A;A;#7
+*FAMILY Din Din Din Din Din Dout Dout
+*PARAM=clk_delay;delay from clk;real;1n;1p -;no;-;yes
+*PARAM=set_delay;delay from set;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;delay from reset;real;1n;1p -;no;-;yes
+*PARAM=ic;output initial state;int;0;0 2;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=jk_load;j/k load (F);real;1p;-;no;-;yes
+*PARAM=clk_load;clk load (F);real;1p;-;no;-;yes
+*PARAM=set_load;set load (F);real;1p;-;no;-;yes
+*PARAM=reset_load;reset load (F);real;1p;-;no;-;yes
+.Model JKFF_Def d_jkff(clk_delay = 13.0e-9 set_delay = 25.0e-9
++ reset_delay = 27.0e-9 ic = 2 rise_delay = 10.0e-9 fall_delay = 3e-9)
+*Connections s clk r pr cl q qn
+**********
+*SRC=TFF;TFF_Def;Digital;Generic;Toggle flip flop
+*SYM=d_tff
+*HELP issyntax.hlp "Toggle Flip Flop"
+*NAME=d_tff;A;A;#6
+*FAMILY Din Din Din Din Dout Dout
+*PARAM=clk_delay;delay from clk;real;1n;1p -;no;-;yes
+*PARAM=set_delay;delay from set;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;delay from reset;real;1n;1p -;no;-;yes
+*PARAM=ic;output initial state;int;0;0 2;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=t_load;t load value (F);real;1p;-;no;-;yes
+*PARAM=clk_load;clk load value (F);real;1p;-;no;-;yes
+*PARAM=set_load;set load value (F);real;1p;-;no;-;yes
+*PARAM=reset_load;reset load value (F);real;1p;-;no;-;yes
+.Model TFF_Def d_tff(clk_delay = 13.0e-9 set_delay = 25.0e-9
++ reset_delay = 27.0e-9 ic = 2 rise_delay = 10.0e-9 fall_delay = 3e-9 t_load = 0.2e-12)
+*Connections t clk set reset out outn
+**********
+*SRC=SRFF;SRFF_Def;Digital;Generic;Set-reset flip flop
+*SYM=d_srff
+*HELP issyntax.hlp "Set-Reset Flip Flop"
+*NAME=d_srff;A;A;#7
+*FAMILY Din Din Din Din Din Dout Dout
+*PARAM=clk_delay;clock delay;real;1n;1p -;no;-;yes
+*PARAM=set_delay;set delay;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;reset delay;real;1n;1p -;no;-;yes
+*PARAM=ic;output initial state;int;0;-;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=sr_load;sr load values (F);real;1p;-;no;-;yes
+*PARAM=clk_load;clk load value (F);real;1p;-;no;-;yes
+*PARAM=set_load;set load value (F);real;1p;-;no;-;yes
+*PARAM=reset_load;reset load value (F);real;1p;-;no;-;yes
+.Model SRFF_Def d_srff(clk_delay = 13.0e-9 set_delay = 25.0e-9
++ reset_delay = 27.0e-9 ic = 2 rise_delay = 10.0e-9 fall_delay = 3e-9)
+*Connections s r clk pr clr q qn
+**********
+*SRC=DLATCH;Dlat_Def;Digital;Generic;D latch
+*SYM=d_dlatch
+*HELP issyntax.hlp "D Latch"
+*NAME=d_dlatch;A;A;#6
+*FAMILY Din Din Din Din Dout Dout
+*PARAM=data_delay;data delay;real;1n;1p -;no;-;yes
+*PARAM=enable_delay;enable delay;real;1n;1p -;no;-;yes
+*PARAM=set_delay;set delay;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;reset delay;real;1n;1p -;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=ic;output initial state;int;0;0 2;no;-;yes
+*PARAM=data_load;data load (F);real;1p;-;no;-;yes
+*PARAM=enable_load;enable load (F);real;1p;-;no;-;yes
+*PARAM=set_load;asynch S load (F);real;1p;-;no;-;yes
+*PARAM=reset_load;asynch R load (F);real;1p;-;no;-;yes
+.Model Dlat_Def d_dlatch()
+**********
+*SRC=SRLATCH;SRlatch_Def;Digital;Generic;SR latch
+*SYM=d_srlatc
+*HELP issyntax.hlp "Set-Reset Latch"
+*NAME=d_srlatch;A;A;#7
+*FAMILY Din Din Din Din Din Dout Dout
+*PARAM=sr_delay;set/reset delay;real;1n;1p -;no;-;yes
+*PARAM=enable_delay;enable delay;real;1n;1p -;no;-;yes
+*PARAM=set_delay;set delay;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;reset delay;real;1n;1p -;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=ic;output initial state;int;0;-;no;-;yes
+*PARAM=sr_load;set/reset load;real;1p;-;no;-;yes
+*PARAM=enable_load;enable load (F);real;1p;-;no;-;yes
+*PARAM=set_load;asynch R load (F);real;1p;-;no;-;yes
+*PARAM=reset_load;asynch S load (F);real;1p;-;no;-;yes
+.Model SRlatch_Def d_srlatch()
+*Connections s r clk pr cl q qnot
+**********
+*SRC=FREQDIV;FDiv_Def;Digital;Generic;Frequency divider
+*SYM=fdiv
+*HELP issyntax.hlp "Frequency Divider"
+*NAME=d_fdiv;A;A;#2
+*FAMILY Din Dout
+*PARAM=div_factor;divide factor;int;2;1 -;no;-;yes
+*PARAM=high_cycles;# 0f cycles for high out;int;1;1 div_factor-1;no;-;yes
+*PARAM=i_count;initial count value;int;0;-;no;-;yes
+*PARAM=rise_delay;rise delay;real;1n;1p -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1n;1p -;no;-;yes
+*PARAM=freq_in_load;freq_in load value (F);real;1p;-;no;-;yes
+.Model FDiv_Def d_fdiv(div_factor = 5 high_cycles = 3
++ i_count = 4 rise_delay = 23e-9 fall_delay = 9e-9)
+*********
+*SRC=DSRC1;Ds1_Def;Digital;Generic;Single digital output
+*SYM=dsrc1
+*HELP issyntax.hlp "Digital Source"
+*NAME=d_source;A;A;[1]
+*FAMILY Dout
+*PARAM=input_file;Input vector filename;string;source1.txt;-;no;-;no
+*PARAM=input_load;input load value (F);real;1p;-;no;-;no
+.model Ds1_Def d_source(input_file =source.txt)
+**********
+*SRC=DSRC2;Ds2_Def;Digital;Generic;Dual digital output
+*SYM=dsrc2
+*HELP issyntax.hlp "Digital Source"
+*NAME=d_source;A;A;[2]
+*FAMILY Dout
+*PARAM=input_file;Input vector filename;string;source2.txt;-;no;-;no
+*PARAM=input_load;input load value (F);real;1p;-;no;-;no
+.model Ds2_Def d_source(input_file =source.txt)
+**********
+*SRC=DSRC3;Ds3_Def;Digital;Generic;Triple digital output
+*SYM=dsrc3
+*HELP issyntax.hlp "Digital Source"
+*NAME=d_source;A;A;[3]
+*FAMILY Dout
+*PARAM=input_file;Input vector filename;string;source3.txt;-;no;-;no
+*PARAM=input_load;input load value (F);real;1p;-;no;-;no
+.model Ds3_Def d_source(input_file =source.txt)
+**********
+*SRC=DSRC7;Ds7_Def;Digital;Generic;Seven digital outputs
+*SYM=dsrc7
+*HELP issyntax.hlp "Digital Source"
+*NAME=d_source;A;A;[7]
+*FAMILY Dout
+*PARAM=input_file;Input vector filename;string;source7.txt;-;no;-;no
+*PARAM=input_load;input load value (F);real;1p;-;no;-;no
+.model Ds7_Def d_source(input_file =source.txt)
+**********
+*SRC=DSRC8;Ds8_Def;Digital;Generic;Eight digital outputs
+*SYM=dsrc8
+*HELP issyntax.hlp "Digital Source"
+*NAME=d_source;A;A;[8]
+*FAMILY Dout
+*PARAM=input_file;Input vector filename;string;source7.txt;-;no;-;no
+*PARAM=input_load;input load value (F);real;1p;-;no;-;no
+.model Ds8_Def d_source(input_file =source.txt)
+**********
+*SRC=DFILTER;Dig_Filter;Digital;Generic;Sampled data filter
+*SYM=SDF
+.SUBCKT DIG_FILTER  FILT_IN CLK FILT_OUT
+*FAMILY Rin Din Rout
+*
+.MODEL N0 REAL_GAIN (GAIN=1.0)
+.MODEL N1 REAL_GAIN (GAIN=2.0)
+.MODEL N2 REAL_GAIN (GAIN=1.0)
+.MODEL G1 REAL_GAIN (GAIN=0.125)
+.MODEL ZM1 REAL_DELAY
+.MODEL D0A REAL_GAIN (GAIN=-0.75)
+.MODEL D1A REAL_GAIN (GAIN=0.5625)
+.MODEL D0B REAL_GAIN (GAIN=-0.3438)
+.MODEL D1B REAL_GAIN (GAIN=1.0)
+*
+AN0A FILT_IN X0A N0
+AN1A FILT_IN X1A N1
+AN2A FILT_IN X2A N2
+*
+AZ0A X0A CLK X1A ZM1
+AZ1A X1A CLK X2A ZM1
+*
+AD0A X2A X0A D0A
+AD1A X2A X1A D1A
+*
+AZ2A X2A FILT1_OUT G1
+AZ3A FILT1_OUT CLK FILT2_IN ZM1
+*
+AN0B FILT2_IN X0B N0
+AN1B FILT2_IN X1B N1
+AN2B FILT2_IN X2B N2
+*
+AZ0B X0B CLK X1B ZM1
+AZ1B X1B CLK X2B ZM1
+*
+AD0 X2B X0B D0B
+AD1 X2B X1B D1B
+*
+AZ2B X2B CLK FILT_OUT ZM1
+*
+.ENDS
+***************
+*SRC=STATE2;St2_Def;Digital;Generic;2 bit up/down counter
+*SYM=state2
+*HELP issyntax.hlp "State Machine"
+*NAME=d_state;A;A;[1]#2[2]
+*FAMILY Din Din Din Dout
+*PARAM=clk_delay;delay;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;delay;real;1n;1p -;no;-;yes
+*PARAM=state_file;transition file;string;state2.txt;-;no;-;no
+*PARAM=reset_state;default reset @DC;int;0;-;no;-;no
+*PARAM=input_load;input load (F);real;1p;-;no;-;yes
+*PARAM=clk_load;clock load (F);real;1p;-;no;-;yes
+*PARAM=reset_load;reset load (F);real;1p;-;no;-;yes
+.model St2_Def d_state(clk_delay=1n reset_delay=1n state_file=state2.txt 
++ reset_state=0 input_load=1p clk_load=1p reset_load=1p)
+**********
+*SRC=RAM2_1;Ram21_DEF;Digital;Generic;1 data bit 2 address bits
+*SYM=ram21
+*HELP issyntax.hlp RAM
+*NAME=d_ram;A;A;[1][1][2]#1[1]
+*FAMILY Din Dout Din Din Din
+*PARAM=select_value;active select comp.;int;1;0 32767;no;-;yes
+*PARAM=ic;init bit state@DC;int;2;0 2;no;-;yes
+*PARAM=read_delay;delay;real;1n;1p -;no;-;yes
+*PARAM=data_load;data load (F);real;1p;-;no;-;yes
+*PARAM=address_load;address load (F);real;1p;-;no;-;yes
+*PARAM=select_load;select load (F);real;1p;-;no;-;yes
+*PARAM=enable_load;enable load (F);real;1p;-;no;-;yes
+.model Ram21_DEF d_ram(select_value=1 ic=0 read_delay=1n data_load=1p
++ address_load=1p select_load=1p enable_load=1p)
+**********
+*SRC=RAM1_1;Ram11_DEF;Digital;Generic;1 data bit 1 address bit
+*SYM=ram1_1
+*HELP issyntax.hlp RAM
+*NAME=d_ram;A;A;[1][1][1]#1[1]
+*FAMILY Din Dout Din Din Din
+*PARAM=select_value;active select comp.;int;1;0 32767;no;-;yes
+*PARAM=ic;init bit state@DC;int;2;0 2;no;-;yes
+*PARAM=read_delay;delay;real;1n;1p -;no;-;yes
+*PARAM=data_load;data load (F);real;1p;-;no;-;yes
+*PARAM=address_load;address load (F);real;1p;-;no;-;yes
+*PARAM=select_load;select load (F);real;1p;-;no;-;yes
+*PARAM=enable_load;enable load (F);real;1p;-;no;-;yes
+.model Ram11_DEF d_ram(select_value=1 ic=0 read_delay=1n data_load=1p
++ address_load=1p select_load=1p enable_load=1p)
+**********
+*SRC=CLK;CLK;Digital;Generic;Digital oscillator
+*SYM=D_Clock
+*HELP issyntax.hlp "Controlled Digital Oscillator"
+.SUBCKT CLK 2 {DUTY=50 FREQ=???}
+*FAMILY Dout
+V1 1 0 0
+A1 1 2 D_OSC1
+.Model D_OSC1 d_osc(cntl_freq_array = [0 {FREQ} 1 {FREQ}] 
++ duty_cycle = {DUTY/100} init_phase =0 rise_delay = 1n fall_delay=1n)
+.ENDS
+**********
+*SRC=DSRC;Dsrc;Digital;Generic;Parameterized digital source
+*SYM=DSRC
+*FAMILY Dout
+.SUBCKT DSRC 2 {INIT=0 PULSE=??? DELAY=0 WIDTH=??? PERIOD=???}
+V1 1 0 PULSE {INIT} {PULSE} {DELAY} 1N 1N {WIDTH} {PERIOD}
+A2 [1] [2] A2D_001
+.Model A2D_001 adc_bridge(in_low = 0.01 in_high = 0.99)
+.ENDS
+**********
+*SRC=DCLK;DClock;!Generators;Signal;Digital oscillator
+*SYM=D_Clock
+*HELP issyntax.hlp "Controlled Digital Oscillator"
+.SUBCKT DCLOCK 2 {DUTY=50 FREQ=???}
+*FAMILY Dout
+V1 1 0 0
+A1 1 2 D_OSC1
+.Model D_OSC1 d_osc(cntl_freq_array = [0 {FREQ} 1 {FREQ}] 
++ duty_cycle = {DUTY/100} init_phase =0 rise_delay = 1n fall_delay=1n)
+.ENDS
+**********
+*SRC=DSOURCE;Dsource;!Generators;Signal;Digital source
+*SYM=DSRC
+.SUBCKT DSOURCE 2 {INIT=0 PULSE=??? DELAY=0 WIDTH=??? PERIOD=???}
+*FAMILY Dout
+V1 1 0 PULSE {INIT} {PULSE} {DELAY} 1N 1N {WIDTH} {PERIOD}
+A2 [1] [2] A2D_001
+.Model A2D_001 adc_bridge(in_low = 0.01 in_high = 0.99)
+.ENDS
+**********
+*SRC=BCNT;BCNT_Def;Digital;Generic;3 bit up/down counter
+*SYM=Bcnt
+*HELP issyntax.hlp "State Machine"
+*NAME=d_state;A;A;[1]#2[3]
+*FAMILY Din Din Din Dout
+*PARAM=clk_delay;delay;real;1n;1p -;no;-;yes
+*PARAM=reset_delay;delay;real;1n;1p -;no;-;yes
+*PARAM=state_file;transition file;string;bcnt.txt;-;no;-;no
+*PARAM=reset_state;default reset @DC;int;0;-;no;-;no
+*PARAM=input_load;input load (F);real;1p;-;no;-;yes
+*PARAM=clk_load;clock load (F);real;1p;-;no;-;yes
+*PARAM=reset_load;reset load (F);real;1p;-;no;-;yes
+.model Bcnt_Def d_state(clk_delay=1n reset_delay=1n state_file=bcnt.txt 
++ reset_state=0 input_load=1p clk_load=1p reset_load=1p)
+**********
+*SRC=ECL10K2A;ECL10K2A_Def;Bridges;ECL2Analog;ECL10K to Analog
+*SYM=ECL2a
+*NAME=dac_bridge;A;A;[1][1]
+*FAMILY ECLin ANALOG
+*PARAM=out_low;analog output for 0 in;real;-1,75;-;no;-;yes
+*PARAM=out_high;analog output for 1 in;real;-.85;-;no;-;yes
+*PARAM=out_undef;analog output for UNDEFINED;real;-1.29;-;no;-;yes
+*PARAM=t_rise;rise time;real;1N;3.5n;no;-;yes
+*PARAM=t_fall;fall time;real;1N;3n;no;-;yes
+*PARAM=input_load;input load (F);real;1P;-;no;-;yes
+.Model ECL10K2A_Def dac_bridge(out_low = -1.75 out_high = -.85 out_undef = -1.29
++ input_load = 5.0e-12 t_rise = 3.5n t_fall = 3n)
+**********
+*SRC=A2ECL10K;A2ECL10K_Def;Bridges;Analog2ECL;Analog to ECL10K
+*SYM=a2ECL
+*NAME=adc_bridge;A;A;[1][1]
+*FAMILY ANALOG ECLout 
+*PARAM=in_low;max. 0-valued A. input;real;-1.65;-;no;-;yes
+*PARAM=in_high;min. 1-valued A. input;real;-.95;-;no;-;yes
+*PARAM=rise_delay;rise delay;real;1N;1P -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1N;1P -;no;-;yes
+.Model A2ECL10K_Def adc_bridge(in_low = -1.65 in_high = -.95)
+**********
+*SRC=ECL10H2A;ECL10H2A_Def;Bridges;ECL2Analog;ECL10H to Analog
+*SYM=ECL2a
+*NAME=dac_bridge;A;A;[1][1]
+*FAMILY ECLin ANALOG  
+*PARAM=out_low;analog output for 0 in;real;-1,7;-;no;-;yes
+*PARAM=out_high;analog output for 1 in;real;-.85;-;no;-;yes
+*PARAM=out_undef;analog output for UNDEFINED;real;-1.29;-;no;-;yes
+*PARAM=t_rise;rise time;real;1N;3.5n;no;-;yes
+*PARAM=t_fall;fall time;real;1N;3n;no;-;yes
+*PARAM=input_load;input load (F);real;1P;-;no;-;yes
+.Model ECL10H2A_Def dac_bridge(out_low = -1.7 out_high = -.85 out_undef = -1.29
++ input_load = 5.0e-12 t_rise = 3.5n t_fall = 3n)
+**********
+*SRC=A2ECL10H;A2ECL10H_Def;Bridges;Analog2ECL;Analog to ECL10H
+*SYM=a2ECL
+*NAME=adc_bridge;A;A;[1][1]
+*FAMILY ANALOG  ECLout  
+*PARAM=in_low;max. 0-valued A. input;real;-1.6;-;no;-;yes
+*PARAM=in_high;min. 1-valued A. input;real;-.95;-;no;-;yes
+*PARAM=rise_delay;rise delay;real;1N;1P -;no;-;yes
+*PARAM=fall_delay;fall delay;real;1N;1P -;no;-;yes
+.Model A2ECL10H_Def adc_bridge(in_low = -1.6 in_high = -.95)
+**********
+

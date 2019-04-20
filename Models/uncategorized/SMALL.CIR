@@ -1,0 +1,49 @@
+*  CMOS Ring oscillator (7 inverters)
+*
+.width out=80
+.options acct
+*
+*  Transistors :
+mq1n   2     1     0     0     CMOSN l=3u w=4.5u
+mq1p   2     1   100   100     CMOSP l=3u w=4.5u
+mq2n   3     2     0     0     CMOSN l=3u w=4.5u
+mq2p   3     2   100   100     CMOSP l=3u w=4.5u
+mq3n   4     3     0     0     CMOSN l=3u w=4.5u
+mq3p   4     3   100   100     CMOSP l=3u w=4.5u
+mq4n   5     4     0     0     CMOSN l=3u w=4.5u
+mq4p   5     4   100   100     CMOSP l=3u w=4.5u
+mq5n   6     5     0     0     CMOSN l=3u w=4.5u
+mq5p   6     5   100   100     CMOSP l=3u w=4.5u
+mq6n   7     6     0     0     CMOSN l=3u w=4.5u
+mq6p   7     6   100   100     CMOSP l=3u w=4.5u
+mq7n   1     7     0     0     CMOSN l=3u w=4.5u
+mq7p   1     7   100   100     CMOSP l=3u w=4.5u
+*
+*  Voltage cards :
+vdd 100     0     dc     5V
+*
+*  Analysis cards :
+.tran 100ps 10ns
+.plot tran v(1) v(7)
+.ic v(1)=0 v(3)=0 v(5)=0 v(7)=0
+
+* Commands for Spice3
+*#destroy all
+*#run
+*#plot tran1.v(1) tran1.v(7)
+
+*
+*  Model cards :
+.MODEL CMOSN NMOS (VTO=0.83 KP=33U GAMMA=1.36 PHI=0.6
++ LAMBDA=0.016 PB=0.8 JS=10N LD=0.28U TOX=50N NSUB=1E16
++ UO=200 UEXP=0.1 UCRIT=4E4 VMAX=100K XJ=0.4U
++ DELTA=1.24 NFS=0 NEFF=2 NSS=0 TPG=1.0 RSH=25
++ CGSO=0.5N CGDO=0.5N CJ=0.32M MJ=0.5 CJSW=0.9N MJSW=0.33
++ CGBO=0 FC=0.5 LEVEL=2)
+.MODEL CMOSP PMOS (VTO=-0.89 KP=15U GAMMA=0.88 PHI=0.6
++ LAMBDA=0.047 PB=0.8 JS=10N LD=0.28U TOX=50N NSUB=1.12E14
++ UO=100 UEXP=0.1 UCRIT=20E4 VMAX=100K XJ=0.4U
++ DELTA=1.94 NFS=0 NEFF=2 NSS=0 TPG=-1.0 RSH=95
++ CGSO=0.4N CGDO=0.4N CJ=0.2M MJ=0.5 CJSW=0.45N MJSW=0.33
++ CGBO=0 FC=0.5 LEVEL=2)
+.end

@@ -1,0 +1,1082 @@
+* ------------------------------------------------------------ *
+*
+* MOTOROLA Semiconductor Product Sector
+* Semiconductor Component Group
+* MC33363 model developed by Christophe BASSO, Toulouse (FRANCE)
+* email: R38010@email.sps.mot.com
+* MICROSIM's PSpice compatible
+* Requires PSpice 6.2a or higher
+*
+* Last modified: 3/13/99
+*
+* ------------------------------------------------------------ *
+***********
+.SUBCKT MC33363_MC 1   3   4 5 6  7  8   9    10 11  12 13 16 PARAMS: RDSON=14
+*               STR VCC GND RT CT REG COMP VF OVL GND   DRAIN
+**** ISUPPLY ****
+GSUPP 3 4 VALUE = { IF( V(33)<3.5, 250U, 3.5M ) }
+**** REFERENCE VOLTAGE ****
+EREF 80 4 VALUE = { IF( V(3)<7.7, V(3)-1.2, 6.5 ) }
+ROUT 80 8 10
+**** STARTUP AND UVLO ****
+XUVLO 3 81 UVLO_MC
+XOVL 60 11 82 COMP2_MC
+GSTRT 1 3 VALUE = { IF( V(81)<3.5, (14M*((14-V(3))/14)+6M), 40U ) }
+XAND 81 82 33 AND2_MC
+**** OSCILLATOR SECTION ****
+GCHG 4 7 VALUE = { IF( ((V(INV1)>500M) & (V(33)>3.5)), I(VIRT)*4, 0 ) }
+GDIS 7 4 VALUE = { IF( V(INV1)<500M, I(VIRT)*4, 0 ) }
+DUV 7 33 DUV
+VSET 21 4 1.25V
+VIRT 21 6
+VREF1 22 4 2.5V
+RI 22 23 40K
+RF 23 INV1 10K
+ECMP CLK 4 VALUE = { IF( (V(7)-V(23)>0), 5, 0 ) }
+EINV 25 4 VALUE = { IF( V(CLK)<500M, 2.5, 0 ) }
+RDEL1 25 INV1 100
+CEL2 INV1 4 100P
+**** PWM AND LATCH ****
+XPWM 7 9 31 COMP2_MC
+XOR1 33 31 32 34 OR3_IN_INV_MC
+XNAND1 34 CLK 35 AND_IN_INV_MC
+XFFLOP 35 34 36 37 FFLOP_MC
+XNAND2 CLK 36 33 450 3 AND3_IN_INV_MC
+RDRV 450 DRV 100
+**** ERROR AMPLIFIER ****
+VREF2 60 4 2.6V
+XERR 60 10 9 4 ERRAMP4_MC ; +  - OUT GND
+**** CURRENT LIMIT COMPARATOR ****
+RLIMIT 40 4 450
+G225 4 40 VALUE = { I(VIRT)*2.25 }
+XCOMP 50 40 32 COMPDEL_MC
+**** MOSFET MODEL ****
+CIN DRV 4 200pF
+SMOS 16 71 DRV 4 MOS
+VISRC 71 4
+**** KELVIN AND L.E.B. ****
+GIKEL 4 50 VALUE = { IF( V(DRV)>V(3)-0.7, I(VISRC)/51.2, 0 ) }
+RKEL 50 4 9
+.MODEL DUV D RS=100M TT=50N CJO=10P N=0.1
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS
+**********
+**** DELAYED COMPARATOR ****
+.SUBCKT COMPDEL_MC 1 2 3
+*               + - Out
+E1 4 0 VALUE = { IF( V(1) > V(2), 1V, 0 ) }
+RT 4 5 100
+CT 5 0 3.36NF
+E2 10 0 VALUE = { IF( V(5) > 500M, 5V, 0 ) }
+RD 10 3 100
+CD 3 0 100P
+.ENDS COMPDEL_MC
+**** UVLO CIRCUIT ****
+.SUBCKT UVLO_MC  1   2
+*            VIN OUT
+S1 1 3 1 0 SUVLO
+RUV 3 0 100K
+E1 4 0 VALUE = { IF( V(3) > 5V, 5V, 0 ) }
+RD 4 2 100
+CD 2 0 100P
+.MODEL SUVLO VSWITCH (RON=1 ROFF=1MEG VON=14.5 VOFF=9.5)
+.ENDS UVLO_MC
+**** T FFLOP Circuit ****
+.SUBCKT FFLOP_MC 6 8 2 1
+*             S R Q Q\
+EQB 10 0 VALUE = { IF ( (V(8)<800M) & (V(2)>800M), 0, 5V ) }
+EQ  20 0 VALUE = { IF ( (V(6)<800M) & (V(1)>800M), 0, 5V ) }
+RD1   10 1 100
+CD1   1 0 10P IC=5
+RD2   20 2 100
+CD2   2 0 10P IC=0
+.ENDS FFLOP_MC
+**** 2 INPUT, ONE INPUT IS INV, AND CIRCUIT ****
+.SUBCKT AND_IN_INV_MC 1   2    3
+*                 INV NINV OUT
+E1 4 0 VALUE = { IF( ((V(1)<3.5V) & (V(2)>800M)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND_IN_INV_MC
+**** 3 INPUT, ONE INPUT IS INV. AND CIRCUIT ****
+.SUBCKT AND3_IN_INV_MC  1   2    3    4  6
+*                   INV NINV NINV OUT VCC
+E1 5 0 VALUE = { IF( ((V(1)<3.5V) & (V(2)>800M) & (V(3)>800M)), V(6), 0 ) }
+RD 5 4 10
+CD 4 0 100P
+.ENDS AND3_IN_INV_MC
+**** 3 INPUT, ONE INPUT IS INV. OR CIRCUIT ****
+.SUBCKT OR3_IN_INV_MC 1   2    3    4
+*                 INV NINV NINV OUT
+E1 5 0 VALUE = { IF( ((V(1)<3.5V) | (V(2)>800M) | (V(3)>800M)), 5V, 0 ) }
+RD 5 4 100
+CD 4 0 10P
+.ENDS OR3_IN_INV_MC
+**** 2 INPUT AND CIRCUIT ****
+.SUBCKT AND2_MC 1 2 3
+E1 4 0 VALUE = { IF( ((V(1)>800M) & (V(2)>800M)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND2_MC
+**** 2 INPUT NOR CIRCUIT ****
+.SUBCKT NOR2_MC 1 2 3
+E1 4 0 VALUE = { IF( ((V(1)>800M) | (V(2)>800M)), 0V, 5 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS NOR2_MC
+**** 2 INPUT COMPARATOR ****
+.SUBCKT COMP2_MC 1 2 3
+*             + - S
+E1 4 0 VALUE = { IF( (V(1) > V(2)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS COMP2_MC
+**** ERROR AMPLIFIER MODEL ****
+.SUBCKT ERRAMP4_MC 20 8  3  21
+*   	       +  - OUT GND
+RIN 20 8 8MEG
+CP1 11 21 11.5P	; {1/(6.28*(GAIN/100U)*POLE)}
+E1 5 21 11 21 1
+R9 5 2 5
+D14 2 13 DMOD
+ISINK 13 21 2.7U	; {ISINK/100} in mA
+Q1 21 13 16 QPMOD
+ISOURCE 7 3 100u ; {ISOURCE} in uA
+D12 3 7 DMOD
+D15 21 11 DCLAMP
+G1 21 11 20 8 100U
+V1 7 21 5.8			; Vhigh - 0.6V
+V4 3 16 250M		; Vlow - 38mV
+RP1 11 21 125.9MEG	; {GAIN/100U}
+.MODEL QPMOD PNP
+.MODEL DCLAMP D (RS=10 BV=5 IBV=0.01)
+.MODEL DMOD D TT=1N CJO=10P
+.ENDS ERRAMP4_MC
+**** MODELS USED FOR APPLICATION EXAMPLE ****
+.SUBCKT XFMR_MC 1 2 3 4 PARAMS: RATIO=1
+RP 1 2 1MEG
+E 5 4 VALUE = { V(1,2)*RATIO }
+G 1 2 VALUE = { I(VM)*RATIO }
+RS 6 3 1U
+VM 5 6
+.ENDS XFMR_MC
+****
+.MODEL MUR110 D BV=133.3 CJO=45P IBV=2U IS=13.5N M=.302
++ N=1.59 RS=25.7M TT=50.4N VJ=.75
+****
+.MODEL MUR120 D BV=266 CJO=15.7P IBV=5U IS=1.08U M=.310
++ N=2.59 RS=55.5M TT=108N VJ=.75
+****
+.MODEL MUR160 D BV=800 CJO=15.7P IBV=5U IS=1.08U M=.310
++ N=2.59 RS=55.5M TT=108N VJ=.75
+****
+.MODEL DN5818 D BV=4.00E+01 CJO=1.84E-10 EG=0.69
++ IBV=5.00E-04 IS=1.65E-05 M=.637 N=1.34 RS=5.07E-02
++ TT=7.20E-11 VJ=1.95 XTI=2
+****
+.SUBCKT TL431_MC 7 6 11
+*             K A FDBK
+.MODEL DCLAMP D (IS=13.5N RS=25M N=1.59
++ CJO=45P VJ=.75 M=.302 TT=50.4N BV=34V IBV=1MA)
+V1 1 6 2.495
+R1 6 2 15.6
+C1 2 6 .5U
+R2 2 3 100
+C2 3 4 .08U
+R3 4 6 10
+G2 6 8 3 6 1.73
+D1 5 8 DCLAMP
+D2 7 8 DCLAMP
+V4 5 6 2
+G1 6 2 1 11 0.11
+.ENDS TL431_MC
+****
+.SUBCKT MOC8101_MC 1 2 3   5
+* OPTO-ISOLATOR A C COL EMITTER
+RB 4 0 100Meg
+VM 1 6
+D1 6 2 LED
+H1 7 0 VM .0055
+R1 7 8 1K
+C1 8 0 3.35nF
+G1 3 4 8 0 1
+Q1 3 4 5 MPSA06
+.MODEL LED D(N=1.7 RS=.7 CJO=23.9P IS=85.3p BV=6 IBV=10U
++ VJ=0.75 M=0.333 TT=4.32U)
+.MODEL MPSA06 NPN (IS=15.2F NF=1 BF=589 VAF=98.6 IKF=90M ISE=3.34P NE=2
++ BR=4 NR=1 VAR=16 IKR=0.135 RE=0.343 RB=1.37 RC=0.137 XTB=1.5
++ CJE=9.67P VJE=1.1 MJE=0.5 CJC=7.34P VJC=0.3 MJC=0.3 TF=10.29n TR=276N)
+.ENDS
+*****
+* ------------------------------------------------------------ *
+*
+* MOTOROLA Semiconductor Product Sector
+* Semiconductor Component Group
+* MC33365 model developed by Christophe BASSO, Toulouse (FRANCE)
+* e-mail: R38010@email.sps.mot.com
+* MICROSIM's PSpice compatible
+* Requires PSpice 6.2a or higher
+*
+* Last modified: 13/3/99
+*
+* ------------------------------------------------------------ *
+***********
+.SUBCKT MC33365_MC 1   3   4 5 6  7  8   9    10 11  12 13 16 PARAMS: RDSON=15
+*               STR VCC GND RT CT REG COMP VF BOK GND   DRAIN
+**** ISUPPLY ****
+GSUPP 3 4 VALUE = { IF( V(33)<3.5, 250U, 3.5M ) }
+**** REFERENCE VOLTAGE ****
+EREF 80 4 VALUE = { IF( V(3)<7.7, V(3)-1.2, 6.5 ) }
+ROUT 80 8 10
+**** STARTUP AND UVLO ****
+XUVLO 3 81 UVLO_MC
+GBOK 3 11 VALUE = { IF( V(82)>3.5, 50U, 100n ) }
+VBOK 120 4 1.25
+XOVL 11 120 82 COMP2_MC
+GSTRT 1 3 VALUE = { IF( V(81)<3.5, (0.2M*((14-V(3))/14)+1.6M), 40U ) }
+XAND 81 82 33 AND2_MC
+**** OSCILLATOR SECTION ****
+GCHG 4 7 VALUE = { IF( ((V(INV1)>500M) & (V(33)>3.5)), I(VIRT)*4, 0 ) }
+GDIS 7 4 VALUE = { IF( V(INV1)<500M, I(VIRT)*4, 0 ) }
+DUV 7 33 DUV
+VSET 21 4 1.25V
+VIRT 21 6
+VREF1 22 4 2.5V
+RI 22 23 40K
+RF 23 INV1 10K
+ECMP CLK 4 VALUE = { IF( (V(7)-V(23)>0), 5, 0 ) }
+EINV 25 4 VALUE = { IF( V(CLK)<500M, 2.5, 0 ) }
+RDEL1 25 INV1 100
+CEL2 INV1 4 100P
+**** PWM AND LATCH ****
+XPWM 7 9 31 COMP2_MC
+XOR1 33 31 32 34 OR3_IN_INV_MC
+XNAND1 34 CLK 35 AND_IN_INV_MC
+XFFLOP 35 34 36 37 FFLOP_MC
+XNAND2 CLK 36 33 450 3 AND3_IN_INV_MC
+RDRV 450 DRV 100
+**** ERROR AMPLIFIER ****
+VREF2 60 4 2.6V
+XERR 60 10 9 4 ERRAMP5_MC ; +  - OUT GND
+**** CURRENT LIMIT COMPARATOR ****
+RLIMIT 40 4 450
+G225 4 40 VALUE = { I(VIRT)*2.25 }
+XCOMP 50 40 32 COMPDEL_MC
+**** MOSFET MODEL ****
+CIN DRV 4 200pF
+SMOS 16 71 DRV 4 MOS
+VISRC 71 4
+**** KELVIN AND L.E.B. ****
+GIKEL 4 50 VALUE = { IF( V(DRV)>V(3)-0.7, I(VISRC)/51.2, 0 ) }
+RKEL 50 4 9
+.MODEL DUV D RS=100M TT=50N CJO=10P N=0.1
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS MC33365_MC
+**********
+**** DELAYED COMPARATOR ****
+.SUBCKT COMPDEL_MC 1 2 3
+*               + - Out
+E1 4 0 VALUE = { IF( V(1) > V(2), 1V, 0 ) }
+RT 4 5 100
+CT 5 0 3.36NF
+E2 10 0 VALUE = { IF( V(5) > 500M, 5V, 0 ) }
+RD 10 3 100
+CD 3 0 100P
+.ENDS COMPDEL_MC
+**** UVLO CIRCUIT ****
+.SUBCKT UVLO_MC  1   2
+*            VIN OUT
+S1 1 3 1 0 SUVLO
+RUV 3 0 100K
+E1 4 0 VALUE = { IF( V(3) > 5V, 5V, 0 ) }
+RD 4 2 100
+CD 2 0 100P
+.MODEL SUVLO VSWITCH (RON=1 ROFF=1MEG VON=14.5 VOFF=9.5)
+.ENDS UVLO_MC
+**** T FFLOP Circuit ****
+.SUBCKT FFLOP_MC 6 8 2 1
+*             S R Q Q\
+EQB 10 0 VALUE = { IF ( (V(8)<800M) & (V(2)>800M), 0, 5V ) }
+EQ  20 0 VALUE = { IF ( (V(6)<800M) & (V(1)>800M), 0, 5V ) }
+RD1   10 1 100
+CD1   1 0 10P IC=5
+RD2   20 2 100
+CD2   2 0 10P IC=0
+.ENDS FFLOP_MC
+**** 2 INPUT, ONE INPUT IS INV, AND CIRCUIT ****
+.SUBCKT AND_IN_INV_MC 1   2    3
+*                 INV NINV OUT
+E1 4 0 VALUE = { IF( ((V(1)<3.5V) & (V(2)>800M)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND_IN_INV_MC
+**** 3 INPUT, ONE INPUT IS INV. AND CIRCUIT ****
+.SUBCKT AND3_IN_INV_MC  1   2    3    4  6
+*                   INV NINV NINV OUT VCC
+E1 5 0 VALUE = { IF( ((V(1)<3.5V) & (V(2)>800M) & (V(3)>800M)), V(6), 0 ) }
+RD 5 4 10
+CD 4 0 100P
+.ENDS AND3_IN_INV_MC
+**** 3 INPUT, ONE INPUT IS INV. OR CIRCUIT ****
+.SUBCKT OR3_IN_INV_MC 1   2    3    4
+*                 INV NINV NINV OUT
+E1 5 0 VALUE = { IF( ((V(1)<3.5V) | (V(2)>800M) | (V(3)>800M)), 5V, 0 ) }
+RD 5 4 100
+CD 4 0 10P
+.ENDS OR3_IN_INV_MC
+**** 2 INPUT AND CIRCUIT ****
+.SUBCKT AND2_MC 1 2 3
+E1 4 0 VALUE = { IF( ((V(1)>800M) & (V(2)>800M)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND2_MC
+**** 2 INPUT NOR CIRCUIT ****
+.SUBCKT NOR2_MC 1 2 3
+E1 4 0 VALUE = { IF( ((V(1)>800M) | (V(2)>800M)), 0V, 5 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS NOR2_MC
+**** 2 INPUT COMPARATOR ****
+.SUBCKT COMP2_MC 1 2 3
+*             + - S
+E1 4 0 VALUE = { IF( (V(1) > V(2)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS COMP2_MC
+**** ERROR AMPLIFIER MODEL ****
+.SUBCKT ERRAMP5_MC 20 8  3  21
+*   	       +  - OUT GND
+RIN 20 8 8MEG
+CP1 11 21 11.5P	; {1/(6.28*(GAIN/100U)*POLE)}
+E1 5 21 11 21 1
+R9 5 2 5
+D14 2 13 DMOD
+ISINK 13 21 2.7U	; {ISINK/100} in mA
+Q1 21 13 16 QPMOD
+ISOURCE 7 3 100u ; {ISOURCE} in uA
+D12 3 7 DMOD
+D15 21 11 DCLAMP
+G1 21 11 20 8 100U
+V1 7 21 5.8			; Vhigh - 0.6V
+V4 3 16 250M		; Vlow - 38mV
+RP1 11 21 125.9MEG	; {GAIN/100U}
+.MODEL QPMOD PNP
+.MODEL DCLAMP D (RS=10 BV=5 IBV=0.01)
+.MODEL DMOD D TT=1N CJO=10P
+.ENDS ERRAMP5_MC
+**** MODELS USED FOR APPLICATION EXAMPLE ****
+.SUBCKT XFMR_MC 1 2 3 4 PARAMS: RATIO=1
+RP 1 2 1MEG
+E 5 4 VALUE = { V(1,2)*RATIO }
+G 1 2 VALUE = { I(VM)*RATIO }
+RS 6 3 1U
+VM 5 6
+.ENDS XFMR_MC
+****
+.MODEL MUR110 D BV=133.3 CJO=45P IBV=2U IS=13.5N M=.302
++ N=1.59 RS=25.7M TT=50.4N VJ=.75
+****
+.MODEL MUR120 D BV=266 CJO=15.7P IBV=5U IS=1.08U M=.310
++ N=2.59 RS=55.5M TT=108N VJ=.75
+****
+.MODEL MUR160 D BV=800 CJO=15.7P IBV=5U IS=1.08U M=.310
++ N=2.59 RS=55.5M TT=108N VJ=.75
+****
+.MODEL DN5818 D BV=4.00E+01 CJO=1.84E-10 EG=0.69
++ IBV=5.00E-04 IS=1.65E-05 M=.637 N=1.34 RS=5.07E-02
++ TT=7.20E-11 VJ=1.95 XTI=2
+****
+.SUBCKT TL431_MC 7 6 11
+*             K A FDBK
+.MODEL DCLAMP D (IS=13.5N RS=25M N=1.59
++ CJO=45P VJ=.75 M=.302 TT=50.4N BV=34V IBV=1MA)
+V1 1 6 2.495
+R1 6 2 15.6
+C1 2 6 .5U
+R2 2 3 100
+C2 3 4 .08U
+R3 4 6 10
+G2 6 8 3 6 1.73
+D1 5 8 DCLAMP
+D2 7 8 DCLAMP
+V4 5 6 2
+G1 6 2 1 11 0.11
+.ENDS TL431_MC
+****
+.SUBCKT MOC8101_MC 1 2 3   5
+* OPTO-ISOLATOR A C COL EMITTER
+RB 4 0 100Meg
+VM 1 6
+D1 6 2 LED
+H1 7 0 VM .0055
+R1 7 8 1K
+C1 8 0 3.35nF
+G1 3 4 8 0 1
+Q1 3 4 5 MPSA06
+.MODEL LED D(N=1.7 RS=.7 CJO=23.9P IS=85.3p BV=6 IBV=10U
++ VJ=0.75 M=0.333 TT=4.32U)
+.MODEL MPSA06 NPN (IS=15.2F NF=1 BF=589 VAF=98.6 IKF=90M ISE=3.34P NE=2
++ BR=4 NR=1 VAR=16 IKR=0.135 RE=0.343 RB=1.37 RC=0.137 XTB=1.5
++ CJE=9.67P VJE=1.1 MJE=0.5 CJC=7.34P VJC=0.3 MJC=0.3 TF=10.29n TR=276N)
+.ENDS
+*****
+* ------------------------------------------------------------ *
+*
+* MOTOROLA Semiconductor Product Sector
+* Semiconductor Component Group
+* MC3337X series Pulse Width Modulator
+* PWM model developed by Christophe BASSO, Toulouse (FRANCE)
+* MICROSIM's PSpice compatible
+* Last modified: April 8th 1999
+*
+* By forcing a current into the FB pin (0->8mA) you
+* generate an output voltage (740mV->10mV) corresponding
+* to a duty-cycle from 74% to 1%
+*
+* ------------------------------------------------------------ *
+*********
+.SUBCKT 370PWM_MC 1 2
+* 			  FB Out_Duty
+RSUPP 1 0 4.3k			; Internal supply current
+RGAIN1 1 70 15			; Dynamic zener resistance
+XERR 71 70 72 ERRAMP2_MC; Internal error amplifier
+VREF 71 0 8.6V			; Internal reference voltage
+XPCH 73 72 70 PCHAN_MC; P-channel MOSFET
+RGAIN2 73 0 130			; I/V converter
+DCLP 73 74 DCLAMP		; Negative clamp
+VCLP1 74 0 100mV		; lower duty-cycle limit
+VD 75 0 700mV			; upper duty-cycle limit
+E1 76 0 75 73 1			; decreasing duty-cycle
+RF 76 140 100
+CF 140 0 227nF
+EB2 2 0 VALUE = { IF ( V(140)>740mV,740mV, IF ( V(140)<10mV,10mV, V(140) ) ) }
+.MODEL DCLAMP D (RS=1.5 CJO=4PF IS=7E-09 N=2 VJ=.6V
++ TT=6E-09 M=.45 BV=100V)
+.ENDS 370PWM_MC
+* ------------------------------------------------------------ *
+*
+* MOTOROLA Semiconductor Product Sector
+* Semiconductor Component Group
+* MC33370 average FLYBACK AC model DCM and CCM modes
+* FLYBACK average model made by Ben-Gurion University (ISRAEL)
+* http://www.ee.bgu.ac.il/~pel
+* MC33370 model developed by Christophe BASSO, Toulouse (FRANCE)
+* MICROSIM's PSpice compatible
+* Last modified: December 2nd 1998
+*
+* ------------------------------------------------------------ *
+*********
+.SUBCKT MC33370AC_MC 11 21  31  41 51  61  81       77   PARAMS: Lp=100u
+* 			    FB Vcc Gnd NC Out Vin Duty_Out In_duty
+RDUM 41 31 1Meg			; Dummy OFF resistor
+RSUPP 11 31 4.3k		; Internal supply current
+RGAIN1 11 70 15			; Dynamic zener resistance
+XERR 71 70 72 ERRAMP2_MC            ; Internal error amplifier
+VREF 71 31 8.6V			; Internal reference voltage
+XPCH 73 72 70 PCHAN_MC; P-channel MOSFET
+RGAIN2 73 31 130		; I/V converter
+DCLP 73 74 DCLAMP		; Negative clamp
+VCLP1 74 31 100mV		; lower duty-cycle limit
+VD 75 31 700mV			; upper duty-cycle limit
+E1 76 31 75 73 1		; decreasing duty-cycle
+RF 76 140 100
+CF 140 31 227nF
+E2 81 31 140 31 1		; duty-cycle buffer
+GIN 61 31 VALUE = { I(VLM)*V(77)/(V(77)+V(DOFF)) }
+EELM OUT1 31 VALUE = { V(61)*V(77)-V(51)*V(DOFF) }
+RM OUT1 5 1M
+LM 5 8 {Lp}
+VLM 8 31
+GOUT 31 51 VALUE = { I(VLM)*V(DOFF)/1/(V(77)+V(DOFF)) }
+VCLP2 VC 31 9M
+D2 VC DOFF DBREAK
+D1 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 31 VALUE = { 1-V(77)-9M }
+EDOFF 7 31 VALUE = { 2*I(VLM)*100000*{Lp}/V(77)/V(61)-V(77) }
+.MODEL DBREAK D (TT=10N CJO=100P N=0.01 RS=10M)
+.MODEL DCLAMP D (RS=1.5 CJO=4PF IS=7E-09 N=2 VJ=.6V
++ TT=6E-09 M=.45 BV=100V)
+.ENDS MC33370AC_MC
+*********
+* ------------------------------------------------------------ *
+*
+* MOTOROLA Semiconductor Product Sector
+* Semiconductor Component Group
+* MC3337X series transient model
+* MC3337X model developed by Christophe BASSO, Toulouse (FRANCE)
+* MICROSIM's PSpice compatible
+*
+* This model does not account for the following features:
+*
+* Internal divide by 8 circuitry
+* Thermal shutdown
+* External shutdown. Pin 4 is dummy.
+* Simplified MOSFET model
+*
+* Fill in ILIMIT and RDSON depending on the device:
+*
+* MC33370 ILMIT = 0.9A typ., RDSON = 12 typ. @ 25C
+* MC33371 ILMIT = 1.5A typ., RDSON = 6.8 typ. @ 25C
+* MC33372 ILMIT = 2A typ., RDSON = 4.8 typ. @ 25C
+* MC33373 ILMIT = 2.7A typ., RDSON = 3.8 typ. @ 25C
+* MC33374 ILMIT = 3A typ., RDSON = 3 typ. @ 25C
+*
+* Last modified: January 2nd 1999
+*
+* ------------------------------------------------------------ *
+.SUBCKT MC33370_MC 1   2  3   4    5   PARAMS: ILIMIT=.9 RDSON=12
+* 			    Vcc FB Gnd Cont Drain
+**** INPUT SECTION ****
+DZ1 3 1 DZENER			; FB 10V clipping
+DZ2 3 2 DZENER			; Vcc 10V clipping
+RDUM2 4 3 1Meg			; Dummy for pin 4
+GSUPP 1 3 VALUE = { IF ( V(110)<3.5, 100u, 1.7M ) }	; Input consumption
+**** STARTUP AND UVLO ****
+XUVLO 10 110 UVLO_MC; delivers 5V if Vfb reaches 8.5V
+GSTRT 5 1 VALUE = { IF ( V(110)<3.5, (0.6M*((8-V(1))/8)+1.4M), 40U ) }
+**** SHUNT REGULATOR ****
+RDYN 2 10 15			; Dynamic Zener resistance
+XP 12 13 10 PCHAN_MC; Internal P-channel shunt
+EREF 11 3 VALUE = { IF ( V(110) > 3.5, 8.6V, 10V ) } ; Disables shunt at UVLO low
+XERR 11 10 13 ERRAMP2_MC; Internal error amplifier
+RFB 12 3 190			; PWM I/V converter, gives the PWM gain
+EBUFF 160 3 12 3 1		; Buffers the PWM info
+RFIL 160 14 2k			; 7kHz filter
+CFIL 14 3 11nF			; 7kHz filter
+**** OSCILLATOR SECTION ****
+VCLK 19 3 PULSE 0 5V 2u 5n 5n 200n 10u	; Main clock 2% Minimum duty-cycle
+VDUT 25 3 PULSE 0 5V 2u 50n 50n 7.1u 10u 	; 71% Maximum duty-cycle
+VRAMP 15 3 PULSE 0 1V 0 2u 8u 10n 10u	; PWM sawtooth
+XCMP 14 15 16 COMP_MC; No-delay PWM comparator
+XOR1 16 74 17 OR2_MC; Current limit protection
+XFF 19 17 20 21 FFLOP_MC; PWM T flip-flop
+RDUM1 21 3 1Meg			; Dummy to load Q\
+XAND 20 25 110 22 1 AND3_MC ; AND gate to drive the MOSFET
+RDRV 22 DRV 100			; AND output gate
+**** MOSFET MODEL ****
+CIN DRV 3 320pF                  ; Input capacitance
+SMOS 5 71 DRV 3 MOS
+VISRC 71 3                      ; Current sensing measurement
+**** CURRENT LIMIT COMPARATOR ****
+EPEAK 72 3 VALUE = { I(VISRC) }	; Converts Id into volts
+VLIM 73 3 {ILIMIT}		; Peak current limit
+XPEAK 80 73 74 COMPDEL_MC          ; 180ns delayed peak reaction
+**** L.E.B. section ****
+ELEB 80 3 VALUE = { IF ( V(DRV)>V(1)-1.1, V(72), 0 ) } ; 100ns blanking time
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS MC33370_MC
+**********
+* ------------------------------------------------------------ *
+.SUBCKT MC33371_MC 1   2  3   4    5   PARAMS: ILIMIT=1.5 RDSON=6.8
+*               Vcc FB Gnd Cont Drain
+**** INPUT SECTION ****
+DZ1 3 1 DZENER          ; FB 10V clipping
+DZ2 3 2 DZENER          ; Vcc 10V clipping
+RDUM2 4 3 1Meg          ; Dummy for pin 4
+GSUPP 1 3 VALUE = { IF ( V(110)<3.5, 100u, 1.7M ) } ; Input consumption
+**** STARTUP AND UVLO ****
+XUVLO 10 110 UVLO_MC; delivers 5V if Vfb reaches 8.5V
+GSTRT 5 1 VALUE = { IF ( V(110)<3.5, (0.6M*((8-V(1))/8)+1.4M), 40U ) }
+**** SHUNT REGULATOR ****
+RDYN 2 10 15            ; Dynamic Zener resistance
+XP 12 13 10 PCHAN_MC; Internal P-channel shunt
+EREF 11 3 VALUE = { IF ( V(110) > 3.5, 8.6V, 10V ) } ; Disables shunt at UVLO low
+XERR 11 10 13 ERRAMP2_MC; Internal error amplifier
+RFB 12 3 190            ; PWM I/V converter, gives the PWM gain
+EBUFF 160 3 12 3 1      ; Buffers the PWM info
+RFIL 160 14 2k          ; 7kHz filter
+CFIL 14 3 11nF          ; 7kHz filter
+**** OSCILLATOR SECTION ****
+VCLK 19 3 PULSE 0 5V 2u 5n 5n 200n 10u  ; Main clock 2% Minimum duty-cycle
+VDUT 25 3 PULSE 0 5V 2u 50n 50n 7.1u 10u    ; 71% Maximum duty-cycle
+VRAMP 15 3 PULSE 0 1V 0 2u 8u 10n 10u   ; PWM sawtooth
+XCMP 14 15 16 COMP_MC; No-delay PWM comparator
+XOR1 16 74 17 OR2_MC; Current limit protection
+XFF 19 17 20 21 FFLOP_MC; PWM T flip-flop
+RDUM1 21 3 1Meg         ; Dummy to load Q\
+XAND 20 25 110 22 1 AND3_MC ; AND gate to drive the MOSFET
+RDRV 22 DRV 100         ; AND output gate
+**** MOSFET MODEL ****
+CIN DRV 3 320pF                  ; Input capacitance
+SMOS 5 71 DRV 3 MOS
+VISRC 71 3                      ; Current sensing measurement
+**** CURRENT LIMIT COMPARATOR ****
+EPEAK 72 3 VALUE = { I(VISRC) } ; Converts Id into volts
+VLIM 73 3 {ILIMIT}      ; Peak current limit
+XPEAK 80 73 74 COMPDEL_MC          ; 180ns delayed peak reaction
+**** L.E.B. section ****
+ELEB 80 3 VALUE = { IF ( V(DRV)>V(1)-1.1, V(72), 0 ) } ; 100ns blanking time
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS MC33371_MC
+**********
+* ------------------------------------------------------------ *
+.SUBCKT MC33372_MC 1   2  3   4    5   PARAMS: ILIMIT=2 RDSON=4.8
+*               Vcc FB Gnd Cont Drain
+**** INPUT SECTION ****
+DZ1 3 1 DZENER          ; FB 10V clipping
+DZ2 3 2 DZENER          ; Vcc 10V clipping
+RDUM2 4 3 1Meg          ; Dummy for pin 4
+GSUPP 1 3 VALUE = { IF ( V(110)<3.5, 100u, 1.7M ) } ; Input consumption
+**** STARTUP AND UVLO ****
+XUVLO 10 110 UVLO_MC; delivers 5V if Vfb reaches 8.5V
+GSTRT 5 1 VALUE = { IF ( V(110)<3.5, (0.6M*((8-V(1))/8)+1.4M), 40U ) }
+**** SHUNT REGULATOR ****
+RDYN 2 10 15            ; Dynamic Zener resistance
+XP 12 13 10 PCHAN_MC; Internal P-channel shunt
+EREF 11 3 VALUE = { IF ( V(110) > 3.5, 8.6V, 10V ) } ; Disables shunt at UVLO low
+XERR 11 10 13 ERRAMP2_MC; Internal error amplifier
+RFB 12 3 190            ; PWM I/V converter, gives the PWM gain
+EBUFF 160 3 12 3 1      ; Buffers the PWM info
+RFIL 160 14 2k          ; 7kHz filter
+CFIL 14 3 11nF          ; 7kHz filter
+**** OSCILLATOR SECTION ****
+VCLK 19 3 PULSE 0 5V 2u 5n 5n 200n 10u  ; Main clock 2% Minimum duty-cycle
+VDUT 25 3 PULSE 0 5V 2u 50n 50n 7.1u 10u    ; 71% Maximum duty-cycle
+VRAMP 15 3 PULSE 0 1V 0 2u 8u 10n 10u   ; PWM sawtooth
+XCMP 14 15 16 COMP_MC; No-delay PWM comparator
+XOR1 16 74 17 OR2_MC; Current limit protection
+XFF 19 17 20 21 FFLOP_MC; PWM T flip-flop
+RDUM1 21 3 1Meg         ; Dummy to load Q\
+XAND 20 25 110 22 1 AND3_MC ; AND gate to drive the MOSFET
+RDRV 22 DRV 100         ; AND output gate
+**** MOSFET MODEL ****
+CIN DRV 3 320pF                  ; Input capacitance
+SMOS 5 71 DRV 3 MOS
+VISRC 71 3                      ; Current sensing measurement
+**** CURRENT LIMIT COMPARATOR ****
+EPEAK 72 3 VALUE = { I(VISRC) } ; Converts Id into volts
+VLIM 73 3 {ILIMIT}      ; Peak current limit
+XPEAK 80 73 74 COMPDEL_MC          ; 180ns delayed peak reaction
+**** L.E.B. section ****
+ELEB 80 3 VALUE = { IF ( V(DRV)>V(1)-1.1, V(72), 0 ) } ; 100ns blanking time
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS MC33372_MC
+**********
+* ------------------------------------------------------------ *
+.SUBCKT MC33373_MC 1   2  3   4    5   PARAMS: ILIMIT=2.7 RDSON=3.8
+*               Vcc FB Gnd Cont Drain
+**** INPUT SECTION ****
+DZ1 3 1 DZENER          ; FB 10V clipping
+DZ2 3 2 DZENER          ; Vcc 10V clipping
+RDUM2 4 3 1Meg          ; Dummy for pin 4
+GSUPP 1 3 VALUE = { IF ( V(110)<3.5, 100u, 1.7M ) } ; Input consumption
+**** STARTUP AND UVLO ****
+XUVLO 10 110 UVLO_MC; delivers 5V if Vfb reaches 8.5V
+GSTRT 5 1 VALUE = { IF ( V(110)<3.5, (0.6M*((8-V(1))/8)+1.4M), 40U ) }
+**** SHUNT REGULATOR ****
+RDYN 2 10 15            ; Dynamic Zener resistance
+XP 12 13 10 PCHAN_MC; Internal P-channel shunt
+EREF 11 3 VALUE = { IF ( V(110) > 3.5, 8.6V, 10V ) } ; Disables shunt at UVLO low
+XERR 11 10 13 ERRAMP2_MC; Internal error amplifier
+RFB 12 3 190            ; PWM I/V converter, gives the PWM gain
+EBUFF 160 3 12 3 1      ; Buffers the PWM info
+RFIL 160 14 2k          ; 7kHz filter
+CFIL 14 3 11nF          ; 7kHz filter
+**** OSCILLATOR SECTION ****
+VCLK 19 3 PULSE 0 5V 2u 5n 5n 200n 10u  ; Main clock 2% Minimum duty-cycle
+VDUT 25 3 PULSE 0 5V 2u 50n 50n 7.1u 10u    ; 71% Maximum duty-cycle
+VRAMP 15 3 PULSE 0 1V 0 2u 8u 10n 10u   ; PWM sawtooth
+XCMP 14 15 16 COMP_MC; No-delay PWM comparator
+XOR1 16 74 17 OR2_MC; Current limit protection
+XFF 19 17 20 21 FFLOP_MC; PWM T flip-flop
+RDUM1 21 3 1Meg         ; Dummy to load Q\
+XAND 20 25 110 22 1 AND3_MC ; AND gate to drive the MOSFET
+RDRV 22 DRV 100         ; AND output gate
+**** MOSFET MODEL ****
+CIN DRV 3 320pF                  ; Input capacitance
+SMOS 5 71 DRV 3 MOS
+VISRC 71 3                      ; Current sensing measurement
+**** CURRENT LIMIT COMPARATOR ****
+EPEAK 72 3 VALUE = { I(VISRC) } ; Converts Id into volts
+VLIM 73 3 {ILIMIT}      ; Peak current limit
+XPEAK 80 73 74 COMPDEL_MC          ; 180ns delayed peak reaction
+**** L.E.B. section ****
+ELEB 80 3 VALUE = { IF ( V(DRV)>V(1)-1.1, V(72), 0 ) } ; 100ns blanking time
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS MC33373_MC
+**********
+* ------------------------------------------------------------ *
+.SUBCKT MC33374_MC 1   2  3   4    5   PARAMS: ILIMIT=3 RDSON=3
+*               Vcc FB Gnd Cont Drain
+**** INPUT SECTION ****
+DZ1 3 1 DZENER          ; FB 10V clipping
+DZ2 3 2 DZENER          ; Vcc 10V clipping
+RDUM2 4 3 1Meg          ; Dummy for pin 4
+GSUPP 1 3 VALUE = { IF ( V(110)<3.5, 100u, 1.7M ) } ; Input consumption
+**** STARTUP AND UVLO ****
+XUVLO 10 110 UVLO_MC; delivers 5V if Vfb reaches 8.5V
+GSTRT 5 1 VALUE = { IF ( V(110)<3.5, (0.6M*((8-V(1))/8)+1.4M), 40U ) }
+**** SHUNT REGULATOR ****
+RDYN 2 10 15            ; Dynamic Zener resistance
+XP 12 13 10 PCHAN_MC; Internal P-channel shunt
+EREF 11 3 VALUE = { IF ( V(110) > 3.5, 8.6V, 10V ) } ; Disables shunt at UVLO low
+XERR 11 10 13 ERRAMP2_MC; Internal error amplifier
+RFB 12 3 190            ; PWM I/V converter, gives the PWM gain
+EBUFF 160 3 12 3 1      ; Buffers the PWM info
+RFIL 160 14 2k          ; 7kHz filter
+CFIL 14 3 11nF          ; 7kHz filter
+**** OSCILLATOR SECTION ****
+VCLK 19 3 PULSE 0 5V 2u 5n 5n 200n 10u  ; Main clock 2% Minimum duty-cycle
+VDUT 25 3 PULSE 0 5V 2u 50n 50n 7.1u 10u    ; 71% Maximum duty-cycle
+VRAMP 15 3 PULSE 0 1V 0 2u 8u 10n 10u   ; PWM sawtooth
+XCMP 14 15 16 COMP_MC; No-delay PWM comparator
+XOR1 16 74 17 OR2_MC; Current limit protection
+XFF 19 17 20 21 FFLOP_MC; PWM T flip-flop
+RDUM1 21 3 1Meg         ; Dummy to load Q\
+XAND 20 25 110 22 1 AND3_MC ; AND gate to drive the MOSFET
+RDRV 22 DRV 100         ; AND output gate
+**** MOSFET MODEL ****
+CIN DRV 3 320pF                  ; Input capacitance
+SMOS 5 71 DRV 3 MOS
+VISRC 71 3                      ; Current sensing measurement
+**** CURRENT LIMIT COMPARATOR ****
+EPEAK 72 3 VALUE = { I(VISRC) } ; Converts Id into volts
+VLIM 73 3 {ILIMIT}      ; Peak current limit
+XPEAK 80 73 74 COMPDEL_MC          ; 180ns delayed peak reaction
+**** L.E.B. section ****
+ELEB 80 3 VALUE = { IF ( V(DRV)>V(1)-1.1, V(72), 0 ) } ; 100ns blanking time
+.MODEL MOS VSWITCH (RON={RDSON} ROFF=1MEG VON=3 VOFF=1)
+.ENDS MC33374_MC
+**********
+
+*****
+.MODEL DZENER D(RS=8.4832 BV=9.8303
++ CJO=233.41P TT=50N M=.33 VJ=.75 IS=1E-11 N=1.27 IBV=10MA)
+**** INTERNAL P-CHANNEL MODEL ****
+.SUBCKT PCHAN_MC 30 40 50
+* NODES: DRAIN GATE SOURCE
+M1 30 20 50 50 MOD1 L=1U W=1U
+RG 40 20 167
+RL 30 50 50E6
+.MODEL MOD1 PMOS VTO=-1.709 RS=3.091 RD=0.979 IS=1E-15 KP=0.146
++CGSO=26P CGDO=4P CBD=12P PB=1
+.ENDS
+**** SIMPLE ERROR AMPLIFIER ****
+.SUBCKT ERRAMP2_MC 1 5 2
+*               + - OUT
+G1 0 4 1 5 100u
+R1 4 0 300Meg		 ; 90dB OL
+C1 4 0 53pF IC=8.5   ; 10Hz pole
+E1 2 0 4 0 1
+V1 3 0 500mV
+D2 3 4 DCLP
+.MODEL DCLP D (BV=8.7 CJO=40PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=10E-09 VJ=.6V)
+.ENDS ERRAMP2_MC
+**** NO DELAY COMPARATOR ****
+.SUBCKT COMP_MC 1 2 3
+*            + - S
+EB1 4 0 VALUE = { IF ( V(1)>V(2), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS COMP_MC
+**** 180NS DELAYED COMPARATOR ****
+.SUBCKT COMPDEL_MC 1 2 3
+*               + - Out
+* T = 0.693 x Ct x Rt
+E1 4 0 VALUE = { IF ( V(1)>V(2), 1V, 0 ) }
+RT 4 5 100
+CT 5 0 2.6nF
+E2 10 0 VALUE = { IF ( V(5)>500M, 5V, 0 ) }
+RD 10 3 100
+CD 3 0 10P
+.ENDS COMPDEL_MC
+**** 2 INPUT OR CIRCUIT ****
+.SUBCKT OR2_MC 1 2 3
+E_B1 4 0 VALUE = { IF ( (V(1)>800M) | (V(2)>800M), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS OR2_MC
+**** T FFLOP Circuit ****
+.SUBCKT FFLOP_MC 6 8 2 1
+*             S R Q Q\
+EQB 10 0 VALUE = { IF ( (V(8)<800M) & (V(2)>800M), 0, 5V ) }
+EQ  20 0 VALUE = { IF ( (V(6)<800M) & (V(1)>800M), 0, 5V ) }
+RD1   10 1 100
+CD1   1 0 10P IC=5
+RD2   20 2 100
+CD2   2 0 10P IC=0
+.ENDS FFLOP_MC
+**** 2 INPUT AND CIRCUIT ****
+.SUBCKT AND2_MC 1 2 3
+E_B1 4 0 VALUE = { IF ( (V(1)>800M) & (V(2)>800M), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND2_MC
+**** 3 INPUT AND GATE ****
+.SUBCKT AND3_MC 1 2 3 4 6
+E_B1 5 0 VALUE = { IF ( (V(1)>800M) & (V(2)>800M) & (V(3)>800M), V(6), 0V ) }
+R1 5 4 100
+C1 4 0 10P
+.ENDS AND3_MC
+**** UVLO CIRCUIT ****
+.SUBCKT UVLO_MC  1   2
+*            VIN OUT
+S1 1 3 1 0 SUVLO
+RUV 3 0 100K
+E1 4 0 VALUE = { IF( V(3) > 3.5V, 5V, 0 ) }
+RD 4 2 100
+CD 2 0 10P
+.MODEL SUVLO VSWITCH (RON=1 ROFF=1MEG VON=8.5 VOFF=7.5)
+.ENDS UVLO_MC
+**** MULTI-WINDING TRANSFORMER ****
+.SUBCKT XFMR2_MC 1 2 3 4 10 11 PARAMS: RATIO1=1 RATIO2=1
+RP 1 2 1MEG
+E1 5 4 VALUE = { V(1,2)*RATIO1 }
+G1 1 2 VALUE = { I(VM1)*RATIO1 }
+RS1 6 3 1U
+VM1 5 6
+E2 20 11 VALUE = { V(2,1)*RATIO2 }
+G2 2 1 VALUE = { I(VM2)*RATIO2 }
+RS2 21 10 1U
+VM2 20 21
+.ENDS XFMR2_MC
+**** SINGLE WINDING TRANSFORMER ****
+.SUBCKT XFMR1_MC 1 2 3 4 PARAMS: RATIO=1
+RP 1 2 1MEG
+E 5 4 VALUE = { V(1,2)*RATIO }
+G 1 2 VALUE = { I(VM)*RATIO }
+RS 6 3 1U
+VM 5 6
+.ENDS XFMR1_MC
+**** TL431 ADJUSTABLE VOLTAGE REF. ****
+.SUBCKT TL431_MC 7 6 11
+*             K A FDBK
+.MODEL DCLAMP D (IS=13.5N RS=25M N=1.59
++ CJO=45P VJ=.75 M=.302 TT=50.4N BV=34V IBV=1MA)
+V1 1 6 2.495
+R1 6 2 15.6
+C1 2 6 .5U
+R2 2 3 100
+C2 3 4 .08U
+R3 4 6 10
+G2 6 8 3 6 1.73
+D1 5 8 DCLAMP
+D2 7 8 DCLAMP
+V4 5 6 2
+G1 6 2 1 11 0.11
+.ENDS TL431_MC
+**** MOC8101 OPTOCOUPLER ****
+.SUBCKT MOC8101_MC 1 2 3   5
+* ISOLATOR      A C COL EMITTER
+RB 4 0 100Meg
+VM 1 6
+D1 6 2 LED
+H1 7 0 VM .0055
+R1 7 8 1K
+C1 8 0 3.35nF
+G1 3 4 8 0 1
+Q1 3 4 5 MPSA06
+.MODEL LED D(N=1.7 RS=.7 CJO=23.9P IS=85.3p BV=6 IBV=10U
++ VJ=0.75 M=0.333 TT=4.32U)
+.MODEL MPSA06 NPN (IS=15.2F NF=1 BF=589 VAF=98.6 IKF=90M ISE=3.34P NE=2
++ BR=4 NR=1 VAR=16 IKR=0.135 RE=0.343 RB=1.37 RC=0.137 XTB=1.5
++ CJE=9.67P VJE=1.1 MJE=0.5 CJC=7.34P VJC=0.3 MJC=0.3 TF=10.29n TR=276N)
+.ENDS
+**** HIGH-CURRENT SCHOTTKY RECTIFIER ****
+.SUBCKT MBR20100_MC 1 2
+*Connections     A C
+LPKG 1 3 8N
+RS 3 4 6.552M
+RB 4 5 65.52M
+RFR 3 6 1K
+CFR 6 5 10P
+MFR 4 6 5 5 BULK
+DIO 5 7 DMOD1
+VDIO 7 2
+GDIO 5 2 VALUE = { I(VDIO)*EXP(0.025*V(2,5)) }
+DCAP 5 2 DMOD2
+CPAR 5 2 23P
+.MODEL DMOD1 D(IS=2.26U N=.9 XTI=1 EG=.605 )
+.MODEL DMOD2 D(CJO=1.02N VJ=.75 M=.333)
+.MODEL BULK NMOS(VTO=.19 KP=320)
+.ENDS
+*****
+* ------------------------------------------------------------ *
+*
+* MOTOROLA Semiconductor Product Sector
+* Semiconductor Component Group
+* MC44608 average FLYBACK AC model DCM and CCM modes
+* FLYBACK average model made by Ben-Gurion University (ISRAEL)
+* http://www.ee.bgu.ac.il/~pel
+* MC44608 AC model developed by Christophe BASSO, Toulouse (FRANCE)
+* MICROSIM's PSpice compatible
+* Last modified: April 9th 1999
+*
+* ------------------------------------------------------------ *
+*********
+.SUBCKT MC44608AC_MC 77      81       11 31  51  61 PARAMS: Lp=180u Fs=75k
+*				In_duty Duty_Out FB Gnd Out Vin
+
+
+RGAIN1 11 70 20			; Dynamic zener resistance
+XERR 71 70 72 ERRAMP3_MC; Internal error amplifier
+VREF 71 31 5V			; Internal reference voltage
+XPCH 73 72 70 PCHAN_MC; P-channel MOSFET
+RGAIN2 73 31 390		; I/V converter
+DCLP 73 74 DCLAMP		; Negative clamp
+VCLP1 74 31 320mV		; lower duty-cycle limit
+VD 75 31 820mV			; upper duty-cycle limit
+E1 76 31 75 73 1		; decreasing duty-cycle
+RF 76 140 750k
+CF 140 31 55pF
+EB2 81 31 VALUE = { IF ( V(140,31)>810mV,810mV, IF ( V(140,31)<10mV,10mV, V(140,31) ) ) }
+EELM OUT1 31 VALUE = { V(61)*V(77)-V(51)*V(DOFF) }
+EDOFF 7 31 VALUE = { 2*I(VLM)*{FS}*{Lp}/V(77)/V(61)-V(77) }
+GIN 61 31 VALUE = { I(VLM)*V(77)/(V(77)+V(DOFF)) }
+GOUT 31 51 VALUE = { I(VLM)*V(DOFF)/1/(V(77)+V(DOFF)) }
+RM OUT1 5 1M
+LM 5 8 {Lp}
+VLM 8 31
+VCLP2 VC 31 9M
+D2 VC DOFF DBREAK
+D1 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 31 VALUE = { 1-V(77)-9M }
+.MODEL DBREAK D (TT=10N CJO=100P N=0.01 RS=10M)
+.MODEL DCLAMP D (BV=100V CJO=4PF IS=7E-09 M=.45 N=1.8
++ RS=1.5 TT=6E-09 VJ=.6V)
+.ENDS MC44608_MC
+*********
+.SUBCKT PCHAN_MC 30 40 50
+* NODES: DRAIN GATE SOURCE
+M1 30 20 50 50 MOD1 L=1U W=1U
+RG 40 20 167
+RL 30 50 50E6
+.MODEL MOD1 PMOS VTO=-1.709 RS=3.091 RD=0.979 IS=1E-15 KP=0.146
++CGSO=26P CGDO=4P CBD=12P PB=1
+.ENDS
+**** SIMPLE ERROR AMPLIFIER ****
+.SUBCKT ERRAMP3_MC 1 5 2
+*               + - OUT
+G1 0 4 1 5 100u
+R1 4 0 300Meg	; 90dB OL
+C1 4 0 53pF		; 10Hz pole
+E1 2 0 4 0 1
+V1 3 0 500mV
+D2 3 4 DCLP
+.MODEL DCLP D (BV=8.7 CJO=40PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=10E-09 VJ=.6V)
+.ENDS ERRAMP3_MC
+**** SINGLE WINDING TRANSFORMER ****
+.SUBCKT XFMR1_MC 1 2 3 4 PARAMS: RATIO=1
+RP 1 2 1MEG
+E 5 4 VALUE = { V(1,2)*RATIO }
+G 1 2 VALUE = { I(VM)*RATIO }
+RS 6 3 1U
+VM 5 6
+.ENDS XFMR1_MC
+*********
+**************************************
+*      Model Generated by MODPEX     *
+*Copyright(c) Symmetry Design Systems*
+*         All Rights Reserved        *
+*    UNPUBLISHED LICENSED SOFTWARE   *
+*   Contains Proprietary Information *
+*      Which is The Property of      *
+*     SYMMETRY OR ITS LICENSORS      *
+*Commercial Use or Resale Restricted *
+*   by Symmetry License Agreement    *
+**************************************
+* Model generated on Feb 12, 97
+* MODEL FORMAT: SPICE3
+**********
+.SUBCKT MC33341_MC 1 2 3 4 5 6 7 8
+DCLP1 4 8 DSTD
+DCLP2 6 7 DSTD
+DCLP3 4 5 DSTD
+DCLP4 4 1 DSTD
+DCLP5 2 7 DSTD
+DCLP6 3 7 DSTD
+**** INTERNAL REFERENCES ****
+EREF1 10 4 VALUE = { IF( V(7)>200M, 200M, V(7) ) }
+EREF2 11 4 VALUE = { IF( V(7)>1.2, 1.2, V(7) ) }
+**** DISABLE LOGIC FUNCTION ****
+XCMP1 11 1 14 COMP2_MC
+XCMP2 6 1 15 COMP2_MC
+ENOR 16 4 VALUE = { IF( ((V(14)>800M) | (V(15)>800M)), 0, 5 ) }
+RDEL 16 17 100
+CDEL 17 4 10P
+**** INVERTING AMP/ DIFF. AMP ****
+R1 6 20 10K
+R2 20 21 10K
+R3 1 22 10K
+R4 22 4 10K
+XAMP1 22 20 21 4 ERRSIMP_MC
+R5 1 23 10K
+R6 23 24 10K
+XAMP2 4 23 25 4 ERRSIMP_MC
+D1 25 24 DSTD
+**** CURRENT SENSE SELECTION ****
+EISENS 52 4 VALUE = { IF( V(17)>3, V(21,4), V(24,4) ) }
+**** LIMITED TRANSCONDUCTANCE CONVERSION ****
+XCON 11 10 6 5 2 52 4 3 7 8 OTA_MC
+**** INTERNAL MODELS ****
+.MODEL DSTD D(RS=.8 CJO=4PF IS=7E-09 N=2 VJ=.6V
++ TT=6E-09 M=.45 BV=100V)
+.ENDS MC33341_MC
+********************
+.SUBCKT COMP2_MC 1 2 3
+*             + - S
+E1 4 0 VALUE = { IF( (V(1) > V(2)), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS COMP2_MC
+**** SIMPLIFIED ERROR AMP. ****
+.SUBCKT ERRSIMP_MC 20 8 23  21
+*   	        +  - OUT GND
+RIN 20 8 8MEG
+E1 22 21 5 21 1
+RO 22 23 100
+VOFF 5 11 0
+D15 21 11 DCLAMP
+G1 21 11 20 8 100U
+RP1 11 21 130MEG
+CP1 11 21 10P
+.MODEL DCLAMP D (RS=10 BV=5 IBV=0.01)
+.ENDS ERRSIMP_MC
+**** TRANSCONDUCTANCE AMPLIFIER ****
+.SUBCKT OTA_MC VREF IREF PIN6 PIN5 PIN2 ISENSE GND COMP VCC OUT
+*
+R5 Vcc 13 43
+I4 4 gnd DC=20uA
+Q1 Comp 12 33 Q2N3904
+Q2 gnd Comp 7 Q2N3906
+Q3 Comp 14 5 Q2N3906
+Q4 Comp 7 Out Q2N3906
+Q5 5 5 26 Q2N3906
+Q6 14 5 24 Q2N3906
+Q7 14 4 29 Q2N3904
+Q9 12 22 20 Q2N3906
+Q12 gnd pin2 27 Q2N3906
+R11 24 Vcc 10k
+R12 26 Vcc 10k
+Q10 12 12 34 Q2N3904
+Q11 4 4 28 Q2N3904
+Q16 12 Vref 20 Q2N3906
+Q19 4 pin5 20 Q2N3906
+Q20 gnd Iref 27 Q2N3906
+Q21 12 27 21 Q2N3906
+R13 28 gnd 10k
+R14 29 gnd 10k
+Q8 Out 7 13 Q2N3906
+I3 Vcc 21 DC=20uA
+I8 Vcc 23 DC=2uA
+I5 Vcc 27 DC=2uA
+R15 33 gnd 10k
+R16 34 gnd 10k
+Q22 4 23 21 Q2N3906
+Q23 gnd Isense 23 Q2N3906
+I6 Vcc 20 DC=20uA
+R4 22 pin6 6.25k
+.model Q2N3904	NPN(Is=6.734f Xti=3 Eg=1.11 Vaf=74.03 Bf=416.4 Ne=1.259
++		Ise=6.734f Ikf=66.78m Xtb=1.5 Br=.7371 Nc=2 Isc=0 Ikr=0 Rc=1
++		Cjc=3.638p Mjc=.3085 Vjc=.75 Fc=.5 Cje=4.493p Mje=.2593 Vje=.75
++		Tr=239.5n Tf=301.2p Itf=.4 Vtf=4 Xtf=2 Rb=10)
+.model Q2N3906	PNP(Is=1.41f Xti=3 Eg=1.11 Vaf=18.7 Bf=180.7 Ne=1.5 Ise=0
++		Ikf=80m Xtb=1.5 Br=4.977 Nc=2 Isc=0 Ikr=0 Rc=2.5 Cjc=9.728p
++		Mjc=.5776 Vjc=.75 Fc=.5 Cje=8.063p Mje=.3677 Vje=.75 Tr=33.42n
++		Tf=179.3p Itf=.4 Vtf=4 Xtf=6 Rb=10)
+.ENDS OTA_MC
+****

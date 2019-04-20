@@ -1,0 +1,2301 @@
+**********
+*   H124,125,350-352 Translator I/O Modelelling Kit - Netlist  *
+*   Schematics                                                 *
+*                                                              *
+*     The purpose of this document is to provide the netlists  *
+* for the various schematics of the H124,125,350-352 Translator*
+* I/O Modelling Kit Application Note.  This information will   *
+* save design engineers who have no schematic capture tools    *
+* at their disposal the task of producing the SPICE netlists   *
+* for the schematics. To use these netlists it will require    *
+* a copy of the H124,125,350-352 I/o Spice Modelling Kit       *
+* application note.This note is needed to identify appropriate *
+* input and output models for a specific device as well as the *
+* appropriate package model and ESD structure.  In addition a  *
+* copy of this note will help visualize the netlists and ease  *
+* the building of the simulation circuits.                     *
+**************
+*                   Netlist Organization                       *
+*                                                              *
+*     The netlists are organized as a group of subcircuits so  *
+* that the user can simply build a simulation netlist by       *
+* calling the appropriate subcircuit models.  In this way any  *
+* problems associated with commonality in node numbering       *
+* or component naming due to the use of multiple copies of a   *
+* schematic will be eliminated.                                *
+*     There are a group of GLOBAL nodes for the schematics,    *
+* they are as follows:                                         *
+*                                                              *
+*                EVCC = Node (110)                             *
+*                VEE = Node (200)                              *
+*                VBB = Node (300)                              *
+*                VBB' = Node (310)                             *
+*                VBB''= Node (320)                             *
+*                VCS = Node (400)                              *
+*                TVCCI = Node (100)                            *
+*                TVCCO = Node (500)                            *
+*                EVCCO = Node (510)                            *
+*                GNDI = Node (710)                             *
+*                GNDO = Node (700)                             *
+*                                                              *
+* A detailed discussion on these nodes can be found in the     *
+* application note.                                            *
+**************
+*     All of the subcircuits are labeled as to what they rep-  *
+* represent (ie. H124 I/O gate) and are cross referenced       *
+* to the figure numbers in the application note.  In           *
+* addition all of the subcircuits list the node numbers for    *
+* the specified inputs and outputs for the cell.  This will    *
+* ease the task of interconnecting the simulation netlist.     *
+* The component labels used in the netlists are identical to   *
+* those on the schematics in the application note.  With the   *
+* simplicity of the models this should allow the user to trace *
+* the netlists back to the schematics.                         *
+*   The user may notice that there are four terminals on       *
+* the transistor models.  The fourth terminal represents the   *
+* the connection to the substrate and is always biased to the  *
+* most negative voltage in the schematic.                      *
+*                                                              *
+**********
+*                                                              *
+*                     Subcircuit Netlists                      *
+*                                                              *
+*                                                              *
+*                                                              *
+*               H124 I/O Gate  (Figure 1)                      *
+*                                                              *
+*IN =Node(901) OUT =Node(911) INB =Node(902) OUTB =Node(912)   *
+*                                                              *
+**********
+*SRC=H124IO;H124IO;ECL;MECL10KH;Translator I/O
+*SYM=H124IO
+.SUBCKT H124IO 100 110 200 310 400 510 901 902 911 912
+* NODES: TVCC,EVCC,VEE,VBB',VCS,EVCCO,IN,INB,OUT,OUTB
+Q1 2 4 5 200 T08I3
+Q2 110 9 12 200 T08I3
+Q3 9 400 10 200 T06B4
+Q4 12 400 13 200 T06B4
+Q5 16 12 17 200 T08I3
+Q6 21 310 17 200 T08I2
+Q7 17 400 18 200 T12B4
+Q8 510 21 911 200 T8106
+Q9 510 16 912 200 T8106
+XD3 4 901 FSD003
+XD4 4 902 FSD003
+Q12 5 5 6 200 T08I3
+Q13 6 6 7 200 T08I3
+XD7 7 110 FSD003
+R1_R1A 100 1 108 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 2 108 RMOD
+DR1_D1 1 100 RES_DIODE
+R2_R1A 2 3 404.5 RMOD
+R2_R1B 3 4 404.5 RMOD
+DR2_D1 3 100 RES_DIODE
+R3_R1A 7 8 213 RMOD
+R3_R1B 8 9 213 RMOD
+DR3_D1 8 100 RES_DIODE
+R4_R1A 10 11 112.5 RMOD
+R4_R1B 11 200 112.5 RMOD
+DR4_D1 11 100 RES_DIODE
+R5_R1A 13 14 112.5 RMOD
+R5_R1B 14 200 112.5 RMOD
+DR5_D1 14 100 RES_DIODE
+R6_R1A 110 15 121 RMOD
+R6_R1B 15 16 121 RMOD
+DR6_D1 15 110 RES_DIODE
+R7_R1A 110 20 121 RMOD
+R7_R1B 20 21 121 RMOD
+DR7_D1 20 110 RES_DIODE
+R8_R1A 18 19 55.5 RMOD
+R8_R1B 19 200 55.5 RMOD
+DR8_D1 19 110 RES_DIODE
+.MODEL RES_DIODE D IS=3.7E-16 CJO=4.14E-13
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN =Node(901) OUT =Node(911) INN =Node(902)                  *
+*                                                              *
+**********
+*SRC=H125IO;H125IO;ECL;MECL10KH;Translator I/O
+*SYM=H125IO
+.SUBCKT H125IO 100 700 200 320 400 901 902 911
+* NODES: TVCC,GNDO,VEE,VBB'',VCS,IN,INB,OUT
+Q1 11 400 12 200 T12B1
+Q2 6 11 700 200 T16I3
+Q3 6 4 7 200 T16I3
+Q4 6 320 7 200 T16I3
+Q5 7 400 8 200 T18B1
+Q6 100 15 20 200 T16I2
+Q7 22 23 7 200 T16I3
+XQ8 100 6 26 911 FLNN01
+Q9 911 22 700 200 T025E
+Q10 17 17 18 200 T12B1
+Q11 18 18 700 200 T12B1
+QRXCX2 100 901 100 200 RXCX1
+QRXCX1 100 902 100 200 RXCX1
+XDS1 26 6 FSS002
+XDS2 700 911 STS002
+RB1_R1A 901 28 37.4 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+RB1_R1B 28 23 37.4 RMOD
+DRB1_D1 28 100 RES_DIODE
+RB2_R1A 902 3 37.4 RMOD
+RB2_R1B 3 4 37.4 RMOD
+DRB2_D1 3 100 RES_DIODE
+R1_R1A 100 5 397.5 RMOD
+R1_R1B 5 6 397.5 RMOD
+DR1_D1 5 100 RES_DIODE
+R2_R1A 100 10 3500 RMOD
+R2_R1B 10 11 3500 RMOD
+DR2_D1 10 100 RES_DIODE
+R3_R1A 12 13 237.5 RMOD
+R3_R1B 13 200 237.5 RMOD
+DR3_D1 13 100 RES_DIODE
+R4_R1A 8 9 37.5 RMOD
+R4_R1B 9 200 37.5 RMOD
+DR4_D1 9 100 RES_DIODE
+R5_R1A 100 14 493.5 RMOD
+R5_R1B 14 15 493.5 RMOD
+DR5_D1 14 100 RES_DIODE
+R6_R1A 15 16 657 RMOD
+R6_R1B 16 17 657 RMOD
+DR6_D1 16 100 RES_DIODE
+R7_R1A 20 21 200 RMOD
+R7_R1B 21 22 200 RMOD
+DR7_D1 21 100 RES_DIODE
+R8_R1A 26 27 10000 RMOD
+R8_R1B 27 911 10000 RMOD
+DR8_D1 27 100 RES_DIODE
+.MODEL RES_DIODE D IS=3.7E-16 CJO=4.14E-13
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN =Node(901) OUT =Node(911) INN =Node(902) OEN =Node(903)   *
+*                                                              *
+**********
+*SRC=H350IO;H350IO;ECL;MECL10KH;Translator I/O
+*SYM=H350IO
+.SUBCKT H350IO 100 110 200 901 902 903 911
+* NODES: TVCC,EVCC,VEE,IN,INB,OEN,OUT
+Q1 110 2 9 200 T04I3
+Q2 110 4 15 200 T04I3
+Q3 9 9 12 200 T04I3
+Q4 15 15 19 200 T04I3
+Q5 14 14 200 200 T04I3
+Q6 18 14 200 200 T04I3
+Q7 100 21 18 200 T04I3
+XQ8 21 18 200 FLNS01
+XQ9 33 31 25 FLN001
+XQ10 100 25 57 911 FLNN01
+XQ11 25 23 26 FLN113
+XQ12 26 27 200 FLN113
+XQ13 37 35 200 FLN103
+XQ14 39 38 200 FLN103
+XQ15 911 26 200 QPN139
+Q16 9 10 9 200 C90PF
+Q17 15 16 15 200 C90PF
+XQ20 110 47 50 FLNT02
+XQ21 110 50 32 FLNT01
+XQ22 43 41 44 FLN111
+XQ23 47 44 48 FPN108
+XQ24 32 48 200 QPN139
+XQ25 54 53 32 FLN101
+XQ26 29 54 200 FLN101
+QRXCX2 110 4 110 200 RXCX1
+QRXCX1 110 2 110 200 RXCX1
+XD1 38 57 FLD003
+XD20 41 903 FLS001
+XDS1 23 21 FLS107
+XDS2 31 32 FLS107
+XDS3 25 32 FLS107
+XDS4 23 32 FLS107
+XDS5 57 33 FLS104
+XDS6 911 33 FLS001
+XDS7 26 38 FLS101
+XDS8 26 39 FLS101
+XDS9 200 911 FLS002
+XDS20 44 903 FLS001
+XDS21 200 903 FLS002
+RB1_R1A 901 1 37.5 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+RB1_R1B 1 2 37.5 RMOD
+DRB1_D1 1 110 RES_DIODE
+RB2_R1A 902 3 37.5 RMOD
+RB2_R1B 3 4 37.5 RMOD
+DRB2_D1 3 110 RES_DIODE
+R1_R1A 10 11 75 RMOD
+R1_R1B 11 14 75 RMOD
+DR1_D1 11 110 RES_DIODE
+R2_R1A 12 13 1250 RMOD
+R2_R1B 13 14 1250 RMOD
+DR2_D1 13 110 RES_DIODE
+R3_R1A 16 17 75 RMOD
+R3_R1B 17 18 75 RMOD
+DR3_D1 17 110 RES_DIODE
+R4_R1A 19 56 1250 RMOD
+R4_R1B 56 18 1250 RMOD
+DR4_D1 56 110 RES_DIODE
+R5_R1A 27 28 250 RMOD
+R5_R1B 28 29 250 RMOD
+DR5_D1 28 100 RES_DIODE
+R6_R1A 100 20 15000 RMOD
+R6_R1B 20 21 15000 RMOD
+DR6_D1 20 100 RES_DIODE
+R7_R1A 100 22 3000 RMOD
+R7_R1B 22 23 3000 RMOD
+DR7_D1 22 100 RES_DIODE
+R8_R1A 100 24 1500 RMOD
+R8_R1B 24 25 1500 RMOD
+DR8_D1 24 100 RES_DIODE
+R9_R1A 100 30 2500 RMOD
+R9_R1B 30 31 2500 RMOD
+DR9_D1 30 100 RES_DIODE
+R10_R1A 57 58 13130 RMOD
+R10_R1B 58 200 13130 RMOD
+DR10_D1 58 100 RES_DIODE
+R11_R1A 26 34 500 RMOD
+R11_R1B 34 35 500 RMOD
+DR11_D1 34 100 RES_DIODE
+R12_R1A 26 36 750 RMOD
+R12_R1B 36 37 750 RMOD
+DR12_D1 36 100 RES_DIODE
+R20_R1A 110 40 5000 RMOD
+R20_R1B 40 41 5000 RMOD
+DR20_D1 40 110 RES_DIODE
+R21_R1A 110 42 2110 RMOD
+R21_R1B 42 43 2110 RMOD
+DR21_D1 42 110 RES_DIODE
+R22_R1A 110 46 735 RMOD
+R22_R1B 46 47 735 RMOD
+DR22_D1 46 110 RES_DIODE
+R23_R1A 50 51 2500 RMOD
+R23_R1B 51 32 2500 RMOD
+DR23_D1 51 110 RES_DIODE
+R24_R1A 44 45 4330 RMOD
+R24_R1B 45 200 4330 RMOD
+DR24_D1 45 110 RES_DIODE
+R25_R1A 48 49 1380 RMOD
+R25_R1B 49 200 1380 RMOD
+DR25_D1 49 110 RES_DIODE
+R26_R1A 110 52 9500 RMOD
+R26_R1B 52 53 9500 RMOD
+DR26_D1 52 110 RES_DIODE
+R27_R1A 110 55 3080 RMOD
+R27_R1B 55 29 3080 RMOD
+DR27_D1 55 110 RES_DIODE
+.MODEL RES_DIODE D IS=3.7E-16 CJO=4.14E-13
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+*IN =Node(901) OUT =Node(911) STROBE =Node(902) OUTB =Node(912)*
+*                                                              *
+**********
+*SRC=H351IO;H351IO;ECL;MECL10KH;Translator I/O
+*SYM=H351IO
+.SUBCKT H351IO 100 110 400 510 710 901 902 911 912
+* NODES: TVCC,EVCC,VCS,EVCCO,GNDI,IN,STROBE,OUT,OUTB
+Q1 710 902 2 TPNP2
+Q2 4 4 5 710 T08I3
+Q3 5 5 6 710 T08I3
+Q4 6 6 7 710 T08I3
+Q5 710 901 2 TPNP2
+Q6 7 7 710 710 T08I3
+Q7 9 2 10 710 T08I3
+Q8 14 15 10 710 T08I3
+Q9 110 9 110 710 C15PF
+Q10 110 14 110 710 C15PF
+Q11 10 400 11 710 T12B1
+Q12 510 14 911 710 T5406
+Q13 510 9 912 710 T5406
+Q14 15 710 15 710 C60PF
+Q15 110 17 15 710 T12B1
+Q16 17 17 18 710 T12B1
+Q17 18 18 19 710 T12B1
+Q18 19 19 20 710 T12B1
+Q19 20 20 710 710 T12B1
+Q20 15 20 710 710 T12B1
+XDS1 710 901 FLS009
+XDS2 710 902 FLS009
+XDS3 2 4 FLS006
+R1_R1A 100 1 1000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 2 1000 RMOD
+DR1_D1 1 100 RES_DIODE
+R2_R1A 100 3 2500 RMOD
+R2_R1B 3 4 2500 RMOD
+DR2_D1 3 100 RES_DIODE
+R3_R1A 110 8 124.5 RMOD
+R3_R1B 8 9 124.5 RMOD
+DR3_D1 8 110 RES_DIODE
+R4_R1A 110 13 124.5 RMOD
+R4_R1B 13 14 124.5 RMOD
+DR4_D1 13 110 RES_DIODE
+R5_R1A 11 12 55 RMOD
+R5_R1B 12 710 55 RMOD
+DR5_D1 12 110 RES_DIODE
+R6_R1A 110 16 750 RMOD
+R6_R1B 16 17 750 RMOD
+DR6_D1 16 110 RES_DIODE
+.MODEL RES_DIODE D IS=3.7E-16 CJO=4.14E-13
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+*IN =Node(901) OUT =Node(911) STROBE =Node(902) OUTB =Node(912)*
+*                                                              *
+**********
+*SRC=H352IO;H352IO;ECL;MECL10KH;Translator I/O
+*SYM=H351IO
+.SUBCKT H352IO 100 110 400 510 710 901 902 911 912
+* NODES: TVCC,EVCC,VCS,EVCCO,GNDI,IN,STROBE,OUT,OUTB
+Q1 710 902 2 TPNP2
+Q2 4 4 5 710 T08I3
+Q3 5 5 6 710 T08I3
+Q4 6 6 7 710 T08I3
+Q5 710 901 2 TPNP2
+Q6 7 7 710 710 T08I3
+Q7 9 2 10 710 T08I3
+Q8 14 15 10 710 T08I3
+Q9 110 9 110 710 C15PF
+Q10 110 14 110 710 C15PF
+Q11 10 400 11 710 T12B1
+Q12 510 14 911 710 T5406
+Q13 510 9 912 710 T5406
+Q14 15 710 15 710 C60PF
+Q15 110 17 15 710 T12B1
+Q16 17 17 18 710 T12B1
+Q17 18 18 19 710 T12B1
+Q18 19 19 20 710 T12B1
+Q19 20 20 710 710 T12B1
+Q20 15 20 710 710 T12B1
+Q21 100 2 21 710 T08I3
+XDS2 710 901 FLS009
+XDS3 710 902 FLS009
+XDS1 2 4 FLS006
+R1_R1A 100 1 1000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 2 1000 RMOD
+DR1_D1 1 100 RES_DIODE
+R2_R1A 100 3 2500 RMOD
+R2_R1B 3 4 2500 RMOD
+DR2_D1 3 100 RES_DIODE
+R3_R1A 110 8 124.5 RMOD
+R3_R1B 8 9 124.5 RMOD
+DR3_D1 8 110 RES_DIODE
+R4_R1A 110 13 124.5 RMOD
+R4_R1B 13 14 124.5 RMOD
+DR4_D1 13 110 RES_DIODE
+R5_R1A 11 12 55 RMOD
+R5_R1B 12 710 55 RMOD
+DR5_D1 12 110 RES_DIODE
+R6_R1A 110 16 750 RMOD
+R6_R1B 16 17 750 RMOD
+DR6_D1 16 110 RES_DIODE
+R7_R1A 21 22 2000 RMOD
+R7_R1B 22 710 2000 RMOD
+DR7_D1 22 110 RES_DIODE
+.MODEL RES_DIODE D IS=3.7E-16 CJO=4.14E-13
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+.SUBCKT FLS001 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+REPI 4 5 15.3 RMOD
+REXT 5 2 13.7 RMOD
+DS1 1 3 GRS001
+D1 0 5 DSUBS001
+.ENDS
+**********
+.SUBCKT FLS002 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+REPI 4 5 3.32 RMOD
+REXT 5 2 21.5 RMOD
+DS1 1 3 GRS002
+D1 0 5 DSUBS002
+.ENDS
+**********
+.SUBCKT FLS006 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+REPI 4 5 13.1 RMOD
+REXT 5 2 67.6 RMOD
+DS1 1 3 GRS006
+D1 0 5 DSUBS006
+.ENDS
+**********
+.SUBCKT FLS009 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=4.45M TC2=2.78U
+REPI 4 5 3.32 RMOD
+REXT 5 2 21.5 RMOD
+DS1 1 3 GRS009
+D1 0 5 DSUBS009
+.ENDS
+**********
+.SUBCKT FSS002 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+REPI 4 5 3.32 RMOD
+REXT 5 2 21.5 RMOD
+DS1 1 3 WSS002
+D1 0 5 DSBSS002
+.ENDS
+**********
+.SUBCKT STS002 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+REPI 4 5 2.83 RMOD
+REXT 5 2 17.4 RMOD
+DS1 1 3 GRTS002
+D1 0 5 DSBTS002
+.ENDS
+**********
+.SUBCKT FLD003 1 2
+RSEXT 3 2 43.3 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+D2 1 3 DIOD003
+D1 0 3 DSUBD003
+.ENDS
+**********
+.SUBCKT FLS101 1 2
+REXT 3 2 125.3 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+DS1 1 3 WS101
+D1 0 3 DSUBS101
+.ENDS
+**********
+.SUBCKT FLS104 1 2
+REXT 3 2 19.25 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+DS1 1 3 WS106
+D1 0 3 DSUBS106
+.ENDS
+**********
+.SUBCKT FLS107 1 2
+REXT 3 2 22.6 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+DS1 1 3 WS107
+D1 0 3 DSUBS107
+.ENDS
+**********
+.SUBCKT FLNN01 1 2 3 4
+Q1 5 2 3 0 PNN01A
+Q2 5 3 4 0 PNN01B
+RT 1 5 40.4 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+D1 0 5 DSUBN01
+DS1 2 5 FPN01
+.ENDS
+**********
+.SUBCKT QPN139 1 2 3
+Q1 4 2 3 0 PN139
+Q2 5 2 3 0 PN139
+Q3 6 2 3 0 PN139
+Q4 7 2 3 0 PN139
+R1 1 4 7.89 RMOD
+.MODEL RMOD R TC1=4.45M TC2=2.78U
+R2 1 5 7.89 RMOD
+R3 1 6 7.89 RMOD
+R4 1 7 7.89 RMOD
+DS1 2 4 GR139
+DS2 2 5 GR139
+DS3 2 6 GR139
+DS4 2 7 GR139
+D1 0 7 DSUB139
+.ENDS
+**********
+.SUBCKT FLN113 1 2 3
+Q1 4 2 3 0 PN113
+R1 1 4 45.9 RMOD
+.MODEL RMOD R TC1=3.166E-4 TC2=8.33E-6
+D1 0 4 DSUB113
+DS1 2 4 W113
+.ENDS
+**********
+.SUBCKT FLN103 1 2 3
+Q1 4 2 3 0 PN103
+R1 1 4 38.6 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+D1 0 4 DSUB103
+DS1 2 4 W103
+.ENDS
+**********
+.SUBCKT FLN101 1 2 3
+Q1 4 2 3 0 PN101
+R1 1 4 122.29 RMOD
+.MODEL RMOD R TC1=3.166E-4 TC2=8.33E-6
+D1 0 4 DSUB101
+DS1 2 4 W101
+.ENDS
+**********
+.SUBCKT FLNT01 1 2 3
+Q1 4 2 3 0 PNT01
+R1 1 4 56.18 RMOD
+.MODEL RMOD R TC1=3.166E-4 TC2=8.33E-6
+D1 0 4 DSUBT01
+.ENDS
+**********
+.SUBCKT FLNT02 1 2 3
+Q1 4 2 3 0 PNT02
+R1 1 4 30.7 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+D1 0 4 DSUBT02
+.ENDS
+**********
+.SUBCKT FLN001 1 2 3
+Q1 4 2 3 0 PN001
+R1 1 4 122.3 RMOD
+.MODEL RMOD R TC1=.445M TC2=2.78U
+D1 0 4 DSUB001
+DS1 2 4 GR001
+.ENDS
+**********
+.SUBCKT FLN111 1 2 3
+Q1 4 2 3 0 PN111
+R1 1 4 99.65 RMOD
+.MODEL RMOD R TC1=3.166E-4 TC2=8.33E-6
+D1 0 4 DSUB111
+DS1 2 4 W111
+.ENDS
+**********
+.SUBCKT FPN108 1 2 3
+Q1 4 2 3 0 PN108
+R1 1 4 19.5 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 4 DSUB108
+DS1 2 4 W108
+.ENDS
+**********
+.SUBCKT FLNS01 1 2 3
+Q1 5 2 3 0 PNS01
+R1 4 5 52.8 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 5 DSUBS01
+DS1 1 4 FPS01
+.ENDS
+**********
+* Package Model (20-lead PLCC)                                  *
+* EXT = Node (84) INT = Node (81)                               *
+**********
+*SRC=PKG20;PKG20;ECL;ECLinPS;
+*SYM=PLCC28
+.SUBCKT PKG20 84 81
+CPKG 82 0 1.5PF
+RPKG1 84 82 750
+RPKG2 82 83 750
+RPKG3 83 81 .2
+LPKG1 84 82 3.5NH
+LPKG2 82 83 3.5NH
+.ENDS
+**********
+*                                                               *
+*                                                               *
+* Package Model (16-Pin DIP)                                    *
+* EXT = Node (84) INT = Node (81)                               *
+**********
+*SRC=PKG16;PKG16;ECL;ECLinPS;
+*SYM=PLCC28
+.SUBCKT PKG16 84 81
+CPKG 82 0 2.5PF
+RPKG1 84 82 750
+RPKG2 82 83 750
+RPKG3 83 81 .3
+LPKG1 84 82 5NH
+LPKG2 82 83 5NH
+.ENDS
+**********
+*
+*                        TTL Subcircuit Models                           *
+*                                                                        *
+**********
+.MODEL DSUB101 D  (CJO=104FF VJ=.51 M=.24)
+**********
+.MODEL PN101 NPN  (IS=7E-18 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=0.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=.3MA ISC=7.59E-17 NC=1 RB=1441 RBM=400
++                 RE=0 RC=217.6
++                 CJE=41.3FF VJE=.9 MJE=.4
++                 CJC=32.2FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=1.64MA PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL W101 D     (IS=2.15E-13 RS=123.4 N=1.044 TT=10PS
++                 CJO=28.8FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB103 D  (CJO=309.7FF VJ=.51 M=.24)
+**********
+.MODEL PN103 NPN  (IS=1.89E-16 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=8.1MA ISC=2.24E-16 NC=1 RB=715.6 RBM=98.4
++                 RE=0 RC=8.06
++                 CJE=646.4FF VJE=.9 MJE=.4
++                 CJC=171.9FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=10A PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=.5)
+**********
+.MODEL W103 D     (IS=5.39E-13 RS=49.2 N=1.044 TT=10PS
++                 CJO=72.2FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB111 D  (CJO=122FF VJ=.51 M=.24)
+**********
+.MODEL PN111 NPN  (IS=1.05E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=0.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=.45MA ISC=1.14E-16 NC=1 RB=1010 RBM=315.7
++                 RE=0 RC=145
++                 CJE=57.8FF VJE=.9 MJE=.4
++                 CJC=39FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=2.46MA PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL W111 D     (IS=4.8E-13 RS=68.2 N=1.044 TT=10PS
++                 CJO=64.3FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+****                   FLN113                       ****
+.MODEL DSUB113 D  (CJO=182FF VJ=.51 M=.24)
+**********
+.MODEL PN113 NPN  (IS=2.45E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=0.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=1MA ISC=2.66E-16 NC=1 RB=469 RBM=171
++                 RE=0 RC=62.2
++                 CJE=123FF VJE=.9 MJE=.4
++                 CJC=69FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=5.74MA PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL W113 D     (IS=7.41E-13 RS=43 N=1.044 TT=10PS
++                 CJO=99FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBN01 D  (CJO=1.785PF VJ=.51 M=.24)
+**********
+.MODEL PNN01A NPN (IS=1.68E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=.72MA ISC=1.99E-17 NC=1 RB=982.1 RBM=357.1
++                 RE=0 RC=90.7
++                 CJE=83.6FF VJE=.9 MJE=.4
++                 CJC=57FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=10A PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=.5)
+**********
+.MODEL PNN01B NPN (IS=3.64E-16 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=7.8MA ISC=2.15E-16 NC=1 RB=374.5 RBM=54.1
++                 RE=0 RC=4.18
++                 CJE=606.8FF VJE=.9 MJE=.4
++                 CJC=160.4FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=10A PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=.5
+**********
+.MODEL FPN01 D    (IS=8.63E-14 RS=39.4 N=1.044 TT=10PS
++                 CJO=72.3FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL WS107 D    (IS=1.49E-12 RS=14 N=1.044 TT=10PS
++                 CJO=200FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS107 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=221FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL GRS001 D   (IS=4.27E-14 RS=52.8 N=1.044 TT=10PS
++                 CJO=54FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS001 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=87.7FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL GRS002 D   (IS=5.43E-13 RS=4.15 N=1.044 TT=10PS
++                 CJO=54FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS002 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=593FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL GRTS002 D  (IS=6.84E-13 RS=3.3 N=1.044 TT=10PS
++                 CJO=865FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSBTS002 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=673FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL WSS002 D  (IS=7.52E-13 RS=28.3 N=1.044 TT=10PS
++                 CJO=100.8FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=35)
+**********
+.MODEL DSBSS002 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=97.8FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL DSUB001 D  (CJO=105FF VJ=.51 M=.24)
+**********
+.MODEL PN001 NPN  (IS=7E-18 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=0.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=.3MA ISC=7.59E-17 NC=1 RB=1341 RBM=300
++                 RE=0 RC=217.6
++                 CJE=41FF VJE=.9 MJE=.4
++                 CJC=59FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=1.64MA PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL GR001 D    (IS=3.8E-14 RS=88 N=1.044 TT=10PS
++                 CJO=48FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBT01 D  (CJO=155FF VJ=.51 M=.24)
+**********
+.MODEL PNT01 NPN  (IS=2.73E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=0.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=1.17MA ISC=2.96E-16 NC=1 RB=566.4 RBM=181.8
++                 RE=0 RC=55.79
++                 CJE=129.5FF VJE=.9  MJE=.4
++                 CJC=73.4FF  VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=6.4MA PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL DSUBT02 D  (CJO=97.8FF VJ=.51 M=.24)
+**********
+.MODEL PNT02 NPN  (IS=7.0E-18 BF=70 NF=1.008 VAF=30 IKF=10A
++                 ISE=0 NE=1 BR=.1 NR=1 XCJC=0.1 VAR=100
++                 IKR=.3MA ISC=8.28E-18 NC=1 RB=1475 RBM=433
++                 RE=0 RC=217.6
++                 CJE=41.3FF  VJE=.9  MJE=.4
++                 CJC=35.4FF  VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=10A PTF=0
++                 TR=200P XTB=1.51 EG=1.115 XTI=5 FC=.5)
+**********
+.MODEL DSUB106 D  (CJO=149.4FF VJ=.51 M=.24)
+**********
+.MODEL W106 D     (IS=3.91E-13 RS=98.9 N=1.044 TT=10PS
++                 CJO=52.4FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB108 D (CJO=163FF VJ=.51 M=.24)
+**********
+.MODEL PN108 NPN (IS=1.75E-17 BF=113 NF=1.008 VAF=30 IKF=10a
++                 ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                 IKR=.75MA ISC=1.9E-16 NC=1 RB=638.8 RBM=222
++                 RE=0 RC=87
++                 CJE=90.6FF VJE=.9 MJE=.4
++                 CJC=50.3FF VJC=.53 MJC=.37
++                 TF=40P XTF=0 VTF=100 ITF=4.1MA PTF=0
++                 TR=20Pp XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL W108 D        (IS=5.1E-13 RS=58.8 N=1.044 TT=10PS
++                  CJO=68.3FF VJ=.4 M=.33
++                  EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL GRS006 D   (IS=6.39E-14 RS=35 N=1.044 TT=10PS
++                 CJO=81FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS006 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=149FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL WS101 D    (IS=1.9E-13 RS=111 N=1.044 TT=10PS
++                 CJO=25.6FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS101 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=63.2FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL FSS002 D IS=7.56E-13
+*
+**********
+*          MECL10KH   Transistor Models                               *
+*                                                                     *
+**********
+.MODEL T05I3   NPN
++  IS=2.78E-17 BF=85   RB=707 RC=180 RE=12 BR=5
++  CJE=.04E-12  CJC=.13E-12  CJS=.18E-12
+**********
+.MODEL T06B4   NPN
++  IS=4.048E-17  BF=85   RB=1330  BR=5 RE=7.5
++  RC=121.2  CJE=.06E-12 CJC=.1E-12 CJS=.161E-12
+**********
+.MODEL T08I2   NPN
++  IS=2.6E-17  BF=85   RB=470 BR=5
++  RC=163 RE=7.5 CJE=6.53E-14 CJC=1.235E-13 CJS=1.338E-13
+**********
+.MODEL T025E   NPN
++  IS=1.3E-15  BF=85   RB=64.5 BR=5
++  RC=5.68 RE=.2
+**********
+.MODEL T08I3   NPN
++  IS=4.189E-17  BF=85    RB=450 BR=5
++  RC=118.9 RE=7.5 CJE=6.5E-14 CJC=1.72E-13 CJS=2.08E-13
+**********
+.MODEL T12B1   NPN
++  IS=7.53E-17  BF=85   RB=707 BR=5
++  RC=87.8 RE=3.75 CJE=.11E-12 CJC=.14E-12 CJS=.14E-12
+**********
+.MODEL T12B4   NPN
++  IS=17E-17  BF=85   RB=750 BR=5
++  RC=25.27 CJE=1.14E-13 CJC=1.3E-13 CJS=1.477E-13
+**********
+.MODEL T16I3   NPN
++  IS=7.96E-17  BF=85   RB=240 BR=5
++  RC=63.1 RE=3.75 CJE=.12E-12 CJC=.27E-12 CJS=.25E-12
+**********
+.MODEL T16I2   NPN
++  IS=7.96E-17  BF=85   RB=240 BR=5
++  RC=88.6 RE=3.75 CJE=.12E-12 CJC=.25E-12 CJS=.18E-12
+**********
+.MODEL T18B1   NPN
++  IS=1.10E-16  BF=85   RB=456  BR=5
++  RC=61.3 RE=2.5 CJE=.17E-12 CJC=.19E-12 CJS=.19E-12
+**********
+.MODEL T54O6   NPN
++  IS=3.3E-16  BF=85   RB=86.6 BR=5
++  RC=23.6 RE=.833 CJE=.495E-12 CJC=.722E-12 CJS=.576E-12
+**********
+.MODEL T81O6   NPN
++  IS=1.6E-16  BF=85   RB=61.1 BR=5
++  RC=16 RE=.57 CJE=.726E-12 CJC=.556E-12 CJS=.724E-12
+**********
+.MODEL TPNP2 PNP
++  IS=7.69E-17 BF=5 BR=1 RB=164 RC=56 CJE=.086E-12
++  CJC=1.4E-12
+**********
+.MODEL C15PF NPN
++  IS=8.9426E-16 BF=85 BR=5 RB=1016.2  RC=27 RE=.2
++  CJE=1.2E-12 CJC=.64E-12 CJS=.4E-12
+**********
+.MODEL RXCX1 NPN
++  IS=4.6077E-16 BF=85 BR=5 RB=7084 RC=24 RE=.5
++  CJE=.647E-12 CJC=3.855E-12 CJS=.786E-12
+**********
+.MODEL C60PF NPN
++  IS=8.8224E-16 BF=85 BR=5 RB=141 RC=16 RE=.3
++  CJE=3.657E-12 CJC=2.927E-12 CJS=1.029E-12
+**********
+.MODEL C90PF NPN
++  IS=1.419E-15 BF=85 BR=5 RB=16 RC=9 RE=.4
++  CJE=5.325E-12 CJC=4.452E-12 CJS=1.448E-12
+**********
+*   H60x Clock Driver I/O Modelling Kit - Netlist Schematics   *
+*                                                              *
+*     The purpose of this document is to provide the netlists  *
+* for the various schematics supplied in the H60x Clk Driver   *
+* I/O Modelling Kit Application Note.  This information will   *
+* save design engineers who have no schematic capture tools    *
+* at their disposal the task of producing the SPICE netlists   *
+* for the schematics. To use these netlists it will require    *
+* a copy of the H60x I/O SPICE Modelling Kit application       *
+* note.  This note is required to identify the appropriate     *
+* input and output models for a specific device as well as the *
+* appropriate package model and ESD structure.  In addition a  *
+* copy of this note will help visualize the netlists and ease  *
+* the building of the simulation circuits.                     *
+*************
+*                   Netlist Organization                       *
+*                                                              *
+*     The netlists are organized as a group of subcircuits so  *
+* that the user can simply build a simulation netlist by       *
+* calling the appropriate subcircuit models.  In this way any  *
+* problems associated with commonality in node numbering       *
+* or component naming due to the use of multiple copies of a   *
+* schematic will be eliminated.                                *
+*     There are a group of GLOBAL nodes for the schematics,    *
+* they are as follows:                                         *
+*                                                              *
+*                EVCC = Node (110)                             *
+*                VEE = Node (200)                              *
+*                VBB = Node (300)                              *
+*                VBBP = Node (310)                             *
+*                VCS = Node (400)                              *
+*                TVCCI = Node (100)                            *
+*                TVVCO = Node (500)                            *
+*                GNDI = Node (710)                             *
+*                GNDO = Node (700)                             *
+*                                                              *
+* A detailed discussion on these nodes can be found in the     *
+* application note.                                            *
+*****************
+*     All of the subcircuits are labeled as to what they rep-  *
+* represent (ie. ECL input gate) and are cross referen-        *
+* ced to the figure numbers in the application note.  In       *
+* addition all of the subcircuits list the node numbers for    *
+* the specified inputs and outputs for the cell.  This will    *
+* ease the task of interconnecting the simulation netlist.     *
+* The component labels used in the netlists are identical to   *
+* those on the schematics in the application note.  With the   *
+* simplicity of the models this should allow the user to trace *
+* the netlists back to the schematics.                         *
+*                                                              *
+*   The user may notice that there are four terminals on       *
+* the transistor models.  The fourth terminal represents the    *
+* the connection to the substrate and is always biased to the  *
+* most negative voltage in the schematic.                      *
+*                                                              *
+**********
+*                                                              *
+*                     Subcircuit Netlists                      *
+*                                                              *
+**********
+*                                                              *
+* IN = Node (901) OUT = Node (911)                             *
+**********
+*SRC=TTLINPUT;TTLINPUT;ECL;MC10/100H6xx;Translator input
+*SYM=TTLINPUT
+.SUBCKT TTLINPUT 100 200 300 400 710 901 911
+* NODES: TVCCI,VEE,VBB,VCS,GNDI,IN,OUT
+Q1 710 901 2 TPNP2
+Q2 4 4 5 200 T05I1
+Q3 5 5 6 200 T05I1
+Q4 6 6 710 200 T05I1
+Q5 100 2 7 200 T05I1
+Q6 7 7 8 200 T05I1
+Q7 8 8 9 200 T05I1
+Q8 911 400 11 200 T05I1
+Q9 710 300 911 200 T05I1
+R1_R1A 100 1 1000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 2 1000 RMOD
+DR1_D1 1 100 RES_DIODE
+R2_R1A 100 3 2500 RMOD
+R2_R1B 3 4 2500 RMOD
+DR2_D1 3 100 RES_DIODE
+R3_R1A 9 10 260.5 RMOD
+R3_R1B 10 911 260.5 RMOD
+DR3_D1 10 100 RES_DIODE
+R4_R1A 11 12 112.5 RMOD
+R4_R1B 12 200 112.5 RMOD
+DR4_D1 12 100 RES_DIODE
+XDS1 2 4 FPS001
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN = Node (821)  OUT1 = Node (831)  OUT1B = Node (832)       *
+*                  OUT2 = Node (833)  OUT2B = Node (834)       *
+* MSA
+* As given this does not represent anything in the documentation.
+* O2 and O2B were removed so that the subcircuit resembles figure 1 of
+* AN1402.
+**********
+*SRC=ECLINPUT;ECLINPUT;ECL;MC10/100H6xx;Translator input
+*SYM=ECLINPUT
+.SUBCKT ECLINPUT 110  200 300 400 821 831 832 
+* 833 834
+*connections     EVcc Vee Vbb Vcs In  O1  O1B 
+* O2  O2B
+Q1 2 10 4 200 T05I1
+Q2 3 300 4 200 T05I1
+Q3 4 400 5 200 T05I1
+Q4 110 3 831 200 T05I1
+Q5 110 2 832 200 T05I1
+Q6 832 832 834 200 T05I1
+Q7 831 831 833 200 T05I1
+Q8 834 400 7 200 T05I1
+Q9 833 400 9 200 T05I1
+R2_R1A 110 20 133.5 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R2_R1B 20 2 133.5 RMOD
+DR2_D1 20 110 RES_DIODE
+R3_R1A 110 30 133.5 RMOD
+R3_R1B 30 3 133.5 RMOD
+DR3_D1 30 110 RES_DIODE
+R4_R1A 5 40 225 RMOD
+R4_R1B 40 200 225 RMOD
+DR3_D1 40 110 RES_DIODE
+R5_R1A 7 50 450 RMOD
+R5_R1B 50 200 450 RMOD
+DR5_D1 50 110 RES_DIODE
+R6_R1A 9 60 450 RMOD
+R6_R1B 60 200 450 RMOD
+DR6_D1 60 110 RES_DIODE
+XECLI 821 10 ECLIN
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* A = Node (901) AN = Node (902) B = Node (903) BN = Node (904)*
+* OUT = Node (911)                                             *
+**********
+*SRC=H602OUT;H602OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H600OUT
+.SUBCKT H602OUT 110 200 400 901 902 903 904 911
+* NODES: EVCC,VEE,VCS,A,AN,B,BN,OUT
+X1 110 200 400 901 902 903 904 911 H600OUT 
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*SRC=H600OUT;H600OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H600OUT
+.SUBCKT H600OUT 110 200 400 901 902 903 904 911
+* NODES: EVCC,VEE,VCS,A,AN,B,BN,OUT
+Q1 2 901 3 200 T08I1
+Q2 8 902 3 200 T08I1
+Q4 3 903 4 200 T08I1
+Q5 8 904 4 200 T08I1
+Q6 4 400 5 200 T12B1
+Q7 110 8 911 200 T5406
+RCL1_R1A 110 1 136.35 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+RCL1_R1B 1 2 136.5 RMOD
+DRCL1_D1 1 110 RES_DIODE
+RCL2_R1A 110 7 136.5 RMOD
+RCL2_R1B 7 8 136.5 RMOD
+DRCL2_D1 7 110 RES_DIODE
+R4_R1A 5 6 64.17 RMOD
+R4_R1B 6 200 64.17 RMOD
+DR4_D1 6 110 RES_DIODE
+XESD 911 200 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN = Node (841) TRI = Node (842) TRIB = Node (843)           *
+* CBIAS = Node (930) OUT = Node (851)                          *
+**********
+*SRC=H601IO;H601IO;ECL;MC10/100H6xx;Translator I/O
+*SYM=H601IO
+.SUBCKT H601IO 100 110 200 300 400 710 842 843 841 851 930
+* NODES:TVCCI,EVCC,VEE,VBB,VCS,TGNDI,TRI,TRIB,IN,OUT,CBIAS
+Q1 2 20 3 200 T05I1
+Q2 7 300 3 200 T05I1
+QC1 100 930 8 200 T05I1
+QC2 100 930 9 200 T05I1
+Q3 110 842 21 200 T05I1
+Q4 3 843 21 200 T05I1
+XQ6 11 2 710 FPN025
+XQ7 13 7 710 FPN025X
+XQ8 19 11 16 851 QPNN05D
+XQ9 851 13 710 QPN139
+Q5 21 400 4 200 T05I1
+RCL1_R1A 100 1 2000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+RCL1_R1B 1 2 2000 RMOD
+DRCL1_D1 1 100 RES_DIODE
+RCL2_R1A 100 6 2000 RMOD
+RCL2_R1B 6 7 2000 RMOD
+DRCL2_D1 6 100 RES_DIODE
+R1_R1A 4 5 128.5 RMOD
+R1_R1B 5 200 128.5 RMOD
+DR1_D1 5 100 RES_DIODE
+XDSC1 8 7 FPS003
+XDSC2 9 2 FPS003
+XDS2 16 11 FPS003
+XDS3 18 710 FPS003
+XDS1 100 19 QPS114
+R2_R1A 100 10 1000 RMOD
+R2_R1B 10 11 1000 RMOD
+DR2_D1 10 100 RES_DIODE
+R3_R1A 100 12 500 RMOD
+R3_R1B 12 13 500 RMOD
+DR3_D1 12 100 RES_DIODE
+R5_R1A 16 17 10500 RMOD
+R5_R1B 17 18 10500 RMOD
+DR5_D1 17 100 RES_DIODE
+XECLI 110 200 841 20 ECLPAD
+XESD 851 710 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+*   IN = Node (941)  OUT = Node (951)  OUTB = Node (952)       *
+*   INB = Node (942)                                           *
+* MSA
+* This subcircuit was missing INB. Added after 941.
+**********
+*SRC=H601ECL;H601ECL;ECL;MC10/100H6xx;Translator input
+*SYM=H601EIN
+.SUBCKT H601ECL 110 200 300 400 941 942 951 952
+* NODES: EVCC,VEE,VBB,VCS,IN,INB,OUT,OUTB
+Q1 4 16 5 200 T05I1
+Q1A 4 17 5 200 T05I1
+Q2 9 300 5 200 T05I1
+Q3 5 400 6 200 T05I1
+Q4 110 4 10 200 T05I1
+Q5 110 9 13 200 T05I1
+Q6 10 10 952 200 T05I1
+Q7 13 13 951 200 T05I1
+Q8 952 400 11 200 T05I1
+Q9 951 400 14 200 T05I1
+R1_R1A 110 1 266.5 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 2 266.5 RMOD
+DR1_D1 1 110 RES_DIODE
+R2_R1A 2 3 133.5 RMOD
+R2_R1B 3 4 133.5 RMOD
+DR2_D1 3 110 RES_DIODE
+R3_R1A 2 8 133.5 RMOD
+R3_R1B 8 9 133.5 RMOD
+DR3_D1 8 110 RES_DIODE
+R4_R1A 6 7 225 RMOD
+R4_R1B 7 200 225 RMOD
+DR4_D1 7 110 RES_DIODE
+R5_R1A 11 12 450 RMOD
+R5_R1B 12 200 450 RMOD
+DR5_D1 12 110 RES_DIODE
+R6_R1A 14 15 450  RMOD
+R6_R1B 15 200 450 RMOD
+DR6_D1 15 110 RES_DIODE
+XECLI 110 200 941 16 ECLPAD
+XECLI 110 200 942 17 ECLPAD
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+*   IN = Node (941)  OUT = Node (951)  OUTB = Node (952)       *
+**********
+*SRC=H602ECL;H602ECL;ECL;MC10/100H6xx;Translator input
+*SYM=H602EIN
+.SUBCKT H602ECL 110 200 300 400 941 951 952
+* NODES: EVCC,VEE,VBB,VCS,IN,OUT,OUTB
+Q1 4 16 5 200 T05I1
+Q2 9 300 5 200 T05I1
+Q3 5 400 6 200 T05I1
+Q5 110 4 10 200 T05I1
+Q4 110 9 13 200 T05I1
+Q6 10 10 952 200 T05I1
+Q7 13 13 951 200 T05I1
+Q8 952 400 11 200 T05I1
+Q9 951 400 14 200 T05I1
+R1_R1A 110 1 266.5 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 2 266.5 RMOD
+DR1_D1 1 110 RES_DIODE
+R2_R1A 2 3 133.5 RMOD
+R2_R1B 3 4 133.5 RMOD
+DR2_D1 3 110 RES_DIODE
+R3_R1A 2 8 133.5 RMOD
+R3_R1B 8 9 133.5 RMOD
+DR3_D1 8 110 RES_DIODE
+R4_R1A 6 7 225 RMOD
+R4_R1B 7 200 225 RMOD
+DR4_D1 7 110 RES_DIODE
+R5_R1A 11 12 450 RMOD
+R5_R1B 12 200 450 RMOD
+DR5_D1 12 110 RES_DIODE
+R6_R1A 14 15 450 RMOD
+R6_R1B 15 200 450 RMOD
+DR6_D1 15 110 RES_DIODE
+XECLI 110 200 941 16 ECLPAD
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN = Node (841) TRI = Node (842) INB = Node (843)            *
+* CBIAS = Node (930) OUT = Node (851) ENA = Node (844)         *
+**********
+*SRC=H603OUT;H603OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H603OUT
+.SUBCKT H603OUT 100 110 200 310 400 710 843 841 844 851 930
+* NODES:TVCCI,EVCC,VEE,VBBP,VCS,TGNDI,INB,IN,ENA,OUT,CBIAS
+Q1 2 841 3 200 T05I1
+Q2 7 843 3 200 T05I1
+QC1 100 930 8 200 T05I1
+QC2 100 930 9 200 T05I1
+Q3 110 22 21 200 T05I1
+Q4 3 310 21 200 T05I1
+XQ6 11 2 710 FPN025
+XQ7 13 7 710 FPN025X
+XQ8 19 11 16 851 15 QPNN05M
+XQ9 851 13 710 QPN139
+Q5 21 400 4 200 T05I1
+Q10 110 20 22 200 T05I1
+Q10A 110 310 22 200 T05I1
+Q11 22 400 23 200 T05I1
+RCL1_R1A 100 1 2000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+RCL1_R1B 1 2 2000 RMOD
+DRCL1_D1 1 100 RES_DIODE
+RCL2_R1A 100 6 2000 RMOD
+RCL2_R1B 6 7 2000 RMOD
+DRCL2_D1 6 100 RES_DIODE
+R1_R1A 4 5 112.5 RMOD
+R1_R1B 5 200 112.5 RMOD
+DR1_D1 5 100 RES_DIODE
+XDSC1 8 7 FPS003
+XDSC2 9 2 FPS003
+XDS2 16 11 FPS003
+XDS3 18 710 FPS003
+XDS1 100 19 QPS114
+R2_R1A 100 10 1000 RMOD
+R2_R1B 10 11 1000 RMOD
+DR2_D1 10 100 RES_DIODE
+R3_R1A 100 12 500 RMOD
+R3_R1B 12 13 500 RMOD
+DR3_D1 12 100 RES_DIODE
+R4_R1A 100 14 350 RMOD
+R4_R1B 14 15 350 RMOD
+DR4_D1 14 100 RES_DIODE
+R5_R1A 16 17 10000 RMOD
+R5_R1B 17 18 10000 RMOD
+DR5_D1 17 100 RES_DIODE
+R6_R1A 23 24 150 RMOD
+R6_R1B 24 200 150 RMOD
+DR6_D1 24 100 RES_DIODE
+XECLI 110 200 844 20 ECLPAD
+XESD 851 710 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+*   IN = Node (901)  INB = Node (902)  OUT = Node (911)        *
+*   OUTB = Node (912)                                          *
+**********
+*SRC=H604OUT;H604OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H604OUT
+.SUBCKT H604OUT 110 200 400 901 902 911 912
+* NODES: EVCC,VEE,VCS,IN,INB,OUT,OUTB
+X1 110 200 400 901 902 911 912 H606OUT 
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*SRC=H606OUT;H606OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H604OUT
+.SUBCKT H606OUT 110 200 400 901 902 911 912
+* NODES: EVCC,VEE,VCS,IN,INB,OUT,OUTB
+Q1 10 2 11 200 T08I1
+Q2 15 6 11 200 T08I1
+Q3 11 400 12 200 T12B1
+Q4 110 901 5 200 T05I1
+Q5 110 902 1 200 T05I1
+Q6 1 1 2 200 T05I1
+Q7 5 5 6 200 T05I1
+Q8 2 400 3 200 T05I1
+Q9 6 400 7 200 T05I1
+Q10 110 15 911 200 T5406
+Q11 110 10 912 200 T5406
+R1_R1A 12 13 60 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 13 200 60 RMOD
+DR1_D1 13 110 RES_DIODE
+R2_R1A 110 9 136.5 RMOD
+R2_R1B 9 10 136.5 RMOD
+DR2_D1 9 110 RES_DIODE
+R3_R1A 110 14 136.5 RMOD
+R3_R1B 14 15 136.5 RMOD
+DR3_D1 14 110 RES_DIODE
+R4_R1A 3 4 450 RMOD
+R4_R1B 4 200 450 RMOD
+DR4_D1 4 110 RES_DIODE
+R5_R1A 7 8 450 RMOD
+R5_R1B 8 200 450 RMOD
+DR5_D1 8 110 RES_DIODE
+XESD1 911 200 FPS009E
+XESD2 912 200 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN = Node (841) INB = Node (842) OUT = Node (851)            *
+**********
+*SRC=H605OUT;H605OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H605OUT
+.SUBCKT H605OUT 100 200 400 710 930 841 842 851
+* NODES:TVCCI,VEE,VCS,TGNDI,CBIAS,IN,INB,OUT
+Q1 2 841 3 200 T05I1
+Q2 7 842 3 200 T05I1
+QC1 100 930 8 200 T05I1
+QC2 100 930 9 200 T05I1
+XQ6 11 2 710 FPN025
+XQ7 13 7 710 FPN025X
+XQ8 19 11 16 851 15 QPNN05M
+XQ9 851 13 710 QPN139
+Q5 3 400 4 200 T05I1
+RCL1_R1A 100 1 2000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+RCL1_R1B 1 2 2000 RMOD
+DRCL1_D1 1 100 RES_DIODE
+RCL2_R1A 100 6 2000 RMOD
+RCL2_R1B 6 7 2000 RMOD
+DRCL2_D1 6 100 RES_DIODE
+R1_R1A 4 5 112.5 RMOD
+R1_R1B 5 200 112.5 RMOD
+DR1_D1 5 100 RES_DIODE
+XDSC1 8 7 FPS003
+XDSC2 9 2 FPS003
+XDS2 16 11 FPS003
+XDS3 18 710 FPS003
+XDS1 100 19 QPS114
+R2_R1A 100 10 1000 RMOD
+R2_R1B 10 11 1000 RMOD
+DR2_D1 10 100 RES_DIODE
+R3_R1A 100 12 500 RMOD
+R3_R1B 12 13 500 RMOD
+DR3_D1 12 100 RES_DIODE
+R4_R1A 100 14 350 RMOD
+R4_R1B 14 15 350 RMOD
+DR4_D1 14 100 RES_DIODE
+R5_R1A 16 17 1000 RMOD
+R5_R1B 17 18 1000 RMOD
+DR5_D1 17 100 RES_DIODE
+XESD 851 710 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN = Node (901) OUT = Node (911)                             *
+**********
+*SRC=H606TTL;H606TTL;ECL;MC10/100H6xx;Translator input
+*SYM=H606TIN
+.SUBCKT H606TTL 100 710 901 911
+* NODES: TVCCI,GNDI,IN,OUT
+Q1 710 901 911 TPNP2
+Q2 4 4 5 710 T05I1
+Q3 5 5 6 710 T05I1
+Q4 6 6 710 710 T05I1
+R1_R1A 100 1 1000 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 1 911 1000 RMOD
+DR1_D1 1 100 RES_DIODE
+R2_R1A 100 3 2500 RMOD
+R2_R1B 3 4 2500 RMOD
+DR2_D1 3 100 RES_DIODE
+XDS1 911 4 FPS001
+XESD 901 710 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+*   IN = Node (841)  INB = Node (842)  OUT = Node (851)        *
+**********
+*SRC=H607OUT;H607OUT;ECL;MC10/100H6xx;Translator output
+*SYM=H607OUT
+.SUBCKT H607OUT 100 710 841 842 851
+*NODES: TVCCI,GNDI,IN,INB,OUT
+Q1 100 842 8 710 T05I1
+Q2 100 841 11 710 T05I1
+Q3 1 1 2 710 T05I1
+Q4 2 2 3 710 T05I1
+Q5 5 6 710 710 T05I1
+Q6 1 5 6 710 T05I1
+Q8 10 6 710 710 T05I1
+Q9 13 6 710 710 T05I1
+XQ10 15 13 16 FPN108
+XQ11 19 10 20 FPN108
+XQ14 23 20 710 FPN025
+XQ15 25 13 710 FPN025X
+XQ16 31 23 28 851 27 QPNN05M
+XQ17 851 25 710 QPN139
+R1_R1A 3 4 700 RMOD
+.MODEL RMOD R TC1=431.6U TC2=8.97U
+R1_R1B 4 5 700 RMOD
+DR1_D1 4 100 RES_DIODE
+R2_R1A 6 7 2500 RMOD
+R2_R1B 7 710 2500 RMOD
+DR2_D1 7 100 RES_DIODE
+R4_R1A 8 9 600 RMOD
+R4_R1B 9 10 600 RMOD
+DR4_D1 9 100 RES_DIODE
+R5_R1A 11 12 600 RMOD
+R5_R1B 12 13 600 RMOD
+DR5_D1 12 100 RES_DIODE
+R6_R1A 16 17 250 RMOD
+R6_R1B 17 710 250 RMOD
+DR6_D1 17 100 RES_DIODE
+R7_R1A 20 21 250 RMOD
+R7_R1B 21 710 250 RMOD
+DR7_D1 21 100 RES_DIODE
+R8_R1A 100 14 600 RMOD
+R8_R1B 14 15 600 RMOD
+DR8_D1 14 100 RES_DIODE
+R9_R1A 100 18 600 RMOD
+R9_R1B 18 19 600 RMOD
+DR9_D1 18 100 RES_DIODE
+R10_R1A 100 22 1000 RMOD
+R10_R1B 22 23 1000 RMOD
+DR10_D1 22 100 RES_DIODE
+R11_R1A 100 24 500 RMOD
+R11_R1B 24 25 500 RMOD
+DR11_D1 24 100 RES_DIODE
+R12_R1A 100 26 350 RMOD
+R12_R1B 26 27 350 RMOD
+DR12_D1 26 100 RES_DIODE
+R13_R1A 28 29 1000 RMOD
+R13_R1B 29 30 1000 RMOD
+DR13_D1 29 100 RES_DIODE
+XDS1 100 31 QPS114
+XDS2 28 23 FPS003
+XDS3 30 710 FPS003
+XESD 851 710 FPS009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+.SUBCKT FPS003 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+REPI 4 5 15.3 RMOD
+REXT 5 2 22.9 RMOD
+DS1 1 3 GRS003
+D1 0 5 DSUBS003
+.ENDS
+**********
+.SUBCKT FPS001 1 2
+RX 3 4 2 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+REPI 4 5 15.2 RMOD
+REXT 5 2 13.7 RMOD
+DS1 1 3 GRS001
+D1 0 5 DSUBS001
+.ENDS
+**********
+.SUBCKT QPNN05M 1 2 3 4 5
+Q1 5 2 3 0 PNN05A
+Q1A 5 2 1 0 PNN05A
+Q2 6 3 4 0 PNN05B
+RT 1 6 5.4 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 5 DSUB1N05
+D2 0 6 DSUB2N05
+DS1 2 5 WN05
+.ENDS
+**********
+.SUBCKT QPNN05D 1 2 3 4
+Q1 1 2 3 0 PNN05A
+Q1A 1 2 3 0 PNN05A
+Q2 6 3 4 0 PNN05B
+RT 1 6 5.3 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 1 DSUB1N05
+D2 0 6 DSUB2N05
+DS1 2 1 WN05
+.ENDS
+**********
+.SUBCKT FPN025 1 2 3
+Q1 4 2 3 0 PN025
+R1 1 4 23.4 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 4 DSUB025
+DS1 2 4 FP025
+.ENDS
+**********
+.SUBCKT QPS114 1 2
+D1 0 3 DSUBS114
+DS1 1 3 QPS114
+REXT 3 2 19 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+.ENDS
+**********
+.SUBCKT FPN025X 1 2 3
+Q1 4 2 3 0 PN025X
+R1 1 4 19.1 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 4 DSUB025X
+DS1 2 4 FP025X
+.ENDS
+**********
+*SRC=ECLPAD;ECLPAD;ECL;MC10/100H6xx;
+* MSA
+* This subcircuit did not match the documentation or the subcircuits
+* that are using it. The EVCC and VEE node connections were added 
+* to the calling subcircuit as a fix.
+*SYM=ECLESD
+.SUBCKT ECLPAD 110 200 1 2
+* NODES: EVCC, VEE, IN, OUT
+XESD 1 200 FPS009E
+RP 1 200 50000 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+RB_R1A 1 3 37.5 RMOD
+RB_R1B 3 2 37.5 RMOD
+DRB_D1 3 110 RES_DIODE
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+.SUBCKT FPS009E 1 2
+Q1 3 2 2 0 PN009E
+R1 1 3 4.97 RMOD
+.MODEL RMOD R TC1=4.45E-4 TC2=2.78E-6
+D1 0 3 DSUB009E
+DS1 2 3 GR009E
+.ENDS
+**********
+*                 ECL Transistor Models                               *
+**********
+.model t08i1 npn
++  is=33.33e-18  bf=114.5  br=2.029  re=1.333   ikf=.0336 vaf=42.7
++  ise=1.0e-15   rb=56.6   rbm=0     irb=0      ikr=.115  var=3.665
++  isc=184.7e-18 eg=1.11   rc=22.86  nc=1.085   nr=.995
++  cje=99.3e-15  vje=1.037 mje=.5718 nf=1.000   xti=4.7
++  cjc=124.4e-15 vjc=.603  mjc=.266  ne=2.000   xtb=1.15
++  cjs=170.4e-15 vjs=.5052 mjs=.3465 tr=9.92e-9 ptf=40
++  tf=35e-12     xtf=2.25  vtf=1.67  itf=.00808 xcjc=.089 fc=.8
+**********
+.model t12b1 npn
++  is=5.7e-17    bf=113    br=1.116  re=1.25     ikf=.0828  vaf=4
++  ise=2.4e-15   rb=170    rbm=170   irb=1.7e-3  ikr=.27    var=3.6
++  isc=1.01e-16  eg=1.11   rc=13.3   nc=1.028    nr=1.019   xti=3
++  cje=15e-15    vje=.658  mje=.273  nf=1.000
++  cjc=27e-15    vjc=.603  mjc=.369  ne=2.000
++  cjs=101e-15   vjs=.429  mjs=.259  tr=5e-9
++  tf=39e-12     xtf=3     vtf=1.4   itf=.008  xcjc=.620  fc=.005
+**********
+.model t5406   npn
++  is=3.3e-16  bf=113   rb=86.6 br=5
++  rc=23.6 re=.833 cje=.495e-12 cjc=.722e-12 cjs=.576e-12
+*
+**********
+*   H646 Clock Driver I/O Modelling Kit - Netlist Schematics   *
+*                                                              *
+*     The purpose of this document is to provide the netlists  *
+* for the various schematics supplied in the H646 Clk Driver   *
+* I/O Modelling Kit Application Note.  This information will   *
+* save design engineers who have no schematic capture tools    *
+* at their disposal the task of producing the SPICE netlists   *
+* for the schematics. To use these netlists it will require    *
+* a copy of the H646 I/O SPICE Modelling Kit application       *
+* note.  This note is required to identify the appropriate     *
+* input and output models for a specific device as well as the *
+* appropriate package model and ESD structure.  In addition a  *
+* copy of this note will help visualize the netlists and ease  *
+* the building of the simulation circuits.                     *
+************
+*                   Netlist Organization                       *
+*                                                              *
+*     The netlists are organized as a group of subcircuits so  *
+* that the user can simply build a simulation netlist by       *
+* calling the appropriate subcircuit models.  In this way any  *
+* problems associated with commonality in node numbering       *
+* or component naming due to the use of multiple copies of a   *
+* schematic will be eliminated.                                *
+*     There are a group of GLOBAL nodes for the schematics,    *
+* they are as follows:                                         *
+*                                                              *
+*                EVCC = Node (110)                             *
+*                VEE = Node (200)                              *
+*                VBB = Node (300)                              *
+*                VCS = Node (400)                              *
+*                TVCCI = Node (100)                            *
+*                TVCCO = Node (500)                            *
+*                GNDI = Node (710)                             *
+*                GNDO = Node (700)                             *
+*                                                              *
+* A detailed discussion on these nodes can be found in the     *
+* application note.                                            *
+**************
+*     All of the subcircuits are labeled as to what they rep-  *
+* represent (ie. ECL input gate) and are cross referen-        *
+* ced to the figure numbers in the application note.  In       *
+* addition all of the subcircuits list the node numbers for    *
+* the specified inputs and outputs for the cell.  This will    *
+* ease the task of interconnecting the simulation netlist.     *
+* The component labels used in the netlists are identical to   *
+* those on the schematics in the application note.  With the   *
+* simplicity of the models this should allow the user to trace *
+* the netlists back to the schematics.                         *
+*                                                              *
+*   The user may notice that there are four terminals on       *
+* the transistor models.  The fourth terminal represents       *
+* the connection to the substrate and is always biased to the  *
+* most negative voltage in the schematic.                      *
+*                                                              *
+**********
+*                                                              *
+*                     Subcircuit Netlists                      *
+*                                                              *
+**********
+* IN = Node (898) Q = Node (911) VBT = Node (912)              *
+**********
+*SRC=TTLIN;TTLIN;ECL;MC10/100H6xx;TTL Clock Driver input
+*SYM=TTLIN
+.SUBCKT TTLIN 100 710 898 911 912
+* NODES: VCCI,GNDI,IN,Q,VBT
+Q1 710 901 911 TPNP2
+Q2 1 1 2 0 T2X8A
+Q3 2 2 710 0 T2X8A
+R1_R1A 100 3 2000 RMOD
+.MODEL RMOD R TC1= 431.6U TC2= 8.97U
+R1_R1B 3 911 2000 RMOD
+DR1_D1 3 100 RES_DIODE
+R2_R1A 100 4 2000 RMOD
+R2_R2B 4 912 2000 RMOD
+DR2_D1 4 100 RES_DIODE
+XDS1 911 912 FPS102
+XDS2 912 1 FPS102
+XESD 901 710 FPS009EX
+XPKG 898 901 PKG28
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+* IN = Node (821) Q = Node (831) QB = Node (832)               *
+**********
+*SRC=ECLIN;ECLIN;ECL;MC10/100H6xx;ECL Clock Driver input
+*SYM=ECLINPS
+.SUBCKT ECLIN 110  200 300 400 821 831 832
+*connections    EVcc Vee Vbb Vcs In  Q   QB
+Q1 2 821 4 200 T2X4A
+Q2 3 300 4 200 T2X4A
+Q3 4 400 5 200 T2X4A
+Q4 110 3 831 200 T2X4A
+Q5 110 2 832 200 T2X4A
+Q6 832 832 6 200 T2X4A
+Q7 831 831 8 200 T2X4A
+Q8 6 400 7 200 T2X4A
+Q9 8 400 9 200 T2X4A
+R2_R1A 110 20 250 RMOD
+.MODEL RMOD R TC1= 431.6U TC2= 8.97U
+R2_R1B 20 2 250 RMOD
+DR2_D1 20 110 RES_DIODE
+R3_R1A 110 30 250 RMOD
+R3_R1B 30 3 250 RMOD
+DR3_D1 30 110 RES_DIODE
+R4_R1A 5 40 230 RMOD
+R4_R1B 40 200 230 RMOD
+DR3_D1 40 110 RES_DIODE
+R5_R1A 7 50 460 RMOD
+R5_R1B 50 200 460 RMOD
+DR5_D1 50 110 RES_DIODE
+R6_R1A 9 60 460 RMOD
+R6_R1B 60 200 460 RMOD
+DR6_D1 60 110 RES_DIODE
+RPD 821 200 50000
+XESD 110 200 821 ESD
+XPKG 989 821 PKG28
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*   IN= Node (841)  INB= Node (842)  OUT = Node (999)          *
+**********
+*SRC=H646OUT;H646OUT;ECL;MC10/100H6xx;Clock Driver output
+*SYM=H646OUT
+.SUBCKT H646OUT 100 500 700 710 900 841 842 999
+* NODES: TVCCI, TVCCO,GNDO,GNDI,BIAS1,IN,INB,OUT
+XQ1 22 19 710 FPN025
+XQ2 24 14 710 FPN025X
+XQ3 500 22 25 871 27 QPNN05M
+XQ4 871 24 700 QPN139
+Q5 710 900 37 TPNP2
+Q6 100 842 6 710 T05I1
+Q7 3 30 710 710 T05I1
+Q8 8 30 710 710 T05I1
+XQ9 12 3 14 FPN108
+XQ10 18 8 19 FPN108
+Q11 100 841 1 710 T05I1
+Q13 100 100 31 710 T05I1
+Q14 31 31 32 710 T05I1
+Q15 100 34 30 710 T05I1
+Q16 34 30 710 710 T05I1
+XDS3A 22 36 FPS003
+XDS3B 25 37 FPS003
+XDS2 25 22 FPS003
+XDS4 29 710 FPS003
+XDS5 36 37 FPS003
+R1_R1A 100 21 1000 RMOD
+.MODEL RMOD R TC1= 431.6U TC2= 8.97U
+R1_R1B 21 22 1000 RMOD
+DR1_D1 21 100 RES_DIODE
+R3_R1A 100 23 500 RMOD
+R3_R1B 23 24 500 RMOD
+DR3_D1 23 100 RES_DIODE
+R4_R1A 100 26 350 RMOD
+R4_R1B 26 27 350 RMOD
+DR4_D1 26 100 RES_DIODE
+R6_R1A 25 28 10000 RMOD
+R6_R1B 28 29 10000 RMOD
+DR6_D1 28 100 RES_DIODE
+R7_R1A 1 2 600 RMOD
+R7_R1B 2 3 600 RMOD
+DR7_D1 2 100 RES_DIODE
+R8_R1A 6 7 600 RMOD
+R8_R1B 7 8 600 RMOD
+DR8_D1 7 100 RES_DIODE
+R9_R1A 100 11 600 RMOD
+R9_R1B 11 12 600 RMOD
+DR9_D1 11 100 RES_DIODE
+R10_R1A 100 17 600 RMOD
+R10_R1B 17 18 600 RMOD
+DR10_D1 17 100 RES_DIODE
+R13_R1A 14 15 250 RMOD
+R13_R1B 15 710 250 RMOD
+DR13_D1 15 100 RES_DIODE
+R14_R1A 19 20 250 RMOD
+R14_R1B 20 710 250 RMOD
+DR14_D1 20 100 RES_DIODE
+R15_R1A 100 35 2000 RMOD
+R15_R1B 35 36 2000 RMOD
+DR15_D1 35 100 RES_DIODE
+R17_R1A 30 38 2500 RMOD
+R17_R1B 38 710 2500 RMOD
+DR17_D1 38 100 RES_DIODE
+R19_R1A 32 33 707.5 RMOD
+R19_R1B 33 34 707.5 RMOD
+DR19_D1 33 100 RES_DIODE
+XESD 871 700 FPS009EX
+XPKG 871 999 PKG28
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+.SUBCKT FPS102 1 2
+D1 0 3 DSUBS102
+DS1 1 3 WS102
+REXT 3 2 39.1 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+.ENDS
+**********
+* Package Model (28-lead PLCC)
+* EXT = Node (84) INT = Node (81)
+**********
+*SRC=PKG28;PKG28;ECL;MC10/100H6xx;
+*SYM=PLCC28
+.SUBCKT PKG28 84  81
+*connections  Ext Int
+CPKG 82 0 1.5PF
+RPKG1 84 82 750
+RPKG2 82 83 750
+RPKG3 83 81 .2
+LPKG1 84 82 3.5NH
+LPKG2 82 83 3.5NH
+.ENDS
+**********
+*                 ECL Transistor Models                               *
+**********
+.MODEL T05I1 NPN
++  IS=21.18E-18  BF=112    BR=5.108  RE=1.533   IKF=.0213 VAF=41.8
++  ISE=250E-18   RB=52.7   RBM=0     IRB=0      IKR=53E-5 VAR=3.766
++  ISC=95.62E-18 EG=1.11   RC=26.33  NC=1.141   NR=.997
++  CJE=67.7E-15  VJE=1.037 MJE=.5718 NF=1.000   XTI=4.7
++  CJC=99.5E-15  VJC=.603  MJC=.266  NE=2.000   XTB=1.15
++  CJS=152E-15   VJS=.5052 MJS=.3465 TR=9.92E-9 PTF=20
++  TF=35E-12     XTF=2.25  VTF=1.67  ITF=.00808 XCJC=.069 FC=.8
+**********
+.MODEL T2X4A NPN
++  IS=12.88E-18  BF=112.3  BR=.9806  RE=2        IKF=.0143  VAF=46
++  ISE=239.4E-18 RB=400    RBM=200   IRB=850E-6  IKR=.364   VAR=3.581
++  ISC=64.04E-18 EG=1.11   RC=35.4   NC=1.045    NR=.9972
++  CJE=44.5E-15  VJE=1.037 MJE=.572  NF=1.000    XTI=4.7
++  CJC=61E-15    VJC=.75   MJC=.266  NE=2.000    XTB=1.15
++  CJS=109.4E-15 VJS=.5815 MJS=.5273 TR=9.92E-9  PTF=30
++  TF=32E-12     XTF=2.25  VTF=1.67  ITF=.00808  XCJC=.059  FC=.8
+**********
+.MODEL T2X8A NPN
++  IS=25.32E-18  BF=113    BR=1.383  RE=1.50     IKF=.0273  VAF=46
++  ISE=478E-18   RB=222    RBM=111   IRB=1.7E-3  IKR=.3655  VAR=3.581
++  ISC=80E-18    EG=1.11   RC=22.67  NC=1.045    NR=.9972
++  CJE=79.6E-15  VJE=1.037 MJE=.572  NF=1.000    XTI=4.7
++  CJC=88.7E-15  VJC=.75   MJC=.266  NE=2.000    XTB=1.15
++  CJS=130.9E-15 VJS=.5815 MJS=.5273 TR=8.515E-9 PTF=50
++  TF=34.62E-12  XTF=2.599 VTF=1.578 ITF=.016    XCJC=.085  FC=.8
+**********
+.MODEL T2X12E NPN
++  IS=37.37E-18  BF=113    BR=1.383  RE=1.30     IKF=.0411  VAF=464
++  ISE=726E-18   RB=154    RBM=76.9  IRB=2.55E-3 IKR=.3655  VAR=3.681
++  ISC=100E-18   EG=1.11   RC=17     NC=1.045    NR=.9972
++  CJE=114E-15   VJE=1.037 MJE=.572  NF=1.000    XTI=4.7
++  CJC=114E-15   VJC=.75   MJC=.266  NE=2.000    XTB=1.15
++  CJS=152.3E-15 VJS=.5815 MJS=.5273 TR=8.515E-9 PTF=80
++  TF=34.62E-12  XTF=2.599 VTF=1.475 ITF=.024    XCJC=.099  FC=.8
+*
+**********
+*   H64x Clock Driver I/O Modelling Kit - Netlist Schematics   *
+*                                                              *
+*     The purpose of this document is to provide the netlists  *
+* for the various schematics supplied in the H64x Clk Driver   *
+* I/O Modelling Kit Application Note.  This information will   *
+* save design engineers who have no schematic capture tools    *
+* at their disposal the task of producing the SPICE netlists   *
+* for the schematics. To use these netlists it will require    *
+* a copy of the H64x I/O SPICE Modelling Kit application       *
+* note.  This note is required to identify the appropriate     *
+* input and output models for a specific device as well as the *
+* appropriate package model and ESD structure.  In addition a  *
+* copy of this note will help visualize the netlists and ease  *
+* the building of the simulation circuits.                     *
+**************
+*                   Netlist Organization                       *
+*                                                              *
+*     The netlists are organized as a group of subcircuits so  *
+* that the user can simply build a simulation netlist by       *
+* calling the appropriate subcircuit models.  In this way any  *
+* problems associated with commonality in node numbering       *
+* or component naming due to the use of multiple copies of a   *
+* schematic will be eliminated.                                *
+*     There are a group of GLOBAL nodes for the schematics,    *
+* they are as follows:                                         *
+*                                                              *
+*                EVCC = Node (110)                             *
+*                VEE = Node (200)                              *
+*                VBB = Node (300)                              *
+*                VCS = Node (400)                              *
+*                TVCCI = Node (100)                            *
+*                TVVCO = Node (500)                            *
+*                GNDI = Node (710)                             *
+*                GNDO = Node (700)                             *
+*                                                              *
+* A detailed discussion on these nodes can be found in the     *
+* application note.                                            *
+*************
+*     All of the subcircuits are labeled as to what they rep-  *
+* represent (ie. ECL input gate) and are cross referen-        *
+* ced to the figure numbers in the application note.  In       *
+* addition all of the subcircuits list the node numbers for    *
+* the specified inputs and outputs for the cell.  This will    *
+* ease the task of interconnecting the simulation netlist.     *
+* The component labels used in the netlists are identical to   *
+* those on the schematics in the application note.  With the   *
+* simplicity of the models this should allow the user to trace *
+* the netlists back to the schematics.                         *
+*                                                              *
+*   The user may notice that there are four terminals on       *
+* the transistor models.  The fouth terminal represents the    *
+* the connection to the substrate and is always biased to the  *
+* most negative voltage in the schematic                       *
+*                                                              *
+**********
+*                                                              *
+*                     Subcircuit Netlists                      *
+*                                                              *
+**********
+* IN = Node (801) INB = Node (802) Q = Node (999)              *
+**********
+*SRC=H640OUT;H640OUT;ECL;MC10/100H6xx;Clock Driver output
+*SYM=H64XOUT
+.SUBCKT H640OUT 500 700 801 802 999
+* NODES: TVCCO,GNDO,IN,INB,Q
+X1 500 700 801 802 999 H640XOUT
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*SRC=H641OUT;H641OUT;ECL;MC10/100H6xx;Clock Driver output
+*SYM=H64XOUT
+.SUBCKT H641OUT 500 700 801 802 999
+* NODES: TVCCO,GNDO,IN,INB,Q
+X1 500 700 801 802 999 H640XOUT
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*SRC=H642OUT;H642OUT;ECL;MC10/100H6xx;Clock Driver output
+*SYM=H64XOUT
+.SUBCKT H642OUT 500 700 801 802 999
+* NODES: TVCCO,GNDO,IN,INB,Q
+X1 500 700 801 802 999 H640XOUT
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*SRC=H645OUT;H645OUT;ECL;MC10/100H6xx;Clock Driver output
+*SYM=H64XOUT
+.SUBCKT H645OUT 500 700 801 802 999
+* NODES: TVCCO,GNDO,IN,INB,Q
+X1 500 700 801 802 999 H640XOUT
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+.SUBCKT H640XOUT 500 700 801 802 999
+* NODES: TVCCO,GNDO,IN,INB,Q
+Q1 500 801 1 0 T2X8A
+Q3 1 1 2 0 T2X8A
+Q4 4 4 700 0 T2X8A
+Q2 500 802 5 0 T2X8A
+Q5 7 4 700 0 T2X8A
+R1_R1A 2 3 1000 RMOD
+.MODEL RMOD R TC1= 431.6U TC2= 8.97U
+R1_R1B 3 4 1000 RMOD
+DR1_D1 3 500 RES_DIODE
+R2_R1A 5 6 1000 RMOD
+R2_R1B 6 7 1000 RMOD
+DR2_D1 6 500 RES_DIODE
+R3_R1A 500 12 1800 RMOD
+R3_R1B 12 13 1800 RMOD
+DR3_D1 12 500 RES_DIODE
+R4_R1A 18 20 2500 RMOD
+R4_R1B 20 811 2500 RMOD
+DR4_D1 20 500 RES_DIODE
+R5_R1A 500 21 15.5 RMOD
+R5_R1B 21 19 15.5 RMOD
+DR5_D1 21 500 RES_DIODE
+R6_R1A 14 15 500 RMOD
+R6_R1B 15 16 500 RMOD
+DR6_D1 15 500 RES_DIODE
+XQ6 13 7 14 FPN022
+XDS4 16 700 FPS003
+XDS5 14 17 FPS003
+XDS1 811 13 FPS003
+XDS2 18 13 FPS003
+XD1 17 18 FPD003
+XQ7 19 13 18 811 QPNN05
+XQ8 811 14 700 FPN002
+XQM 14 17 700 FPNS01
+XESD 811 700 FPS009EX
+XPKG 811 999 PKG28
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                                                              *
+* IN = Node (841) INB = Node (842) OUT = Node (999)            *
+**********
+*SRC=H643OUT;H643OUT;ECL;MC10/100H6xx;Clock Driver output
+*SYM=H643OUT
+.SUBCKT H643OUT 100 200 400 500 710 920 930 841 842 999 700
+* NODES:TVCCI,VEE,VCS,TVCCO,TGNDI,BIAS3,CBIAS,IN,INB,OUT,TGNDO
+Q1 2 841 3 200 T05I1
+Q2 7 842 3 200 T05I1
+QC1 100 930 8 200 T05I1
+QC2 100 930 9 200 T05I1
+QBVOH 200 920 11 200 TPNP2
+XQ6 11 2 710 FPN025
+XQ7 13 7 710 FPN025X
+XQ8 19 11 16 851 15 QPNN05M
+XQ9 851 13 700 QPN139
+Q5 3 400 4 200 T05I1
+RCL1_R1A 100 1 2000 RMOD
+.MODEL RMOD R TC1= 431.6U TC2= 8.97U
+RCL1_R1B 1 2 2000 RMOD
+DRCL1_D1 1 100 RES_DIODE
+RCL2_R1A 100 6 2000 RMOD
+RCL2_R1B 6 7 2000 RMOD
+DRCL2_D1 6 100 RES_DIODE
+R1_R1A 4 5 112.5 RMOD
+R1_R1B 5 200 112.5 RMOD
+DR1_D1 5 100 RES_DIODE
+XDSC1 8 7 FPS003
+XDSC2 9 2 FPS003
+XDS2 16 11 FPS003
+XDS3 18 710 FPS003
+XDS1 500 19 QPS114
+R2_R1A 100 10 1000 RMOD
+R2_R1B 10 11 1000 RMOD
+DR2_D1 10 100 RES_DIODE
+R3_R1A 100 12 500 RMOD
+R3_R1B 12 13 500 RMOD
+DR3_D1 12 100 RES_DIODE
+R4_R1A 100 14 350 RMOD
+R4_R1B 14 15 350 RMOD
+DR4_D1 14 100 RES_DIODE
+R5_R1A 16 17 1000 RMOD
+R5_R1B 17 18 1000 RMOD
+DR5_D1 17 100 RES_DIODE
+XESD 851 700 FPS009EX
+XPKG 851 999 PKG28
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*   I = Node (841)  IB = Node (842)  OUT = Node (999)          *
+**********
+* Node 400 is not used in this subcircuit but is used on the call line.
+* The nodes discussed at the top of this file are not used consistantly in 
+* this subcircuit.
+.SUBCKT H644OUT 100 700 400 900 910 861 862 999
+* NODES: TVCCO,GNDO,MBIAS,BIAS1,BIAS2,IN,INB,OUT
+QD1 500 500 29 0 PNN05B
+XQ1 22 19 700 FPN025
+XQ2 24 14 700 FPN025
+XQ3 31 22 25 871 27 QPNN05M
+XQ4 871 24 200 QPN139
+Q5 500 861 1 0 T2X8A
+Q6 500 862 6 0 T2X8A
+Q7 3 32 4 0 T2X8A
+Q8 8 32 9 0 T2X8A
+Q9 500 3 11 0 T2X8A
+Q10 500 8 16 0 T2X8A
+Q11 13 13 14 0 T2X8A
+Q12 18 18 19 0 T2X8A
+Q13 500 500 34 0 T2X8A
+Q14 34 36 38 0 T2X8A
+Q15 500 40 32 0 T2X8A
+Q16 40 32 41 0 T2X8A
+DS3A 22 900 FPS003
+XDS3B 25 910 FPS003
+XDS2 25 22 FPS003
+R1_R1A 500 21 1000 RMOD
+.MODEL RMOD R TC1= 431.6U TC2= 8.97U
+R1_R1B 21 22 1000 RMOD
+DR1_D1 21 500 RES_DIODE
+R3_R1A 500 23 500 RMOD
+R3_R1B 23 24 500 RMOD
+DR3_D1 23 500 RES_DIODE
+R4_R1A 500 26 100 RMOD
+R4_R1B 26 27 100 RMOD
+DR4_D1 26 500 RES_DIODE
+R5_R1A 29 30 9.08 RMOD
+R5_R1B 30 31 9.08 RMOD
+DR5_D1 30 500 RES_DIODE
+R6_R1A 25 28 2500 RMOD
+R6_R1B 28 871 2500 RMOD
+DR6_D1 28 500 RES_DIODE
+R7_R1A 1 2 600 RMOD
+R7_R1B 2 3 600 RMOD
+DR7_D1 2 500 RES_DIODE
+R8_R1A 6 7 600 RMOD
+R8_R1B 7 8 600 RMOD
+DR8_D1 7 500 RES_DIODE
+R9_R1A 11 12 162.5 RMOD
+R9_R1B 12 13 162.5 RMOD
+DR9_D1 12 500 RES_DIODE
+R10_R1A 16 17 225 RMOD
+R10_R1B 17 18 225 RMOD
+DR10_D1 17 500 RES_DIODE
+R11_R1A 4 5 115 RMOD
+R11_R1B 5 700 115 RMOD
+DR11_D1 5 500 RES_DIODE
+R12_R1A 9 10 115 RMOD
+R12_R1B 10 700 115 RMOD
+DR12_D1 10 500 RES_DIODE
+R13_R1A 14 15 1000 RMOD
+R13_R1B 15 700 1000 RMOD
+DR13_D1 15 500 RES_DIODE
+R14_R1A 19 20 750 RMOD
+R14_R1B 20 700 750 RMOD
+DR14_D1 20 500 RES_DIODE
+R15_R1A 34 35 1395 RMOD
+R15_R1B 35 36 1395 RMOD
+DR15_D1 35 500 RES_DIODE
+R16_R1A 36 37 1250 RMOD
+R16_R1B 37 38 1250 RMOD
+DR16_D1 37 500 RES_DIODE
+R17_R1A 32 33 500 RMOD
+R17_R1B 33 700 500 RMOD
+DR17_D1 33 500 RES_DIODE
+R18_R1A 41 42 115 RMOD
+R18_R1B 42 700 115 RMOD
+DR18_D1 42 500 RES_DIODE
+R19_R1A 38 39 420 RMOD
+R19_R1B 39 40 420 RMOD
+DR19_D1 39 500 RES_DIODE
+XESD 871 700 FPS009EX
+XPKG 871 999 PKG28
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+.SUBCKT FPN022 1 2 3
+Q1 4 2 3 0 PN022
+R1 1 4 15.5 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+D1 0 4 DSUB022
+DS1 2 4 GR022
+.ENDS
+**********
+.SUBCKT FPD003 1 2
+D2 1 3 DIOD003
+D1 0 3 DSUBS003
+RSEXT 3 2 33.6 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+.ENDS
+**********
+.SUBCKT QPNN05 1 2 3 4
+Q1 5 2 3 0 PNN05A
+Q2 6 3 4 0 PNN05B
+R1 6 5 19.5 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+RT 1 6 5.4 RMOD
+D1 0 5 DSUB1N05
+D2 0 6 DSUB2N05
+DS1 2 5 WN05
+.ENDS
+**********
+.SUBCKT FPN002 1 2 3
+Q1 4 2 3 0 PN002
+Q2 5 2 3 0 PN002
+R1 1 4 4.17 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+R2 1 5 4.17 RMOD
+D1 0 5 DSUB002
+DS1 2 4 GR002
+DS2 2 5 GR002
+.ENDS
+**********
+.SUBCKT FPNS01 1 2 3
+Q1 5 2 3 0 PNS01
+R1 4 5 52.8 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+D1 0 5 DSUBS01
+DS1 1 4 FPS01
+.ENDS
+**********
+*SRC=ESD;ESD;ECL;MC10/100H6xx;ESD circuit
+*SYM=ECLESD
+.SUBCKT ESD 110 200 1
+* NODES: EVCC, VEE, IN/OUT
+QESD1 1 200 200 200 T2X12E
+QESD2 110 1 1 200 T2X12E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*SRC=FPS009EX;FPS009EX;ECL;MC10/100H6xx;ESD circuit
+*SYM=TTLESD
+.SUBCKT FPS009EX 1 2
+Q1 3 2 2 0 PN009E
+R1 1 3 4.97 RMOD
+.MODEL RMOD R TC1= .445M TC2= 2.78U
+D1 0 3 DSUB009E
+DS1 2 3 GR009E
+.ENDS
+*INCLUDE ECL1.LIB
+**********
+*                        TTL Subcircuit Models                           *
+**********
+.MODEL DSUB1N05 D   (CJO=203FF VJ=.51 M=.24)
+**********
+.MODEL DSUB2N05 D   (CJO=388FF VJ=.51 M=.24)
+**********
+.MODEL PNN05A NPN   (IS=1.662E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=.7125MA ISC=1.803E-16 NC=1 RB=656.7 RBM=218
++                   RE=0 RC=91.62
++                   CJE=86.47FF VJE=.9 MJE=.4
++                   CJC=58.32FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=3.89MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL PNN05B NPN   (IS=1.583E-16 BF=70 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=6.78MA ISC=1.717E-15 NC=1 RB=77.29 RBM=31.25
++                   RE=0 RC=9.61
++                   CJE=751.6FF VJE=.9 MJE=.4
++                   CJC=445.2FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=37.1MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL WN05 D       (IS=1.0578E-12 RS=37.6 N=1.044 TT=10PS
++                   CJO=141.75FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB022 D    (CJO=214FF VJ=.51 M=.24)
+**********
+.MODEL PN022 NPN    (IS=2.1E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=.9MA ISC=2.28E-16 NC=1 RB=541 RBM=193
++                   RE=0 RC=72.5
++                   CJE=107FF VJE=.9 MJE=.4
++                   CJC=93.5FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=4.9MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL GR022 D      (IS=8.87E-14 RS=52 N=1.044 TT=10PS
++                   CJO=112FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB002 D    (CJO=1.53PF VJ=.51 M=.24)
+**********
+.MODEL PN002 NPN    (IS=3.15E-16 BF=70 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=13MA ISC=3.73E-16 NC=1 RB=125 RBM=32
++                   RE=0 RC=2.98
++                   CJE=1.19PF VJE=.9 MJE=.4
++                   CJC=400FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=148MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL GR002 D      (IS=1.04E-13 RS=7.2 N=1.044 TT=10PS
++                   CJO=131FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS01 D    (CJO=164FF VJ=.51 M=.24)
+**********
+.MODEL PNS01 NPN    (IS=2.1E-17 BF=70 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=.9MA ISC=2.28E-16 NC=1 RB=573 RBM=225
++                   RE=0 RC=72.5
++                   CJE=107FF VJE=.9 MJE=.4
++                   CJC=67.5FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=4.9MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL FPS01 D      (IS=1.80E-13 RS=0 N=1.044 TT=10PS
++                   CJO=151FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DIOD003 D    (IS=5.82E-17 RS=2.92 N=1 TT=500PS
++                   CJO=202FF VJ=.51 M=.24
++                   EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL DSUBD003 D   (IS=1E-16 RS=0 N=1 TT=500PS
++                   CJO=326FF VJ=.51 M=.24
++                   EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL DSUBS114 D   (IS=1E-16 RS=0 N=1 TT=500PS
++                   CJO=2.75PF VJ=.51 M=.24
++                   EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL QPS114 D     (IS=2.52E-12 RS=1.35 N=1.044 TT=10PS
++                   CJO=2.1PF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB025X D   (CJO=284FF VJ=.51 M=.24)
+**********
+.MODEL PN025X NPN   (IS=4.32E-17 BF=113 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=1.85MA ISC=4.68E-16 NC=1 RB=175 RBM=65
++                   RE=0 RC=35.2
++                   CJE=193FF VJE=.9 MJE=.4
++                   CJC=158FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=5.7MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL FP025X D     (IS=1.08E-13 RS=48.3 N=1.044 TT=10PS
++                   CJO=90FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB025 D    (CJO=284FF VJ=.51 M=.24)
+**********
+.MODEL PN025 NPN    (IS=2.45E-17 BF=113 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=1MA ISC=2.66E-16 NC=1 RB=193 RBM=89
++                   RE=0 RC=62
++                   CJE=123FF VJE=.9 MJE=.4
++                   CJC=108FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=5.7MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL FP025 D      (IS=1.4E-13 RS=52 N=1.044 TT=10PS
++                   CJO=117FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUB139 D    (CJO=2.12PF VJ=.51 M=.24)
+**********
+.MODEL PN139 NPN    (IS=1.03E-16 BF=113 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=4.4MA ISC=1.22E-16 NC=1 RB=117 RBM=47
++                   RE=0 RC=8.41
++                   CJE=493FF VJE=.9 MJE=.4
++                   CJC=244FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=96.7MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL GR139 D      (IS=7E-14 RS=10 N=1.044 TT=10PS
++                   CJO=88FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL GRS003 D     (IS=4.27E-14 RS=53 N=1.044 TT=10PS
++                   CJO=54FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS003 D   (IS=1E-16 RS=0 N=1 TT=500PS
++                   CJO=127FF VJ=.51 M=.24
++                   EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+.MODEL DSUB009E D   (CJO=106FF VJ=.51 M=.24)
+**********
+.MODEL PN009E NPN   (IS=3.92E-16 BF=113 NF=1.008 VAF=30 IKF=10A
++                   ISE=0 NE=1 BR=5 NR=1 XCJC=.1 VAR=100
++                   IKR=.3MA ISC=4.25E-15 NC=1 RB=185 RBM=39
++                   RE=0 RC=3.9
++                   CJE=1.37PF VJE=.9 MJE=.4
++                   CJC=609FF VJC=.53 MJC=.37
++                   TF=40P XTF=0 VTF=100 ITF=1.64MA PTF=0
++                   TR=200P XTB=1.51 EG=1.115 XTI=5 FC=0.5 )
+**********
+.MODEL GR009E D     (IS=5.4E-13 RS=9.57 N=1.044 TT=10PS
++                   CJO=683FF VJ=.4 M=.33
++                   EG=.69 XTI=3 FC=.5 BV=30)
+*
+**********
+.MODEL WS102 D    (IS=4.64E-13 RS=46 N=1.044 TT=10PS
++                 CJO=62.2FF VJ=.4 M=.33
++                 EG=.69 XTI=3 FC=.5 BV=30)
+**********
+.MODEL DSUBS102 D (IS=1E-16 RS=0 N=1 TT=500PS
++                 CJO=85FF VJ=.51 M=.24
++                 EG=1.115 XTI=3 FC=.5 BV=35)
+**********
+*                 ECL Transistor Models                               *
+**********
+* Resistor Diode Model 
+**********
+.MODEL RES_DIODE D (IS=1E-16 TT=1NS VJ=.759V M=.333 CJO=50FF )
+**********

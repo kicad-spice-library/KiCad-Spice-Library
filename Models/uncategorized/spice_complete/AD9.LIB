@@ -1,0 +1,2295 @@
+****************
+*SRC=AD8072jn;AD8072jn;Opamps;AD-"ADxxx";Dual/Triple Video Amp
+*SYM=ADOPAMP
+* AD8072jn SPICE Macro-model       rev B; 6/6/97,SMR,ADI
+* Copyright 1997 by Analog Devices, Inc.
+* This model will give typical performance characteristics
+* for the following parameters;
+*     closed loop gain and phase vs bandwidth
+*     output current and voltage limiting
+*     offset voltage (is static, will not vary with vcm)
+*     ibias (again, is static, will not vary with vcm)
+*     slew rate and step response performance
+*     (slew rate is based on 10-90% of step response)
+*     current on output will be reflected to the supplies 
+*     vnoise, referred to the input
+*     inoise, referred to the input
+*     distortion is not characterized
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8072jn 1 2 99 50 24   
+
+* INPUT STAGE
+
+v1   8 2 0
+i1   99 5 108e-6
+i2   4 50 108e-6
+q1   50 3 5 qp1
+q2   99 3 4 qn1
+q3   99 5 8 qn2
+q4   50 4 8 qp2
+
+* input error sources
+ 
+fn   99  2 vn4 1e-3
+ib1  99  2     2.87e-6
+ib2  99  3     4e-6
+eos  3 1 poly(1)  32 98  0 1
+cs3  98  2     1.6e-12
+cs4  98  3     1.6e-12
+
+* slew rate limiting stage
+
+fl1 98 70 v1 1
+dl1 70 98 dx
+dl2 98 70 dx
+dl3 70 72 dx
+dl4 72 70 dx
+vl1 72 73 0
+rl1 73 98 27
+
+* first gain stage and dominant pole
+
+fgain 98 12 vl1 2
+r5   12 98 300k
+c4   12 98 1.7e-12
+v3   99 13 2.54
+v4   14 50 2.84
+d3   12 13 dx
+d4   14 12 dx
+
+* v noise generator
+
+vn1 30 98 0.555
+dn1 30 31 dn1
+rn1 31 98 1.84e-3
+vn2 31 98 0 
+
+fn1 32 98 vn2 1
+rn2 32 98 1
+
+* i noise generation
+
+vn3 33 98 0.595
+dn2 33 34 dn1
+rn3 34 98 0.46e-3
+vn4 34 98 0
+
+fn2 35 98 vn4 1
+rn4 35 98 1
+
+* buffer stage
+
+g13 98 17 12 98 1e-2 
+rbuf 17 98 100
+
+* reference stage
+
+eref1 98 0 poly(2) 99 0 50 0 0 0.5 0.5 
+
+* current mirroring on supplies
+
+fo1 98 300 vcd 1
+vi1 311 98 0
+vi2 98 312 0
+dm1 300 311 dx
+dm2 312 300 dx
+fsy 99 50 poly(2) vi1 vi2 7e-3 1 1
+
+* output stage
+
+r15 23 99  2
+r16 23 50  2
+vcd 23 24   0
+rl  24 98  1e6
+g11 99 23  17 99  0.5
+g12 23 50  50 17  0.5
+v5  23 19  -0.666
+v6  20 23  -0.668
+d5  19 17  dx
+d6  17 20  dx
+
+* models
+
+.model qn1 npn(bf=1e3)
+.model qp1 pnp(bf=1e3)
+.model qn2 npn(bf=1e3)
+.model qp2 pnp(bf=1e3)
+.model dx  d
+.model dn1 d(af=1 kf=1e-10)
+.ends ad8072jn
+*************
+*SRC=AD8009an;AD8009an;Opamps;AD-"ADxxx";1 GHz 5.5kV/µs Low Dist Amp
+*SYM=ADOPAMP
+* AD8009 SPICE model       Rev A SMR/ADI 6-18-97
+* Copyright 1997 by Analog Devices, Inc.
+* This model will give typical performance characteristics
+* for the following parameters;
+*     closed loop gain and phase vs bandwidth
+*     output current and voltage limiting
+*     offset voltage (is static, will not vary with vcm)
+*     ibias (again, is static, will not vary with vcm)
+*     slew rate and step response performance
+*     (slew rate is based on 10-90% of step response)
+*     current on output will be reflected to the supplies 
+*     vnoise, referred to the input
+*     inoise, referred to the input
+*     distortion is not characterized
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8009an 1 2 99 50 28
+
+* input stage *
+
+q1 50 3 5 qp1
+q2 99 5 4 qn1
+q3 99 3 6 qn2
+q4 50 6 4 qp2
+i1 99 5 1.625e-3
+i2 6 50 1.625e-3
+cin1 1 98 2.6e-12
+cin2 2 98 1e-12
+v1 4 2 0
+
+* input error sources *
+
+eos 3 1 poly(1) 20 98 2e-3 1
+fbn 2 98 poly(1) vnoise3 50e-6 1e-3
+fbp 1 98 poly(1) vnoise3 50e-6 1e-3
+
+* slew limiting stage *
+
+fsl 98 16 v1 1
+dsl1 98 16 d1
+dsl2 16 98 d1
+dsl3 16 17 d1
+dsl4 17 16 d1
+rsl  17 18 0.22
+vsl  18 98 0
+
+* gain stage *
+
+f1 98 7 vsl 2e5
+rgain 7 98 2.5
+cgain 7 98 1.25e-7
+dcl1 7 8 d1
+dcl2 9 7 d1
+vcl1 99 8 1.83
+vcl2 9 50 1.83
+
+gcm 98 7 poly(2) 98 0 30 0 0 1 1
+
+* second pole *
+
+epole 14 98 7 98 1
+rpole 14 15 1
+cpole 15 98 2e-10
+
+* reference stage *
+
+eref 98 0 poly(2) 99 0 50 0 0 0.5 0.5 
+
+ecmref 30 0 poly(2) 1 0 2 0 0 0.5 0.5
+
+* vnoise stage *
+
+rnoise1 19 98 4.6e-3
+vnoise1 19 98 0
+vnoise2 21 98 0.53
+dnoise1 21 19 dn
+
+fnoise1 20 98 vnoise1 1
+rnoise2 20 98 1
+
+* inoise stage *
+
+
+rnoise3 22 98 8.18e-6
+vnoise3 22 98 0
+vnoise4 24 98 0.575
+dnoise2 24 22 dn
+
+fnoise2 23 98 vnoise3 1
+rnoise4 23 98 1
+
+* buffer stage *
+
+gbuf 98 13 15 98 1e-2
+rbuf 98 13 1e2
+
+* output current reflected to supplies *
+
+fcurr 98 40 voc 1
+vtest 40 25 0
+vcur1 25 26 0
+vcur2 27 25 0
+dcur1 26 98 d1
+dcur2 98 27 d1
+*fsy 99 50 poly(2) vcur1 vcur2 9.2e-3 0 0 
+Bfsy 99 50 I=9.2M + I(vcur1)*0 + I(vcur2)*0
+* output stage *
+
+gout1 99 10 13 99 0.5
+gout2 50 10 13 50 0.5
+rout1 10 99 2
+rout2 10 50 2
+voc 10 28 0
+rout3 28 98 1e6
+dcl3 13 11 d1
+dcl4 12 13 d1
+vcl3 11 10 -0.445
+vcl4 10 12 -0.445
+
+.model qp1 pnp
+.model qp2 pnp
+.model qn1 npn
+.model qn2 npn
+.model d1  d
+.model dn  d(af=1 kf=1e-8)
+.ends
+******************
+*SRC=AD815an;AD815an;Opamps;AD-"ADxxx";High Output Current Diff Driver
+*SYM=ADOPAMP
+*  AD815 Spice Macro-model                  9/96, Rev A
+*
+*  Copyright 1996 by Analog Devices, Inc.
+*
+* This model will give typical performance characteristics
+* for the following parameters;
+*     closed loop gain and phase vs bandwidth
+*     output current and voltage limiting
+*     offset voltage (is static, will not vary with vcm)
+*     ibias (again, is static, will not vary with vcm)
+*     slew rate and step response performance
+*     (slew rate is based on 10-90% of step response)
+*     current on output will be reflected to the supplies
+*     vnoise, referred to the input
+*     inoise, referred to the input
+*     distortion is not characterized
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD815an  1 2 99 50 61
+
+* Input Stage
+
+q1 50 41 4 qp1 
+q2 99 41 3 qn1
+i1 99 4 1e-4
+i2 3 50 1e-4
+
+fni 99 2 vn2 1
+fnn 99 1 vn2 0.1
+
+*ibneg 2 99 10e-6
+*ibpos 1 99 2e-6
+
+cin1 4 88 1.4pf
+cin2 2 88 1.4pf
+
+q3 9 4 2 qn2
+q4 10 3 2 qp2
+
+rxxa 99 4 28k
+rxxb 3 50 28k
+  
+
+VT1 99 9 0   ;ammeters for monitoring
+VT2 50 10 0  ;current thru Q3, Q4
+eos 41 1 poly(1) 43 88 5e-3 1
+
+* internal vnoise source
+
+dn1 42 88 dnv
+rn1 42 88 5e-3
+vn1 42 88 0
+
+hn1 43 88 vn1 1
+rn2 43 88 1
+
+* internal inoise source
+
+dn2 72 88 dniinv
+rn3 72 88 50
+vn2 72 88 0
+
+hn2 73 88 vn2 1
+rn4 73 88 1
+
+* internal reference
+
+Eref 88 0 poly(2) 99 0 50 0 0 0.5 0.5
+
+* gain stage/dominant pole/clamp circuitry
+
+f3 88 31 vt1 0.7e-4
+f4 88 31 vt2 0.7e-4
+dgain1 88 31 dy
+dgain2 31 88 dy
+
+egain1 28 88 31 88 143000
+r3 28 29 5
+c1 29 88 4500nf
+
+vc1 99 45 3.65
+vc2 46 50 3.65
+dc1 29 45 dx
+dc2 46 29 dx
+
+* pole at 100MHz
+
+egain2 32 88 88 29 1
+r4 32 44 0.001
+c3 44 88 1500000p
+
+* buffer to output stage
+
+gbuf 34 88 44 88 1e-2
+re1 34 88 100
+
+* output stage
+
+fo1 88 110 vcd 1
+do1 110 111 dx
+do2 112 110 dx
+vi1 111 88 0
+vi2 88 112 0
+
+fsy 99 50 poly(2) vi1 vi2 5.61e-4 1 1
+
+go3 60 99 99 34 0.385
+go4 50 60 34 50 0.385
+r03 60 99 2.6 
+r04 60 50 2.6 
+vcd 60 62 0   
+lo1 62 61 1e-10
+ro2 61 88 1e9
+do5 34 70 dx
+do6 71 34 dx
+vo1 70 60 0.45
+vo2 60 71 0.45
+
+.model dx d(is=1e-13 kf=1e-30 af=0)
+.model dy d(is=26e-9 kf=1e-30 af=0)
+.model dnv d(is=1e-15 kf=2e-15 af=0)
+.model dniinv d(is=1e-15 kf=1e-19 af=0)
+.model qn1 npn(bf=200 kf=1e-30 af=0)
+.model qn2 npn(bf=200 kf=1e-30 af=0)
+.model qp1 pnp(bf=200 kf=1e-30 af=0)
+.model qp2 pnp(bf=200 kf=1e-30 af=0)
+.ends ad815an
+***********
+*SRC=AD8531;AD8531;Opamps;AD-"ADxxx";250mA Out Single-Sup Amp
+*SYM=ADOPAMP
+* AD8531 SPICE Macro-model              7/97, Rev. A
+*                                       ARG/TAM ADSC
+*
+* Copyright 1996,1997 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD8531   1  2  99 50 40
+*
+* INPUT STAGE
+*
+m1 3 2 6 50 nix l=6u w=25u
+m2 4 7 6 50 nix l=6u w=25u
+m3 8 2 5 5 pix l=6u w=25u
+m4 9 7 5 5 pix l=6u w=25u
+eos 7 1 poly(1) 25 98 5e-3 0.451
+iin1 1 98 5p
+iin2 2 98 5p
+ios 2 1 0.5p
+i1 99 5 50u
+i2 6 50 50u
+r1 99 3 4.833k
+r2 99 4 4.833k
+r3 8 50 4.833k
+r4 9 50 4.833k
+d3 5 99 dx
+d4 50 6 dx
+*
+* GAIN STAGE
+*
+eref 98 0 poly(2) 99 0 50 0 0 0.5 0.5
+g1 98 21 poly(2) 4 3 9 8 0 145u 145u
+rg 21 98 18.078e6
+cc 21 40 14p
+d1 21 22 dx
+d2 23 21 dx
+v1 99 22 1.37
+v2 23 50 1.37
+*
+* COMMON MODE GAIN STAGE
+*
+ecm 24 98 poly(2) 1 98 2 98 0 0.5 0.5
+r5 24 25 1e6
+r6 25 98 10k
+c1 24 25 0.75p
+*
+* OUTPUT STAGE
+*
+isy 99 50 450.4u
+gsy 99 50 poly(1) 99 50 -3.334e-4 6.667e-5
+ep 99 39 poly(1) 98 21 0.78925 1
+en 38 50 poly(1) 21 98 0.78925 1
+m15 40 39 99 99 pox l=1.5u w=1500u
+m16 40 38 50 50 nox l=1.5u w=1500u
+c15 40 39 50p
+c16 40 38 50p
+.model dx d(rs=1 cjo=0.1p)
+.model nix nmos(vto=0.75 kp=205.5u rd=1 rs=1 cgso=4e-9
++ cgdo=4e-9 cgbo=16.667e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model nox nmos(vto=0.75 kp=195u rd=.5 rs=.5 cgso=66.667e-12
++ cgdo=66.667e-12 cgbo=125e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model pix pmos(vto=-0.75 kp=205.5u rd=1 rs=1 cgso=4e-9
++ cgdo=4e-9 cgbo=16.667e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model pox pmos(vto=-0.75 kp=195u rd=.5 rs=.5 cgso=66.667e-12
++ cgdo=66.667e-12 cgbo=125e-9 cbs=2.34e-13 cbd=2.34e-13)
+.ends AD8531
+* Removed rg=1 rb=1 
+***********
+*SRC=AD8532;AD8532_5;Opamps;AD-"ADxxx";250mA Out Single-Sup Amp
+*SYM=ADOPAMP
+* AD8532 SPICE Macro-model              3/96, Rev. A
+* 5-Volt Version                        ARG / ADSC
+*
+* Copyright 1996 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD8532_5 1  2  99 50 40
+*
+* INPUT STAGE
+*
+m1 3 2 6 50 nix l=6u w=25u
+m2 4 7 6 50 nix l=6u w=25u
+m3 8 2 5 5 pix l=6u w=25u
+m4 9 7 5 5 pix l=6u w=25u
+eos 7 1 poly(1) 25 98 5e-3 0.451
+iin1 1 98 5p
+iin2 2 98 5p
+ios 2 1 0.5p
+i1 99 5 50u
+i2 6 50 50u
+r1 99 3 4.833k
+r2 99 4 4.833k
+r3 8 50 4.833k
+r4 9 50 4.833k
+d3 5 99 dx
+d4 50 6 dx
+*
+* GAIN STAGE
+*
+eref 98 0 poly(2) 99 0 50 0 0 0.5 0.5
+g1 98 21 poly(2) 4 3 9 8 0 145u 145u
+rg 21 98 18.078e6
+cc 21 40 14p
+d1 21 22 dx
+d2 23 21 dx
+v1 99 22 1.37
+v2 23 50 1.37
+*
+* COMMON MODE GAIN STAGE
+*
+ecm 24 98 poly(2) 1 98 2 98 0 0.5 0.5
+r5 24 25 1e6
+r6 25 98 10k
+c1 24 25 0.75p
+*
+* OUTPUT STAGE
+*
+isy 99 50 450.4u
+gsy 99 50 poly(1) 99 50 -3.334e-4 6.667e-5
+ep 99 39 poly(1) 98 21 0.78925 1
+en 38 50 poly(1) 21 98 0.78925 1
+m15 40 39 99 99 pox l=1.5u w=1500u
+m16 40 38 50 50 nox l=1.5u w=1500u
+c15 40 39 50p
+c16 40 38 50p
+.model dx d(rs=1 cjo=0.1p)
+.model nix nmos(vto=0.75 kp=205.5u rd=1 rs=1 cgso=4e-9
++ cgdo=4e-9 cgbo=16.667e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model nox nmos(vto=0.75 kp=195u rd=.5 rs=.5 cgso=66.667e-12
++ cgdo=66.667e-12 cgbo=125e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model pix pmos(vto=-0.75 kp=205.5u rd=1 rs=1 cgso=4e-9
++ cgdo=4e-9 cgbo=16.667e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model pox pmos(vto=-0.75 kp=195u rd=.5 rs=.5 cgso=66.667e-12
++ cgdo=66.667e-12 cgbo=125e-9 cbs=2.34e-13 cbd=2.34e-13)
+.ends
+* Removed rg=1 rb=1 
+***********
+*SRC=AD8534;AD8534;Opamps;AD-"ADxxx";250mA Out Single-Sup Amp
+*SYM=ADOPAMP
+* AD8534 SPICE Macro-model              7/97, Rev. A
+*                                       ARG/TAM ADSC
+*
+* Copyright 1996,1997 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD8534   1  2  99 50 40
+*
+* INPUT STAGE
+*
+m1 3 2 6 50 nix l=6u w=25u
+m2 4 7 6 50 nix l=6u w=25u
+m3 8 2 5 5 pix l=6u w=25u
+m4 9 7 5 5 pix l=6u w=25u
+eos 7 1 poly(1) 25 98 5e-3 0.451
+iin1 1 98 5p
+iin2 2 98 5p
+ios 2 1 0.5p
+i1 99 5 50u
+i2 6 50 50u
+r1 99 3 4.833k
+r2 99 4 4.833k
+r3 8 50 4.833k
+r4 9 50 4.833k
+d3 5 99 dx
+d4 50 6 dx
+*
+* GAIN STAGE
+*
+eref 98 0 poly(2) 99 0 50 0 0 0.5 0.5
+g1 98 21 poly(2) 4 3 9 8 0 145u 145u
+rg 21 98 18.078e6
+cc 21 40 14p
+d1 21 22 dx
+d2 23 21 dx
+v1 99 22 1.37
+v2 23 50 1.37
+*
+* COMMON MODE GAIN STAGE
+*
+ecm 24 98 poly(2) 1 98 2 98 0 0.5 0.5
+r5 24 25 1e6
+r6 25 98 10k
+c1 24 25 0.75p
+*
+* OUTPUT STAGE
+*
+isy 99 50 450.4u
+gsy 99 50 poly(1) 99 50 -3.334e-4 6.667e-5
+ep 99 39 poly(1) 98 21 0.78925 1
+en 38 50 poly(1) 21 98 0.78925 1
+m15 40 39 99 99 pox l=1.5u w=1500u
+m16 40 38 50 50 nox l=1.5u w=1500u
+c15 40 39 50p
+c16 40 38 50p
+.model dx d(rs=1 cjo=0.1p)
+.model nix nmos(vto=0.75 kp=205.5u rd=1 rs=1 cgso=4e-9
++ cgdo=4e-9 cgbo=16.667e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model nox nmos(vto=0.75 kp=195u rd=.5 rs=.5 cgso=66.667e-12
++ cgdo=66.667e-12 cgbo=125e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model pix pmos(vto=-0.75 kp=205.5u rd=1 rs=1 cgso=4e-9
++ cgdo=4e-9 cgbo=16.667e-9 cbs=2.34e-13 cbd=2.34e-13)
+.model pox pmos(vto=-0.75 kp=195u rd=.5 rs=.5 cgso=66.667e-12
++ cgdo=66.667e-12 cgbo=125e-9 cbs=2.34e-13 cbd=2.34e-13)
+.ends AD8534
+* Removed rg=1 rb=1 
+*************
+*SRC=AD816an;AD816an;Opamps;AD-"ADxxx";500mA Diff Driver & Amp 
+*SYM=AD816
+*  AD816an Spice Macro-model                  3/20/97,SMR,REV A
+*
+*  Copyright 1997 by Analog Devices, Inc.
+*
+*   The following parameters are also accurately modeled
+*   for the driver and receiver sections.
+*
+*    Closed loop gain and phase vs frequency. This model 
+*    accurately reflects small and large signal closed 
+*    loop gain vs bw. It was written using fig 16 and fig
+*    32 from the rev 0 datasheet as a reference.
+*    output clamping voltage and current
+*    Slew rate
+*    Output currents are reflected to V supplies
+*    Input referred voltage and current noise 
+*    Vos and Ibias match the specs given in the data- 
+*    sheet. They do not, however, vary with Vcm in.
+*    Distortion is not characterized
+*
+*    Node assignments
+*
+*                 Receiver     Driver          
+*
+*                n-inv input  n-inv input
+*                |            |
+*                | inv input  |  inv input   +supply
+*                |  |         |   |          |
+*                |  | output  |   | output   | -supply
+*                |  |  |      |   |   |      |   |
+.SUBCKT AD816an  1  2  61     101 102 124    99 50
+
+
+* RECEIVER SECTION
+
+* input stage *
+
+r1 1 2 300k
+cin1 1 98 1.5e-12
+cin2 2 98 1.5e-12
+ib1 99 1 5e-6
+ib2 99 2 5e-6
+fn 99 2 vn4 1
+q1 5 57 6 qn
+q2 7 2 8 qn
+eosr 57 1 poly(2)  23 98   84 98  7.5e-3 1.59e-9 1  
+r3 99 5  13.27
+r4 99 7  13.27
+r5 6 9  10.67
+r6 8 9  10.67
+c2 5 7 65pf
+itail 9 50 20e-3
+
+** v noise generation **
+
+vn1 80 98 0
+dn2 80 98 dn1
+
+rn1 83 98 1.1e-3
+vn3 83 98 0
+
+fn2 84 98 vn1 1
+fn1 84 98 vn3 1
+rn2 84 98 1
+
+** i noise generation **
+
+vn4 87 98 0
+rn5 87 98 4k
+
+hn2 35 98 vn4 1
+rn6 35 98 1
+
+
+* gain stage,clamping - open loop gain=76dB * 
+* pd at 100khz *
+
+gm1 99 10 poly(1) 7 5 0 0.075 0 -0.6
+gm2 50 10 poly(1) 7 5 0 0.075 0 -0.6
+r7  99 10  79617                   
+r8  10 50  79617
+c3  99 10 40pf
+c4  10 50 40pf
+vcl1 99 25 3.3
+vcl2 26 50 3.3
+d1 10 25 dx
+d2 26 10 dx
+
+* common mode reference
+
+ecmref  98 0 poly(2) 99 0 50 0 0 0.5 0.5
+einref1 18 0 poly(2) 1 0 2 0 0 0.5 0.5
+
+* vcm generation
+
+ecm1 19 98 18 98 2000
+rvcm1 19 20 1999
+rvcm2 20 21 1
+lcm1 21 98 3.18e-6
+
+ecm2 22 98 20 98 37037
+rvcm3 22 23 37036
+rvcm4 23 24 1
+lcm2 24 98 59e-6
+
+* buffer to output stage
+
+gbuf 98 17 10 98 0.002
+rbufr 98 17 500
+
+* current mirroring on supplies
+* includes Iout driver and rvcr
+
+fo1 98 210 vcd1 1
+fo2 98 210 vcd2 1
+do1 210 211 dx
+do2 212 210 dx
+vi1 211 98 0
+vi2 98 212 0
+fsy 99 50 poly(2) vi1 vi2 0.032 1 1
+
+* receiver output stage
+
+go3 60 99 99 17 1
+go4 50 60 17 50 1
+r03 60 99 1
+r04 60 50 1
+vcd1 60 62 0
+lo1 62 61 1e-20
+rlr 61 98 1e6
+do5 17 70 dx
+do6 71 17 dx
+vo1 70 60 -0.759
+vo2 60 71 -0.759
+
+
+* DRIVER SECTION
+
+* INPUT STAGE
+
+v101   102 108 0
+i101   99 105 100e-6
+i102   104 50 100e-6
+q101   50 103 105 qp1
+q102   99 103 104 qn1
+q103   99 105 108 qn1
+q104   50 104 108 qp1
+r103a  99 105 20k
+r104a  50 104 20k
+
+* input error sources
+ 
+fn105   99  101  poly(2) vn103 vn104 0 1 1
+fn106   99  102  poly(2) vn103 vn104 0 10 10
+ib101   99  102  20.135e-6
+ib102   99  103  2e-6
+eosd    103 101 poly(1)  134 98  5e-3 1
+cin101  99  103     1.4e-12
+cin102  50  103     1.4e-12
+
+* first gain stage and dominant pole
+
+r105   112 99  2e6
+r106   112 50  2e6
+c103   112 99  2.7e-12
+c104   112 50  2.7e-12
+f101   112 99 poly(1) v101 0 1 40   
+f102   112 50 poly(1) v101 0 1 40
+v103   99 113  3.3
+v104   114 50  3.3
+d103   112 113 dx
+d104   114 112 dx
+
+* v noise generator
+
+dn101 130 98 dn2
+vn101 130 98 0 
+
+rn102 132 98 5.3e-3
+vn102 132 98 0
+
+fn101 134 98 vn101 1.
+fn102 134 98 vn102 1
+rn201 134 98 1
+
+* i noise generation
+
+dn103 140 98 dn3
+vn103 140 98 0
+
+rn104 142 98 5.5e3
+vn104 142 98 0
+
+fn103 135 98 vn103 1000  
+fn104 135 98 vn104 1000
+rn105 135 98 1
+
+* buffer stage
+
+g113 98 117 112 98 1e-2    
+cbufd 117 98 15pf
+rbufd 117 98 100
+
+* output stage
+
+r115 123 99   2
+r116 123 50   2
+vcd2 123 125  0
+l101 125 124  1e-20
+rld  124 98   1e6
+g111 99 123   117 99  0.5
+g112 123 50   50 117  0.5
+v105 123 119  -0.05
+v106 120 123  -0.05
+d105 117 119   dx
+d106 120 117   dx
+
+
+.model qn npn(kf=1e-30 af=0 bf=1e3 is=1e-15)
+.model qn1 npn(kf=1e-30 af=0 bf=1e3 is=1e-15)
+.model qp1 pnp(kf=1e-30 af=0 bf=1e3 is=1e-15)
+.model dx d(kf=1e-30 af=0 is=1e-15)
+.model dn1  d(kf=7e-5 af=0.5 is=1e-15)
+.model dn2  d(kf=0.5e-12 af=0 is=1e-15)
+.model dn3  d(kf=5e-19 af=0 is=1e-15)
+.ends ad816an
+***************
+*SRC=AD8041a;AD8041a;Opamps;AD-"ADxxx";160MHz Rail-to-Rail Amp
+*SYM=ADOPAMP
+*  AD8041a Spice Macro-model                  9/96, Rev A
+*
+*  Copyright 1996 by Analog Devices, Inc.
+*
+* The following parameters are accurately modeled;
+*
+*    open loop gain and phase vs frequency
+*    output clamping voltage and current
+*    input common mode range
+*    CMRR vs freq
+*    I bias vs Vcm in    
+*    Slew rate
+*    Output currents are reflected to V supplies
+*    Vos is static and will not vary with Vcm in
+*    Step response is modeled at unity gain w/1k load 
+*    Distortion and noise are not characterized
+*
+*    Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8041a  1 2 99 50 61 
+
+* Input bias current source
+
+ecm 20 0 99 3 1 
+d1 20 21 dx
+v3 21 22 0.2
+r20 22 0 100
+f1 0 25 v3 1 
+r22 25 0 1k
+r23 26 28 8
+d3 25 26 dx
+v5 28 0 .3
+g1 1 0 0 25 400e-9
+g2 2 0 0 25 400e-9
+
+* Input Stage
+
+R1 1 3 80k
+R2 3 2 80k
+C1 1 2 1.8pf
+rcm1 1 0 5e6
+rcm2 2 0 5e6
+R3 1 98 40e6
+R4 2 98 40e6 
+r9 15 7 764
+r10 16 7 764
+q1 5 1 15 qp1
+q2 6 4 16 qp1
+r5 50 5 1254
+r6 50 6 1254
+ib3 99 7 1e-4
+eos 2 4 poly(1)  108 98  2e-3 1
+
+* gain stage/pole at 3200hz/clamp circuitry
+
+g3 99 31 6 5 7.97e-4
+g4 31 50 5 6 7.97e-4
+r7 99 31 63e6
+r8 31 50 63e6
+c3 99 31 0.635e-12
+c4 31 50 0.635e-12
+
+vc1 99 45 0.72
+vc2 46 50 0.72
+dc1 31 45 dx
+dc2 46 31 dx
+
+* pole at 200mhz
+
+e1 32 98 31 98 1
+rflt 32 33 1k
+cflt 33 98 0.796e-12
+
+* internal reference
+
+rdiv1 99 97 100k
+rdiv2 97 50 100k
+Eref 98 0 97 0 1
+rref 98 0 1e6
+
+* Common mode gain network
+
+gacm1 99 100 3 98 2e-13
+gacm2 100 50 98 3 2e-13
+racm1 99 100 1e4
+racm2 100 50 1e4
+
+* Common mode gain network/zero at 3200hz 
+
+ecm1  101 98 100 98 1e6 
+racm3 101 102 1e6
+racm4 102 103 1
+lacm1 103 98 40u
+
+* Common mode gain network/zero at 100khz/pole at 60mhz
+
+ecm2  104 98 102 98 300
+racm5 104 105 300
+racm6 105 106 1
+lacm2 106 98 .78u
+
+* Common mode gain network/pole at 60mhz
+
+ecm3 107 98 105 98 1 
+racm7 107 108 10k
+cacm1 108 98 0.265e-12
+
+* buffer to output stage
+
+gbuf 98 34 33 98 1e-4
+re1 34 98 10k
+
+* output stage
+
+fo1 98 110 vcd 1
+do1 110 111 dx
+do2 112 110 dx
+vi1 111 98 0
+vi2 98 112 0
+
+fsy 99 50 poly(2) vi1 vi2 4.73e-3 1 1
+
+go3 60 99 99 34 0.1
+go4 50 60 34 50 0.1
+r03 60 99 10
+r04 60 50 10
+vcd 60 62 0
+lo1 62 61 2n
+ro2 61 98 1e9
+do5 34 70 dx
+do6 71 34 dx
+vo1 70 60 -0.31
+vo2 60 71 -0.05
+
+.model dx d(is=1e-15)
+.model qn1 npn(bf=500 vaf=100)
+.model qp1 pnp(bf=500 vaf=60)
+.ends ad8041a
+******************
+*SRC=REF43;REF43;Voltage Ref.;Analog Devices;+2.5V Low Pow Prec. Ref
+*SYM=ADREF
+* REF43 SPICE MACROMODEL                     4/96, Rev. A
+*                                            (RN)  
+*
+* 
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |
+.SUBCKT REF43   2  4  5  6
+*
+* 1.23V REFERENCE
+*
+I1     4  10   1.22998E-3
+R1     10  4   1E3  RMOD
+.MODEL RMOD R TC1=6E-6
+EN     10  9   41 0  1
+G1     4   9   2  4  983.9E-12
+F1     4   9   VS  17.0565E-6
+*
+* NOISE GENERATOR
+*
+VN1    40  0   DC  2
+DN1    40  41  DEN
+DN2    41  42  DEN
+VN2    0   42  DC  2
+*
+* INTERNAL OP AMP
+*
+G2     4  11   9  19  1E-3
+R2     4  11   300E6
+C1     4  11   5E-10
+D1     11 12   DX
+V1     2  12   1.5
+*
+* SECONDARY POLE
+*
+G3     4  13   11 4  1E-6
+R3     4  13   1E6
+C2     4  13   1.5E-13
+*
+* OUTPUT STAGE
+*
+ISY    2   4   0.246E-3
+FSY    2   4   V1  -1 
+G4     4  14   13  4  25E-6
+R4     4  14   40E3
+R7     17 19   13.6E3
+R8     19  4   13.1716E3
+R9     19  5   196E3
+R10    5   4   1E12
+Q1     16 14   17   QN
+VS     18 17   DC 0
+L1     18  6   1E-9
+*
+* OUTPUT CURRENT LIMIT
+*
+Q2     15  2   16  QN
+R6     2  16   14
+R5     2  15   18E3
+C3     2  15   1E-6
+G5     14  4   2  15  1
+*
+
+.MODEL  QN  NPN(IS=1E-15  BF=1000)
+.MODEL  DX  D(IS=1E-15)
+.MODEL  DEN D(IS=1E-12 RS=1.3796e6 AF=1 KF=1.998751E-17)
+.ENDS
+***************
+*SRC=REF43B;REF43B;Voltage Ref.;Analog Devices;+2.5V Low Pow Prec. Ref
+*SYM=ADREF
+* REF43B SPICE MACROMODEL                     4/96, Rev. A
+*                                             (RN)  
+*
+* 
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |
+.SUBCKT REF43B  2  4  5  6
+*
+* 1.23V REFERENCE
+*
+I1     4  10   1.2299631E-3
+R1     10  4   1E3 RMOD
+.MODEL RMOD R TC1=10E-6
+EN     10  9   41 0  1
+G1     4   9   2  4  2.4599E-9
+F1     4   9   VS  2.46E-5
+*
+* NOISE GENERATOR
+*
+VN1    40  0   DC  2
+DN1    40  41  DEN
+DN2    41  42  DEN
+VN2    0   42  DC  2
+*
+* INTERNAL OP AMP
+*
+G2     4  11   9  19  1E-3
+R2     4  11   300E6
+C1     4  11   5E-10
+D1     11 12   DX
+V1     2  12   1.4
+*
+* SECONDARY POLE
+*
+G3     4  13   11 4  1E-6
+R3     4  13   1E6
+C2     4  13   1.5E-13
+*
+* OUTPUT STAGE
+*
+ISY    2   4   0.3568E-3
+FSY    2   4   V1  -1 
+G4     4  14   13  4  25E-6
+R4     4  14   40E3
+R7     17 19   13.6E3
+R8     19  4   13.197E3
+R9     19  5   196E3
+R10    5   4   1E12
+Q1     16 14   17   QN
+VS     18 17   DC 0
+L1     18  6   1E-9
+*
+* OUTPUT CURRENT LIMIT
+*
+Q2     15  2   16  QN
+R6     2  16   14
+R5     2  15   18E3
+C3     2  15   1E-6
+G5     14  4   2  15  1
+*
+
+.MODEL  QN  NPN(IS=1E-15  BF=1000)
+.MODEL  DX  D(IS=1E-15)
+.MODEL  DEN D(IS=1E-12 RS=2.94357e6 AF=1 KF=1.998751E-18)
+.ENDS
+**************
+*SRC=REF43F;REF43F;Voltage Ref.;Analog Devices;+2.5V Low Pow Prec. Ref
+*SYM=ADREF
+* REF43F SPICE MACROMODEL                     4/96, Rev. A
+*                                             (RN)  
+*
+* 
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |
+.SUBCKT REF43F  2  4  5  6
+*
+* 1.23V REFERENCE
+*
+I1     4  10   1.2299631E-3
+R1     10  4   1E3  RMOD
+.MODEL RMOD R TC1=10E-6
+EN     10  9   41 0  1
+G1     4   9   2  4  2.46E-9
+F1     4   9   VS  2.46E-5
+*
+* NOISE GENERATOR
+*
+VN1    40  0   DC  2
+DN1    40  41  DEN
+DN2    41  42  DEN
+VN2    0   42  DC  2
+*
+* INTERNAL OP AMP
+*
+G2     4  11   9  19  1E-3
+R2     4  11   300E6
+C1     4  11   5E-10
+D1     11 12   DX
+V1     2  12   1.4
+*
+* SECONDARY POLE
+*
+G3     4  13   11 4  1E-6
+R3     4  13   1E6
+C2     4  13   1.5E-13
+*
+* OUTPUT STAGE
+*
+ISY    2   4   0.3567E-3
+FSY    2   4   V1  -1 
+G4     4  14   13  4  25E-6
+R4     4  14   40E3
+R7     17 19   13.6E3
+R8     19  4   13.187E3
+R9     19  5   196E3
+R10    5   4   1E12
+Q1     16 14   17   QN
+VS     18 17   DC 0
+L1     18  6   1E-9
+*
+* OUTPUT CURRENT LIMIT
+*
+Q2     15  2   16  QN
+R6     2  16   14
+R5     2  15   18E3
+C3     2  15   1E-6
+G5     14  4   2  15  1
+*
+
+.MODEL  QN  NPN(IS=1E-15  BF=1000)
+.MODEL  DX  D(IS=1E-15)
+.MODEL  DEN D(IS=1E-12 RS=2.941223e6 AF=1 KF=1.998751E-18)
+.ENDS
+**********
+*SRC=REF43G;REF43G;Voltage Ref.;Analog Devices;+2.5V Low Pow Prec. Ref
+*SYM=ADREF
+* REF43G SPICE MACROMODEL                     4/96, Rev. A
+*                                             (RN)  
+*
+* 
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |
+.SUBCKT REF43G  2  4  5  6
+*
+* 1.23V REFERENCE
+*
+I1     4  10   1.2299631E-3
+R1     10  4   1E3  RMOD
+.MODEL RMOD R TC1=25E-6
+EN     10  9   41 0  1
+G1     4   9   2  4  2.4599E-9
+F1     4   9   VS  2.46E-5
+*
+* NOISE GENERATOR
+*
+VN1    40  0   DC  2
+DN1    40  41  DEN
+DN2    41  42  DEN
+VN2    0   42  DC  2
+*
+* INTERNAL OP AMP
+*
+G2     4  11   9  19  1E-3
+R2     4  11   300E6
+C1     4  11   5E-10
+D1     11 12   DX
+V1     2  12   1.4
+*
+* SECONDARY POLE
+*
+G3     4  13   11 4  1E-6
+R3     4  13   1E6
+C2     4  13   1.5E-13
+*
+* OUTPUT STAGE
+*
+ISY    2   4   0.3568E-3
+FSY    2   4   V1  -1 
+G4     4  14   13  4  25E-6
+R4     4  14   40E3
+R7     17 19   13.6E3
+R8     19  4   13.197E3
+R9     19  5   196E3
+R10    5   4   1E12
+Q1     16 14   17   QN
+VS     18 17   DC 0
+L1     18  6   1E-9
+*
+* OUTPUT CURRENT LIMIT
+*
+Q2     15  2   16  QN
+R6     2  16   14
+R5     2  15   18E3
+C3     2  15   1E-6
+G5     14  4   2  15  1
+*
+
+.MODEL  QN  NPN(IS=1E-15  BF=1000)
+.MODEL  DX  D(IS=1E-15)
+.MODEL  DEN D(IS=1E-12 RS=2.94357e6 AF=1 KF=1.998751E-18)
+.ENDS
+************
+*SRC=AD8023an;AD8023an;Opamps;AD-"ADxxx";High Cur Output Video Amp
+*SYM=ADOPAMP
+* AD8023 SPICE model       Rev A SMR/ADI 7-14-97
+* Copyright 1997 by Analog Devices, Inc.
+* This model will give typical performance characteristics
+* for the following parameters;
+*     closed loop gain and phase vs bandwidth
+*     output current and voltage limiting
+*     offset voltage (is static, will not vary with vcm)
+*     ibias (again, is static, will not vary with vcm)
+*     slew rate and step response performance
+*     (slew rate is based on 10-90% of step response)
+*     current on output will be reflected to the supplies 
+*     vnoise, referred to the input
+*     inoise, referred to the input
+*     distortion is not characterized
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8023an 1 2 99 50 28
+
+* input stage *
+
+q1 50 3 5 qp1
+q2 99 5 4 qn1
+q3 99 3 6 qn1
+q4 50 6 4 qp1
+i1 99 5 173e-6
+i2 6 50 173e-6
+cin1 1 98 2e-12
+cin2 2 98 2e-12
+v1 4 2 0
+
+* input error sources *
+
+*eos 3 1 poly(1) 20 98 2e-3 0
+Beos 3 1 V= 2e-2 + V(20,98) * 0
+*fbn 2 98 poly(1) vnoise3 10e-6 0
+Bfbn 2 98 I= 10e-6 + I(vnoise3) * 0
+
+*fbp 1 98 poly(1) vnoise3 5e-6 0
+Bfbp 1 98 I= 5e-6 + I(vnoise3) * 0
+
+* slew limiting stage *
+
+fsl 98 16 v1 1
+dsl1 98 16 d1
+dsl2 16 98 d1
+dsl3 16 17 d1
+dsl4 17 16 d1
+rsl  17 18 3.5
+vsl  18 98 0
+
+* gain stage *
+
+f1 98 7 vsl 2
+rgain 7 98 2e5
+cgain 7 98 1.7e-12
+dcl1 7 8 d1
+dcl2 9 7 d1
+vcl1 99 8 1.7
+vcl2 9 50 1.7
+           
+* second pole *
+
+epole1 14 98 7 98 1
+rpole1 14 15 1
+*cpole1 15 98 2.5e-10
+cpole1 15 98 2e-10
+
+* third pole *
+
+epole2 34 98 15 98 1
+rpole2 34 35 1
+*cpole2 35 98 2.5e-10
+cpole2 35 98 2e-10
+
+* reference stage *
+
+eref 98 0 poly(2) 99 0 50 0 0 0.5 0.5 
+
+ecmref 30 0 poly(2) 1 0 2 0 0 0.5 0.5
+
+* vnoise stage *
+
+rnoise1 19 98 1.84e-3
+vnoise1 19 98 0
+vnoise2 21 98 0.53
+dnoise1 21 19 dn
+
+fnoise1 20 98 vnoise1 1
+rnoise2 20 98 1
+
+* inoise stage *
+
+rnoise3 22 98 8.18e-6
+vnoise3 22 98 0
+vnoise4 24 98 0.575
+dnoise2 24 22 dn
+
+fnoise2 23 98 vnoise3 1
+rnoise4 23 98 1
+
+* buffer stage *
+
+gbuf 98 13 35 98 1e-2
+rbuf 98 13 1e2
+
+* output current reflected to supplies *
+
+fcurr 98 40 voc 1
+vtest 40 25 0
+vcur1 25 26 0
+vcur2 27 25 0
+dcur1 26 98 d1
+dcur2 98 27 d1
+*fsy 99 50 poly(2) vcur1 vcur2 9.2e-3 0 0
+Bfsy 99 50 I=9.2M + I(vcur1)*0 + I(vcur2)*0
+
+* output stage *
+
+gout1 99 10 13 99 0.5
+gout2 50 10 13 50 0.5
+rout1 10 99 2
+rout2 10 50 2
+voc 10 28 0
+rout3 28 98 1e6
+dcl3 13 11 d1
+dcl4 12 13 d1
+vcl3 11 10 -0.585
+vcl4 10 12 -0.585
+
+.model qp1 pnp
+.model qn1 npn
+.model d1  d
+.model dn  d(af=1 kf=1e-8)
+.ends AD8023
+******************
+*SRC=AD823an;AD823an;Opamps;AD-"ADxxx";Dual Precision 16MHz JFET
+*SYM=ADOPAMP
+*  AD823an Spice Macro-model                  4/16/97, Rev C, SMR
+*
+*  Copyright 1996 by Analog Devices, Inc.
+*
+* The following parameters are accurately modeled;
+*
+*    open loop gain and phase vs frequency
+*    output clamping voltage and current
+*    input common mode range
+*    CMRR vs freq
+*    I bias vs Vcm in    
+*    Slew rate
+*    Output currents are reflected to V supplies
+*    Voltage and current noise density are accurate
+*    for the entire bandwidth of the AD823
+*
+*    Vos is static and will not vary with Vcm input
+*
+*    Step response is modeled at unity gain w/1k load 
+*
+*    Distortion is not characterized
+*
+*    This model of the AD823 works at 3.3v
+*
+*    Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD823an  1 2 99 50 11  
+
+* Input Stage/pole at 50mhz
+
+R1 1 13 5e12
+R2 13 2 5e12
+fn1 98 1 vn2 1
+fn2 98 2 vn2 1
+cin1 1 98 1.8e-12
+cin2 2 98 1.8e-12
+J1 24 1 25 jx
+J2 24 14 26 jx
+R3 99 25 708
+R4 99 26 708
+Cp 25 26 0.65pf
+Ibt 24 50 0.62ma
+Ib1 1 98 5p
+Ib2 2 98 5p
+Eos 2 12 poly(1) 34 98 0.2e-3 1
+Enoise 12 14 36 98 1
+
+* Input V noise source
+
+dn1 35 98 dn1
+rn1 35 98 6.5e-5
+vn1 35 98 0
+
+hn1 36 98 vn1 1
+rn2 36 98 1
+
+* Input I noise source
+
+rn3 37 98 1.6e10
+vn2 37 98 0
+
+hn2 38 98 vn2 1
+rn4 38 98 1
+
+* Gain Stage & Pole @ 300Hz
+
+Vd1 99 3 0.91
+Vd2 4 50 0.91
+Gg1 99 5  26 25  1.413e-3
+Gg2 5 50  25 26  1.413e-3
+D1 5 3 dx
+D2 4 5 dx
+Rg1 99 5 21.23e6
+Rg2 50 5 21.23e6
+Cdp1 99 5 25pf
+Cdp2 50 5 25pf
+
+* Internal Reference
+
+Eref1 98 0 poly(2)  99 0  50 0  0 0.5 0.5  
+Eref2 97 0 poly(2)  1 0   2 0  0 0.5 0.5
+
+* Common Mode Gain Network/Pole at 10khz
+
+Gacm1 15 98 98 97 1.4
+Lacm2 15 29 10e-9
+Racm2 29 98 1e-3
+
+* Common Mode Gain Network/Zero at 300hz
+
+Ecm1  30 98 15 98 70e-3
+Racm3 30 31 1.67e3
+Racm4 31 32 100e-3
+Lacm3 32 98 53e-6
+
+* Common Mode Gain Network/Pole at 5mhz
+
+Ecm2  33 98 31 98 1
+Lacm4 33 34 31.8u
+Racm 34 98 1k 
+
+* Zero/Pole Stages (20MHz/50MHz))
+
+ezp  16 98 5 98 2.5
+rzp1 16 17 188
+rzp2 17 18 126
+lzp  18 98 1u
+
+* Buffer to output stage
+
+gbuf  98 19 17 98 1e-4
+Rbuf  19 98 10k
+
+* Output Stage
+
+fo1 98 90 vcd 1
+Do1 90 91 dx
+Do2 92 90 dx
+vi1 91 98 0
+vi2 98 92 0
+
+fsy 99 50 poly(2) vi1 vi2 5.7e-3 1 1 
+
+Go3 10 99 99 19 50m
+Go4 50 10 19 50 50m
+Ro3 99 10 20
+Ro4 10 50 20
+vcd 10 95 0
+lo1 95 11 1e-10
+ro 11 98 1e6
+Do5 19 20 dx
+Do6 21 19 dx
+Vo1 20 10 -0.3
+Vo2 10 21 -0.4
+
+.model dx d(IS=1e-15) 
+.model dn1 d(is=1e-15 af=0 kf=1e-12)
+.model jx njf(beta=3e-3 vto=-1 Is=1e-12) 
+.ends ad823an
+*************
+*SRC=AD1580;AD1580;Diodes;Zener <=10V;1.2V Micro Prec. Shunt Ref
+*SYM=HZEN
+*  AD1580 Spice Macro-model   8/96, Rev A
+*
+*  Copyright 1996 by Analog Devices, Inc.
+*
+* Node assignments
+*              zener diode anode
+*                | zener diode cathode
+*                | | 
+*                | | 
+*                | | 
+*                | | 
+.SUBCKT AD1580   8 1 ; 2 3 4 5 6 7 
+
+r1 1 2 13.0k
+r2 2 3 21k
+r3 2 4 105k 
+r4 3 5 2.73k
+c1 4 6 10e-12
+q1 7 3 8 qn1 
+q2 4 5 8 qn2
+q3 8 6 1 qp1
+vic 5 7 0
+f1 1 8 vic 0.8
+g1 6 8 4 3 2e-4
+
+.model qn1 npn(bf=100 vaf=100)
+.model qn2 npn(bf=100 vaf=100)
+.model qp1 pnp(bf=50k vaf=100)
+
+.ends ad1580
+****************
+*SRC=AD8004a;AD8004a;Opamps;AD-"ADxxx";3KV/µs 35mW Current FB Amp
+*SYM=ADOPAMP
+* AD8004a SPICE Macro-model                  12/96, revA
+*                                           SMR/ADI
+*
+* Copyright 1996 by Analog Devices, Inc.
+*
+* This model was written with the specs as they apply to running from a
+* dual supply, +/-5v. This means that the model will give a slew rate of
+* 3000v/us, whether or not the model is run from +/-5v, or single supply
+* of 5v. The user should keep in mind that the actual slew rate is much 
+* slower in the real device when running from single supply 5v. Refer to
+* the data sheet for the actual specs. 
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8004a  1 2 99 50 24   
+*
+* INPUT STAGE
+*
+r1   99 8 1
+r2   10 50 1
+i1   99 5 100e-6
+i2   4 50 100e-6
+q1   50 3 5  qp1
+q2   99 3 4  qn1
+q3   8 6 2  qn2
+q4   10 7 2 qp2
+r3   5 6 1
+r4   4 7 1
+r3a  99 6 40k
+r4a  50 7 40k
+*
+* input error sources
+* 
+ib1  99  2     90e-6
+ib2  99  3     110e-6
+vos  3   1     3.5e-3
+cs1  99  2     0.75e-12
+cs2  50  2     0.75e-12
+cs3  99  3     0.75e-12
+cs4  50  3     0.75e-12
+*
+* first gain stage and dominant pole
+*
+r5   12 99     280k
+r6   12 50     280k
+c3   12 99     1e-12
+c4   12 50     1e-12
+g1   99 12     99 8 1
+g2   12 50     10 50 1 
+gsl1 99 12     poly(1) 99 8 0 0 300
+gsl2 12 50     poly(1) 10 50 0 0 300
+v3   99 13     1.6
+v4   14 50     1.6
+d3   12 13     dx
+d4   14 12     dx
+*
+* secondary pole
+*
+r7  15 99    1k
+r8  15 50    1k
+c5  15 99    0.9pf
+c6  15 50    0.9pf
+g3  99 15    12 18 1e-3
+g4  15 50    18 12 1e-3
+*
+* buffer stage
+*
+g13 98 17 15 98 1e-4    
+rbuf 17 98 10k
+*
+* reference stage
+*
+r13 18 99 1e5 
+r14 18 50 1e5
+eref 98 0 18 0 1 
+rref 98 0 1e6
+*
+* current mirroring on supplies
+*
+fo1 98 300 vcd 1
+vi1 311 98 0
+vi2 98 312 0
+dm1 300 311 dx
+dm2 312 300 dx
+fsy 99 50 poly(2) vi1 vi2 0 1 1
+iq 99 50 10.9e-3
+*
+* output stage
+*
+r15 23 99   2
+r16 23 50   2
+vcd 23 25   0
+l1  25 24   1.5e-12
+rl  24 98   1e6
+g11 99 23   17 99  0.5
+g12 23 50   50 17  0.5
+v5  19 23   0.59
+v6  23 20   0.59
+d5  19 17   dx
+d6  17 20   dx
+*
+* models
+*
+.model qn1 npn(bf=1e3 is=1e-15)
+.model qp1 pnp(bf=1e3 is=1e-15)
+.model qn2 npn(bf=1e3 is=1e-15)
+.model qp2 pnp(bf=1e3 is=1e-15)
+.model dx   d(is=1e-15)
+.ends ad8004a
+****************
+*SRC=AD8031a;AD8031a;Opamps;AD-"ADxxx";Rail-to-Rail I/O Amp
+*SYM=ADOPAMP
+*  AD8031a Spice Macro-model                  8/96, Rev A
+*
+*  Copyright 1996 by Analog Devices, Inc.
+*
+* The following parameters are accurately modeled;
+*
+*    open loop gain and phase vs frequency
+*    output clamping voltage and current
+*    input common mode range
+*    CMRR vs freq
+*    I bias vs Vcm in    
+*    Slew rate
+*    Output currents are reflected to V supplies
+*
+*    Vos is static and will not vary with Vcm in
+*    Step response is modeled at unity gain w/1k load 
+*
+*    Distortion and noise are not characterized
+*
+*    Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8031a  1 2 99 50 61 
+
+* Input bias current source
+
+ecm 20 0 3 97 1 
+d1 20 21 dx
+d2 23 20 dx
+v3 21 22 -0.9
+v4 24 23 -0.9
+r20 22 0 100
+r21 24 0 100
+f1 0 25 v3 1 
+f2 25 0 v4 1
+r22 25 0 1k
+d3 25 26 dx
+d4 27 25 dx
+v5 26 0 0.2
+v6 0 27 0.3
+g1 1 0 25 0 400e-9
+g2 2 0 25 0 400e-9
+
+* Input Stage
+
+R1 1 3 140k
+R2 3 2 140k
+C1 1 2 1.6pf
+R3 1 98 40e6
+R4 2 98 40e6 
+r9 15 7 1015
+r10 16 7 1015
+q1 5 1 15 qn1
+q2 6 4 16 qn1
+r5 99 5 1515
+r6 99 6 1515
+cp 5 6 0.657p
+ib3 7 50 1e-4
+eos 2 4 poly(1)  105 98  0.55e-3 1 
+
+
+* dummy first stage (pnp) for correct bias current
+
+ib4 81 99 1e-4
+r11 82 81 1015
+r12 83 81 1015
+q3 84 1 82 qp1 
+q4 85 4 83 qp1
+r13 50 84 1515
+r14 50 85 1515
+
+* gain stage/pole at 2530hz/clamp circuitry
+
+g3 99 31 6 5 0.692
+g4 31 50 5 6 0.692
+r7 99 31 19072
+r8 31 50 19072
+c3 99 31 3.3n
+c4 31 50 3.3n
+
+vc1 99 45 0.66
+vc2 46 50 1.11
+dc1 31 45 dx
+dc2 46 31 dx
+
+* internal reference
+
+rdiv1 99 97 100k
+rdiv2 97 50 100k
+Eref 98 0 97 0 1
+rref 98 0 1e6
+
+* Common mode gain network
+
+gacm1 99 100 3 98 7.94e-13
+gacm2 100 50 98 3 7.94e-13
+racm1 99 100 1e4
+racm2 100 50 1e4
+
+* Common mode gain network/zero at 2530hz 
+
+ecm1  101 98 100 98 1e6 
+racm3 101 102 1e6
+racm4 102 103 1
+lacm1 103 98 62.9u
+
+* Common mode gain network/zero at 450hz/pole at 1mhz
+
+ecm2  104 98 102 98 6000
+racm5 104 105 6000
+racm6 105 106 1
+lacm2 106 98 354u
+
+* buffer to output stage
+
+gbuf 98 32 31 98 1e-4
+re1 32 98 10k
+
+* output stage
+
+fo1 98 110 vcd 1
+do1 110 111 dx
+do2 112 110 dx
+vi1 111 98 0
+vi2 98 112 0
+
+fsy 99 50 poly(2) vi1 vi2 5.61e-4 1 1
+
+go3 60 99 99 32 0.5
+go4 50 60 32 50 0.5
+r03 60 99 2
+r04 60 50 2
+vcd 60 62 0
+lo1 62 61 2u
+ro2 61 98 1e9
+do5 32 70 dx
+do6 71 32 dx
+vo1 70 60 -0.642
+vo2 60 71 -0.628
+
+.model dx d(is=1e-15)
+.model qn1 npn(bf=2500 vaf=100)
+.model qp1 pnp(bf=2500 vaf=60)
+.ends ad8031a
+**************
+*SRC=AD8031;AD8031;Opamps;AD-"ADxxx";Rail-to-Rail I/O Amp
+*SYM=ADOPAMP
+*  AD8031 Spice Macro-model                  8/96, Rev A
+*
+*  Copyright 1996 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD8031   1 2 99 50 61  
+
+* Input bias current source
+
+ecm 20 0 3 97 1 
+d1 20 21 dx
+d2 23 20 dx
+v3 21 22 -0.9
+v4 24 23 -0.9
+r20 22 0 100
+r21 24 0 100
+f1 0 25 v3 1 
+f2 25 0 v4 1
+r22 25 0 1k
+d3 25 26 dx
+d4 27 25 dx
+v5 26 0 0.2
+v6 0 27 0.3
+g1 1 0 25 0 400e-9
+g2 2 0 25 0 400e-9
+
+* Input Stage
+
+R1 1 3 140k
+R2 3 2 140k
+C1 1 2 1.6pf
+R3 1 98 40e6
+R4 2 98 40e6 
+r9 15 7 1015
+r10 16 7 1015
+q1 5 1 15 qn1
+q2 6 4 16 qn1
+r5 99 5 1515
+r6 99 6 1515
+cp 5 6 0.657p
+ib3 7 50 1e-4
+eos 2 4 poly(1)  105 98  0.55e-4 1 
+
+* dummy first stage (pnp) for correct bias current
+
+ib4 81 99 1e-4
+r11 82 81 1015
+r12 83 81 1015
+q3 84 1 82 qp1 
+q4 85 4 83 qp1
+r13 50 84 1515
+r14 50 85 1515
+
+* gain stage/pole at 2530hz/clamp circuitry
+
+g3 99 31 6 5 0.692
+g4 31 50 5 6 0.692
+r7 99 31 19072
+r8 31 50 19072
+c3 99 31 3.3n
+c4 31 50 3.3n
+
+vc1 99 45 0.66
+vc2 46 50 1.11
+dc1 31 45 dx
+dc2 46 31 dx
+
+* internal reference
+
+rdiv1 99 97 100k
+rdiv2 97 0 100k
+Eref 98 0 97 0 1
+rref 98 0 1e6
+
+* Common mode gain network
+
+gacm1 99 100 3 98 7.94e-13
+gacm2 100 50 98 3 7.94e-13
+racm1 99 100 1e4
+racm2 100 50 1e4
+
+* Common mode gain network/zero at 2530hz 
+
+ecm1  101 98 100 98 1e6 
+racm3 101 102 1e6
+racm4 102 103 1
+lacm1 103 98 62.9u
+
+* Common mode gain network/zero at 450hz/pole at 1mhz
+
+ecm2  104 98 102 98 6000
+racm5 104 105 6000
+racm6 105 106 1
+lacm2 106 98 354u
+
+* buffer to output stage
+
+gbuf 98 32 31 98 1e-4
+re1 32 98 10k
+
+* output stage
+
+fo1 98 110 vcd 1
+do1 110 111 dx
+do2 112 110 dx
+vi1 111 98 0
+vi2 98 112 0
+
+fsy 99 50 poly(2) vi1 vi2 5.61e-4 1 1
+
+go3 60 99 99 32 0.5
+go4 50 60 32 50 0.5
+r03 60 99 2
+r04 60 50 2
+vcd 60 62 0
+lo1 62 61 2u
+ro2 61 98 1e9
+do5 32 70 dx
+do6 71 32 dx
+vo1 70 60 -0.642
+vo2 60 71 -0.628
+
+.model dx d(is=1e-15)
+.model qn1 npn(bf=2500 vaf=100)
+.model qp1 pnp(bf=2500 vaf=60)
+.ends ad8031
+*****************
+*SRC=AD9631an;AD9631an;Opamps;AD-"ADxxx";Ultralow Dist. Wide Band
+*SYM=ADOPAMP
+*  AD9631an Spice Macro-model                  2/17/97,SMR,REV A
+*
+*  Copyright 1997 by Analog Devices, Inc.
+*
+* This is a second generation model of the AD9631a. In this
+* rev, voltage and current noise are modeled. Both of these 
+* noise sources are referred to the inputs.
+* 
+* The following parameters are also accurately modeled;
+*
+*    open loop gain and phase vs frequency
+*    output clamping voltage and current
+*    CMRR vs freq
+*    Slew rate
+*    Output currents are reflected to V supplies
+*
+*    Vos and Ibias are static and will not vary with Vcm.
+*    Step response is modeled at unity gain w/100 ohm load 
+*    and Rf =250 ohms.
+*
+*    Distortion is not characterized
+*
+*    Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD9631an 1 2 99 50 61   
+
+
+* input stage *
+
+r1 1 2 500k
+cin1 1 98 1.2e-12
+cin2 2 98 1.2e-12
+q1 5 17 6 qn
+q2 7 2 8 qn
+eos 17 89 poly(1)  23 98  3.3e-3 1
+enoise 89 1 31 0 1 
+gnoise 99 2 36 0 1
+r3 99 5 12.94
+r4 99 7 12.94
+r5 6 9 12.42
+r6 8 9 12.42
+c2 5 7 10.26pf
+itail 9 50 0.1
+
+** v noise generation **
+
+dn1 80 81 dn 
+dn2 81 82 dn
+vn3 82 0 0
+rn1 82 0 340e-6
+vn1 80 0 0.4
+
+hn1 84 0 vn3 2.5
+rn2 84 85 1.5
+rn3 85 86 1
+ln1 86 0 1.25e-9
+
+en  30 0 85 0 1
+rn4 30 31 1 
+cn1 31 0 0.3nf
+
+** i noise generation **
+
+vn4 87 0 0
+rn5 87 0 2.92k
+
+hn2 35 0 vn4 1
+rn6 35 36 1e-6
+cn2 36 0 1e-1
+
+* gain stage,clamping - open loop gain=52dB * 
+* pd at 100khz *
+
+gm1 99 10 poly(1) 7 5 0 0.077 0 1e-3
+gm2 50 10 poly(1) 7 5 0 0.077 0 1e-3
+r7  99 10 10350
+r8  10 50 10350 
+c3  99 10 76.9pf
+c4  10 50 76.9pf
+vcl1 99 14 1.77
+vcl2 15 50 1.77
+d1 10 14 dx
+d2 15 10 dx
+
+* frequency shaping stage, zero at 200mhz
+
+e1 11 98 10 98 10
+rz1 11 12 0.9 
+rz2 12 13 0.1
+l1 13 98 8e-11
+
+* common mode reference
+
+ecmref 98 0 poly(2) 99 0 50 0 0 0.5 0.5
+einref 18 0 poly(2) 1 0 2 0 0 0.5 0.5
+
+* vcm generation
+
+ecm1 19 98 18 98 27e-6
+rvcm1 19 20 666e-6
+rvcm2 20 21 1e-6
+lcm1 21 98 1.06e-12
+
+ecm2 22 98 20 98 833
+rvcm3 22 23 832e-6
+rvcm4 23 24 1e-6
+lcm2 24 98 1.3e-12
+
+* buffer to output stage
+
+gbuf 98 16 12 98 1e-2
+rbuf1 98 16 1e2
+
+* output stage
+
+fo1 98 110 vcd 1
+do1 110 111 dx
+do2 112 110 dx
+vi1 111 98 0
+vi2 98 112 0
+fsy 99 50 poly(2) vi1 vi2 -0.094 1 1
+iq 99 50 11e-3
+
+go3 60 99 99 16 0.1
+go4 50 60 16 50 0.1
+r03 60 99 10
+r04 60 50 10
+vcd 60 62 0
+lo1 62 61 4e-8
+ro2 61 98 1e9
+do5 16 70 dx
+do6 71 16 dx
+vo1 70 60 0.27
+vo2 60 71 0.27
+
+.model dx d(kf=1e-30 af=0 is=1e-15)
+.model dn d(kf=1.16e-13 af=0 is=1e-15) 
+.model qn npn(kf=1e-30 bf=6750 vaf=100 af=0)
+.ends AD9631an
+***********
+*SRC=AD9632an;AD9632an;Opamps;AD-"ADxxx";Ultralow Dist. Wide Bandwidth
+*SYM=ADOPAMP
+*  AD9632an Spice Macro-model                  3/7/97,SMR,Rev A
+*
+*  Copyright 1997 by Analog Devices, Inc.
+*
+* The following parameters are modeled;
+*
+*    open loop gain and phase vs frequency
+*    output clamping voltage and current
+*    input common mode range
+*    CMRR vs freq
+*    Slew rate
+*    Output currents are reflected to V supplies
+*    I bias is static and will not vary with Vcm
+*    Vos is static and will not vary with Vcm 
+*    Step response is modeled at gain of 2 w/1k load 
+*    Slew rate is based on 10-90% change in output step
+*
+*    Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD9632an 1 2 99 50 61   
+
+
+* input stage *
+
+gn 99 2  36 98  1
+r1 1 18 250k
+r2 2 18 250k
+cin1 1 98 1.2e-12
+cin2 2 98 1.2e-12
+ibias1 50 1 8e-6
+ibias2 99 2 8e-6
+q1 5 17 6 qn1
+q2 7 2 8 qn1
+eos 17 1 poly(2)  23 98   34 98  2e-3 1 0
+r3 99 5 50.23
+r4 99 7 50.23
+r5 6 9 47.63
+r6 8 9 47.63
+c2 5 7 2.26pf
+itail 9 50 0.02
+irev 50 99 0.019
+
+* vnoise generation
+
+dn1 30 31 dn
+vn1 31 98 0
+rn1 31 98 100e-5
+vn2 30 98 0.4
+
+hn1 34 98 vn1 1
+rn2 34 98 1
+
+* inoise generation
+
+vn3 35 98 0
+rn3 35 98 4k
+
+hn2 36 98 vn3 1
+rn4 36 98 1e-6
+
+* gain stage,clamping - open loop gain=64dB * 
+
+* pd at 105khz *
+
+gm1 99 10 poly(1) 7 5 0 0.02 0 2.3e-3
+gm2 50 10 poly(1) 7 5 0 0.02 0 2.3e-3
+r7  99 10 79617
+r8  10 50 79617
+c3  99 10 13.33pf
+c4  10 50 13.33pf
+vcl1 99 14 1.65
+vcl2 15 50 1.65
+d1 10 14 dx
+d2 15 10 dx
+
+* frequency shaping stage *
+* zero at 200mhz, pole at 600mhz *
+
+e1 11 98 10 98 3
+rz1 11 12 2
+rz2 12 13 1
+l1 13 98 0.8e-9
+
+* common mode reference
+
+eref 98 0 poly(2) 99 0 50 0 0 0.5 0.5
+
+* vcm generation
+
+ecm1 19 98 18 98 38e-5 
+rvcm1 19 20 1.9e-9
+rvcm2 20 21 1e-12
+lcm1 21 98 1.516e-18
+
+ecm2 22 98 20 98 25000
+rvcm3 22 23 25e-8
+rvcm4 23 24 1e-12
+lcm2 24 98 1.990e-18
+
+* buffer to output stage
+
+gbuf 98 16 12 98 1e-2
+rbuf1 98 16 100
+
+* output current mirrored to supplies
+
+fo1 98 110 vcd 1
+do1 110 111 dx
+do2 112 110 dx
+vi1 111 98 0
+vi2 98 112 0
+fsy 99 50 poly(2) vi1 vi2 4.73e-3 1 1
+iq 99 50 11e-3
+
+* output stage
+
+go3 60 99 99 16 0.1
+go4 50 60 16 50 0.1
+r03 60 99 10
+r04 60 50 10
+vcd 60 62 0
+lo1 62 61 0.75e-7
+ro2 61 98 1e9
+do5 16 70 dx
+do6 71 16 dx
+vo1 70 60 0.27
+vo2 60 71 0.27
+
+.model dx d(is=1e-15)
+.model dn d(af=0.6 kf=1.4e-10 is=1e-15)
+.model qn1 npn(af=0 kf=1e-30 is=1e-15 bf=1000)
+.ends AD9632an
+**************
+

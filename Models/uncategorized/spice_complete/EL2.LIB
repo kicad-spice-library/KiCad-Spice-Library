@@ -1,0 +1,1556 @@
+****************************
+*This library of macromodels is being supplied to users as an  aid
+*to   circuit  designs.    While  it  reflects  reasonably   close
+*similarity  to the actual device in terms of performance,  it  is
+*not  suggested  as a replacement for  breadboarding.   Simulation
+*should be used as a forerunner or a supplement to traditional lab
+*testing.
+*
+*Users  should very carefully note the following factors regarding
+*these models:
+*
+*Model performance in general will reflect typical baseline  specs
+*for a given device, and certain aspects of performance may not be
+*modeled  fully  to  keep  the model as simple  as  possible  thus
+*minimizing  computer running time.  For example,  PSRR  and  CMRR
+*effects,  parametric variation with temperature,  operation under
+*output short circuit conditions,  and input noise sources are not
+*included in the models.
+*
+**********
+*While  reasonable  care has been taken in their  preparation,  we
+*cannot  be  responsible for correct application on  any  and  all
+*computer  systems.  Model  users are hereby notified  that  these
+*models  are  supplied  "as  is",   with  no  direct  or   implied
+*responsibility on the part of Elantec,  Inc.  for their operation
+*within  a  customer circuit or  system.   Further,  Elantec  Inc.
+*reserves the right to change these models without prior notice.
+*
+*In all cases, the current data sheet information for a given real
+*device  is  your final design guideline,  and is the only  actual
+*performance guarantee.   For further technical information, refer
+*to individual device data sheets.
+*
+*The  Elantec  Engineering staff is in the  process  of  improving
+*these  models,   and  we  welcome  your  comments  and  feedback.
+*Inquiries should be made to:
+*
+*                  Applications Engineering Manager
+*                  Elantec, Inc.
+*                  1996 Tarob Ct.
+*                  Milpitas, CA 95035
+*
+*Voice Telephone:  (800) 333-6314, ext. 311
+*
+*FAX: (408) 945-9305
+*
+*TELEX: 910-997-0649
+****************************
+*SRC=EL2008E;EL2008E;Opamps;Elantec;
+*SYM=ADBUF2
+*EL2008 MACROMODEL
+* CONNECTIONS:        +INPUT
+*                       | +VSUPPLY
+*                       |    | -VSUPPLY
+*                       |    |    |  OUTPUT
+*                       |    |    |    |
+.SUBCKT EL2008E         4    5    1    2
+*
+* INPUT STAGE
+*
+E1 10 0 4 0 1.0
+R1 10 0 1K
+RH 10 11 1K
+CH 11 0 2.65PF
+RC 11 12 10K
+CC 12 0 0.159PF
+E2 13 0 12 0 1.0
+*
+* OUTPUT STAGE
+*
+Q1  1 13 14 QP
+Q2  5 13 15 QN
+Q3  5 14 16 QN 15
+Q4  1 15 19 QP 15
+R2 16 2 0.4
+R3 19 2 0.4
+C1 14 0 0.6PF
+C2 15 0 0.6PF
+I1 5 14 1.2MA
+I2 15 1 1.2MA
+*
+* BIAS CURRENT
+*
+IIN 4 0 5UA
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=1500)
+.MODEL QP PNP(IS=5E-15 BF=1500)
+.ENDS
+****************************
+*SRC=EL2009E;EL2009E;Opamps;Elantec;
+*SYM=ADBUF2
+*EL2009 MACROMODEL
+* CONNECTIONS:        +INPUT
+*                       | +VSUPPLY
+*                       |    | -VSUPPLY
+*                       |    |    |  OUTPUT
+*                       |    |    |    |
+.SUBCKT EL2009E         4    5    1    2
+*
+* INPUT STAGE
+*
+E1 10 0 4 0 1.0
+R1 10 0 1K
+RH 10 11 1K
+CH 11 0 1PF
+RC 11 12 6.3K
+CC 12 0 0.159PF
+E2 13 0 12 0 1.0
+*
+* OUTPUT STAGE
+*
+Q1  1 13 14 QP
+Q2  5 13 15 QN
+Q3  5 14 16 QN 10
+Q4  1 15 19 QP 10
+R2 16 2 0.2
+R3 19 2 0.2
+C1 14 0 1.7PF
+C2 15 0 1.7PF
+I1 5 14 5MA
+I2 15 1 5MA
+*
+* BIAS CURRENT
+*
+IIN 4 0 5UA
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=500)
+.MODEL QP PNP(IS=5E-15 BF=500)
+*
+.ENDS
+****************************
+*SRC=EL2018E;EL2018E;Comparators;Elantec;Latched
+*SYM=EL2018
+*EL2018 MACROMODEL
+* CONNECTIONS:       +INPUT
+*                      |  -INPUT
+*                      |    |   +V
+*                      |    |    |   -V   __
+*                      |    |    |    |   LE   __
+*                      |    |    |    |    |   CS
+*                      |    |    |    |    |    |  OUTPUT
+*                      |    |    |    |    |    |    |
+*                      |    |    |    |    |    |    |
+.SUBCKT EL2018E        2    3    8    4    6    5    7
+*
+*INPUT STAGE
+*
+I1 8 10 700UA
+R1 13 4 1K
+R2 14 4 1K
+Q1  8 3 11  QN
+Q2  8 2 12  QN
+Q3 13 11 10 QP
+Q4 14 12 10 QP
+I2 11 4 200UA
+I3 12 4 200UA
+*
+* 2ND STAGE & FLIP FLOP
+*
+*I4 8 24 700UA
+I4 8 24 1MA
+Q9  22  6 24 QP
+Q10 18 17 24 QP
+V1 17 0 2.5V
+Q5 15 14 22 QP
+Q6 16 13 22 QP
+R3 15 4 1K
+R4 16 4 1K
+Q7 16 15 18 QP
+Q8 15 16 18 QP
+*
+* OUTPUT STAGE
+*
+I7 8 35 2MA
+*S1 35 20 5 0 SW
+XS1 35 20 5 0 PSW2 {VON=0.4V VOFF=2.5V}
+D2 35 8 DS
+I6 26 34 5MA
+*S2 34 4 5 0 SW
+XS2 34 4 5 0 PSW2 {VON=0.4V VOFF=2.5V}
+D3 34 26 DS
+Q19 8 20 21 QN 2
+Q20 4 19  7 QP 2
+R8 21  7 60
+R7 20 19 4K
+Q17 19 16 26 QN 5
+Q18  0 15 26 QN 5
+Q22 20 20 30 QN 5
+Q23 19 19 30 QP 8
+D1 0 19 DS
+Q21 0 17 19 QP
+*
+* POWER SUPPLY CURRENT
+*
+IPS 8 4 4MA
+*
+* MODELS
+*
+.MODEL QN NPN(IS=2E-15 BF=400 TF=0.05NS CJE=0.3PF CJC=0.2PF CCS=0.2PF)
+.MODEL QP PNP(IS=0.6E-15 BF=60 TF=0.3NS CJE=0.5PF CJC=0.5PF CCS=0.4PF)
+.MODEL DS D(IS=2E-12 TT=0.05NS EG=0.62V VJ=0.58)
+*.MODEL SW VSWITCH(VON=0.4V VOFF=2.5V)
+.ENDS
+*INCLUDE EL2.LIB
+****************************
+*SRC=EL2045E;EL2045E;Opamps;Elantec;
+*SYM=BBOPAMP
+*EL2045 MODEL
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2045E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+IE 7 37 0.9MA
+R6 36 37 400
+R7 38 37 400
+RC1 4 30 850
+RC2 4 39 850
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF 33 0 39 30 1.0
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION
+*
+GA 0 34 33 0 1M
+RH 34 0 2MEG
+CH 34 0 1.5PF
+RC 34 40 1K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 2PF
+RPB 42 43 200
+CPB 43 0 2PF
+*
+* OUTPUT STAGE
+*
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3  4 43 50 QP
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 2.7MA
+*
+* MODELS
+*
+.MODEL QN  NPN(IS=800E-18 BF=200 TF=0.2NS)
+.MODEL QPA PNP(IS=864E-18 BF=100 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=125 TF=0.2NS)
+.ENDS
+****************************
+*SRC=EL2090E;EL2090E;Opamps;Elantec;
+*SYM=EL2090
+*EL2090 MACROMODEL
+* REVISION A, OCTOBER 1992
+*.PARAM VCLAMP = {-0.002*(TEMP-25)}
+*
+* CONNECTIONS:    VIDIN+
+*                   |  VIDIN-
+*                   |    | +VSUPPLY
+*                   |    |    | -VSUPPLY
+*                   |    |    |    |  VID OUT
+*                   |    |    |    |    |  S/H IN+
+*                   |    |    |    |    |    | S/H IN-
+*                   |    |    |    |    |    |    |  S/H OUT
+*                   |    |    |    |    |    |    |    | HOLD CONTROL
+*                   |    |    |    |    |    |    |    |    |  CHOLD
+*                   |    |    |    |    |    |    |    |    |    |
+.SUBCKT EL2090E     3    1    14   12   13   5    6    11   7    9  {TEMP=27}
+*
+* VIDEO AMPLIFIER *
+*
+E1  20 0 3 0 1.0
+VIS 20 34 0V
+H2  34 38 VXX 1.0
+R10  1 36 25
+L1 36 38 20NH
+IINP 3 0 10UA
+IINM 1 0  5UA
+H1 21  0 VIS 600
+R2 21 22 1K
+D1 22  0  DCLAMP
+D2  0 22  DCLAMP
+E2 23 0 22 0 0.00166666666
+L5 23 24 0.7UH
+C5 24 0 0.5PF
+R5 24 0 600
+G1 0 25 24 0 1.0
+ROL 25 0 400K
+CDP 25 0 7.7PF
+Q1 12 25 26 QP
+Q2 14 25 27 QN
+Q3 14 26 28 QN
+Q4 12 27 29 QP
+R7 28 13 4
+R8 29 13 4
+IOS1 14 26 2.5MA
+IOS2 27 12 2.5MA
+IPS 14 12 7.2MA
+IVOS 0 33 5MA
+VXX 33 0 0V
+R11 33 0 1K
+*
+* SAMPLE & HOLD *
+*
+G40  49 0 5 6 1E-3
+VCUR 49 42 0V
+R43    6 0 100MEG
+R44    5 0 100MEG
+R40   42 0 4K
+D41 50 42 DIODE
+D42 42 51 DIODE
+V41 50 0 {-0.002*(TEMP-25)}
+* VCLAMP 
+V42 0 51 {-0.002*(TEMP-25)}
+* VCLAMP 
+G41  44 0 42 0 200E-6
+R42  44 0 31MEG
+D43  44 14 DIODE
+D44  12 44 DIODE
+D45   9 14 DIODE
+D46  12  9 DIODE
+XS1   44 9 48 0 PSW2 {VON=1.2V VOFF=1.6V ROFF=1E12 RON=100}
+E40  46 0  9 0 0.95
+I40   0 9 10NA
+R45  46 47 70
+L40  47 11 70NH
+C40   7  9 0.32PF
+R47   7 48 10K
+C41   48 0 3PF
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=500 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=500 TF=0.1NS)
+.MODEL DCLAMP D(IS=1E-30 IBV=0.02 BV=2.75 N=4)
+.MODEL DIODE D
+*.MODEL SWA VSWITCH(VON=1.2V VOFF=1.6V ROFF=1E12 RON=100)
+.ENDS
+*INCLUDE EL2.LIB
+****************************
+*SRC=EL2210E;EL2210E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2210/EL2310/EL2410 MACROMODEL
+* REVISION A, JUNE 1994
+* APPLICATION HINTS:
+*
+* A PULL DOWN RESISTOR BETWEEN THE OUTPUT AND V- IS RECOMMENDED
+* TO ALLOW OUTPUT VOLTAGES TO SWING CLOSE TO V-. SEE DATASHEET
+* FOR RECOMMENDED VALUES.
+*
+* CONNECTIONS:     +IN
+*                   |    -IN
+*                   |      |   V+
+*                   |      |   |   V-
+*                   |      |   |   |   VOUT
+*                   |      |   |   |     |
+.SUBCKT EL2210E    3      2   8   4     1
+Q1  20  3 24 QP
+Q2  21  2 25 QP
+Q3  10 10 26 QP
+Q4  12 10 11 QP
+Q5  14 10 13 QP
+Q6  19 19 20 QN
+Q7  14 19 21 QN
+Q8   8 14 15 QN
+Q9   8 16 17 QN 10
+R1   24 12 350
+R2   12 25 350
+R3    8 26 250
+R4    8 11 150
+R5    8 13 240
+R6   20  4 150
+R7   21  4 150
+R8   15 17 700
+R9    1  4 1250
+R10  15 16 40
+R11  17  1 15
+R12  10 19 10K
+R13  14 22 20
+C1   22  4 0.45PF
+C2   22 19 1PF
+D1   1 14 DCAP
+.MODEL QN NPN(BF=150 TF=0.05NS)
+.MODEL QP PNP(BF=90 TF=0.05NS)
+.MODEL DCAP D(RS=200 CJO=1E-12 VJ=0.8 TT=100E-9)
+.ENDS
+****************************
+*SRC=EL2211E;EL2211E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2211/EL2311/EL2411 MACROMODEL
+* REVISION A, JUNE 1994
+* APPLICATION HINTS:
+*
+* A PULL DOWN RESISTOR BETWEEN THE OUTPUT AND V- IS RECOMMENDED
+* TO ALLOW OUTPUT VOLTAGES TO SWING CLOSE TO V-. SEE DATASHEET
+* FOR RECOMMENDED VALUES.
+*
+* CONNECTIONS:     +IN
+*                   |    -IN
+*                   |      |   V+
+*                   |      |   |   V-
+*                   |      |   |   |   VOUT
+*                   |      |   |   |     |
+.SUBCKT EL2211E    3      2   8   4     1
+Q1  20  3 24 QP
+Q2  21  2 25 QP
+Q3  10 10 26 QP
+Q4  12 10 11 QP
+Q5  14 10 13 QP
+Q6  19 19 20 QN
+Q7  14 19 21 QN
+Q8   8 14 15 QN
+Q9   8 16 17 QN 10
+R1   24 12 175
+R2   12 25 175
+R3    8 26 250
+R4    8 11 150
+R5    8 13 240
+R6   20  4 150
+R7   21  4 150
+R8   15 17 700
+R9    1  4 1250
+R10  15 16 40
+R11  17  1 15
+R12  10 19 10K
+R13  14 22 20
+C1   22  4 0.42PF
+C2   22 19 1PF
+D1   1 14 DCAP
+.MODEL QN NPN(BF=150 TF=0.05NS)
+.MODEL QP PNP(BF=90 TF=0.05NS)
+.MODEL DCAP D(RS=200 CJO=1E-12 VJ=0.8 TT=100E-9)
+.ENDS
+****************************
+*SRC=EL2245E;EL2245E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2245 MACROMODEL
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2245E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+IE 7 37 1MA
+R6 36 37 400
+R7 38 37 400
+RC1 4 30 850
+RC2 4 39 850
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF 33 0 39 30 1.0
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION
+*
+GA 0 34 33 0 1M
+RH 34 0 2MEG
+CH 34 0 1.3PF
+RC 34 40 1K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 1PF
+RPB 42 43 200
+CPB 43 0 1PF
+*
+* OUTPUT STAGE
+*
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3  4 43 50 QP
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 2.7MA
+*
+* MODELS
+*
+.MODEL QN  NPN(IS=800E-18 BF=200 TF=0.2NS)
+.MODEL QPA PNP(IS=864E-18 BF=100 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=125 TF=0.2NS)
+.ENDS
+****************************
+*SRC=EL2252E;EL2252E;Comparators;Elantec;Comparator/Receiver
+*SYM=EL2252
+*EL2252 MARCROMODEL
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    |    +V
+*                       |    |    |    -V
+*                       |    |    |    |   HYS  ___
+*                       |    |    |    |    |   TTL
+*                       |    |    |    |    |    |  OUTPUT
+*                       |    |    |    |    |    |    |
+*                       |    |    |    |    |    |    |
+.SUBCKT EL2252E         2    3    14   7    4    5    13
+*
+* APPLICATION HINTS:
+*
+* CONNECT PIN 4 TO GROUND THROUGH 1000 MEGOHM RESISTOR TO INHIBIT
+* HYSTERESIS; TO INVOKE HYSTERESIS, CONNECT PIN 4 TO V-.
+*
+* CONNECT PIN 5 TO GROUND TO INVOKE TTL VOH; PIN 5 MAY LEFT OPEN
+* FOR CMOS VOH.
+*
+* TO FACILTATE .OP, SET ITL1 = 200, ITL2 = 200, SET NODE 27 TO 13.8
+* VOLTS, AND NODE 30 TO -12 VOLTS.  AS AN EXAMPLE, IF YOU CALLED YOUR
+* SUBCKT X1, THEN THE FOLLOWING STATEMENT SHOULD BE ADDED TO YOUR DECK:
+*
+* .NODESET V(X1.27)=13.8 V(X1.30)=-12
+*
+*INPUT STAGE
+*
+I1  22  7 1.7MA
+R1  14 20 300
+R2  14 21 300
+Q1  20  2 22 QN
+Q2  21  3 22 QN
+Q3  20 26 23 QN
+Q4  21 25 23 QN
+Q13 25 27 20 QP
+Q14 26 27 21 QP
+V1  14 27 1.2V
+R3  23 24 1.4K
+D1  24 4 DS
+R4  25 33 700
+R5  26 33 700
+Q16 33 33 34 QN
+Q17 34 34 37 QN
+V4  37 7 1.2V
+*
+* 2ND STAGE
+*
+I2 30 7  3MA
+I3 14 28 1.5MA
+Q7  0 35 28 QP
+V2  44 0 1.2V
+XS1  44 35 5 0 PSW2 {VON=0V VOFF=2.5V}
+*SWA
+XS2  45 35 5 0 PSW1 {VON=2.5 VOFF= 0V}
+*SWB
+RSW 14 5 10K
+V3  45 0 2.5V
+Q5  0 26 30 QN
+Q6 28 25 30 QN
+D3 0 28 DS
+*
+* OUTPUT STAGE
+*
+I4 14 38 1MA
+Q8 38 38 39 QN
+Q9 32 32 39 QP
+Q10 7 28 32 QP
+Q11 14 38 40 QN 2
+Q12  7 28 13 QP 2
+R6 40 13 50
+C1 28 0 3PF
+*
+* MODELS
+*
+.MODEL QN NPN(IS=2E-15 BF=120 TF=0.2NS CJE=0.2PF CJC=0.2PF CCS=0.2PF)
+.MODEL QP PNP(IS=0.6E-15 BF=60 TF=0.2NS CJE=0.5PF CJC=0.3PF CCS=0.2PF)
+.MODEL DS D(IS=3E-12 TT=0.05NS EG=0.72V VJ=0.58)
+*.MODEL SWA VSWITCH(VON=0V VOFF=2.5V)
+*.MODEL SWB VSWITCH(VON=2.5 VOFF= 0V)
+.ENDS
+*INCLUDE EL2.LIB
+****************************
+*SRC=EL2260E;EL2260E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2260 MACROMODEL
+* REVISION A, MARCH 1993
+* AC CHARACTERISTICS USED CIN- (PIN 2) = 1 PF; RF = 560 OHMS
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2260E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+E1  10 0 3 0 1.0
+VIS 10 9 0V
+H2   9 12 VXX 1.0
+R1   2 11 130
+L1  11  12 25NH
+IINP 3  0 0.5UA
+IINM 2  0 5UA
+R12  3  0 2MEG
+*
+* SLEW RATE LIMITING
+*
+H1 13  0 VIS 600
+R2 13 14 1K
+D1 14  0  DCLAMP
+D2  0 14  DCLAMP
+*
+* HIGH FREQUENCY POLE
+*
+E2 30 0 14 0 0.00166666666
+L3 30 17 0.43UH
+C5 17 0 0.27PF
+R5 17 0 500
+*
+* TRANSIMPEDANCE STAGE
+*
+G1 0 18 17 0 1.0
+ROL 18 0 2MEG
+CDP 18 0 2.285PF
+*
+* OUTPUT STAGE
+*
+Q1 4 18 19 QP
+Q2 7 18 20 QN
+Q3 7 19 21 QN
+Q4 4 20 22 QP
+R7 21 6  4
+R8 22 6  4
+IOS1 7 19 2MA
+IOS2 20 4 2MA
+*
+* SUPPLY CURRENT
+*
+IPS 7 4 2MA
+*
+* ERROR TERMS
+*
+IVOS 0 23 2MA
+VXX 23  0 0V
+E4  24 0 3 0 1.0
+E5  25 0 7 0 1.0
+E6  26 0 4 0 1.0
+R9  24 23 562
+R10 25 23 1K
+R11 26 23 1K
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL DCLAMP D(IS=1E-30 IBV=0.266 BV=2.24 N=4)
+.ENDS
+****************************
+*SRC=EL2444E;EL2444E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2444 MACROMODEL
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2444E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+IE 7 37 1MA
+R6 36 37 800
+R7 38 37 800
+RC1 4 30 850
+RC2 4 39 850
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF 33 0 39 30 1.0
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION
+*
+GA 0 34 33 0 1M
+RH 34 0 2MEG
+CH 34 0 1.3PF
+RC 34 40 1K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 1PF
+RPB 42 43 200
+CPB 43 0 1PF
+*
+* OUTPUT STAGE
+*
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3  4 43 50 QP
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 2.7MA
+*
+* MODELS
+*
+.MODEL QN  NPN(IS=800E-18 BF=200 TF=0.2NS)
+.MODEL QPA PNP(IS=864E-18 BF=100 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=125 TF=0.2NS)
+.ENDS
+****************************
+*SRC=EL2445E;EL2445E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2445 MACROMODEL
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2445E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+IE 7 37 1MA
+R6 36 37 400
+R7 38 37 400
+RC1 4 30 850
+RC2 4 39 850
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF 33 0 39 30 1.0
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION
+*
+GA 0 34 33 0 1M
+RH 34 0 2MEG
+CH 34 0 1.3PF
+RC 34 40 1K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 1PF
+RPB 42 43 200
+CPB 43 0 1PF
+*
+* OUTPUT STAGE
+*
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3  4 43 50 QP
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 2.7MA
+*
+* MODELS
+*
+.MODEL QN  NPN(IS=800E-18 BF=200 TF=0.2NS)
+.MODEL QPA PNP(IS=864E-18 BF=100 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=125 TF=0.2NS)
+.ENDS
+****************************
+*SRC=EL2460E;EL2460E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2460 MACROMODEL
+* REVISION A, MARCH 1993
+* AC CHARACTERISTICS USED CIN- (PIN 2) = 1 PF; RF = 560 OHMS
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2460E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+E1  10 0 3 0 1.0
+VIS 10 9 0V
+H2   9 12 VXX 1.0
+R1   2 11 130
+L1  11  12 25NH
+IINP 3  0 0.5UA
+IINM 2  0 5UA
+R12  3  0 2MEG
+*
+* SLEW RATE LIMITING
+*
+H1 13  0 VIS 600
+R2 13 14 1K
+D1 14  0  DCLAMP
+D2  0 14  DCLAMP
+*
+* HIGH FREQUENCY POLE
+*
+E2 30 0 14 0 0.00166666666
+L3 30 17 0.43UH
+C5 17 0 0.27PF
+R5 17 0 500
+*
+* TRANSIMPEDANCE STAGE
+*
+G1 0 18 17 0 1.0
+ROL 18 0 2MEG
+CDP 18 0 2.285PF
+*
+* OUTPUT STAGE
+*
+Q1 4 18 19 QP
+Q2 7 18 20 QN
+Q3 7 19 21 QN
+Q4 4 20 22 QP
+R7 21 6  4
+R8 22 6  4
+IOS1 7 19 2MA
+IOS2 20 4 2MA
+*
+* SUPPLY CURRENT
+*
+IPS 7 4 2MA
+*
+* ERROR TERMS
+*
+IVOS 0 23 5MA
+VXX 23  0 0V
+E4  24 0 3 0 1.0
+E5  25 0 7 0 1.0
+E6  26 0 4 0 1.0
+R9  24 23 3K
+R10 25 23 1K
+R11 26 23 1K
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL DCLAMP D(IS=1E-30 IBV=0.266 BV=2.24 N=4)
+.ENDS
+****************************
+*SRC=EL4089E;EL4089E;Opamps;Elantec;
+*SYM=EL4089
+*EL4089 MACROMODEL
+* REVISION A, JULY 24 1994
+*
+* CONNECTIONS:    VIN-
+*                 | VIN+
+*                 |  |  REF
+*                 |  |  |  HOLD
+*                 |  |  |  | -VSUPPLY
+*                 |  |  |  |  | VOUT
+*                 |  |  |  |  |  | +VSUPPLY
+*                 |  |  |  |  |  |  |
+.SUBCKT EL4089E   1  2  3  4  6  7  8
+* *******RESTORE SECTION
+G10 2 0 XX 0 430U
+E10 YY 0 WW 3 4.66
+RFL 7 WW 8K
+CFL WW 0 20P
+RD YY SS 100
+D10 XX 0 DD
+D20 0 XX DD
+XS1 XX SS 4 0 PSW2 {VON=0.8 VOFF=2.4}
+*SWNO
+XS2 0 XX 4 0 PSW1 {VON=2.4 VOFF=0.8}
+*SWNC
+RCL 3 0 999K
+RHH 4 0 100K
+*.MODEL SWNO VSWITCH (VON=0.8 VOFF=2.4)
+*.MODEL SWNC VSWITCH (VON=2.4 VOFF=0.8)
+* *********************
+* INPUT STAGE
+E1 10 0 2 0 1.0
+VIS 10 9 0V
+H2 9 12 VXX 1.0
+R1 1 11 20
+L1 11 12 20NH
+IINP 2 0 1U
+IINN 1 0 18U
+R12 2 0 2MEG
+* SLEW RATE LIMITING
+H1 13 0 VIS 600
+R2 13 14 1K
+D1 14 0 DD
+D2 0 14 DD
+* HIGH FREQUENCY POLE
+E2 30 0 14 0 0.00166666666
+L3 30 17 1.47U
+C5 17 0 0.47P
+R5 17 0 700
+* TRANSIMPEDANCE STAGE
+G1 0 18 17 0 1.0
+ROL 18 0 800K
+CDP 18 0 11P
+* OUTPUT STAGE
+Q1 6 18 19 QP
+Q2 8 18 20 QN
+Q3 8 19 21 QN
+Q4 6 20 22 QP
+R7 21 7 3
+R8 22 7 3
+IOS1 8 19 2MA
+ISO2 20 6 2MA
+* SUPPLY CURRENT
+IPS 8 6 6.5MA
+* ERROR TERM
+IOVS 0 23 12M
+VXX 23 0 0V
+E4 24 0 2 0 1.0
+E5 25 0 8 0 1.0
+E6 26 0 6 0 1.0
+R9 23 24 560
+R10 25 23 1K
+R11 26 23 1K
+* MODELS
+.MODEL QN NPN (IS=5E-15, BF=100, TF=0.1NS)
+.MODEL QP PNP (IS=5E-15, BF=100, TF=0.1NS)
+.MODEL DCLAMP D(IS=1E-20, IBV=0.266, BV=2.24, N=4)
+.MODEL DD D RS=2
+.ENDS
+*INCLUDE EL2.LIB
+****************************
+*SRC=EL4094E;EL4094E;Opamps;Elantec;
+*SYM=EL4094
+* EL4094 MACROMODEL
+* REVISION A, JULY 1993
+*
+* THIS MACROMODEL IS OFFERED TO ALLOW SIMULATION OF GENERAL EL4094
+* BEHAVIOR. WE HAVE INCLUDED THESE CHARACTERISTICS:
+*
+*  SMALL SIGNAL FREQUENCY RESPONSE
+*  OUTPUT LOADING EFFECTS
+*  INPUT IMPEDANCE
+*  OFF CHANNEL FEEDTHROUGH
+*  OUTPUT IMPEDANCE OVER FREQUENCY
+*  SIGNAL PATH DC DISTORTION
+*  VGAIN IV CHARACTERISTICS
+*  VGAIN OVERDRIVE RECOVERY DELAY
+*  100% GAIN ERROR
+*
+* THE MACROMODEL DOES NOT BEHAVE IDENTICALLY AS THE CIRCUIT IN
+* THESE AREAS: TEMPERATURE EFFECTS, SIGNAL OVERLOAD EFFECTS,
+* SIGNAL AND /VG OPERATING RANGE, CURRENT LIMIT, SUPPLY VOLTAGE
+* EFFECTS, SLEW RATE LIMITATIONS, NOISE, AND POWER SUPPLY INTER-
+* ACTION.
+*
+* CONNECTIONS:         VINB
+*                       |   VOUT __
+*                       |    |   VG
+*                       |    |    |   VG
+*                       |    |    |    |   VINA
+*                       |    |    |    |    |
+.SUBCKT EL4094E         1    4    6    7    8
+*
+ROL    810 0 290K
+CCOMP  810 0 3.5PF
+G1      10 0 810 0 -10
+ROUT    10 0 0.1
+LOUT    10 4 350.2NH
+RLOUT   10 4 80
+R1      10 910 10
+C1     910 911 300PF
+R2     911  0 90
+*
+* INPUT CHANNEL A
+*
+RINA   22 10 16K
+RA     11  0  1K
+CFEEDA 23  8 130PF
+RFEEDA 8  22 1.0
+E1A   23  22 1 0 1.0
+RSPICE3 23 22 1E12
+G1A  11 0 POLY(1) 22 910 0.0 0.001 -3E6
+G2A 810 0 POLY(2)  11 0   13 0  0.0 0.0 0.0 0.0 0.001
+*
+* INPUT CHANNEL B
+*
+RINB   25 10 16K
+RB     20  0  1K
+CFEEDB 24  1 130PF
+RFEEDB  1 25 1.0
+ELB    24 25 8 0 1.0
+RSPICE4 24 25 1E12
+G1B  20 0 POLY(1)  25 910  0.0 0.001 -3E6
+G2B 810 0 POLY(2)  20 0   19 0  0.0 0.0 0.0 0.0 0.001
+*
+* GAIN CONTROL
+RSPICE1 13 0 1E12
+RSPICE2 18 0 1E12
+R10     14 0 1E7
+C10     14 0 8E-16
+D1      14 15 DCLAMP
+D2      16 14 DCLAMP
+.MODEL DCLAMP D(TT=200NS)
+V1     15  0 4999.3
+V2      0 16 4999.3
+V3     13 17 0.5
+V4     19 18 0.5
+G10    14  0  7  6 -0.001
+G11     7  6 14  0 -2E-8
+E10    17  0 14  0  1E-4
+E11    18  0 14  0 -1E-4
+.ENDS
+****************************
+*SRC=EL4095E;EL4095E;Opamps;Elantec;
+*SYM=EL4095
+* EL4095 MACROMODEL
+* REVISION A, JULY 1993
+*
+* THIS MACROMODEL IS OFFERED TO ALLOW SIMULATION OF GENERAL EL4095
+* BEHAVIOR. WE HAVE INCLUDED THESE CHARACTERISTICS:
+*
+*  SMALL SIGNAL FREQUENCY RESPONSE
+*  OUTPUT LOADING EFFECTS
+*  INPUT IMPEDANCE
+*  OFF CHANNEL FEEDTHROUGH
+*  OUTPUT IMPEDANCE OVER FREQUENCY
+*  SIGNAL PATH DC DISTORTION
+*  VGAIN IV CHARACTERISTICS
+*  VGAIN OVERDRIVE RECOVERY DELAY
+*  100% GAIN ERROR
+*  -VIN CHARACTERISTICS & SENSITIVITY TO PARASISTIC CAPACITANCE
+*  /FORCE OPERATION
+*
+* THE MACROMODEL DOES NOT BEHAVE IDENTICALLY AS THE CIRCUIT IN
+* THESE AREAS: TEMPERATURE EFFECTS, SIGNAL OVERLOAD EFFECTS,
+* SIGNAL AND /VG OPERATING RANGE, CURRENT LIMIT, SUPPLY VOLTAGE
+* EFFECTS, SLEW RATE LIMITATIONS, NOISE, POWER SUPPLY INTER-
+* ACTION, VIDEO AND HIGH FREQUENCY DISTORTION, GLITCH AND
+* DELAY FROM /FORCE INPUTS, AND MANUFACTURING TOLERANCES.
+*
+* CONNECTIONS:   +VINB
+*                  |  -VINB ______
+*                  |    |   FORCE A _____
+*                  |    |     |     FORCEB
+*                  |    |     |       |   VOUT ______
+*                  |    |     |       |     |   VGAIN
+*                  |    |     |       |     |     |  VGAIN
+*                  |    |     |       |     |     |     |  -VINA
+*                  |    |     |       |     |     |     |    |   +VINA
+*                  |    |     |       |     |     |     |    |     |
+.SUBCKT EL4095E    1    2     4       5     7     10   11    13    14
+*
+ROL    810 0 290K
+CCOMP  810 0 4.3PF
+G1     110 0 810 0 -10
+ROUT   110 0 0.1
+LOUT   110 7 350NH
+RLOUT  110 7 80
+*
+RINA+   14  0 5E6
+RINB+    1  0 5E6
+RVG     11  0 2E6
+RVGG    10  0 2E6
+RFORCEA  4  0 1E9
+RFORCEB  5  0 1E9
+*
+* INPUT CHANNEL A
+*
+RINA    22 313  79
+RA     111   0  1K
+RFEEDA  13 313 1.0
+CFEEDA  23  13 2500PF
+CCOMPA 111   0 2PF
+E1A     23  313 302 25 -1.0
+E2A     22    0 14 0 0.9999
+RSPICE3 23  313 1E12
+G1A  111 0 POLY(1)  22 313  0.0 0.125 -150E-6
+G2A  810 0 POLY(2)  111 0   113 0  0.0 0.0 0.0 0.0 0.001
+*
+* INPUT CHANNEL B
+*
+RINB   25 302  79
+RB    120   0  1K
+RFEEDB  2 302  1.0
+CFEEDB 24   2  2500PF
+CCOMPB 120   0   2PF
+E1B    24  302 22 313 -1
+E2B    25    0  1   0 0.9999
+RSPICE4 24 302 1E12
+G1B  120 0 POLY(1)  25 302  0.0 0.125 -150E-6
+G2B  810 0 POLY(2)  120 0   119 0  0.0 0.0 0.0 0.0 0.001
+*
+* GAIN CONTROL
+RSPICE1 113 0 1E12
+RSPICE2 119 0 1E12
+R10     114 0 1E7
+R11 204 206 2.5E6
+R12 205 206 2.5E6
+C10 201   0 9.5E-16
+D1  114 115 DCLAMP
+D2  116 114 DCLAMP
+D3  204   4 DCLAMP
+D4  205   5 DCLAMP
+.MODEL DCLAMP D(TT=200NS)
+VTT1 206 0 2.4
+V1  115   0 4999.3
+V2    0 116 4999.3
+V3  113 117  0.5
+V4  119 118  0.5
+V5  203 115  0.7
+V6  116 202  0.7
+G10 114  0  11 10 -0.001
+G11  11 10 114 0  -2E-8
+E10 117  0 201 0  1E-4
+E11 118  0 201 0 -1E-4
+XS1 114 200 5 0 PSW1 {RON=100 ROFF=1E12 VON=1.6 VOFF=1.2}
+*NOPEN
+XS2 200 201 4 0 PSW1 {RON=100 ROFF=1E12 VON=1.6 VOFF=1.2}
+*NOPEN
+XS3 203 201 4 0 PSW2 {RON=100 ROFF=1E12 VON=1.2 VOFF=1.6}
+*NCLOSED
+XS4 202 201 5 0 PSW2 {RON=100 ROFF=1E12 VON=1.2 VOFF=1.6}
+*NCLOSED
+*.MODEL NOPEN   VSWITCH(RON=100 ROFF=1E12 VON=1.6 VOFF=1.2)
+*.MODEL NCLOSED VSWITCH(RON=100 ROFF=1E12 VON=1.2 VOFF=1.6)
+.ENDS
+*INCLUDE EL2.LIB
+****************************
+*SRC=EL4393E;EL4393E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL4393 MACROMODEL
+* REVISION A, FEBRUARY 1993
+* ENHANCEMENTS INCLUDE PSRR, CMRR, AND SLEW RATE LIMITING
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL4393E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+E1  10 0 3 0 1.0
+VIS 10 9 0V
+H2   9 12 VXX 1.0
+R1  2 11 50
+L1 11 12 29NH
+IINP 3 0 0.2UA
+IINM 2 0  10UA
+*
+* SLEW RATE LIMITING
+*
+H1 13  0 VIS 600
+R2 13 14 1K
+D1 14  0  DCLAMP
+D2  0 14  DCLAMP
+*
+* HIGH FREQUENCY POLE
+*
+E2 30 0 14 0 0.00166666666
+L5 30 17 1.2UH
+C5 17 0 1PF
+R5 17 0 500
+*
+* TRANSIMPEDANCE STAGE
+*
+G1 0 18 17 0 1.0
+ROL 18 0 250K
+CDP 18 0 2.2PF
+*
+* OUTPUT STAGE
+*
+Q1 4 18 19 QP
+Q2 7 18 20 QN
+Q3 7 19 21 QN
+Q4 4 20 22 QP
+R7 21 6 4
+R8 22 6 4
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+* ERROR TERMS
+*
+IVOS 0 23 2MA
+VXX 23 0 0V
+E4  24 0 3 0 1.0
+E5  25 0 7 0 1.0
+E6  26 0 4 0 1.0
+R9  24 23 1K
+R10 25 23 1K
+R11 26 23 1K
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.2NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.2NS)
+.MODEL DCLAMP D(IS=1E-30 IBV=0.266 BV=1.5 N=4)
+.ENDS
+****************************
+*SRC=EL2160E;EL2160E;Opamps;Elantec;
+*SYM=BBOPAMP
+* EL2160 MACROMODEL
+* REVISION A, NOVEMBER 1993
+* AC CHARACTERISTICS USED CIN- (PIN 2) = 1 PF; RF = 560 OHMS
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    | +VSUPPLY
+*                       |    |    | -VSUPPLY
+*                       |    |    |    |  OUTPUT
+*                       |    |    |    |    |
+.SUBCKT EL2160E         3    2    7    4    6
+*
+* INPUT STAGE
+*
+E1  10 0 3 0 1.0
+VIS 10 9 0V
+H2   9 12 VXX 1.0
+R1   2 11 130
+L1  11  12 25NH
+IINP 3  0 0.5UA
+IINM 2  0 5UA
+R12  3  0 2MEG
+*
+* SLEW RATE LIMITING
+*
+H1 13  0 VIS 600
+R2 13 14 1K
+D1 14  0  DCLAMP
+D2  0 14  DCLAMP
+*
+* HIGH FREQUENCY POLE
+*
+E2 30 0 14 0 0.00166666666
+L3 30 17 0.43UH
+C5 17 0 0.27PF
+R5 17 0 500
+*
+* TRANSIMPEDANCE STAGE
+*
+G1 0 18 17 0 1.0
+ROL 18 0 2MEG
+CDP 18 0 2.285PF
+*
+* OUTPUT STAGE
+*
+Q1 4 18 19 QP
+Q2 7 18 20 QN
+Q3 7 19 21 QN
+Q4 4 20 22 QP
+R7 21 6  4
+R8 22 6  4
+IOS1 7 19 2MA
+IOS2 20 4 2MA
+*
+* SUPPLY CURRENT
+*
+IPS 7 4 3MA
+*
+* ERROR TERMS
+*
+IVOS 0 23 2MA
+VXX 23  0 0V
+E4  24 0 3 0 1.0
+E5  25 0 7 0 1.0
+E6  26 0 4 0 1.0
+R9  24 23 562
+R10 25 23 1K
+R11 26 23 1K
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL DCLAMP D(IS=1E-30 IBV=0.266 BV=2.24 N=4)
+.ENDS
+************
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+**********
+.SUBCKT PSW2 1 2 3   4 {RON=1 ROFF=1MEG VON=0 VOFF=1}
+*Connections + - NC+ NC-
+* VON < Voff Case
+B1 1 2 I=V(3,4) < {VON} ? V(1,2)/{RON} : V(3,4) > {VOFF} ?
++ V(1,2)/{ROFF} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) - (3 * LN({RON/ROFF}) * 
++ (V(3,4) - {(VON+VOFF)/2}) / {2* (VOFF-VON)}) + 
++ (2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VOFF-VON)^3} )))
+.ENDS
+*********************
+* SRC=EL2019E;EL2019E;Comparators;Elantec;M-S Flip Flop
+* SYM=EL2019
+*EL2019 MARCROMODEL
+* CONNECTIONS:        +INPUT
+*                       |  -INPUT
+*                       |    |    +V
+*                       |    |    |    -V
+*                       |    |    |    |   CPIN __
+*                       |    |    |    |    |   CS
+*                       |    |    |    |    |    |  OUTPUT
+*                       |    |    |    |    |    |    |
+*                       |    |    |    |    |    |    |
+.SUBCKT EL2019E         2    3    8    4    6    5    7
+*
+*INPUT STAGE
+*
+I1 8 10 700UA
+R1 13 4 1K
+R2 14 4 1K
+Q1  8 3 11  QN
+Q2  8 2 12  QN
+Q3 13 11 10 QP
+Q4 14 12 10 QP
+I2 11 4 200UA
+I3 12 4 200UA
+*
+* 2ND STAGE & FLIP FLOP
+*
+*I4 8 24 700UA
+I4 8 24 1MA
+Q9  22  6 24 QP
+Q10 18 17 24 QP
+V1 17 0 2.5V
+Q5 15 14 22 QP
+Q6 16 13 22 QP
+R3 15 4 1K
+R4 16 4 1K
+Q7 16 15 18 QP
+Q8 15 16 18 QP
+I5 8 40 500UA
+Q11 41 17 40 QP
+Q12 42  6 40 QP
+Q13 43 16 41 QP
+Q14 44 15 41 QP
+Q15 44 43 42 QP
+Q16 43 44 42 QP
+R5 43 4 1K
+R6 44 4 1K
+*
+* OUTPUT STAGE
+*
+I7 8 35 2MA
+XS1 35 20 5 0 PSW2 {VON=0.4V VOFF=2.5V}
+D2 35 8 DS
+I6 26 34 5MA
+XS2 34 4 5 0 PSW2 {VON=0.4V VOFF=2.5V}
+D3 34 26 DS
+Q19 8 20 21 QN 2
+Q20 4 19  7 QP 2
+R8 21 7 60
+R7 20 19 4K
+Q17 19 44 26 QN 5
+Q18  0 43 26 QN 5
+Q22 20 20 30 QN 5
+Q23 19 19 30 QP 8
+D1 0 19 DS
+Q21 0 17 19 QP
+*
+* POWER SUPPLY CURRENT
+*
+IPS 8 4 4MA
+*
+* MODELS
+*
+.MODEL QN NPN(IS=2E-15 BF=400 TF=0.05NS CJE=0.3PF CJC=0.2PF CCS=0.2PF)
+.MODEL QP PNP(IS=0.6E-15 BF=60 TF=0.3NS CJE=0.5PF CJC=0.5PF CCS=0.4PF)
+.MODEL DS D(IS=2E-12 TT=0.05NS EG=0.62V VJ=0.58)
+*.MODEL SW VSWITCH(VON=0.4V VOFF=2.5V)
+.ENDS
+*INCLUDE EL2.LIB
+**********
+* SRC=EL4083E;EL4083E;Opamps;Elantec;
+* SYM=EL4083
+*EL4083 MACROMODEL
+*REVISION A, AUGUST 22, 1994
+*
+*CONNECTION:    IZ(BIAS)
+*               |   IX(IN)
+*               |   |   IY(IN)
+*               |   |   |   VEE
+*               |   |   |   |   VCC
+*               |   |   |   |   |   IXY
+*               |   |   |   |   |   |   /IXY
+*               |   |   |   |   |   |   |
+.SUBCKT EL4083E ZIN XIN YIN VEE VCC IXY IYX
+.MODEL M1MP5DIODE D TT=60P IS=1F CJO=300F VJ=600M XTI=3 EG=1.11 RS=80M
+.MODEL M2MDCAP D TT=100N IS=2E-17 CJO=1P VJ=800M RS=300
+.MODEL M3MNPN1 NPN CJC=1.3P TF=120P IS=1.04F BF=120 CJS=480F
+.MODEL M4MPNP1 PNP CJC=1.79P TF=50.167P IS=1F BF=90 CJS=480F
+*replaced [vee] with vee
+C1 N9 N7 9P
+C2 N7 0 350F
+C3 N19 N16 9P
+C4 N16 0 350F
+D1 0 N15 M2MDCAP 12
+D10 0 N26 M1MP5DIODE 1
+D11 N26 N27 M1MP5DIODE 1
+D12 N29 N30 M1MP5DIODE 1
+D13 0 N31 M1MP5DIODE 1
+D14 VBP N34 M1MP5DIODE 2
+D15 N34 VBP M1MP5DIODE 2
+D16 0 N34 M2MDCAP 12.5
+D17 N35 0 M2MDCAP 12.5
+D18 N35 VBN M1MP5DIODE 2
+D19 VBN N35 M1MP5DIODE 2
+D2 N15 0 M2MDCAP 12
+D20 N42 N10 M2MDCAP 4
+D21 N10 0 M2MDCAP 4
+D22 0 N20 M2MDCAP 4
+D23 N20 N45 M2MDCAP 4
+D3 0 N12 M1MP5DIODE 8
+D4 N55 N13 M1MP5DIODE 8
+D5 0 N25 M2MDCAP 6
+D6 N25 0 M2MDCAP 6
+D7 0 N22 M1MP5DIODE 8
+D8 N54 N23 M1MP5DIODE 8
+D9 0 N28 M1MP5DIODE 1
+EV94 0 VBN 0 N45 1
+EV95 VBP 0 N42 0 1
+EV96 N54 0 N21 0 650M
+EV97 N55 0 N11 0 650M
+EV98 N27 0 N28 0 1
+EV99 N29 0 SWIN 0 1
+FI10 VN- VEE VFI10 1
+FI11 VCC VP- VFI11 1
+FI12 VCC N39 VFI12 1
+FI13 N37 VEE VFI13 1
+FI14 VCC N38 VFI14 1
+FI15 N36 VEE VFI15 1
+FI16 N45 VEE VFI16 1
+FI17 VCC N42 VFI17 1
+FI18 N37 N36 VFI18 500M
+FI19 N38 N39 VFI19 500M
+FI20 VN+ VN- VFI20 500M
+FI21 VP+ VP- VFI21 500M
+FI22 0 N21 VFI22 1
+FI23 N21 0 VFI23 1
+FI24 N24 0 VFI24 2
+FI25 N14 0 VFI25 2
+FI26 N11 0 VFI26 1
+FI27 0 N11 VFI27 1
+FI28 VCC VEE VFI28 21
+FI29 N28 ZB1 VFI29 1
+FI5 N33 0 VFI5 1
+FI6 0 N33 VFI6 1
+FI7 N35 N34 VFI7 1
+FI8 VN+ VEE VFI8 1
+FI9 VCC VP+ VFI9 1
+IIBGN 0 VEE 2.2M
+IIBGP VCC 0 2.46M
+IIISWB N32 VEE 629U
+IIISWI SWIN VEE 555U
+IIZSU N28 VEE 10U
+L1 N7 IXA 71N
+L2 XIN N7 4N
+L3 N16 IYA 71N
+L4 YIN N16 4N
+L5 N46 IYX 4N
+L6 N47 IXY 4N
+Q1 0 N10 VP+ VEE M4MPNP1 2
+Q10 N46 VN+ N36 VEE M3MNPN1 2
+Q11 N47 VN+ N37 VEE M3MNPN1 2
+Q12 N46 VN- N37 VEE M3MNPN1 2
+Q13 0 N34 N56 VEE M4MPNP1 400M
+Q14 0 N34 N57 VEE M4MPNP1 400M
+Q15 0 N35 N58 VEE M3MNPN1 400M
+Q16 0 N35 N59 VEE M3MNPN1 400M
+Q2 0 N10 VP- VEE M4MPNP1 2
+Q3 0 N20 VN+ VEE M3MNPN1 2
+Q4 0 N20 VN- VEE M3MNPN1 2
+Q5 N46 VP- N39 VEE M4MPNP1 2
+Q6 N47 VP+ N39 VEE M4MPNP1 2
+Q7 N46 VP+ N38 VEE M4MPNP1 2
+Q8 N47 VP- N38 VEE M4MPNP1 2
+Q9 N47 VN- N36 VEE M3MNPN1 2
+.MODEL RMOD R TC1=824U TC2=7.67U
+R1 N15 N7 60 RMOD
+R10 N16 N17 450  
+R11 YIN N16 100  
+R12 0 SWIN 500 RMOD
+R13 N56 N38 35  
+R14 N57 N39 35  
+R15 N37 N58 35  
+R16 N36 N59 35  
+R17 N46 IYX 100  
+R18 N47 IXY 100  
+R2 N11 IXC 6.25  
+R3 N9 IXC 4.5  
+R4 N7 IXA 1.5K  
+R5 XIN N7 100  
+R6 N25 N16 156 RMOD
+R7 N21 IYC 6.25  
+R8 IYC N19 45  
+R9 N17 IYA 45  
+RSU VEE 0 16K  
+VFI10 N43 N44 0.0
+VFI11 N40 N41 0.0
+VFI12 ZB4 ZB5 0.0
+VFI13 ZB5 ZB6 0.0
+VFI14 ZB3 ZB4 0.0
+VFI15 ZB6 ZB7 0.0
+VFI16 N44 ZB9 0.0
+VFI17 N41 ZB8 0.0
+VFI18 IYB IYC 0.0
+VFI19 IYA IYB 0.0
+VFI20 IXB IXC 0.0
+VFI21 IXA IXB 0.0
+VFI22 N22 N24 0.0
+VFI23 N23 N24 0.0
+VFI24 ZB2 ZB3 0.0
+VFI25 ZB1 ZB2 0.0
+VFI26 N13 N14 0.0
+VFI27 N12 N14 0.0
+VFI28 ZB9 VEE 0.0
+VFI29 ZIN N26 0.0
+VFI5 N30 N32 0.0
+VFI6 N31 N32 0.0
+VFI7 N33 0 0.0
+VFI8 ZB8 N43 0.0
+VFI9 ZB7 N40 0.0
+.ENDS
+**************

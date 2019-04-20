@@ -1,0 +1,43 @@
+* dc voltage divider -Tests circuit by using DC sweeping
+
+*rmod alters the top resistor of the divider.
+*sweep rmod1 from 1 to 100 in 5 ohm steps
+
+Vin1 1 0 DC 1
+R1 1 2 RMOD L=1 W=1 
+R2 2 0 100
+
+.MODEL RMOD R(RSH=100)
+
+.DC R1 RMOD(RSH) 1 100 5
+
+.END
+ spice output commands
+
+*# echo ***********************************************************
+*# echo Sweep altering a resistance model (will affect all resistors using the model)
+*# echo ***********************************************************
+*# let xxx = 1
+*# while xxx <= 100
+*#   alter @rmod[rsh] = xxx
+*#   op
+*#   print v(1) v(2)
+*#   let xxx = xxx + 5
+*# end
+* The following does the same thing by varying R1 resistance directly
+
+*# echo ***********************************************************
+*# echo Sweep altering R1 directly
+*# echo ***********************************************************
+*# let xxx = 1
+*# let outindex = 0
+*# while xxx <= 100
+*#   alter @r1[resistance] = xxx
+*#   op
+*#   print v(1) v(2)
+*   let output[outindex] = v(2)
+*#  let outindex = outindex + 1
+*#   let xxx = xxx + 5
+*# end
+*# plot output
+

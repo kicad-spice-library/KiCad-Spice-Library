@@ -1,0 +1,595 @@
+*Needs new sym for tline and ltline.
+**********
+* Copyright Intusoft 1988-1997
+* All Rights Reserved
+**********
+**********
+*SRC=NBJT;NBJT;Generic Models;BJT;NPN Small Signal
+*SYM=NBJT
+.SUBCKT NBJT 1 2 3 {COB=??? FT=??? TS=??? IMAX=???}
+*Connections C B E
+*Parameters: COB Output capacitance in Farads @ 10V, FT Gain Badwidth in Hz, 
+* TS Storage Time in Sec, IMAX Max IC. in Amps
+Q1 1 2 3 NBJT
+.MODEL NBJT NPN(CJC={2.2*COB} TF={.16/FT} TR={1.7*TS}
++ CJE={7*COB} RC={.5/IMAX} VAF=100 IKF={.7*IMAX} IS={2E-15*IMAX} )
+.ENDS
+**********
+*SRC=PBJT;PBJT;Generic Models;BJT;PNP Small Signal
+*SYM=PBJT
+.SUBCKT PBJT 1 2 3 {COB=??? FT=??? TS=??? IMAX=???}
+*Connections C B E
+*Parameters: COB Output capacitance in Farads @ 10V, FT Gain Badwidth in Hz, 
+* TS Storage Time in Sec, IMAX Max IC. in Amps
+Q1 1 2 3 PBJT 
+.MODEL PBJT PNP(CJC={2.2*COB} TF={.16/FT} TR={1.7*TS}
++ CJE={7*COB} RC={.5/IMAX} VAF=100 IKF={.7*IMAX} IS={2E-15*IMAX} )
+.ENDS
+**********
+*SRC=NPWR;NPWR;Generic Models;BJT;NPN Power 
+*SYM=NPWR
+.SUBCKT NPWR 1 2 3 {COB=??? FT=??? TS=??? IMAX=???}
+*Connections C B E
+*Parameters: COB Output capacitance in Farads @ 10V, FT Gain Badwidth in Hz, 
+* TS Storage Time in Sec, IMAX Max IC. in Amps
+Q1 1 2 3 NBJT1 AREA=.67
+Q2 1 4 3 NBJT1 AREA=.33
+RB1 2 4 {1800/IMAX}  
+.MODEL NBJT1 NPN( CJC={2.2*COB} TF={.16/FT} TR={1.7*TS}
++ CJE={7*COB} RC={1.5/IMAX} VAF=100 IKF={.7*IMAX} IS={2E-15*IMAX} )
+.ENDS
+**********
+*SRC=CORE;CORE;Magnetic Cores;Generic;Saturable Core
+*SYM=CORE
+.SUBCKT CORE 1 2 3 {VSEC=??? IVSEC=??? LMAG=??? LSAT=??? FEDDY=???}
+*Connections + - Flux Test Point
+*Parameters:
+* VSEC, VOLT-SEC CORE CAPACITY (2Bm) in V-sec
+* IVSEC, INITIAL CONDITION in V-sec
+* LMAG, MAGNETIZING INDUCTANCE in Henries
+* LSAT, SATURATION INDUCTANCE in Henries
+* FEDDY, FREQUENCY WHEN LMAG REACTANCE = LOSS RESISTANCE in Hz
+* EXAMPLE CALL
+*   XCORE1 5 6 7 CORE {VSEC=50U IVSEC=-25U LMAG=10MHY LSAT=20UHY FEDDY=20KHZ}
+*
+RX 3 2 1E12
+* EXAMPLE MAKES CB=1E-7, IC=-250
+CB 3 2 {VSEC/500} IC={IVSEC/VSEC*500}
+F1 1 2 VM1 1
+G2 2 3 1 2 1
+E1 4 2 3 2 1
+VM1 4 5 
+* EXAMPLE MAKES RB=100K
+RB 5 2 {LMAG*500/VSEC}
+RS 5 6 {LSAT*500/VSEC}
+* EXAMPLE MAKES RS=200
+VP 7 2 250
+D1 6 7 DCLAMP
+VN 2 8 250
+D2 8 6 DCLAMP
+*EXAMPLE MAKES CJO=238PF, MULTIPLIER 3 AND VJ=25 GO TOGETHER
+.MODEL DCLAMP D(CJO={3*VSEC/(6.28*FEDDY*500*LMAG)} VJ=25)
+.ENDS
+**********
+*SRC=XFMRWCORE;XFMRWCORE;Transformers;Ratio=Sec/Pri;
+*SYM=XFMR
+.SUBCKT XFMRWCORE 100 2 300 4 {RATIO=??? VSEC=??? IVSEC=0 LMAG=??? LSAT=??? FEDDY=??? LEAKPRI=???
++ LEAKSEC=??? RP=.01 RS=.01}
+*Connections      +Pri -Pri +Sec -Sec
+*Parameters:
+* VSEC, VOLT-SEC CORE CAPACITY (2Bm) in V-sec
+* IVSEC, INITIAL CONDITION in V-sec
+* LMAG, MAGNETIZING INDUCTANCE in Henries
+* LSAT, SATURATION INDUCTANCE in Henries
+* FEDDY, FREQUENCY WHEN LMAG REACTANCE = LOSS RESISTANCE in Hz
+* LEAKPRI, Primary leakage inductance in Henries
+* LEAKSEC, Secondary leakage inductance in Henries
+* RP, Primary series resistance in Ohms
+* RS, Secondary series resistance in Ohms
+*
+* Ratio = Secondary/Primary
+*
+* 100__Rpri__10__LeakPri___1_______   _______3___LeakSec__30__Rsec___300
+*                        ||  +     ) (     +
+*                       (||        ) (      
+*                  Core (||  V1    ) (     V2
+*                       (||        ) (
+*                       (||  -     ) (     -
+*________________________||2_______) (_______4_________________________
+*
+*         1 : RATIO
+*
+XCore 1 2 100 CORE {VSEC=VSEC IVSEC=IVSEC LMAG=LMAG LSAT=LSAT FEDDY=FEDDY} ; Core across 1&2
+
+Leakpri 10 1 {Leakpri}
+Rpri 100 10 {RP}
+
+Leaksec 30 3 {Leaksec}
+Rsec 300 30 {RS}
+
+RP 1 2 1MEG
+E 5 4 1 2 {RATIO}
+F 1 2 VM {RATIO}
+RS 6 3 1U
+VM 5 6 
+.ENDS
+*INCLUDE DEVICE.LIB
+**********
+*SRC=XFMR;XFMR;Transformers;Ratio=Sec/Pri;
+*SYM=XFMR
+.SUBCKT XFMR 1    2    3    4 {RATIO=???}
+*Connections +Pri -Pri +Sec -Sec
+*Parameters:
+* Ratio = Secondary/Primary turns ratio
+*
+*  1_______   _______3
+*    +     ) (     +
+*          ) (      
+*    V1    ) (     V2
+*          ) (
+*    -     ) (     -
+*  2_______) (_______4
+*
+*         1 : RATIO
+*
+RP 1 2 1MEG
+E 5 4 1 2 {RATIO}
+F 1 2 VM {RATIO}
+RS 6 3 1U
+VM 5 6 
+.ENDS
+**********
+*SRC=COUPLEDIND;COUPLEDIND;Inductors;Coupled;w/Parasitics
+*SYM=COUPLEDL
+.SUBCKT COUPLEDIND 1    2    3    4 {LPRIM=??? LSEC=??? K=??? RP=.01 RS=.01}
+*Connections       +Pri -Pri +Sec -Sec
+*Parameters:
+* Lprim - Primary Inductance in Henries
+* Lsec  - Secondary Inductance in Henries
+* K     - Coupling Coefficient >> Lprim=Lmag, Lsec = N^2*Lprim, K=1-Leakage/Lmag
+* RP    - Primary Series Resistance in Ohms
+* RS    - Secondary Series Resistance in Ohms
+*  1_______   _______3
+*    +     ) (     +
+*          ) (      
+*    V1    ) (     V2
+*          ) (
+*    -     ) (     -
+*  2_______) (_______4
+*
+*         K = 1 - Le/Lm
+*
+RP 1 10 {RP}
+LP 10 2 {LPRIM}
+RS 3 30 {RS}
+LS 30 4 {LSEC}
+K1 LP LS {K}
+.ENDS
+**********
+*SRC=COUPLEDL;COUPLEDL;Transformers;Coupled Inductors;
+*SYM=COUPLEDL
+.SUBCKT COUPLEDL 1    2    3    4 {LPRIM=??? LSEC=??? K=??? RP=.01 RS=.01}
+*Connections     +Pri -Pri +Sec -Sec
+*Parameters:
+*Lprim - Primary Inductance in Henries
+*Lsec  - Secondary Inductance in Henries
+*K     - Coupling Coefficient >> Lprim=Lmag, Lsec = N^2*Lprim, K=1-Leakage/Lmag
+*RP    - Primary Series Resistance in Ohms
+*RS    - Secondary Series Resistance in Ohms
+*  1_______   _______3
+*    +     ) (     +
+*          ) (      
+*    V1    ) (     V2
+*          ) (
+*    -     ) (     -
+*  2_______) (_______4
+*
+*
+RP 1 10 {RP}
+LP 10 2 {LPRIM}
+RS 3 30 {RS}
+LS 30 4 {LSEC}
+K1 LP LS {K}
+.ENDS
+**********
+*SRC=XFMR-TAP;XFMR-TAP;Transformers;Center-Tapped;
+*SYM=XFMR-TAP
+.SUBCKT XFMR-TAP 1    2    3       4       5  {RATIO=???}
+*Connections     +Pri -Pri +Sec Center-Tap -Sec
+*Parameters:
+* Ratio = V2/V1 AND V2=V3
+*
+*  1_______   _______3
+*    +     ) (     
+*          ) (   V2   
+*    V1    ) (_______4
+*          ) (
+*    -     ) (   V3
+*  2_______) (_______5
+*
+E1 7 8 1 2 {RATIO}
+F1 1 2 VM1 {RATIO}
+RP 1 2 1MEG
+RS 6 3 1U
+VM1 7 6
+F2 1 2 VM2 {RATIO}
+E 9 5 1 2 {RATIO}
+R5 8 4 1U
+VM2 9 8
+.ENDS
+**********
+*SRC=PWM;PWM;PWM Models;Average;Pulse Width Modulator
+*SYM=PWM
+.SUBCKT PWM 1 2 3 4 5
+*
+*  1______
+*         )
+*         )
+*         )_______3
+*         )  ^
+*  2______)  |
+*            |
+*            |
+*  4 ________|
+*            |
+*  5_________|
+*
+RP 1 2 1MEG
+E 6 2 POLY(2) 1 2 4 5 0 0 0 0 1 
+G 1 2 POLY(2) 6 3 4 5 0 0 0 0 1K
+RS 6 3 1M
+.ENDS
+**********
+*SRC=GAS;GAS;Generic Models;GaAs FET;
+*SYM=GAS
+.SUBCKT GAS  1 2 3 {L=??? W=??? KP=??? RHOG=??? RHOD=??? DC=??? VT=??? N=???}
+*Connections D G S
+*Parameters:
+* L=CHANNEL LENGTH IN MICRONS
+* W=CHANNEL WIDTH IN MICRONS
+* KP=KPRIME, ID=KP*W/L(VG-VT)^2
+* RHOG=GATE METAL OHMS/MICRON
+* RHOD=DRAIN METAL OHMS/MICRON
+* DC=CAPACITANCE/MICRON
+* VT=THRESHOLD
+* N=NUMBER OF DEVICES DEFINED BY W AND L THAT ARE IN PARALLEL
+*
+* SUBSTRATE CAPACITIVE COUPLING IS IGNORED
+*
+RG 2 4 {W*RHOG/N}
+RD 1 5 {W*RHOD/N}
+DGS 4 3 DGAS
+*THE GATE DRAIN DIODE IS NOT MODELED SINCE IT IS ALWAYS REVERSE BIASED
+* THIS IS AN ESTIMATE OF A GAS JFET, SET N=1 FOR A MESFET
+* FOR MORE DETAIL, SEE THE CHAPTER ON DIODE MODELS
+.MODEL DGAS D(N=2)
+RGG 4 6 1E10
+J1 5 4 3 JFET
+J2 5 6 3 JFET AREA=.33
+*THE ABOVE AREA PARAMETER MUST BE DETERMINED EXPERIMENTALLY
+*TO MATCH THE DEVICE SATURATION SLOPES AT HIGH FREQUENCY
+.MODEL JFET NJF(BETA={KP*W/L*N} LAMBDA=.15 IS=1E-30 CGS={DC*W*N}
++ CGD={DC*W*N} VTO={VT} )
+.ENDS
+**********
+*SRC=WIRE;WIRE;Interconnects;Generic;Single LC section
+*SYM=WIRE
+.SUBCKT WIRE 1 2 {Impedance=??? Length=???}
+*Connections + -
+*Parameters:
+* Impedance in Ohms, Length In Inches
+L1 1 2 {Impedance * Length * 125P}
+C1 2 0 {125P * Length / Impedance}
+.ENDS
+**********
+*SRC=WIREA;WIREA;Interconnects;Generic;LC section w/dielectric
+*SYM=WIREA
+.SUBCKT WIREA 1 2 {Impedance=??? Length=??? K=???}
+*Connections  + -
+*Parameters:
+* Impedance in Ohms, Length In Inches, K = dielectric constant
+L1 1 2 {Impedance * Length * (1/(1.18E10 * K^-.5)) }
+C1 1 0 {Length * (1/(1.18E10 * K^-.5)) / Z }
+.ENDS
+**********
+*SRC=WIRE4;WIRE4;Interconnects;Generic;4 LC sections
+*SYM=WIRE4
+.SUBCKT WIRE4 1 5  {Impedance=??? Length=???}
+*Connections  + -
+*Parameters:
+* Impedance in Ohms, Length In Inches
+L1 1 2 {Impedance*Length*31.25P}
+C1 2 0 {31.25P*LEN/Impedance}
+L2 2 3 {Impedance*Length*31.25P}
+C2 3 0 {31.25P*Length/Impedance}
+L3 3 4 {Impedance*Length*31.25P}
+C3 4 0 {31.25P*Length/Impedance}
+L4 4 5 {Impedance*Length*31.25P}
+C4 5 0 {31.25P*Length/Impedance}
+.ENDS
+**********
+*SRC=MWIRE;MWIRE;Interconnects;Generic;Crosstalk Model
+*SYM=MWIRE
+.SUBCKT MWIRE 1   2    3   4 {Impedance=??? Length=??? KC=??? KM=???}
+*Connections  in1 out1 in2 out2
+*Parameters:
+* Impedance in Ohms, Length In Inches, KM Inductive Coupling Coefficient,
+* KC Capacitive Coupling Coefficient
+L1 1 2 {Impedance*Length*125P}
+C1 2 0 {125P*Length/Impedance}
+L2 3 4 {Impedance*Length*125P}
+K12 L1 L2 {KM}
+C12 2 4 {KC*125P*Length/Impedance}
+.ENDS
+**********
+*SRC=GWIRE;GWIRE;Interconnects;Generic;Ground Plane Coupling
+*SYM=GWIRE
+.SUBCKT GWIRE 1 2 3 4 {Impedance=??? Length=??? N=??? KM=???}
+*Connections  in1 out1 in2 out2
+*Parameters:
+* Impedance in Ohms, Length In Inches, KM Inductive Coupling Coefficient,
+* N Turns Ratio
+L1 1 2 {(Impedance*Length*125P)/(N^2-(KM*N)+1)}
+C1 2 4 {125P*Length/Impedance}
+L2 3 4 {((Impedance*Length*125P)/(N^2-(KM*N)+1))*N^2}
+K12 L1 L2 {KM}
+.ENDS
+**********
+*SRC=VARES;VARES;Resistors;Voltage Control;Req=R(Vctrl^2)
+*SYM=VARES
+.SUBCKT VARES 10    20    40 {RNOM=???}
+*Connections  Term1 Term2 Control
+* The control voltage must be referenced to Term2
+* Requivalent = R(Vcontrol^2)
+*Parameters: Rnom nominal resistance in Ohms
+R 10 30 {RNOM}
+RI 40 20 1.0
+ER 30 20 POLY(2) 10 30 40 20 0 -1.0 0 0 0 0 0 0 1.0
+.ENDS
+**********
+*SRC=VARCAP;VARCAP;Capacitors;Voltage Control;Ceq=C*(1+Vctrl)
+*SYM=VARCAP
+.SUBCKT VARCAP 10    20    40 {CNOM=???}
+*Connections  Term1 Term2 Control
+* The control voltage must be referenced to Term2
+* Cequivalent = C*(1+Vcontrol)
+*Parameters: Cnom nominal capacitance in Farads
+C 10 30 {CNOM}
+RI 40 20 1.0
+EC 30 20 POLY(2) 10 20 40 20 0 0 0 0 -1.0
+.ENDS
+**********
+*SRC=VARIND;VARIND;Inductors;Voltage Control;Leq=L*(Vctrl)
+*SYM=VARIND
+.SUBCKT VARIND 10    20    40 {LNOM=???}
+*Connections  Term1 Term2 Control
+* The control voltage must be referenced to Term2
+* Lequivalent = L*(Vcontrol)
+*Parameters: Lnom nominal inductance in Henries
+L 30 20 {LNOM}
+RI 50 20 1.0
+VAMP 10 30 0
+VSENSE 40 50 0
+FL 30 20 POLY(2) VAMP VSENSE 0 1.0 0 0 -1.0
+.ENDS
+**********
+*SRC=VARES2;VARES2;Resistors;Voltage Control;RON=1/Vctrl, ROFF=1E10
+*SYM=SWITCH
+.SUBCKT VARES2 1    2     3
+*Connections  Term1 Term2 Control
+* The switch is OPEN WHEN V(3) = 0, It is CLOSED WHEN V(3) <> 0
+* The ON RESISTANCE IS 1 / V(3)
+* The OFF RESISTANCE IS 1E10
+R1 1 2 1E10
+G1 1 2 POLY(2) 1 2 3 0 0 0 0 0 1
+.ENDS
+**********
+*SRC=SWITCH;SWITCH;Switches;Linear;RON=1/Vcontrol, ROFF=1E12
+*SYM=SWITCH
+.SUBCKT SWITCH 1     2     3
+*Connections   Term1 Term2 Control
+* The switch is OPEN WHEN V(3) = 0, It is CLOSED WHEN V(3) <> 0
+* The ON RESISTANCE IS 1 / V(3)
+* The OFF RESISTANCE IS 1E10
+R1 1 2 1E10
+G1 1 2 POLY(2) 1 2 3 0 0 0 0 0 1
+.ENDS
+**********
+*SRC=CCSWITCH2;CCSWITCH2;Switches;Hysteresis;Cur Ctrld w/Hysteresis 
+*SYM=CCSWITCH
+.SUBCKT CCSWITCH2 1 2 3   4 {RON=1 ROFF=1MEG IT=1 IH=0}
+*Connections      + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* It On Current in Amps, Ih Hysteresis Current in Amps
+* This is the same as the Berkeley SPICE 3 current controlled switch
+* except the inputs are nodes that must be connected
+* in the branch (breaking the branch) whose current controls 
+* the switch.
+W1 1 2 VW SW
+VW 3 4
+.MODEL SW CSW RON={RON} ROFF={ROFF} IT={IT} IH={IH}
+.ENDS
+**********
+*SRC=CCSWITCH;CCSWITCH;Switches;Smooth;Cur Ctrl'd w/Smooth Transition
+*SYM=CCSWITCH
+*HELP issyntax.hlp "Smooth Transition Switch"
+.SUBCKT CCSWITCH 1 2 3   4 {RON=1 ROFF=1MEG ION=0.1 IOFF=0}
+*Connections     + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* ION On Current in Amps, IOFF Off Current in Amps
+* IF I(Switch) > ION THEN RSwitch=RON, IF I(Switch) < IOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+VW 3 4
+H1 5 6 VW 1
+A1 1 2 5 6 SMOOTH
+.MODEL SMOOTH VSWITCH RON={RON} ROFF={IOFF} VON={ION} VOFF={IOFF}
+.ENDS
+**********
+*SRC=SSWITCH;SSWITCH;Switches;Smooth;V Ctrl'd w/Smooth Transition
+*SYM=SWITCH2
+*HELP issyntax.hlp "Smooth Transition Switch"
+.SUBCKT SSWITCH 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections    + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps
+* IF V(3,4) > VON THEN RSwitch=RON, IF V(3,4) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+A1 1 2 3 4 SMOOTH
+.MODEL SMOOTH VSWITCH RON={RON} ROFF={ROFF} VON={VON} VOFF={VOFF}
+.ENDS
+**********
+*SRC=PSW1;PSW1;Switches;Smooth;VON>VOFF Behavioral
+*SYM=SWITCH2
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps
+* VON > Voff Case
+* IF V(3,4) > VON THEN RSwitch=RON, IF V(3,4) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+**********
+*SRC=PSW2;PSW2;Switches;Smooth;VON<VOFF Behavioral
+*SYM=SWITCH2
+.SUBCKT PSW2 1 2 3   4 {RON=1 ROFF=1MEG VON=0 VOFF=1}
+*Connections + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps
+* VON < Voff Case
+* IF V(3,4) > VON THEN RSwitch=RON, IF V(3,4) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+B1 1 2 I=V(3,4) < {VON} ? V(1,2)/{RON} : V(3,4) > {VOFF} ?
++ V(1,2)/{ROFF} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) - (3 * LN({RON/ROFF}) * 
++ (V(3,4) - {(VON+VOFF)/2}) / {2* (VOFF-VON)}) + 
++ (2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VOFF-VON)^3} )))
+.ENDS
+**********
+*SRC=TANHSW;TANHSW;Switches;TANH Function;TANH Function
+*SYM=SWITCHPB
+.SUBCKT TANHSW 1 2 3 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections   + - Control
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps
+* IF V(3) > VON THEN RSwitch=RON, IF V(3) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+* V(3) is single ended control voltage
+* The switch uses a TANH Function for the resistance transition region
+B1 1 2 I=V(1,2)/ ({ROFF}-{.5*(ROFF-RON)} * (1 + V(5)))
+B2 5 0 V=TANH({(VOFF+VON)/(VOFF-VON)} + (2 * V(3)/{VON-VOFF}))
+.ENDS
+**********
+*SRC=GSW;GSW;Switches;Gudermanian;Gudermanian Function
+*SYM=SWITCH3
+.SUBCKT GSW  1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0 SC=15.708}
+*Connections + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps, 
+* SC Transition region slope modifier
+* IF V(3) > VON THEN RSwitch=RON, IF V(3) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+* The switch uses a Gudermannian Function for the resistance transition region
+B1 1 2 I=V(1,2)/({.5 * (ROFF+RON)}-({2 * (ROFF-RON)}/PI * 
++ (ATAN(EXP({SC} * ((V(3,4)/{(VON+VOFF)/2}) - 1))) - PI/4)))
+.ENDS
+**********
+*SRC=EXPSW;EXPSW;Switches;Exp. Function;Exponential Function
+*SYM=SWITCH3
+.SUBCKT EXPSW 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0 SC=20}
+*Connections  + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps, 
+* SC Transition region slope modifier
+* IF V(3) > VON THEN RSwitch=RON, IF V(3) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+* The switch uses a Fermi Probability Function for the resistance transition region
+B1 1 2 I=V(1,2)/({RON} + ({ROFF-RON}/(1 + EXP({SC} * 
++ (V(3,4)/{(VON+VOFF)/2} - 1)))) )
+.ENDS
+**********
+*SRC=TIMESW;TIMESW;Switches;Time;Vout=In2 after Tswitch
+*SYM=TIMESW
+.SUBCKT TIMESW  1    2   3  {Tswitch=0}
+*Connections    VOut In1 In2
+*Parameters: Tswitch time for switch to change position in seconds
+* VOut = In1 until time Tswitch. After Tswtich Vout=In2
+B1 1 0 V=Time > {Tswitch} ? V(3) : V(2)
+.ENDS
+**********
+*SRC=CAPACITOR;CAPACITOR;Capacitors;Nonideal;Ideal Capacitor
+*SYM=CAP
+.SUBCKT CAPACITOR 1 2 {C=1U}
+*Parameters: C capacitance in Farads
+C1 1 2 {C}
+.ENDS
+**********
+*SRC=CAPACITOR1;CAPACITOR1;Capacitors;Nonideal;Generic w/Parasitics
+*SYM=CAP
+.SUBCKT CAPACITOR1 1 2 {ESR=1M ESL=20N RLEAK=100MEG C=???}
+*Parameters: C Capacitance in Farads, ESR ESR in Ohms
+* ESL ESL in Henries, RLEAK Leakage resistance in Ohms
+C1 1 3 {C}
+R1 3 4 {ESR}
+L1 4 2 {ESL}
+RL 1 2 {RLEAK}
+.ENDS
+**********
+*SRC=INDUCTOR;INDUCTOR;Inductors;Nonideal;Ideal Inductor
+*SYM=IND
+.SUBCKT INDUCTOR 1 2 {L=1U}
+*Parameters: L Inductance in Henries
+L1 1 2 {L}
+.ENDS
+**********
+*SRC=INDUCTOR1;INDUCTOR1;Inductors;Nonideal;Generic w/Parasitics
+*SYM=IND
+.SUBCKT INDUCTOR1 1 2 {DCR=1M CP=??? L=???}
+*Parameters: L Inductance in Henries, DCR DC series resistance in Ohms
+* CP parallel capaictance in Farads
+L1 1 3 {L}
+R1 3 2 {DCR}
+C1 1 2 {CP}
+.ENDS
+**********
+*SRC=INDUCTOR2;INDUCTOR2;Inductors;Nonideal;Generic w/More Parasitics
+*SYM=IND
+.SUBCKT INDUCTOR2 1 2 {DCR=1M L0=??? F0=??? Idc=???}
+*Parameters:
+* DCR - DC Resistance i Ohms
+* L0 - Inductance at the self resonant frequency in Henries
+* F0 - Self resonant frequency in Hz
+* Idc - Maximum DC current in Amps
+* L1 derived from 0.9L0 = L0 + L2Idc^2 --> L2 = -0.1L0/Idc^2
+* Reproduced with permission by Martin O-Hara Newport Components Ltd, England
+L1 1 3 L={L0} + {-0.1*L0/Idc^2}*I(R1)^2
+R1 3 2 {DCR}
+*C1 1 2 {L0/(2*3.1415*F0)^2}	;Old Equation
+C1 1 2 C={1/((4*(3.1415)^2*(F0)^2)*L0)}
+.ENDS
+**********
+*SRC=RESISTOR;RESISTOR;Resistors;Nonideal;Ideal Resistor w/tempco
+*SYM=RESISTOR
+.SUBCKT RESISTOR 1 2 {R=1K TC=100U}
+*Parameters: R - Resistance value in Ohms, TC Temperature coefficient in 1/degreesC
+R1 1 2 {R} RMOD
+.MODEL RMOD R TC1={TC}
+.ENDS
+**********
+*SRC=RESISTOR1;RESISTOR1;Resistors;Nonideal;Generic w/Parasitics
+*SYM=RESISTOR
+.SUBCKT RESISTOR1 1 2 {R=1K LS=??? CP=??? TC=100U}
+*Parameters:
+* R - Resistance value in Ohms
+* CP - Parallel Capacitance in Farads
+* LS - Series Inductance in Henries
+* TC - Temperature coefficient in 1/degreesC, 100ppm default)
+C1 1 2 {Cp}
+R1 1 3 {R} RMOD
+.MODEL RMOD R TC1={TC}
+L1 3 2 {Ls}
+.ENDS
+**********
+

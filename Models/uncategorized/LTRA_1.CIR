@@ -1,0 +1,241 @@
+   BJTdriver -- 24inch lossy line -- DiodeCircuit
+
+* This unclassified circuit is from Raytheon, courtesy Gerry Marino.
+* It consists of a BJT driver connected by a 24 inch lossy line to a
+* passive load consisting mostly of diodes. Each inch 
+* of the lossy line is modelled by 10 LRC lumps in the Raytheon
+* model.
+
+* The line parameters (derived from the Raytheon input file) are:
+* L = 9.13nH per inch
+* C = 3.65pF per inch
+* R = 0.2 ohms per inch
+
+* the circuit
+*tran 0.1ns 60ns 0 0.5ns
+
+v1 1 0 0v pulse(0 4 1ns 1ns 1ns 20ns 40ns)
+*v1 1 0 4v pulse(4 0 1ns 1ns 1ns 20ns 40ns)
+vcc 10 0 5v
+*rseries 1 2 5
+x1 1 2 10 bjtdrvr
+*t1 2 0 3 0 z0=50.0136 td=4.38119ns rel=10
+o2 2 0 3 0 lline
+*x2 2 3 oneinch
+*x2 100 101 twentyfourinch
+*x2 100 101 xtwentyfourinch
+vtest1 2 100 0
+vtest2 101 3 0
+x3 3 4 10 dioload
+*rl 3 0 5
+*dl 0 3 diod2
+
+.model lline ltra rel=1 r=0.2 g=0 l=9.13e-9 c=3.65e-12 len=24 steplimit compactrel=1.0e-3 compactabs=1.0e-14
+
+.model qmodn npn(bf=100 rb=100 cje=0.09375pF cjc=0.28125pF is=1e-12
++pe=0.5 pc=0.5)
+
+.model qmodpd npn(bf=100 rb=100 cje=0.08187pF cjc=0.2525pF is=1e-12
++pe=0.5 pc=0.5)
+*.model qmodpdmine npn(bf=100 rb=100  cje=0.08187pF cjc=0.15pF is=1e-12
+.model qmodpdmine npn(bf=100 rb=100  cje=0.08187pF cjc=0.05pF is=1e-12
++pe=0.5 pc=0.5)
+
+.model dmod1 d(n=2.25 is=1.6399e-4 bv=10)
+
+.model dmod2 d
+
+.model dmod d(vj=0.3v)
+
+*.model diod1 d(1.0 tt=0.75ns vj=0.6 rs=909 bv=10)
+.model diod1 d(tt=0.75ns vj=0.6 rs=909 bv=10)
+
+*.model diod2 d(1.0 tt=0.5ns vj=0.3 rs=100 bv=10)
+.model diod2 d(tt=0.5ns vj=0.3 rs=100 bv=10)
+
+.options itl5=0 acct
++reltol=1e-3 abstol=1e-14
+.tran 0.1ns 60ns
+.save v(1) v(2) v(3)
+
+*.tran 1e-9 1e-8
+
+* bjt driver - 19=input, 268=output, 20=vcc; wierd node numbers from 
+* the Raytheon file
+
+.subckt bjtdrvr 19 268 20
+q1 22 18 13 qmodn
+q2 18 16 13 qmodn
+qd2 21 9 0 qmodn
+q4 14 14 0 qmodn
+q3 16 15 14 qmodpd
+q5 8 13 17 qmodn
+q6 25 12 0 qmodn
+q7 6 17 0 qmodpd
+qd1 26 10 0 qmodn
+q8 7 11 10 qmodn
+q10 268 17 0 qmodpdmine
+*q10 268 17 0 qmodpd
+q9 7 10 268 qmodn
+
+d1 0 19 dmod1
+d2 18 19 dmod2
+d3 13 19 dmod
+dq1 18 22 dmod
+dq2 16 18 dmod
+d502 9 21 dmod
+dq3 15 16 dmod
+d10 24 8 dmod
+d4 15 6 dmod
+dq6 12 25 dmod
+dq7 17 6 dmod
+dd1 17 10 dmod
+d7 11 6 dmod
+dd2 17 26 dmod
+d9 23 6 dmod
+dq8 11 7 dmod
+d501 17 268 dmod
+dq9 10 7 dmod
+d14 20 27 dmod
+d8 0 268 dmod
+
+r1 18 20 6k
+r2 22 20 2.2k
+r4 0 13 7k
+rd1 9 13 2k
+rd2 21 13 3k
+r3 16 20 10k
+r5 15 20 15k
+r9 0 17 4k
+r6 24 20 750
+r10 12 17 2k
+r12 24 11 1.5k
+r11 25 17 3k
+r15 23 20 10k
+r13 0 10 15k
+r14 7 27 12
+
+.ends bjtdrvr
+
+* subckt dioload - diode load: input=28, output=4, vcc=5
+
+.subckt dioload 28 4 5
+*comment out everything in dioload except d5 and r503, and watch
+* the difference in results obtained between a tran 0.1ns 20ns and
+* a tran 0.01ns 20ns
+c1 28 0 5pF
+r503 0 4 5.55
+r4 0 28 120k
+r5 1 5 7.5k
+
+d5 4 28 diod2
+d1 1 28 diod1
+d4 2 0 diod1
+d3 3 2 diod1
+d2 1 3 diod1
+.ends dioload
+
+* subckt lump - one RLC lump of the lossy line
+
+*10 segments per inch
+.subckt lump 1 2
+*r1 1 3 0.02
+*c1 3 0 0.365pF
+*l1 3 2 0.913nH
+
+l1 1 3 0.913nH
+c1 2 0 0.365pF
+r1 3 2 0.02
+
+*r1 1 3 0.01
+*c1 3 0 0.1825pF
+*l1 3 4 0.4565nH
+*r2 4 5 0.01
+*c2 5 0 0.1825pF
+*l2 5 2 0.4565nH
+
+*c1 1 0 0.365pF
+*l1 1 2 0.913nH
+.ends lump
+
+.subckt oneinch 1 2
+x1 1 3 lump
+x2 3 4 lump
+x3 4 5 lump
+x4 5 6 lump
+x5 6 7 lump
+x6 7 8 lump
+x7 8 9 lump
+x8 9 10 lump
+x9 10 11 lump
+x10 11 2 lump
+.ends oneinch
+
+.subckt fourinch 1 2
+x1 1 3 oneinch
+x2 3 4 oneinch
+x3 4 5 oneinch
+x4 5 2 oneinch
+.ends fourinch
+
+.subckt fiveinch 1 2
+x1 1 3 oneinch
+x2 3 4 oneinch
+x3 4 5 oneinch
+x4 5 6 oneinch
+x5 6 2 oneinch
+.ends fiveinch
+
+.subckt twentyfourinch 1 2
+x1 1 3 fiveinch
+x2 3 4 fiveinch
+x3 4 5 fiveinch
+x4 5 6 fiveinch
+x5 6 2 fourinch
+.ends twentyfourinch
+
+*modelling using R and lossless lines
+*5 segments per inch
+.model llfifth ltra nocontrol noprint rel=10 r=0 g=0 l=9.13e-9
++c=3.65e-12 len=0.2 steplimit quadinterp
+.subckt xlump 1 2 
+o1 1 0 3 0 llfifth
+r1 2 3 0.04
+.ends xlump
+
+.subckt xoneinch 1 2
+x1 1 3 xlump
+x2 3 4 xlump
+x3 4 5 xlump
+x4 5 6 xlump
+x5 6 2 xlump
+*x5 6 7 xlump
+*x6 7 8 xlump
+*x7 8 9 xlump
+*x8 9 10 xlump
+*x9 10 11 xlump
+*x10 11 2 xlump
+.ends xoneinch
+
+.subckt xfourinch 1 2
+x1 1 3 xoneinch
+x2 3 4 xoneinch
+x3 4 5 xoneinch
+x4 5 2 xoneinch
+.ends xfourinch
+
+.subckt xfiveinch 1 2
+x1 1 3 xoneinch
+x2 3 4 xoneinch
+x3 4 5 xoneinch
+x4 5 6 xoneinch
+x5 6 2 xoneinch
+.ends xfiveinch
+
+.subckt xtwentyfourinch 1 2
+x1 1 3 xfiveinch
+x2 3 4 xfiveinch
+x3 4 5 xfiveinch
+x4 5 6 xfiveinch
+x5 6 2 xfourinch
+.ends xtwentyfourinch

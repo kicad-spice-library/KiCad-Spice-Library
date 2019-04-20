@@ -1,0 +1,157 @@
+********
+* Dead time generator library
+* Developed by Christophe BASSO (France)
+* INTUSOFT's IsSpice4 compatible
+* Last modified: March 3rd 1998 
+********
+*SRC=DEADTIME;DEADTIME;!Generators;Power;1/2 Bridge DT Gen.
+*SYM=DEADTIME
+.SUBCKT DEADTIME 1 50 110 51 100 {DT=500N VHIGH=10V VLOW=100M RS=10}
+*
+* Nodes:
+* Clock_In GateUpper SourceUpper GateLower Ground
+* Parameters:
+* DT     : Dead time in seconds
+* VHIGH  : High voltage output in Volts
+* VLOW   : Low voltage output in Volts
+* RS     : GateUpper to SourceUpper resistance
+*
+* Dead-time generation for half-bridge or synchronous rectification
+* Implementing an upper floating N MOS and a lower N channel
+* Developed by Christophe BASSO (FRANCE)
+*
+RIN 1 100 1MEG
+B6 17 100 V=V(1,100)>2V ? 10 : 0
+R3 17 18 1k
+C3 18 100 {DT/(1000*4.14)}
+B4 21 100 V=V(25,19)<100MV ? {VLOW} : {VHIGH}
+RCQ 21 60 100
+CCQ 60 100 10P
+BQ 61 110 V=V(60,100)
+RDUM1 50 100 100MEG
+RDUM2 110 100 100MEG
+RSQ 61 50 {RS}
+R4 22 23 1k
+C4 23 100 {DT/(1000*4.14)}
+B5 24 100 V=V(26,20)<100MV ? {VLOW} : {VHIGH}
+RCQB 24 70 100
+CCQB 70 100 10P
+BQB 71 100 V=V(70,100)
+RSQB 71 51 {RS}
+R5 17 25 1k
+C5 25 100 {DT/(1000*41.4)}
+R6 22 26 1k
+C6 26 100 {DT/(1000*41.4)}
+D3 23 22 DISCH
+D4 18 17 DISCH
+B1 22 100 V=V(1,100)>2V ? 0 : 10
+B2 19 100 V=V(17,18)<100MV ? 0 : 10
+B3 20 100 V=V(22,23)<100MV ? 0 : 10
+.MODEL DISCH D BV=100V CJO=4PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=6E-09 VJ=.6V
+.ENDS
+********
+*SRC=DEADSYNC;DEADSYNC;!Generators;Power;Dead Time Gene. Synchronous Rec.
+*SYM=DEADSYNC
+.SUBCKT DEADSYNC 1 50 51 {DT=500N VHIGH=10V VLOW=100M RS=10}
+*
+* Nodes:
+* Clock_In Nchannel Pchannel
+* Parameters:
+* DT     : Dead time in seconds
+* VHIGH  : High voltage output in Volts
+* VLOW   : Low voltage output in Volts
+* RS     : GateUpper to SourceUpper resistance
+*
+* Synchronous rectification using a lower N MOS and an upper P MOS
+* Developed by Christophe BASSO (FRANCE)
+RIN 1 0 1MEG
+B6 17 0 V=V(1)>2V ? 10 : 0
+R3 17 18 1k
+C3 18 0 {DT/(1000*4.14)}
+B4 21 0 V=V(25,19)<100MV ? {VLOW} : {VHIGH}
+RCQ 21 60 100
+CCQ 60 0 10P
+BQ 61 0 V=V(60)
+RSQ 61 50 {RS}
+R4 22 23 1k
+C4 23 0 {DT/(1000*4.14)}
+B5 24 0 V=V(26,20)<100MV ? {VHIGH} : {VLOW}
+RCQB 24 70 100
+CCQB 70 0 10P
+BQB 71 0 V=V(70)
+RSQB 71 51 {RS}
+R5 17 25 1k
+C5 25 0 {DT/(1000*41.4)}
+R6 22 26 1k
+C6 26 0 {DT/(1000*41.4)}
+D3 23 22 DISCH
+D4 18 17 DISCH
+B1 22 0 V=V(1)>2V ? 0 : 10
+B2 19 0 V=V(17,18)<100MV ? 0 : 10
+B3 20 0 V=V(22,23)<100MV ? 0 : 10
+.MODEL DISCH D BV=100V CJO=4PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=6E-09 VJ=.6V
+.ENDS
+********
+*SRC=DEADDRV;DEADDRV;!Generators;Power;DT Synchro. Rec. w/driver
+*SYM=DEADDRV
+.SUBCKT DEADDRV 1 50 51 80 100 {DT=500N}
+*
+* Nodes:
+* Clock_In Nchannel Pchannel Vcc Ground
+* Parameters:
+* DT     : Dead time in seconds
+*
+* Synchronous rectification using a lower N MOS and an upper P MOS
+* With UC384X-like output drivers
+* Developed by Christophe BASSO (FRANCE)
+RIN 1 100 1MEG
+B6 17 100 V=V(1,100)>2V ? 10 : 0
+R3 17 18 1k
+C3 18 100 {DT/(1000*4.14)}
+B4 21 100 V=V(25,19)<100MV ? 100M : V(80,100)
+RCQ 21 60 100
+CCQ 60 100 10P
+BQ 61 100 V=V(60)
+XDRVQ 80 100 61 50 DRIVER
+B5 24 100 V=V(26,20)<100MV ? V(80,100) : 100M
+RCQB 24 70 100
+CCQB 70 100 10P
+BQB 71 100 V=V(70,100)
+XDRVQB 80 100 71 51 DRIVER
+R4 22 23 1k
+C4 23 100 {DT/(1000*4.14)}
+R5 17 25 1k
+C5 25 100 {DT/(1000*41.4)}
+R6 22 26 1k
+C6 26 100 {DT/(1000*41.4)}
+D3 23 22 DISCH
+D4 18 17 DISCH
+B1 22 100 V=V(1,100)>2V ? 0 : 10
+B2 19 100 V=V(17,18)<100MV ? 0 : 10
+B3 20 100 V=V(22,23)<100MV ? 0 : 10
+.MODEL DISCH D BV=100V CJO=4PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=6E-09 VJ=.6V
+.ENDS
+*INCLUDE DEAD.LIB
+*****************
+.SUBCKT DRIVER  4  7  3  12
+*               +V -V IN OUT
+.MODEL QMOD NPN RC=1.5  RE=.5 RB=100  IKF=0.5
+.MODEL QMOD2 NPN
+.MODEL QIN NPN BF=100 BR=2 IS=1E-16 VAF=50 
++ CJE=1.5P CJC=.15P TR=1N TF=4N
+.MODEL DMOD D RS=1 IS=0.4U
+I3 4 8 100U
+D3 8 4 DMOD
+D4 12 8 DMOD
+Q3 8 1 9 QIN
+Q4 12 9 7 QMOD
+Q5 4 8 6 QMOD
+I4 7 1 .9M
+R1 3 2 10K
+Q8 1 2 7 QIN
+Q2 4 6 12 QMOD2
+.ENDS
+********

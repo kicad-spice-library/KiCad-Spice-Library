@@ -1,0 +1,267 @@
+**********
+* Copyright Intusoft 1994-1997
+* All Rights Reserved
+**********
+*SRC=LM555;LM555;Timers;National;Behavioral <2kHz
+*SYM=LM555
+*
+* This version of the LM555 will operate into the low khz (2kHz)
+* region in the astable mode.
+*
+.SUBCKT LM555 2     3   4     5     6      7       8
+*Connections  Trig. Out Reset Ctrl. Thres. Dischg. VCC
+*Generic 555 Timer Chip Model
+R1 8 5 5K
+R2 5 9 5K
+R3 9 0 5K
+M1 0 3 7 7 PCHAN1 L=12.5U W=12.5U ;OFF
+.MODEL PCHAN1 PMOS (LEVEL=1 VTO=-.6 KP=370.7M GAMMA=.46
++ PHI=.75 LAMBDA=2.08M RD=8M RS=8M IS=250F PB=.8 MJ=.46
++ CBD=45.9P CBS=83P CGSO=57N CGDO=37.5N CGBO=100N)
+X2 6 5 10 8 COMP
+X3 9 2 11 8 COMP
+X4 11 10 3 12 8 SR
+RESET 8 4 10G
+MRESET 0 4 3 7 PCHAN L=12.5U W=12.5U ;OFF
+.MODEL PCHAN PMOS (LEVEL=1 VTO=-.6 KP=378.7M GAMMA=.46
++ PHI=.75 LAMBDA=2.08M RD=8M RS=8M IS=250F PB=.8 MJ=.46
++ CBD=45.9P CBS=83P CGSO=57N CGDO=37.5N CGBO=100N)
+.ENDS
+*
+*** Subcircuit SR BEGINS ***
+*
+.SUBCKT SR   1   2     3 4    5
+*Connections Set Reset Q Qbar Power
+X1 2 4 3 5 NOR
+X2 3 1 4 5 NOR
+.ENDS
+*
+*** Subcircuit NOR BEGINS ***
+*
+.SUBCKT NOR  1   2   3   5
+*Connections In1 In2 Out Power
+*THIS POWER SUPPLY POWERS THE WHOLE T555
+M1 6 2 5 5 PCHANR L=12.5U W=50U 
+M2 3 1 6 6 PCHANR L=12.5U W=50U ;OFF
+M3 3 1 0 0 NCHANR L=12.5U W=12.5U ;OFF
+M4 3 2 0 0 NCHANR L=12.5U W=12.5U 
+.MODEL PCHANR PMOS (LEVEL=1 VTO=-.6 KP=361.2M GAMMA=.6868
++ PHI=.75 LAMBDA=2.08M RD=8M RS=8M IS=150F PB=.8 MJ=.46
++ CBD=45.9P CBS=83P CGSO=57N CGDO=37.5N CGBO=100N)
+.MODEL NCHANR NMOS (LEVEL=1 VTO=.5 KP=361.2M GAMMA=.791
++ PHI=.55 LAMBDA=2.08M RD=8M RS=8M IS=150F PB=.8 MJ=.46
++ CBD=45.9P CBS=83P CGSO=57N CGDO=37.5N CGBO=100N)
+.ENDS
+*
+***  Subcircuit COMP BEGINS  ***
+*
+.SUBCKT COMP 1   2   3   7
+*Connection  In+ In- Out Timer_Supply_Voltage
+R1CMP 1 2 1000G
+RGND 2 0 100G
+E1CMP 4 0 1 2 1000
+R3CMP 4 3 100MEG
+R4CMP 3 0 100MEG
+*This voltage sets the upper limit on the output of 
+*the comparator equal to the supply of the timer.
+E1CLMP 5 0 POLY(1) 7 0 .8 1
+D1CLMP 0 6 DIODE 
+*This voltage sets the lower limit on the output of 
+*the comparitor to zero volts
+V2CLMP 6 3 DC -.8
+D2CLMP 3 5 DIODE
+.MODEL DIODE D
+*(CJO=20P RS=1M)
+.ENDS 
+**********
+*SRC=UA555;UA555;Timers;Fairchild;Transistor
+*SYM=LM555
+.SUBCKT UA555  32 30 19 23 33 1  21 
+*              TR O  R  F  TH D  V  
+*
+* Taken from the Fairchild data book (1982) page 9-3
+*SYM=UA555
+*DWG=C:\SPICE\555\UA555.DWG
+Q4 25 2 3 QP
+Q5 0 6 3 QP
+Q6 6 6 8 QP
+R1 9 21 4.7K
+R2 3 21 830
+R3 8 21 4.7K
+Q7 2 33 5 QN
+Q8 2 5 17 QN
+Q9 6 4 17 QN
+Q10 6 23 4 QN
+Q11 12 20 10 QP
+R4 10 21 1K
+Q12 22 11 12 QP
+Q13 14 13 12 QP
+Q14 0 32 11 QP
+Q15 14 18 13 QP
+R5 14 0 100K
+R6 22 0 100K
+R7 17 0 10K
+Q16 1 15 0 QN
+Q17 15 19 31 QP
+R8 18 23 5K
+R9 18 0 5K
+R10 21 23 5K
+Q18 27 20 21 QP
+Q19 20 20 21 QP
+R11 20 31 5K
+D1 31 24 DA
+Q20 24 25 0 QN
+Q21 25 22 0 QN
+Q22 27 24 0 QN
+R12 25 27 4.7K
+R13 21 29 6.8K
+Q23 21 29 28 QN
+Q24 29 27 16 QN
+Q25 30 26 0 QN
+Q26 21 28 30 QN
+D2 30 29 DA
+R14 16 15 100
+R15 16 26 220
+R16 16 0 4.7K
+R17 28 30 3.9K
+Q3 2 2 9 QP
+.MODEL DA D (RS=40 IS=1.0E-14 CJO=1PF)
+.MODEL QP PNP (BF=20 BR=0.02 RC=4 RB=25 IS=1.0E-14 VA=50 NE=2)  
++ CJE=12.4P VJE=1.1 MJE=.5 CJC=4.02P VJC=.3 MJC=.3 TF=229P TR=159N)
+.MODEL QN NPN (IS=5.07F NF=1 BF=100 VAF=161 IKF=30M ISE=3.9P NE=2       
++ BR=4 NR=1 VAR=16 IKR=45M RE=1.03 RB=4.12 RC=.412 XTB=1.5      
++ CJE=12.4P VJE=1.1 MJE=.5 CJC=4.02P VJC=.3 MJC=.3 TF=229P TR=959P)
+.ENDS
+**********
+* Sample Test Circuit for the LM555 Timer: Astable Mode
+* The LM555 timer model is designed for low frequency 
+* applications, up to 100Hz. 
+*INCLUDE IC.LIB
+.TRAN 1MS 100MS 0 25US UIC
+.OPTIONS LIMPTS=5001 ITL5=0 RELTOL=.0001
+*ALIAS  V(1)=VOUT
+*ALIAS  V(5)=VRESET
+*ALIAS  V(6)=VCTRL
+*ALIAS  V(4)=VCAP
+.PRINT TRAN  V(1)  V(5)  V(6)  V(4) 
+V2 2 0 PULSE 0 5
+R3 2 3 1000
+R4 3 4 5000
+C3 4 0 .001M
+X2 4 1 5 6 4 3 2 LM555 
+.END
+**********
+*SRC=ICL7667;ICL7667;Drivers;Power Mosfet;TTL/CMOS Input
+*SYM=ICL7667
+*DWG=ICL7667S.DWG
+.SUBCKT ICL7667  3  8   1   2
+*Connections     In Vdd Out Vss
+I1 8 4 2M
+X1 4 6 8 2 ICL
+X2 6 1 8 2 ICL
+R1 4 2 1MEG
+M1 4 3 2 2 INPUT
+.MODEL INPUT NMOS (LEVEL=1 VTO=0.80 KP=1M GAMMA=2U
++ PHI=0.75 LAMBDA=14M RD=30 RS=36 IS=11.2F CBD=5.13P 
++ CBS=6.16P PB=0.80 MJ=.46 CGSO=3.60N CGDO=3.00N
++ CGBO=23.4N)
+.ENDS
+.SUBCKT ICL 6  1   4   3
+*Connections     In Out Vdd Vss
+M2 1 6 3 3 NMOS L=1U W=1U
+M3 1 6 4 4 PMOS L=1U W=1U
+.MODEL NMOS NMOS (LEVEL=1 VTO=1.9 KP=13.2M GAMMA=.62
++ PHI=.75 LAMBDA=4.16M RD=1.4 RS=1.4 IS=5F PB=.8
++ MJ=.46 CBD=2.7P CBS=2.57P CGSO=3.9N CGDO=3.25N
++ CGBO=5.35N)
+.MODEL PMOS PMOS (LEVEL=1 VTO=-2.1 KP=7.75M GAMMA=.62
++ PHI=.75 LAMBDA=4.16M RD=1.4 RS=1.4 IS=5F PB=.8
++ MJ=.46 CBD=2.7P CBS=2.57P CGSO=3.9N CGDO=3.25N
++ CGBO=5.35N)
+.ENDS
+**********
+*SRC=CD4046B;PL4046B;PLLs;National;
+*SYM=PL4046B
+*DWG=C:\SPICE4\PHASE\NL38\PL4046B.DWG
+* This subcircuit operates from 0 and 5 volt supplies
+* The parameters passed in determine the frequency response of
+* the VCO (SQVCO). The voltage array is set to reflect the supplies
+* used within the subcircuit.
+* FMIN - The frequency of of the VCO at 0 volts
+* FO - The frequency of the VCO at 2.5 volts
+* FMAX - The frequency of the VCO at 5 volts
+.SUBCKT PL4046B  13 28 16 18 12 30 {FMIN=400 FO=10K FMAX=20K}
+*  SIGin PC2in VCOout EFollower VCOin PC2out
+X4 2 10 8 6 7 AND4N
+X32 8 7 14 6 SRLATCH
+X39 24 7 2 17 10 1 SRR
+X40 25 7 6 21 8 1 SRR
+V7 23 0 PULSE 0 5
+S3 31 30 19 0 SWP
+S4 30 36 20 0 SWN
+A37 [23] [1] A2D_001
+A38 [13] [24] A2D_001
+A39 [28] [25] A2D_001
+A40 [17] [4] D2A_001
+A41 [21] [5] D2A_001
+A42 [14] [26] D2A_001
+A43 [27] [11] D2A_001
+A44 [29] [19] D2A_002
+A45 [21] [20] D2A_002
+A46 [15] [9] D2A_002
+A47 17 29 INV_001
+A48 [17 21] 15 NOR2_001
+Asq41 12 16 SQVCO
+VSS 36 0 
+E1 18 0 12 0 1
+VDD 31 0 5
+X2 10 7 27 2 SRLATCH
+.MODEL A2D_001 adc_bridge(IN_LOW=100.0M IN_HIGH=900.0M RISE_DELAY=1.0N FALL_DELAY=1.0N )
+.MODEL D2A_001 dac_bridge(OUT_LOW=0.0 OUT_HIGH=1.0 OUT_UNDEF=500.0M INPUT_LOAD=1.0P T_RISE=
++ 500.0N T_FALL=500.0N )
+.MODEL INV_001 d_inverter(RISE_DELAY=500.0N FALL_DELAY=500.0N INPUT_LOAD=1.0P )
+.MODEL NOR2_001 D_Nor(RISE_DELAY=500.0N FALL_DELAY=500.0N INPUT_LOAD=1.0P )
+.MODEL D2A_002 dac_bridge(OUT_LOW=0.0 OUT_HIGH=1.0 OUT_UNDEF=500.0M INPUT_LOAD=1.0P T_RISE=
++ 2.0U T_FALL=2.0U )
+.MODEL SQVCO SQUARE(CNTL_FREQ_ARRAY=[0 {FMIN} 2.5 {FO} 5 {FMAX}]
++ OUT_LOW=0 OUT_HIGH=5 DUTY_CYCLE=.5 RISE_TIME=1U FALL_TIME=1U)
+.MODEL SWP SW(RON=100MEG ROFF=1 VT=.1)
+.MODEL SWN SW(RON=1 ROFF=100MEG VT=.9)
+.SUBCKT SRR  3 9 100 55 66 4
+*  S R R Q QN Clr
+abuff5 5 55 buff
+abuff6 6 66 buff
+aor1 [~4 8] 1 or
+aand1 [9 100] 8 and
+V2 22 0 5
+aadc2 [22] [2] adc
+VGND 77 0
+aadc77 [77] [7] adc
+a1 [~7 12 11] 13 nand3 
+a2 [13 ~1 3] 11 nand3
+a3 [11 3 12] 10 nand3
+a4 [10 ~1 2] 12 nand3
+a5 [~7 11 6] 5 nand3
+a6 [5 ~1 10] 6 nand3
+.model adc adc_bridge rise_delay=100n fall_delay=100n
+.model buff d_buffer  rise_delay=50N fall_delay=50N input_load=.5p
+.model nand3  d_nand rise_delay=50N fall_delay=50N input_load=.5p
+.model or  d_or rise_delay=50N fall_delay=50N input_load=.5p
+.model and d_and rise_delay=50N fall_delay=50N input_load=.5p
+.ENDS
+.SUBCKT AND4N 1 2 3 4 5
+*            A B C D Out
+and [~1 ~2 ~3 ~4] 5 and
+.model and d_and rise_delay=400N fall_delay=400N input_load=.5p
+.ENDS
+.SUBCKT SRLATCH  3 4 11 22
+*                s r q qn
+abuff1 1 11 buff
+abuff2 2 22 buff
+a1 [3 1] 2 nor
+a2 [4 2] 1 nor
+.model nor  d_nor rise_delay=200N fall_delay=200N input_load=.5p
+.model buff d_buffer  rise_delay=50N fall_delay=50N input_load=.5p
+.ENDS
+.ENDS
+**********

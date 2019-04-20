@@ -1,0 +1,155 @@
+* AD743K SPICE Macro-model 4/92, Rev. A
+* AAG / PMI
+*
+* This version of the AD743 multiplier model simulates the worst case
+* parameters of the 'K' grade.  The worst case parameters used
+* correspond to those in the data sheet.
+*
+* Copyright 1992 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws. Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement. Before using the macro-
+* models the licensee should read this license. If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, load, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company. The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models. ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD743K 1 2 99 50 37
+*
+* INPUT STAGE & POLE AT 65 MHz
+*
+IOS 1 2 DC 37.5E-12
+CIN 1 2 20E-12
+EOS 9 3 POLY(1) 16 31 500E-6 1
+EN 3 1 41 0 1
+J1 5 2 4 PJX
+J2 6 9 4 PJX
+R3 5 51 0.9323
+R4 6 51 0.9323
+C2 5 6 1.3132E-9
+I1 97 4 100E-3
+EPOS 97 0 99 0 1
+ENEG 51 0 50 0 1
+GN1 0 1 44 0 1E-6
+GN2 0 2 47 0 1E-6
+*
+* INPUT NOISE VOLTAGE GENERATOR
+*
+VN1 40 0 DC 2
+DN1 40 41 DEN
+DN2 41 42 DEN
+VN2 0 42 DC 2
+*
+* INPUT NOISE CURRENT GENERATOR FOR IN+
+*
+VN3 43 0 DC 2
+DN3 43 44 DIN
+DN4 44 45 DIN
+VN4 0 45 DC 2
+*
+* INPUT NOISE CURRENT GENERATOR FOR IN-
+*
+VN5 46 0 DC 2
+DN5 46 47 DIN
+DN6 47 48 DIN
+VN6 0 48 DC 2
+*
+* GAIN STAGE & DOMINANT POLE AT 2.39 Hz
+*
+EREF 98 0 31 0 1
+G1 98 12 5 6 1.0726
+R5 12 98 1.8646E6
+C3 12 98 35.714E-9
+V1 99 13 DC 0.8
+D1 12 13 DX
+V2 14 50 DC 2
+D4 14 12 DX
+*
+* CMR Network with Zero at 2.388 kHz
+*
+ECM 15 98 POLY(2) 1 31 2 31 (0,15.812,15.812)
+RCM1 15 16 1
+CCM 15 16 6.663E-5
+RCM2 16 98 1E-6
+*
+* NEGATIVE ZERO AT -19.5 MHz
+*
+ENZ 17 98 12 31 1E6
+RNZ1 17 18 1
+CNZ 17 18 -8.1618E-9
+RNZ2 18 98 1E-6
+*
+* POLE-ZERO PAIR AT 330 kHz/690 kHz
+*
+GPZ 98 19 18 31 1
+RPZ1 19 98 1
+RPZ2 19 20 0.91667
+CPZ 20 98 251.63E-9
+*
+* POLE AT 65 MHz
+*
+G2 98 21 19 31 1
+R10 21 98 1
+C5 21 98 2.4485E-9
+*
+* OUTPUT STAGE
+*
+VWIRE 21 30
+*
+IDC 99 50 DC 9.7E-3
+RDC1 99 31 50E3
+CDC 31 0 1E-12
+RDC2 31 50 50E3
+DO1 99 32 DX
+GO1 32 50 36 30 5.5556E-3
+DO2 50 32 DY
+DO3 99 33 DX
+GO2 33 50 30 36 5.5556E-3
+DO4 50 33 DY
+VSC1 34 36 3.1
+DSC1 30 34 DX
+VSC2 36 35 2.66
+DSC2 35 30 DX
+GO3 36 99 99 30 5.5556E-3
+GO4 50 36 30 50 5.5556E-3
+FO1 36 0 VSC1 1
+FO2 0 36 VSC2 1
+RO1 99 36 180
+RO2 36 50 180
+LO 36 37 250E-9
+*
+* MODELS USED
+*
+.MODEL PJX PJF(VTO=-2 BETA=5.7526 IS=250E-12)
+.MODEL DEN D(IS=1E-12 RS=1.237E3 AF=1 KF=1.3772E-15)
+.MODEL DIN D(IS=1E-12 RS=5.7483E3 AF=1 KF=7.7505E-15)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS AD743K

@@ -1,0 +1,2195 @@
+**********
+* Library of National Semiconductor JFET OP-AMP Macromodels.
+* File:  NSJFETOA.LIB
+*
+* This library of macromodels is being supplied to users as
+* an aid to circuit designs.  While it reflects reasonably 
+* close similarity to the actual device in terms of
+* performance, it is not suggested as a replacement for
+* breadboarding.  Simulation should be used as a supplement
+* to traditional lab testing.
+*
+* Users should very carefully note the following factors
+* regarding these models:
+*
+* 1. Model performance in general will reflect typical
+* baseline specs for a given device, and certain aspects of
+* performance may not be modeled fully.
+*
+* 2. While reasonable care has been taken in their
+* preparation, we cannot be responsible for correct
+* application on any and all computer systems.
+*
+* 3. Model users are hereby notified that these models are
+* supplied "as is", with no direct or implied responsibility
+* on the part of National Semiconductor for their operation
+* within a customer circuit or system.  Further, National
+* Semiconductor reserves the right to change these models
+* without prior notice.
+*
+* 4. In all cases, the current data sheet information for a
+* given real device is your final design guideline, and is
+* the only actual performance guarantee.  For further
+* technical information, refer to individual device data
+* sheets.
+*
+* 5. The current models presently do not simulate
+* temperature or noise effects correctly. 
+*
+* 6. Please send us your comments.  Thank you for choosing
+*  to use National Semiconductor Amplifier Products
+*
+* Models developed and under copyright by:
+* National Semiconductor Corporation
+* Amplifier Products Applications Engineering, M/S: C2-505
+* 2900 Semiconductor Drive  
+* P.O. Box 58090
+* Santa Clara, CA 95052-8090 
+* 
+* For ordering or technical information on these models, contact:
+* National Semiconductor's Customer Response Center
+*                 7:00 A.M.--7:00 P.M.  U.S. Central Time
+*                                (800) 272-9959
+* 
+* Revision History:
+* 3.00    06-Dec-93  D. Stolitzka/HG  Model Updates
+* 2.60     4-Mar-93  D. Stolitzka/HG  Added LF441/A, LF442/A, LF444/A
+* 2.59    15-Feb-93  D. Stolitzka     Corrected RIN for gm=1E12.
+* 2.50    06-Mar-92  D. Hindi         Models added, begin history.
+* 
+* User Notes:
+*
+* 1. Input resistance (Rin) for these JFET op amps is 1TOhm.  Rin is
+*    modeled by assuming the option GMIN=1TOhm.  If a different (non-
+*    default) GMIN value is needed, users may recalculate as follows:
+*    Rin=(R1||GMIN+R2||GMIN), where R1=R2,
+*    to maintain a consistent Rin model.
+*
+**********
+*SRC=LF155N;LF155N;Opamps;NAT-"LFxxx";JFET Input, Fast 5 V/us
+*SYM=NATOPAMP
+*LF155/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF155N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*NOTE:Asymetrical slew rate not modeled.
+*Use default gm=1e12
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=20 MHz
+C4 5 6 1.9894E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 1.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 9.6796E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=23.7 HZ
+C3 98 11 67.154P
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 9 1
+VA8 26 27 0
+R16 27 28 25
+V5  28 25 -.1V
+D4  25  9 DX
+V4  24 28 -.1V
+D3   9 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF156N;LF156N;Opamps;NAT-"LFxxx";JFET Input, Fast 12 V/us
+*SYM=NATOPAMP
+*LF156/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF156N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=20 MHz
+C4 5 6 1.9894E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 4.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.5944E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=31.96 HZ
+C3 98 11 49.9798P
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 9 1
+VA8 26 27 0
+R16 27 28 20
+V5  28 25 -.25
+D4  25  9 DX
+V4  24 28 -.25
+D3   9 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF157N;LF157N;Opamps;NAT-"LFxxx";JFET Input, Fast 50 V/us
+*SYM=NATOPAMP
+*LF157/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF157N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 4.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 8.1291E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=224 HZ
+C3 98 11 7.10513P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 8.3766E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 25
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF255N;LF255N;Opamps;NAT-"LFxxx";JFET Input, Fast 5 V/us
+*SYM=NATOPAMP
+*LF255/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF255N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*NOTE:Asymetrical slew rate not modeled.
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=20 MHz
+C4 5 6 1.9894E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 1.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 9.6796E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=23.7 HZ
+C3 98 11 67.154P
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 9 1
+VA8 26 27 0
+R16 27 28 25
+V5  28 25 -.1V
+D4  25  9 DX
+V4  24 28 -.1V
+D3   9 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF256N;LF256N;Opamps;NAT-"LFxxx";JFET Input, Fast 12 V/us
+*SYM=NATOPAMP
+*LF256/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF256N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=20 MHz
+C4 5 6 1.9894E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 4.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.5944E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=31.96 HZ
+C3 98 11 49.9798P
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 9 1
+VA8 26 27 0
+R16 27 28 20
+V5  28 25 -.25V
+D4  25  9 DX
+V4  24 28 -.25V
+D3   9 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF257N;LF257N;Opamps;NAT-"LFxxx";JFET Input, Fast 50 V/us
+*SYM=NATOPAMP
+*LF257/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF257N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 4.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 8.1291E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=224 HZ
+C3 98 11 7.10513P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 8.3766E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 25
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF351N;LF351N;Opamps;NAT-"LFxxx";JFET Input Wideband 4MHz
+*SYM=NATOPAMP
+*LF351 Wide Bandwidth JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF351N    1   2  99  50  28
+*
+*Features:
+*Low supply current =                1.8mA
+*Wide bandwidth =                     4MHz
+*High slew rate =                   13V/uS
+*Low offset voltage =                 10mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 25P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 1.7MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 5E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.0985E7
+G1 98 9 5 6 1E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=40.3 HZ
+C3 98 11 39.493P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 3.7894E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 31.831M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 35
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=50E-12)
+*
+.ENDS
+**********
+*SRC=LF353N;LF353N;Opamps;NAT-"LFxxx";JFET Input Wideband 4MHz
+*SYM=NATOPAMP
+*LF353 Wide Bandwidth Dual JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF353N    1   2  99  50  28
+*
+*Features:
+*Low supply current =                1.8mA
+*Wide bandwidth =                     4MHz
+*High slew rate =                   13V/uS
+*Low offset voltage =                 10mV
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1/2 of total device current.
+*
+*INPUT STAGE 
+*
+IOS 2 1 25P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 1.7MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 5E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.0985E7
+G1 98 9 5 6 1E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=40.3 HZ
+C3 98 11 39.493P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 3.7894E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 31.831M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 35
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=50E-12)
+*
+.ENDS
+**********
+*SRC=LF355N;LF355N;Opamps;NAT-"LFxxx";JFET Input, Fast 5 V/us
+*SYM=NATOPAMP
+*LF355/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF355N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*NOTE:Asymetrical slew rate not modeled.
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=20 MHz
+C4 5 6 1.9894E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 1.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 9.6796E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=23.7 HZ
+C3 98 11 67.154P
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 9 1
+VA8 26 27 0
+R16 27 28 25
+V5  28 25 -.1V
+D4  25  9 DX
+V4  24 28 -.1V
+D3   9 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF356N;LF356N;Opamps;NAT-"LFxxx";JFET Input, Fast 12 V/us
+*SYM=NATOPAMP
+*LF356/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF356N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=20 MHz
+C4 5 6 1.9894E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 4.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.5944E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=31.96 HZ
+C3 98 11 49.9798P
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 9 1
+VA8 26 27 0
+R16 27 28 20
+V5  28 25 -.25V
+D4  25  9 DX
+V4  24 28 -.25V
+D3   9 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF357N;LF357N;Opamps;NAT-"LFxxx";JFET Input, Fast 50 V/us
+*SYM=NATOPAMP
+*LF357/A/B Monolithic JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF357N    1   2  99  50  28
+*
+*Features:
+*Low input bias current =             30pA
+*Low input offset current =            3pA
+*High input impedance =              1Tohm
+*Low input offset voltage =            1mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 3P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 4.65MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 8.1291E7
+G1 98 9 5 6 2E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=224 HZ
+C3 98 11 7.10513P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 8.3766E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 530.52M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 25
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=30E-12)
+*
+.ENDS
+**********
+*SRC=LF400N;LF400N;Opamps;NAT-"LFxxx";JFET Input, Fast Settling
+*SYM=NATOPAMP
+*LF400/A Fast-Settling JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF400N    1   2  99  50  28
+*
+*Features:
+*Fast settling time (.01%) =         400nS
+*High bandwidth =                      16MHz
+*High slew rate =                       60V/uS
+*Low offset voltage =                    .5mV
+*NOTE: High current output not modeled.
+*
+*INPUT STAGE 
+*
+IOS 2 1 50P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 1.0M
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 2K
+R4 6 50 2K
+*Fp2=100MHz
+C4 5 6 3.9789E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 10MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 .5E-3 1
+*Input offset voltage.^
+R8 99 49 40K
+R9 49 50 40K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 3.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 3.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 6.887E6
+G1 98 9 5 6 2.74E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=54.6 HZ
+C3 98 11 29.149P
+*
+*POLE STAGE
+*
+*Fp3=100 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1.5915E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1.0E-8
+L2 98 17 144.7M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 40
+V5  28 25 .396V
+D4  25 15 DX
+V4  24 28 .396V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-4 VTO=-2.00 IS=100E-12)
+*
+.ENDS
+**********
+*SRC=LF411N;LF411N;Opamps;NAT-"LFxxx";JFET Input, Low VOS .5mV max.
+*SYM=NATOPAMP
+*LF411/A LOW OFFSET, LOW DRIFT JFET INPUT OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF411N    1   2  99  50  28
+*
+*Features:
+*Fast settling time (.01%) =           2uS
+*High bandwidth =                     3MHz
+*High slew rate =                   10V/uS
+*Low offset voltage =                 .5mV
+*Low supply current =                1.8mA
+*
+*INPUT STAGE 
+*
+IOS 2 1 25.0P
+*^Input offset current
+CI1 1 0 3P
+CI2 2 0 3P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 1.0M
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 650
+R4 6 50 650
+*Fp2=28 MHZ
+C4 5 6 4.372P 
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 800UA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 .8E-3 1
+*Input offset voltage.^
+R8 99 49 80K
+R9 49 50 80K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+*Fp1=18 HZ
+C3 98 11 857.516P
+*
+*POLE STAGE
+*
+*Fp=30 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 5.305E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 144.7M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 50
+V5  28 25 0.646V
+D4  25 15 DX
+V4  24 28 0.646V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.183E-3 VTO=-.65 IS=50E-12)
+*
+.ENDS
+**********
+*SRC=LF412N;LF412N;Opamps;NAT-"LFxxx";JFET Input, Low VOS 1mV max.
+*SYM=NATOPAMP
+*LF412/A LOW OFFSET, LOW DRIFT DUAL JFET INPUT OP-AMP MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF412N    1   2  99  50  28
+*
+*Features:
+*Fast settling time (.01%) =           2uS
+*High bandwidth =                     3MHz
+*High slew rate =                   10V/uS
+*Low offset voltage =                  1mV
+*Low supply current =                1.8mA
+*NOTE: Model is for single device only and simulated
+*      supply current is 1/2 of total device current.
+*
+*INPUT STAGE 
+*
+IOS 2 1 25.0P
+*^Input offset current
+CI1 1 0 3P
+CI2 2 0 3P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 1.0M
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 650
+R4 6 50 650
+*Fp2=28 MHZ
+C4 5 6 4.372P 
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 800UA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 1E-3 1
+*Input offset voltage.^
+R8 99 49 80K
+R9 49 50 80K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+*Fp1=18 HZ
+C3 98 11 857.516P
+*
+*POLE STAGE
+*
+*Fp=30 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 5.305E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 144.7M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 50
+V5  28 25 0.646V
+D4  25 15 DX
+V4  24 28 0.646V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.183E-3 VTO=-.65 IS=50E-12)
+*
+.ENDS
+**********
+*SRC=LF441N;LF441N;Opamps;NAT-"LFxxx";JFET Input
+*SYM=NATOPAMP 
+* LF441 Low Power JFET Input Operational Amplifier
+* 
+* Connections:    Non-inverting input
+*                 |   Inverting input
+*                 |   |   Positive power supply
+*                 |   |   |   Negative power supply
+*                 |   |   |   |   Output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF441N    1   2  99  50  28
+*
+* Features:
+* Low input bias current =             10pA
+* High bandwidth =                     1MHz
+* High slew rate =                    1V/uS
+* Low offset voltage (max) =            5mV
+* Low supply current =                150uA
+*
+*INPUT STAGE 
+*
+* Input offset current     
+IOS 2 1 2.5P                  
+CI1 1 50 2.5P
+CI2 2 50 2.5P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+IB1 4 7 48P
+IB2 4 2 48P
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 3.956K
+R4 6 50 3.956K
+* Fp2=5.02 MHZ
+C4 31 6 7P 
+R20 31 5 1500
+* Fz1=15.1 MHZ
+*
+*COMMON MODE EFFECT
+*
+* Supply current    
+I2 99 50 44UA                 
+* Input offset voltage|
+EOS 7 1 POLY(1) 16 49 5E-3 1 
+R8 99 49 1.25E6
+R9 49 50 1.25E6
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+D7  22 99 DX
+D8  50 22 DX
+*
+*SECOND STAGE
+*
+* Level shifter
+EH 99 98 99 49 1              
+F1 9 98 POLY(1) VA3 0 0 0 2E6
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+* Fp1=11.5 HZ
+C3 98 11 1385P
+*
+*POLE STAGE
+*
+* Fp3=159 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 POLY(2) 1 49 2 49 0 0.5E-8 0.5E-8
+L2 98 17 5.1
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+* Supply current correction  
+F6 50 99 POLY(1) V6 30U 1     
+E1 99 23 99 15 1               
+* Output resistance      
+R16 24 23 675                
+D5 26 24 DX
+V6 26 22 0.63V
+R17 23 25 250      
+D6 25 27 DX
+V7 22 27 0.63V
+V5 22 30 6.35V
+R19 21 30 1.2E6
+D4 21 15 DX
+V4 29 22 0.63V
+R18 20 29 24K
+D3 15 20 DX
+* Output inductor     
+L3 22 28 1U                  
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=9.201E-5 VTO=-2.33 IS=10E-12 N=3)
+*
+.ENDS
+**********
+*SRC=LF441AN;LF441AN;Opamps;NAT-"LFxxx";JFET Input
+*SYM=NATOPAMP 
+* LF441A Low Offset, Low Power JFET Input Operational Amplifier
+* 
+* Connections:    Non-inverting input
+*                 |   Inverting input
+*                 |   |   Positive power supply
+*                 |   |   |   Negative power supply
+*                 |   |   |   |   Output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF441AN   1   2  99  50  28
+*
+* Features:
+* Low input bias current =             10pA
+* High bandwidth =                     1MHz
+* High slew rate =                    1V/uS
+* Low offset voltage (max) =          0.5mV
+* Low supply current =                150uA
+*
+*INPUT STAGE 
+*
+* Input offset current     
+IOS 2 1 2.5P                  
+CI1 1 50 2.5P
+CI2 2 50 2.5P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+IB1 4 7 48P
+IB2 4 2 48P
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 3.956K
+R4 6 50 3.956K
+* Fp2=5.02 MHZ
+C4 31 6 7P 
+R20 31 5 1500
+* Fz1=15.1 MHZ
+*
+*COMMON MODE EFFECT
+*
+* Supply current    
+I2 99 50 44UA                 
+* Input offset voltage|
+EOS 7 1 POLY(1) 16 49 5E-4 1 
+R8 99 49 1.25E6
+R9 49 50 1.25E6
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+D7  22 99 DX
+D8  50 22 DX
+*
+*SECOND STAGE
+*
+* Level shifter
+EH 99 98 99 49 1              
+F1 9 98 POLY(1) VA3 0 0 0 2E6
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+* Fp1=11.5 HZ
+C3 98 11 1385P
+*
+*POLE STAGE
+*
+* Fp3=159 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 POLY(2) 1 49 2 49 0 0.5E-8 0.5E-8
+L2 98 17 5.1
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+* Supply current correction  
+F6 50 99 POLY(1) V6 30U 1     
+E1 99 23 99 15 1               
+* Output resistance      
+R16 24 23 675                
+D5 26 24 DX
+V6 26 22 0.63V
+R17 23 25 250      
+D6 25 27 DX
+V7 22 27 0.63V
+V5 22 30 6.35V
+R19 21 30 1.2E6
+D4 21 15 DX
+V4 29 22 0.63V
+R18 20 29 24K
+D3 15 20 DX
+* Output inductor     
+L3 22 28 1U                  
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=9.201E-5 VTO=-2.33 IS=10E-12 N=3)
+*
+.ENDS
+**********
+*SRC=LF442N;LF442N;Opamps;NAT-"LFxxx";JFET Input
+*SYM=NATOPAMP 
+* LF442 Dual Low Power JFET Input Operational Amplifier
+* 
+* Connections:    Non-inverting input
+*                 |   Inverting input
+*                 |   |   Positive power supply
+*                 |   |   |   Negative power supply
+*                 |   |   |   |   Output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF442N    1   2  99  50  28
+*
+* Features:
+* Low input bias current =             10pA
+* High bandwidth =                     1MHz
+* High slew rate =                    1V/uS
+* Low offset voltage (max) =            5mV
+* Low supply current =                200uA/Amplifier
+*
+* Note: Model is for single device only and simulated
+*       supply current is 1/2 of total device current.
+*
+*INPUT STAGE 
+*
+* Input offset current      
+IOS 2 1 2.5P                
+CI1 1 50 2.5P
+CI2 2 50 2.5P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+IB1 4 7 48P
+IB2 4 2 48P
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 3.956K
+R4 6 50 3.956K
+* Fp2=5.02 MHZ
+C4 31 6 7P 
+R20 31 5 1500
+* Fz1=15.1 MHZ
+*
+*COMMON MODE EFFECT
+*
+* Supply current    
+I2 99 50 94UA                 
+* Input offset voltage| 
+EOS 7 1 POLY(1) 16 49 5E-3 1  
+R8 99 49 1.25E6
+R9 49 50 1.25E6
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+D7  22 99 DX
+D8  50 22 DX
+*
+*SECOND STAGE
+*
+* Level shifter  
+EH 99 98 99 49 1              
+F1 9 98 POLY(1) VA3 0 0 0 2E6
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+* Fp1=11.5 HZ
+C3 98 11 1385P
+*
+*POLE STAGE
+*
+* Fp3=159 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 POLY(2) 1 49 2 49 0 0.5E-8 0.5E-8
+L2 98 17 5.1
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+* Supply current correction  
+F6 50 99 POLY(1) V6 30U 1    
+E1 99 23 99 15 1               
+* Output resistance        
+R16 24 23 675               
+D5 26 24 DX
+V6 26 22 0.63V
+R17 23 25 250      
+D6 25 27 DX
+V7 22 27 0.63V
+V5 22 30 6.35V
+R19 21 30 1.2E6
+D4 21 15 DX
+V4 29 22 0.63V
+R18 20 29 24K
+D3 15 20 DX
+* Output inductor   
+L3 22 28 1U                  
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=9.201E-5 VTO=-2.33 IS=10E-12 N=3)
+*
+.ENDS
+**********
+*SRC=LF442AN;LF442AN;Opamps;NAT-"LXxxx";JFET Input
+*SYM=NATOPAMP 
+* LF442A Dual Low Power JFET Input Operational Amplifier
+* 
+* Connections:    Non-inverting input
+*                 |   Inverting input
+*                 |   |   Positive power supply
+*                 |   |   |   Negative power supply
+*                 |   |   |   |   Output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF442AN   1   2  99  50  28
+*
+* Features:
+* Low input bias current =             10pA
+* High bandwidth =                     1MHz
+* High slew rate =                    1V/uS
+* Low offset voltage (max) =            1mV
+* Low supply current =                150uA/Amplifier
+*
+* Note: Model is for single device only and simulated
+*       supply current is 1/2 of total device current.
+*
+*INPUT STAGE 
+*
+* Input offset current      
+IOS 2 1 2.5P                
+CI1 1 50 2.5P
+CI2 2 50 2.5P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+IB1 4 7 48P
+IB2 4 2 48P
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 3.956K
+R4 6 50 3.956K
+* Fp2=5.02 MHZ
+C4 31 6 7P 
+R20 31 5 1500
+* Fz1=15.1 MHZ
+*
+*COMMON MODE EFFECT
+*
+* Supply current    
+I2 99 50 44UA                 
+* Input offset voltage| 
+EOS 7 1 POLY(1) 16 49 1E-3 1  
+R8 99 49 1.25E6
+R9 49 50 1.25E6
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+D7  22 99 DX
+D8  50 22 DX
+*
+*SECOND STAGE
+*
+* Level shifter  
+EH 99 98 99 49 1              
+F1 9 98 POLY(1) VA3 0 0 0 2E6
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+* Fp1=11.5 HZ
+C3 98 11 1385P
+*
+*POLE STAGE
+*
+* Fp3=159 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 POLY(2) 1 49 2 49 0 0.5E-8 0.5E-8
+L2 98 17 5.1
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+* Supply current correction  
+F6 50 99 POLY(1) V6 30U 1    
+E1 99 23 99 15 1               
+* Output resistance        
+R16 24 23 675               
+D5 26 24 DX
+V6 26 22 0.63V
+R17 23 25 250      
+D6 25 27 DX
+V7 22 27 0.63V
+V5 22 30 6.35V
+R19 21 30 1.2E6
+D4 21 15 DX
+V4 29 22 0.63V
+R18 20 29 24K
+D3 15 20 DX
+* Output inductor   
+L3 22 28 1U                  
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=9.201E-5 VTO=-2.33 IS=10E-12 N=3)
+*
+.ENDS
+**********
+*SRC=LF444N;LF444N;Opamps;NAT-"LXxxx";JFET Input
+*SYM=NATOPAMP 
+* LF444 Quad Low Power JFET Input Operational Amplifier   
+* 
+* Connections:    Non-inverting input
+*                 |   Inverting input
+*                 |   |   Positive power supply
+*                 |   |   |   Negative power supply
+*                 |   |   |   |   Output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF444N    1   2  99  50  28
+*
+* Features:
+* Low input bias current =             10pA
+* High bandwidth =                     1MHz
+* High slew rate =                    1V/uS
+* Low offset voltage (max) =           10mV
+* Low supply current =                200uA/Amplifier
+*
+* Note: Model is for single device only and simulated
+*       supply current is 1/4 of total device current.
+*
+*INPUT STAGE 
+*
+* Input offset current      
+IOS 2 1 2.5P                
+CI1 1 50 2.5P
+CI2 2 50 2.5P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+IB1 4 7 48P
+IB2 4 2 48P
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 3.956K
+R4 6 50 3.956K
+* Fp2=5.02 MHZ
+C4 31 6 7P 
+R20 31 5 1500
+* Fz1=15.1 MHZ
+*
+*COMMON MODE EFFECT
+*
+* Supply current  
+I2 99 50 94UA                
+* input offset voltage|  
+EOS 7 1 POLY(1) 16 49 1E-2 1  
+R8 99 49 1.25E6
+R9 49 50 1.25E6
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+D7  22 99 DX
+D8  50 22 DX
+*
+*SECOND STAGE
+*
+* Level shifter     
+EH 99 98 99 49 1             
+F1 9 98 POLY(1) VA3 0 0 0 2E6
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+* Fp1=11.5 HZ
+C3 98 11 1385P
+*
+*POLE STAGE
+*
+* Fp3=159 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 POLY(2) 1 49 2 49 0 0.5E-8 0.5E-8
+L2 98 17 5.1
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+* Supply current correction   
+F6 50 99 POLY(1) V6 30U 1    
+E1 99 23 99 15 1               
+* Output resistance     
+R16 24 23 675               
+D5 26 24 DX
+V6 26 22 0.63V
+R17 23 25 187      
+D6 25 27 DX
+V7 22 27 0.63V
+V5 22 30 6.35V
+R19 21 30 1.2E6
+D4 21 15 DX
+V4 29 22 0.63V
+R18 20 29 24K
+D3 15 20 DX
+* Output inductor   
+L3 22 28 1U                  
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=9.201E-5 VTO=-2.33 IS=10E-12 N=3)
+*
+.ENDS
+**********
+*SRC=LF444AN;LF444AN;Opamps;NAT-"LXxxx";JFET Input
+*SYM=NATOPAMP 
+* LF444A Quad Low Power JFET Input Operational Amplifier   
+* 
+* Connections:    Non-inverting input
+*                 |   Inverting input
+*                 |   |   Positive power supply
+*                 |   |   |   Negative power supply
+*                 |   |   |   |   Output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF444AN   1   2  99  50  28
+*
+* Features:
+* Low input bias current =             10pA
+* High bandwidth =                     1MHz
+* High slew rate =                    1V/uS
+* Low offset voltage (max) =            5mV
+* Low supply current =                150uA/Amplifier
+*
+* Note: Model is for single device only and simulated
+*       supply current is 1/4 of total device current.
+*
+*INPUT STAGE 
+*
+* Input offset current      
+IOS 2 1 2.5P                
+CI1 1 50 2.5P
+CI2 2 50 2.5P
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+IB1 4 7 48P
+IB2 4 2 48P
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 3.956K
+R4 6 50 3.956K
+* Fp2=5.02 MHZ
+C4 31 6 7P 
+R20 31 5 1500
+* Fz1=15.1 MHZ
+*
+*COMMON MODE EFFECT
+*
+* Supply current  
+I2 99 50 44UA                
+* input offset voltage|  
+EOS 7 1 POLY(1) 16 49 5E-3 1  
+R8 99 49 1.25E6
+R9 49 50 1.25E6
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.63
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.63
+D7  22 99 DX
+D8  50 22 DX
+*
+*SECOND STAGE
+*
+* Level shifter     
+EH 99 98 99 49 1             
+F1 9 98 POLY(1) VA3 0 0 0 2E6
+G1 98 9 5 6 20E-3
+R5 98 9 10MEG
+VA3 9 11 0
+* Fp1=11.5 HZ
+C3 98 11 1385P
+*
+*POLE STAGE
+*
+* Fp3=159 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 1E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 POLY(2) 1 49 2 49 0 0.5E-8 0.5E-8
+L2 98 17 5.1
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+* Supply current correction   
+F6 50 99 POLY(1) V6 30U 1    
+E1 99 23 99 15 1               
+* Output resistance     
+R16 24 23 675               
+D5 26 24 DX
+V6 26 22 0.63V
+R17 23 25 187      
+D6 25 27 DX
+V7 22 27 0.63V
+V5 22 30 6.35V
+R19 21 30 1.2E6
+D4 21 15 DX
+V4 29 22 0.63V
+R18 20 29 24K
+D3 15 20 DX
+* Output inductor   
+L3 22 28 1U                  
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=9.201E-5 VTO=-2.33 IS=10E-12 N=3)
+*
+.ENDS
+**********
+*SRC=LF451N;LF451N;Opamps;NAT-"LFxxx";JFET Input, Wideband
+*SYM=NATOPAMP
+*LF451 Wide-Bandwidth JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF451N    1   2  99  50  28
+*
+*Features:
+*Low supply current =                3.4mA(max)
+*Wide bandwidth =                     4MHz
+*High slew rate =                   13V/uS
+*Low offset voltage =                 10mV
+*
+*INPUT STAGE 
+*
+IOS 2 1 25P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 2.1MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 .3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.0985E7
+G1 98 9 5 6 1E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=40.3 HZ
+C3 98 11 39.493P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 3.7894E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 31.831M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 35
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=50E-12)
+*
+.ENDS
+**********
+*SRC=LF453N;LF453N;Opamps;NAT-"LFxxx";JFET Input, Wideband
+*SYM=NATOPAMP
+*LF453 Wide-Bandwidth Dual JFET-Input OP-AMP MACRO-MODEL
+*
+* connections:    non-inverting input
+*                 |   inverting input
+*                 |   |   positive power supply
+*                 |   |   |   negative power supply
+*                 |   |   |   |   output
+*                 |   |   |   |   |
+*                 |   |   |   |   |
+.SUBCKT LF453N    1   2  99  50  28
+*
+*Features:
+*Low supply current =                6.5mA(max)
+*Wide bandwidth =                     4MHz
+*High slew rate =                   13V/uS
+*Low offset voltage =                  5mV(max)
+*NOTE: Model is for single device only and simulated
+*      supply current is 1/2 of total device current.
+*
+*INPUT STAGE 
+*
+IOS 2 1 25P
+*^Input offset current
+R1 1 3 1E12
+R2 3 2 1E12
+I1 99 4 100U
+J1 5 2 4 JX
+J2 6 7 4 JX
+R3 5 50 20K
+R4 6 50 20K
+*Fp2=12 MHz
+C4 5 6 3.31573E-13
+*
+*COMMON MODE EFFECT
+*
+I2 99 50 2.1MA
+*^Quiescent supply current
+EOS 7 1 POLY(1) 16 49 .3E-3 1
+*Input offset voltage.^
+R8 99 49 50K
+R9 49 50 50K
+*
+*OUTPUT VOLTAGE LIMITING
+V2 99 8 2.13
+D1 9 8 DX
+D2 10 9 DX
+V3 10 50 2.13
+*
+*SECOND STAGE
+*
+EH 99 98 99 49 1
+F1 9 98 POLY(1) VA3 0 0 0 1.0985E7
+G1 98 9 5 6 1E-3
+R5 98 9 100MEG
+VA3 9 11 0
+*Fp1=40.3 HZ
+C3 98 11 39.493P
+*
+*POLE STAGE
+*
+*Fp3=42 MHz
+G3 98 15 9 49 1E-6
+R12 98 15 1MEG
+C5 98 15 3.7894E-15
+*
+*COMMON-MODE ZERO STAGE
+*
+G4 98 16 3 49 1E-8
+L2 98 17 31.831M
+R13 17 16 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 23 VA8 1
+D5  21 23 DX
+VA7 99 21 0
+D6  23 99 DX
+E1  99 26 99 15 1
+VA8 26 27 0
+R16 27 28 35
+V5  28 25 0.1V
+D4  25 15 DX
+V4  24 28 0.1V
+D3  15 24 DX
+*
+*MODELS USED
+*
+.MODEL DX D(IS=1E-15)
+.MODEL JX PJF(BETA=1.25E-5 VTO=-2.00 IS=50E-12)
+*
+.ENDS
+**********

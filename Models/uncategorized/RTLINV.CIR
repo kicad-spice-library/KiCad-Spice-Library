@@ -1,0 +1,26 @@
+rtlinv ckt - cascaded rtl inverters
+.width in=72
+.opt acct list node lvlcod=2
+.dc vin 0.0 2.5 0.025
+.tran 2ns 200ns
+vcc 6 0 5
+vin 1 0 pulse(0 5 2ns 2ns 2ns 80ns)
+rb1 1 2 10k
+rc1 6 3 1k
+q1 3 2 0 qnd
+rb2 3 4 10k
+q2 5 4 0 qnd
+rc2 6 5 1k
+.model qnd npn(bf=50 rb=70 rc=40 ccs=2pf tf=0.1ns tr=10ns cje=0.9pf
++   cjc=1.5pf pc=0.85 va=50)
+.print dc v(3) v(5)
+.plot dc v(3)
+.print tran v(3) v(5)
+.plot tran v(3) v(5) v(1)
+
+* Commands for Spice3
+*#destroy all
+*#run
+*#plot dc1.v(3)
+*#plot tran1.v(3) tran1.v(5) tran1.v(1)
+.end

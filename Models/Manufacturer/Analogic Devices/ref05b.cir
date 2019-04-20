@@ -1,0 +1,97 @@
+* REF05B SPICE MACROMODEL                    9/91, Rev. A
+*                                            (JCB / PMI)    
+*
+* This version of the REF05 model simulates the worst case 
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1991 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws.  Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement.  Before using the macro-
+* models the licensee should read this license.  If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, load, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company.  The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models.  ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |
+.SUBCKT REF05B  2  4  5  6
+*
+* 1.23V REFERENCE
+*
+I1     4  10   5.3398E-7
+R1     10  4   2300E3  TC=25E-6
+G1     4  10   21  4  1E-6
+F1     4  10   VS  53.48E-9
+*
+* LINE REGULATION ZERO
+*
+E1     20  4   2  4  53.48
+R11    20 21   1E6
+R12    21  4   1
+C4     20 21   27E-8
+*
+* INTERNAL OP AMP
+*
+G2     4  11   10  19  2E-3
+R2     4  11   150E6
+C1     4  11   2.6E-10
+D1     11 12   DX
+V1     2  12   1.9
+*
+* SECONDARY POLE
+*
+G3     4  13   11  0  1E-6
+R3     4  13   1E6
+C2     4  13   2.4E-13
+*
+* OUTPUT STAGE
+*
+ISY    2   4   0.785E-3
+FSY    2   4   V1  -1 
+G4     4  14   13  0  25E-6
+R4     4  14   40E3
+R7     17 19   6.0894E3
+R8     19  4   2E3
+R9     19  5   44.5E3
+R10    5   4   1E12
+Q1     16 14   17   QN
+VS     18 17   DC 0
+L1     18  6   1E-7
+*
+* OUTPUT CURRENT LIMIT
+*
+Q2     15  2   16  QN
+R6     2  16   19
+R5     2  15   18E3
+C3     2  15   1E-6
+G5     14  4   2  15  1
+*
+.MODEL  QN  NPN(IS=1E-15  BF=1000)
+.MODEL  DX  D(IS=1E-18)
+.ENDS REF05B

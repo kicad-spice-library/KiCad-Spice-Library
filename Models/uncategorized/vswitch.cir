@@ -1,0 +1,20 @@
+* PSpice voltage controlled switch example
+
+VS 1 0 SIN(0 200V 1KHZ)
+RS 1 2 100
+R1 2 0 100K
+
+E1 3 0 2 0 0.1
+RL 4 5 2
+
+VX 5 0 DC 0V
+S1 3 4 3 0 SMOD
+
+.MODEL SMOD VSWITCH(RON=5M ROFF=10E9 VON=25M VOFF=0.0)
+
+.TRAN 5US 1MS
+
+.PLOT TRAN I(VX) V(3)
+.PROBE
+.END
+

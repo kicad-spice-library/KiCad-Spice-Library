@@ -1,0 +1,114 @@
+**********
+* Copyright Intusoft 1994-1997
+* All Rights Reserved
+**********
+*SRC=PSK;PSK;!Generators;Signal;Phase shift key modulation
+*SYM=PSK
+*HELP issyntax.hlp "Coherent Binary PSK Source"
+.SUBCKT PSK  3 {EB=??? NC=??? TB=???}
+*Parameters:
+* EB = Energy per bit
+* NC = integer constant
+* TB = bit duration (The Period is set to 2*Tb and the Duty is set to 50.)
+* From equations in Communication Systems Haykin, Simon page 541
+VSIG 2 0 PULSE {-(EB)^2} {(EB)^2} {TD} {TR} {TF} {50/100*(2*TB-TR-TF)} {2*TB}
+B1 3 0 V = V(1) * V(2)
+VLO1 1 0 SIN 0 {(2/EB)^2} {(NC)/TB}
+.ENDS
+*******
+*SRC=FSK;FSK;!Generators;Signal;Frequency shift key modulation
+*SYM=FSK
+*HELP issyntax.hlp "Coherent Binary FSK Source"
+.SUBCKT FSK  5 {EB=??? NC=??? TB=???}
+*Parameters:
+* EB = Energy per bit
+* NC = integer constant
+* TB = bit duration (The Period is set to 2*Tb and the Duty is set to 50.)
+* From equations in Communication Systems Haykin, Simon page 544
+VSIG 3 0 PULSE 0 {(EB)^2} {TD} {TR} {TF} {50/100*(2*TB-TR-TF)} {2*TB}
+VSIGN 4 0 PULSE {(EB)^2} 0 {TD} {TR} {TF} {50/100*(2*TB-TR-TF)} {2*TB}
+B1 5 0 V = (V(1) * V(3)) + (V(2) * V(4))
+VLO1 1 0 SIN 0 {(2/EB)^2} {(NC+1)/TB}
+VLO2 2 0 SIN 0 {(2/EB)^2} {(NC+2)/TB}
+.ENDS
+*******
+*SRC=RWAVE;RWAVE;!Generators;Signal;0.5us 100KHz Waveform
+*SYM=RWAVE
+.SUBCKT RWAVE 2 {A=1.590 T1=0.533U T2=9.788U VP=100} 
+X1 1 TIME
+B1 2 0 V = {A * VP} * (1 - EXP( -1 * V(1) / {T1})) * EXP( -1 * V(1) / {T2}) * cos(6.283185307*100K * V(1))
+.ENDS
+*INCLUDE SIGNAL2.LIB
+*******
+*SRC=WAVE820;WAVE820;!Generators;Signal;8/20us Waveform
+*SYM=WAVE820
+.SUBCKT WAVE820 2 {A=0.01243E18 T1=3.991U IP=1000}
+X1 1 TIME
+B1 0 2 I = {A * IP} * V(1)^3 * EXP( -1 * V(1) / {T1})
+.ENDS
+*INCLUDE SIGNAL2.LIB
+*******
+*SRC=WAVE1250;WAVE1250;!Generators;Signal;1.2/50us Waveform
+*SYM=WAVE1250
+.SUBCKT WAVE1250 2 {A=1.037 T1=0.4074U T2=68.22U VP=1000}
+X1 1 TIME
+B1 2 0 V = {A * VP} * (1 - EXP( -1 * V(1) / {T1})) * EXP( -1 * V(1) / {T2})
+.ENDS
+*INCLUDE SIGNAL2.LIB
+*******
+*SRC=WAV101K;WAV101K;!Generators;Signal;10/1000us Waveform
+*SYM=WAV101K
+.SUBCKT WAV101K 2 {A=1.019 T1=3.827U T2=1404U IP=1000}
+X1 1 TIME
+B1 0 2 I = {A * IP} * (1 - EXP( -1 * V(1) / {T1})) * EXP( -1 * V(1) / {T2})
+.ENDS
+*INCLUDE SIGNAL2.LIB
+*******
+*SRC=RWAVE5K;RWAVE5K;!Generators;Signal;5KHz Ring Wave
+*SYM=RWAVE
+.SUBCKT RWAVE5K 2 {A=1.027 T1=0.7356U T2=280.4U VP=1000}
+X1 1 TIME
+B1 2 0 V = {A * VP} * (1 - EXP( -1 * V(1) / {T1})) * EXP( -1 * V(1) / {T2}) * cos(6.283185307*5K * V(1))
+.ENDS
+*INCLUDE SIGNAL2.LIB
+*******
+*SRC=WAVEEFT;WAVEEFT;!Generators;Signal;EFT Waveform
+*SYM=WAVEEFT
+.SUBCKT WAVEEFT 2 {A=1.27 T1=3.5N T2=55.6N VP=1000}
+X1 1 TIME
+B1 2 0 V = {A * VP} * (1 - EXP( -1 * V(1) / {T1})) * EXP( -1 * V(1) / {T2})
+.ENDS
+*INCLUDE SIGNAL2.LIB
+*******
+*SRC=TIME_2;TIME_2;Behavioral;Function Block;Requires UIC in .TRAN
+*SYM=TIME
+.SUBCKT TIME_2  1 ; Requires UIC in the .TRAN statement
+C1 1 0 1 IC=0
+R1 1 0 1E12
+I1 0 1 1
+.ENDS
+*******
+*SRC=TIME;TIME;Behavioral;Function Block;Using Laplace
+*SYM=TIME
+.SUBCKT TIME  2  ; Does not requires UIC in the .TRAN statement 
+A1 1 2 S_001  ; Laplace Code Model
+V1 1 0 1
+.Model S_001 s_xfer(num_coeff=[1] den_coeff=[1 0] out_ic=0)
+.ENDS
+*******
+*SRC=GSINE;GSINE;!Generators;Signal;Gated Sine Wave
+*SYM=GSINE
+.SUBCKT GSINE 1        2     3    {OFFSET=0 AMP=??? FREQ=??? DELAY=0 DAMP=0} 
+*Connections  Vcontrol Vout+ Vout-
+*Parameters:
+* Offset DC Voltage Offset in Volts
+* Amp Amplitude in Volts
+* Freq Frequency in Hz
+* Delay Time Delay in Seconds
+* Damp Damping factor (See Sin source for definition)
+V1 4 0 SIN {OFFSET} {AMP} {FREQ} {DELAY} {DAMP}
+Blimit 100 0 V=V(1) > .99 ? 1 : V(1) < .01 ? 0 : V(1)
+B1 2 3 V=V(100)*V(4)
+.ENDS
+**********
+

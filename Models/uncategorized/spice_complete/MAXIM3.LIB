@@ -1,0 +1,2732 @@
+************
+* MAX4144 FAMILY MACROMODEL
+* -------------------------
+* FEATURES:
+* 130MHz -3dB Bandwidth (MAX4144)
+* 70MHz -3dB Bandwidth (MAX4146)
+* 11mA Typical Supply Current
+* 100mA Typical Output Current Drive
+* 2V/V Fixed Gain (MAX4144)
+* External Gain Selection (MAX4146)
+* 1000V/uS Slew Rate
+* Available in 14-Pin SO (MAX4144 & MAX4146)
+*
+* PART NUMBER         DESCRIPTION
+* ___________         ________________________________________
+* MAX4144             130MHz, Av=1, Differential Line Receiver
+* MAX4146             70MHz, Av=10, Differential Line Receiver
+************
+*SRC=MAX4144;MAX4144;Line Receivers;Maxim;
+*SYM=MAX4144
+*   ///////////////// MAX4144 MACROMODEL /////////////////////
+* 
+*   ====>       REFER TO MAX4144 DATA SHEET          <====
+*
+* connections:      IN+
+*                   |    IN-
+*                   |    |    positive power supply
+*                   |    |    |    negative power supply
+*                   |    |    |    |   OUT  SENSE
+*                   |    |    |    |   |     |      Ref
+*                   |    |    |    |   |     |      |
+.SUBCKT  MAX4144    501  201  99  50   3021  3999  3041
+VFAKE2 340 1200  0V
+RFAKE 1000 0 1E9
+VSHORT44 1000 40 0V
+*vshort44 1000 3021 0v
+ISUPP 99 0 5.25MA
+ISUPPN 50 0 -5.25MA
+RF1001 301 1200 100
+RG1000 301 1 200
+RF1002 1 1000 100
+* INPUT STAGE
+I401 99  505 430U
+I502  504 50 430U
+Q501  50  503 505 QPN
+Q502  99  503 504 QNN 
+R501   505 506 633
+R502  504  507 633
+R503 99  508 633
+V501  99 510 .3
+RE501 510 530 130
+D501  530  508 DX
+R504 50  509 633
+V502  511 50 .3
+RE502 511 531 150
+D502  509 531 DX
+Q503   508  506 502 QNI
+Q504   509  507 502 QPI
+R506  501 99 20meg
+R507  501 50 20meg
+IB501 501 99 9UA
+IB502 99  502 9UA
+VOS500 503 501 0V
+*
+RGM300 302 520 380
+VGM300 502 520 0V
+* VGM300 SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I301 99  305 430U
+I302  304 50 430U
+Q301  50  303 305 QPN
+Q302  99  303 304 QNN 
+R301   305 306 633
+R302  304  307 633
+R303 99  308 633
+V301  99 310 .3
+RE301 310 330 130
+D301  330  308 DX
+R304 50  309 633
+V302  311 50 .3
+RE302 311 331 150
+D302   309 331 DX
+Q303   308  306 302 QNI
+Q304   309  307 302 QPI
+R306  301 99 20meg
+R307 301 50 20meg
+IB301 301 99 9UA
+IB302 99  302 9UA
+VOS300 303 301 0V
+*SECOND STAGE
+Isup2  99 50 4.47M
+* changed isup to isup2 to avoid contention.
+R308  99 349 1meg
+R309  349 50 1meg
+V303  99 316 1.755
+*pos swig
+D303  315 316 DX
+D304  317 315 DX
+V304  317 50 1.755
+*neg swing
+EH300  99 398 99 349 1
+F301 398 315 VGM300 .35
+R305  398 315 2.372MEG
+* *  1st pole here with r5, and c3
+C301 398 315 .49P 
+*was .157
+*OUTPUT STAGE
+*
+E301  99 340 99 315 1
+* *
+* *
+* SECOND AMPLIFER AT THE BOTTOM, IN- SIDE.
+* INPUT STAGE
+I101 99  205 430U
+I202  204 50 430U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+R202  204  207 633
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 10UA
+IB202 99  202 10UA
+VOS200 203 201 0V
+*
+RGM 2 220 380
+VGM 202 220 0V
+* VGM SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+*C1   6 99 .3P
+*was .63
+R2  4  7 633
+*C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 2UA
+IB2 99  2 2UA
+VOS 3 1 0V
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 1.755
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 1.755
+*neg swing
+EH  99 98 99 49 1
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+C3 98 15 .49P 
+*was .157p
+*OUTPUT STAGE
+*
+E1  99 40 99 15 1
+* Third amplifier
+*
+rin3 3000 3001 10k
+ggain 3020 98 3000 3001 1e-2
+rggain 3020 98 1e8
+
+GGAIN2 3100 98 98 3020 1E-6
+RGAIN2 98 3100 1E6
+
+egain 98 3090 98 3100 1
+rout 3090 3021 50
+DO1 3021 3091 Dx
+*
+vo1 3091 99  -2.6
+vo2 3092 3021 -2.6
+DO2 50 3092  Dx
+*          
+R3000 1000 3000 700
+R3001 3000 3999 700 
+* 3000 IS PLUS INPUT, REF SIDE  3001 IS NEG. INPUT.
+R3002 1200 3001 700
+R3003 3001 3041 700
+* out 3021      sense 3020       ref 3041
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=11111 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=11111 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=11111 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=11111 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DP D(N=0.001 rs=30)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+*SRC=MAX4146;MAX4146;Line Receivers;Maxim;
+*SYM=MAX4144
+*   ///////////////// MAX4146 MACROMODEL /////////////////////
+* 
+*   ====>       REFER TO MAX4144 DATA SHEET          <====
+*
+* connections:      IN+
+*                   |    IN-
+*                   |    |    positive power supply
+*                   |    |    |    negative power supply
+*                   |    |    |    |   OUT  SENSE
+*                   |    |    |    |   |     |      Ref   RG(+)
+*                   |    |    |    |   |     |      |     |     RG(-)
+.SUBCKT  MAX4146    501  201  99  50   3021   3020  3041  301   1
+* NOTE:       THE OUTPUT SWING HAS NOT BEEN CLAMPED DUE TO
+*             CONVERGENCE ISSUES.  THE OUTPUT SWING SHOULD BE
+*             CONSTRAINED TO SWING +-3.5V INTO 150 OHM LOAD, AND SWING
+*             +-3.8V INTO RL=INFINITY.  
+*
+VFAKE2 340 1200  0V
+*RFAKE 1000 0 1E9
+VSHORT44 1000 40 0V
+ISUPP 99 0 5.25MA
+ISUPPN 50 0 -5.25MA
+RF1001 301 1200 1400
+RF1002 1 1000 1400
+* INPUT STAGE
+I401 99  505 430U
+I502  504 50 430U
+Q501  50  503 505 QPN
+Q502  99  503 504 QNN 
+R501   505 506 633
+R502  504  507 633
+R503 99  508 633
+V501  99 510 .3
+RE501 510 530 130
+D501  530  508 DX
+R504 50  509 633
+V502  511 50 .3
+RE502 511 531 150
+D502  509 531 DX
+Q503   508  506 502 QNI
+Q504   509  507 502 QPI
+R506  501 99 20meg
+R507  501 50 20meg
+IB501 501 99 9UA
+IB502 99  502 9UA
+VOS500 503 501 0V
+*
+RGM300 302 520 380
+VGM300 502 520 0V
+* VGM300 SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I301 99  305 430U
+I302  304 50 430U
+Q301  50  303 305 QPN
+Q302  99  303 304 QNN 
+R301   305 306 633
+R302  304  307 633
+R303 99  308 633
+V301  99 310 .3
+RE301 310 330 130
+D301  330  308 DX
+R304 50  309 633
+V302  311 50 .3
+RE302 311 331 150
+D302   309 331 DX
+Q303   308  306 302 QNI
+Q304   309  307 302 QPI
+R306  301 99 20meg
+R307 301 50 20meg
+*IB301 301 99 9UA
+*IB302 99  302 9UA
+VOS300 303 301 0V
+*SECOND STAGE
+Isup2  99 50 4.47M
+* changed isup to isup2 to avoid contention.
+R308  99 349 1meg
+R309  349 50 1meg
+V303  99 316 1.755
+*pos swig
+D303  315 316 DX
+D304  317 315 DX
+V304  317 50 1.755
+*neg swing
+EH300  99 398 99 349 1
+F301 398 315 VGM300 .35
+R305  398 315 2.372MEG
+* *  1st pole here with r5, and c3
+C301 398 315 1.76P 
+*was .157
+*OUTPUT STAGE
+*
+E301  99 340 99 315 1
+* *
+* *
+* SECOND AMPLIFER AT THE BOTTOM, IN- SIDE.
+* INPUT STAGE
+I101 99  205 430U
+I202  204 50 430U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+R202  204  207 633
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 9UA
+IB202 99  202 9UA
+VOS200 203 201 0V
+*
+RGM 2 220 380
+VGM 202 220 0V
+* VGM SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+*C1   6 99 .3P
+*was .63
+R2  4  7 633
+*C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+*IB1 1 99 2UA
+IB2 99  2 2UA
+VOS 3 1 0V
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 1.755
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 1.755
+*neg swing
+EH  99 98 99 49 1
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+C3 98 15 1.76P 
+*was .157p
+*OUTPUT STAGE
+*
+E1  99 40 99 15 1
+* Third amplifier
+
+rin3 3000 3001 100k
+GGAIN 98 3901 3000 3001 1E-6
+RGGAIN 98 3901 1E11
+Egain 99 3020 98 3901 1
+routput 3020 3021 30
+*DO1 3901 3091 DW
+*vo1 3091 98  3
+*Vo2 3092 3901 3
+*DO2 98 3092  DW
+*
+R3000 1000 3000 70
+R3001 3000 3021 700 
+* 3000 IS PLUS INPUT, REF SIDE  3001 IS NEG. INPUT.
+R3002 1200 3001 70
+* 1200 AND 1000 IS OUTPUT FROM FIRST TWO AMPS.
+R3003 3001 3041 700
+* out 3021      sense 3020       ref 3041
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=11111 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=11111 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=11111 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=11111 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.model DW  D(RS=10K)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+* MAX4162 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 250kHz Gain Bandwidth Product
+* 25uA Typical Supply Current
+* Unity-Gain Stable
+* Rail-to-Rail I/O
+* Available in 5-Pin SOT23-5 (MAX4162)
+*              8-Pin SO      (MAX4162)
+*              8-Pin uMAX/SO (MAX4163)
+*             14-Pin SO      (MAX4164) 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________________
+* MAX4162        Single 250kHz, Unity-Gain Stable
+* MAX4163        Dual 250kHz, Unity-Gain Stable
+* MAX4164        Quad 250kHz, Unity-Gain Stable  
+*
+************
+*SRC=MAX4162;MAX4162;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4162 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4162 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4162 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 1pa
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E4
+C3 10 98 16.2e-7
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.6E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.6E-1 -1
+* 
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 -.5ma
+Isupply 99 50 25ua
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.2V
+V4 36 97 -.2v
+*V5,V4 SET ISC
+R16 34 97 13
+*LOUT 197 97 4.0uh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+*SRC=MAX4163;MAX4163;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4163 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4163 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4163 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 1pa
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E4
+C3 10 98 16.2e-7
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.6E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.6E-1 -1
+* 
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 -.5ma
+Isupply 99 50 25ua
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.2V
+V4 36 97 -.2v
+*V5,V4 SET ISC
+R16 34 97 13
+*LOUT 197 97 4.0uh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+*SRC=MAX4164;MAX4164;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4164 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4164 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4164 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 1pa
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E4
+C3 10 98 16.2e-7
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.6E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.6E-1 -1
+* 
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 -.5ma
+Isupply 99 50 25ua
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.2V
+V4 36 97 -.2v
+*V5,V4 SET ISC
+R16 34 97 13
+*LOUT 197 97 4.0uh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+* MAX4165 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 5MHz Gain Bandwidth Product
+* 1.2mA Typical Supply Current
+* 80mA Output Drive Capability
+* Unity-Gain Stable
+* Rail-to-Rail I/O
+* Available in 5-Pin SOT23-5 (MAX4165)
+*              8-Pin DIP/SO (MAX4167)
+*             14-Pin DIP/SO (MAX4169) 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ______________________________
+* MAX4165        Single 5MHz, Unity-Gain Stable
+* MAX4167        Dual 5MHz, Unity-Gain Stable
+* MAX4169        Quad 5MHz, Unity-Gain Stable  
+*
+************
+*SRC=MAX4165;MAX4165;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4165 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4165 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4165 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 50na
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 6.5e-8
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.2E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.2E-1 -1
+* *
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 .7ma
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.12V
+V4 36 97 -.12V
+*V5,V4 SET ISC
+R16 34 97 2
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+*SRC=MAX4167;MAX4167;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4167 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4165 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4167 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 50na
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 6.5e-8
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.2E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.2E-1 -1
+* *
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 .7ma
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.12V
+V4 36 97 -.12V
+*V5,V4 SET ISC
+R16 34 97 2
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+*SRC=MAX4169;MAX4169;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4169 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4165 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4169 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 50na
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 6.5e-8
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.2E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.2E-1 -1
+* *
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 .7ma
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.12V
+V4 36 97 -.12V
+*V5,V4 SET ISC
+R16 34 97 2
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+* MAX4182 FAMILY MACROMODELS
+* --------------------------
+* FEATURES:
+* 270MHz Gain Bandwidth Product (MAX4184/MAX4187)
+* 240MHz Gain Bandwidth Product (MAX4182/MAX4186)
+* 1mA Supply Current
+* Stable Av=+2 (MAX4182/MAX4186)
+* Unity-Gain Stable (MAX4184/MAX4187
+* 400V/us Slew Rate
+* Available in 8-Pin SO      (MAX4182/4)
+*             14-Pin SO &    (MAX4186/7) 
+*             16-Pin QSOP    
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________________
+* MAX4182        Dual 240MHz, Stable Av=+2
+* MAX4184        Dual 270MHz, Unity-Gain Stable
+* MAX4186        Quad 240MHz, Stable Av=+2
+* MAX4187        Quad 270MHz, Unity-Gain Stable  
+*
+************
+*SRC=MAX4182;MAX4182;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4182 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4182 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+.SUBCKT  MAX4182     1   2  99  50  40
+ISUPP 99 0 3.73MA
+ISUPPN 50 0 -1.73MA
+* INPUT STAGE
+I1 99  5 130U
+I2  4 50 130U
+*i1,i2 was 430ua
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .63P
+R2  4  7 633
+C2   7 50 .63P
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 2 99 1UA
+VOS 3 1 0V
+*CIN1 1  0 2.5P
+*CIN2 2  0 2.5P
+*
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.1
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.1
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+*C3 98 15 .176P
+C3 98 15 .43P
+*POLE STAGE* 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+C4 98 20 .2P
+*
+*POLE STAGE* 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 12
+V5  33 40 .70V
+D5  23 33 DX
+V6  40 34 .70V
+D6  34 23 DX
+*CF1 40  2 2P
+* was 1.8pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+*SRC=MAX4184;MAX4184;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4184 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4184 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+.SUBCKT  MAX4184     1   2  99  50  40
+ISUPP 99 0 -1.7MA
+ISUPPN 50 0 -.73MA
+* INPUT STAGE
+I1 99  5 260U
+I2  4 50 260U
+*i1,i2 was 430ua
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .63P
+R2  4  7 633
+C2   7 50 .63P
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 2 99 1UA
+VOS 3 1 0V
+*CIN1 1  0 2.5P
+*CIN2 2  0 2.5P
+*
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.1
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.1
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+*C3 98 15 .176P
+C3 98 15 .43P
+*POLE STAGE* 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+C4 98 20 .7P
+*
+*POLE STAGE* 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 12
+V5  33 40 .70V
+D5  23 33 DX
+V6  40 34 .70V
+D6  34 23 DX
+CF1 40  2 1.8P
+* was 2.1pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+*
+************
+*SRC=MAX4186;MAX4186;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4186 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4186 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+.SUBCKT  MAX4186      1   2  99  50  40
+ISUPP 99 0 3.73MA
+ISUPPN 50 0 -1.73MA
+* INPUT STAGE
+I1 99  5 130U
+I2  4 50 130U
+*i1,i2 was 430ua
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .63P
+R2  4  7 633
+C2   7 50 .63P
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 2 99 1UA
+VOS 3 1 0V
+*CIN1 1  0 2.5P
+*CIN2 2  0 2.5P
+*
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.1
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.1
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+*C3 98 15 .176P
+C3 98 15 .43P
+*POLE STAGE* 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+C4 98 20 .2P
+*
+*POLE STAGE* 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 12
+V5  33 40 .70V
+D5  23 33 DX
+V6  40 34 .70V
+D6  34 23 DX
+*CF1 40  2 2P
+* was 1.8pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+*SRC=MAX4187;MAX4187;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4187 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4187 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+.SUBCKT  MAX4187     1   2  99  50  40
+ISUPP 99 0 -1.7MA
+ISUPPN 50 0 -.73MA
+* INPUT STAGE
+I1 99  5 260U
+I2  4 50 260U
+*i1,i2 was 430ua
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .63P
+R2  4  7 633
+C2   7 50 .63P
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 2 99 1UA
+VOS 3 1 0V
+*CIN1 1  0 2.5P
+*CIN2 2  0 2.5P
+*
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.1
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.1
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+*C3 98 15 .176P
+C3 98 15 .43P
+*POLE STAGE* 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+C4 98 20 .7P
+*
+*POLE STAGE* 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 12
+V5  33 40 .70V
+D5  23 33 DX
+V6  40 34 .70V
+D6  34 23 DX
+CF1 40  2 1.8P
+* was 2.1pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+* MAX4212 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 300MHz -3dB Bandwidth
+* 600V/uS Slew Rate
+* 5.5mA Typical Supply Current
+* 120mA Typical Output Current
+* Rail-to-Rail Outputs
+* Available in 5-Pin SOT23-5 (MAX4212)
+*
+*
+* PART NUMBER    DESCRIPTION
+* ___________    _____________________________
+* MAX4212        300MHz, Rail-to-Rail Op Amps  
+*
+************
+*SRC=MAX4212;MAX4212;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4212 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4212 DATA SHEET       <====
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+* OUTPUT CONNECTS:  1   2   99  50  97
+.SUBCKT MAX4212 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+IBIASE 1 2 5.5ua
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+CI1  1  0 2P
+CI2  2  0 2P
+*DP1  1 99 DA
+*DP2 50  1 DA
+*DP3  2 99 DB
+*DP4 50  2 DB
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-3
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 1.488e-11
+*C3 10 98 1.166e-11
+* *
+D1 9 111 DP
+D2 112 9 DP
+V11 99 111 50MV
+V12 112 50 50MV
+
+I2 99 50 5.1mA
+VOS 7 1 0v
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+C5 98 15 .48p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-3
+*          ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E3
+*D3 32 36 Dx
+*D4 37 32 Dx
+*V5 34 37  .3V
+*V4 36 34  -.3V
+* V5,V4 SET ISC
+R16 34 97 7.55
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.05)
+.MODEL MOSFET PMOS(VTO=0 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+
+.ENDS
+************
+* MAX4216 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 200MHz -3dB Bandwidth
+* 600V/uS Slew Rate
+* 5.5mA Typical Supply Current
+* 120mA Typical Output Current
+* Rail-to-Rail Outputs
+* Available in 8-Pin uMAX/SO (MAX4216)
+*              14-Pin SO or 16-Pin QSOP (MAX4220)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    _________________________________
+* MAX4216        Dual 200MHz, Rail-to-Rail Op Amps  
+* MAX4220        Quad 200MHz, Rail-to-Rail Op Amps
+*
+************
+*SRC=MAX4216;MAX4216;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4216 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4216 DATA SHEET       <====
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+* OUTPUT CONNECTS:  1   2   99  50  97
+*
+.SUBCKT MAX4216 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+IBIASE 1 2 5.5ua
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+CI1  1  0 2P
+CI2  2  0 2P
+*DP1  1 99 DA
+*DP2 50  1 DA
+*DP3  2 99 DB
+*DP4 50  2 DB
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-3
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 2.43e-11
+*C3 10 98 1.166e-11
+* *
+D1 9 111 DP
+D2 112 9 DP
+V11 99 111 50MV
+V12 112 50 50MV
+
+I2 99 50 5.1mA
+VOS 7 1 0v
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+C5 98 15 .72p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-3
+*          ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E3
+*D3 32 36 Dx
+*D4 37 32 Dx
+*V5 34 37  .3V
+*V4 36 34  -.3V
+* V5,V4 SET ISC
+R16 34 97 7.55
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.05)
+.MODEL MOSFET PMOS(VTO=0 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+
+.ENDS
+*
+************
+*SRC=MAX4220;MAX4220;Opamps;Maxim;
+*SYM=ADOPAMP
+.SUBCKT MAX4220 1 2 99 50 97
+*
+*   ////////////// MAX4220 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4220 DATA SHEET       <====
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+* OUTPUT CONNECTS:  1   2   99  50  97
+*
+*INPUT STAGE
+I1 99 4 .5e-3
+IBIASE 1 2 5.5ua
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+CI1  1  0 2P
+CI2  2  0 2P
+*DP1  1 99 DA
+*DP2 50  1 DA
+*DP3  2 99 DB
+*DP4 50  2 DB
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-3
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 2.43e-11
+*C3 10 98 1.166e-11
+* *
+D1 9 111 DP
+D2 112 9 DP
+V11 99 111 50MV
+V12 112 50 50MV
+
+I2 99 50 5.1mA
+VOS 7 1 0v
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+C5 98 15 .72p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-3
+*          ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E3
+*D3 32 36 Dx
+*D4 37 32 Dx
+*V5 34 37  .3V
+*V4 36 34  -.3V
+* V5,V4 SET ISC
+R16 34 97 7.55
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.05)
+.MODEL MOSFET PMOS(VTO=0 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+
+.ENDS
+************
+* MAX4278 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 310MHz -3dB Bandwidth
+* 250MHz Full-Power Bandwidth
+* 8mA Typical Supply Current
+* 100mA Output Drive
+* 1600V/uS Slew Rate
+* Available in 8-Pin DIP/SO/uMAX 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________
+* MAX4278        310MHz, Gain = +2 Buffer  
+*
+************
+*SRC=MAX4278;MAX4278;Buffers;Maxim;
+*SYM=MAXBUF
+*   ////////////// MAX4278 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4278 DATA SHEET       <====
+*
+* connections:      input
+*                   |   ground
+*                   |   |     positive power supply
+*                   |   |     |   negative power supply
+*                   |   |     |   |   output
+*                   |   |     |   |   |
+*                   |   |     |   |   |
+.SUBCKT  MAX4278    201 1000  99  50 40
+ISUPP 99 0 5.5MA
+ISUPN 50 0 -5.5MA
+rfeedback 40 1 500
+RFEEDBACK2 1 0 500
+rground 1000 0 .00001
+* INPUT STAGE
+I101 99  205 430U
+I202  204 50 430U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+C201   206 99 .3p
+*was .63
+R202  204  207 633
+C202   207 50 .3P
+*was .63
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 1UA
+IB202 99  202 1UA
+VOS200 203 201 0V
+*CIN201 201  0 1.5P
+*CIN202 202  0 1.5P
+*
+RGM 2 220 380
+VGM 202 220 0V
+* VGM SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .3P
+*was .63
+R2  4  7 633
+C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 99  2 1UA
+VOS 3 1 0V
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 2.4
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 2.4
+*neg swing
+EH  99 98 99 49 1
+*G1  98 15 POLY(2) 99 2 50 202 0 1.58E-3 1.58E-3
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+C3 98 15 .272P 
+*POLE STAGE* 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*C4 98 20 .5P
+*
+*POLE STAGE* 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+*POLE STAGE* 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-5
+R17 98 23 100K
+*C7  98 23 .246P
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+R35 38 40 10
+*r35 was 12
+V5  33 40 .9V
+D5  23 33 DX
+V6  40 34 .9V
+D6  34 23 DX
+*CF1 40  2 5P
+* was 2.1pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+* MAX4330 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 3MHz Gain Bandwidth Product
+* 245uA Typical Supply Current
+* Unity-Gain Stable
+* Rail-to-Rail I/O
+* Available in 5-Pin SOT23-5 (MAX4330)
+*              8-Pin SO      (MAX4332)
+*             14-Pin SO      (MAX4334) 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________________
+* MAX4330        Single 3MHz, Unity-Gain Stable
+* MAX4332        Dual 3MHz, Unity-Gain Stable
+* MAX4334        Quad 3MHz, Unity-Gain Stable  
+*
+************
+*SRC=MAX4330;MAX4330;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4330 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4330 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4330 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 25na
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 10.8e-8
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.6E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.6E-1 -1
+* 
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 -.5ma
+Isupply 99 50 275ua
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 3.5V
+V4 36 97 3.5V
+*V5,V4 SET ISC
+R16 34 97 130
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+*SRC=MAX4332;MAX4332;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4332 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4330 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4332 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 25na
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 10.8e-8
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.6E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.6E-1 -1
+* 
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 -.5ma
+Isupply 99 50 275ua
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 3.5V
+V4 36 97 3.5V
+*V5,V4 SET ISC
+R16 34 97 130
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+*SRC=MAX4334;MAX4334;Opamps;Maxim;
+*SYM=ADOPAMP
+*   ////////////// MAX4334 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4330 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4334 1 2 99 50 97
+*INPUT STAGE
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 25na
+
+* GAIN, 1ST POLE, SLEW STAGE
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 10.8e-8
+*C3 10 98 1.3E-10
+* *
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.6E-1 1
+
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.6E-1 -1
+* 
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+
+I2 99 50 -.5ma
+Isupply 99 50 275ua
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*COMMON-MODE ZERO STAGE
+* POLE STAGE 
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*
+* change for second pole
+*C5 98 15 8p
+*  
+*OUTPUT STAGE
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 3.5V
+V4 36 97 3.5V
+*V5,V4 SET ISC
+R16 34 97 130
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+************
+* MAX496 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 375MHz -3dB Bandwidth
+* 230MHz Full-Power Bandwidth
+* 1600V/uS Slew Rate
+* Available in 16-Pin DIP/SO 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________
+* MAX496         375MHz, Quad Buffers, Av=+1  
+*
+************
+*SRC=MAX496;MAX496;Buffers;Maxim;
+*SYM=MAXBUF
+*   ////////////// MAX496 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX496 DATA SHEET       <====
+*
+* connections:      input
+*                   |   ground
+*                   |   |     positive power supply
+*                   |   |     |   negative power supply
+*                   |   |     |   |   output
+*                   |   |     |   |   |
+*                   |   |     |   |   |
+.SUBCKT  MAX496    201 1000  99  50 40
+ISUPP 99 0 5.5MA
+ISUPN 50 0 -5.5MA
+rfeedback 40 1 500
+rground 1000 0 .00001
+* INPUT STAGE
+I101 99  205 430U
+I202  204 50 430U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+C201   206 99 .3p
+R202  204  207 633
+C202   207 50 .3P
+*was .63
+
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 1UA
+IB202 99  202 1UA
+VOS200 203 201 0V
+RGM 2 220 380
+VGM 202 220 0V
+* VGM SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .3P
+*was .63
+R2  4  7 633
+C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 99  2 1UA
+VOS 3 1 0V
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 1.1
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 1.1
+*neg swing
+EH  99 98 99 49 1
+*G1  98 15 POLY(2) 99 2 50 202 0 1.58E-3 1.58E-3
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+C3 98 15 .3355P 
+*POLE STAGE* 
+*
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 15 1
+VA8 37 38 0
+R35 38 40 38
+*r35 was 12
+V5  33 40 4.5V
+D5  23 33 DX
+V6  40 34 4.5V
+D6  34 23 DX
+*CF1 40  2 2P
+* was 2.1pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+* MAX497 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 275MHz -3dB Bandwidth
+* 215MHz Full-Power Bandwidth
+* 1500V/uS Slew Rate
+* Available in 16-Pin DIP/SO 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________
+* MAX497         275MHz, Quad Buffers, Av=+2  
+*
+************
+*SRC=MAX497;MAX497;Buffers;Maxim;
+*SYM=MAXBUF
+*   ////////////// MAX497 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX497 DATA SHEET       <====
+*
+* connections:      input
+*                   |   ground
+*                   |   |     positive power supply
+*                   |   |     |   negative power supply
+*                   |   |     |   |   output
+*                   |   |     |   |   |
+*                   |   |     |   |   |
+.SUBCKT  MAX497     201 1000  99  50 40
+ISUPP 99 0 5.5MA
+ISUPN 50 0 -5.5MA
+rfeedback 40 1 500
+rfeedback2 1 0 500
+rground 1000 0 .00001
+* INPUT STAGE
+I101 99  205 430U
+I202  204 50 430U
+Q201  50  203 205 QPN
+Q202  99  203 204 QNN 
+R201   205 206 633
+C201   206 99 .3p
+*was .63
+R202  204  207 633
+C202   207 50 .3P
+*was .63
+R203 99  208 633
+V201  99 210 .3
+RE201 210 230 130
+D201  230  208 DX
+R204 50  209 633
+V202  211 50 .3
+RE202 211 231 150
+D202  209 231 DX
+Q203   208  206 202 QNI
+Q204   209  207 202 QPI
+R206  201 99 20meg
+R207  201 50 20meg
+IB201 201 99 1UA
+IB202 99  202 1UA
+VOS200 203 201 0V
+*CIN201 201  0 1.5P
+*CIN202 202  0 1.5P
+*
+RGM 2 220 380
+VGM 202 220 0V
+* VGM SENSES THE CURRENT THROUGH VGM
+* INPUT STAGE
+I1 99  5 430U
+I2  4 50 430U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .3P
+*was .63
+R2  4  7 633
+C2   7 50 .3P
+*was .63
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 DX
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 150
+D2   9 31 DX
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 1UA
+IB2 99  2 1UA
+VOS 3 1 0V
+*SECOND STAGE
+*
+Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 1.1
+*pos swig
+D3  15 16 DX
+D4  17 15 DX
+V4  17 50 1.1
+*neg swing
+EH  99 98 99 49 1
+*G1  98 15 POLY(2) 99 2 50 202 0 1.58E-3 1.58E-3
+F1 98 15 VGM .35
+R5  98 15 2.372MEG
+* *  1st pole here with r5, and c3
+C3 98 15 .211P 
+*POLE STAGE* 
+*
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 15 1
+VA8 37 38 0
+R35 38 40 38
+*r35 was 12
+V5  33 40 4.5V
+D5  23 33 DX
+V6  40 34 4.5V
+D6  34 23 DX
+*CF1 40  2 2P
+* was 2.1pf
+*
+*MODELS USED
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+*
+.ENDS
+************
+* MAX961 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* Ultra-Fast, 7nS Propagation Delay (5mV overdrive)
+* Rail-to-Rail Input Voltage Range 
+* Low Power: 8.5mA Per Comparator (+5V)
+* Single 3V/5V Supply Operation
+* Available in 8-Pin uMAX/SO (Single MAX961)
+*              8-Pin uMAX/SO (Dual MAX962)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX961         Single, int HYST, 7nS delay, latch        
+* 
+************
+*SRC=MAX961;MAX961;Comparators;Maxim;
+*SYM=MAXCOMP3
+*   ////////////// MAX961 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX961 DATA SHEET       <====
+*
+* connections:   +IN
+*                | -IN
+*                | | V+ 
+*                | | | V-
+*                | | | |       
+*                | | | | LE 
+*                | | | | |   GND  QOUT QOUTCOMP
+*                | | | | |   |    |    |
+.subckt max961   1 2 3 4 352 300  433  483
+*
+* NOTE1: QOUTCOMP IS ACTUALLY COMPLIMENTED QOUT. 
+*
+f101    3  9 v1 1
+Iee100   7  400 dc 100.0E-6
+q101    9  20  7 qin
+Q2    8  21  7 qin
+Q3    9  8  399 qmo
+Q4    8  8  399 qmi
+VMB 400 4 0V
+VPB 399 3 0V
+*
+VIN1 2 23 .95
+VIN2 1 25 .95
+*
+IPSUP 3 0 8.5ma
+INSUP 0 4 8.5ma
+*
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=3.33) 
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=3.3E-9) 
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+e1   10  4  3  9  2
+v1   10 11 dc 0
+q5    5 11  44 qoc
+vshift 44 4 0v
+*clamps output, Q5 collector load.
+R55 3 5 1meg
+DP5 5 3 DP
+DP6 4 5 DP
+*== Hysterisis section
+GH 0 51 32 101 1E-6
+ECM 101 0 3 4 0.5
+RCM 101 0 10MEG
+*== COMPARATOR POINT FOR CREATING LOGIC OUTPUT, +-1, hi,lo. 
+RH1 3 51 1E11
+RH2 4 51 1E11
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+*==
+IHYST 55 0 -1E-9
+*GENERATES 1MV OF HYST. TO MIMIC SMOOTH TRANSITION. 
+RREF 55 0 1E6
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS. 
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*==
+*EH 3 98 3 4 0.5
+VVIRTUAL 98 0 0V
+G12 98 32 5 0 7.04E-3
+R15 98 32 140
+*==
+.model qoc NPN(Is=800.0E-18 Bf=181 Cjc=1E-15 Tf=42e-12 Tr=2E-9)
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*==
+*== MODELS USED ==*
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*   
+VCONNECT 302 32 0V
+* AND1
+* 302, 312 is the input, output is 333. 
+RN1 302 303 1MEG             
+DA1 305 330 DP
+DA2 300 305 DP
+RA2 304 305 1MEG
+EA1 304 300 POLY(1) 302 303 0 10 
+*
+RN10 312 303 1MEG ;node 303 is 1.4volts.            
+DA10 315 330 DP
+DA12A 300 315 DP
+RA12 314 315 1MEG 
+EA11 314 300 POLY(1) 312 303 0 -10
+* -10 COMPLIMENTS LE, SO LOW IS TRANSPARENT    
+*
+GAMULT 300 331 POLY(2) 305 300 315 300  0 0 0 0 1E-6 
+RAMULT 331 300 1G
+DA5 331 330 DP
+DA6 300 331 DP 
+EOA 332 300 331 300 1
+ROA 332 333 100
+*
+* AND2
+* 352, 362 is the input, output is 383. 
+RN12 352 303 1MEG             
+ILE 352 300 -20UA
+DA12 355 380 DP
+DA22 300 355 DP
+RA22 354 355 1MEG
+EA12 354 300 POLY(1) 352 303 0 -10
+* -10 COMPLIMENTS LE, SO LOW IS TRANSPARENT 
+*
+RN102 362 303 1MEG ;node 303 is 1.4volts.            
+DA102 365 380 DP
+DA122 300 365 DP
+RA122 364 365 1MEG 
+EA112 364 300 POLY(1) 362 303 0 10 
+*
+GAMULT2 300 381 POLY(2) 355 300 365 300  0 0 0 0 1E-6 
+RAMULT2 381 300 1G
+DA52 381 330 DP
+DA62 300 381 DP 
+EOA2 382 300 381 300 1
+ROA2 382 383 100
+*
+* OR1
+* 402,412 are the inputs, output is 433 
+RO1 402 403 1MEG             
+VO14 403 300 1.4V 
+VO1 430 300 5V
+DO1 405 430 DP
+DO2 300 405 DP
+RO2 404 405 1MEG ; WAS 1MEG
+EO1 404 300 POLY(1) 402 403 0 10 
+*
+RO10 412 403 1MEG ;node 403 is 1.4volts.            
+DO10 415 430 DP
+DO12 300 415 DP
+RO12O 414 415 300 ; WAS 1MEG
+EO11 414 300 POLY(1) 412 403 0 10 
+*
+GOADD1 300 431 POLY(2) 405 300 415 300 0 1E-6 1E-6 
+ROADD 431 300 1G
+DO5 431 3 DP
+DO6 300 431 DP 
+EOO 432 300 431 300 1
+ROO 432 433 125 ; OUTPUT IS 433
+* OR2 
+* 452,462 are the inputs, output is 488 
+RO12 452 403 1MEG             
+VO12 480 300 5V
+DO12O 455 480 DP
+DO22 300 455 DP
+RO22 454 455 1MEG ; WAS 1MEG
+EO12 454 300 POLY(1) 452 403 0 10 
+*
+RO102 462 403 1MEG ;node 403 is 1.4volts.            
+DO102 465 480 DP
+DO122 300 465 DP
+RO122 464 465 300 ; WAS 1MEG
+EO112 464 300 POLY(1) 462 403 0 10 
+*
+GOADD12 300 481 POLY(2) 455 300 465 300 0 1E-6 1E-6 
+ROADD2 481 300 1G
+DO52 481 3 DP
+* was 3 was 480
+DO62 300 481 DP 
+EOO2 482 300 481 300 1
+ROO2 482 483 125 ; OUTPUT IS 483
+* INVERTER1
+*INPUT 602, OUTPUT  605
+RIN1 602 303 1MEG             
+DIA1 605 630 DP
+DIA2 300 605 DP
+vi1 630 300 5v
+RIA2 604 605 10k
+EIA1 604 300 POLY(1) 602 303 0 -10
+* INVERTER2
+*INPUT 612, OUTPUT 615
+RIN12 612 303 1MEG             
+DIA12 615 640 DP
+DIA22 300 615 DP
+vi12 640 300 5v
+RIA22 614 615 10k
+EIA12 614 300 POLY(1) 612 303 0 -10
+* INVERTER3
+*INPUT 622, OUTPUT 625
+RIN13 622 303 1MEG             
+DIA13 625 650 DP
+DIA23 300 625 DP
+vi13 650 300 5v
+RIA23 624 625 10k
+EIA13 624 300 POLY(1) 622 303 0 -10
+* BIASING
+* *
+VA14 303 300 1.4V 
+VA1 330 300 5V
+*VDGND 300 0 0V ;  Will be brought out in subckt. 
+*
+* CONNECTIONS *
+VSH1 605 362 0V
+VSH2 312 352 0V
+VSH3 333 402 0V
+VSH4 383 462 0V
+VSH5 433 622 0V
+VSH6 625 452 0V
+VSH7 483 612 0V
+VSH8 615 412 0V
+VSH9 302 602 0V
+.ENDS
+************

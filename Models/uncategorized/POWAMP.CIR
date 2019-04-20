@@ -1,0 +1,78 @@
+powamp
+
+* The output node is 9, the input is on node 1
+
+*SPICE_NET
+
+.MODEL NONAME4 D (RS=.04 IS=1.4N N=1.7 VJ=.34 M=.38)
+
+.MODEL NONAME1 PNP (IS=1.1P BF=200 NF=1.21 VAF=50 IKF=.1
++ ISE=13P NE=1.9 BR=6 RC=.6 RB=40 CJE=23P VJE=.85 MJE=1.25
++ TF=.5N CJC=19P VJC=.5 MJC=.2 TR=34N XTB=1.5 KF=.3F AF=1)
+
+.MODEL NONAME2 NPN (IS=1.1P BF=200 NF=1.21 VAF=50 IKF=.1
++ ISE=13P NE=1.9 BR=6 RC=.6 RB=40 CJE=23P VJE=.85 MJE=1.25
++ TF=.5N CJC=19P VJC=.5 MJC=.2 TR=34N XTB=1.5 KF=.3F AF=1)
+
+.MODEL NONAME3 PNP (IS=15N BF=75 NF=1.67 VAF=100 IKF=4
++ BR=4 RC=.06 CJE=520P VJE=1.2 MJE=.5 TF=40N CJC=380P
++ MJC=.45 TR=.8U XTB=1.5)
+
+Q2 15 4 3 NONAME1
+V1 1 0 AC 1 SIN 0 .25V 1KHZ
+*V1 1 0 AC 1 PULSE 0 .2V .5US 0 0 2.5US 1S 
+C1 1 2 .22UF
+R1 2 0 47K
+R2 3 16 24K
+R3 4 5 470
+R4 4 9 47K
+R5 6 15 1.5K
+C2 5 0 33U
+Q3 8 6 15 NONAME2
+C5 9 12 47U
+Q6 15 8 14 NONAME1 AREA=10
+Q4 11 10 8 NONAME2
+R7 12 16 470
+R8 12 11 4.7K
+R9 11 10 2.2K
+R10 10 8 1.5K
+Q5 13 11 9 NONAME2 AREA=10
+R11 16 13 100
+Q7 9 13 16 NONAME3
+R12 9 14 100
+Q8 15 14 9 NONAME3
+D1 9 16 NONAME4
+D2 15 9 NONAME4
+R13 9 0 4
+V2 16 0 25V
+V3 15 0 -25V
+Q1 6 2 3 NONAME1
+
+.TRAN 5US 1MS
+.AC DEC 25 10HZ 1MEGHZ
+.NOISE V(9) V1 DEC 25 10HZ 1MEGHZ
+.PRINT NOISE INOISE ONOISE
+*.TRAN 25N 5US
+.PRINT TRAN V(6,15) V(2,4)
+.PRINT AC VDB(9) VDB(2,4) VP(2,4) VDB(6) VDB(6,15) VP(6,15) 
+.PRINT AC  V(2)  VP(2)  V(6)  VP(6) 
+.PRINT AC  V(15)  VP(15)  V(9)  VP(9) 
+.PRINT AC  V(4)  VP(4)  V(15)  VP(15) 
+.PRINT TRAN  V(1)  V(2)  V(6)  V(15) 
+.PRINT TRAN  V(8)  V(9)  V(4)  V(15) 
+
+* Commands for Spice3
+*#destroy all
+*#run
+*#set units=degrees
+*#plot tran1.v(6)-tran1.v(15)
+*#plot tran1.v(2)-tran1.v(4)
+*#plot db(mag(ac1.v(9)))
+*#plot db(mag(ac1.v(2)-ac1.v(4)))
+*#plot ph(ac1.v(2)-ac1.v(4))
+*#plot tran1.v(1) tran1.v(2) tran1.v(6) tran1.v(15)
+* Plot input impedance
+*#plot mag(ac1.v(1)/ac1.v1#branch)
+
+
+.END

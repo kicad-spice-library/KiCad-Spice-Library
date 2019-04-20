@@ -1,0 +1,45 @@
+difpair ckt - simple differential pair
+*.width in=72
+.opt acct list node lvlcod=2
+*.tf v(5) vin
+.dc vin -0.25 0.25 0.005
+.ac dec 10 1 10ghz
+.tran 5ns 500ns
+vin 1 0 sin(0 0.1 5meg) ac 1
+vcc 8 0 12
+vee 9 0 -12
+q1 4 2 6 qnl
+q2 5 3 6 qnl
+rs1 1 2 1k
+rs2 3 0 1k
+vsense1 4 99 0
+rc1 99 8 10k
+rc2 5 8 10k
+q3 6 7 9 qnl
+q4 7 7 9 qnl
+rbias 7 8 20k
+.model qnl npn(bf=80 rb=100 ccs=2pf tf=0.3ns tr=6ns cje=3pf cjc=2pf
++   va=50)
+.print dc v(4) v(5)
+.plot dc v(5)
+
+.print ac vm(5) vp(5)
+.plot ac vm(5) vp(5)
+
+.print tran v(4) v(5)
+.plot tran v(5)
+.op
+
+* Commands for Spice3
+*#destroy all
+*#save none all @q1[ic]
+*#run
+*#set units=degrees
+*#plot dc1.v(4) dc1.v(5)
+*#plot mag(ac1.v(5))
+*#plot ph(ac1.v(5)) ylabel degrees 
+*#plot tran1.v(5)
+* Try plotting input impedance
+*#plot mag(ac1.v(1)/ac1.vin#branch)
+
+.end

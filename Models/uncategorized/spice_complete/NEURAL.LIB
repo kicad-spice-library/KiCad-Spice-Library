@@ -1,0 +1,135 @@
+**********
+* Copyright Intusoft 1989-1997
+* All Rights Reserved
+**********
+**********
+*SRC=RSUM;RSUM;Neural Networks;;
+*SYM=RSUM
+.SUBCKT RSUM 1 4 5 6 
+*INTEGRATOR, GAIN -1/S
+*IN 1
+*OUT 4
+*P1 5
+*P2 6 
+GX1 3 2 POLY(2) 3 2 6 0 0 0 0 0 10K 
+R1 1 3 10K
+R2 3 2 10K
+E1 4 0 0 2 10000
+C1 2 4 1 IC=0
+R3 2 4 10K
+C2 3 0 1 IC=0
+GX2 1 3 POLY(2) 1 3 5 0 0 0 0 0 10K 
+.ENDS
+**********
+*SRC=CELL;CELL;Neural Networks;;
+*SYM=CELL
+.SUBCKT CELL 1 2 11 3 
+* 2 out
+* 1 VJ
+* 11 Vdel-in
+* 3 Vdelout
+RX2 2 0 1K
+RX9 9 0 1K 
+RX7 7 0 1K
+RX8 8 0 1K
+RX63 63 0 1K
+RX12 12 0 1K
+RX5 5 0 1K
+RX6 6 0 1K
+RX10 10 0 1K
+RX3 3 0 1K
+X5 8 7 2 DIVIDEA 
+EX6 5 0 9 0 0 -1 
+EX7 7 0 POLY(2) 6 0 8 0 0 1 1
+V2 8 0 1
+H1 9 0 VJ 1
+VJ 1 0 
+EX12 12 0 POLY(2) 63 0 2 0 0 0 0 0 1
+EX14 10 0 POLY(2) 2 0 8 0 0 -1 1
+H2 63 0 V6 1
+V6 11 0 
+EX26 3 0 POLY(2) 10 0 12 0 0 0 0 0 1
+X4 5 6 EXPA
+.ENDS
+.SUBCKT EXPA 1 2
+R 1 0 1K
+E 3 0 1 0 .0258642
+V 3 4
+RD 4 0 1E8
+D 4 0 DIODE
+C1 4 0 .0025U IC=0
+.MODEL DIODE D(IS=1U RS=10K )
+I 0 4 -1U
+H 2 0 V 1MEG
+.ENDS
+.SUBCKT DIVIDEA 1 2 4
+* V4 = V1 / V2
+R1 1 0 1MEG
+R2 2 0 1MEG
+R4 4 0 1MEG
+G1 0 3 1 0 1
+C1 3 0 .001 IC=0
+G2 3 0 POLY(2) 2 0 3 0 0 0 0 0 1
+R3 3 0 100
+E1 4 0 3 0 1
+.ENDS
+**********
+*SRC=AXON;AXON;Neural Networks;;
+*SYM=AXON
+.SUBCKT AXON 9 6 7 8 2 5 100 101 {W=.01}
+*5 gain, hidden node
+*2 weight, testpoint
+*8 ibout, back prop out
+*9 vaxon, voltage in
+*6 iaxon, current out
+*7 vdelin, back prop in 
+*100 Phase1 SC clk
+*101 Phase2 SC clk
+** Z TRANSFORM UTD **
+*XSUM 3 30 100 101 RSUM
+ESUM 2 0 3 0 {W} 100
+RESUM 2 0 10K
+*Multiplier
+EX3 3 0 POLY(3) 10 0 5 0 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+**----
+RX3 3 0 1K
+*RX2 2 0 1K
+RX10 10 0 1K
+*Summer
+GA 9 6 POLY(2) 2 0 9 6 0 0 0 0 1
+GB 0 8 10 0 1
+E1 10 0 7 0 1 
+.ENDS
+**********
+.SUBCKT AXON2OLD 9 6 7 8 5 {W=.01}
+*5 gain
+*8 idelut
+*9 vaxon
+*6 iaxon
+*7 vdelin
+*2 weight
+** Z TRANSFORM UTD **
+ETD1 30 0 2 0 1
+RTI 30 0 1K
+T1 30 0 1 0 Z0=1 TD=1
+RTD1 1 0 1
+**
+RX3 3 0 1K
+RX2 2 0 1K
+RX10 10 0 1K
+*Summer
+EX7 2 0 POLY(2) 1 0 3 0 {W} 1 1
+GA 9 6 POLY(2) 2 0 6 9 0 0 0 0 1
+GB 0 8 POLY(2) 10 0 9 0 0 0 0 0 1
+E1 10 0 7 0 1 
+*Multiplier
+EX3 3 0 POLY(2) 10 0 5 0 0 0 0 0 1
+.ENDS
+**********
+*SRC=VTOIn;VTOIn;Neural Networks;;
+*SYM=VTOI
+.SUBCKT VTOIn 1 2 3
+* I(3) = V(1) - V(2) ; vtoi name changed due to Mechatronics library conflict
+G 0 3 POLY(2) 1 0 2 0 0 1 -1
+.ENDS
+**********

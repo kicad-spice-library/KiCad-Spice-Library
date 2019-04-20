@@ -1,0 +1,48 @@
+Example 7.6 Rectifier with single-phase centre tapped transformer
+* Primary is modelled as a voltage source of 120V peak at 60Hz with
+* zero offset voltage
+
+VP 1 0 SIN(0 120 60Hz)
+
+
+* Primary winding is assumed to have a very high resistance: R1 = 10Meg
+
+R1 1 0 10GOHM
+
+
+* Secondary winding is assumed to be a voltage controlled voltage source
+* with a voltage gain of 0.1.
+
+E1 2 3 1 0 0.1
+E2 3 0 1 0 0.1
+C1 4 3 50UF
+RL 4 3 500
+
+
+* Diode D1 with model name DIODE
+
+D1 2 4 DIODE
+D2 0 4 DIODE
+
+
+* Diode model with default values
+
+.MODEL DIODE D
+
+
+* Transient analysis from 0 to 20ms with 0.1ms increment
+
+.TRAN 0.1MS 20MS
+
+
+* Plot the results for voltage across nodes 4 and 3
+
+.PLOT TRAN V(4,3)
+.FOUR 60HZ V(4,3)
+
+* Commands for Spice3
+*#destroy all
+*#run
+*#plot tran1.v(4)-tran1.v(3)
+
+.END

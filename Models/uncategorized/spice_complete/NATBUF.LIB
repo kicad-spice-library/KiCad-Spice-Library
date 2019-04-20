@@ -1,0 +1,178 @@
+**********
+* Library of National Semiconductor's Buffer Macromodels.
+* File:  NSBUFF.LIB
+*
+* This library of macromodels is being supplied to users as
+* an aid to circuit designs.  While it reflects reasonably 
+* close similarity to the actual device in terms of
+* performance, it is not suggested as a replacement for
+* breadboarding.  Simulation should be used as a supplement
+* to traditional lab testing.
+*
+* Users should very carefully note the following factors
+* regarding these models:
+*
+* 1. Model performance in general will reflect typical
+* baseline specs for a given device, and certain aspects of
+* performance may not be modeled fully.
+*
+* 2. While reasonable care has been taken in their
+* preparation, we cannot be responsible for correct
+* application on any and all computer systems.
+*
+* 3. Model users are hereby notified that these models are
+* supplied "as is", with no direct or implied responsibility
+* on the part of National Semiconductor for their operation
+* within a customer circuit or system.  Further, National
+* Semiconductor reserves the right to change these models
+* without prior notice.
+*
+* 4. In all cases, the current data sheet information for a
+* given real device is your final design guideline, and is
+* the only actual performance guarantee.  For further
+* technical information, refer to individual device data
+* sheets.
+*
+* 5. The current models presently do not simulate
+* temperature or noise effects correctly. 
+*
+* 6. Please send us your comments.  Thank you for choosing
+*  to use National Semiconductor Amplifier Products
+*
+* Models developed and under copyright by:
+* National Semiconductor Corporation
+* Amplifier Products Applications Engineering, M/S: C2-505
+* 2900 Semiconductor Drive  
+* P.O. Box 58090
+* Santa Clara, CA 95052-8090 
+*
+* For ordering or technical information on these models, contact:
+* National Semiconductor's Customer Response Center
+*                 7:00 A.M.--7:00 P.M.  U.S. Central Time
+*                                (800) 272-9959
+*
+* Revision History:
+* 3.0   06-Dec-93  D. Stolitzka/HG  LM6121/6221/6321--begin history.
+*
+**********
+*SRC=LM6121;LM6121N;Buffers;National;High speed
+*SYM=NATBUF
+* LM6121/LM6221/LM6321 High Speed Buffer
+*
+* Connections:      Input
+*                   | Positive power supply
+*                   | | Output
+*                   | | | Negative power supply
+*                   | | | |
+.SUBCKT LM6121N     2 6 7 8
+*
+* Features:
+* +5V to +/-18V power supply operation
+* Input current =                        1uA
+* Low offset voltage =                  15mV
+* High Slew rate =                   800V/uS
+* Wide bandwidth =                     50MHz
+* Peak output current =                350mA
+* Short circuit and thermal limiting
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*       - Temperature effects are not modeled.
+*       - Add 'NOREUSE' to the .OPTIONS statement when
+*         .STEP or .MC statements are used in the simulation.
+*       - The effect of AC coupled loads on slew rate and bandwidth
+*         is not modeled. Model parameters default to a 1K ohm load.
+*
+* Input capacitor.
+CIN 2  0  3.5P
+* Primary internal pole capacitor.
+C1  16 0  381P
+* Secondary internal pole capacitor.
+C2  24 27 1.723P
+C3  24 0  .5743P
+* Filter for load resistor sensor.
+C4  28 0  10P
+D1  16 19 DX
+D2  20 31 DX
+D3  16 20 DX
+D4  17 16 DX
+D5  18 16 DX
+D6  32 18 DX
+D7  0  33 DX
+D8  34 0  DX
+D9  8  7  DX
+D10 8  36 DX
+D11 36 7  DX
+D12 7  37 DX
+D13 37 6  DX
+D14 7  6  DX
+* E1, E2, E4 adjust gain for delta Vs.
+E1  25 0  POLY(1) 6 8 .9326 2.25E-3
+E2  12 0  POLY(1) 6 8 3.516E-1 5.39E-2 -1.692E-3 2.065E-5
+E3  21 0  POLY(1) 28 0 9.1839E-1 2.5364E-4 -2.0965E-7 5.7624E-11
+E4  23 0  POLY(2) 24 0 25 0 0 0 0 0 1
+E5  31 0  6       0  1.0
+E6  0  32 0       8  1.0
+* F1, F2 adjust slew rate for load and Vs.
+F1  20 31 POLY(2) VC VSR 0 1 -472M
+F2  32 18 POLY(2) VC VSR 0 -1 -472M
+F3  0  13 POLY(1) VL 1E-9 0 1
+* F4 senses load current.
+F4  0  30 POLY(2) VS VR 0 0 0 0 1
+* F5, F6, F7 simulate load current from +/-Vs.
+F5  6  0  VSP     1.0
+F6  0  8  VSN     1.0
+F7  35 0  POLY(2) VL VRI 0 1 -1
+* F8, F9 determines Isc.
+F8  8  36 POLY(2) VL VRI -350M -1 1
+F9  37 6  POLY(2) VL VRI -350M 1 -1
+* G1 adjusts internal gain.
+G1  11 0  POLY(3) 10 24 12 0 21 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1
+G2  26 0  POLY(1) 28 0 6.6474E-1 1.1761E-3 -1.2316E-6 4.407E-10
+G3  24 0  16      0  1M
+G4  13 0  POLY(1) 13 0 0 0 1
+G5  15 0  POLY(2) 15 0 13 0 0 0 0 0 1
+* G6 senses output voltage.
+G6  0  14 POLY(1) 7 0 2.5E-6 0 1
+G7  14 0  POLY(1) 14 0 0 0 1
+G8  15 0  14      0  -1.0
+* G9 output proportional to dc load resistor (defalts to 1k with ac load).
+G9  28 0  15      0  -1U
+G10 29 0  POLY(1) 6 8 -1.4626E-1 4.2552E-2 4.0888E-5 -6.2241E-6
+* Load capacitor sensor.
+H1  27 0  POLY(2) VL VRI 0 -15 15
+* Input bias current.
+IB  2  8  1U
+* Supply current.
+IQ  6  8  12.65MA
+* Input resistance.
+RIN 10 0  5E6
+R1  11 0  1K
+R2  12 0  1E6
+R3  25 0  1E6
+R4  13 0  1T
+R5  15 0  1T
+R6  21 0  1E6
+R7  6  8  11.2K
+R8  24 0  1K
+* Output resistor.
+R9  23 22 4.7
+R10 27 0  1E6
+R11 14 0  1T
+R13 28 0  1E6
+R14 7  38 1K
+VC  11 16 0V
+VL  22 7  0V
+* Input offset voltage.
+VOS 2  10 15M
+VR  0  26 0V
+VRI 38 0  0V
+VS  0  29 0V
+VSN 35 34 0V
+VSP 33 35 0V
+VSR 30 0  0V
+V1  31 19 2.135V
+V2  17 32 2.135V
+.MODEL DX D(IS=5E-14 TT=1E-10 CJO=1E-12)
+.ENDS
+**********

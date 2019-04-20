@@ -1,0 +1,142 @@
+* OP27 SPICE Macro-model                   12/90, Rev. B
+*                                           JCB / PMI
+* Copyright 1990 by Analog Devices, Inc.
+*
+* Refer to "README.DOC" file for License Statement.  Use of this model
+* indicates your acceptance with the terms and provisions in the License Statement.
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP27     1 2 99 50 39
+*
+* INPUT STAGE   POLE AT 80 MHZ
+*
+R3   5  97    0.0619
+R4   6  97    0.0619
+CIN  1   2    4E-12
+C2   5   6    16.07E-9
+I1   4  51    1
+IOS  1   2    3.5E-9
+EOS  9  10    POLY(1)  30 33  10E-6  1
+Q1   5  2  7  QX
+Q2   6  9  8  QX
+R5   7   4    0.0107
+R6   8   4    0.0107
+D1   2   1    DX
+D2   1   2    DX
+EN   10  1    12  0  1
+GN1  0   2    15  0  1
+GN2  0   1    18  0  1
+*
+EREF  98 0    33  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* VOLTAGE NOISE SOURCE WITH FLICKER NOISE
+*
+DN1  11  12   DEN
+DN2  12  13   DEN
+VN1  11   0   DC 2
+VN2  0   13   DC 2
+*
+* CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+DN3  14  15   DIN
+DN4  15  16   DIN
+VN3  14   0   DC 2
+VN4  0   16   DC 2
+*
+* SECOND CURRENT NOISE SOURCE
+*
+DN5  17  18   DIN
+DN6  18  19   DIN
+VN5  17   0   DC 2
+VN6  0   19   DC 2
+*
+* GAIN STAGE   DOMINANT POLE AT 4.0 HZ
+*
+R7   20 98     111.5E3
+C3   20 98     357E-9
+G1   98 20     5  6  16.15
+V1   97 21     1.2
+V2   22 51     1.2
+D5   20 21     DX
+D6   22 20     DX
+*
+* POLE - ZERO AT 2.9MHZ / 6MHZ
+*
+R8   23 98     1
+R9   23 24     0.935
+C4   24 98     28.4E-9
+G2   98 23     20 33  1
+*
+* ZERO - POLE AT 6.8MHZ / 40MHZ
+*
+R10  25 26     1
+R11  26 98     4.88
+L1   26 98     19.4E-9
+G3   98 25     23 33  1
+*
+* POLE AT 60 MHZ
+*
+R12  27 98     1
+C5   27 98     2.65E-9
+G4   98 27     25 33 1
+*
+* ZERO AT 28 MHZ
+*
+R13  28 29     1
+C6   28 29     -5.68E-9
+R14  29 98     1E-6
+E1   28 98     27 33  1E6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3 KHZ
+*
+R15  30 31     1
+L2   31 98     53.1E-6
+G5   98 30     POLY(2) 2  33  1  33  0  250.5E-9  250.5E-9
+D7   30 97     DX
+D8   51 30     DX
+*
+* POLE AT 80 MHZ
+*
+R16  32 98     1
+C7   32 98     1.99E-9
+G6   98 32     29 33  1
+*
+* OUTPUT STAGE
+*
+R17  33 97     1
+R18  33 51     1
+GSY  99 50     POLY(1) 99 50 1.8E-3 40E-6
+F1   34  0     V3  1
+F2   0  34     V4  1
+R19  34 99     180
+R20  34 50     180
+L3   34 39     1E-7
+G7   37 50     32 34  5.56E-3
+G8   38 50     34 32  5.56E-3
+G9   34 99     99 32  5.56E-3
+G10  50 34     32 50  5.56E-3
+V3   35 34     2.5
+V4   34 36     3.1
+D9   32 35     DX
+D10  36 32     DX
+D11  99 37     DX
+D12  99 38     DX
+D13  50 37     DY
+D14  50 38     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=50E6)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.MODEL DEN  D(IS=1E-12, RS=1.09K, KF=1.08E-16, AF=1)
+.MODEL DIN  D(IS=1E-12, RS=19.3E-6, KF=4.28E-15, AF=1)
+.ENDS

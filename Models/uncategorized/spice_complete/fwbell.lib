@@ -1,0 +1,2557 @@
+
+HALLSPICE READ-ME FILE                         Revision:--- (08/18/93) 
+
+* These SPICE Models are provided free, Courtesy of F.W. BELL, Inc.
+
+
+    Copyright 1993 F.W. BELL, INC.
+
+    The information on this diskette is protected under the
+    United States copyright laws.  F.W. BELL, INC.
+    ("Licensor") hereby grants to the user hereof
+    ("Licensee"), a non-exclusive, non-transferable license
+    to use the diskette and the models contained on this
+    diskette (collectively referred to as "Software") as long
+    as the Licensee abides by the terms of this agreement as
+    set forth in the following paragraphs.  Before using the
+    Software the Licensee should read the terms of this
+    license.  If Licensee does not accept these terms, this
+    diskette should be returned to Licensor within 10 days.
+
+    The Licensee shall not sell, transfer, publish, disclose,
+    load, lease, license, display or otherwise make available
+    the Software or copies thereof, in whole, in part, or in
+    modified form, to anyone in the Licensee's company other
+    than those who need to know nor to anyone outside the
+    Licensee's company.  The license granted herein includes
+    the right to copy the Software in non-printed machine
+    readable form in whole or in part as necessary for use
+    within Licensee's own business only.  The Licensee may
+    modify this Software to suit its specific application
+    needs in order to utilize this Software.
+
+    This Software is provided "AS IS AND WHERE IS, AND
+    LICENSOR MAKES AND LICENSEE RECEIVES NO WARRANTY EXPRESS
+    OR IMPLIED INCLUDING BUT NOR LIMITED TO ALL WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. 
+    LICENSOR SHALL HAVE NO LIABILITY WITH RESPECT TO ITS
+    OBLIGATIONS UNDER THIS AGREEMENT FOR CONSEQUENTIAL,
+    COLLATERAL, EXEMPLARY, OR INCIDENTAL DAMAGES EVEN IF IT
+    HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES." 
+    Licensor reserves the right to make changes to the
+    Software and the underlying products without prior
+    notice.
+
+F.W. BELL, Inc., THE COMPANY
+
+F.W BELL, Inc. is a recognized leader in magnetic sensing technology, 
+supplying instruments to the OEM and end user marketplaces worldwide. Our 
+Hall Effect Gaussmeter line is one of four product lines produced by F.W. 
+BELL. More F.W BELL Gaussmeters are sold through out the world than by all 
+the other manufactures combined.
+
+A commitment to quality and dedication to the advancement of technology 
+assures you superior products. No other manufacturer will do more to bring 
+you quality Hall Generators than F.W. BELL Inc. 
+
+
+SPICE MODELING AND BREADBOARDING
+
+SPICE modeling is an extremely powerful tool for predicting the performance
+of analog circuits that utilize Hall Generators and for comparing different 
+types of Hall Generators with one another in the same circuit. However, SPICE 
+Models do not model all characteristics and they may omit real life effects. 
+For these reasons it is a must to breadboard a prototype to prove and verify 
+the final design!
+
+
+SAMPLES AND TECHNICAL SUPPORT
+
+Samples are available for many of the Hall Generators that we have modeled. 
+We strongly suggest breadboarding and we will be glad to support you with 
+samples, for this purpose. For a sample or any technical questions please, 
+call 1-800-775-2550 or FAX to 1-407-677-5765. For more information on other 
+F.W. BELL products request a copy of our Short Form Catalog.
+
+
+TECHNICAL SPECIFICATIONS
+
+Full electrical and mechanical specifications for all the Hall Generators
+are found in F.W. BELL's Hall Generator Catalog. This 24 page catalog also
+contains; helpful information on the Hall Effect, Hall Generator Theory and
+Application Aids.
+
+
+SPICE MODELERS DISCOUNT
+
+Any user of F.W. BELL, Inc.'s SPICE Models is eligible for a discount up to 
+25% on their first order of Hall Generators. You will be given the 100 piece 
+price for the Hall Generator you modeled. To be entitled to this discount you 
+must make your purchase no later than 90 days after the receipt of the SPICE 
+Models. This discount is only good for your first order. Proof of the time 
+element is the responsibility of the end user. This offer is good for a 
+limited time only.
+
+
+
+
+F. W. BELL HALL GENERATORS
+
+      The following hall generators are modeled on this disk:
+
+      BH-200     BHA-910     BH-700     FH-301-040     GH-600
+      BH-203     BHT-910     BH-705     FH-540
+      BH-208                                             
+
+
+MODEL DESCRIPTION 
+ 
+ * The Models were written in Berkeley Standard 2G6 format and are useable
+on Microsim, Intosoft and other standard analog circuit simulation programs.
+
+ * The following parameters are modeled, for each Hall Generator:
+      
+Input Resistance         Output Resistance           Magneto Resistance  
+Magnetic Sensitivity     Inductive Pickup            Linearity
+Offset Voltage           Temp Coeff, Output          Temp Coeff, Offset 
+
+ * Min, Nominal and Max Model is included for each Hall Generator. The 
+parameters that are altered in these models are, Input Resistance (Rin),
+Output Resistance (Rout), and Sensitivity (Yb). All temperature coefficients
+and the Misalignment Voltage are set to their Max values. All other parameters
+are set to their nominal values.
+
+* The following diagrams of the hall generator symbol and the subckt node
+* assignment shows connections required for a spice circuit.
+
+******************** HALL GENERATOR HALLSPICE SYMBOL ******************
+*
+*                                  (+Ic) CONTROL CURRENT   
+*  MAGNETIC FIELD INPUT (+B)         |
+*                            \       |
+*                            / \  -------
+*  MAGNETIC FIELD INPUT (-B)     \|     |
+*                                 |\    |
+*     HALL OUTPUT (-Vh)-----------|  \  |-----------(+Vh) HALL OUTPUT
+*                                 |     |
+*                                 |     |
+*                                 -------
+*                                    |
+*                                    |
+*                                  (-Ic) CONTROL CURRENT
+***********************************************************************
+* NODES:       +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*              |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*              |   |  +Vh HALL OUTPUT 
+*              |   |  | -Vh HALL OUTPUT
+*              |   |  | |  +B MAGNETIC FIELD INPUT
+*              |   |  | |  |   -B MAGNETIC FIELD INPUT
+*              |   |  | |  |   |
+*.SUBCKT BH200  2 100 17 4 31 101
+* |
+* |
+*.ENDS
+
+
+EXAMPLE CIRCUIT:
+     
+The EXAMPLE circuit is similar to Figure 11(a) page 24 of the  
+F.W. Bell Hall Generator Catalog.
+ 
+Vs is changed to 15V and the resistor (R1 in model) has been changed 
+to 3K ohms.
+
+A resistor (RL) is connected across the Hall output so spice can 
+run the analysis properly.  The resistance value of RL may be
+varied to observe loading effects.
+ 
+V(3,2) is the Hall Output
+
+IB represents the magnetic field level.
+1 Ampere = 1 KiloGauss
+
+The output file will contain a magnetic field sweep from -30KG(30A) to 
++30KG(30A), frequency response for 10Hz to 100KHz, and a transient analysis
+for a 10KG(10A) 10uS pulse with a 1uS rise and fall time. A printout of I(V1)
+is provided to demonstrate the change in Hall current (Ic) caused by the
+magnetoresistive effect of the Hall input resistance (Rin).
+
+
+
+      For any technical questions please, call 1-800-775-2550 or 
+      FAX to 1-407-677-5765.
+*
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH200MAX_FW 2 100 17 4 31 101
+*
+*
+FUO 100 41 VIST 1.E-3
+RGUO 41 100 1 TC = 1.E-2
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.0625
+E2 13 4 50 100 0.0625
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 6.38E-5 0 7.465E-8
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 4.695
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.33862 0.108319
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=3.126
+*
+HRI2 74 100 POLY(1) VIB -0.34121 -0.10838
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=3.148
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+* 
+HRO1 93 100 POLY(1) VIB -0.24846 0.109796
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=2.2629
+*
+HRO2 94 100 POLY(1) VIB -0.24709 -0.10988
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=2.2487
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 1.5 TC= 1.5E-3
+R2 5 8 1.5 TC= 1.5E-3
+R3 10 9 1.5 TC= 1.5E-3
+R4 5 12 1.5 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-200  MINIMUM   ***********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+*
+.SUBCKT BH200MIN_FW 2 100 17 4 31 101
+*
+*
+FUO 100 41 VIST 1.E-3
+RGUO 41 100 1 TC = 1.E-2
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 3.75E-2
+E2 13 4 50 100 3.75E-2
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 6.38E-5 0 7.465E-8
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 4.695
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.33862 0.108319
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=3.126
+*
+HRI2 74 100 POLY(1) VIB -0.34121 -0.10838
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=3.148
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.24846 0.109796
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=2.2629
+*
+HRO2 94 100 POLY(1) VIB -0.24709 -0.10988
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=2.2487
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 0.75 TC= 1.5E-3
+R2 5 8 0.75 TC= 1.5E-3
+R3 10 9 0.75 TC= 1.5E-3
+R4 5 12 0.75 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-200  NOMINAL    *********************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT BH200_FW 2 100 17 4 31 101
+*
+*
+FUO 100 41 VIST 1.E-3
+RGUO 41 100 1 TC = 1.E-2
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.05
+E2 13 4 50 100 0.05
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 6.38E-5 0 7.465E-8
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 4.695
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.33862 0.108319
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=3.126
+*
+HRI2 74 100 POLY(1) VIB -0.34121 -0.10838
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=3.148
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.24846 0.109796
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=2.2629
+*
+HRO2 94 100 POLY(1) VIB -0.24709 -0.10988
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=2.2487
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 1 TC= 1.5E-3
+R2 5 8 1 TC= 1.5E-3
+R3 10 9 0.85 TC= 1.5E-3
+R4 5 12 0.85 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+*
+****************     BH-203  MAXIMUM    **********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH203MAX_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 1.E-3
+RGUO 41 100 1 TC = 1.E-2
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.0625
+E2 13 4 50 100 0.0625
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 1.22E-4 0 1.396E-7
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 7.958
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.28125 0.12257
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=2.2946
+*
+HRI2 74 100 POLY(1) VIB -0.28125 -0.12257
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=2.2946
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.30275 0.1173
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=2.58
+*
+HRO2 94 100 POLY(1) VIB -0.30275 -0.1173
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=2.58
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 1.5 TC= 1.5E-3
+R2 5 8 1.5 TC= 1.5E-3
+R3 10 9 1.5 TC= 1.5E-3
+R4 5 12 1.5 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-203 MINIMUM      ********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH203MIN_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 1.E-3
+RGUO 41 100 1 TC = 1.E-2
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.0375
+E2 13 4 50 100 0.0375
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 1.22E-4 0 1.396E-7
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 7.958
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.28125 0.12257
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=2.2946
+*
+HRI2 74 100 POLY(1) VIB -0.28125 -0.12257
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=2.2946
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.30275 0.1173
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=2.58
+*
+HRO2 94 100 POLY(1) VIB -0.30275 -0.1173
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=2.58
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 0.75 TC= 1.5E-3
+R2 5 8 0.75 TC= 1.5E-3
+R3 10 9 0.75 TC= 1.5E-3
+R4 5 12 0.75 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-203   NOMINAL     *********************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT BH203_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 1.E-3
+RGUO 41 100 1 TC = 1.E-2
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.05
+E2 13 4 50 100 0.05
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 1.22E-4 0 1.396E-7
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 7.958
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.28125 0.12257
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=2.2946
+*
+HRI2 74 100 POLY(1) VIB -0.28125 -0.12257
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=2.2946
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.30275 0.1173
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=2.58
+*
+HRO2 94 100 POLY(1) VIB -0.30275 -0.1173
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=2.58
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 0.95 TC= 1.5E-3
+R2 5 8 0.95 TC= 1.5E-3
+R3 10 9 0.95 TC= 1.5E-3
+R4 5 12 0.95 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-208   MAXIMUM      ********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH208MAX_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 2.5E-3
+RGUO 41 100 1 TC = 4.E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.0625
+E2 13 4 50 100 0.0625
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 2.204E-4 0 4.478E-8
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 4.377
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.444 0.1306
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=3.398
+*
+HRI2 74 100 POLY(1) VIB -0.444 -0.1306
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=3.398
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.444 0.1205
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=3.683
+*
+HRO2 94 100 POLY(1) VIB -0.444 -0.1205
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=3.683
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 2.0 TC= 1.5E-3
+R2 5 8 2.0 TC= 1.5E-3
+R3 10 9 2.0 TC= 1.5E-3
+R4 5 12 2.0 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-208 MINIMUM    ***********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH208MIN_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 2.5E-3
+RGUO 41 100 1 TC = 4.E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.0375
+E2 13 4 50 100 0.0375
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 2.204E-4 0 4.478E-8
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 4.377
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.444 0.1306
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=3.398
+*
+HRI2 74 100 POLY(1) VIB -0.444 -0.1306
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=3.398
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.444 0.1205
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=3.683
+*
+HRO2 94 100 POLY(1) VIB -0.444 -0.1205
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=3.683
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 1.0 TC= 1.5E-3
+R2 5 8 1.0 TC= 1.5E-3
+R3 10 9 1.0 TC= 1.5E-3
+R4 5 12 1.0 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+****************     BH-208   NOMINAL   *********************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT BH208_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 2.5E-3
+RGUO 41 100 1 TC = 4.E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.05
+E2 13 4 50 100 0.05
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB 0 2.204E-4 0 4.478E-8
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 4.377
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 10.0
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 73 100 POLY(1) VIB -0.444 0.1306
+MI1 73 63 70 70 TYPE1
+HGI1 63 70 VIB 1
+.MODEL TYPE1 NMOS VTO=3.398
+*
+HRI2 74 100 POLY(1) VIB -0.444 -0.1306
+MI2 74 64 70 70 TYPE2
+HGI2 64 70 VIB -1
+.MODEL TYPE2 NMOS VTO=3.398
+*
+RMAGI 70 100 1 TC= 1.5E-3
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+HRO1 93 100 POLY(1) VIB -0.444 0.1205
+MO1 93 95 80 80 TYPE3
+HGO1 95 80 VIB 1
+.MODEL TYPE3 NMOS VTO=3.683
+*
+HRO2 94 100 POLY(1) VIB -0.444 -0.1205
+MO2 94 96 80 80 TYPE4
+HGO2 96 80 VIB -1
+.MODEL TYPE4 NMOS VTO=3.683
+*
+RMAGO 80 100 1 TC= 1.5E-3
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 1.5 TC= 1.5E-3
+R2 5 8 1.5 TC= 1.5E-3
+R3 10 9 1.5 TC= 1.5E-3
+R4 5 12 1.5 TC= 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -8.E-4
+*
+.ENDS
+**************  HALL GENERATOR BH-700  MAXIMUM  ***************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH700MAX_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.0075
+RGUO 100 41 1 TC = 8.e-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -0.002
+*
+E1 3 11 50 100 0.2
+E2 13 4 50 100 0.2
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 4.424E-4 0 -7.501E-7
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -0.002
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 31.83
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -0.0075 0 0 5
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0.377
+RMAGI 100 70 1 TC = 0.002
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 0.349
+RMAGO 80 100 1 TC = 0.002
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 2.75 TC = 0.002
+R2 5 8 2.75 TC = 0.002
+R3 10 9 2.75 TC = 0.002
+R4 5 12 2.75 TC = 0.002
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+**************  HALL GENERATOR BH-700  MINIMUM   **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH700MIN_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.0075
+RGUO 100 41 1 TC = 8.e-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -0.002
+*
+E1 3 11 50 100 0.125
+E2 13 4 50 100 0.125
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 4.424E-4 0 -7.501E-7
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -0.002
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 31.83
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -0.0075 0 0 5
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0.377
+RMAGI 100 70 1 TC = 0.002
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 0.349
+RMAGO 80 100 1 TC = 0.002
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 1.5 TC = 0.002
+R2 5 8 1.5 TC = 0.002
+R3 10 9 1.5 TC = 0.002
+R4 5 12 1.5 TC = 0.002
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+**************  HALL GENERATOR BH-700  NOMINAL  **************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT BH700_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.0075
+RGUO 100 41 1 TC = 8.e-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -0.002
+*
+E1 3 11 50 100 0.1625
+E2 13 4 50 100 0.1625
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 4.424E-4 0 -7.501E-7
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -0.002
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 31.83
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -0.0075 0 0 5
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0.377
+RMAGI 100 70 1 TC = 0.002
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 0.349
+RMAGO 80 100 1 TC = 0.002
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 1.75 TC = 0.002
+R2 5 8 1.75 TC = 0.002
+R3 10 9 1.75 TC = 0.002
+R4 5 12 1.75 TC = 0.002
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+**************  HALL GENERATOR BH-705 MAXIMUM  ***************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH705MAX_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.003
+RGUO 100 41 1 TC = 3.3333E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -8.E-4
+*
+E1 3 11 50 100 0.0625
+E2 13 4 50 100 0.0625
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 9.59E-5 0 8.255E-8
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 13.528
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -0.003 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0.076
+RMAGI 100 70 1 TC = 0.002
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 8.38E-2
+RMAGO 80 100 1 TC = 0.002
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 1.1 TC = 0.002
+R2 5 8 1.1 TC = 0.002
+R3 10 9 1.0 TC = 0.002
+R4 5 12 1.0 TC = 0.002
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+***************  HALL GENERATOR BH-705  MINIMUM **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BH705MIN_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.003
+RGUO 100 41 1 TC = 3.3333E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -8.E-4
+*
+E1 3 11 50 100 0.0375
+E2 13 4 50 100 0.0375
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 9.59E-5 0 8.255E-8
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 13.528
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -0.003 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0.076
+RMAGI 100 70 1 TC = 0.002
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 8.38E-2
+RMAGO 80 100 1 TC = 0.002
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.75 TC = 0.002
+R2 5 8 0.75 TC = 0.002
+R3 10 9 0.75 TC = 0.002
+R4 5 12 0.75 TC = 0.002
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+***************  HALL GENERATOR BH-705 NOMINAL **************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT BH705_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.003
+RGUO 100 41 1 TC = 3.3333E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -8.E-4
+*
+E1 3 11 50 100 0.05
+E2 13 4 50 100 0.05
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 9.59E-5 0 8.255E-8
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -8.E-4
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 13.528
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -0.003 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0.076
+RMAGI 100 70 1 TC = 0.002
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 8.38E-2
+RMAGO 80 100 1 TC = 0.002
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.9 TC = 0.002
+R2 5 8 0.9 TC = 0.002
+R3 10 9 0.9 TC = 0.002
+R4 5 12 0.9 TC = 0.002
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+**************  HALL GENERATOR BHA-910 MAXIMUM  ****************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BHA910MA_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 5.E-4
+RGUO 100 41 1 TC = 8.E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -4.807E-3
+*
+E1 3 11 50 100 5.2E-3
+E2 13 4 50 100 5.2E-3
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 0 0 0 0 4.132E-13
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -4.807E-3
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 0.8753
+*
+EXX1 301 100 POLY(2) 71 100 203 100 0 -5.E-4 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 6.66E-3
+RMAGI 100 70 1 TC = 1.5E-3
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 6.4E-3
+RMAGO 80 100 1 TC = 1.5E-3
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.75 TC = 1.5E-3
+R2 5 8 0.75 TC = 1.5E-3
+R3 10 9 0.75 TC = 1.5E-3
+R4 5 12 0.75 TC = 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+***************  HALL GENERATOR BHA-910 MINIMUM  **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BHA910MI_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 5.E-4
+RGUO 100 41 1 TC = 8.E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -4.807E-3
+*
+E1 3 11 50 100 2.8E-3
+E2 13 4 50 100 2.8E-3
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 0 0 0 0 4.132E-13
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -4.807E-3
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 0.8753
+*
+EXX1 301 100 POLY(2) 71 100 203 100 0 -5.E-4 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 6.66E-3
+RMAGI 100 70 1 TC = 1.5E-3
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 6.4E-3
+RMAGO 80 100 1 TC = 1.5E-3
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.35 TC = 1.5E-3
+R2 5 8 0.35 TC = 1.5E-3
+R3 10 9 0.35 TC = 1.5E-3
+R4 5 12 0.35 TC = 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+***************  HALL GENERATOR BHA-910  NOMINAL **************
+*
+* NODES:       +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*              |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*              |   |  +Vh HALL OUTPUT 
+*              |   |  | -Vh HALL OUTPUT
+*              |   |  | |  +B MAGNETIC FIELD INPUT
+*              |   |  | |  |   -B MAGNETIC FIELD INPUT
+*              |   |  | |  |   |
+.SUBCKT BHA910_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 5.E-4
+RGUO 100 41 1 TC = 8.E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -4.807E-3
+*
+E1 3 11 50 100 4.E-3
+E2 13 4 50 100 4.E-3
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 0 0 0 0 4.132E-13
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -4.807E-3
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 0.8753
+*
+EXX1 301 100 POLY(2) 71 100 203 100 0 -5.E-4 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 6.66E-3
+RMAGI 100 70 1 TC = 1.5E-3
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 6.4E-3
+RMAGO 80 100 1 TC = 1.5E-3
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.5 TC = 1.5E-3
+R2 5 8 0.5 TC = 1.5E-3
+R3 10 9 0.5 TC = 1.5E-3
+R4 5 12 0.5 TC = 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+***************  HALL GENERATOR BHT-910 MAXIMUM  **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BHT910MA_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 5.E-4
+RGUO 100 41 1 TC = 8.E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -4.807E-3
+*
+E1 3 11 50 100 5.2E-3
+E2 13 4 50 100 5.2E-3
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 0 8.165E-9 6.546E-10
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -4.807E-3
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 0.8753
+*
+EXX1 301 100 POLY(2) 71 100 203 100 0 -5.E-4 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 6.E-3
+RMAGI 100 70 1 TC = 1.5E-3
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 6.E-3
+RMAGO 80 100 1 TC = 1.5E-3
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.75 TC = 1.5E-3
+R2 5 8 0.75 TC = 1.5E-3
+R3 10 9 0.75 TC = 1.5E-3
+R4 5 12 0.75 TC = 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+**************  HALL GENERATOR BHT-910 MINIMUM  **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT BHT910MI_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 5.E-4
+RGUO 100 41 1 TC = 8.E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -4.807E-3
+*
+E1 3 11 50 100 2.8E-3
+E2 13 4 50 100 2.8E-3
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 0 8.165E-9 6.546E-10
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -4.807E-3
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 0.8753
+*
+EXX1 301 100 POLY(2) 71 100 203 100 0 -5.E-4 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 6.E-3
+RMAGI 100 70 1 TC = 1.5E-3
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 6.E-3
+RMAGO 80 100 1 TC = 1.5E-3
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.35 TC = 1.5E-3
+R2 5 8 0.35 TC = 1.5E-3
+R3 10 9 0.35 TC = 1.5E-3
+R4 5 12 0.35 TC = 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+***************  HALL GENERATOR BHT-910 NOMINAL **************
+*
+* NODES:       +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*              |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*              |   |  +Vh HALL OUTPUT 
+*              |   |  | -Vh HALL OUTPUT
+*              |   |  | |  +B MAGNETIC FIELD INPUT
+*              |   |  | |  |   -B MAGNETIC FIELD INPUT
+*              |   |  | |  |   |
+.SUBCKT BHT910_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 5.E-4
+RGUO 100 41 1 TC = 8.E-4
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -4.807E-3
+*
+E1 3 11 50 100 4.E-3
+E2 13 4 50 100 4.E-3
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 0 8.165E-9 6.546E-10
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -4.807E-3
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 0.8753
+*
+EXX1 301 100 POLY(2) 71 100 203 100 0 -5.E-4 0 0 10
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 6.E-3
+RMAGI 100 70 1 TC = 1.5E-3
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EFRI 370 100 POLY(2) 70 100 212 100 0 0 0 0 1
+RFI 370 100 1
+*
+EV1 7 6 POLY(2) 71 100 370 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  370 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 6.E-3
+RMAGO 80 100 1 TC = 1.5E-3
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EFRO 380 100 POLY(2) 80 100 212 100 0 0 0 0 1
+RFO 380 100 1
+*
+EV3 11 10 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 380 100 0 0 0 0 -0.5
+*
+R1 6 5 0.5 TC = 1.5E-3
+R2 5 8 0.5 TC = 1.5E-3
+R3 10 9 0.5 TC = 1.5E-3
+R4 5 12 0.5 TC = 1.5E-3
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+
+****************     FH-301 MAXIMUM    ***********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT FH301MAX_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.4
+RGUO 41 100 1 TC = 1.667E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 1.0
+E2 13 4 50 100 1.0
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB -0.006 4.439E-4 0 -1.537E-6
+RG 190 100 1 TC = -0.001
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 35.8
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 66.66
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 70 100 POLY(1) VIB 0 0 5.555E-2
+RMAGI 70 100 1 TC= 0.001
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 0.5
+*
+HRO1 80 100 POLY(1) VIB 0 0 5.555E-2
+RMAGO 80 100 1 TC= 0.001
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 0.5
+*
+R1 6 5 40.0 TC= 0.001
+R2 5 8 40.0 TC= 0.001
+R3 10 9 120.0 TC= 0.001
+R4 5 12 120.0 TC= 0.001
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -0.001
+*
+.ENDS
+****************     FH-301 MINIMUM     **********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT FH301MIN_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.4
+RGUO 41 100 1 TC = 1.667E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.4
+E2 13 4 50 100 0.4
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB -0.006 4.439E-4 0 -1.537E-6
+RG 190 100 1 TC = -0.001
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 35.8
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 66.66
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 70 100 POLY(1) VIB 0 0 5.555E-2
+RMAGI 70 100 1 TC= 0.001
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 0.5
+*
+HRO1 80 100 POLY(1) VIB 0 0 5.555E-2
+RMAGO 80 100 1 TC= 0.001
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 0.5
+*
+R1 6 5 20.0 TC= 0.001
+R2 5 8 20.0 TC= 0.001
+R3 10 9 40.0 TC= 0.001
+R4 5 12 40.0 TC= 0.001
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -0.001
+*
+.ENDS
+****************     FH-301 NOMINAL     **********************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT FH301_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.4
+RGUO 41 100 1 TC = 1.667E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.5
+E2 13 4 50 100 0.5
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB -0.006 4.439E-4 0 -1.537E-6
+RG 190 100 1 TC = -0.001
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 35.8
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 66.66
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 70 100 POLY(1) VIB 0 0 5.555E-2
+RMAGI 70 100 1 TC= 0.001
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 0.5
+*
+HRO1 80 100 POLY(1) VIB 0 0 5.555E-2
+RMAGO 80 100 1 TC= 0.001
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 0.5
+*
+R1 6 5 30.0 TC= 0.001
+R2 5 8 30.0 TC= 0.001
+R3 10 9 65 TC= 0.001
+R4 5 12 65 TC= 0.001
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -0.001
+*
+.ENDS
+
+****************     FH-540 MAXIMUM     **********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT FH540MAX_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.4
+RGUO 41 100 1 TC = 1.667E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 1.0
+E2 13 4 50 100 1.0
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB -0.006 1.834E-4 0 -4.469E-7
+RG 190 100 1 TC = -0.001
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 35.8
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 66.66
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 70 100 POLY(1) VIB 0 0 5.1E-2
+RMAGI 70 100 1 TC= 0.001
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 0.5
+*
+HRO1 80 100 POLY(1) VIB 0 0 0.081
+RMAGO 80 100 1 TC= 0.001
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 0.5
+*
+R1 6 5 40.0 TC= 0.001
+R2 5 8 40.0 TC= 0.001
+R3 10 9 120.0 TC= 0.001
+R4 5 12 120.0 TC= 0.001
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -0.001
+*
+.ENDS
+****************     FH-540 MINIMUM     ***********************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT FH540MIN_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.4
+RGUO 41 100 1 TC = 1.667E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.4
+E2 13 4 50 100 0.4
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB -0.006 1.834E-4 0 -4.469E-7
+RG 190 100 1 TC = -0.001
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 35.8
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 66.66
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 70 100 POLY(1) VIB 0 0 5.1E-2
+RMAGI 70 100 1 TC= 0.001
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 0.5
+*
+HRO1 80 100 POLY(1) VIB 0 0 0.081
+RMAGO 80 100 1 TC= 0.001
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 0.5
+*
+R1 6 5 20.0 TC= 0.001
+R2 5 8 20.0 TC= 0.001
+R3 10 9 40.0 TC= 0.001
+R4 5 12 40.0 TC= 0.001
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -0.001
+*
+.ENDS
+****************     FH-540 NOMINAL     ***********************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT FH540_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 0.4
+RGUO 41 100 1 TC = 1.667E-3
+*
+EUO 9 5 41 100 1
+*
+E1 3 11 50 100 0.5
+E2 13 4 50 100 0.5
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+FNON 100 190 POLY(1) VIB -0.006 1.834E-4 0 -4.469E-7
+RG 190 100 1 TC = -0.001
+*
+EMAGC 37 100 31 1 1.E3
+CMAG  37 38 1.E-11
+RMAG  38 100 35.8
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 0 0 0 66.66
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+HRI1 70 100 POLY(1) VIB 0 0 5.1E-2
+RMAGI 70 100 1 TC= 0.001
+* 
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 0.5
+*
+HRO1 80 100 POLY(1) VIB 0 0 0.081
+RMAGO 80 100 1 TC= 0.001
+*
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 0.5
+*
+R1 6 5 30.0 TC= 0.001
+R2 5 8 30.0 TC= 0.001
+R3 10 9 65.0 TC= 0.001
+R4 5 12 65.0 TC= 0.001
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST 50 100 1 TC = -0.001
+*
+.ENDS
+***************  HALL GENERATOR GH-600  MAXIMUM  **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT GH600MAX_FW 2 100 17 4 31 101
+*
+* 2 AND 100 : CURRENT INPUTS,
+* 17 AND 4 : THE OUTPUT HALL VOLTAGE TERMINALS, 
+* 31 AND 101 : THE MAGNETIC FIELD INPUTS.
+*
+FUO 100 41 VIST 2.4
+RGUO 100 41 1 TC = 2.5e-7
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -0.0007
+*
+E1 3 11 50 100 14.0
+E2 13 4 50 100 14.0
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 -3.075E-4 0 9.25E-7
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -0.0007
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 39.78
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -2.4 0 0 200
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0 -0.491
+RMAGI 100 70 1 TC = 0.0015
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 0 -0.56
+RMAGO 80 100 1 TC = 0.0015
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 450 TC = 0.0015
+R2 5 8 450 TC = 0.0015
+R3 10 9 850 TC = 0.0015
+R4 5 12 850 TC = 0.0015
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+***************  HALL GENERATOR GH-600 MINIMUM **************
+*
+* NODES:         +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*                |   |  +Vh HALL OUTPUT 
+*                |   |  | -Vh HALL OUTPUT
+*                |   |  | |  +B MAGNETIC FIELD INPUT
+*                |   |  | |  |   -B MAGNETIC FIELD INPUT
+*                |   |  | |  |   |
+.SUBCKT GH600MIN_FW 2 100 17 4 31 101
+*
+* 2 AND 100 : CURRENT INPUTS,
+* 17 AND 4 : THE OUTPUT HALL VOLTAGE TERMINALS, 
+* 31 AND 101 : THE MAGNETIC FIELD INPUTS.
+*
+FUO 100 41 VIST 2.4
+RGUO 100 41 1 TC = 2.5e-7
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -0.0007
+*
+E1 3 11 50 100 5.0
+E2 13 4 50 100 5.0
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 -3.075E-4 0 9.25E-7
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -0.0007
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 39.78
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -2.4 0 0 200
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0 -0.491
+RMAGI 100 70 1 TC = 0.0015
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 0 -0.56
+RMAGO 80 100 1 TC = 0.0015
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 225 TC = 0.0015
+R2 5 8 225 TC = 0.0015
+R3 10 9 290 TC = 0.0015
+R4 5 12 290 TC = 0.0015
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS
+***************  HALL GENERATOR GH-600  **********************
+*
+* NODES:      +Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   -Ic HALL CONTROL(BIAS) CURRENT INPUT
+*             |   |  +Vh HALL OUTPUT 
+*             |   |  | -Vh HALL OUTPUT
+*             |   |  | |  +B MAGNETIC FIELD INPUT
+*             |   |  | |  |   -B MAGNETIC FIELD INPUT
+*             |   |  | |  |   |
+.SUBCKT GH600_FW 2 100 17 4 31 101
+*
+FUO 100 41 VIST 2.4
+RGUO 100 41 1 TC = 2.5e-7
+EUO 9 5 41 100 1
+*
+GFST 100 50 POLY(2) 31 1 71 100 0 0 0 0 1
+RST  100 50 1 TC = -0.0007
+*
+E1 3 11 50 100 9.5
+E2 13 4 50 100 9.5
+*
+VIST 2 7 0
+VOM 15 3 0
+*
+ENON1 203 100 POLY(1) 31 101 0 -3.075E-4 0 9.25E-7
+RNON1 203 100 1
+*
+FB 100 210 VIB 0.1
+RB1 210 100 100K
+Q1 212 210 211 QMOD
+.MODEL QMOD NPN
+RQ1 212 213 10K
+VCQ1 213 100 1.0
+VEQ1 211 100 -1.0
+*
+GNON 100 190 POLY(2) 203 100 212 100 0 0 0 0 -1
+*
+RG 190 100 1 TC = -0.0007
+*
+EMAGC 37 100 31 1 1.E3
+CMAG 37 38 1.E-11
+RMAG 38 100 39.78
+*
+EXX1 301 100 POLY(2) 71 100 190 100 0 -2.4 0 0 200
+EXX2 302 301 38 100 1
+RXX1 302 100 1
+*
+ENON 17 15 302 100 1
+*
+FRI 100 70 POLY(1) VIB 0 0 -0.491
+RMAGI 100 70 1 TC = 0.0015
+HIST 71 100 VIST 1
+RIST 71 100 1
+*
+EV1 7 6 POLY(2) 71 100 70 100 0 0 0 0 -0.5
+EV2 8 100 POLY(2) 71 100  70 100 0 0 0 0 -0.5
+*
+FRO 100 80 POLY(1) VIB 0 0 -0.56
+RMAGO 80 100 1 TC = 0.0015
+HVOM 81 100 VOM 1
+ROM 81 100 1
+*
+EV3 11 10 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+EV4 12 13 POLY(2) 81 100 80 100 0 0 0 0 -0.5
+*
+R1 6 5 345 TC = 0.0015
+R2 5 8 345 TC = 0.0015
+R3 10 9 570 TC = 0.0015
+R4 5 12 570 TC = 0.0015
+*
+RB 31 1 1
+VIB 1 101 0
+RDUM 101 100 1.E8
+*
+.ENDS

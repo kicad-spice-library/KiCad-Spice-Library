@@ -1,0 +1,333 @@
+**********
+* Copyright Intusoft 1992-1997
+* All Rights Reserved
+**********
+**********
+*SRC=PWRSPLY;PWRSPLY;!Generators;Power;Current Limited
+*SYM=DCSUPPLY
+.SUBCKT PWRSPLY 1 2 {Voltage=5 ILimit =1 Rmin=1u delta=.01}
+*smooth cosine limiting with variable sharpness
+*Parameters:
+*Voltage Voltage Output in Volts, 
+*ILimit Current limit in Amps for 1/2 output voltage, 
+*Rmin Minimum resistance in Ohms
+*delta fraction of Ilimit used from start of limit to 0 volts
+R1 4 1 {Rmin}
+V1 3 4
+B1 3 2 V=I(V1) < {(1-delta/2)  * ILimit } ? 
++ {Voltage}  :  I(V1)  >  {(1+ delta/2)  *  ILimit }  ?  0  : 
++  {Voltage * .5}*(  1+cos(3.14159*(I(V1) - ({(1-delta/2) * ILimit}))/({ILimit* delta}))  )
+
+.ENDS
+**********
+*SRC=PWRSPLY2;PWRSPLY2;!Generators;Power;Sigmoid Current Limited
+*SYM=DCSUPPLY
+.SUBCKT PWRSPLY2 VHI VLO {Voltage=5 ILimit=1 Gain=1K Rmin=1u}
+*Parameters:
+* Voltage Voltage Output in Volts, ILimit Current limit in Amps, Rmin Minimum resistance in Ohms
+* Gain Gain
+B1 VLO VHI I = V(ER) * {ILimit} / (1 + V(ER))
+B2 ER 0 V = ({Voltage} - V(VHI) + V(VLO)) * {Gain}
+.ENDS
+**********
+*SRC=PSUPPLY;PSUPPLY;!Generators;Power;Power Supply
+*SYM=PSUPPLY
+.SUBCKT PSUPPLY 1 2 3 4 5 6 {VCC=??? VEE=??? VBIAS=???}
+*Parameters:
+* VCC VCC Output in Volts, VEE VEE Output in Volts, VEE VEE Output in Volts
+V1 1 2 {VCC}
+R1 1 2 1MEG
+V2 3 4 {VEE}
+R2 3 4 1MEG
+V3 5 6 {VBIAS}
+R3 5 6 1MEG
+.ENDS
+**********
+*SRC=AM;AM;!Generators;Signal;
+*SYM=AM
+.SUBCKT AM 1 2 {CARAMP=??? CARFQ=??? PCTMOD=??? MODFQ=???}
+*          + -
+*Parameters:
+* Caramp Carrier Amplitude in Volts, CarFq Carrier frequency in Hz, 
+* PctMod Percent modulation in %, ModFq Modulation Frequency in Hz             
+V1 3 2 SIN 0 {CARAMP} {CARFQ}
+R1 3 2 100K
+R3 4 2 100K
+E1 1 2 POLY(2) 3 2 4 2 0 1 0 0 {1/CARAMP}
+V2 4 2 SIN 0 {CARAMP * (PCTMOD/100)} {MODFQ}
+.ENDS
+**********
+*SRC=VCO;VCO;VCOs;Sin Wave Output, UIC;
+*SYM=VCO
+.SUBCKT VCO 3 2 {VPK=??? FREQ=???}
+*Parameters:
+* Vpk Peak voltage output in Volts, 
+* Freq Output Signal Frequency/Volt - 1K would give 1KHz output with 1 Volt input and 
+* 2KHz output with 2 Volts Input
+* Requires UIC option in the .TRAN
+RE1 2 0 1K
+E1 2 0 22 0 1
+G1 1 0 POLY(2) 22 0 3 0 0 0 0 0 -1 
+G2 22 0 POLY(2) 1 0 3 0 0 0 0 0 1 
+R2 1 0 1E9
+I1 0 1 PULSE {1N*VPK} 0
+C1 22 0 {.15915/FREQ} IC=0
+R1 22 0 1E9
+R3 0 3 1MEG
+C2 1 0 {.15915/FREQ} IC={VPK}
+.ENDS
+**********
+*SRC=GEN3;GEN3;!Generators;Signal;Three Phase
+*SYM=GEN3
+*HELP issyntax.hlp "3 Phase Power Generator"
+.SUBCKT GEN3 3 7 1 20  {FREQ=??? VGEN=??? MAGERR=0 PHASE=0}
+*Parameters:
+* Freq Generator Frequency in Hz, Vgen Phase to Neutral Peak Amplitude in Volts, 
+* Magerr Magnitude Error in percent, Phase Phase Error in degrees
+C1 2 20 {1/(6.28319K*FREQ)} IC={VGEN}
+R1 2 20 1E6
+I1 20 2 PULSE {VGEN*1U} 0
+* MAKES UIC UNNECESSARY
+E1 5 20 20 2 1
+V1 3 20 SIN 0 {VGEN} {FREQ} 
+E2 7 20 POLY(2) 5 20 3 20 0 -866.00M -500.00M
+E3 1 20 POLY(2) 5 20 3 20 0 
++ {(1+.01*MAGERR)*(.866*(1-.5*(.0174533*PHASE)^2)
++ -.5*.0174533*PHASE*(1+.166667*
++ (.0174533*PHASE)^2))}
++ {(1+.01*MAGERR)*(-.5*(1-.5*(.0174533*PHASE)^2)
++ -.866*.0174533*PHASE*(1+.166667*
++ (.0174533*PHASE)^2))}
+G1 20 2 20 3 1M
+R2 7 0 100MEG
+R3 1 0 100MEG
+R4 3 0 100MEG
+R5 5 0 100MEG
+.ENDS
+**********
+*SRC=PHASE;PHASE;!Generators;Timing;Variable Phase
+*SYM=PHASE
+.SUBCKT PHASE 2 4 5 {ANGLE=45 VGEN=??? FREQ=???}
+*             | | COSINE WAVE
+*             | SIN WAVE
+*             DELAYED SIN WAVE OUTPUT 
+*Parameters:
+* Angle Delay in Degrees, Vgen Phase to Neutral Peak Amplitude in Volts,
+* Freq Generator Frequency in Hz 
+C1 1 0 {1/(6.28319K*FREQ)}
+R1 1 0 1E6
+E1 5 0 0 1 1
+G1 0 1 0 4 1M
+E2 2 0 POLY(2) 5 0 4 0 0 {SIN(ANGLE*3.1415926/180)} 
++ {COS(ANGLE*3.1415926/180)}
+R5 5 0 1MEG
+R4 4 0 1MEG
+I1 0 1 PULSE {VGEN*1U} 0
+*I1 USED FOR INITIALIZATION OF CAPACITOR
+V1 4 0 SIN 0 {VGEN} {FREQ}
+.ENDS
+**********
+*SRC=VCOSQ;VCOSQ;VCOs;Square Wave Output;
+*SYM=VCOSQ
+.SUBCKT VCOSQ  3 30 {FREQ=??? VLO=0 VHI=5}
+*Parameters:
+* Vlo Output voltage low in Volts, Vhi Output voltage high in Volts, 
+* Freq Output Signal Frequency/Volt - 1K would give 1KHz output with 1 Volt input and 
+* 2KHz output with 2 Volts Input
+* Requires UIC option in the .TRAN
+RE1 2 0 1K
+E1 2 0 22 0 1
+G1 1 0 POLY(2) 22 0 3 0 0 0 0 0 -1 
+G2 22 0 POLY(2) 1 0 3 0 0 0 0 0 1 
+R2 1 0 1E9
+I1 0 1 PULSE 1E-9 0
+C1 22 0 {.15915/FREQ} IC=0
+R1 22 0 1E9
+R3 0 3 1MEG
+C2 1 0 {.15915/FREQ} IC=1
+B1 30 0 V=V(2) > .5 ? {VHI} : {VLO}
+.ENDS
+**********
+*SRC=PHASE2;PHASE2;!Generators;Timing;Voltage Controlled Phase
+*SYM=PHASE2
+.SUBCKT PHASE2 2 4 5 10 {VGEN=??? FREQ=???}
+*              | | |  ANGLE IN DEGREES
+*              | | COSINE WAVE
+*              | SIN WAVE
+*              DELAYED SIN WAVE OUTPUT 
+*Parameters:
+* Vgen Phase to Neutral Peak Amplitude in Volts,
+* Freq Generator Frequency in Hz 
+C1 1 0 {1/(6.28319K*FREQ)}
+R1 1 0 1E6
+E1 5 0 0 1 1
+G1 0 1 0 4 1M
+BE2 2 0 V=(V(5)*SIN(V(10) * 3.1415926/180) + 
++ V(4) * COS(V(10)*3.1415926/180))
+R5 5 0 1MEG
+R4 4 0 1MEG
+I1 0 1 PULSE {VGEN*1U} 0
+*I1 USED FOR INITIALIZATION OF CAPACITOR
+V1 4 0 SIN 0 {VGEN} {FREQ}
+.ENDS
+**********
+*SRC=PHASE3;PHASE3;!Generators;Timing;Volt. Ctrl. Phase, UIC version
+*SYM=PHASE2
+.SUBCKT PHASE3 2 4 5 10 {VGEN=??? FREQ=???}
+*              | | |  ANGLE IN DEGREES
+*              | | COSINE WAVE
+*              | SIN WAVE
+*              DELAYED SIN WAVE OUTPUT 
+*Parameters: VGEN Amplitude In Volts, FREQ Frequency In Hz
+* This version for use with .TRAN UIC only!!!.
+C1 1 0 {1/(6.28319K*FREQ)} IC={VGEN}
+R1 1 0 1E6
+E1 5 0 0 1 1
+G1 0 1 0 4 1M
+BE2 2 0 V=(V(5)*SIN(V(10) * 3.1415926/180) + 
++ V(4) * COS(V(10)*3.1415926/180))
+R5 5 0 1MEG
+R4 4 0 1MEG
+V1 4 0 SIN 0 {VGEN} {FREQ}
+.ENDS
+**********
+*SRC=Exponential;Exponential;!Generators;Signal;Voltage
+*SYM=EXPON
+.SUBCKT Exponential 1 2 {Initial=0 Pulse=??? RiseDelay=0 RiseTC=??? FallDelay=0 FallTC=???} 
+*Parameters: 
+* Initial    Initial Value 	    Volts   0
+* Pulse      Pulsed Value       Volts   None
+* RiseDelay  Rise Delay Time    Sec     0
+* RiseTC     Rise Time Constant Sec     Must be entered
+* FallDelay  Fall Delay Time    Sec     0
+* FallTC     Fall Time Constant Sec     Must be entered
+*
+V1 1 2 EXP {Initial} {Pulse} {RiseDelay} {RiseTC} {FallDelay} {FallTC}
+R1 1 2 1MEG
+.ENDS
+**********
+*SRC=SINE;SINE;!Generators;Signal;Voltage
+*SYM=SIN
+.SUBCKT SINE 1 2 {Offset=0 Amplitude=??? Freq=??? Delay=0 Damping=0} 
+*Parameters:
+* Offset DC Voltage Offset in Volts
+* Amp Amplitude in Volts
+* Freq Frequency in Hz
+* Delay Time Delay in Seconds
+* Damp Damping factor (See Sin source for definition)
+V1 1 2 SIN {Offset} {Amplitude} {Freq} {Delay} {Damping}
+R1 1 2 1MEG
+.ENDS
+**********
+*SRC=FM;FM;!Generators;Signal;Voltage
+*SYM=FM
+.SUBCKT FM 1 2 {Offset=0 Amplitude=??? Freq=??? MODIndex=0 SigFreq=0}
+*Parameters:
+* Offset DC Current Offset in Amps
+* Amp Amplitude in Amps
+* Freq Frequency in Hz
+* MODIndex FM Modulation factor
+* SigFreq Signal Frequency (See FM source for definition)
+V1 1 2 SFFM {Offset} {Amplitude} {Freq} {MODIndex} {SigFreq}
+R1 1 2 1MEG
+.ENDS
+**********
+*SRC=PULSE;PULSE;!Generators;Signal;Voltage
+*SYM=PULSE
+.SUBCKT PULSE 1 2 {Initial=0 Delay=0 Pulse=??? Rise=0 Fall=0 Duty=50 Period=???}
+*Parameters:
+* Initial Initial DC Current value in Amps
+* Delay Time Delay in Seconds
+* Pulse Pulsed Current value in Amps
+* Rise Rise time in Seconds
+* Fall Fall time in Seconds
+* Duty Duty cycle in percent
+* Period Signal period in Seconds
+V1 1 2 PULSE {Initial} {Pulse} {Delay} {Rise} {Fall} 
++ {Duty/100*(Period-Rise-Fall)} {Period}
+R1 1 2 1MEG
+.ENDS
+**********
+*SRC=SAWTOOTH;SAW;!Generators;Signal;Voltage
+*SYM=SAW
+.SUBCKT SAW 1 2 {Initial=0 Delay=0 Pulse=??? Duty=50 Skew=50 Period=???}
+*Parameters:
+* Initial Initial DC Voltage value in Volts
+* Delay Time Delay in Seconds
+* Pulse Pulsed Voltage value in Volts
+* Duty Duty cycle in percent
+* Skew Ratio of rise to fall edge times in percent
+* Period Signal period in Seconds
+V1 1 2 Pulse {INITIAL} {Pulse} {Delay} {(Skew/100)*Duty/100*Period}
++ {(1-(Skew/100))*Duty/100*Period} 1P {Period}
+R1 1 2 1MEG
+.ENDS
+**********
+*SRC=ExponentialI;ExponentialI;!Generators;Signal;Current
+*SYM=EXPON
+.SUBCKT ExponentialI 1 2 {Initial=0 Pulse=??? RiseDelay=0 RiseTC=??? FallDelay=0 FallTC=???} 
+*Parameters	Description	        Units   Default
+* Initial    Initial Value 	    Amps    0
+* Pulse      Pulsed Value       Amps   None
+* RiseDelay  Rise Delay Time    Sec     0
+* RiseTC     Rise Time Constant Sec     Must be entered
+* FallDelay  Fall Delay Time    Sec     0
+* FallTC     Fall Time Constant Sec     Must be entered
+*
+I1 1 2 EXP {Initial} {Pulse} {RiseDelay} {RiseTC} {FallDelay} {FallTC}
+.ENDS
+**********
+*SRC=SINEI;SINEI;!Generators;Signal;Current
+*SYM=SIN
+.SUBCKT SINEI 1 2 {Offset=0 Amplitude=??? Freq=??? Delay=0 Damping=0} 
+*Parameters:
+* Offset DC Current Offset in Amps
+* Amp Amplitude in Amps
+* Freq Frequency in Hz
+* Delay Time Delay in Seconds
+* Damp Damping factor (See Sin source for definition)
+I1 1 2 SIN {Offset} {Amplitude} {Freq} {Delay} {Damping}
+.ENDS
+**********
+*SRC=FMI;FMI;!Generators;Signal;Current
+*SYM=FM
+.SUBCKT FMI 1 2 {Offset=0 Amplitude=??? Freq=??? MODIndex=0 SigFreq=0}
+*Parameters:
+* Offset DC Current Offset in Amps
+* Amp Amplitude in Amps
+* Freq Frequency in Hz
+* MODIndex FM Modulation factor
+* SigFreq Signal Frequency (See FM source for definition)
+I1 1 2 SFFM {Offset} {Amplitude} {Freq} {MODIndex} {SigFreq}
+.ENDS
+**********
+*SRC=PULSEI;PULSEI;!Generators;Signal;Current
+*SYM=PULSE
+.SUBCKT PULSEI 1 2 {Initial=0 Delay=0 Pulse=??? Rise=0 Fall=0 Duty=50 Period=???}
+*Parameters:
+* Initial Initial DC Current value in Amps
+* Delay Time Delay in Seconds
+* Pulse Pulsed Current value in Amps
+* Rise Rise time in Seconds
+* Fall Fall time in Seconds
+* Duty Duty cycle in percent
+* Period Signal period in Seconds
+I1 1 2 PULSE {Initial} {Pulse} {Delay} {Rise} {Fall} 
++ {Duty/100*(Period-Rise-Fall)} {Period}
+.ENDS
+**********
+*SRC=SAWTOOTHI;SAWI;!Generators;Signal;Current
+*SYM=SAW
+.SUBCKT SAWI 1 2 {Initial=0 Delay=0 Pulse=??? Duty=50 Skew=50 Period=???}
+*Parameters:
+* Initial Initial DC Current value in Amps
+* Delay Time Delay in Seconds
+* Pulse Pulsed Current value in Amps
+* Duty Duty cycle in percent
+* Skew Ratio of rise to fall edge times in percent
+* Period Signal period in Seconds
+I1 1 2 Pulse {INITIAL} {Pulse} {Delay} {(Skew/100)*Duty/100*Period}
++ {(1-(Skew/100))*Duty/100*Period} 1P {Period}
+.ENDS
+**********
+

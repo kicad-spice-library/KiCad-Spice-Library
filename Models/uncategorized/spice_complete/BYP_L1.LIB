@@ -1,0 +1,237 @@
+*****************************************************************
+* Library for SIEMENS Power Diodes	V1.0  	      01/26/98      *
+*										                        *
+* Models provided by SIEMENS are not warranted by SIEMENS as    *
+* fully representing all of the specifications and operating    *
+* characteristics of the semiconductor product to which the     *
+* model relates. The model describe the characteristics of a    * 
+* typical device.                                               * 
+* In all cases, the current data sheet information for a given  *
+* device is the final design guideline and the only actual      *
+* performance specification.                                    *
+* Altough models can be a useful tool in evaluating device      *
+* performance, they cannot model exact device performance under *
+* all conditions, nor are they intended to replace bread-       *
+* boarding for final verification. SIEMENS therefore does not   *
+* assume any liability arising from their use.                  *
+* SIEMENS reserves the right to change models without prior     * 
+* notice.                                                       *
+*                                                               * 
+* content:									                    *
+* BYP 103							   	                        *
+* BYP 301							                            *
+* BYP 302							                            *
+* BYP 303							                            *
+*                    						                    *
+* This model is solely valid at room-temperature                *
+* 								                                *
+* The basics of the diode model used in this template can be    *
+* found in							                            *
+*	R. Kraus, K. Hoffmann, P. Türkes			                *
+*	Reverse Recovery Model of Power Diodes	        		    *
+*	EPE-MADEP Proceedings O - 343 (1991)			            *
+*     and the papers cited therein					            *
+*								                                *
+*****************************************************************
+*********
+*SRC=BYP103;BYP103;Diodes;Siemens;
+*SYM=DIODE
+.SUBCKT BYP103   ANODE    KATODE    PARAMS:
++
++ TT        =         200n    
++ TM        =         150n   
++ VTA       =         0.026 
++ Is        =         1e-5  
++ N         =         2    
++ R_reih    =         25m   
++ Cjc       =         1.5nF
++ Mj        =         .7  
++ Vj        =         .6 
++ Ls        =         1n 
++ Rs        =         1  
++ BV        =         1000 
+
+* TT        =         200n     ; bestimmt Hoehe der Rueckstromspitze
+* TM        =         150n     ; bestimmt Abrissteilheit des Rueckstroms
+* VTA       =         0.026    ; Vta = K*T/q
+* Is        =         1e-5     ; Abschaetzen aus der Diodenkennlinie
+* N         =         2        ;    "   "   "   "   "   "   "   "
+* R_reih    =         25m      ;    "   "   "   "   "   "   "   "
+* Cjc       =         1.5nF    ; Dem Datenblatt zu entnehmen
+* Mj        =         .7       ; default
+* Vj        =         .6       ; default
+* Ls        =         1n       ; parasitaere Induktivitaet
+* Rs        =         1        ; parasitaerer Widerstand
+* BV        =         1000     ; Blockierspannung
+
+*
+R_diode    ANODE     an_1     {R_reih}
+L_streu    an_1      an_2     {Ls}   
+BG_diode    an_2      KATODE   I= (V(1)-I(V_mess))/{TM} 
+*G_diode    an_2      KATODE   VALUE = {(V(1)-I(V_mess))/TM}
+***  HILFSNETZWERK  ***
+*
+BE_e 99 0 V=V(an_2,KATODE) * {TT}
+AE_e        99   1  PWL
+.Model PWL PWL2 xy_array=[-1k -1e-14   0 0   10 10K]
+*E_e        1         0        TABLE { V(an_2,KATODE)*TT } = (-1k,-1e-14) (0,0) (10,10K)
+R_dif      1         2        {(TT+TM)/TT}
+L_dif      2         3        {TM}  IC=0
+V_mess     3         0        0V
+***  SPERRSCHICHTKAPAZITAET  ***
+*
+D_kap      an_2      KATODE   D_Sperr
+.MODEL     D_Sperr   D(IS={Is} CJO={Cjc} VJ={Vj} M={Mj} N={N} Rs=0.001 FC=1 BV={BV})
+.ends
+*****************
+*SRC=BYP303;BYP303;Diodes;Siemens;
+*SYM=DIODE
+.SUBCKT BYP303   ANODE    KATODE    PARAMS:
++
++ TT        =         200n
++ TM        =         150n 
++ VTA       =         0.026 
++ Is        =         1e-5
++ N         =         2  
++ R_reih    =         25m 
++ Cjc       =         1.4nF
++ Mj        =         .7 
++ Vj        =         .6
++ Ls        =         1n 
++ Rs        =         1   
++ BV        =         1200 
+
+* TT        =         200n     ; bestimmt Hoehe der Rueckstromspitze
+* TM        =         150n     ; bestimmt Abrissteilheit des Rueckstroms
+* VTA       =         0.026    ; Vta = K*T/q
+* Is        =         1e-5    ; Abschaetzen aus der Diodenkennlinie
+* N         =         2        ;    "   "   "   "   "   "   "   "
+* R_reih    =         25m      ;    "   "   "   "   "   "   "   "
+* Cjc       =         1.4nF    ; Dem Datenblatt zu entnehmen
+* Mj        =         .7       ; default
+* Vj        =         .6       ; default
+* Ls        =         1n       ; parasitaere Induktivitaet
+* Rs        =         1        ; parasitaerer Widerstand
+* BV        =         1200     ; Blockierspannung
+
+*
+R_diode    ANODE     an_1     {R_reih}
+L_streu    an_1      an_2     {Ls}   
+BG_diode    an_2      KATODE   I= (V(1)-I(V_mess))/{TM}
+*G_diode    an_2      KATODE   VALUE = {(V(1)-I(V_mess))/TM}
+***  HILFSNETZWERK  ***
+*
+BE_e 99 0 V=V(an_2,KATODE) * {TT}
+AE_e        99   1  PWL
+.Model PWL PWL2 xy_array=[-1k -1e-14   0 0   10 10K]
+*E_e        1         0        TABLE { V(an_2,KATODE)*TT } = (-1k,-1e-14) (0,0) (10,10K)
+R_dif      1         2        {(TT+TM)/TT}
+L_dif      2         3        {TM}  IC=0
+V_mess     3         0        0V
+***  SPERRSCHICHTKAPAZITAET  ***
+*
+D_kap      an_2      KATODE   D_Sperr
+.MODEL     D_Sperr   D(IS={Is} CJO={Cjc} VJ={Vj} M={Mj} N={N} Rs=0.001 FC=1 BV={BV})
+.ends
+*************
+*SRC=BYP302;BYP302;Diodes;Siemens;
+*SYM=DIODE
+.SUBCKT BYP302   ANODE    KATODE    PARAMS:
++
++ TT        =         200n 
++ TM        =         150n 
++ VTA       =         0.026
++ Is        =         .8e-5 
++ N         =         2   
++ R_reih    =         25m  
++ Cjc       =         1.1nF 
++ Mj        =         .7 
++ Vj        =         .6 
++ Ls        =         1n 
++ Rs        =         1   
++ BV        =         1200 
+
+* TT        =         200n     ; bestimmt Hoehe der Rueckstromspitze
+* TM        =         150n     ; bestimmt Abrissteilheit des Rueckstroms
+* VTA       =         0.026    ; Vta = K*T/q
+* Is        =         .8e-5    ; Abschaetzen aus der Diodenkennlinie
+* N         =         2        ;    "   "   "   "   "   "   "   "
+* R_reih    =         25m      ;    "   "   "   "   "   "   "   "
+* Cjc       =         1.1nF    ; Dem Datenblatt zu entnehmen
+* Mj        =         .7       ; default
+* Vj        =         .6       ; default
+* Ls        =         1n       ; parasitaere Induktivitaet
+* Rs        =         1        ; parasitaerer Widerstand
+* BV        =         1200     ; Blockierspannung
+
+*
+R_diode    ANODE     an_1     {R_reih}
+L_streu    an_1      an_2     {Ls}   
+BG_diode    an_2      KATODE   I= (V(1)-I(V_mess))/{TM}
+*G_diode    an_2      KATODE   VALUE = {(V(1)-I(V_mess))/TM}
+***  HILFSNETZWERK  ***
+*
+BE_e 99 0 V=V(an_2,KATODE) * {TT}
+AE_e        99   1  PWL
+.Model PWL PWL2 xy_array=[-1k -1e-14   0 0   10 10K]
+*E_e        1         0        TABLE { V(an_2,KATODE)*TT } = (-1k,-1e-14) (0,0) (10,10K)
+R_dif      1         2        {(TT+TM)/TT}
+L_dif      2         3        {TM}  IC=0
+V_mess     3         0        0V
+***  SPERRSCHICHTKAPAZITAET  ***
+*
+D_kap      an_2      KATODE   D_Sperr
+.MODEL     D_Sperr   D(IS={Is} CJO={Cjc} VJ={Vj} M={Mj} N={N} Rs=0.001 FC=1 BV={BV})
+.ends
+*************
+*SRC=BYP301;BYP301;Diodes;Siemens;
+*SYM=DIODE
+.SUBCKT BYP301   ANODE    KATODE    PARAMS:
++
++ TT        =         200n  
++ TM        =         150n  
++ VTA       =         0.026
++ Is        =         .5e-5 
++ N         =         2    
++ R_reih    =         25m 
++ Cjc       =         .7nF
++ Mj        =         .7  
++ Vj        =         .6 
++ Ls        =         1n 
++ Rs        =         1    
++ BV        =         1200 
+
+* TT        =         200n     ; bestimmt Hoehe der Rueckstromspitze
+* TM        =         150n     ; bestimmt Abrissteilheit des Rueckstroms
+* VTA       =         0.026    ; Vta = K*T/q
+* Is        =         .5e-5    ; Abschaetzen aus der Diodenkennlinie
+* N         =         2        ;    "   "   "   "   "   "   "   "
+* R_reih    =         25m      ;    "   "   "   "   "   "   "   "
+* Cjc       =         .7nF    ; Dem Datenblatt zu entnehmen
+* Mj        =         .7       ; default
+* Vj        =         .6       ; default
+* Ls        =         1n       ; parasitaere Induktivitaet
+* Rs        =         1        ; parasitaerer Widerstand
+* BV        =         1200     ; Blockierspannung
+
+*
+R_diode    ANODE     an_1     {R_reih}
+L_streu    an_1      an_2     {Ls}   
+BG_diode    an_2      KATODE   I= (V(1)-I(V_mess))/{TM}
+*G_diode    an_2      KATODE   VALUE = {(V(1)-I(V_mess))/TM}
+***  HILFSNETZWERK  ***
+*
+BE_e 99 0 V=V(an_2,KATODE) * {TT}
+AE_e        99   1  PWL
+.Model PWL PWL2 xy_array=[-1k -1e-14   0 0   10 10K]
+*E_e        1         0        TABLE { V(an_2,KATODE)*TT } = (-1k,-1e-14) (0,0) (10,10K)
+R_dif      1         2        {(TT+TM)/TT}
+L_dif      2         3        {TM}  IC=0
+V_mess     3         0        0V
+***  SPERRSCHICHTKAPAZITAET  ***
+*
+D_kap      an_2      KATODE   D_Sperr
+.MODEL     D_Sperr   D(IS={Is} CJO={Cjc} VJ={Vj} M={Mj} N={N} Rs=0.001 FC=1 BV={BV})
+.ends
+************
+

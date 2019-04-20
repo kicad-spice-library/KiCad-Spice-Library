@@ -1,0 +1,84 @@
+Test of MOS BSIM2 implementation; DC transfer curve
+****************************************************************** 
+MN1 13 2 0 4 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN2 23 2 0 5 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN3 33 2 0 6 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN4 43 2 0 7 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN5 53 2 0 8 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+VDS 3 0 0.05    
+VGS 2 0 0
+V1 3 13 0       
+V2 3 23 0       
+V3 3 33 0       
+V4 3 43 0       
+V5 3 53 0       
+VBS1 4 0 0      
+VBS2 5 0 -1
+VBS3 6 0 -2     
+VBS4 7 0 -3
+VBS5 8 0 -4     
+*************************************************************** 
+.OPTIONS LIMPTS=5000 ACCT       
+.DC VGS 0 5 0.01
+.PRINT DC I(V1) I(V2) I(V3) I(V4) I(V5) 
+*.PLOT DC I(V1) I(V2) I(V3) I(V4) I(V5) 
+*.OPTIONS LIMPTS=501 ACCT       
+*VGS  2  0  PWL(0 0 5 5)
+*.TRAN 0 5 0.01
+*.PRINT TRAN I(V1) I(V2) I(V3) I(V4) I(V5) 
+
+* Commands for Spice3
+*#run
+*#plot v1#branch v2#branch v3#branch v4#branch v5#branch
+
+***** MODEL PARAMETERS TEMP2 ********************       
+* This file contains the BSIM2 process file parameters as they should
+* be input to the .model card of spice3c1.
+.model nmos nmos level=5 
++ vfb =  -0.7919 lvfb =  -0.0266 wvfb =   0.0000 
++ phi =   0.8039  lphi =   0.0042  wphi =   0.0000 
++ k1  =   0.7286  lk1  =   0.0309  wk1  =   0.0000 
++ k2  =  -0.0506  lk2  =   0.0786  wk2  =   0.0000 
++ mu0 = 453.2926  dl =   0.1553  dw =   0.0000 
++ mu0b =  -5.4925  lmu0b =  -1.9192  wmu0b =   0.0000 
++ mus0 = 781.7117  lmus0 =  25.2769  wmus0 =   0.0000 
++ musb =  25.5724  lmusb = -10.0060  wmusb =   0.0000 
++ mu20 =   0.9390  lmu20 =  -0.0840  wmu20 =   0.0000 
++ mu2b =   0.0753  lmu2b =  -0.0148  wmu2b =   0.0000 
++ mu2g =   0.1804  lmu2g =   0.0181  wmu2g =   0.0000 
++ mu30 =  44.9689  lmu30 =  -0.0933  wmu30 =   0.0000 
++ mu3b =   0.5871  lmu3b =   1.0793  wmu3b =   0.0000 
++ mu3g = -11.6723  lmu3g =   0.6804  wmu3g =   0.0000 
++ mu40 =   0.2682  lmu40 =   2.3969  wmu40 =   0.0000 
++ mu4b =  -0.3179  lmu4b =   0.1264  wmu4b =   0.0000 
++ mu4g =  -0.2654  lmu4g =  -0.5702  wmu4g =   0.0000 
++ ua0 =   0.0441  lua0 =   0.2283  wua0 =   0.0000 
++ uab =  -0.0045  luab =  -0.0105  wuab =   0.0000 
++ ub0 =   0.0125  lub0 =  -0.0051  wub0 =   0.0000 
++ ubb =  -0.0015  lubb =   0.0010  wubb =   0.0000 
++ u10 =   0.1262  lu10 =   0.5563  wu10 =   0.0000 
++ u1d =  -0.2967  lu1d =  -0.0062  wu1d =   0.0000 
++ u1b =   0.0960  lu1b =  -0.0345  wu1b =   0.0000 
++ eta0 =  -0.0373  leta0 =   0.0271  weta0 =   0.0000 
++ etab =   0.0004  letab =  -0.0041  wetab =   0.0000 
++ n0 =   0.8032  ln0 =   0.1734  wn0 =   0.0000 
++ nd =   0.0105  lnd =  -0.0091  wnd =   0.0000 
++ nb =   0.5978  lnb =  -0.1638  wnb =   0.0000 
++ vof0 =   1.4977  lvof0 =  -0.1766  wvof0 =   0.0000 
++ vofd =   0.1795  lvofd =  -0.1247  wvofd =   0.0000 
++ vofb =   0.8368  lvofb =  -0.3432  wvofb =   0.0000 
++ ai0 =  32.0150  lai0 =   8.2816  wai0 =   0.0000 
++ aib = -19.5396  laib =   4.9347  waib =   0.0000 
++ bi0 =  37.6044  lbi0 =  -1.8713  wbi0 =   0.0000 
++ bib =  -2.5109  lbib =   0.7903  wbib =   0.0000 
++ vghigh =   0.2342  lvghigh =  -0.0007  wvghigh =   0.0000 
++ vglow =  -0.1023  lvglow =   0.0038  wvglow =   0.0000 
++ tox = 0.0150 temp = 27 vdd = 5.0 vgg = 5.0 vbb =  -3.0 
++ cgdo = 1.0e-10 cgso = 1.0e-10 cgbo = 2.5e-11 
++ xpart = 0  
++ rsh = 0 cj = 0.0002 cjsw = 1.0e-10 
++ js = 5e-5 pb = 0.7 pbsw = 0.8 
++ mj = 0.5 mjsw = 0.33 wdf = 0 
++ dell = 0 
+*****                                        *****      
+.END    

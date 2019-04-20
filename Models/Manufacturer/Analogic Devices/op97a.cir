@@ -1,0 +1,150 @@
+* OP-97A SPICE Macro-model                  4/92, Rev. B
+*                                           JCB / PMI
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP-97A 1 2 99 50 38
+*
+* INPUT STAGE & POLE AT 15 MHZ
+*
+R1   2  3     5E11
+R2   1  3     5E11
+R3   5 99     516
+R4   6 99     516 
+CIN  1  2     4E-12
+C2   5  6     10.28E-12
+I1   4  50    0.1E-3
+IOS  1  2     50E-12
+EOS  9  1     POLY(1)  26 32  25E-6  1
+Q1   5  2  4  QX
+Q2   6  9  4  QX
+D12  2  9     DX
+D13  9  2     DX
+*
+* FIRST GAIN STAGE
+*
+R5  99 10     1E6
+R6  50 10     1E6
+GX1 99 10     5  6  3.268E-5
+GX2 10 50     6  5  3.268E-5
+E1  99 11     POLY(1)  99 32 -0.4  1
+DX1 10 11     DX
+E2  12 50     POLY(1)  32 50 -0.4  1
+DX2 12 10     DX  
+*
+* GAIN STAGE & DOMINANT POLE AT 1.73 HZ
+*
+R9  13 99     9.18E7
+R10 13 50     9.18E7
+C3  13 99     1E-9
+C4  13 50     1E-9
+G3  99 13     10 32  0.1E-3
+G4  13 50     32 10  0.1E-3
+V2  99 14     2.2
+V3  15 50     2.2
+D1  13 14     DX
+D2  15 13     DX
+GS  99 50     POLY(1)  99 50  0.28E-3  -3.7E-6
+*
+* ZERO-POLE PAIR AT 150 KHZ / 285 KHZ
+*
+R17 19 20     1E6
+R18 19 21     1E6
+R19 20 99     0.9E6
+R20 21 50     0.9E6
+L3  20 99     0.503
+L4  21 50     0.503
+G7  99 19     13 32  1E-6
+G8  19 50     32 13  1E-6
+*
+* POLE AT 4.8 MHZ
+*
+R21 22 99     1E6
+R22 22 50     1E6
+C7  22 99     33.2E-15
+C8  22 50     33.2E-15
+G9  99 22     19 32  1E-6
+G10 22 50     32 19  1E-6
+*
+* POLE AT 8 MHZ
+*
+R23 23 99     1E6
+R24 23 50     1E6
+C9  23 99     19.9E-15
+C10 23 50     19.9E-15
+G11 99 23     22 32  1E-6
+G12 23 50     32 22  1E-6
+*
+* POLE AT 10 MHZ
+*
+R25 24 99     1E6
+R26 24 50     1E6
+C11 24 99     15.9E-15
+C12 24 50     15.9E-15
+G13 99 24     23 32  1E-6
+G14 24 50     32 23  1E-6
+*
+* POLE AT 15 MHZ
+*
+R27 25 99     1E6
+R28 25 50     1E6
+C13 25 99     10.6E-15
+C14 25 50     10.6E-15
+G15 99 25     24 32  1E-6
+G16 25 99     32 24  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 200 HZ
+*
+R29 26 27     1E6
+R30 26 28     1E6
+L5  27 99     796
+L6  28 50     796
+RS1 27 99     16E9
+RS2 28 50     16E9
+G17 99 26     3 32  2E-12
+G18 26 50     32 3  2E-12
+D3  26 99     DX
+D4  50 26     DX
+*
+* POLE AT 12 MHZ
+*
+R32 31 99     1E6
+R33 31 50     1E6
+C15 31 99     13.2E-15
+C16 31 50     13.2E-15 
+G19 99 31     25 32  1E-6
+G20 31 50     32 25  1E-6
+*
+* OUTPUT STAGE
+*
+R34 32 99     1E6
+R35 32 50     1E6
+R36 33 99     600
+R37 33 50     600
+L7  33 38     2.65E-7
+G21 36 50     31 33  1.6667E-3
+G22 37 50     33 31  1.6667E-3
+G23 33 99     99 31  1.6667E-3
+G24 50 33     31 50  1.6667E-3
+V6  34 33     3.6
+V7  33 35     3.0
+D5  31 34     DX
+D6  35 31     DX
+D7  99 36     DX
+D8  99 37     DX
+D9  50 36     DY
+D10 50 37     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=5E5)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS OP-97A

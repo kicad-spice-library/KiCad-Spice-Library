@@ -1,0 +1,158 @@
+* MAX4216 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 200MHz -3dB Bandwidth
+* 600V/uS Slew Rate
+* 5.5mA Typical Supply Current
+* 120mA Typical Output Current
+* Rail-to-Rail Outputs
+* Available in 8-Pin uMAX/SO (MAX4216)
+*              14-Pin SO or 16-Pin QSOP (MAX4220)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    _________________________________
+* MAX4216        Dual 200MHz, Rail-to-Rail Op Amps  
+* MAX4220        Quad 200MHz, Rail-to-Rail Op Amps
+*
+*
+*   ////////////// MAX4216 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4216 DATA SHEET       <====
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+* OUTPUT CONNECTS:  1   2   99  50  97
+*
+.SUBCKT MAX4216 1 2 99 50 97
+****************INPUT STAGE**********************
+I1 99 4 .5e-3
+IBIASE 1 2 5.5ua
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+CI1  1  0 2P
+CI2  2  0 2P
+*DP1  1 99 DA
+*DP2 50  1 DA
+*DP3  2 99 DB
+*DP4 50  2 DB
+************************
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-3
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 2.43e-11
+*C3 10 98 1.166e-11
+*** ***********
+D1 9 111 DP
+D2 112 9 DP
+V11 99 111 50MV
+V12 112 50 50MV
+************
+I2 99 50 5.1mA
+VOS 7 1 0v
+******** POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+***************************
+*********** change for second pole
+C5 98 15 .72p
+*  
+*************OUTPUT STAGE****************
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-3
+*          ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E3
+*D3 32 36 Dx
+*D4 37 32 Dx
+*V5 34 37  .3V
+*V4 36 34  -.3V
+*** V5,V4 SET ISC
+R16 34 97 7.55
+E1 99 33 99 32 1
+VA8 33 34 0V
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.05)
+.MODEL MOSFET PMOS(VTO=0 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+**
+.ENDS
+*
+.SUBCKT MAX4220 1 2 99 50 97
+****************INPUT STAGE**********************
+I1 99 4 .5e-3
+IBIASE 1 2 5.5ua
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+CI1  1  0 2P
+CI2  2  0 2P
+*DP1  1 99 DA
+*DP2 50  1 DA
+*DP3  2 99 DB
+*DP4 50  2 DB
+************************
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-3
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 2.43e-11
+*C3 10 98 1.166e-11
+*** ***********
+D1 9 111 DP
+D2 112 9 DP
+V11 99 111 50MV
+V12 112 50 50MV
+************
+I2 99 50 5.1mA
+VOS 7 1 0v
+******** POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+***************************
+*********** change for second pole
+C5 98 15 .72p
+*  
+*************OUTPUT STAGE****************
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-3
+*          ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E3
+*D3 32 36 Dx
+*D4 37 32 Dx
+*V5 34 37  .3V
+*V4 36 34  -.3V
+*** V5,V4 SET ISC
+R16 34 97 7.55
+E1 99 33 99 32 1
+VA8 33 34 0V
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.05)
+.MODEL MOSFET PMOS(VTO=0 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+**
+.ENDS
+*
+

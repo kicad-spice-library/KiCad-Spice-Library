@@ -1,0 +1,108 @@
+**********
+* Copyright Intusoft 1997
+* All Rights Reserved
+**********
+****************
+*SRC=RELAY2S;RELAY2S;Relays;Simple;
+*SYM=RELAY2
+.SUBCKT RELAY2S 1  12  19 23  ;    17 9 13 3  4 18 19 20 7 8 14 15
+*Connections  C+ C-  O+ O-        ; I S  V MF F CG O+ SC F V PO FS
+* Other connections:  17 9 13 3 4 18 20 7 8 14 15
+*                CoilCur |  | | |  |  | | |  |  |
+*      Sum Magnetic Forces  | | |  |  | | |  |  |
+*                    Velocity | |  |  | | |  |  |
+*                Magnetic Force |  |  | | |  |  |
+*                        Friction  |  | | |  |  |
+*                        Contact Gap  | | |  |  |
+*                 Output Switch Control | |  |  |
+*                               Coil Flux |  |  |
+*                              Coil Voltage  |  |
+*                             Plunger Position  |
+*                                   Force at Stop
+V1 2 12
+S1 19 23 20 0 SW1
+.MODEL SW1 SW RON=10M ROFF=10G VT=3K VH=1K
+B13 20 0 V=ABS(V(19) / (V(18)))
+B5 8 0 V=V(1) - V(12)
+A1 8 7 S_001
+.MODEL S_001 s_xfer(in_offset=0 gain=1.0 
++ num_coeff=[1.0] den_coeff=[1.0 0] denorm_freq=1.0)
+A2 9 13 S_002
+.MODEL S_002 s_xfer(in_offset=0 gain=1.0 
++ num_coeff=[1.0] den_coeff=[1.0 0] out_ic=0 denorm_freq=1.0)
+A3 13 14 S_003
+.MODEL S_003 s_xfer(in_offset=0 gain=1.0 
++ num_coeff=[1.0] den_coeff=[1.0 0] out_ic=0 denorm_freq=1.0)
+A4 14 15 PWL_001
+.MODEL PWL_001 Pwl(xy_array=[0 0 1.0 
++ 0 1.1 100.0Meg 1.2 200.0Meg] input_domain=10.0M fraction=TRUE)
+A5 13 4 LIM_002
+.MODEL LIM_002 Limit(in_offset=0 gain=1.0K 
++ out_lower_limit=-10.0 out_upper_limit=10.0 limit_range=1.0U 
++ fraction=FALSE)
+A6 14 18 LIM_001
+.MODEL LIM_001 Limit(in_offset=-800.0M gain=1.0 
++ out_lower_limit=-10.0K out_upper_limit=-1.0U 
++ limit_range=1.0U fraction=FALSE)
+B7 1 2 I=V(17)
+B8 17 5 I=V(7)
+V2 5 0
+B12 17 16 V=.1 * I(V2)
+B4 16 0 V=I(V2) * (ABS(1.1-V(14)) + (1.1-V(14))) * .5 ; simple air gap model
+B10 9 0 V=V(3) - V(4) ; Perfectly Elastic Stop
+B11 3 0 V=(I(V2) * 3E4)^2 - V(15)
+.ENDS
+*****************
+*SRC=RELAY2;RELAY2;Relays;;
+*SYM=RELAY2
+.SUBCKT RELAY2 1  12  19 23  {KStop=.0001 Parea=3E4}
+*Connections  Ctrl+ Ctrl-  Out+ Out-  
+* Other connections:  17 9 13 3 4 18 20 7 8 14 15
+*                CoilCur |  | | |  |  | | |  |  |
+*      Sum Magnetic Forces  | | |  |  | | |  |  |
+*                    Velocity | |  |  | | |  |  |
+*                Magnetic Force |  |  | | |  |  |
+*                        Friction  |  | | |  |  |
+*                        Contact Gap  | | |  |  |
+*                 Output Switch Control | |  |  |
+*                               Coil Flux |  |  |
+*                              Coil Voltage  |  |
+*                             Plunger Position  |
+*                                   Force at Stop
+* Parameters: Kstop - scaling factor for non elastic plunger stop ex. .0001
+*             Parea - Plunger face surface area in mm^2.
+V1 2 12
+S1 19 23 20 0 SW1
+.MODEL SW1 SW RON=10M ROFF=10G VT=3K VH=1K
+B13 20 0 V=ABS(V(19) / (V(18)))
+B5 8 0 V=V(1) - V(12)
+A1 8 7 S_001
+.MODEL S_001 s_xfer(in_offset=0 gain=1.0 
++ num_coeff=[1.0] den_coeff=[1.0 0] denorm_freq=1.0)
+A2 9 13 S_002
+.MODEL S_002 s_xfer(in_offset=0 gain=1.0 
++ num_coeff=[1.0] den_coeff=[1.0 0] out_ic=0 denorm_freq=1.0)
+A3 13 14 S_003
+.MODEL S_003 s_xfer(in_offset=0 gain=1.0 
++ num_coeff=[1.0] den_coeff=[1.0 0] out_ic=0 denorm_freq=1.0)
+A4 14 15 PWL_001
+.MODEL PWL_001 Pwl(xy_array=[0 0 1.0 
++ 0 1.1 100.0Meg 1.2 200.0Meg] input_domain=10.0M fraction=TRUE)
+A5 13 4 LIM_002
+.MODEL LIM_002 Limit(in_offset=0 gain=1.0K 
++ out_lower_limit=-10.0 out_upper_limit=10.0 limit_range=1.0U 
++ fraction=FALSE)
+A6 14 18 LIM_001
+.MODEL LIM_001 Limit(in_offset=-800.0M gain=1.0 
++ out_lower_limit=-10.0K out_upper_limit=-1.0U 
++ limit_range=1.0U fraction=FALSE)
+B7 1 2 I=V(17)
+B8 17 5 I=V(7)
+V2 5 0
+B12 17 16 V=.1 * I(V2)
+RB4 16 0 R = (1.1-V(14)) + (1.1-V(14))^2 ; nonlinear air gap with fringing increases
+B10 9 0 V=V(3) - V(4) - V(13) * V(15) * {KStop}
+B11 3 0 V=(I(V2) * {Parea})^2 - V(15)
+.ENDS
+*****************
+

@@ -1,0 +1,158 @@
+* file BIPOLE: Schottky TTL edge-triggered register
+*
+*
+.options          acct   gmin=1e-11   abstol=1e-9   limpts=404
+.width out=133
+*
+.tran  0.1ns   18ns
+*
+**********************************************************************
+*
+*      Power supplies
+*
+vcc   100    0    dc    5.0
+*
+rcc   100    0          1e6
+*
+**********************************************************************
+*
+*     Input wiggles  (piecewise linear waveforms)
+*
+vin    170  0     pwl(  0ns 4.0   1ns 4.0   3ns 0.0     10ns 0.0 )
+*
+vinb   171  0     pwl(  0ns 4.0   1ns 4.0   3ns 0.06    10ns 0.0 )
+*
+*
+ra1a   170  0     100K
+*
+*
+.NODESET   V(250)=0.1
++          V(260)=0.1
++          V(350)=4.0
++          V(360)=4.0
++          V(450)=0.1
++          V(460)=4.0
++          V(550)=4.0
++          V(560)=0.1
+*
+*
+**********************************************************************
+**********************************************************************
+*
+*     Circuit Hookup  (definition and interconnection)
+*
+*
+.SUBCKT   NAND3   201   202   203   100   400
+*
+* triple emitter transistor
+R1    100   301         2.8K
+Q1A   302   301   201   XNPN
+Q1B   302   301   202   XNPN
+Q1C   302   301   203   XNPN
+*
+* phase splitter
+R2    100   311         900
+Q2    311   302   312   XNPN
+D2Q   302   311         SD
+*
+* squaring network
+R3    312   313         500
+R4    312   314         250
+Q3    314   313   0     XNPN
+D3Q   313   314         SD
+*
+* darlington pullup network
+R5    100   321         40.0
+Q4    321   311   322   XNPN
+D4Q   311   321         SD
+Q5    321   322   400   XNPN
+R6    322   0           3.5K
+*
+* output pulldown
+Q6    400   312   0     XNPN
+D6Q   312   400         SD
+*
+*
+.ENDS NAND3
+*
+*
+*
+*
+*
+* Inverters to create TTL-driven waveforms
+*
+R201   100   201   400.0
+XNG1   170   201   201   100   250     NAND3
+XNG2   171   201   201   100   260     NAND3
+C250   250   0     40P
+C260   260   0     40P
+*
+*
+*
+*
+* Bottom flipflop
+*
+R301   100   301   400.0
+XNG3   250   460   360   100   350     NAND3
+XNG4   260   301   350   100   360     NAND3
+C350   350   0     2P
+C360   360   0     2P
+*
+XNG4x  260   301   301   100   367     NAND3
+*
+*
+* Top flipflop
+*
+R401   100   401   400.0
+XNG5   360   401   460   100   450     NAND3
+XNG6   250   401   450   100   460     NAND3
+*
+XNG6x  450   450   401   100   467     NAND3
+*
+*
+*
+* Output flipflop
+*
+R501   100   501   400.0
+XNG7   460   501   560   100   550     NAND3
+XNG8   350   501   550   100   560     NAND3
+C550   550   0     40P
+C560   560   0     40P
+*
+*
+*
+**********************************************************************
+*
+*      Outputs (raw output from Spice)
+*
+*
+*
+*
+.print   tran  v(250)   v(260)   v(350)   v(360)
++              v(450)   v(460)   v(550)   v(560)
+
+* Commands for Spice3
+*#run
+*#plot v(250) v(260) v(350) v(360) v(450) v(460) v(550) v(560)
+
+*
+*
+*
+*
+**********************************************************************
+* bipolar circuit models
+*
+.MODEL   SD       D(  RS=20   CJO=0.1P   IS=5E-10   EG=0.69  )
+*
+*
+.MODEL   XNPN   NPN(  BF=50     BR=1   RB=70   RC=5   CCS=0.8P
++                     TF=0.05E-9   TR=4E-9   IS=1E-14
++                     CJE=0.4P   CJC=0.4P   PC=0.85   VA=40 )
+*
+*
+**********************************************************************
+*
+*
+*
+*
+.end

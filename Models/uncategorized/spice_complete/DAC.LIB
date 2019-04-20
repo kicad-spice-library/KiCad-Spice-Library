@@ -1,0 +1,20 @@
+*********
+*SRC=DAC8;DAC8;DACs;Generic;8 bit D-to-A Converter
+*SYM=dac8
+.SUBCKT DAC8 Vref Vout D0 D1 D2 D3 D4 D5 D6 D7
+X1 20 Vref 1 19 DAC1 {  }
+X2 1 Vref 2 D6 DAC1 {  }
+X3 2 Vref 3 D5 DAC1 {  }
+X4 3 Vref 8 D4 DAC1 {  }
+X5 8 Vref 4 D3 DAC1 {  }
+X6 4 Vref 5 D2 DAC1 {  }
+X7 5 Vref 6 D1 DAC1 {  }
+X8 6 Vref Voutx D0 DAC1 {  }
+B1 Vout 0 V=v(voutx)/128
+B2 19 0 V=v(D7) > .6 ? 0 : 5
+B3 20 0 V=-v(Vref)/256
+.ENDS 
+.SUBCKT DAC1 Vin Vref Vout Din
+B2 Vout 0 V=2 * v(vin) + ( (V(Din) > .6) ? v(Vref) : - v(vref))
+.ENDS 
+*********

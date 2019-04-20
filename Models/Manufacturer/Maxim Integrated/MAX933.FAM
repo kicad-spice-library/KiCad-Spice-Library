@@ -1,0 +1,221 @@
+* MAX933 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* Ultra-Low 4uA Quiescent Current
+* 12uS Propagation Delay (10mV Overdrive)
+* Input Voltage Range Includes Negative Supply
+* Internal 1.182V Reference
+* Adjustable Hysteresis 
+* Available in 8-Pin DIP/SO/uMAX (Dual MAX923)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX933         Dual, adj HYST, 12uS delay, 1.182V REF
+*
+*
+*   ////////////// MAX933 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX933 DATA SHEET       <====
+*
+* connections:   +INA
+*                |      -INB     
+                 |     |      +V -V  HYST.      
+*                |     |      |  |   |   REF.  
+*                |     |      |  |   |   |    OUT1
+*                |     |      |  |   |   |    |   OUT2
+.subckt max933   1     102    3  4   49  235  97  197
+*
+VE1 2 101  0V
+VE2 2 235 0V
+  f101    3  9 v1 1
+  iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  q2    8  21  7 qin
+  q3    9  8  399 qmo
+  q4    8  8  399 qmi
+  VMB 400 0 0V
+  VPB 399 3 0V
+***================
+RIN1 2 23 20K
+RIN2 1 25 20K
+***
+DCM2 70 3 DP
+DCM1 4 24 DP
+VCM1 70 24 1.3V
+DCM3 4 26 DP
+VCM2 71 26 1.3V
+DCM4 71 3 DP
+***
+IPSUP 0 3 2.5523948MA
+IMSUP 0 4 -2.552948MA
+***
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=5E6)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=6.662E-6)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  4  3  9  1
+  v1   10 11 dc 0
+  q5    5 11  44 qoc
+  VSHIFT  44 400 0V
+  R55 399 5 10K
+  DP5 5 3 DP
+  DP6 4 5 DP
+***============= Hysterisis section
+RINH 49 50 200
+I50 50 0 0.02NA
+D50 50 200 DX 
+EREFER 200 0 235 4 1
+D51 4 50 DX
+GH 0 51 97 0 1E-6
+RH1 3 51 1E9
+RH2 4 51 1E9
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+***=================
+GHYST 55 0 50 0 1E-6
+GREF 0 55 235 4 1E-6 
+RREF 55 0 1E6
+DP10 55 56 DP
+DP20 57 55 DP
+VP10 56 0 50MV
+VP20 57 0 0MV
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*================
+*EH 3 98 3 4 0.5
+VVIRTUAL 98 0 0V
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+F6 3  4 VA7 1
+G12 98 32 5 0 7.04E-3
+R15 98 32 142
+D3 36 41 DX
+D4 42 37 DX
+V5 34 36 -.63
+V4 37 34 -.65
+****V4,V5 SET ISC
+R16 41 35 7
+R17 42 35 145
+E11 3 33 3 32 1
+VA8 33 34 0V
+L 35 97 10NH
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=2.069E3 Cjc=1E-15 Tf=25.53E-9 Tr=6.983E-6)
+  dp    4  3 DX
+  rp    3  4 2.041E3
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+*=======================
+* MAX931-934 VOLTAGE REF. 
+*
+VREF 301 4 1.1832V
+VSHORT 235 302 0V
+RIN200 301 302 1MEG
+F226 3 4 VA227 1
+F225 3 238 VA228 1
+D229 240 238 DX
+D230 238 3 DX
+VA227 3 240 0
+***=====================
+G232 0 232 301 302 1E-3
+R235 0 232 1E6
+C235 0 232 6800PF
+D223 232 236 DX2
+D224 237 232 DX2
+V225 235 237 1.8mV
+V224 236 235 .9mV
+R236 234 235 60
+E221 3 233 3 232 1
+VA228 233 234 0V
+*
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*.MODEL DX D(IS=1E-15) 
+***===============================
+* SECOND COMPARATOR
+* 
+  f201    3  109 v101 1
+  iee200   107  500 dc 100.0E-6
+  q201    109  120  107 qin
+  q102    108  121  107 qin
+  q103    109  108  499 qmo
+  q104    108 108  499 qmi
+  VMB100 500 0 0V
+  VPB100 499 3 0V
+***================
+RIN101 102 123 20K
+RIN102 101 125 20K
+***
+DCM102 170 3 DP
+DCM101 4 124 DP
+VCM101 170 124 1.3V
+DCM103 4 126 DP
+VCM102 171 126 1.3V
+DCM104 171 3 DP
+***
+IPSUP100 0 3 2.5523948MA
+IMSUP100 0 4 -2.5523948MA
+***=================
+EHYST100 123 120 POLY(1) 0 160 0 1
+VS102 121 125 0V
+***=================
+  e101   110  4  3  109  1
+  v101   110 111 dc 0
+  q105    105 111  144 qoc
+  VSHIFT100  144 500 0V
+  R155 499 105 10K
+  DP105 105 3 DP
+  DP106 4 105 DP
+***============= Hysterisis section
+GH100 0 151 197 0 1E-6
+RH101 3 51 1E9
+RH102 4 51 1E9
+DP101 151 152 DP
+DP102 153 151 DP
+VP100 152 0 1V
+VP102 153 0 -1V
+***=================
+GHYST100 155 0 50 0 1E-6
+GREF100 0 155 235 4 1E-6 
+*NODE 235 STAYS SAME FOR BOTH AMPLIFIERS.
+RREF100 155 0 1E6
+DP110 155 156 DP
+DP120 157 155 DP
+VP110 156 0 50MV
+VP120 157 0 0MV
+*LOGIC OUTPUT, NODE 160 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT100 160 0 POLY(2) 151 0 155 0 0 0  0 0 1E-6
+RMULT100 160 0 1E6
+*================
+VVIRTUAL100 198 0 0V
+F105 3 138 VA108 1
+D109 140 138 DX
+D110 138 3 DX
+VA107 3 140 0
+F106 3  4 VA107 1
+G112 198 132 105 0 7.04E-3
+R115 198 132 142
+D103 136 141 DX
+D104 142 137 DX
+V105 134 136 -.63
+V104 137 134 -.65
+****V104,V105 SET ISC
+R116 141 135 107
+R117 142 135 245
+E111 3 133 3 132 1
+VA108 133 134 0V
+L100 135 197 10NH
+*========================
+  dp100    4  3 DX
+  rp100    3  4 2.041E3
+.ends     
+

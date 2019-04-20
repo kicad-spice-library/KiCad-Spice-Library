@@ -1,0 +1,5912 @@
+**********
+*SRC=AD704;AD704;Opamps;AD-"ADxxx";Bipolar Input, 100pA Bias Cur.
+*SYM=ADOPAMP
+* AD704 SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Node assignments
+*             non-inverting input
+*             | inverting input
+*             | |  positive supply
+*             | |  |  negative supply
+*             | |  |  |  output
+*             | |  |  |  |
+.SUBCKT AD704 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 15E-12
+CIN 1 2 2E-12
+R1 2 3 3.3157E8
+R2 1 3 3.3157E8
+EOS 9 1 POLY(1) 16 22 30E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 0.45 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 530.51E6
+C3 12 98 666.67E-12
+V1 99 13 DC 1.3375
+D3 12 13 DX
+V2 14 50 DC 1.3375
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 500 HZ
+*
+ECM 15 98 3 22 251.19E-3
+RCM1 15 16 1E6
+CCM 15 16 318.31E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 260E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=6.25E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD704A;AD704A;Opamps;AD-"ADxxx";Bipolar Input, 100pA Bias Cur.
+*SYM=ADOPAMP
+* AD704A SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD704 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD704A 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 125E-12
+CIN 1 2 2E-12
+R1 2 3 9.8243E7
+R2 1 3 9.8243E7
+EOS 9 1 POLY(1) 16 22 150E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3625
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 20 kHZ
+*
+ECM 15 98 3 22 10
+RCM1 15 16 1E6
+CCM 15 16 7.9577E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.8519E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD704B;AD704B;Opamps;AD-"ADxxx";Bipolar Input, 100pA Bias Cur.
+*SYM=ADOPAMP
+* AD704B SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD704 model simulates the worst case 
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD704B 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 1.7684E8
+R2 1 3 1.7684E8
+EOS 9 1 POLY(1) 16 22 75E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 159.15E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3625
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHZ
+*
+ECM 15 98 3 22 1.9953
+RCM1 15 16 1E6
+CCM 15 16 39.883E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=3.3333E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD704J;AD704J;Opamps;AD-"ADxxx";Bipolar Input, 100pA Bias Cur.
+*SYM=ADOPAMP
+* AD704J SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD704 model simulates the worst case 
+* parameters of the 'J' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD704J 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 125E-12
+CIN 1 2 2E-12
+R1 2 3 9.8243E7
+R2 1 3 9.8243E7
+EOS 9 1 POLY(1) 16 22 150E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3625
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 20 kHZ
+*
+ECM 15 98 3 22 10
+RCM1 15 16 1E6
+CCM 15 16 7.9577E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.8519E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD704K;AD704K;Opamps;AD-"ADxxx";Bipolar Input, 100pA Bias Cur.
+*SYM=ADOPAMP
+* AD704K SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD704 model simulates the worst case 
+* parameters of the 'K' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD704K 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 1.7684E8
+R2 1 3 1.7684E8
+EOS 9 1 POLY(1) 16 22 75E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 159.15E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3625
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHZ
+*
+ECM 15 98 3 22 1.9953
+RCM1 15 16 1E6
+CCM 15 16 39.883E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=3.3333E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD704T;AD704T;Opamps;AD-"ADxxx";Bipolar Input, 100pA Bias Cur.
+*SYM=ADOPAMP
+* AD704T SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD704 model simulates the worst case 
+* parameters of the 'T' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD704T 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 75E-12
+CIN 1 2 2E-12
+R1 2 3 1.3263E8
+R2 1 3 1.3263E8
+EOS 9 1 POLY(1) 16 22 100E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3625
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 6.3 kHZ
+*
+ECM 15 98 3 22 3.1623
+RCM1 15 16 1E6
+CCM 15 16 25.165E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=2.5E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD705;AD705;Opamps;AD-"ADxxx";Bipolar Input w/Compensation
+*SYM=ADCOMP
+* AD705 SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+* External compensation node added.
+*
+* Node assignments
+*             non-inverting input
+*             | inverting input
+*             | |  positive supply
+*             | |  |  negative supply
+*             | |  |  |  output
+*             | |  |  |  |  compensation
+*             | |  |  |  |  |
+.SUBCKT AD705 1 2 99 50 28 12
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 15E-12
+CIN 1 2 2E-12
+R1 2 3 8.8421E8
+R2 1 3 8.8421E8
+EOS 9 1 POLY(1) 16 22 10E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 1.05E3
+R4 99 6 1.05E3
+C2 5 6 25.263E-12
+R5 10 4 26.369
+R6 11 4 26.369
+I1 4 50 50.526E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 0.45 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 952.38E-6
+R7 12 98 1.05E9
+C3 12 98 336.84E-12
+V1 99 13 DC 1.3375
+D3 12 13 DX
+V2 14 50 DC 1.3375
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 500 HZ
+*
+ECM 15 98 3 22 251.19E-3
+RCM1 15 16 1E6
+CCM 15 16 318.31E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R8 21 98 1E6
+C4 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 314.47E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=8.4205E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD705A;AD705A;Opamps;AD-"ADxxx";Bipolar Input w/Compensation
+*SYM=ADCOMP
+* AD705A SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD705 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+* External compensation node added.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |  compensation
+*              | |  |  |  |  |
+.SUBCKT AD705A 1 2 99 50 31 15
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 75E-12
+CIN 1 2 2E-12
+R1 2 3 1.724E8
+R2 1 3 1.724E8
+EOS 9 1 POLY(1) 19 25 90E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+R3 99 5 1.5354E3
+R4 99 6 1.5354E3
+C2 5 6 17.276E-12
+I1 4 50 33.684E-6
+*
+* FIRST GAIN STAGE
+*
+EREF 98 0 25 0 1
+G1 98 12 5 6 56.548E-6
+R7 12 98 1.5E6
+E1 99 13 POLY(1) 99 25 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 25 50 -2.4 1
+D4 14 12 DX
+*
+* SECOND GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+G2 98 15 12 25 11.228E-6
+R8 15 98 210E6
+C3 15 98 336.84E-12
+V1 99 16 DC 2.3625
+D5 15 16 DX
+V2 17 50 DC 2.3625
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 6.3 kHz
+*
+ECM 18 98 3 25 3.1623
+RCM1 18 19 1E6
+CCM 18 19 25.165E-12
+RCM2 19 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP 98 20 15 25 1E-6
+RZP1 20 21 1E6
+RZP2 21 98 1.6061E6
+LZP 21 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 22 98 20 25 1E6
+RNZ1 22 23 -1
+CNZ 22 23 53.052E-9
+RNZ2 23 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G3 98 24 23 25 1E-6
+R9 24 98 1E6
+C5 24 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 551.32E-6
+RDC1 99 25 1E6
+RDC2 25 50 1E6
+DO1 99 26 DX
+GO1 26 50 30 24 2E-3
+DO2 50 26 DY
+DO3 99 27 DX
+GO2 27 50 24 30 2E-3
+DO4 50 27 DY
+VSC1 28 30 DC 3.15
+DSC1 24 28 DX
+VSC2 30 29 DC 3.15
+DSC2 29 24 DX
+GO3 30 99 99 24 2E-3
+GO4 50 30 24 50 2E-3
+RO1 99 30 500
+RO2 30 50 500
+LO 30 31 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.1228E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD705B;AD705B;Opamps;AD-"ADxxx";Bipolar Input w/Compensation
+*SYM=ADCOMP
+* AD705B SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD705 model simulates the worst case 
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+* External compensation node added.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |  compensation
+*              | |  |  |  |  |
+.SUBCKT AD705B 1 2 99 50 31 15
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 2.586E8
+R2 1 3 2.586E8
+EOS 9 1 POLY(1) 19 25 35E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+R3 99 5 1.5111E3
+R4 99 6 1.5111E3
+C2 5 6 17.554E-12
+I1 4 50 34.227E-6
+*
+* FIRST GAIN STAGE
+*
+EREF 98 0 25 0 1
+G1 98 12 5 6 57.46E-6
+R7 12 98 1.4762E6
+E1 99 13 POLY(1) 99 25 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 25 50 -2.4 1
+D4 14 12 DX
+*
+* SECOND GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+G2 98 15 12 25 11.409E-6
+R8 15 98 310E6
+C3 15 98 342.27E-12
+V1 99 16 DC 2.3625
+D5 15 16 DX
+V2 17 50 DC 2.3625
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHz
+*
+ECM 18 98 3 25 1.9953
+RCM1 18 19 1E6
+CCM 18 19 39.88E-12
+RCM2 19 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP 98 20 15 25 1E-6
+RZP1 20 21 1E6
+RZP2 21 98 1.6061E6
+LZP 21 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 22 98 20 25 1E6
+RNZ1 22 23 -1
+CNZ 22 23 53.052E-9
+RNZ2 23 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G3 98 24 23 25 1E-6
+R9 24 98 1E6
+C5 24 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 550.77E-6
+RDC1 99 25 1E6
+RDC2 25 50 1E6
+DO1 99 26 DX
+GO1 26 50 30 24 2E-3
+DO2 50 26 DY
+DO3 99 27 DX
+GO2 27 50 24 30 2E-3
+DO4 50 27 DY
+VSC1 28 30 DC 3.15
+DSC1 24 28 DX
+VSC2 30 29 DC 3.15
+DSC2 29 24 DX
+GO3 30 99 99 24 2E-3
+GO4 50 30 24 50 2E-3
+RO1 99 30 500
+RO2 30 50 500
+LO 30 31 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.7114E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD705J;AD705J;Opamps;AD-"ADxxx";Bipolar Input w/Compensation
+*SYM=ADCOMP
+* AD705J SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD705 model simulates the worst case 
+* parameters of the 'J' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+* External compensation node added.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |  compensation
+*              | |  |  |  |  |
+.SUBCKT AD705J 1 2 99 50 31 15
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 75E-12
+CIN 1 2 2E-12
+R1 2 3 1.724E8
+R2 1 3 1.724E8
+EOS 9 1 POLY(1) 19 25 90E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+R3 99 5 1.5354E3
+R4 99 6 1.5354E3
+C2 5 6 17.276E-12
+I1 4 50 33.684E-6
+*
+* FIRST GAIN STAGE
+*
+EREF 98 0 25 0 1
+G1 98 12 5 6 56.548E-6
+R7 12 98 1.5E6
+E1 99 13 POLY(1) 99 25 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 25 50 -2.4 1
+D4 14 12 DX
+*
+* SECOND GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+G2 98 15 12 25 11.228E-6
+R8 15 98 210E6
+C3 15 98 336.84E-12
+V1 99 16 DC 2.3625
+D5 15 16 DX
+V2 17 50 DC 2.3625
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 6.3 kHz
+*
+ECM 18 98 3 25 3.1623
+RCM1 18 19 1E6
+CCM 18 19 25.165E-12
+RCM2 19 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP 98 20 15 25 1E-6
+RZP1 20 21 1E6
+RZP2 21 98 1.6061E6
+LZP 21 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 22 98 20 25 1E6
+RNZ1 22 23 -1
+CNZ 22 23 53.052E-9
+RNZ2 23 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G3 98 24 23 25 1E-6
+R9 24 98 1E6
+C5 24 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 551.32E-6
+RDC1 99 25 1E6
+RDC2 25 50 1E6
+DO1 99 26 DX
+GO1 26 50 30 24 2E-3
+DO2 50 26 DY
+DO3 99 27 DX
+GO2 27 50 24 30 2E-3
+DO4 50 27 DY
+VSC1 28 30 DC 3.15
+DSC1 24 28 DX
+VSC2 30 29 DC 3.15
+DSC2 29 24 DX
+GO3 30 99 99 24 2E-3
+GO4 50 30 24 50 2E-3
+RO1 99 30 500
+RO2 30 50 500
+LO 30 31 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.1228E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD705K;AD705K;Opamps;AD-"ADxxx";Bipolar Input w/Compensation
+*SYM=ADCOMP
+* AD705K SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD705 model simulates the worst case 
+* parameters of the 'K' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+* External compensation node added.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |  compensation
+*              | |  |  |  |  |
+.SUBCKT AD705K 1 2 99 50 31 15
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 2.586E8
+R2 1 3 2.586E8
+EOS 9 1 POLY(1) 19 25 35E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+R3 99 5 1.5111E3
+R4 99 6 1.5111E3
+C2 5 6 17.554E-12
+I1 4 50 34.227E-6
+*
+* FIRST GAIN STAGE
+*
+EREF 98 0 25 0 1
+G1 98 12 5 6 57.46E-6
+R7 12 98 1.4762E6
+E1 99 13 POLY(1) 99 25 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 25 50 -2.4 1
+D4 14 12 DX
+*
+* SECOND GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+G2 98 15 12 25 11.409E-6
+R8 15 98 310E6
+C3 15 98 342.27E-12
+V1 99 16 DC 2.3625
+D5 15 16 DX
+V2 17 50 DC 2.3625
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHz
+*
+ECM 18 98 3 25 1.9953
+RCM1 18 19 1E6
+CCM 18 19 39.88E-12
+RCM2 19 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP 98 20 15 25 1E-6
+RZP1 20 21 1E6
+RZP2 21 98 1.6061E6
+LZP 21 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 22 98 20 25 1E6
+RNZ1 22 23 -1
+CNZ 22 23 53.052E-9
+RNZ2 23 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G3 98 24 23 25 1E-6
+R9 24 98 1E6
+C5 24 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 550.77E-6
+RDC1 99 25 1E6
+RDC2 25 50 1E6
+DO1 99 26 DX
+GO1 26 50 30 24 2E-3
+DO2 50 26 DY
+DO3 99 27 DX
+GO2 27 50 24 30 2E-3
+DO4 50 27 DY
+VSC1 28 30 DC 3.15
+DSC1 24 28 DX
+VSC2 30 29 DC 3.15
+DSC2 29 24 DX
+GO3 30 99 99 24 2E-3
+GO4 50 30 24 50 2E-3
+RO1 99 30 500
+RO2 30 50 500
+LO 30 31 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.7114E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD705T;AD705T;Opamps;AD-"ADxxx";Bipolar Input w/Compensation
+*SYM=ADCOMP
+* AD705T SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD705 model simulates the worst case 
+* parameters of the 'T' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+* External compensation node added.
+*
+* Node assignments
+*             non-inverting input
+*             | inverting input
+*             | |  positive supply
+*             | |  |  negative supply
+*             | |  |  |  output
+*             | |  |  |  |  compensation
+*             | |  |  |  |  |
+.SUBCKT AD705T 1 2 99 50 31 15
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 2.586E8
+R2 1 3 2.586E8
+EOS 9 1 POLY(1) 19 25 25E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+R3 99 5 1.5111E3
+R4 99 6 1.5111E3
+C2 5 6 17.554E-12
+I1 4 50 34.227E-6
+*
+* FIRST GAIN STAGE
+*
+EREF 98 0 25 0 1
+G1 98 12 5 6 57.46E-6
+R7 12 98 1.4762E6
+E1 99 13 POLY(1) 99 25 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 25 50 -2.4 1
+D4 14 12 DX
+*
+* SECOND GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+G2 98 15 12 25 11.409E-6
+R8 15 98 310E6
+C3 15 98 342.27E-12
+V1 99 16 DC 2.3625
+D5 15 16 DX
+V2 17 50 DC 2.3625
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHz
+*
+ECM 18 98 3 25 1.9953
+RCM1 18 19 1E6
+CCM 18 19 39.88E-12
+RCM2 19 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP 98 20 15 25 1E-6
+RZP1 20 21 1E6
+RZP2 21 98 1.6061E6
+LZP 21 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 22 98 20 25 1E6
+RNZ1 22 23 -1
+CNZ 22 23 53.052E-9
+RNZ2 23 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G3 98 24 23 25 1E-6
+R9 24 98 1E6
+C5 24 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 550.77E-6
+RDC1 99 25 1E6
+RDC2 25 50 1E6
+DO1 99 26 DX
+GO1 26 50 30 24 2E-3
+DO2 50 26 DY
+DO3 99 27 DX
+GO2 27 50 24 30 2E-3
+DO4 50 27 DY
+VSC1 28 30 DC 3.15
+DSC1 24 28 DX
+VSC2 30 29 DC 3.15
+DSC2 29 24 DX
+GO3 30 99 99 24 2E-3
+GO4 50 30 24 50 2E-3
+RO1 99 30 500
+RO2 30 50 500
+LO 30 31 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.7114E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD706;AD706;Opamps;AD-"ADxxx";Bipolar Input, 110pA Bias Cur.
+*SYM=ADOPAMP
+* AD706 SPICE Macro-model 9/91, Rev. A
+* AAG / PMI
+*
+* Node assignments
+*             non-inverting input
+*             | inverting input
+*             | |  positive supply
+*             | |  |  negative supply
+*             | |  |  |  output
+*             | |  |  |  |
+.SUBCKT AD706 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 15E-12
+CIN 1 2 2E-12
+R1 2 3 8.8415E8
+R2 1 3 8.8415E8
+EOS 9 1 POLY(1) 16 22 10E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 0.45 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 530.51E6
+C3 12 98 666.67E-12
+V1 99 13 DC 1.3375
+D3 12 13 DX
+V2 14 50 DC 1.3375
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 500 HZ
+*
+ECM 15 98 3 22 251.19E-3
+RCM1 15 16 1E6
+CCM 15 16 318.31E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 260E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.6667E6)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD706A;AD706A;Opamps;AD-"ADxxx";Bipolar Input, 110pA Bias Cur.
+*SYM=ADOPAMP
+* AD706A SPICE Macro-model 9/91, Rev. A
+* AAG / PMI
+*
+* This version of the AD706 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD706A 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 75E-12
+CIN 1 2 2E-12
+R1 2 3 1.3263E8
+R2 1 3 1.3263E8
+EOS 9 1 POLY(1) 16 22 100E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3635
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 6.32 kHZ
+*
+ECM 15 98 3 22 3.1623
+RCM1 15 16 1E6
+CCM 15 16 25.165E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=250E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD706B;AD706B;Opamps;AD-"ADxxx";Bipolar Input, 110pA Bias Cur.
+*SYM=ADOPAMP
+* AD706B SPICE Macro-model 9/91, Rev. A
+* AAG / PMI
+*
+* This version of the AD706 model simulates the worst case 
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD706B 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 2.4114E8
+R2 1 3 2.4114E8
+EOS 9 1 POLY(1) 16 22 50E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 159.15E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3635
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHZ
+*
+ECM 15 98 3 22 1.9953
+RCM1 15 16 1E6
+CCM 15 16 39.88E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=454.55E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD706J;AD706J;Opamps;AD-"ADxxx";Bipolar Input, 110pA Bias Cur.
+*SYM=ADOPAMP
+* AD706J SPICE Macro-model 9/91, Rev. A
+* AAG / PMI
+*
+* This version of the AD706 model simulates the worst case 
+* parameters of the 'J' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD706J 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 75E-12
+CIN 1 2 2E-12
+R1 2 3 1.3263E8
+R2 1 3 1.3263E8
+EOS 9 1 POLY(1) 16 22 100E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3635
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 6.32 kHZ
+*
+ECM 15 98 3 22 3.1623
+RCM1 15 16 1E6
+CCM 15 16 25.165E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=250E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD706K;AD706K;Opamps;AD-"ADxxx";Bipolar Input, 110pA Bias Cur.
+*SYM=ADOPAMP
+* AD706K SPICE Macro-model 9/91, Rev. A
+* AAG / PMI
+*
+* This version of the AD706 model simulates the worst case 
+* parameters of the 'K' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD706K 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 2.4114E8
+R2 1 3 2.4114E8
+EOS 9 1 POLY(1) 16 22 50E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 1.5 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 159.15E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3635
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHZ
+*
+ECM 15 98 3 22 1.9953
+RCM1 15 16 1E6
+CCM 15 16 39.88E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=454.55E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD706T;AD706T;Opamps;AD-"ADxxx";Bipolar Input, 110pA Bias Cur.
+*SYM=ADOPAMP
+* AD706T SPICE Macro-model 9/91, Rev. A
+* AAG / PMI
+*
+* This version of the AD706 model simulates the worst case 
+* parameters of the 'T' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD706T 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 50E-12
+CIN 1 2 2E-12
+R1 2 3 2.2105E8
+R2 1 3 2.2105E8
+EOS 9 1 POLY(1) 16 22 50E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3635
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 kHZ
+*
+ECM 15 98 3 22 1.9953
+RCM1 15 16 1E6
+CCM 15 16 39.88E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 -1
+CNZ 19 20 53.052E-9
+RNZ2 20 98 -1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=416.67E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD711A;AD711A;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711A SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'A' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711A 13 15 12 16 14
+* 
+VOS 15 8 DC 1E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 9.09E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  630E-6
+RE 1 0 2.5E6
+RGM 3 0 2.4E3
+VC 12 2 DC 2.6
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 12.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD711B;AD711B;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711B SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'B' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711B 13 15 12 16 14
+* 
+VOS 15 8 DC 0.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 10.35E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 12.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD711C;AD711C;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711C SPICE Macro-model       		1/91, Rev. A
+*								JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'C' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711C 13 15 12 16 14
+* 
+VOS 15 8 DC 0.25E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 11.11E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=25E-12)
+.ENDS
+**********
+*SRC=AD711J;AD711J;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711J SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'J' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711J 13 15 12 16 14
+* 
+VOS 15 8 DC 2E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 9.09E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  630E-6
+RE 1 0 2.5E6
+RGM 3 0 2.4E3
+VC 12 2 DC 2.6
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 12.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD711K;AD711K;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711K SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'K' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711K 13 15 12 16 14
+* 
+VOS 15 8 DC 0.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 10.35E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 12.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD711S;AD711S;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711S SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'S' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711S 13 15 12 16 14
+* 
+VOS 15 8 DC 1E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 9.09E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  630E-6
+RE 1 0 2.5E6
+RGM 3 0 2.4E3
+VC 12 2 DC 2.6
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 12.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD711T;AD711T;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD711T SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD711 model simulates the worst case
+* parameters of the 'T' grade. The worst case parameters 
+* used correspond to those in the data book.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD711T 13 15 12 16 14
+* 
+VOS 15 8 DC 0.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 10.35E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 12.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD713;AD713;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713 SPICE Macro-model         3/91, Rev. B
+*        JLW / PMI
+*
+* Revision History:
+*     Corrected VOS to be 0.2mV
+*
+*
+* This version of the AD713 model simulates the typical
+* parameters corresponding to those in the device data
+* sheet.
+*
+*
+* connections: non-inverting input 
+*              |  inverting input  
+*              |  |  positive supply
+*              |  |  |  negative supply
+*              |  |  |  |  output
+*              |  |  |  |  |
+.SUBCKT AD713 13 15 12 16 14
+* 
+VOS 15 8 DC 0.2E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 12E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 150E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  2.3E-3
+RE 1 0 2.5E6
+RGM 3 0 1.69E3
+VC 12 2 DC 2.8
+VE 10 16 DC 2.8
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=40E-12)
+.ENDS
+**********
+*SRC=AD713A;AD713A;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713A SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD713 model simulates the worst case
+* parameters of the 'A' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD713A 13 15 12 16 14
+* 
+VOS 15 8 DC 1.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 9.16E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  630E-6
+RE 1 0 2.5E6
+RGM 3 0 2.4E3
+VC 12 2 DC 2.6
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 37.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=150E-12)
+.ENDS
+**********
+*SRC=AD713B;AD713B;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713B SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD713 model simulates the worst case
+* parameters of the 'B' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD713B 13 15 12 16 14
+* 
+VOS 15 8 DC 0.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 10.35E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 17.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=75E-12)
+.ENDS
+**********
+*SRC=AD713J;AD713J;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713J SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD713 model simulates the worst case
+* parameters of the 'J' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD713J 13 15 12 16 14
+* 
+VOS 15 8 DC 1.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 9.16E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  630E-6
+RE 1 0 2.5E6
+RGM 3 0 2.4E3
+VC 12 2 DC 2.6
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 37.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=150E-12)
+.ENDS
+**********
+*SRC=AD713K;AD713K;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713K SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD713 model simulates the worst case
+* parameters of the 'K' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD713K 13 15 12 16 14
+* 
+VOS 15 8 DC 0.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 10.35E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 17.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=75E-12)
+.ENDS
+**********
+*SRC=AD713S;AD713S;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713S SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD713 model simulates the worst case
+* parameters of the 'S' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD713S 13 15 12 16 14
+* 
+VOS 15 8 DC 1.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 9.16E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  630E-6
+RE 1 0 2.5E6
+RGM 3 0 2.4E3
+VC 12 2 DC 2.6
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 37.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=150E-12)
+.ENDS
+**********
+*SRC=AD713T;AD713T;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD713T SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD713 model simulates the worst case
+* parameters of the 'T' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input 
+*               |  inverting input  
+*               |  |  positive supply
+*               |  |  |  negative supply
+*               |  |  |  |  output
+*               |  |  |  |  |
+.SUBCKT AD713T 13 15 12 16 14
+* 
+VOS 15 8 DC 0.5E-3
+EC 9 0  14 0  1
+C1 6 7 .5E-12
+RP 16 12 10.35E3
+GB 11 0  3 0  1.67E3
+RD1 6 16 16E3
+RD2 7 16 16E3
+ISS 12 1 DC 100E-6
+CCI 3 11 45E-12
+GCM 0 3  0 1  1.76E-9
+GA 3 0  7 6  780E-6
+RE 1 0 2.5E6
+RGM 3 0 2.6E3
+VC 12 2 DC 2.8
+VE 10 16 DC 3.1
+RO1 11 14 25
+CE 1 0 2E-12
+RO2 0 11 30
+RS1 1 4 5.77E3
+RS2 1 5 5.77E3
+J1 6 13 4 FET
+J2 7 8 5 FET
+DC 14 2 DIODE
+DE 10 14 DIODE
+DP 16 12 DIODE
+D1 9 11 DIODE
+D2 11 9 DIODE
+IOS 15 13 17.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=75E-12)
+.ENDS
+**********
+*SRC=AD744;AD744;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744 SPICE Macro-model         3/91, Rev. B
+*        JLW / PMI
+*
+* Revision History:
+*     Corrected VOS to be 0.1mV
+*
+*
+* This version of the AD744 model simulates the typical
+* parameters that correspond to those in the device data
+* sheet.
+*
+*
+* connections: non-inverting input
+*               |  inverting input
+*               |  |  positive power supply
+*               |  |  |  negative power supply
+*               |  |  |  |  output
+*               |  |  |  |  |   compensation
+*               |  |  |  |  |  / \
+.SUBCKT AD744  11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 0.1E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  2.33E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.76E3
+VC 10 2 DC 2.8
+VE 9 16 DC 2.8
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 8.5E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=30E-12)
+.ENDS
+**********
+*SRC=AD744A;AD744A;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744A SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'A' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections: non-inverting input
+*               |  inverting input
+*               |  |  positive power supply
+*               |  |  |  negative power supply
+*               |  |  |  |  output
+*               |  |  |  |  |   compensation
+*               |  |  |  |  |  / \
+.SUBCKT AD744A 11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 1E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.4E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.44E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 6.13E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 25E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=100E-12)
+.ENDS
+**********
+*SRC=AD744B;AD744B;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744B SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'B' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   compensation
+*                |  |  |  |  |  / \
+.SUBCKT AD744B  11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 0.5E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.47E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.7E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 7.7E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 25E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=100E-12)
+.ENDS
+**********
+*SRC=AD744C;AD744C;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744C SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'C' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   compensation
+*                |  |  |  |  |  / \
+.SUBCKT AD744C  11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 0.25E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.47E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.7E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 7.7E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 10E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=50E-12)
+.ENDS
+**********
+*SRC=AD744J;AD744J;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744J SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'J' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections: non-inverting input
+*               |  inverting input
+*               |  |  positive power supply
+*               |  |  |  negative power supply
+*               |  |  |  |  output
+*               |  |  |  |  |   compensation
+*               |  |  |  |  |  / \
+.SUBCKT AD744J 11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 1E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.4E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.44E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 6.13E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 25E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=100E-12)
+.ENDS
+**********
+*SRC=AD744K;AD744K;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744K SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'K' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   compensation
+*                |  |  |  |  |  / \
+.SUBCKT AD744K  11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 0.5E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.47E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.7E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 7.7E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 25E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=100E-12)
+.ENDS
+**********
+*SRC=AD744S;AD744S;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744S SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'S' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections: non-inverting input
+*               |  inverting input
+*               |  |  positive power supply
+*               |  |  |  negative power supply
+*               |  |  |  |  output
+*               |  |  |  |  |   compensation
+*               |  |  |  |  |  / \
+.SUBCKT AD744S 11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 1E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.4E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.44E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 6.13E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 25E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=100E-12)
+.ENDS
+**********
+*SRC=AD744T;AD744T;Opamps;AD-"ADxxx";FET Input w/Compensation
+*SYM=ADCOMP2
+* AD744T SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD744 model simulates the worst case
+* parameters of the 'T' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* An external compensation capacitor, connected between the
+* compensation terminals in main circuit, is required at low
+* gains. A nominal 0.001pF capacitor is supplied in this
+* subcircuit.
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   compensation
+*                |  |  |  |  |  / \
+.SUBCKT AD744T  11 14 10 16 13 12 15
+* 
+VOS 14 7 DC 0.5E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.47E-3
+CCE 12 15 0.001E-12
+RE 1 0 2.5E6
+RGM 15 0 1.7E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 7.7E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 25E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=100E-12)
+.ENDS
+**********
+*SRC=AD746;AD746;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD746 SPICE Macro-model         3/91, Rev. B
+*        JLW / PMI
+*
+* Revision History:
+*     Corrected VOS to be 0.25mV
+*
+*
+* This version of the AD746 model simulates the typical
+* parameters corresponding to those in the device data
+* sheet.
+*
+*
+* connections: non-inverting input
+*               |  inverting input
+*               |  |  positive power supply
+*               |  |  |  negative power supply
+*               |  |  |  |  output
+*               |  |  |  |  | 
+.SUBCKT AD746  11 14 10 16 13 
+* 
+VOS 14 7 DC 0.25E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.75E-3
+RE 1 0 2.5E6
+RGM 15 0 1.76E3
+VC 10 2 DC 2.8
+VE 9 16 DC 2.8
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 8.5E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=110E-12)
+.ENDS
+**********
+*SRC=AD746A;AD746A;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD746A SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD746 model simulates the worst case
+* parameters of the 'A' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   
+.SUBCKT AD746A  11 14 10 16 13 
+* 
+VOS 14 7 DC 1.5E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.4E-3
+RE 1 0 2.5E6
+RGM 15 0 1.1E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 6.13E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 62.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=250E-12)
+.ENDS
+**********
+*SRC=AD746B;AD746B;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD746B SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD746 model simulates the worst case
+* parameters of the 'B' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   
+.SUBCKT AD746B  11 14 10 16 13 
+* 
+VOS 14 7 DC 0.5E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.63E-3
+RE 1 0 2.5E6
+RGM 15 0 1.1E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 7.69E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 37.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=150E-12)
+.ENDS
+**********
+*SRC=AD746J;AD746J;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD746J SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD746 model simulates the worst case
+* parameters of the 'J' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   
+.SUBCKT AD746J  11 14 10 16 13 
+* 
+VOS 14 7 DC 1.5E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.4E-3
+RE 1 0 2.5E6
+RGM 15 0 1.1E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 6.13E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 62.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=250E-12)
+.ENDS
+**********
+*SRC=AD746S;AD746S;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* AD746S SPICE Macro-model         1/91, Rev. A
+*        JLW / PMI
+*
+* This version of the AD746 model simulates the worst case
+* parameters of the 'S' grade. The worst case parameters 
+* used correspond to those in the device data sheet.
+*
+*
+* connections:  non-inverting input
+*                |  inverting input
+*                |  |  positive power supply
+*                |  |  |  negative power supply
+*                |  |  |  |  output
+*                |  |  |  |  |   
+.SUBCKT AD746S  11 14 10 16 13 
+* 
+VOS 14 7 DC 1E-3
+EC 8 0  13 0  1
+C1 5 6 0.33E-12
+GB 12 0  15 0  1.67E3 
+RD1 5 16 16E3
+RD2 6 16 16E3
+ISS 10 1 DC 100E-6
+GCM 0 15  0 1  1.76E-9
+GA 15 0  6 5  1.4E-3
+RE 1 0 2.5E6
+RGM 15 0 1.1E3
+VC 10 2 DC 2.8
+VE 9 16 DC 3.1
+RO1 12 13 25
+CE 1 0 1E-12
+RO2 0 12 30
+RS1 1 3 5.77E3
+RS2 1 4 5.77E3
+CCI 15 12 40E-12
+RP 16 10 6.13E3
+J1 5 11 3 FET
+J2 6 7 4 FET
+DC 13 2 DIODE
+DE 9 13 DIODE
+DP 16 10 DIODE
+D1 8 12 DIODE
+D2 12 8 DIODE
+IOS 14 11 62.5E-12
+.MODEL DIODE D
+.MODEL FET PJF(VTO=-1 BETA=1E-3 IS=250E-12)
+.ENDS
+**********
+*SRC=AD811;AD811;Opamps;AD-"ADxxx";Wideband, 400MHz GBP
+*SYM=ADOPAMP
+* AD811 SPICE Macro-model                   7/91, Rev. A   
+*                                           JCB / PMI
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT AD811  1 2 99 50 28
+*
+* INPUT STAGE
+*
+R1   99  8     1E3
+R2   10 50     1E3
+V1   99  9     11
+D1   9   8     DX
+V2   11 50     11
+D2   10 11     DX
+I1   99  5     920E-6
+I2   4  50     920E-6
+Q1   5   5  3  QN
+Q2   4   4  3  QP
+Q3   8   5 30  QN
+Q4   10  4 30  QP
+*
+* INPUT ERROR SOURCES
+* 
+GB1  99  1     POLY(1)  1  22  2E-6  1E-6
+GB2  99 30     POLY(1)  1  22  2E-6  1E-6
+VOS  3   1     500E-6
+LS1  30  2     4E-8
+CS1  99  2     0.5E-12
+CS2  50  2     0.5E-12
+CIN  1  50     2E-12
+*
+EREF 97  0     22  0  1
+*
+* GAIN STAGE & DOMINANT POLE
+*
+R5   12 97     1.5E6
+C3   12 97     3.9E-12
+G1   97 12     99  8  1E-3
+G2   12 97     10 50  1E-3
+V3   99 13     2.9
+V4   14 50     2.9
+D3   12 13     DX
+D4   14 12     DX
+*
+* POLE AT 400 MHZ
+*
+R8  17 97     1E6
+C4  17 97     0.530E-15
+G4  97 17     12 22  1E-6
+*
+* ZERO AT 150 MHZ
+*
+R20 18 19     -1E6
+R21 19 97     -1
+C20 18 19     .530E-15
+E20 18 97     17 22  1E6
+*
+* POLE AT 200 MHZ
+*
+R12 21 97     1E6
+C8  21 97     0.395E-15
+G8  97 21     19 22  1E-6
+*
+* OUTPUT STAGE
+*
+ISY 99 50     14.7E-3
+R13 22 99     16.7E3
+R14 22 50     16.7E3
+R15 27 99     22
+R16 27 50     22
+L2  27 28     1E-8
+G9  25 50     21 27  45.45E-3
+G10 26 50     27 21  45.45E-3
+G11 27 99     99 21  45.45E-3
+G12 50 27     21 50  45.45E-3
+V5  23 27     1.3
+V6  27 24     1.3
+D5  21 23     DX
+D6  24 21     DX
+D7  99 25     DX
+D8  99 26     DX
+D9  50 25     DY
+D10 50 26     DY
+*
+* MODELS USED
+*
+.MODEL QN   NPN(BF=1E9 IS=1E-15)
+.MODEL QP   PNP(BF=1E9 IS=1E-15)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD829;AD829;Opamps;AD-"ADxxx";Video, Low Noise, w/Comp
+*SYM=ADCOMP
+* AD829 SPICE Macro-model                   9/90, Rev. A
+*                                           JCB / PMI
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | | positive supply
+*               | | |  negative supply
+*               | | |  |  output
+*               | | |  |  |  compensation node
+*               | | |  |  |  |
+.SUBCKT AD829   1 2 99 50 30 12
+*
+* INPUT STAGE & POLE AT 200 MHZ
+*
+R1   2  3     17.8E3
+R2   1  3     17.8E3
+R3   5 99     56.4
+R4   6 99     56.4
+CIN  1  2     5E-12
+C2   5  6     7.18E-12
+I1   4  50    1.2E-3
+IOS  1  2     25E-9
+EOS  9  1     POLY(1)  19 23  0.2E-3  1
+Q1   5  2 10  QX
+Q2   6  9 11  QX
+R5   10 4     13.4
+R6   11 4     13.4
+*
+EREF 98 0     23  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 5.4 KHZ
+*
+R7  12 98     5.64E6
+C3  12 98     5.2E-12
+G1  98 12     5  6  17.73E-3
+V2  99 13     2.1
+V3  14 50     2.1
+D3  12 13     DX
+D4  14 12     DX
+*
+* ZERO/POLE PAIR AT 50MHz/100MHz
+*
+R8  15 16     1E6
+R9  16 98     1E6
+L1  16 98     1.59E-3
+G2  98 15     12 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R41 41 98     1E6
+C41 41 98     398E-18
+G41 98 41     15 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R42 42 98     1E6
+C42 42 98     398E-18
+G42 98 42     41 23  1E-6
+*
+* POLE AT 200 MHZ
+*
+R43 43 98     1E6
+C43 43 98     796E-18
+G43 98 43     42 23  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3 kHZ
+*
+R11 18 19     1E6
+C6  18 19     53.1E-12
+R12 19 98     1
+E2  18 98     3  23  1
+*
+* POLE AT 400 MHZ
+*
+R15 22 98     1E6
+C8  22 98     398E-18
+G3  98 22     43 23  1E-6
+*
+* OUTPUT STAGE
+*
+RF  25 60     500
+CF  60 12     12.5E-12
+R16 23 99     100E3
+R17 23 50     100E3
+ISY 99 50     3.95E-3
+R18 25 99     30
+R19 25 50     30
+L2  25 30     1E-8
+G4  28 50     22 25  33.33E-3
+G5  29 50     25 22  33.33E-3
+G6  25 99     99 22  33.33E-3
+G7  50 25     22 50  33.33E-3
+V4  26 25     -0.2
+V5  25 27     -0.2
+D5  22 26     DX
+D6  27 22     DX
+D7  99 28     DX
+D8  99 29     DX
+D9  50 28     DY
+D10 50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=181.8)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD829A;AD829A;Opamps;AD-"ADxxx";Video, Low Noise, w/Comp
+*SYM=ADCOMP
+* AD829A SPICE Macro-model                   9/90, Rev. A
+*                                            JCB / PMI
+*
+* This version of the AD829 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | | positive supply
+*               | | |  negative supply
+*               | | |  |  output
+*               | | |  |  |  compensation node
+*               | | |  |  |  |
+.SUBCKT AD829A  1 2 99 50 30 12
+*
+* INPUT STAGE & POLE AT 200 MHZ
+*
+R1   2  3     17.8E3
+R2   1  3     17.8E3
+R3   5 99     56.4
+R4   6 99     56.4
+CIN  1  2     5E-12
+C2   5  6     7.18E-12
+I1   4  50    1.2E-3
+IOS  1  2     250E-9
+EOS  9  1     POLY(1)  19 23  0.5E-3  1
+Q1   5  2 10  QX
+Q2   6  9 11  QX
+R5   10 4     13.4
+R6   11 4     13.4
+*
+EREF 98 0     23  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 2.7 KHZ
+*
+R7  12 98     2.82E6
+C3  12 98     5.2E-12
+G1  98 12     5  6  17.73E-3
+V2  99 13     3.4
+V3  14 50     3.4
+D3  12 13     DX
+D4  14 12     DX
+*
+* ZERO/POLE PAIR AT 50MHz/100MHz
+*
+R8  15 16     1E6
+R9  16 98     1E6
+L1  16 98     1.59E-3
+G2  98 15     12 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R41 41 98     1E6
+C41 41 98     398E-18
+G41 98 41     15 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R42 42 98     1E6
+C42 42 98     398E-18
+G42 98 42     41 23  1E-6
+*
+* POLE AT 200 MHZ
+*
+R43 43 98     1E6
+C43 43 98     796E-18
+G43 98 43     42 23  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 30 KHZ
+*
+R11 18 19     1E6
+C6  18 19     5.31E-12
+R12 19 98     1
+E2  18 98     3  23  10
+*
+* POLE AT 400 MHZ
+*
+R15 22 98     1E6
+C8  22 98     398E-18
+G3  98 22     43 23  1E-6
+*
+* OUTPUT STAGE
+*
+RF  25 60     500
+CF  60 12     12.5E-12
+R16 23 99     100E3
+R17 23 50     100E3
+ISY 99 50     5.45E-3
+R18 25 99     30
+R19 25 50     30
+L2  25 30     1E-8
+G4  28 50     22 25  33.33E-3
+G5  29 50     25 22  33.33E-3
+G6  25 99     99 22  33.33E-3
+G7  50 25     22 50  33.33E-3
+V4  26 25     -0.2
+V5  25 27     -0.2
+D5  22 26     DX
+D6  27 22     DX
+D7  99 28     DX
+D8  99 29     DX
+D9  50 28     DY
+D10 50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=85.7)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD829J;AD829J;Opamps;AD-"ADxxx";Video, Low Noise, w/Comp
+*SYM=ADCOMP
+* AD829J SPICE Macro-model                   9/90, Rev. A
+*                                            JCB / PMI
+*
+* This version of the AD829 model simulates the worst case 
+* parameters of the 'J' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | | positive supply
+*               | | |  negative supply
+*               | | |  |  output
+*               | | |  |  |  compensation node
+*               | | |  |  |  |
+.SUBCKT AD829J  1 2 99 50 30 12
+*
+* INPUT STAGE & POLE AT 200 MHZ
+*
+R1   2  3     17.8E3
+R2   1  3     17.8E3
+R3   5 99     56.4
+R4   6 99     56.4
+CIN  1  2     5E-12
+C2   5  6     7.18E-12
+I1   4  50    1.2E-3
+IOS  1  2     250E-9
+EOS  9  1     POLY(1)  19 23  1.0E-3  1
+Q1   5  2 10  QX
+Q2   6  9 11  QX
+R5   10 4     13.4
+R6   11 4     13.4
+*
+EREF 98 0     23  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 2.7 KHZ
+*
+R7  12 98     2.82E6
+C3  12 98     5.2E-12
+G1  98 12     5  6  17.73E-3
+V2  99 13     3.4
+V3  14 50     3.4
+D3  12 13     DX
+D4  14 12     DX
+*
+* ZERO/POLE PAIR AT 50MHz/100MHz
+*
+R8  15 16     1E6
+R9  16 98     1E6
+L1  16 98     1.59E-3
+G2  98 15     12 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R41 41 98     1E6
+C41 41 98     398E-18
+G41 98 41     15 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R42 42 98     1E6
+C42 42 98     398E-18
+G42 98 42     41 23  1E-6
+*
+* POLE AT 200 MHZ
+*
+R43 43 98     1E6
+C43 43 98     796E-18
+G43 98 43     42 23  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 30 KHZ
+*
+R11 18 19     1E6
+C6  18 19     5.31E-12
+R12 19 98     1
+E2  18 98     3  23  10
+*
+* POLE AT 400 MHZ
+*
+R15 22 98     1E6
+C8  22 98     398E-18
+G3  98 22     43 23  1E-6
+*
+* OUTPUT STAGE
+*
+RF  25 60     500
+CF  60 12     12.5E-12
+R16 23 99     100E3
+R17 23 50     100E3
+ISY 99 50     5.45E-3
+R18 25 99     30
+R19 25 50     30
+L2  25 30     1E-8
+G4  28 50     22 25  33.33E-3
+G5  29 50     25 22  33.33E-3
+G6  25 99     99 22  33.33E-3
+G7  50 25     22 50  33.33E-3
+V4  26 25     -0.2
+V5  25 27     -0.2
+D5  22 26     DX
+D6  27 22     DX
+D7  99 28     DX
+D8  99 29     DX
+D9  50 28     DY
+D10 50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=85.7)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD829S;AD829S;Opamps;AD-"ADxxx";Video, Low Noise, w/Comp
+*SYM=ADCOMP
+* AD829S SPICE Macro-model                   9/90, Rev. A
+*                                            JCB / PMI
+*
+* This version of the AD829 model simulates the worst case 
+* parameters of the 'S' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | | positive supply
+*               | | |  negative supply
+*               | | |  |  output
+*               | | |  |  |  compensation node
+*               | | |  |  |  |
+.SUBCKT AD829S  1 2 99 50 30 12
+*
+* INPUT STAGE & POLE AT 200 MHZ
+*
+R1   2  3     17.8E3
+R2   1  3     17.8E3
+R3   5 99     56.4
+R4   6 99     56.4
+CIN  1  2     5E-12
+C2   5  6     7.18E-12
+I1   4  50    1.2E-3
+IOS  1  2     250E-9
+EOS  9  1     POLY(1)  19 23  0.5E-3  1
+Q1   5  2 10  QX
+Q2   6  9 11  QX
+R5   10 4     13.4
+R6   11 4     13.4
+*
+EREF 98 0     23  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 2.7 KHZ
+*
+R7  12 98     2.82E6
+C3  12 98     5.2E-12
+G1  98 12     5  6  17.73E-3
+V2  99 13     3.4
+V3  14 50     3.4
+D3  12 13     DX
+D4  14 12     DX
+*
+* ZERO/POLE PAIR AT 50MHz/100MHz
+*
+R8  15 16     1E6
+R9  16 98     1E6
+L1  16 98     1.59E-3
+G2  98 15     12 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R41 41 98     1E6
+C41 41 98     398E-18
+G41 98 41     15 23  1E-6
+*
+* POLE AT 400 MHZ
+*
+R42 42 98     1E6
+C42 42 98     398E-18
+G42 98 42     41 23  1E-6
+*
+* POLE AT 200 MHZ
+*
+R43 43 98     1E6
+C43 43 98     796E-18
+G43 98 43     42 23  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 30 KHZ
+*
+R11 18 19     1E6
+C6  18 19     5.31E-12
+R12 19 98     1
+E2  18 98     3  23  10
+*
+* POLE AT 400 MHZ
+*
+R15 22 98     1E6
+C8  22 98     398E-18
+G3  98 22     43 23  1E-6
+*
+* OUTPUT STAGE
+*
+RF  25 60     500
+CF  60 12     12.5E-12
+R16 23 99     100E3
+R17 23 50     100E3
+ISY 99 50     5.45E-3
+R18 25 99     30
+R19 25 50     30
+L2  25 30     1E-8
+G4  28 50     22 25  33.33E-3
+G5  29 50     25 22  33.33E-3
+G6  25 99     99 22  33.33E-3
+G7  50 25     22 50  33.33E-3
+V4  26 25     -0.2
+V5  25 27     -0.2
+D5  22 26     DX
+D6  27 22     DX
+D7  99 28     DX
+D8  99 29     DX
+D9  50 28     DY
+D10 50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=85.7)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD840;AD840;Opamps;AD-"ADxxx";Wideband, 400MHz GBP
+*SYM=ADOPAMP
+* AD840 SPICE Macro-model                 1/91, Rev. A   
+*                                          AAG / PMI
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |   negative supply
+*              | | |   |   output
+*              | | |   |   |
+.SUBCKT AD840  1 2 100 101 36
+*
+* INPUT STAGE & POLE AT 120 MHz
+*
+IOS  1  2  DC  0.05E-6
+CIN  1  2  2E-12
+R1  1  3  15E3
+R2  2  3  15E3
+EOS  9  1  POLY(1)  16  11  200E-6  1
+R3  100  5  223.38
+R4  100  6  223.38
+C2  5  6  2.9687E-12
+R5  7  4  171.66
+R6  8  4  171.66
+Q1  5  2  7  QX
+Q2  6  9  8  QX
+I1  4  101  DC  1E-3
+*
+*  VIRTUAL NODE
+*
+RVN1  100  10  25E3
+RVN2  10  101  25E3
+*
+* GAIN STAGE & DOMINANT POLE AT 2.1923 KHz
+*
+EREF  11  0  10  0  1
+G1  11  12  5  6  4.4768E-3
+R7  12  11  29.039E6
+C3  12  11  2.5E-12
+V1  100  13  DC  2.4375
+D1  12  13  DX
+V2  14  101  DC  2.4375
+D2  14  12  DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 20 KHz
+*
+ECM  15  11  3  11  3.1623
+RCM1  15  16  1E6
+CCM  15  16  7.9577E-12
+RCM2  16  11  1
+*
+* NEGATIVE ZERO STAGE AT 290 MHz
+*
+EZ1  17  11  12  11  1E6
+RZ1  17  18  -1
+CZ1  17  18  548.81E-12
+RZ2  18  11  -1E-6
+*
+* POLE STAGE AT 500 MHz
+*
+GP1  11  19  18  11  1E-6
+RP1  19  11  1E6
+CP1  19  11  318.31E-18
+*
+* OUTPUT STAGE
+*
+IDC  100  101  DC  8.9E-3
+VX  19  30
+V3  32  35  DC  2.725
+D3  30  32  DX
+V4  35  33  DC  2.575
+D4  33  30  DX
+D5  100  31  DX
+GO1  31  101  30  35  16.667E-3
+D6  101  31  DY
+D7  100  34  DX
+GO2  34  101  35  30  16.667E-3
+D8  101  34  DY
+RO1  100  35  60
+GO3  35  100  100  30  16.667E-3
+RO2  35  101  60
+GO4  101  35  30  101  16.667E-3
+LO  35  36  0.04E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=142.86)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD840J;AD840J;Opamps;AD-"ADxxx";Wideband, 400MHz GBP
+*SYM=ADOPAMP
+* AD840J SPICE Macro-model                 1/91, Rev. A   
+*                                           AAG / PMI
+*
+* This version of the AD-840 model simulates the worst case 
+* parameters of the 'J' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |   negative supply
+*              | | |   |   output
+*              | | |   |   |
+.SUBCKT AD840J 1 2 100 101 36
+*
+* INPUT STAGE & POLE AT 120 MHz
+*
+IOS  1  2  DC  0.2E-6
+CIN  1  2  2E-12
+R1  1  3  3.2325E3
+R2  2  3  3.2325E3
+EOS  9  1  POLY(1)  16  11  1E-3  1
+R3  100  5  195.45
+R4  100  6  195.45
+C2  5  6  3.3929E-12
+R5  7  4  143.73
+R6  8  4  143.73
+Q1  5  2  7  QX
+Q2  6  9  8  QX
+I1  4  101  DC  1E-3
+*
+*  VIRTUAL NODE
+*
+RVN1  100  10  25E3
+RVN2  10  101  25E3
+*
+* GAIN STAGE & DOMINANT POLE AT 3.8 KHz
+*
+EREF  11  0  10  0  1
+G1  11  12  5  6  5.1163E-3
+R7  12  11  14.659E6
+C3  12  11  2.857E-12
+V1  100  13  DC  5.0875
+D1  12  13  DX
+V2  14  101  DC  5.0875
+D2  14  12  DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 200 KHz
+*
+ECM  15  11  3  11  31.623
+RCM1  15  16  1E6
+CCM  15  16  795.77E-15
+RCM2  16  11  1
+*
+* NEGATIVE ZERO STAGE AT 290 MHz
+*
+EZ1  17  11  12  11  1E6
+RZ1  17  18  -1
+CZ1  17  18  548.81E-12
+RZ2  18  11  -1E-6
+*
+* POLE STAGE AT 500 MHz
+*
+GP1  11  19  18  11  1E-6
+RP1  19  11  1E6
+CP1  19  11  318.31E-18
+*
+* OUTPUT STAGE
+*
+IDC  100  101  DC  10.4E-3
+VX  19  30
+V3  32  35  DC  2.725
+D3  30  32  DX
+V4  35  33  DC  2.575
+D4  33  30  DX
+D5  100  31  DX
+GO1  31  101  30  35  16.667E-3
+D6  101  31  DY
+D7  100  34  DX
+GO2  34  101  35  30  16.667E-3
+D8  101  34  DY
+RO1  100  35  60
+GO3  35  100  100  30  16.667E-3
+RO2  35  101  60
+GO4  101  35  30  101  16.667E-3
+LO  35  36  0.04E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=62.5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD840K;AD840K;Opamps;AD-"ADxxx";Wideband, 400MHz GBP
+*SYM=ADOPAMP
+* AD840K SPICE Macro-model                 1/91, Rev. A   
+*                                           AAG / PMI
+*
+* This version of the AD-840 model simulates the worst case 
+* parameters of the 'K' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |   negative supply
+*              | | |   |   output
+*              | | |   |   |
+.SUBCKT AD840K 1 2 100 101 36
+*
+* INPUT STAGE & POLE AT 120 MHz
+*
+IOS  1  2  DC  0.1E-6
+CIN  1  2  2E-12
+R1  1  3  5.172E3
+R2  2  3  5.172E3
+EOS  9  1  POLY(1)  16  11  300E-6  1
+R3  100  5  195.46
+R4  100  6  195.46
+C2  5  6  3.3927E-12
+R5  7  4  143.74
+R6  8  4  143.74
+Q1  5  2  7  QX
+Q2  6  9  8  QX
+I1  4  101  DC  1E-3
+*
+*  VIRTUAL NODE
+*
+RVN1  100  10  25E3
+RVN2  10  101  25E3
+*
+* GAIN STAGE & DOMINANT POLE AT 2.85 KHz
+*
+EREF  11  0  10  0  1
+G1  11  12  5  6  5.1161E-3
+R7  12  11  19.546E6
+C3  12  11  2.857E-12
+V1  100  13  DC  5.0875
+D1  12  13  DX
+V2  14  101  DC  5.0875
+D2  14  12  DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 31.7 KHz
+*
+ECM  15  11  3  11  5.0119
+RCM1  15  16  1E6
+CCM  15  16  5.0207E-12
+RCM2  16  11  1
+*
+* NEGATIVE ZERO STAGE AT 290 MHz
+*
+EZ1  17  11  12  11  1E6
+RZ1  17  18  -1
+CZ1  17  18  548.81E-12
+RZ2  18  11  -1E-6
+*
+* POLE STAGE AT 500 MHz
+*
+GP1  11  19  18  11  1E-6
+RP1  19  11  1E6
+CP1  19  11  318.31E-18
+*
+* OUTPUT STAGE
+*
+IDC  100  101  DC  10.4E-3
+VX  19  30
+V3  32  35  DC  2.725
+D3  30  32  DX
+V4  35  33  DC  2.575
+D4  33  30  DX
+D5  100  31  DX
+GO1  31  101  30  35  16.667E-3
+D6  101  31  DY
+D7  100  34  DX
+GO2  34  101  35  30  16.667E-3
+D8  101  34  DY
+RO1  100  35  60
+GO3  35  100  100  30  16.667E-3
+RO2  35  101  60
+GO4  101  35  30  101  16.667E-3
+LO  35  36  0.04E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=100)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD840S;AD840S;Opamps;AD-"ADxxx";Wideband, 400MHz GBP
+*SYM=ADOPAMP
+* AD840S SPICE Macro-model                 1/91, Rev. A   
+*                                           AAG / PMI
+*
+* This version of the AD-840 model simulates the worst case 
+* parameters of the 'S' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |   negative supply
+*              | | |   |   output
+*              | | |   |   |
+.SUBCKT AD840S 1 2 100 101 36
+*
+* INPUT STAGE & POLE AT 120 MHz
+*
+IOS  1  2  DC  0.2E-6
+CIN  1  2  2E-12
+R1  1  3  3.2325E3
+R2  2  3  3.2325E3
+EOS  9  1  POLY(1)  16  11  1E-3  1
+R3  100  5  195.45
+R4  100  6  195.45
+C2  5  6  3.3929E-12
+R5  7  4  143.73
+R6  8  4  143.73
+Q1  5  2  7  QX
+Q2  6  9  8  QX
+I1  4  101  DC  1E-3
+*
+*  VIRTUAL NODE
+*
+RVN1  100  10  25E3
+RVN2  10  101  25E3
+*
+* GAIN STAGE & DOMINANT POLE AT 3.8 KHz
+*
+EREF  11  0  10  0  1
+G1  11  12  5  6  5.1163E-3
+R7  12  11  14.659E6
+C3  12  11  2.857E-12
+V1  100  13  DC  5.0875
+D1  12  13  DX
+V2  14  101  DC  5.0875
+D2  14  12  DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 200 KHz
+*
+ECM  15  11  3  11  31.623
+RCM1  15  16  1E6
+CCM  15  16  795.77E-15
+RCM2  16  11  1
+*
+* NEGATIVE ZERO STAGE AT 290 MHz
+*
+EZ1  17  11  12  11  1E6
+RZ1  17  18  -1
+CZ1  17  18  548.81E-12
+RZ2  18  11  -1E-6
+*
+* POLE STAGE AT 500 MHz
+*
+GP1  11  19  18  11  1E-6
+RP1  19  11  1E6
+CP1  19  11  318.31E-18
+*
+* OUTPUT STAGE
+*
+IDC  100  101  DC  10.4E-3
+VX  19  30
+V3  32  35  DC  2.725
+D3  30  32  DX
+V4  35  33  DC  2.575
+D4  33  30  DX
+D5  100  31  DX
+GO1  31  101  30  35  16.667E-3
+D6  101  31  DY
+D7  100  34  DX
+GO2  34  101  35  30  16.667E-3
+D8  101  34  DY
+RO1  100  35  60
+GO3  35  100  100  30  16.667E-3
+RO2  35  101  60
+GO4  101  35  30  101  16.667E-3
+LO  35  36  0.04E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=62.5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=AD645A;AD645A;Opamps;AD-"ADxxx";FET Input, Low Noise 9nV/RTHz
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD645A   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    1.049
+R4   6  50    1.049
+CIN  1   2    1E-12
+C2   5   6    1.90E-9
+I1   99  4    100E-3
+IOS  1   2    0.5E-12
+EOS  65  1    POLY(1)  17 24  500E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    79.8E-11
+RS3  43 44    1.2E9
+CS2  43 44    79.8E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    144
+RN6  47 48    144
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    144
+RN8  61 62    144
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 3 HZ
+*
+R5   9  98    5.26E5
+C3   9  98    1.00E-7
+G1   98  9    5  6  9.53E-1
+V2   99  8    4.7
+V3   10 50    4.7
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     -1E6
+C4   11 12     10.6E-15
+R7   12 98     -1
+E2   11 98     9  24  1E6
+*
+* POLE AT 40 MHZ
+*
+R8   13 98     1E3
+C5   13 98     3.98E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R9   14 98     1E3
+C6   14 98     3.98E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R10  15 98     1E3
+C7   15 98     3.98E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 600 HZ
+*
+R11  16 17     1E6
+C8   16 17     2.65E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  15.8  15.8
+*
+* POLE AT 40 MHZ
+*
+R13  18 98     1E3
+C9   18 98     3.98E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+ISY  99 50     -96.5E-3
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G6   27 50     18 29  2.78E-3
+G7   28 50     29 18  2.78E-3
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=4.54  VTO=-2.000  IS=5E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-15)
+.MODEL DEN  D(IS=1E-12 RS=7409.6 KF=2.051E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=41.5 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD645J;AD645J;Opamps;AD-"ADxxx";FET Input, Low Noise 9nV/RTHz
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD645J   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    1.049
+R4   6  50    1.049
+CIN  1   2    1E-12
+C2   5   6    1.90E-9
+I1   99  4    100E-3
+IOS  1   2    0.5E-12
+EOS  65  1    POLY(1)  17 24  500E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    79.8E-11
+RS3  43 44    1.2E9
+CS2  43 44    79.8E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    144
+RN6  47 48    144
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    144
+RN8  61 62    144
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 3 HZ
+*
+R5   9  98    5.26E5
+C3   9  98    1.00E-7
+G1   98  9    5  6  9.53E-1
+V2   99  8    4.7
+V3   10 50    4.7
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     -1E6
+C4   11 12     10.6E-15
+R7   12 98     -1
+E2   11 98     9  24  1E6
+*
+* POLE AT 40 MHZ
+*
+R8   13 98     1E3
+C5   13 98     3.98E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R9   14 98     1E3
+C6   14 98     3.98E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R10  15 98     1E3
+C7   15 98     3.98E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 600 HZ
+*
+R11  16 17     1E6
+C8   16 17     2.65E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  15.8  15.8
+*
+* POLE AT 40 MHZ
+*
+R13  18 98     1E3
+C9   18 98     3.98E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+ISY  99 50     -96.5E-3
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G6   27 50     18 29  2.78E-3
+G7   28 50     29 18  2.78E-3
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=4.54  VTO=-2.000  IS=3E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-15)
+.MODEL DEN  D(IS=1E-12 RS=7409.6 KF=2.051E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=41.5 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD645B;AD645B;Opamps;AD-"ADxxx";FET Input, Low Noise 9nV/RTHz
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD645B   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    1.049
+R4   6  50    1.049
+CIN  1   2    1E-12
+C2   5   6    1.90E-9
+I1   99  4    100E-3
+IOS  1   2    0.25E-12
+EOS  65  1    POLY(1)  17 24  250E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    100E-11
+RS3  43 44    1.2E9
+CS2  43 44    100E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    75.4
+RN6  47 48    75.4
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    75.4
+RN8  61 62    75.4
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 1.5 HZ
+*
+R5   9  98    1.05E6
+C3   9  98    1.00E-7
+G1   98  9    5  6  9.53E-1
+V2   99  8    4.7
+V3   10 50    4.7
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     -1E6
+C4   11 12     10.6E-15
+R7   12 98     -1
+E2   11 98     9  24  1E6
+*
+* POLE AT 40 MHZ
+*
+R8   13 98     1E3
+C5   13 98     3.98E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R9   14 98     1E3
+C6   14 98     3.98E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R10  15 98     1E3
+C7   15 98     3.98E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 380 HZ
+*
+R11  16 17     1E6
+C8   16 17     4.198E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  10  10
+*
+* POLE AT 40 MHZ
+*
+R13  18 98     1E3
+C9   18 98     3.98E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+ISY  99 50     -96.5E-3
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G6   27 50     18 29  2.78E-3
+G7   28 50     29 18  2.78E-3
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=4.54  VTO=-2.000  IS=3E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-15)
+.MODEL DEN  D(IS=1E-12 RS=7409.6 KF=2.051E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=41.5 KF=0 AF=1)
+.ENDS 
+**********
+*SRC=AD645S;AD645S;Opamps;AD-"ADxxx";FET Input, Low Noise 9nV/RTHz
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD645S   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    1.049
+R4   6  50    1.049
+CIN  1   2    1E-12
+C2   5   6    1.90E-9
+I1   99  4    100E-3
+IOS  1   2    0.5E-12
+EOS  65  1    POLY(1)  17 24  500E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    79.8E-11
+RS3  43 44    1.2E9
+CS2  43 44    79.8E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    144
+RN6  47 48    144
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    144
+RN8  61 62    144
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 3 HZ
+*
+R5   9  98    5.26E5
+C3   9  98    1.00E-7
+G1   98  9    5  6  9.53E-1
+V2   99  8    4.7
+V3   10 50    4.7
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     -1E6
+C4   11 12     10.6E-15
+R7   12 98     -1
+E2   11 98     9  24  1E6
+*
+* POLE AT 40 MHZ
+*
+R8   13 98     1E3
+C5   13 98     3.98E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R9   14 98     1E3
+C6   14 98     3.98E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R10  15 98     1E3
+C7   15 98     3.98E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 600 HZ
+*
+R11  16 17     1E6
+C8   16 17     2.65E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  15.8  15.8
+*
+* POLE AT 40 MHZ
+*
+R13  18 98     1E3
+C9   18 98     3.98E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+ISY  99 50     -96.5E-3
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G6   27 50     18 29  2.78E-3
+G7   28 50     29 18  2.78E-3
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=4.54  VTO=-2.000  IS=5E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-15)
+.MODEL DEN  D(IS=1E-12 RS=7409.6 KF=2.051E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=41.5 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD712;AD712;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712    1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    6.631
+R4   6  50    6.631
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    2.5E-12
+EOS  60  1    POLY(1)  17 24  100E-6  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 12 HZ
+*
+R5   9  98    2.65E6
+C3   9  98    5.00E-9
+G1   98  9    5  6  1.51E-1
+V2   99  8    1.3
+V3   10 50    1.9
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 300 HZ
+*
+R11  16 17     1E6
+C8   16 17     5.318E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  9.975 9.975
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -95E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.14E-1  VTO=-2.000  IS=20E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS 
+**********
+*SRC=AD712A;AD712A;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712A   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.305
+R4   6  50    5.305
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    12.5E-12
+EOS  60  1    POLY(1)  17 24  1E-3  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 32 HZ
+*
+R5   9  98    7.96E5
+C3   9  98    6.25E-9
+G1   98  9    5  6  1.88E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 2.4kHZ
+*
+R11  16 17     1E6
+C8   16 17     6.695E-11
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  79.24 79.24
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -93.2E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.78E-1  VTO=-2.000  IS=75E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD712B;AD712B;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712B   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.968
+R4   6  50    5.968
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    12.5E-12
+EOS  60  1    POLY(1)  17 24  0.7E-3  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 24 HZ
+*
+R5   9  98    1.19E6
+C3   9  98    5.56E-9
+G1   98  9    5  6  1.68E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1500 HZ
+*
+R11  16 17     1E6
+C8   16 17     1.061E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  50 50
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -94.4E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.4E-1  VTO=-2.000  IS=75E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD712C;AD712C;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712C   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.968
+R4   6  50    5.968
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    5E-12
+EOS  60  1    POLY(1)  17 24  300E-6  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 24 HZ
+*
+R5   9  98    1.19E6
+C3   9  98    5.56E-9
+G1   98  9    5  6  1.68E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 750 HZ
+*
+R11  16 17     1E6
+C8   16 17     2.117E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  25 25
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -94.4E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.4E-1  VTO=-2.000  IS=50E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD712J;AD712J;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712J   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.305
+R4   6  50    5.305
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    12.5E-12
+EOS  60  1    POLY(1)  17 24  3E-3  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 32 HZ
+*
+R5   9  98    7.96E5
+C3   9  98    6.25E-9
+G1   98  9    5  6  1.88E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 2.4kHZ
+*
+R11  16 17     1E6
+C8   16 17     6.695E-11
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  79.24 79.24
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -93.2E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.78E-1  VTO=-2.000  IS=75E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD712K;AD712K;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712K   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.968
+R4   6  50    5.968
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    12.5E-12
+EOS  60  1    POLY(1)  17 24  1E-3  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 24 HZ
+*
+R5   9  98    1.19E6
+C3   9  98    5.56E-9
+G1   98  9    5  6  1.68E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1500 HZ
+*
+R11  16 17     1E6
+C8   16 17     1.061E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  50 50
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -94.4E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.4E-1  VTO=-2.000  IS=75E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS 
+**********
+*SRC=AD712S;AD712S;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712S   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.305
+R4   6  50    5.305
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    12.5E-12
+EOS  60  1    POLY(1)  17 24  1E-3  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 32 HZ
+*
+R5   9  98    7.96E5
+C3   9  98    6.25E-9
+G1   98  9    5  6  1.88E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 2.4kHZ
+*
+R11  16 17     1E6
+C8   16 17     6.695E-11
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  79.24 79.24
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -93.2E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.78E-1  VTO=-2.000  IS=75E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD712T;AD712T;Opamps;AD-"ADxxx";FET Input, Precision
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD712T   1 2 99 50 30
+*
+* INPUT STAGE
+*
+R3   5  50    5.968
+R4   6  50    5.968
+CIN  1   2    5.5E-12
+I1   99  4    100E-3
+IOS  1   2    12.5E-12
+EOS  60  1    POLY(1)  17 24  0.7E-3  1
+EN   7  60    42  0  1
+GN1  0   1    45  0  1E-6
+GN2  0   2    48  0  1E-6
+J1   5   2    4   JX
+J2   6   7    4   JX
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+DN1  41 42    DEN
+DN2  42 43    DEN
+VN2  0  43    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  44  0    DC 2
+DN3  44 45    DIN
+DN4  45 46    DIN
+VN4  0  46    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  47  0    DC 2
+DN5  47 48    DIN
+DN6  48 49    DIN
+VN6  0  49    DC 2
+*  
+* SECOND STAGE & POLE AT 24 HZ
+*
+R5   9  98    1.19E6
+C3   9  98    5.56E-9
+G1   98  9    5  6  1.68E-1
+V2   99  8    2.2
+V3   10 50    2.8
+D1   9   8    DX
+D2   10  9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1500 HZ
+*
+R11  16 17     1E6
+C8   16 17     1.061E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  50 50
+*
+* POLE AT 15 MHZ
+*
+R13  18 98     1E3
+C9   18 98     10.61E-12
+G5   98 18     9  24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     500E3
+R15  24 50     500E3
+CF   24  0     1E-6
+ISY  99 50     -94.4E-3
+R16  29 99     110
+R17  29 50     110
+L1   29 30     1E-8
+G6   27 50     18 29  9.09E-3
+G7   28 50     29 18  9.09E-3
+G8   29 99     99 18  9.09E-3
+G9   50 29     18 50  9.09E-3
+V4   25 29     0.675
+V5   29 26     0.675
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.4E-1  VTO=-2.000  IS=75E-12 RD=0
++ RS=0 CGD=1E-12 CGS=1E-12)
+.MODEL DX   D(IS=1E-15 RS=0 CJO=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-12)
+.MODEL DEN  D(IS=1E-12 RS=30909 KF=2.651E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=12090 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD645K;AD645K;Opamps;AD-"ADxxx";FET Input, Low Noise 9nV/RTHz
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD645K   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    1.049
+R4   6  50    1.049
+CIN  1   2    1E-12
+C2   5   6    1.90E-9
+I1   99  4    100E-3
+IOS  1   2    0.25E-12
+EOS  65  1    POLY(1)  17 24  250E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    100E-11
+RS3  43 44    1.2E9
+CS2  43 44    100E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    75.4
+RN6  47 48    75.4
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    75.4
+RN8  61 62    75.4
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 1.5 HZ
+*
+R5   9  98    1.05E6
+C3   9  98    1.00E-7
+G1   98  9    5  6  9.53E-1
+V2   99  8    4.7
+V3   10 50    4.7
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     -1E6
+C4   11 12     10.6E-15
+R7   12 98     -1
+E2   11 98     9  24  1E6
+*
+* POLE AT 40 MHZ
+*
+R8   13 98     1E3
+C5   13 98     3.98E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R9   14 98     1E3
+C6   14 98     3.98E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R10  15 98     1E3
+C7   15 98     3.98E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 380 HZ
+*
+R11  16 17     1E6
+C8   16 17     4.198E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  10  10
+*
+* POLE AT 40 MHZ
+*
+R13  18 98     1E3
+C9   18 98     3.98E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+ISY  99 50     -96.5E-3
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G6   27 50     18 29  2.78E-3
+G7   28 50     29 18  2.78E-3
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=4.54  VTO=-2.000  IS=1.5E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-15)
+.MODEL DEN  D(IS=1E-12 RS=7409.6 KF=2.051E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=41.5 KF=0 AF=1)
+.ENDS
+**********
+*SRC=AD645;AD645;Opamps;AD-"ADxxx";FET Input, Low Noise 9nV/RTHz
+*SYM=ADOPAMP
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD645    1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    2.097
+R4   6  50    2.097
+CIN  1   2    1E-12
+C2   5   6    9.48E-10
+I1   99  4    100E-3
+IOS  1   2    0.1E-12
+EOS  65  1    POLY(1)  17 24  100E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    8E3
+RS2  42 43    1.2E9
+CS1  42 43    398E-11
+RS3  43 44    1.2E9
+CS2  43 44    398E-11
+RS4  44 45    8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    41.5
+RN6  47 48    41.5
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    41.5
+RN8  61 62    41.5
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 0.48 HZ
+*
+R5   9  98    6.632E6
+C3   9  98    5.00E-8
+G1   98  9    5  6  4.769E-1
+V2   99  8    3.6
+V3   10 50    3.6
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     -1E6
+C4   11 12     10.6E-15
+R7   12 98     -1
+E2   11 98     9  24  1E6
+*
+* POLE AT 40 MHZ
+*
+R8   13 98     1E3
+C5   13 98     3.98E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R9   14 98     1E3
+C6   14 98     3.98E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 40 MHZ
+*
+R10  15 98     1E3
+C7   15 98     3.98E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 60 HZ
+*
+R11  16 17     1E6
+C8   16 17     2.65E-9
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  1.58  1.58
+*
+* POLE AT 40 MHZ
+*
+R13  18 98     1E3
+C9   18 98     3.98E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+ISY  99 50     -97E-3
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G6   27 50     18 29  2.78E-3
+G7   28 50     29 18  2.78E-3
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+D5   99 27     DX
+D6   99 28     DX
+D7   50 27     DY
+D8   50 28     DY
+F1   29  0     V4  1
+F2   0  29     V5  1
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.137  VTO=-2.000  IS=0.7E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50 RS=10 CJO=1E-15)
+.MODEL DEN  D(IS=1E-12 RS=7409.6 KF=2.051E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=41.5 KF=0 AF=1)
+.ENDS
+**********

@@ -1,0 +1,22 @@
+TEST_INPUTS	= bsim1test.cir bsim2test.cir diffpair.cir ltra_1.cir	      \
+		  ltra_2.cir ltra_3.cir mos6ndinv.cir mosamp2.cir mosmem.cir  \
+		  pz2.cir pzt.cir rc.cir rca3040.cir rtlinv.cir schmitt.cir   \
+		  simplepz.cir
+
+TEST_OUTPUTS	= bsim1test.raw bsim2test.raw diffpair.raw ltra_1.raw	      \
+		  ltra_2.raw ltra_3.raw mos6ndinv.raw mosamp2.raw mosmem.raw  \
+		  pz2.raw pzt.raw rc.raw rca3040.raw rtlinv.raw schmitt.raw   \
+		  simplepz.raw
+
+ALL_PURPOSE	= test
+
+.SUFFIXES:	.cir .raw
+
+test: $(TEST_OUTPUTS)
+
+$(TEST_OUTPUTS): $(CWD_TO_TOP)/src/bin/spice3
+
+.cir.raw:
+	-@rm -f rawspice.raw
+	$(CWD_TO_TOP)/src/bin/spice3 -r < $*.cir > $*.sum 2>&1
+	-mv -f rawspice.raw $*.raw

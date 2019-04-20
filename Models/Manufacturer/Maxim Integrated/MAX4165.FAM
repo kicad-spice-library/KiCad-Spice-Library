@@ -1,0 +1,285 @@
+* MAX4165 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 5MHz Gain Bandwidth Product
+* 1.2mA Typical Supply Current
+* 80mA Output Drive Capability
+* Unity-Gain Stable
+* Rail-to-Rail I/O
+* Available in 5-Pin SOT23-5 (MAX4165)
+*              8-Pin DIP/SO (MAX4167)
+*             14-Pin DIP/SO (MAX4169) 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ______________________________
+* MAX4165        Single 5MHz, Unity-Gain Stable
+* MAX4167        Dual 5MHz, Unity-Gain Stable
+* MAX4169        Quad 5MHz, Unity-Gain Stable  
+*
+*
+*   ////////////// MAX4165 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4165 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4165 1 2 99 50 97
+****************INPUT STAGE**********************
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 50na
+************************
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 6.5e-8
+*C3 10 98 1.3E-10
+*** ***********
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.2E-1 1
+****
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.2E-1 -1
+*** ***********
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+************
+I2 99 50 .7ma
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+***************************
+*********** change for second pole
+*C5 98 15 8p
+*  
+*************OUTPUT STAGE****************
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+***                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.12V
+V4 36 97 -.12V
+*V5,V4 SET ISC
+R16 34 97 2
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+*
+*   ////////////// MAX4167 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4165 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4167 1 2 99 50 97
+****************INPUT STAGE**********************
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 50na
+************************
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 6.5e-8
+*C3 10 98 1.3E-10
+*** ***********
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.2E-1 1
+****
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.2E-1 -1
+*** ***********
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+************
+I2 99 50 .7ma
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+***************************
+*********** change for second pole
+*C5 98 15 8p
+*  
+*************OUTPUT STAGE****************
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+***                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.12V
+V4 36 97 -.12V
+*V5,V4 SET ISC
+R16 34 97 2
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+*
+*   ////////////// MAX4169 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4165 DATA SHEET       <====
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* OUTPUT CONNECTS:    1   2   99  50  97
+*
+*
+.SUBCKT MAX4169 1 2 99 50 97
+****************INPUT STAGE**********************
+I1 99 4 .5e-3
+M1   5  2 4 99 MOSFET
+R3   5 50 2828
+M2   6  7 4 99 MOSFET
+R4   6 50 2828
+DP1  1 99 DA
+DP2 50  1 DA
+DP3  2 99 DB
+DP4 50  2 DB
+Ibiase 7 4 50na
+************************
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 99 98 99 50 0.5
+G0  98  9 5 6 7.87e-1
+VB 9 10 0V 
+R0  98  9 127E3
+C3 10 98 6.5e-8
+*C3 10 98 1.3E-10
+*** ***********
+D107 10 99 Dx 
+D103 10 100 Dx
+D104 100 99 Dx
+F100 100 99 POLY(1) VB -1.2E-1 1
+****
+D108 50 10 Dx
+D105 101 10 Dx
+D106 50 101 Dx
+F2 50 101 POLY(1) VB -1.2E-1 -1
+*** ***********
+D1 9 111 DX
+D2 112 9 DX
+V11 99 111 .3V
+V12 112 50 .3V
+************
+I2 99 50 .7ma
+VOS 7 1 0v
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+***************************
+*********** change for second pole
+*C5 98 15 8p
+*  
+*************OUTPUT STAGE****************
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+G12 98 32 15 98 1E-6
+***                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 -.12V
+V4 36 97 -.12V
+*V5,V4 SET ISC
+R16 34 97 2
+*LOUT 197 97 .4nh
+E1 99 33 99 32 1
+VA8 33 34 0V
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL Dp D(N=0.001)
+.MODEL MOSFET PMOS(VTO=.250 KP=1.8E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE  , was -1.7
+*
+.Ends
+
+
+
+
+
+

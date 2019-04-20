@@ -1,0 +1,109 @@
+* OP-482G SPICE Macro-model                 4/92, Rev. A
+*                                           JCB / PMI
+*
+* This version of the OP-482 model simulates the worst case 
+* parameters of the 'G' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1991 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP482G   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 15 MHZ
+*
+R1   1   3   5E11
+R2   2   3   5E11
+R3   5  50   3011
+R4   6  50   3011
+CIN  1   2   5E-12
+C2   5   6   1.76E-12
+I1   99  4   0.1E-3
+IOS  1   2   2.5E-11
+EOS  7   1   POLY(1)  21 24  4E-3  1
+J1   5   2   4   JX
+J2   6   7   4   JX
+*
+EREF 98  0   24  0  1
+*
+* GAIN STAGE & POLE AT 185 HZ
+*
+R5   9  98   6.02E7
+C3   9  98   1.43E-11
+G1   98  9   5  6  3.32E-4
+V2   99  8   1.2
+V3   10 50   1.2
+D1   9   8   DX
+D2   10  9   DX
+*
+* ZERO AT 6 MHZ
+*
+R6   11 12   1E6
+R7   12 98   1
+C4   11 12   26.5E-15
+E2   11 98   9  24  1E6
+*
+* POLE AT 15 MHZ
+*
+R8   13 98   1E6
+C5   13 98   1.06E-15
+G2   98 13   12  24  1E-6
+*
+* POLE AT 20 MHZ
+*
+R9   14 98   1E6
+C6   14 98   7.96E-15
+G3   98 14   13  24  1E-6
+*
+* POLE AT 20 MHZ
+*
+R19  19 98   1E6
+C13  19 98   7.96E-15
+G11  98 19   14  24  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 190 KHZ
+*
+R21  20 21   1E6
+R22  21 98   1
+C14  20 21   0.8388E-12
+E13  98 20   3  24  316.2
+*
+* POLE AT 25 MHZ
+*
+R23  23 98   1E6
+C15  23 98   6.37E-15
+G15  98 23   19 24  1E-6
+*
+* OUTPUT STAGE
+*
+R25  24 99   5E6
+R26  24 50   5E6
+ISY  99 50   147E-6
+R27  29 99   700
+R28  29 50   700
+L5   29 30   1E-8
+G17  27 50   23 29  1.43E-3
+G18  28 50   29 23  1.43E-3
+G19  29 99   99 23  1.43E-3
+G20  50 29   23 50  1.43E-3
+V4   25 29   0.35
+V5   29 26   2.1
+D3   23 25   DX
+D4   26 23   DX
+D5   99 27   DX
+D6   99 28   DX
+D7   50 27   DY
+D8   50 28   DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=5.51E-4  VTO=-2.000  IS=1E-10)
+.MODEL DX   D(IS=1E-15 RS=1)
+.MODEL DY   D(IS=1E-15 BV=50 RS=1)
+.ENDS OP482G

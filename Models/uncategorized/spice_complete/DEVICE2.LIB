@@ -1,0 +1,356 @@
+**********
+* Copyright Intusoft 1988-1997
+* All Rights Reserved
+**********
+**********
+*SRC=JFET;NJFET;Generic Models;JFET;N Channel
+*SYM=NJFET
+.SUBCKT NJFET 1 2 3 {VTO=??? BETA=??? IDSS=??? GDS=???}
+*Parameters:
+* VTO is the threshold voltage or VGS(off) Gate Source cutoff voltage.
+* IDSS is the zero gate voltage drain current
+* GDS is the output conductance, if not available use Lambda = .02
+* Capacitances CGS and CGD can be obtained from Capacitance curves if
+* available, or from the values of Ciss and Crss. PB which is the same
+* as VJ for a diode, can also be obtained from the capacitance curves.
+* Add RD if the linear region curves are to steep.
+* Add RS if the saturation region curves for various VGS values
+* are too widely separated. 
+J 1 2 3 NJFET
+.MODEL NJFET NJF VTO={VTO} BETA={IDSS/VTO^2} LAMBDA={GDS/IDSS}
+.ENDS
+**********
+*SRC=XTAL;XTAL;Generic Models;Crystal;
+*SYM=XTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XTAL 1 2 {CP=??? RS=??? FREQ=??? Q=???}
+*Parameters: CP Parallel capacitance in Farads, RS Series Resistance in Ohms
+* Q Q of the crystal, FREQ resonant frequency in Hz
+CP 1 2 {CP}
+RS 1 3 {RS}
+L 3 4 {Q*RS/(6.283185*FREQ)}
+C 4 2 {1/(Q*6.283185*FREQ*RS)}
+.ENDS
+**********
+*SRC=XTALT;XTALT;Generic Models;Crystal;Varies with .OPT TEMP
+*SYM=XTALT
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XTALT 1 2 {TEMP=27 TC=1 CP=??? RS=??? FREQ=??? Q=???} 
+*Parameters: CP Parallel capacitance in Farads, RS Series Resistance in Ohms
+* Q Q of the crystal, FREQ resonant frequency in Hz
+* TEMP IN Degrees C, TC IN PPM PER DEG C
+CP 1 2 {CP}
+RS 1 3 {RS}
+L 3 4 {Q*RS/(6.283185*FREQ*(1+(TEMP-27)*TC*1U))}
+C 4 2 {1/(Q*6.283185*FREQ*(1+(TEMP-27)*TC*1U)*RS)}
+RS3 1 30 {RS/2}
+L3 30 40 {Q*RS/(6.283185*FREQ*(1+(TEMP-27)*TC*1U)*3)}
+C3 40 2 {1/(Q*6.283185*3*FREQ*(1+(TEMP-27)*TC*1U)*RS)}
+.ENDS
+**********
+*SRC=XT10K;XT10K;Crystals;10 kHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT10K 1 2      
+CP 1 2 1.4000P  
+RS 1 3 40.000K  
+L 3 4 12.732K   
+C 4 2 19.894F   
+.ENDS   
+**********
+*SRC=XT32768K;XT32768K;Crystals;32.768 kHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT32768K 1 2      
+CP 1 2 1.5000P  
+RS 1 3 30.000K  
+L 3 4 10.200K   
+C 4 2 2.3129F   
+.ENDS   
+**********
+*SRC=XT100K;XT100K;Crystals;100 kHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT100K 1 2      
+CP 1 2 1.4000P  
+RS 1 3 10.0000K 
+L 3 4 1.5915K   
+C 4 2 1.5915F   
+.ENDS   
+**********
+*SRC=XT3_5MEG;XT3_5MEG;Crystals;3.5 MEGHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT3_5MEG 1 2
+CP 1 2 7.0000P
+RS 1 3 180.00 
+L 3 4 240.10M
+C 4 2 8.2338F
+.ENDS
+**********
+*SRC=XT10MEG;XT10MEG;Crystals;10 MEGHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT10MEG 1 2
+CP 1 2 7.0000P
+RS 1 3 30.000 
+L 3 4 14.324M
+C 4 2 17.684F
+.ENDS
+**********
+*SRC=XT8MEG;XT8MEG;Crystals;8 MEGHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT8MEG 1 2      
+CP 1 2 6.0000P  
+RS 1 3 30.000   
+L 3 4 596.83M   
+C 4 2 6.6315E-16
+.ENDS   
+**********
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT16MEG 1 2      
+CP 1 2 6.0000P  
+RS 1 3 20.000   
+L 3 4 198.94M   
+C 4 2 4.9736E-16
+.ENDS   
+**********
+*SRC=XT32MEG;XT32MEG;Crystals;32 MEGHz;
+*SYM=CRYSTAL
+*HELP issyntax.hlp "Modeling Crystals"
+.SUBCKT XT32MEG 1 2      
+CP 1 2 6.0000P  
+RS 1 3 35.000   
+L 3 4 174.08M   
+C 4 2 1.4210E-16
+.ENDS   
+**********
+*SRC=RPOT;RPOT;Generic Models;Potentiometer;
+*SYM=RPOT
+.SUBCKT RPOT 8    3     4      5    7 {RPOT=???}
+*            TOP  WIPER BOTTOM CNT+ CNT-
+*Parameters: Rpot Total Potentiometer resistance, in Ohms
+*Connect a voltage source between the + and - pins
+*to control wiper position.
+*Connect - pin to ground.
+*Control Voltage can be set between 0 and 1.
+*Wiper is at one end (bottom) when control voltage=0.0
+*Wiper is at the other end (top) when control voltage=1.0
+*Wiper is in the middle when control voltage=0.5
+*Wiper is elsewhere when control voltage=other values between 0 & 1.
+R3 2 3 1G
+R1 3 6 1M
+R2 6 4 1G
+V1 2 1 
+V2 6 9 
+H5 1 3 POLY(2) V1 V3 0 {RPOT} 0 0 {-1E6*RPOT}
+H6 9 4 POLY(2) V2 V3 0 0 0 0 {1E6*RPOT}
+V3 10 7 
+R5 5 10 1MEG
+R4 8 2 1M
+.ENDS
+**********
+*SRC=POT50K;POT50K;Potentiometers;50 kOhm;
+*SYM=POT
+.SUBCKT POT50K 8    3     4      5    7  
+*              TOP  WIPER BOTTOM CNT+ CNT-   
+R3 2 3 1G       
+R1 3 6 1M       
+R2 6 4 1G       
+V1 2 1  
+V2 6 9  
+H5 1 3 POLY(2) V1 V3 0 50.000K 0 0 -50.000G     
+H6 9 4 POLY(2) V2 V3 0 0 0 0 50.000G    
+V3 10 7 
+R5 5 10 1MEG    
+R4 8 2 1M       
+.ENDS   
+**********
+*SRC=POT100K;POT100K;Potentiometers;100 kOhm;
+*SYM=POT
+.SUBCKT POT100K 8    3     4      5    7  
+*               TOP  WIPER BOTTOM CNT+ CNT-   
+R3 2 3 1G       
+R1 3 6 1M       
+R2 6 4 1G       
+V1 2 1  
+V2 6 9  
+H5 1 3 POLY(2) V1 V3 0 100.000K 0 0 -100.000G   
+H6 9 4 POLY(2) V2 V3 0 0 0 0 100.000G   
+V3 10 7 
+R5 5 10 1MEG    
+R4 8 2 1M       
+.ENDS   
+**********
+*SRC=POT1MEG;POT1MEG;Potentiometers;1 MEGOhm;
+*SYM=POT
+.SUBCKT POT1MEG 8    3     4      5    7  
+*               TOP  WIPER BOTTOM CNT+ CNT-   
+R3 2 3 1G       
+R1 3 6 1M       
+R2 6 4 1G       
+V1 2 1  
+V2 6 9  
+H5 1 3 POLY(2) V1 V3 0 1.0000MEG 0 0 -1.0000E12 
+H6 9 4 POLY(2) V2 V3 0 0 0 0 1.0000E12  
+V3 10 7 
+R5 5 10 1MEG    
+R4 8 2 1M       
+.ENDS   
+**********
+*SRC=POT10K;POT10K;Potentiometers;10 kOhm;
+*SYM=POT
+.SUBCKT POT10K 8    3     4      5    7  
+*              TOP  WIPER BOTTOM CNT+ CNT-   
+R3 2 3 1G       
+R1 3 6 1M       
+R2 6 4 1G       
+V1 2 1  
+V2 6 9  
+H5 1 3 POLY(2) V1 V3 0 10.0000K 0 0 -10.0000G   
+H6 9 4 POLY(2) V2 V3 0 0 0 0 10.0000G   
+V3 10 7 
+R5 5 10 1MEG    
+R4 8 2 1M       
+.ENDS   
+**********
+*SRC=BUCK;BUCK;Generic Models;Buck Regulator;
+*SYM=BUCK
+.SUBCKT BUCK 6     16  25 {VFLBK=??? LFIL=??? FREQ=???}
+*            CNTRL OUT IN
+*Parameters: FREQ in Hz, LFIL in Henries, VFLBK in Volts
+.MODEL DIODE D(IS=1E-12 N=.42)
+X1 6 4 7 1 SUM3A 
+
+V2 7 0 1
+V3 8 0 {VFLBK }
+L1 9 16 {LFIL }
+X2 12 4 13 0 LIMITV 
+X3 6 7 13 SUM2A  
+
+X4 4 12 14 SUM2B  
+
+E2 15 0  POLY(2) 8 0 4 0 0 0 0 0 1
+R2 8 0 1K
+G1 0 17 3 0 1
+R3 17 0 .01MEG
+G2 17 0  POLY(2) 18 0 17 0 0 0 0 0 1
+E3 12 0 17 0 10
+R4 12 0 1MEG
+R5 18 0 1MEG
+D1 19 9 DIODE
+X5 2 15 11 SUM2C  
+
+X6 25 16 20 SUM2B  
+
+*X7 20 6 3 MULA  
+EX7 3 0 POLY(2) 20 0 6 0 0 0 0 0 {1/(FREQ*LFIL) }
+
+*AVG LAG FROM VPI PAPER
+RG3 5 55 1K
+*Aug 90 Newsletter correction from GG3 5 55 1K
+CG3 55 0 {.5M/FREQ }
+
+G3 0 9 55 0 1
+X8 21 22 5 SUM2D  
+
+X9 3 6 22 MULB  
+
+X10 4 3 21 MULB  
+
+G4 25 0  POLY(2) 6 0 11 19 0 0 0 0 1K
+R6 11 19 .001
+G5 0 25 22 0 -.5
+X11 8 16 18 SUM2A  
+
+E1 2 0  POLY(2) 25 0 6 0 0 0 0 0 1
+.ENDS
+.SUBCKT LIMITV 1  2   10   11
+* PINS ARE    IN OUT +LIM -LIM
+*PARAMETERS ARE NONE 
+RIN 1 0 1E12
+E1 3 0 0 1 1
+RC1 2 4 .1MEG
+C1 2 4 1F IC=0
+R1 3 4 .1MEG
+E2 102 0 0 4 1E6
+DX 102 2 DN
+RN 11 0 1MEG
+DN 4 102 DN
+.MODEL DN D(IS=1E-12 N=.14319)
+EP 2 6 10 0 -.0597 1
+DP 6 4 DN
+.ENDS
+.SUBCKT SUM3A 1 2 3 4
+* 3 PORT SUMMER
+RIN1 1 0 1E12
+RIN2 2 0 1E12
+RIN3 3 0 1E12
+ROUT 4 0 1E12
+E1 4 0 POLY(3) 1 0 2 0 3 0 0 -1.0000  -1.0000  1.0000 
+.ENDS
+.SUBCKT SUM2A 1 2 3
+RIN1 1 0 1E12
+RIN2 2 0 1E12
+ROUT 3 0 1E12
+E1 3 0 POLY(2) 1 0 2 0 0 -1.0000  1.0000 
+.ENDS
+.SUBCKT SUM2B 1 2 3
+RIN1 1 0 1E12
+RIN2 2 0 1E12
+ROUT 3 0 1E12
+E1 3 0 POLY(2) 1 0 2 0 0 1.0000  -1.0000 
+.ENDS
+.SUBCKT SUM2C 1 2 3
+RIN1 1 0 1E12
+RIN2 2 0 1E12
+ROUT 3 0 1E12
+E1 3 0 POLY(2) 1 0 2 0 0 1.0000  1.0000 
+.ENDS
+.SUBCKT SUM2D 1 2 3
+RIN1 1 0 1E12
+RIN2 2 0 1E12
+ROUT 3 0 1E12
+E1 3 0 POLY(2) 1 0 2 0 0 500.00M 500.00M
+.ENDS
+.SUBCKT MULB 1 2 3
+RIN1 1 0 1E12
+RIN2 2 0 1E12
+ROUT 3 0 1E12
+E1 3 0 POLY(2) 1 0 2 0 0 0 0 0 1.0000 
+.ENDS
+**********
+*SRC=PLATRES;PLATRES;Sensors;Thermal;10 kOhm Platinum
+*SYM=PLATRES
+.SUBCKT PLATRES 1 2    4
+*Connections   In+ In- Temperature Input as a voltage
+*Rosemount Inc. Model 118MF Platinum Resistor Temperature Sensor
+E1 3 0 4 0  9.9999852M,  -39.578240U,  162.20918N,  -651.71860P,  
++ 2.4374024P,  -7.7566684F,  1.8935112E-17,  -3.1854041E-20,  
++ 3.2138513E-23,  -1.4483587E-26,  
+G1 1 2 POLY(2) 1 2 3 0 0 0 0 0 1
+RE1 3 0 1E12
+RIN 4 0 1E12
+RG1 1 2 1E12
+.ENDS
+**********
+*SRC=CIRCULATOR;CIRCLTR;Generic Models;Circulator;
+*SYM=CIRCULATR
+.SUBCKT CIRCLTR 1  2  3
+E1 5 0 1 4 1MEG
+E2 7 0 2 6 1MEG
+E3 9 0 3 8 1MEG
+R1 4 9 50
+R2 1 9 50
+R3 4 5 50
+R4 5 6 50
+R5 2 5 50
+R6 6 7 50
+R7 7 8 50
+R8 3 7 50
+R9 8 9 50
+.ENDS 
+************
+

@@ -1,0 +1,154 @@
+* AD624A SPICE Macro-model                 9/91, Rev. A
+*                                          ARG / PMI
+*
+* This version of the AD624 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws.  Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement.  Before using the macro-
+* models the licensee should read this license.  If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, loan, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company.  The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models.  ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+*
+* Node assignments
+*
+*              rg1
+*              |  inverting input
+*              |  |  non-inverting input
+*              |  |  |  negative supply
+*              |  |  |  |   reference (ground usually)
+*              |  |  |  |   |   output
+*              |  |  |  |   |   |   positive supply
+*              |  |  |  |   |   |   |   rg2
+*              |  |  |  |   |   |   |   |  sense
+*              |  |  |  |   |   |   |   |  |
+.SUBCKT AD624A 5  1  2  50  17  32  99  8  11  42  41  40
+*                                              |   |   |
+*                                              |   |  G=500
+*                                              |  G=200
+*                                             G=100
+*
+* input stage
+*
+Q1   4    3    5    QX
+Q2   7    6    8    QX
+E1   9    11   16   4    50E3
+E2   10   11   16   7    50E3
+I1   99   4    50E-6
+I2   99   7    50E-6
+I3   5    50   50E-6
+I4   8    50   50E-6
+IOS  0    35   35E-9
+R1   1    3    50
+R2   2    35   50
+R3   5    9    20E3
+R4   8    10   20E3
+VB   99   16   1
+RB   99   16   1E6
+C1   4    9    12E-12
+C2   7    10   12E-12
+D1   5    3    DX
+D2   8    6    DX
+VIOS 6    35   200E-6
+EOOS 34   10   POLY(1) 22 26 5E-3 1
+*
+* output resistor network
+*
+R7   9    36   1E3   
+R8   36   12   9E3
+R9   11   12   10E3
+R10  34   37   1E3
+R11  13   37   9E3
+R12  13   17   10E3
+R30  5    40   80.2
+R31  40   41   124
+R32  41   42   225.3
+R33  40   42   4445
+V4   99   38   2.28
+V5   39   50   2.28
+D11  36   38   DX
+D12  39   36   DX
+D13  37   38   DX
+D14  39   37   DX
+*
+* output amplifier
+*
+R5   14   50   1.989E3
+R6   15   50   1.989E3
+I5   99   18   200E-6
+J1   14   12   18   JX
+J2   15   13   18   JX
+C3   14   15   41E-12
+*
+* common mode gain stage
+*
+EREF 98   0    26   0    1
+E3   21   20   1    26   0.5
+E4   20   98   2    26   0.5
+R15  21   22   3.162E3
+R16  22   98   1
+C4   21   22   503E-9
+*
+* gain stage
+*
+R17  23   98   198.9E6
+C5   23   98   40E-12
+G1   98   23   14 15 502.66E-6
+V2   99   24   2.986
+V3   25   50   2.986
+D3   23   24   DX
+D4   25   23   DX
+R26  26   99   75E3
+R27  26   50   75E3
+*
+* output stage
+*
+ISY  99   50   4.5E-3
+D5   23   28   DX
+D6   29   23   DX
+R28  27   99   60
+R29  27   50   60
+L1   27   32   1.0E-8
+G17  30   50   23   27   16.667E-3
+G18  31   50   27   23   16.667E-3
+G19  27   99   99   23   16.667E-3
+G20  50   27   23   50   16.667E-3
+V6   28   27   -.013
+V7   27   29   .707
+D7   99   30   DX
+D8   99   31   DX
+D9   50   30   DY
+D10  50   31   DY
+*
+* non-linear models
+*
+.MODEL JX PJF (BETA=631.66E-6 VTO=-2.0 IS=1E-16)
+.MODEL DX D (IS=1E-15)
+.MODEL DY D (IS=1E-15 BV=50)
+.MODEL QX NPN (IS=1E-16 BF=1000 RE=50)
+.ENDS AD624A

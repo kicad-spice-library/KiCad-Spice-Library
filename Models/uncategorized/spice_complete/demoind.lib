@@ -1,0 +1,2816 @@
+**********
+* Copyright Intusoft 1998
+* All Rights Reserved
+* Inductor Models for CoilCraft and Newport Components
+**********
+
+SPICE Simulation Models
+These SPICE simulation models may be used and distributed freely, 
+provided they are not altered in any way, resold, or included in 
+any other package for resale. In addition, the Intusoft copyright
+notice MUST be maintained and included with any model distribution.
+
+As a service to our customers, we provide a free modeling service.  
+If you are interested in obtaining additional models, please contact 
+Intusoft technical support.
+
+ICAP/4 Windows Demonstration Software
+The demonstration version of ICAP/4 Windows including IsSpice4 may be 
+downloaded from our Web site or Compuserve forum at no charge.  
+Also available for download are additional models, product and 
+ordering information, technical articles, and Intusoft Newsletters.
+
+SpiceMod Modeling Software
+SpiceMod is a CAE program that is used to create SPICE models from 
+data sheet values.  SPICEMOD is particularly useful in the circuit 
+design phase because it allows the designer to create SPICE models 
+based on electrical specifications before an actual device is selected.
+SpiceMod may be used to create models for diodes, Zener diodes, BJTs,
+power BJTs, Darlington BJTs, JFETs, MOSFETs, power MOSFETs, IGBTs, 
+SCRs, and TRIACS.
+
+*************
+Macromodels, simulation models, or other models provided by
+Intusoft, directly or indirectly, are not warranted by
+Intusoft as fully representing all of the specifications and
+operating characteristics of the semiconductor product to
+which the model relates. Moreover, these models are
+furnished on an "as is" basis without support or warranty of
+any kind, either expressed or implied, regarding the use
+thereof and Intusoft specifically disclaims all implied
+warranties of merchantability and fitness of the models for
+any purpose. Intusoft does not assume any liability arising
+out of the application or use of the models including
+infringement of patents and copyrights nor does Intusoft
+convey any license under its patents and copyrights or the
+rights of others. Intusoft reserves the right to make
+changes without notice to any model.
+
+Although the use of macromodels can be a useful tool in evaluating
+device performance in various applications, they cannot
+model exact device performance under all conditions, nor are
+they intended to replace breadboarding for final verification.
+
+***********
+* Dielectric and permeability effects are not directly accounted for in this model.
+* R1 value = the inductor dc resistance.
+* B1 forms an equivalent circuit for the ac inductor resistance. 
+*  The If-Then-Else sexpressions defines a frequency dependent voltage 
+*  which simulates the frequency dependent resistance
+*  due to the conductor skin effect. 
+* L1 value = the low frequency inductance. This is measured at a low frequency 
+*  where the distributed winding capacitance is negligible.
+* C1 value = the distributed winding capacitance.
+**********
+*SRC=INDUCC;INDCC;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT INDCC 1 4 {L=??? C=??? RDC=??? K=???}
+*Coilcraft Inductor Model with skin effect
+R1 1 2 {RDC}
+B1 2 3 V = TIME > 0 ? (({K/L})/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? {K}*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 {L}
+C1 2 4 {C}
+.ENDS
+********
+*SRC=0603HS1N8;0603HS1N8;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS1N8 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 4.5000M
+B1 2 3 V = TIME > 0 ? ((3.8125K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 6.1000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 1.6000N
+C1 2 4 239.00F
+.ENDS
+*******
+*SRC=0603HS3N9;0603HS3N9;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS3N9 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 80.000M
+B1 2 3 V = TIME > 0 ? ((2.6389K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 9.5000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 3.6000N
+C1 2 4 80.000F
+.ENDS
+******
+*SRC=0603HS6N8;0603HS6N8;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS6N8 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 111.00M
+B1 2 3 V = TIME > 0 ? ((2.2206K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 15.100U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 6.8000N
+C1 2 4 111.00F
+.ENDS
+******
+*SRC=0603HS10N;0603HS10N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS10N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 130.00M
+B1 2 3 V = TIME > 0 ? ((2.3158K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 22.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 9.5000N
+C1 2 4 110.00F
+.ENDS
+******
+*SRC=0603HS12N;0603HS12N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS12N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 130.00M
+B1 2 3 V = TIME > 0 ? ((1.8596K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 21.200U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 11.400N
+C1 2 4 132.00F
+.ENDS
+******
+*SRC=0603HS15N;0603HS15N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS15N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 170.00M
+B1 2 3 V = TIME > 0 ? ((1.9331K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 27.450U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 14.200N
+C1 2 4 106.00F
+.ENDS
+******
+*SRC=0603HS18N;0603HS18N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS18N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 170.00M
+B1 2 3 V = TIME > 0 ? ((1.9883K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 34.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 17.100N
+C1 2 4 125.00F
+.ENDS
+******
+*SRC=0603HS22N;0603HS22N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS22N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 190.00M
+B1 2 3 V = TIME > 0 ? ((1.8660K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 39.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 20.900N
+C1 2 4 110.00F
+.ENDS
+******
+*SRC=0603HS27N;0603HS27N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS27N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 220.00M
+B1 2 3 V = TIME > 0 ? ((2.1241K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 56.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 26.600N
+C1 2 4 90.000F
+.ENDS
+******
+*SRC=0603HS33N;0603HS33N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS33N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 220.00M
+B1 2 3 V = TIME > 0 ? ((2.5559K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 80.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 31.300N
+C1 2 4 99.000F
+.ENDS
+******
+*SRC=0603HS39N;0603HS39N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS39N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 250.00M
+B1 2 3 V = TIME > 0 ? ((2.5385K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 99.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 39.000N
+C1 2 4 85.000F
+.ENDS
+******
+*SRC=0603HS47N;0603HS47N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS47N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 280.00M
+B1 2 3 V = TIME > 0 ? ((2.2222K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 100.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 45.000N
+C1 2 4 99.000F
+.ENDS
+******
+*SRC=0603HS56N;0603HS56N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS56N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 310.00M
+B1 2 3 V = TIME > 0 ? ((2.5455K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 140.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 55.000N
+C1 2 4 85.000F
+.ENDS
+******
+*SRC=0603HS68N;0603HS68N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS68N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 340.00M
+B1 2 3 V = TIME > 0 ? ((2.2388K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 150.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 67.000N
+C1 2 4 79.000F
+.ENDS
+******
+*SRC=0603HS72N;0603HS72N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS72N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 490.00M
+B1 2 3 V = TIME > 0 ? ((2.5175K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 180.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 71.500N
+C1 2 4 60.200F
+.ENDS
+******
+*SRC=0603HS82N;0603HS82N;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HS82N 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 540.00M
+B1 2 3 V = TIME > 0 ? ((2.4051K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 190.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 79.000N
+C1 2 4 60.000F
+.ENDS
+******
+*SRC=0603HSR10;0603HSR10;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HSR10 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 580.00M
+B1 2 3 V = TIME > 0 ? ((4.0000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 400.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 100.00N
+C1 2 4 60.000F
+.ENDS
+******
+*SRC=0603HSR11;0603HSR11;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HSR11 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 610.00M
+B1 2 3 V = TIME > 0 ? ((3.4783K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 400.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 115.00N
+C1 2 4 56.500F
+.ENDS
+******
+*SRC=0603HSR12;0603HSR12;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0603HSR12 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 650.00M
+B1 2 3 V = TIME > 0 ? ((24.000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 3.0000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 125.00N
+C1 2 4 67.000F
+.ENDS
+******
+*SRC=0805030;0805030;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805030 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 800.00M
+B1 2 3 V = TIME > 0 ? ((2.1212K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 7.0000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 3.3000N
+C1 2 4 213.00F
+.ENDS
+******
+*SRC=0805060;0805060;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805060 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 81.000M
+B1 2 3 V = TIME > 0 ? ((2.3529K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 16.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 6.8000N
+C1 2 4 123.00F
+.ENDS
+******
+*SRC=0805080;0805080;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805080 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 18.000M
+B1 2 3 V = TIME > 0 ? ((2.3293K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 19.100U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 8.2000N
+C1 2 4 147.00F
+.ENDS
+******
+*SRC=0805120;0805120;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805120 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 150.00M
+B1 2 3 V = TIME > 0 ? ((2.9167K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 35.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 12.000N
+C1 2 4 10.200F
+.ENDS
+******
+*SRC=0805150;0805150;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805150 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 200.00M
+B1 2 3 V = TIME > 0 ? ((2.2667K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 34.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 15.000N
+C1 2 4 180.00F
+.ENDS
+******
+*SRC=0805180;0805180;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805180 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 200.00M
+B1 2 3 V = TIME > 0 ? ((1.2778K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 23.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 18.000N
+C1 2 4 200.00F
+.ENDS
+******
+*SRC=0805220;0805220;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805220 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 220.00M
+B1 2 3 V = TIME > 0 ? ((1.5909K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 35.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 22.000N
+C1 2 4 200.00F
+.ENDS
+******
+*SRC=0805270;0805270;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805270 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 250.00M
+B1 2 3 V = TIME > 0 ? ((1.7200K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 43.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 25.000N
+C1 2 4 170.00F
+.ENDS
+******
+*SRC=0805330;0805330;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805330 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 270.00M
+B1 2 3 V = TIME > 0 ? ((1.3636K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 45.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 33.000N
+C1 2 4 160.00F
+.ENDS
+******
+*SRC=0805390;0805390;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805390 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 290.00M
+B1 2 3 V = TIME > 0 ? ((1.2821K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 50.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 39.000N
+C1 2 4 150.00F
+.ENDS
+******
+*SRC=0805560;0805560;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805560 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 340.00M
+B1 2 3 V = TIME > 0 ? ((2.8571K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 160.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 56.000N
+C1 2 4 140.00F
+.ENDS
+*******
+*SRC=0805680;0805680;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805680 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 340.00M
+B1 2 3 V = TIME > 0 ? ((1.9853K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 135.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 68.000N
+C1 2 4 129.00F
+.ENDS
+******
+*SRC=0805820;0805820;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805820 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 420.00M
+B1 2 3 V = TIME > 0 ? ((1.4634K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 120.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 82.000N
+C1 2 4 115.00F
+.ENDS
+*******
+*SRC=0805101;0805101;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805101 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 460.00M
+B1 2 3 V = TIME > 0 ? ((1.5670K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 152.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 97.000N
+C1 2 4 131.00F
+.ENDS
+*******
+*SRC=0805121;0805121;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805121 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 510.00M
+B1 2 3 V = TIME > 0 ? ((1.5000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 180.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 120.00N
+C1 2 4 105.00F
+.ENDS
+*******
+*SRC=0805151;0805151;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805151 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 560.00M
+B1 2 3 V = TIME > 0 ? ((1.6667K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 250.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 150.00N
+C1 2 4 120.00F
+.ENDS
+*******
+*SRC=0805181;0805181;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805181 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 640.00M
+B1 2 3 V = TIME > 0 ? ((1.4444K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 260.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 180.00N
+C1 2 4 110.00F
+.ENDS
+******
+*SRC=0805221;0805221;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 0805221 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 700.00M
+B1 2 3 V = TIME > 0 ? ((1.3182K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 290.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 220.00N
+C1 2 4 90.000F
+.ENDS
+******
+*SRC=1008040;1008040;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008040 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 100.00M
+B1 2 3 V = TIME > 0 ? ((3.4615K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 13.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 3.9000N
+C1 2 4 90.600F
+.ENDS
+******
+*SRC=1008080;1008080;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008080 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 120.00M
+B1 2 3 V = TIME > 0 ? ((2.7922K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 21.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 7.7000N
+C1 2 4 203.00F
+.ENDS
+******
+*SRC=1008100;1008100;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008100 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 50.000M
+B1 2 3 V = TIME > 0 ? ((2.1053K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 20.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 9.5000N
+C1 2 4 167.00F
+.ENDS
+*******
+*SRC=1008120;1008120;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008120 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 70.000M
+B1 2 3 V = TIME > 0 ? ((2.2901K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 30.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 13.100N
+C1 2 4 322.00F
+.ENDS
+******
+*SRC=1008150;1008150;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008150 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 100.00M
+B1 2 3 V = TIME > 0 ? ((2.1277K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 30.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 14.100N
+C1 2 4 295.00F
+.ENDS
+*******
+*SRC=1008180;1008180;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008180 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 110.00M
+B1 2 3 V = TIME > 0 ? ((1.2079K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 21.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 17.800N
+C1 2 4 205.00F
+.ENDS
+******
+*SRC=1008220;1008220;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008220 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 120.00M
+B1 2 3 V = TIME > 0 ? ((1.6667K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 35.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 21.300N
+C1 2 4 258.00F
+.ENDS
+******
+*SRC=1008270;1008270;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008270 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 130.00M
+B1 2 3 V = TIME > 0 ? ((5.8491K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 155.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 26.500N
+C1 2 4 270.00F
+.ENDS
+******
+*SRC=1008330;1008330;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008330 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 140.00M
+B1 2 3 V = TIME > 0 ? ((1.7290K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 55.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 32.100N
+C1 2 4 201.00F
+.ENDS
+******
+*SRC=1008390;1008390;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008390 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 150.00M
+B1 2 3 V = TIME > 0 ? ((1.6795K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 65.500U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 39.000N
+C1 2 4 205.00F
+.ENDS
+******
+*SRC=1008470;1008470;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008470 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 160.00M
+B1 2 3 V = TIME > 0 ? ((2.1505K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 100.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 46.500N
+C1 2 4 155.00F
+.ENDS
+*******
+*SRC=1008560;1008560;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008560 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 180.00M
+B1 2 3 V = TIME > 0 ? ((2.2686K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 125.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 55.100N
+C1 2 4 200.00F
+.ENDS
+******
+*SRC=1008680;1008680;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008680 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 200.00M
+B1 2 3 V = TIME > 0 ? ((1.4925K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 100.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 67.000N
+C1 2 4 161.00F
+.ENDS
+******
+*SRC=1008820;1008820;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008820 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 220.00M
+B1 2 3 V = TIME > 0 ? ((11.166K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 910.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 81.500N
+C1 2 4 250.00F
+.ENDS
+******
+*SRC=1008101;1008101;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008101 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 560.00M
+B1 2 3 V = TIME > 0 ? ((1.5000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 150.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 100.00N
+C1 2 4 164.00F
+.ENDS
+******
+*SRC=1008121;1008121;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008121 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 630.00M
+B1 2 3 V = TIME > 0 ? ((2.5000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 300.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 120.00N
+C1 2 4 155.00F
+.ENDS
+******
+*SRC=1008151;1008151;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008151 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 700.00M
+B1 2 3 V = TIME > 0 ? ((2.0270K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 300.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 148.00N
+C1 2 4 175.00F
+.ENDS
+******
+*SRC=1008181;1008181;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008181 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 770.00M
+B1 2 3 V = TIME > 0 ? ((1.1732K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 210.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 179.00N
+C1 2 4 165.00F
+.ENDS
+*******
+*SRC=1008221;1008221;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008221 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 840.00M
+B1 2 3 V = TIME > 0 ? ((1.1364K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 250.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 220.00N
+C1 2 4 170.00F
+.ENDS
+******
+*SRC=1008271;1008271;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008271 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 540.00M
+B1 2 3 V = TIME > 0 ? ((1.2075K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 320.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 265.00N
+C1 2 4 15.100P
+.ENDS
+******
+*SRC=1008331;1008331;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008331 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.0500 
+B1 2 3 V = TIME > 0 ? ((925.93 )/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 300.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 324.00N
+C1 2 4 170.00F
+.ENDS
+*******
+*SRC=1008391;1008391;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008391 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.1200 
+B1 2 3 V = TIME > 0 ? ((1.0256K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 400.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 390.00N
+C1 2 4 174.00F
+.ENDS
+******
+*SRC=1008471;1008471;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008471 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.1900 
+B1 2 3 V = TIME > 0 ? ((1.1702K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 550.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 470.00N
+C1 2 4 178.00F
+.ENDS
+*******
+*SRC=1008561;1008561;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008561 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.3300 
+B1 2 3 V = TIME > 0 ? ((982.14 )/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 550.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 560.00N
+C1 2 4 213.00F
+.ENDS
+******
+*SRC=1008681;1008681;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008681 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.4700 
+B1 2 3 V = TIME > 0 ? ((1.0294K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 700.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 680.00N
+C1 2 4 175.00F
+.ENDS
+******
+*SRC=1008751;1008751;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008751 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.5400 
+B1 2 3 V = TIME > 0 ? ((800.00 )/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 600.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 750.00N
+C1 2 4 175.00F
+.ENDS
+******
+*SRC=1008821;1008821;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008821 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.6100 
+B1 2 3 V = TIME > 0 ? ((1.0976K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 900.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 820.00N
+C1 2 4 200.00F
+.ENDS
+*******
+*SRC=1008911;1008911;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008911 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.6800 
+B1 2 3 V = TIME > 0 ? ((1.1715K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.0251M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 875.00N
+C1 2 4 200.00F
+.ENDS
+******
+*SRC=1008102;1008102;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008102 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.7500 
+B1 2 3 V = TIME > 0 ? ((1.0753K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.0000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 930.00N
+C1 2 4 240.00F
+.ENDS
+******
+*SRC=1008122;1008122;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008122 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.9500 
+B1 2 3 V = TIME > 0 ? ((1.0924K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.3000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 1.1900U
+C1 2 4 230.00F
+.ENDS
+******
+*SRC=1008152;1008152;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008152 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 2.3000 
+B1 2 3 V = TIME > 0 ? ((993.79 )/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.6000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 1.6100U
+C1 2 4 300.00F
+.ENDS
+******
+*SRC=1008182;1008182;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008182 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 2.6000 
+B1 2 3 V = TIME > 0 ? ((1.0556K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.9000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 1.8000U
+C1 2 4 320.00F
+.ENDS
+******
+*SRC=1008222;1008222;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008222 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 2.8000 
+B1 2 3 V = TIME > 0 ? ((1.1468K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 2.5000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 2.1800U
+C1 2 4 340.00F
+.ENDS
+******
+*SRC=1008272;1008272;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008272 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 3.2000 
+B1 2 3 V = TIME > 0 ? ((1.0769K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 2.8000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 2.6000U
+C1 2 4 350.00F
+.ENDS
+******
+*SRC=1008332;1008332;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008332 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 3.4000 
+B1 2 3 V = TIME > 0 ? ((1.0303K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 3.4000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 3.3000U
+C1 2 4 390.00F
+.ENDS
+******
+*SRC=1008392;1008392;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008392 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 3.6000 
+B1 2 3 V = TIME > 0 ? ((1.0513K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 4.1000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 3.9000U
+C1 2 4 480.00F
+.ENDS
+******
+*SRC=1008472;1008472;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1008472 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 3.8000 
+B1 2 3 V = TIME > 0 ? ((940.92 )/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 4.3000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 4.5700U
+C1 2 4 510.00F
+.ENDS
+******
+*SRC=1206030;1206030;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206030 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 500.00M
+B1 2 3 V = TIME > 0 ? ((2.1212K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 7.0000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 3.3000N
+C1 2 4 153.00F
+.ENDS
+******
+*SRC=1206060;1206060;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206060 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 70.000M
+B1 2 3 V = TIME > 0 ? ((1.9672K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 12.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 6.1000N
+C1 2 4 50.000F
+.ENDS
+*******
+*SRC=1206100;1206100;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206100 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 80.000M
+B1 2 3 V = TIME > 0 ? ((3.8000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 38.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 10.0000N
+C1 2 4 18.100F
+******
+*SRC=1206120;1206120;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.ENDS
+.SUBCKT 1206120 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 80.000M
+B1 2 3 V = TIME > 0 ? ((1.8333K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 22.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 12.000N
+C1 2 4 241.00F
+.ENDS
+******
+*SRC=1206150;1206150;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206150 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 100.00M
+B1 2 3 V = TIME > 0 ? ((1.4667K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 22.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 15.000N
+C1 2 4 100.000F
+.ENDS
+******
+*SRC=1206180;1206180;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206180 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 100.00M
+B1 2 3 V = TIME > 0 ? ((1.7778K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 32.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 18.000N
+C1 2 4 100.000F
+.ENDS
+******
+*SRC=1206220;1206220;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206220 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 100.00M
+B1 2 3 V = TIME > 0 ? ((1.5455K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 34.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 22.000N
+C1 2 4 160.00F
+.ENDS
+******
+*SRC=1206270;1206270;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206270 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 110.00M
+B1 2 3 V = TIME > 0 ? ((1.4815K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 40.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 27.000N
+C1 2 4 125.00F
+.ENDS
+******
+*SRC=1206330;1206330;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206330 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 110.00M
+B1 2 3 V = TIME > 0 ? ((2.1212K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 70.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 33.000N
+C1 2 4 175.00F
+.ENDS
+******
+*SRC=1206390;1206390;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206390 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 120.00M
+B1 2 3 V = TIME > 0 ? ((2.5641K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 100.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 39.000N
+C1 2 4 75.000F
+.ENDS
+******
+*SRC=1206470;1206470;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206470 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 130.00M
+B1 2 3 V = TIME > 0 ? ((1.9149K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 90.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 47.000N
+C1 2 4 147.00F
+.ENDS
+******
+*SRC=1206560;1206560;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206560 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 140.00M
+B1 2 3 V = TIME > 0 ? ((2.1429K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 120.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 56.000N
+C1 2 4 157.00F
+.ENDS
+******
+*SRC=1206680;1206680;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206680 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 260.00M
+B1 2 3 V = TIME > 0 ? ((2.2059K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 150.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 68.000N
+C1 2 4 186.00F
+.ENDS
+******
+*SRC=1206820;1206820;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206820 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 260.00M
+B1 2 3 V = TIME > 0 ? ((1.2195K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 100.000U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 82.000N
+C1 2 4 153.00F
+.ENDS
+******
+*SRC=1206101;1206101;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206101 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 260.00M
+B1 2 3 V = TIME > 0 ? ((2.0000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 200.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 100.00N
+C1 2 4 175.00F
+.ENDS
+******
+*SRC=1206121;1206121;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206121 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 260.00M
+B1 2 3 V = TIME > 0 ? ((1.5000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 180.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 120.00N
+C1 2 4 105.00F
+.ENDS
+******
+*SRC=1206151;1206151;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206151 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 260.00M
+B1 2 3 V = TIME > 0 ? ((1.2000K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 180.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 150.00N
+C1 2 4 109.00F
+.ENDS
+******
+*SRC=1206181;1206181;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206181 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 430.00M
+B1 2 3 V = TIME > 0 ? ((1.1111K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 200.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 180.00N
+C1 2 4 119.00F
+.ENDS
+******
+*SRC=1206221;1206221;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206221 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 500.00M
+B1 2 3 V = TIME > 0 ? ((1.2955K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 285.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 220.00N
+C1 2 4 137.00F
+.ENDS
+******
+*SRC=1206271;1206271;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206271 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 560.00M
+B1 2 3 V = TIME > 0 ? ((1.4815K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 400.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 270.00N
+C1 2 4 135.00F
+.ENDS
+******
+*SRC=1206331;1206331;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206331 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 650.00M
+B1 2 3 V = TIME > 0 ? ((1.3235K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 450.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 340.00N
+C1 2 4 150.00F
+.ENDS
+******
+*SRC=1206391;1206391;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206391 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 750.00M
+B1 2 3 V = TIME > 0 ? ((1.1538K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 450.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 390.00N
+C1 2 4 112.00F
+.ENDS
+******
+*SRC=1206471;1206471;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206471 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.3000 
+B1 2 3 V = TIME > 0 ? ((957.45 )/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 450.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 470.00N
+C1 2 4 105.00F
+.ENDS
+******
+*SRC=1206561;1206561;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206561 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.3400 
+B1 2 3 V = TIME > 0 ? ((1.3761K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 750.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 545.00N
+C1 2 4 134.00F
+.ENDS
+******
+*SRC=1206681;1206681;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206681 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.5800 
+B1 2 3 V = TIME > 0 ? ((1.2500K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 850.00U*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 680.00N
+C1 2 4 115.00F
+.ENDS
+******
+*SRC=1206821;1206821;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206821 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 1.8200 
+B1 2 3 V = TIME > 0 ? ((1.2805K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.0500M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 820.00N
+C1 2 4 100.000F
+.ENDS
+******
+*SRC=1206102;1206102;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206102 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 2.8000 
+B1 2 3 V = TIME > 0 ? ((1.4359K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.4000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 975.00N
+C1 2 4 115.00F
+.ENDS
+******
+*SRC=1206122;1206122;Inductors;Nonideal;Coilcraft Model
+*SYM=IND
+.SUBCKT 1206122 1 4
+*COILCRAFT INDUCTOR MODEL WITH SKIN EFFECT
+R1 1 2 3.2000 
+B1 2 3 V = TIME > 0 ? ((1.2500K)/(SQRT(PI*TIME)))*(V(3)) : 
++          FREQ+1.0E-20 > 0 ? 1.5000M*SQRT(FREQ/(2.0*PI))*I(L1)
+L1 3 4 1.2000U
+C1 2 4 94.500F
+.ENDS
+************************
+*SRC=L12103;L12103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12103 1 2
+LO  1 4 1.00E-05
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.25E-08/(3*1.00E-5)
+RDC 3 2    0.056
+CP  1 2  7.73E-12
+RP  1 2  7.39E+04
+.ENDS
+**********
+*SRC=L12104;L12104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.50E-06/(3*1.00E-04)
+RDC 3 2    0.220
+CP  1 2  1.85E-11
+RP  1 2  1.16E+05
+.ENDS
+**********
+*SRC=L12105;L12105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12105 1 2
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.00E-04/(3*1.00E-03)
+RDC 3 2    0.770
+CP  1 2  3.96E-11
+RP  1 2  2.76E+05
+.ENDS
+**********
+*SRC=L12124;L12124;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12124 1 2
+LO  1 4 1.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.00E-06/(3*1.20E-04)
+RDC 3 2    0.240
+CP  1 2  2.06E-11
+RP  1 2  1.21E+05
+.ENDS
+**********
+*SRC=L12125;L12125;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12125 1 2
+LO  1 4 1.20E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.20E-04/(3*1.20E-03)
+RDC 3 2    0.880
+CP  1 2  4.31E-11
+RP  1 2  2.64E+05
+.ENDS
+**********
+*SRC=L12153;L12153;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12153 1 2
+LO  1 4 1.50E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.67E-07/(3*1.50E-05)
+RDC 3 2    0.068
+CP  1 2  7.51E-12
+RP  1 2  7.78E+04
+.ENDS
+**********
+*SRC=L12154;L12154;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12154 1 2
+LO  1 4 1.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.75E-06/(3*1.50E-04)
+RDC 3 2    0.260
+CP  1 2  2.01E-11
+RP  1 2  1.37E+05
+.ENDS
+**********
+*SRC=L12155;L12155;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12155 1 2
+LO  1 4 1.50E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.50E-04/(3*1.50E-03)
+RDC 3 2    0.990
+CP  1 2  4.69E-11
+RP  1 2  3.39E+05
+.ENDS
+**********
+*SRC=L12184;L12184;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12184 1 2
+LO  1 4 1.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.88E-06/(3*1.80E-04)
+RDC 3 2    0.310
+CP  1 2  2.25E-11
+RP  1 2  1.41E+05
+.ENDS
+**********
+*SRC=L12223;L12223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.44E-07/(3*2.20E-05)
+RDC 3 2    0.087
+CP  1 2  9.69E-12
+RP  1 2  7.53E+04
+.ENDS
+**********
+*SRC=L12224;L12224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.78E-06/(3*2.20E-04)
+RDC 3 2    0.350
+CP  1 2  4.10E-12
+RP  1 2  3.30E+05
+.ENDS
+**********
+*SRC=L12274;L12274;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12274 1 2
+LO  1 4 2.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.73E-05/(3*2.70E-04)
+RDC 3 2    0.380
+CP  1 2  2.90E-11
+RP  1 2  1.37E+05
+.ENDS
+**********
+*SRC=L12303;L12303;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12303 1 2
+LO  1 4 3.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.33E-07/(3*3.00E-05)
+RDC 3 2    0.100
+CP  1 2  1.39E-11
+RP  1 2  6.62E+04
+.ENDS
+**********
+*SRC=L12304;L12304;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12304 1 2
+LO  1 4 3.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.00E-05/(3*3.00E-04)
+RDC 3 2    0.400
+CP  1 2  5.00E-11
+RP  1 2  1.10E+05
+.ENDS
+**********
+*SRC=L12394;L12394;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12394 1 2
+LO  1 4 3.90E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.90E-05/(3*3.90E-04)
+RDC 3 2    0.450
+CP  1 2  4.51E-11
+RP  1 2  1.47E+05
+.ENDS
+**********
+*SRC=L12472;L12472;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12472 1 2
+LO  1 4 4.70E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.32E-08/(3*4.70E-06)
+RDC 3 2    0.037
+CP  1 2  5.91E-12
+RP  1 2  5.80E+04
+.ENDS
+**********
+*SRC=L12473;L12473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.18E-06/(3*4.70E-05)
+RDC 3 2    0.140
+CP  1 2  2.16E-11
+RP  1 2  8.12E+04
+.ENDS
+**********
+*SRC=L12474;L12474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.70E-05/(3*4.70E-04)
+RDC 3 2    0.490
+CP  1 2  5.39E-11
+RP  1 2  1.48E+05
+.ENDS
+**********
+*SRC=L12683;L12683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.70E-06/(3*6.80E-05)
+RDC 3 2    0.170
+CP  1 2  1.55E-11
+RP  1 2  1.05E+05
+.ENDS
+**********
+*SRC=L12684;L12684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.80E-05/(3*6.80E-04)
+RDC 3 2    0.630
+CP  1 2  4.60E-11
+RP  1 2  1.92E+05
+.ENDS
+**********
+*SRC=L12882;L12882;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12882 1 2
+LO  1 4 8.80E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.35E-08/(3*8.80E-06)
+RDC 3 2    0.050
+CP  1 2  7.34E-12
+RP  1 2  7.12E+04
+.ENDS
+**********
+*SRC=L12883;L12883;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12883 1 2
+LO  1 4 8.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.20E-06/(3*8.80E-05)
+RDC 3 2    0.200
+CP  1 2  1.25E-11
+RP  1 2  1.33E+05
+.ENDS
+**********
+*SRC=L12H103;L12H103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H103 1 2
+LO  1 4 1.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.78E-08/(3*1.00E-05)
+RDC 3 2    0.014
+CP  1 2  7.32E-12
+RP  1 2  4.09E+04
+.ENDS
+**********
+*SRC=L12H104;L12H104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.25E-07/(3*1.00E-04)
+RDC 3 2    0.060
+CP  1 2  2.81E-11
+RP  1 2  1.88E+04
+.ENDS
+**********
+*SRC=L12H105;L12H105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H105 1 2
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.46E-05/(3*1.00E-03)
+RDC 3 2    0.470
+CP  1 2  2.09E-11
+RP  1 2  2.83E+05
+.ENDS
+**********
+*SRC=L12H124;L12H124;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H124 1 2
+LO  1 4 1.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -7.69E-07/(3*1.20E-04)
+RDC 3 2    0.068
+CP  1 2  2.69E-11
+RP  1 2  2.11E+04
+.ENDS
+**********
+*SRC=L12H125;L12H125;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H125 1 2
+LO  1 4 1.20E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.99E-05/(3*1.20E-03)
+RDC 3 2    0.600
+CP  1 2  2.61E-11
+RP  1 2  2.71E+05
+.ENDS
+**********
+*SRC=L12H153;L12H153;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H153 1 2
+LO  1 4 1.50E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.06E-08/(3*1.50E-05)
+RDC 3 2    0.020
+CP  1 2  7.61E-12
+RP  1 2  2.81E+04
+.ENDS
+**********
+*SRC=L12H154;L12H154;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H154 1 2
+LO  1 4 1.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.86E-07/(3*1.50E-04)
+RDC 3 2    0.075
+CP  1 2  2.32E-11
+RP  1 2  2.54E+04
+.ENDS
+**********
+*SRC=L12H155;L12H155;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H155 1 2
+LO  1 4 1.50E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -7.65E-05/(3*1.50E-03)
+RDC 3 2    0.730
+CP  1 2  2.64E-11
+RP  1 2  3.54E+05
+.ENDS
+**********
+*SRC=L12H184;L12H184;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H184 1 2
+LO  1 4 1.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.31E-06/(3*1.80E-04)
+RDC 3 2    0.093
+CP  1 2  2.25E-11
+RP  1 2  2.83E+04
+.ENDS
+**********
+*SRC=L12H223;L12H223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.21E-08/(3*2.20E-05)
+RDC 3 2    0.025
+CP  1 2  6.81E-12
+RP  1 2  3.59E+04
+.ENDS
+**********
+*SRC=L12H224;L12H224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.80E-06/(3*2.20E-04)
+RDC 3 2    0.110
+CP  1 2  2.00E-11
+RP  1 2  2.85E+04
+.ENDS
+**********
+*SRC=L12H274;L12H274;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H274 1 2
+LO  1 4 2.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.27E-06/(3*2.70E-04)
+RDC 3 2    0.120
+CP  1 2  1.77E-11
+RP  1 2  3.24E+04
+.ENDS
+**********
+*SRC=L12H303;L12H303;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H303 1 2
+LO  1 4 3.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.33E-08/(3*3.00E-05)
+RDC 3 2    0.029
+CP  1 2  1.23E-11
+RP  1 2  2.35E+04
+.ENDS
+**********
+*SRC=L12H304;L12H304;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H304 1 2
+LO  1 4 3.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.60E-06/(3*3.00E-04)
+RDC 3 2    0.130
+CP  1 2  1.74E-11
+RP  1 2  3.23E+04
+.ENDS
+**********
+*SRC=L12H394;L12H394;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H394 1 2
+LO  1 4 3.90E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.93E-06/(3*3.90E-04)
+RDC 3 2    0.150
+CP  1 2  1.34E-11
+RP  1 2  4.20E+04
+.ENDS
+**********
+*SRC=L12H472;L12H472;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H472 1 2
+LO  1 4 4.70E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.70E-09/(3*4.70E-06)
+RDC 3 2    0.009
+CP  1 2  1.05E-11
+RP  1 2  4.36E+04
+.ENDS
+**********
+*SRC=L12H473;L12H473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.55E-07/(3*4.70E-05)
+RDC 3 2    0.038
+CP  1 2  3.37E-11
+RP  1 2  1.18E+04
+.ENDS
+**********
+*SRC=L12H474;L12H474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.59E-06/(3*4.70E-04)
+RDC 3 2    0.170
+CP  1 2  1.22E-11
+RP  1 2  4.78E+04
+.ENDS
+**********
+*SRC=L12H683;L12H683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.89E-07/(3*6.80E-05)
+RDC 3 2    0.046
+CP  1 2  2.72E-11
+RP  1 2  1.58E+04
+.ENDS
+**********
+*SRC=L12H684;L12H684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.29E-05/(3*6.80E-04)
+RDC 3 2    0.320
+CP  1 2  1.29E-11
+RP  1 2  5.81E+04
+.ENDS
+**********
+*SRC=L12H882;L12H882;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H882 1 2
+LO  1 4 8.80E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.37E-08/(3*8.80E-06)
+RDC 3 2    0.013
+CP  1 2  6.78E-12
+RP  1 2  4.56E+04
+.ENDS
+**********
+*SRC=L12H883;L12H883;Inductors;Newport;
+*SYM=IND
+.SUBCKT L12H883 1 2
+LO  1 4 8.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.99E-07/(3*8.80E-05)
+RDC 3 2    0.055
+CP  1 2  2.35E-11
+RP  1 2  1.94E+04
+.ENDS
+**********
+*SRC=L14103;L14103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14103 1 2
+LO  1 4 1.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.92E-09/(3*1.00E-05)
+RDC 3 2    0.008
+CP  1 2  5.91E-12
+RP  1 2  7.02E+04
+.ENDS
+**********
+*SRC=L14104;L14104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.64E-07/(3*1.00E-04)
+RDC 3 2    0.033
+CP  1 2  2.33E-11
+RP  1 2  7.05E+04
+.ENDS
+**********
+*SRC=L14105;L14105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14105 1 2
+.ENDS
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.25E-06/(3*1.00E-03)
+RDC 3 2    0.173
+CP  1 2  3.96E-11
+RP  1 2  2.46E+05
+.ENDS
+**********
+*SRC=L14106;L14106;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14106 1 2
+LO  1 4 1.00E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.26E-04/(3*1.00E-02)
+RDC 3 2    1.530
+CP  1 2  2.53E-10
+RP  1 2  1.88E+05
+.ENDS
+**********
+*SRC=L14153;L14153;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14153 1 2
+LO  1 4 1.50E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.04E-08/(3*1.50E-05)
+RDC 3 2    0.009
+CP  1 2  1.05E-11
+RP  1 2  5.03E+04
+.ENDS
+**********
+*SRC=L14154;L14154;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14154 1 2
+LO  1 4 1.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.81E-07/(3*1.50E-04)
+RDC 3 2    0.040
+CP  1 2  1.65E-11
+RP  1 2  1.27E+05
+.ENDS
+**********
+*SRC=L14155;L14155;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14155 1 2
+LO  1 4 1.50E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.38E-05/(3*1.50E-03)
+RDC 3 2    0.216
+CP  1 2  3.45E-11
+RP  1 2  1.45E+05
+.ENDS
+**********
+*SRC=L14156;L14156;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14156 1 2
+LO  1 4 1.50E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.50E-03/(3*1.50E-02)
+RDC 3 2    2.400
+CP  1 2  1.69E-10
+RP  1 2  5.18E+05
+.ENDS
+**********
+*SRC=L14223;L14223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.82E-08/(3*2.20E-05)
+RDC 3 2    0.012
+CP  1 2  1.33E-11
+RP  1 2  8.23E+04
+.ENDS
+**********
+*SRC=L14224;L14224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.21E-07/(3*2.20E-04)
+RDC 3 2    0.051
+CP  1 2  3.55E-11
+RP  1 2  1.17E+05
+.ENDS
+**********
+*SRC=L14225;L14225;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14225 1 2
+LO  1 4 2.20E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.02E-05/(3*2.20E-03)
+RDC 3 2    0.349
+CP  1 2  3.20E-11
+RP  1 2  1.74E+05
+.ENDS
+**********
+*SRC=L14226;L14226;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14226 1 2
+LO  1 4 2.20E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.44E-03/(3*2.20E-02)
+RDC 3 2    3.540
+CP  1 2  1.15E-10
+RP  1 2  2.90E+05
+.ENDS
+**********
+*SRC=L14304;L14304;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14304 1 2
+LO  1 4 3.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.12E-07/(3*3.00E-04)
+RDC 3 2    0.054
+CP  1 2  4.31E-11
+RP  1 2  1.13E+05
+.ENDS
+**********
+*SRC=L14333;L14333;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14333 1 2
+LO  1 4 3.30E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.82E-08/(3*3.30E-05)
+RDC 3 2    0.016
+CP  1 2  9.27E-12
+RP  1 2  5.09E+04
+.ENDS
+**********
+*SRC=L14334;L14334;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14334 1 2
+LO  1 4 3.30E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.31E-07/(3*3.30E-04)
+RDC 3 2    0.054
+CP  1 2  5.33E-11
+RP  1 2  1.12E+05
+.ENDS
+**********
+*SRC=L14335;L14335;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14335 1 2
+LO  1 4 3.30E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -7.48E-05/(3*3.30E-03)
+RDC 3 2    0.548
+CP  1 2  4.80E-11
+RP  1 2  1.82E+05
+.ENDS
+**********
+*SRC=L14336;L14336;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14336 1 2
+LO  1 4 3.30E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.17E-03/(3*3.30E-02)
+RDC 3 2    5.320
+CP  1 2  7.68E-11
+RP  1 2  5.18E+05
+.ENDS
+**********
+*SRC=L14473;L14473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.51E-08/(3*4.70E-05)
+RDC 3 2    0.023
+CP  1 2  1.20E-11
+RP  1 2  6.53E+04
+.ENDS
+**********
+*SRC=L14474;L14474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.35E-06/(3*4.70E-04)
+RDC 3 2    0.066
+CP  1 2  5.39E-11
+RP  1 2  1.77E+05
+.ENDS
+**********
+*SRC=L14475;L14475;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14475 1 2
+LO  1 4 4.70E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.45E-04/(3*4.70E-03)
+RDC 3 2    0.748
+CP  1 2  5.99E-11
+RP  1 2  4.78E+05
+.ENDS
+**********
+*SRC=L14476;L14476;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14476 1 2
+LO  1 4 4.70E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.88E-02/(3*4.70E-02)
+RDC 3 2    8.190
+CP  1 2  5.39E-11
+RP  1 2  8.86E+05
+.ENDS
+**********
+*SRC=L14683;L14683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.28E-07/(3*6.80E-05)
+RDC 3 2    0.024
+CP  1 2  1.33E-11
+RP  1 2  1.02E+05
+.ENDS
+**********
+*SRC=L14684;L14684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.08E-06/(3*6.80E-04)
+RDC 3 2    0.111
+CP  1 2  4.60E-11
+RP  1 2  1.65E+05
+.ENDS
+**********
+*SRC=L14685;L14685;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14685 1 2
+LO  1 4 6.80E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.47E-04/(3*6.80E-03)
+RDC 3 2    1.040
+CP  1 2  4.14E-11
+RP  1 2  2.18E+05
+.ENDS
+**********
+*SRC=L14905;L14905;Inductors;Newport;
+*SYM=IND
+.SUBCKT L14905 1 2
+LO  1 4 9.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.00E-04/(3*9.00E-03)
+RDC 3 2    1.950
+CP  1 2  7.04E-11
+RP  1 2  3.73E+05
+.ENDS
+**********
+*SRC=L17103;L17103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17103 1 2
+LO  1 4 1.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.09E-07/(3*1.00E-05)
+RDC 3 2    0.045
+CP  1 2  5.64E-12
+RP  1 2  5.33E+04
+.ENDS
+**********
+*SRC=L17104;L17104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.83E-05/(3*1.00E-04)
+RDC 3 2    0.350
+CP  1 2  3.20E-12
+RP  1 2  3.63E+05
+.ENDS
+**********
+*SRC=L17105;L17105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17105 1 2
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.77E-03/(3*1.00E-03)
+RDC 3 2    3.300
+CP  1 2  4.05E-12
+RP  1 2  1.88E+06
+.ENDS
+**********
+*SRC=L17153;L17153;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17153 1 2
+LO  1 4 1.50E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.67E-07/(3*1.50E-05)
+RDC 3 2    0.060
+CP  1 2  4.49E-12
+RP  1 2  5.49E+04
+.ENDS
+**********
+*SRC=L17154;L17154;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17154 1 2
+LO  1 4 1.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.46E-05/(3*1.50E-04)
+RDC 3 2    0.490
+CP  1 2  4.39E-12
+RP  1 2  4.67E+05
+.ENDS
+**********
+*SRC=L17155;L17155;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17155 1 2
+LO  1 4 1.50E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.67E-03/(3*1.50E-03)
+RDC 3 2    5.900
+CP  1 2  3.83E-12
+RP  1 2  2.57E+06
+.ENDS
+**********
+*SRC=L17223;L17223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.53E-06/(3*2.20E-05)
+RDC 3 2    0.082
+CP  1 2  3.98E-12
+RP  1 2  7.05E+04
+.ENDS
+**********
+*SRC=L17224;L17224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.55E-05/(3*2.20E-04)
+RDC 3 2    0.750
+CP  1 2  3.95E-12
+RP  1 2  6.72E+05
+.ENDS
+**********
+*SRC=L17225;L17225;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17225 1 2
+LO  1 4 2.20E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.53E-02/(3*2.20E-03)
+RDC 3 2    7.800
+CP  1 2  3.19E-12
+RP  1 2  3.41E+06
+.ENDS
+**********
+*SRC=L17333;L17333;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17333 1 2
+LO  1 4 3.30E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.30E-06/(3*3.30E-05)
+RDC 3 2    0.130
+CP  1 2  5.91E-12
+RP  1 2  5.91E+04
+.ENDS
+**********
+*SRC=L17334;L17334;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17334 1 2
+LO  1 4 3.30E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.87E-04/(3*3.30E-04)
+RDC 3 2    1.100
+CP  1 2  3.79E-12
+RP  1 2  8.86E+05
+.ENDS
+**********
+*SRC=L17473;L17473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.35E-06/(3*4.70E-05)
+RDC 3 2    0.200
+CP  1 2  4.54E-12
+RP  1 2  8.05E+04
+.ENDS
+**********
+*SRC=L17474;L17474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.07E-04/(3*4.70E-04)
+RDC 3 2    1.560
+CP  1 2  5.26E-12
+RP  1 2  9.45E+05
+.ENDS
+**********
+*SRC=L17476;L17476;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17476 1 2
+LO  1 4 4.70E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.70E-01/(3*4.70E-02)
+RDC 3 2   16.000
+CP  1 2  3.74E-13
+RP  1 2  4.61E+07
+.ENDS
+**********
+*SRC=L17683;L17683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.41E-06/(3*6.80E-05)
+RDC 3 2    0.260
+CP  1 2  3.32E-12
+RP  1 2  3.17E+05
+.ENDS
+**********
+*SRC=L17684;L17684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.67E-04/(3*6.80E-04)
+RDC 3 2    2.430
+CP  1 2  4.14E-12
+RP  1 2  1.35E+06
+.ENDS
+**********
+*SRC=L17823;L17823;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17823 1 2
+LO  1 4 8.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.31E-05/(3*8.20E-05)
+RDC 3 2    0.290
+CP  1 2  3.73E-12
+RP  1 2  3.75E+05
+.ENDS
+**********
+*SRC=L17824;L17824;Inductors;Newport;
+*SYM=IND
+.SUBCKT L17824 1 2
+LO  1 4 8.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.21E-03/(3*8.20E-04)
+RDC 3 2    2.700
+CP  1 2  3.94E-12
+RP  1 2  1.66E+06
+.ENDS
+**********
+*SRC=L18103;L18103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18103 1 2
+LO  1 4 1.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.40E-08/(3*1.00E-05)
+RDC 3 2    0.011
+CP  1 2  7.02E-12
+RP  1 2  7.64E+04
+.ENDS
+**********
+*SRC=L18104;L18104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.40E-06/(3*1.00E-04)
+RDC 3 2    0.085
+CP  1 2  4.63E-12
+RP  1 2  1.86E+05
+.ENDS
+**********
+*SRC=L18105;L18105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18105 1 2
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.41E-04/(3*1.00E-03)
+RDC 3 2    0.920
+CP  1 2  9.89E-12
+RP  1 2  9.45E+05
+.ENDS
+**********
+*SRC=L18106;L18106;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18106 1 2
+LO  1 4 1.00E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.92E-02/(3*1.00E-02)
+RDC 3 2   12.000
+CP  1 2  1.01E-11
+RP  1 2  4.49E+06
+.ENDS
+**********
+*SRC=L18153;L18153;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18153 1 2
+LO  1 4 1.50E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.67E-07/(3*1.50E-05)
+RDC 3 2    0.016
+CP  1 2  6.68E-12
+RP  1 2  8.24E+04
+.ENDS
+**********
+*SRC=L18154;L18154;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18154 1 2
+LO  1 4 1.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.24E-05/(3*1.50E-04)
+RDC 3 2    0.145
+CP  1 2  8.72E-12
+RP  1 2  1.95E+05
+.ENDS
+**********
+*SRC=L18155;L18155;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18155 1 2
+LO  1 4 1.50E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.04E-03/(3*1.50E-03)
+RDC 3 2    1.400
+CP  1 2  9.99E-12
+RP  1 2  1.31E+06
+.ENDS
+**********
+*SRC=L18223;L18223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.76E-07/(3*2.20E-05)
+RDC 3 2    0.020
+CP  1 2  8.27E-12
+RP  1 2  9.62E+04
+.ENDS
+**********
+*SRC=L18224;L18224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.66E-05/(3*2.20E-04)
+RDC 3 2    0.200
+CP  1 2  9.40E-12
+RP  1 2  2.23E+05
+.ENDS
+**********
+*SRC=L18225;L18225;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18225 1 2
+LO  1 4 2.20E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.44E-03/(3*2.20E-03)
+RDC 3 2    2.000
+CP  1 2  9.52E-12
+RP  1 2  1.64E+06
+.ENDS
+**********
+*SRC=L18254;L18254;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18254 1 2
+LO  1 4 2.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.91E-05/(3*2.50E-04)
+RDC 3 2    0.230
+CP  1 2  7.40E-12
+RP  1 2  2.91E+05
+.ENDS
+**********
+*SRC=L18333;L18333;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18333 1 2
+LO  1 4 3.30E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.25E-07/(3*3.30E-05)
+RDC 3 2    0.035
+CP  1 2  8.69E-12
+RP  1 2  9.36E+04
+.ENDS
+**********
+*SRC=L18334;L18334;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18334 1 2
+LO  1 4 3.30E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.19E-05/(3*3.30E-04)
+RDC 3 2    0.315
+CP  1 2  8.53E-12
+RP  1 2  3.61E+05
+.ENDS
+**********
+*SRC=L18335;L18335;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18335 1 2
+LO  1 4 3.30E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.24E-03/(3*3.30E-03)
+RDC 3 2    3.400
+CP  1 2  1.20E-11
+RP  1 2  2.37E+06
+.ENDS
+**********
+*SRC=L18472;L18472;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18472 1 2
+LO  1 4 4.70E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.64E-08/(3*4.70E-06)
+RDC 3 2    0.005
+CP  1 2  4.07E-12
+RP  1 2  1.20E+05
+.ENDS
+**********
+*SRC=L18473;L18473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.73E-06/(3*4.70E-05)
+RDC 3 2    0.041
+CP  1 2  7.46E-12
+RP  1 2  1.38E+05
+.ENDS
+**********
+*SRC=L18474;L18474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.22E-04/(3*4.70E-04)
+RDC 3 2    0.425
+CP  1 2  1.11E-11
+RP  1 2  3.64E+05
+.ENDS
+**********
+*SRC=L18475;L18475;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18475 1 2
+LO  1 4 4.70E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.17E-02/(3*4.70E-03)
+RDC 3 2    4.400
+CP  1 2  1.10E-11
+RP  1 2  2.65E+06
+.ENDS
+**********
+*SRC=L18682;L18682;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18682 1 2
+LO  1 4 6.80E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.95E-08/(3*6.80E-06)
+RDC 3 2    0.007
+CP  1 2  6.69E-12
+RP  1 2  7.86E+04
+.ENDS
+**********
+*SRC=L18683;L18683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.73E-06/(3*6.80E-05)
+RDC 3 2    0.060
+CP  1 2  8.55E-12
+RP  1 2  8.74E+04
+.ENDS
+**********
+*SRC=L18684;L18684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.42E-04/(3*6.80E-04)
+RDC 3 2    0.620
+CP  1 2  9.31E-12
+RP  1 2  4.70E+05
+.ENDS
+**********
+*SRC=L18685;L18685;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18685 1 2
+LO  1 4 6.80E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.02E-02/(3*6.80E-03)
+RDC 3 2    7.000
+CP  1 2  1.03E-11
+RP  1 2  3.69E+06
+.ENDS
+**********
+*SRC=L18R103;L18R103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R103 1 2
+LO  1 4 1.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.40E-08/(3*1.00E-05)
+RDC 3 2    0.011
+CP  1 2  4.47E-12
+RP  1 2  8.82E+04
+.ENDS
+**********
+*SRC=L18R104;L18R104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.40E-06/(3*1.00E-04)
+RDC 3 2    0.085
+CP  1 2  4.63E-12
+RP  1 2  1.86E+05
+.ENDS
+**********
+*SRC=L18R105;L18R105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R105 1 2
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -5.41E-04/(3*1.00E-03)
+RDC 3 2    0.920
+CP  1 2  7.65E-12
+RP  1 2  1.05E+06
+.ENDS
+**********
+*SRC=L18R106;L18R106;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R106 1 2
+LO  1 4 1.00E-02 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.97E-03/(3*1.00E-02)
+RDC 3 2   12.000
+CP  1 2  5.02E-12
+RP  1 2  6.33E+06
+.ENDS
+**********
+*SRC=L18R153;L18R153;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R153 1 2
+LO  1 4 1.50E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.67E-07/(3*1.50E-05)
+RDC 3 2    0.016
+CP  1 2  5.84E-12
+RP  1 2  8.81E+04
+.ENDS
+**********
+*SRC=L18R154;L18R154;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R154 1 2
+LO  1 4 1.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.24E-05/(3*1.50E-04)
+RDC 3 2    0.145
+CP  1 2  5.42E-12
+RP  1 2  2.10E+05
+.ENDS
+**********
+*SRC=L18R155;L18R155;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R155 1 2
+LO  1 4 1.50E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.04E-03/(3*1.50E-03)
+RDC 3 2    1.400
+CP  1 2  6.60E-12
+RP  1 2  1.60E+06
+.ENDS
+**********
+*SRC=L18R223;L18R223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.76E-07/(3*2.20E-05)
+RDC 3 2    0.020
+CP  1 2  5.79E-12
+RP  1 2  9.94E+04
+.ENDS
+**********
+*SRC=L18R224;L18R224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.66E-05/(3*2.20E-04)
+RDC 3 2    0.200
+CP  1 2  7.20E-12
+RP  1 2  2.16E+05
+.ENDS
+**********
+*SRC=L18R225;L18R225;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R225 1 2
+LO  1 4 2.20E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.44E-03/(3*2.20E-03)
+RDC 3 2    2.000
+CP  1 2  5.79E-12
+RP  1 2  2.07E+06
+.ENDS
+**********
+*SRC=L18R254;L18R254;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R254 1 2
+LO  1 4 2.50E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.91E-05/(3*2.50E-04)
+RDC 3 2    0.230
+CP  1 2  6.84E-12
+RP  1 2  2.42E+05
+.ENDS
+**********
+*SRC=L18R333;L18R333;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R333 1 2
+LO  1 4 3.30E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -8.25E-07/(3*3.30E-05)
+RDC 3 2    0.350
+CP  1 2  6.01E-12
+RP  1 2  1.12E+05
+.ENDS
+**********
+*SRC=L18R334;L18R334;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R334 1 2
+LO  1 4 3.30E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.19E-05/(3*3.30E-04)
+RDC 3 2    0.315
+CP  1 2  6.02E-12
+RP  1 2  3.63E+05
+.ENDS
+**********
+*SRC=L18R335;L18R335;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R335 1 2
+LO  1 4 3.30E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -6.24E-03/(3*3.30E-03)
+RDC 3 2    3.400
+CP  1 2  7.10E-12
+RP  1 2  3.00E+06
+.ENDS
+**********
+*SRC=L18R472;L18R472;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R472 1 2
+LO  1 4 4.70E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.64E-08/(3*4.70E-06)
+RDC 3 2    0.005
+CP  1 2  4.37E-12
+RP  1 2  1.10E+05
+.ENDS
+**********
+*SRC=L18R473;L18R473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.73E-06/(3*4.70E-05)
+RDC 3 2    0.041
+CP  1 2  5.55E-12
+RP  1 2  1.34E+05
+.ENDS
+**********
+*SRC=L18R474;L18R474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.22E-04/(3*4.70E-04)
+RDC 3 2    0.425
+CP  1 2  6.83E-12
+RP  1 2  4.15E+05
+.ENDS
+**********
+*SRC=L18R475;L18R475;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R475 1 2
+LO  1 4 4.70E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.17E-02/(3*4.70E-03)
+RDC 3 2    4.400
+CP  1 2  7.12E-12
+RP  1 2  3.24E+06
+.ENDS
+**********
+*SRC=L18R682;L18R682;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R682 1 2
+LO  1 4 6.80E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.95E-08/(3*6.80E-06)
+RDC 3 2    0.007
+CP  1 2  5.39E-12
+RP  1 2  8.20E+04
+.ENDS
+**********
+*SRC=L18R683;L18R683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.73E-06/(3*6.80E-05)
+RDC 3 2    0.060
+CP  1 2  5.42E-12
+RP  1 2  9.56E+04
+.ENDS
+**********
+*SRC=L18R684;L18R684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.42E-04/(3*6.80E-04)
+RDC 3 2    0.620
+CP  1 2  6.31E-12
+RP  1 2  4.98E+05
+.ENDS
+**********
+*SRC=L18R685;L18R685;Inductors;Newport;
+*SYM=IND
+.SUBCKT L18R685 1 2
+LO  1 4 6.80E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.02E-02/(3*6.80E-03)
+RDC 3 2    7.000
+CP  1 2  7.39E-12
+RP  1 2  4.34E+06
+.ENDS
+**********
+*SRC=L19102;L19102;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19102 1 2
+LO  1 4 1.00E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.44E-10/(3*1.00E-06)
+RDC 3 2    0.010
+CP  1 2  1.13E-12
+RP  1 2  2.83E+04
+.ENDS
+**********
+*SRC=L19103;L19103;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19103 1 2
+LO  1 4 1.00E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.78E-08/(3*1.00E-05)
+RDC 3 2    0.025
+CP  1 2  7.04E-13
+RP  1 2  2.26E+05
+.ENDS
+**********
+*SRC=L19104;L19104;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19104 1 2
+LO  1 4 1.00E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.07E-06/(3*1.00E-04)
+RDC 3 2    0.065
+CP  1 2  1.67E-12
+RP  1 2  7.73E+05
+.ENDS
+**********
+*SRC=L19105;L19105;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19105 1 2
+LO  1 4 1.00E-03 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.00E-04/(3*1.00E-03)
+RDC 3 2    0.220
+CP  1 2  4.50E-11
+RP  1 2  4.24E+05
+.ENDS
+**********
+*SRC=L19222;L19222;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19222 1 2
+LO  1 4 2.20E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.12E-09/(3*2.20E-06)
+RDC 3 2    0.012
+CP  1 2  6.81E-13
+RP  1 2  5.39E+04
+.ENDS
+**********
+*SRC=L19223;L19223;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19223 1 2
+LO  1 4 2.20E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.09E-07/(3*2.20E-05)
+RDC 3 2    0.035
+CP  1 2  7.20E-13
+RP  1 2  1.66E+05
+.ENDS
+**********
+*SRC=L19224;L19224;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19224 1 2
+LO  1 4 2.20E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.53E-05/(3*2.20E-04)
+RDC 3 2    0.100
+CP  1 2  1.37E-11
+RP  1 2  3.61E+05
+.ENDS
+**********
+*SRC=L19332;L19332;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19332 1 2
+LO  1 4 3.30E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.89E-09/(3*3.30E-06)
+RDC 3 2    0.015
+CP  1 2  7.68E-13
+RP  1 2  6.22E+04
+.ENDS
+**********
+*SRC=L19333;L19333;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19333 1 2
+LO  1 4 3.30E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.06E-07/(3*3.30E-05)
+RDC 3 2    0.040
+CP  1 2  8.53E-13
+RP  1 2  3.73E+05
+.ENDS
+**********
+*SRC=L19334;L19334;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19334 1 2
+LO  1 4 3.30E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -3.30E-05/(3*3.30E-04)
+RDC 3 2    0.120
+CP  1 2  2.66E-11
+RP  1 2  3.17E+05
+.ENDS
+**********
+*SRC=L19472;L19472;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19472 1 2
+LO  1 4 4.70E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -2.70E-09/(3*4.70E-06)
+RDC 3 2    0.018
+CP  1 2  6.65E-13
+RP  1 2  6.64E+04
+.ENDS
+**********
+*SRC=L19473;L19473;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19473 1 2
+LO  1 4 4.70E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -4.59E-07/(3*4.70E-05)
+RDC 3 2    0.045
+CP  1 2  1.35E-12
+RP  1 2  2.07E+05
+.ENDS
+**********
+*SRC=L19474;L19474;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19474 1 2
+LO  1 4 4.70E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -7.34E-05/(3*4.70E-04)
+RDC 3 2    0.145
+CP  1 2  3.19E-11
+RP  1 2  3.46E+05
+.ENDS
+**********
+*SRC=L19682;L19682;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19682 1 2
+LO  1 4 6.80E-06 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -9.41E-09/(3*6.80E-06)
+RDC 3 2    0.020
+CP  1 2  6.62E-13
+RP  1 2  8.01E+04
+.ENDS
+**********
+*SRC=L19683;L19683;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19683 1 2
+LO  1 4 6.80E-05 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.01E-06/(3*6.80E-05)
+RDC 3 2    0.055
+CP  1 2  1.66E-12
+RP  1 2  1.92E+05
+.ENDS
+**********
+*SRC=L19684;L19684;Inductors;Newport;
+*SYM=IND
+.SUBCKT L19684 1 2
+LO  1 4 6.80E-04 
+V1  4 3
+B1  1 4 I=I(V1)^3 * -1.89E-04/(3*6.80E-04)
+RDC 3 2    0.180
+CP  1 2  4.13E-11
+RP  1 2  3.65E+05
+.ENDS
+**********
+

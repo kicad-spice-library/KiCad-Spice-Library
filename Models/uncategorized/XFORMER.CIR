@@ -1,0 +1,24 @@
+* AC analysis where the frequency is varied linearly from
+* 60Hz to 120Hz with 2 points
+
+.width out=80
+
+.AC LIN 2 60HZ 120HZ
+* Input voltage is 120V peask and 0 degree phase for AC analysis
+VIN 1 0 AC 120
+R1 1 2 0.5
+* The dot convention is followed in inductors L1 and L2
+L1 2 0 0.5MH
+L2 0 4 0.5MH
+* Magnetic coupling coefficient is 0.999. The order of L1 and L2 is no
+* significant
+K12 L1 L2 0.999
+R2 4 6 0.5
+RL 6 7 150
+* A dummy voltage source of VX=0 is added to measure the load current
+VX 7 0 DC 0V
+
+* .PRINT AC IM(VX) IP(VX) IM(RL) IP(RL)
+.PRINT AC IM(VX) IP(VX)
+*
+.end

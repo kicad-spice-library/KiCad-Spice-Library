@@ -1,0 +1,413 @@
+**********
+* Copyright Intusoft 1988-1997
+* All Rights Reserved
+**********
+**********
+*SRC=SINT;SINT;Behavioral;MathCalc;Integrate(Vin)
+*SYM=SINT
+.SUBCKT SINT  1  2 {K=???}
+*Connections: In Out
+*Parameters: K Gain
+RIN 1 0 1E12
+E1 3 0 0 1 {K}
+C1 2 4 1U IC=0
+R1 3 4 1MEG
+E2 2 0 0 4 1E6
+.ENDS
+**********
+*SRC=NTGR8;NTGR8;Behavioral;MathCalc;Int w/ICs and Limits
+*SYM=NTGR8
+.SUBCKT NTGR8 1  2 {K=???  INIT=??? PLIM=??? NLIM=???}
+*Connections: In Out
+*Parameters: K Gain, INIT Initial Output in Volts, PLIM Positive rail in Volts
+* NLIM Negative rail in Volts
+RIN 1 0 1E12
+E1 3 0 0 1 {K}
+C1 2 4 1U IC={INIT}
+R1 3 4 1MEG
+E2 2 0 0 4 1E6
+*DIODES WILL HAVE .0597V DROP AT I=10UA
+VN 5 2 {NLIM-.0597}
+DN 4 5 DN
+.MODEL DN D(IS=1E-12 N=.14319)
+VP 2 6 {PLIM-.0597}
+DP 6 4 DN
+.ENDS
+**********
+*SRC=RLIMIT;RLIMIT;Behavioral;Amplifiers;Resistive Limiter
+*SYM=LIMIT
+*HELP issyntax.hlp "Resistive Limiter"
+.SUBCKT RLIMIT 1 2 {RMIN=10k VMAX=??? VMIN=???}
+B 1 2 I=V(1,2) > {VMAX} ? 
++ {VMAX * (1/RVAL - 1/RMIN) } +  V(1,2)  / {RMIN} : 
++ V(1,2) < {VMIN} ? {VMIN * (1/RVAL - 1/RMIN) } +  V(1,2)  / {RMIN} : 
++  V(1,2) / {RVAL} 
+.ENDS
+*******
+*SRC=LIMIT;LIMIT;Behavioral;Amplifiers;Limiter
+*SYM=LIMIT
+.SUBCKT LIMIT 1  2 {K=??? PLIM=??? NLIM=???}
+*Connections: In Out
+*Parameters: K Gain, PLIM Positive rail in Volts, NLIM Negative rail in Volts
+RIN 1 0 1E12
+E1 3 0 0 1 {K}
+RC1 2 4 1MEG
+C1 2 4 1F IC=0
+R1 3 4 1MEG
+E2 2 0 0 4 1E6
+*DIODES WILL HAVE .0597V DROP AT 10V INPUT FOR GAIN=1
+*IDIODE = IS*EXP(.597/.O26)
+VN 5 2 {NLIM-.0597}
+DN 4 5 DN
+.MODEL DN D(IS=1E-12 N=.14319)
+VP 2 6 {PLIM-.0597}
+DP 6 4 DN
+.ENDS
+**********
+*SRC=ZDIFF;ZDIFF;Behavioral;Z Domain;Z Transform Differentiator
+*SYM=ZDIFF
+.SUBCKT ZDIFF 1  2  {K=??? TD=???}
+*Connections: In Out
+*Parameters: K Gain, TD=Delay in Seconds
+RIN 1 0 1E12
+E1 3 0 1 0 {K/TD}
+T1 3 0 4 0 Z0=1K TD={TD}
+R1 4 0 1K
+*E2 2 0 POLY(2) 3 0 0 4 0 1 1
+B2 2 0 V = V(3) * -1 * V(4) 
+R2 2 0 1E12
+.ENDS
+**********
+*SRC=SDIFF;SDIFF;Behavioral;MathCalc;Derivative d(Vin)/dt
+*SYM=SDIFF
+.SUBCKT SDIFF 1  2  {K=???}
+*Connections: In Out
+*Parameters: K Gain
+RIN 1 0 1E12
+E1 3 0 0 1 {K}
+C1 3 4 1U IC=0
+R1 2 4 1MEG
+E2 2 0 0 4 {1E6}
+.ENDS
+**********
+*SRC=SUM2;SUM2;Behavioral;MathAlgebra;Vin1+/-Vin2
+*SYM=SUM2
+.SUBCKT SUM2  1   2   3  {K1=??? K2=???}
+*Connections: In1 In2 Out
+*Parameters: K1 GAIN1, K2 GAIN2
+B1 3 0 V = {K1}*V(1) + {K2}*V(2)
+.ENDS
+**********
+*SRC=SUM3;SUM3;Behavioral;MathAlgebra;Vin1+/-Vin2+/-Vin3
+*SYM=SUM3
+.SUBCKT SUM3  1   2   3   4  {K1=??? K2=??? K3=???}
+*Connections: In1 In2 In3 Out
+*Parameters: K1 GAIN1, K2 GAIN2, K3 GAIN3
+B1 4 0 V = {K1}*V(1) + {K2}*V(2) + {K3}*V(3)
+.ENDS
+**********
+*SRC=PZ;PZ;Behavioral;MathCalc;Pole-Zero
+*SYM=PZ
+.SUBCKT PZ    1  2 {K=??? FP=??? FO=???}
+*Connections: In Out
+*Parameters: K Gain, FP POLE FREQ in Hz, FO ZERO FREQ in Hz
+* K*Vin*(s/(2piFO)+1))/(s/(2piFP)+1))
+E1 0 3 1 0 {K}
+RI 1 0 1E12
+R1 3 4 1MEG
+R2 4 2 1MEG
+C1 3 4 {1U/(6.28319*FO)}
+C2 2 4 {1U/(6.28319*FP)}
+E2 2 0 0 4 1E6
+.ENDS
+**********
+*SRC=POLE;POLE;Behavioral;MathCalc;First Order Pole
+*SYM=POLE
+.SUBCKT POLE  1  2 {K=??? FP=???}
+*Connections: In Out
+*Parameters: K Gain, FP POLE FREQ in Hz
+* K*Vin*wn/(s+wn)
+E1 0 3 1 0 {K}
+RI 1 0 1E12
+R1 3 4 1MEG
+R2 4 2 1MEG
+C2 2 4 {1U/(6.28319*FP)}
+E2 2 0 0 4 1E6
+.ENDS
+**********
+*SRC=POLE2;POLE2;Behavioral;MathCalc;Second Order Pole
+*SYM=POLE2
+.SUBCKT POLE2 1  2 {K=??? Fn=??? Z=???}
+*Connections: In Out
+*Parameters: K DC Gain, FREQ Natural Frequency in Hz, Z Damping
+*
+*TRANSFER FUNCTION:  K*WN^2/(S^2 +2*Z*WN*S + WN^2)
+*                    WHERE WN=2*PI*FN			
+RI 1 0 1E12
+E1 3 0 1 0 {K}
+R1 3 4 1MEG
+E2 5 0 0 4 1E6
+C1 4 5 {.159155U/FN} IC=0
+RZ 4 5 {.5MEG/Z}
+R2 5 7 -1MEG
+E3 2 0 0 7 1E6
+C2 2 7 {.159155U/FN} IC=0
+R3 2 4 1MEG
+.ENDS
+**********
+*SRC=MUL;MUL;Behavioral;MathAlgebra;Multiply Vin1*Vin2
+*SYM=MUL
+.SUBCKT MUL   1   2   3 {K=???}
+*Connections: In1 In2 Out
+*Parameters: K Gain
+B1 3 0 V = V(1) * V(2) * {K}
+.ENDS
+**********
+*SRC=MUL3;MUL3;Behavioral;MathAlgebra;Multiply Vin1*Vin2*Vin3
+*SYM=MUL3
+.SUBCKT MUL3  1   2   3   4 {K=???}
+*Connections: In1 In2 In3 OUT
+*Parameters: K Gain
+B1 4 0 V = V(1) * V(2) * V(3) * {K}
+.ENDS
+**********
+*SRC=ZCINT;ZCINT;Behavioral;Z Domain;Z Transform Integrator
+*SYM=ZCINT
+.SUBCKT ZCINT 1  2  {K=??? TD=???}
+*Connections: In Out
+*Parameters: K Gain, TD Delay in Seconds
+* Transfer functions K*TD/(1-Z^-1)
+*
+RIN 1 0 1E12
+B1 2 0 V = {K*TD} * V(1) + V(3)
+T1 2 0 3 0 Z0=1K TD={TD}
+R1 3 0 1K
+.ENDS
+**********
+*SRC=ZCINTD;ZCINTD;Behavioral;Z Domain;Z Transform Int w/Delay
+*SYM=ZCINTD
+.SUBCKT ZCINTD 1  4  {K=??? TD=???}
+*Connections:  In Out
+*Parameters: K Gain, TD Delay in Seconds
+* Transfer functions K*TD * Z^-1 / (1-Z^-1)
+*
+RIN 1 0 1E12
+B1 2 0 V = {K*TD} * V(1) + V(3)
+T1 2 0 3 0 Z0=1K TD={TD}
+R1 3 0 1K
+E2 4 0 3 0 1
+RO 4 0 1E12
+.ENDS
+**********
+*SRC=SQROOT;SQROOT;Behavioral;MathAlgebra;Square Root Vin^.5
+*SYM=SQROOT
+.SUBCKT SQROOT 1  2
+*Connections:  In Out
+B1 2 0 V = SQRT( V(1) )
+.ENDS
+**********
+*SRC=GAIN;GAIN;Behavioral;Amplifiers;K * Vin
+*SYM=GAIN
+.SUBCKT GAIN  1  2 {K=???}
+*Connections: In Out
+*Parameters: K Gain
+E1 2 0 1 0 {K}
+.ENDS
+**********
+*SRC=SQ-CUBE;SQ-CUBE;Behavioral;MathAlgebra;Square Cube Vin^2, Vin^3
+*SYM=SQ-CUBE
+.SUBCKT SQ-CUBE 1   2   3 {K1=1 K2=1}
+*Connections:   In1 In2 Out
+*Parameters: K1 Gain Node 1, K2 Gain Node 2
+*X Node 1, K1*X^2 Node 2, K2*X^3 Node 3
+B1 2 0 V = {K1} * V(1)^2
+B2 3 0 V = {K2} * V(1)^3
+.ENDS
+**********
+*SRC=VAREXP;VAREXP;Behavioral;MathAlgebra;Var. Exp. Vin1^Vin2
+*SYM=VAREXP
+.SUBCKT VAREXP 1   2   3
+*Connections:  InX InY Out
+*X > 0 Input Node 1, -Y Exponent Node 2, X^Y Output Node 3
+* Note the Y input must the negative of the exponent value
+B1 3 0 V = V(1)^V(2)
+.ENDS
+**********
+*SRC=LOG;LOG;Behavioral;MathAlgebra;Log10(Vin)
+*SYM=LOG
+.SUBCKT LOG   1  2
+*Connections: In Out
+B1 2 0 V = LOG( V(1) )
+.ENDS
+**********
+.SUBCKT LIMITV 1  2   10   11 {NLIM=??? PLIM=???}
+*Connections:  IN OUT +LIM -LIM
+*Parameters: K Gain, PLIM Positive rail in Volts, NLIM Negative rail in Volts
+RIN 1 0 1E12
+E1 3 0 0 1 1
+RC1 2 4 .1MEG
+C1 2 4 1F IC=0
+R1 3 4 .1MEG
+E2 102 0 0 4 1E6
+DX 102 2 DN
+*DIODES WILL HAVE .0597V DROP AT 1V INPUT FOR GAIN=1
+*IDIODE = IS*EXP(.597/.O26)
+RN 11 0 1MEG
+*VN 5 2 {NLIM-.0597}
+DN 4 102 DN
+.MODEL DN D(IS=1E-12 N=.14319)
+EP 2 6 10 0 -.0597 1
+*VP 2 6 {PLIM-.0597}
+DP 6 4 DN
+.ENDS
+**********
+*SRC=SIN;SIN;Behavioral;MathTrig;Sin(Vin)
+*SYM=SINANG
+.SUBCKT SIN   1  2
+*Connections: In Out
+*Input Vin in radians, Output Sin(Vin)
+B1 2 0 V = SIN( V(1) )
+.ENDS
+**********
+*SRC=COS;COS;Behavioral;MathTrig;Cos(Vin)
+*SYM=COS
+.SUBCKT COS   1  2
+*Connections: In Out
+*Input Vin in radians, Output Cosine(Vin)
+B1 2 0 V = COS( V(1) )
+.ENDS
+**********
+*SRC=TAN;TAN;Behavioral;MathTrig;Tan(Vin)
+*SYM=TAN
+.SUBCKT TAN   1  2
+*Connections: In Out
+*Input Vin in radians, Output Tan(Vin)
+B1 2 0 V = TAN( V(1) )
+.ENDS
+**********
+*SRC=DIVIDE;DIVIDE;Behavioral;MathAlgebra;Vin1/Vin2
+*SYM=DIVIDE
+.SUBCKT DIVIDE 1   2   4
+*Connections:  InN InD Out
+* V4 = V1 / V2
+B1 4 0 V = V(1) / V(2)
+.ENDS
+**********
+*SRC=EXP;EXP;Behavioral;MathAlgebra;exp(Vin)
+*SYM=EXP
+.SUBCKT EXP   1  2
+*Connections: In Out
+B1 2 0 V = EXP( V(1) )
+.ENDS
+**********
+*SRC=HTAN;HTAN;Behavioral;MathTrig;Hyperbolic Tan Htan(Vin)
+*SYM=HTAN
+.SUBCKT HTAN  6  7
+*Connections: In Out
+B1 7 0 V = TANH( V(6) )
+.ENDS
+**********
+*SRC=BESSEL;BESSEL;Behavioral;MathAlgebra;J0 & J1 for 0<Vin<5
+*SYM=BESSEL
+.SUBCKT BESSEL 1   3   2
+*Connections   Vin Jo  J1
+*Bessel Function Jo(Vin) & J1(Vin) 0<= Vin <= 5
+E0 2 0 1 0 1 0 -.25 0 .015625 0 -4.34028E-4 0 6.78168E-6 0 -6.78168E-8
+E1 3 0 1 0 0 .5 0 -.0625 0 2.60417E-3 0 -5.42535E-5 0 6.78168E-7 0 -5.6514E-9
+R1 2 0 1G
+R2 3 0 1G
+R3 1 0 1G
+.ENDS
+**********
+*SRC=ABS;ABS;Behavioral;MathAlgebra;Abs. Value |Vin|
+*SYM=ABS
+.SUBCKT ABS   1   4
+*Connections  In  Out
+*Absolute Value Vout = |Vin|
+B1 4 0 V = ABS( V(1) )
+.ENDS
+**********
+*SRC=SIGNUM;SIGNUM;Behavioral;MathAlgebra;Vout=+1 if Vin<0, -1 if Vin>0
+*SYM=SIGNUM
+.SUBCKT SIGNUM   1   3
+*Connections     In  Out
+*Vout = +1 if Vin is < 0 and -1 if Vin is > 0
+.MODEL DIODE D N=0.1
+D3 5 2 DIODE
+D4 2 6 DIODE
+D2 1 6 DIODE
+R2 6 7 1MEG
+VEE 7 0 -15
+R1 5 4 1MEG
+VCC 4 0 15
+R3 2 3 68K
+R4 1 2 10K
+E1 3 0 0 2 1MEG
+D1 5 1 DIODE
+.ENDS
+**********
+*SRC=MIN;MIN;Behavioral;Function Block;Min(V1,V2)
+*SYM=MIN
+.SUBCKT MIN  1   2   3
+*Connections In1 In2 Out
+BMIN 3 0 V=V(1) < V(2) ? V(1) : V(2)
+.ENDS
+**********
+*SRC=MAX;MAX;Behavioral;Function Block;Max(V1,V2)
+*SYM=MAX
+.SUBCKT MAX  1   2   3
+*Connections In1 In2 Out
+BMAX 3 0 V=V(1) > V(2) ? V(1) : V(2)
+.ENDS
+**********
+*SRC=MIN3;MIN3;Behavioral;Function Block;Min(V1,V2,V3)
+*SYM=MIN3
+.SUBCKT MIN3  1   2  3   4
+*Connections In1 In2 In3 Out
+BMIN1 5 0 V=V(1) < V(2) ? V(1) : V(2)
+BMIN2 4 0 V=V(3) < V(5) ? V(3) : V(5)
+.ENDS
+**********
+*SRC=MAX3;MAX3;Behavioral;Function Block;Max(V1,V2,V3)
+*SYM=MAX3
+.SUBCKT MAX3  1   2  3   4
+*Connections In1 In2 In3 Out
+BMAX1 5 0 V=V(1) > V(2) ? V(1) : V(2)
+BMAX2 4 0 V=V(3) > V(5) ? V(3) : V(5)
+.ENDS
+**********
+*SRC=VCVS;VCVS;Dependent Sources;Linear;Voltage Controlled Voltage 
+*SYM=VCVS
+.SUBCKT VCVS 1    2    3   4 {Offset=0 Gain=1}
+*Connections Out+ Out- In+ In-
+*Parameters: Offset DC Voltage Offset in Volts, Gain Gain
+E1 1 2 3 4 {Offset} {Gain}
+.ENDS
+**********
+*SRC=CCVS;CCVS;Dependent Sources;Linear;Current Controlled Voltage 
+*SYM=CCVS
+.SUBCKT CCVS 1    2    3   4 {Offset=0 Gain=1}
+*Connections Out+ Out- In+ In-
+*Parameters: Offset DC Current Offset in Volts, Gain Gain
+H1 1 2 V1 {Offset} {Gain}
+V1 3 4
+.ENDS
+**********
+*SRC=VCCS;VCCS;Dependent Sources;Linear;Voltage Controlled Current
+*SYM=VCCS
+.SUBCKT VCCS 1    2    3   4 {Offset=0 Gain=1}
+*Connections Out+ Out- In+ In-
+*Parameters: Offset DC Voltage Offset in Volts, Gain Gain
+G1 1 2 3 4 {Offset} {Gain}
+.ENDS
+**********
+*SRC=CCCS;CCCS;Dependent Sources;Linear;Current Controlled Current 
+*SYM=CCCS
+.SUBCKT CCCS 1    2    3   4 {Offset=0 Gain=1}
+*Connections Out+ Out- In+ In-
+*Parameters: Offset DC Current Offset in Volts, Gain Gain
+F1 1 2 V1 {Offset} {Gain}
+V1 3 4
+.ENDS
+***************
+

@@ -1,0 +1,691 @@
+* MAX410 FAMILY MACROMODELS 
+* ------------------------- 
+* * FEATURES: 
+* 100% tested low voltage noise ------  1.8nv/root Hz typ. 
+* Low Supply Voltage Operation ------   +-2.4V to +-5V 
+* Low Offset Voltage ----------------   250uV max. 
+* High Voltage Gain -----------------   115dB min. 
+* Available as single/dual/quad -----   MAX410/412/414 
+* 
+* SUBCIRCUIT      PART NUMBER     DESCRIPTION 
+* __________      ___________     ___________ 
+* MAX410          MAX410          SINGLE, 1.8nV/rt.Hz typ.
+* MAX410B         MAX410B         SINGLE, 2.4nV/rt.Hz typ. 
+* MAX412          MAX412          DUAL,  1.8nV/rt.Hz typ.
+* MAX412B         MAX412B         DUAL,  2.4nV/rt.Hz typ.
+* MAX414          MAX414          QUAD,  1.8nV/rt.Hz typ.
+* MAX414B         MAX414B         QUAD,  2.4nV/rt.Hz typ.
+*
+*////////////// MAX410 MACROMODEL ////////////////// 
+* 
+* connections:          non-inverting input 
+*                       |      inverting input 
+*                       |      |      positive power-supply 
+*                       |      |      |    negative power-supply 
+*                       |      |      |      |       output 
+*                       |      |      |      |       | 
+* NODE CONNECTIONS:     1      2      99     50      97 
+* 
+.SUBCKT MAX410 1 2 99 50 97 
+****************INPUT STAGE********************** 
+* 
+IOS 2 1 40N 
+I1 4 50 2MA 
+GIN 2 1 2 1 50E-9 
+CIN 1 2 4PF 
+G16 0 1 106 0 .87E-3 
+G19 0 2 109 0 .87E-3 
+****VCCS NOISE INPUT CURRENTS**** 
+G1 5 99 5 99 38.5E-3 
+G2 6 99 6 99 38.5E-3 
+EOS 1 3 POLY(1) 98 30 .25M 1 
+*               ^       OFFSET VOLTAGE 
+EN 3 9 POLY(1) 103 0 0 1 
+Q1 5 2 4 QX 
+Q2 6 9 4 QX 
+Dsub 50 99 DX 
+*Fp2=65MHz, Second Pole 
+C4 5 6 23.5PF 
+* 
+*****************NOISE GENERATORS************** 
+* 
+***VOLTAGE NOISE GENERATOR*** 
+VN1 101 0 2V 
+VN2 0 102 2V 
+DN1 101 103 D1 
+DN2 103 102 D1 
+.MODEL D1 D(KF=4E-15 RS=300) 
+****CURRENT NOISE GENERATOR + IN**** 
+VN3 104 0 2V 
+VN4 0 105 2V 
+DN3 104 106 D2 
+DN4 106 105 D2 
+****CURRENT NOISE GENERATOR - IN**** 
+VN5 107 0 2V 
+VN6 0 108 2V 
+DN5 107 109 D2 
+DN6 109 108 D2 
+.MODEL D2 D(KF=3.1E-16 RS=300) 
+* 
+***************SECOND STAGE****************** 
+IS 99 50 .5m 
+*         SETS IS ^ 
+****OUTPUT VOLTAGE LIMITING**** 
+V2 99 11 1.7 
+D1 12 11 DX 
+D2 10 12 DX 
+V3 10 50 1.7 
+****LEVEL TRANSLATION **** 
+EH 99 98 99 50 0.5 
+****GAIN, 1ST POLE**** 
+G3 98 12 5 6 29.3E-3 
+*1ST POLE 21HZ,AVOL 1E6 
+G4 12 98 12 98 29.3E-9 
+C3 98 12 215E-12 
+* 
+**************FREQUENCY SHAPING STAGES******** 
+* 
+****POLE STAGE**** 
+G5 98 15 12 98 1E-3 
+G6 98 15 98 15 1E-3 
+D13 50 15 DX 
+*R5 98 15 1E3 
+C5 98 15 2.45E-12 
+*                  ^ POLE AT 65MEGHZ 
+****DELAY STAGE**** 
+ED 16 98 15 98 1 
+RD1 16 17 20 
+RD2 17 18 20 
+RD3 18 19 20 
+CD1 17 98 18PF 
+CD2 18 98 18PF 
+CD3 19 98 18PF 
+****COMMON-MODE STAGE**** 
+G11 98 30 4 98 316E-12 
+G13 30 98 30 98 1E-3 
+D11 50 30 DX 
+* 
+*******************OUTPUT STAGE**************** 
+F6 99 50 VA7 1 
+F5 99 38 VA8 1 
+D9 40 38 DX 
+D10 38 99 DX 
+VA7 99 40 0 
+**************** 
+G12 98 32 19 98 1E-3 
+R15 98 32 1E3 
+D3 32 36 DX 
+D4 37 32 DX 
+V5 35 37 0.3V 
+V4 36 35 0.3V 
+R16 34 35 30 
+E1 99 33 99 32 1 
+VA8 33 34 0V 
+L 35 96 50P 
+R17 96 97 40 
+* 
+***** MODELS USED ****** 
+.MODEL DX D(IS=1E-15) 
+.MODEL QX NPN(BF=6.25E4) 
+.ENDS 
+*////////////// MAX410B MACROMODEL ////////////////// 
+* 
+* connections:          non-inverting input 
+*                       |      inverting input 
+*                       |      |      positive power-supply 
+*                       |      |      |    negative power-supply 
+*                       |      |      |      |       output 
+*                       |      |      |      |       | 
+* NODE CONNECTIONS:     1      2      99     50      97 
+* 
+.SUBCKT MAX410B 1 2 99 50 97 
+****************INPUT STAGE********************** 
+* 
+IOS 2 1 40N 
+I1 4 50 2MA 
+GIN 2 1 2 1 50E-9 
+CIN 1 2 4PF 
+G16 0 1 106 0 .87E-3 
+G19 0 2 109 0 .87E-3 
+****VCCS NOISE INPUT CURRENTS**** 
+G1 5 99 5 99 38.5E-3 
+G2 6 99 6 99 38.5E-3 
+EOS 1 3 POLY(1) 98 30 .12M 1 
+*               ^       OFFSET VOLTAGE 
+EN 3 9 POLY(1) 103 0 0 1 
+Q1 5 2 4 QX 
+Q2 6 9 4 QX 
+Dsub 50 99 DX 
+*Fp2=65MHz, Second Pole 
+C4 5 6 23.5PF 
+* 
+*****************NOISE GENERATORS************** 
+* 
+***VOLTAGE NOISE GENERATOR*** 
+VN1 101 0 2V 
+VN2 0 102 2V 
+DN1 101 103 D1 
+DN2 103 102 D1 
+.MODEL D1 D(KF=4E-15 RS=580) 
+****CURRENT NOISE GENERATOR + IN**** 
+VN3 104 0 2V 
+VN4 0 105 2V 
+DN3 104 106 D2 
+DN4 106 105 D2 
+****CURRENT NOISE GENERATOR - IN**** 
+VN5 107 0 2V 
+VN6 0 108 2V 
+DN5 107 109 D2 
+DN6 109 108 D2 
+.MODEL D2 D(KF=3.1E-16 RS=300) 
+* 
+***************SECOND STAGE****************** 
+IS 99 50 .5m 
+*         SETS IS ^ 
+****OUTPUT VOLTAGE LIMITING**** 
+V2 99 11 1.7 
+D1 12 11 DX 
+D2 10 12 DX 
+V3 10 50 1.7 
+****LEVEL TRANSLATION **** 
+EH 99 98 99 50 0.5 
+****GAIN, 1ST POLE**** 
+G3 98 12 5 6 29.3E-3 
+*1ST POLE 21HZ,AVOL 1E6 
+G4 12 98 12 98 29.3E-9 
+C3 98 12 195E-12 
+* 
+**************FREQUENCY SHAPING STAGES******** 
+* 
+****POLE STAGE**** 
+G5 98 15 12 98 1E-3 
+G6 98 15 98 15 1E-3 
+D13 50 15 DX 
+*R5 98 15 1E3 
+C5 98 15 2.45E-12 
+*                  ^ POLE AT 65MEGHZ 
+****DELAY STAGE**** 
+ED 16 98 15 98 1 
+RD1 16 17 20 
+RD2 17 18 20 
+RD3 18 19 20 
+CD1 17 98 18PF 
+CD2 18 98 18PF 
+CD3 19 98 18PF 
+****COMMON-MODE STAGE**** 
+G11 98 30 4 98 316E-12 
+G13 30 98 30 98 1E-3 
+D11 50 30 DX 
+* 
+*******************OUTPUT STAGE**************** 
+F6 99 50 VA7 1 
+F5 99 38 VA8 1 
+D9 40 38 DX 
+D10 38 99 DX 
+VA7 99 40 0 
+**************** 
+G12 98 32 19 98 1E-3 
+R15 98 32 1E3 
+D3 32 36 DX 
+D4 37 32 DX 
+V5 35 37 0.3V 
+V4 36 35 0.3V 
+R16 34 35 30 
+E1 99 33 99 32 1 
+VA8 33 34 0V 
+L 35 96 50P 
+R17 96 97 40 
+* 
+***** MODELS USED ****** 
+.MODEL DX D(IS=1E-15) 
+.MODEL QX NPN(BF=6.25E4) 
+.ENDS 
+*////////////// MAX412 MACROMODEL ////////////////// 
+*
+* connections:          non-inverting input 
+*                       |      inverting input 
+*                       |      |      positive power-supply 
+*                       |      |      |    negative power-supply 
+*                       |      |      |      |       output 
+*                       |      |      |      |       | 
+* NODE CONNECTIONS:     1      2      99     50      97 
+*  
+.SUBCKT MAX412 1 2 99 50 97 
+****************INPUT STAGE********************** 
+* 
+IOS 2 1 40N 
+I1 4 50 2MA 
+GIN 2 1 2 1 50E-9 
+CIN 1 2 4PF 
+G16 0 1 106 0 .87E-3 
+G19 0 2 109 0 .87E-3 
+****VCCS NOISE INPUT CURRENTS**** 
+G1 5 99 5 99 38.5E-3 
+G2 6 99 6 99 38.5E-3 
+EOS 1 3 POLY(1) 98 30 .12M 1 
+*               ^       OFFSET VOLTAGE 
+EN 3 9 POLY(1) 103 0 0 1 
+Q1 5 2 4 QX 
+Q2 6 9 4 QX 
+Dsub 50 99 DX 
+*Fp2=65MHz, Second Pole 
+C4 5 6 23.5PF 
+* 
+*****************NOISE GENERATORS************** 
+* 
+***VOLTAGE NOISE GENERATOR*** 
+VN1 101 0 2V 
+VN2 0 102 2V 
+DN1 101 103 D1 
+DN2 103 102 D1 
+.MODEL D1 D(KF=4E-15 RS=300) 
+****CURRENT NOISE GENERATOR + IN**** 
+VN3 104 0 2V 
+VN4 0 105 2V 
+DN3 104 106 D2 
+DN4 106 105 D2 
+****CURRENT NOISE GENERATOR - IN**** 
+VN5 107 0 2V 
+VN6 0 108 2V 
+DN5 107 109 D2 
+DN6 109 108 D2 
+.MODEL D2 D(KF=3.1E-16 RS=300) 
+* 
+***************SECOND STAGE****************** 
+IS 99 50 .5m 
+*         SETS IS ^ 
+****OUTPUT VOLTAGE LIMITING**** 
+V2 99 11 1.7 
+D1 12 11 DX 
+D2 10 12 DX 
+V3 10 50 1.7 
+****LEVEL TRANSLATION **** 
+EH 99 98 99 50 0.5 
+****GAIN, 1ST POLE**** 
+G3 98 12 5 6 29.3E-3 
+*1ST POLE 21HZ,AVOL 1E6 
+G4 12 98 12 98 29.3E-9 
+C3 98 12 195E-12 
+* 
+**************FREQUENCY SHAPING STAGES******** 
+* 
+****POLE STAGE**** 
+G5 98 15 12 98 1E-3 
+G6 98 15 98 15 1E-3 
+D13 50 15 DX 
+*R5 98 15 1E3 
+C5 98 15 2.45E-12 
+*                  ^ POLE AT 65MEGHZ 
+****DELAY STAGE**** 
+ED 16 98 15 98 1 
+RD1 16 17 20 
+RD2 17 18 20 
+RD3 18 19 20 
+CD1 17 98 18PF 
+CD2 18 98 18PF 
+CD3 19 98 18PF 
+****COMMON-MODE STAGE**** 
+G11 98 30 4 98 316E-12 
+G13 30 98 30 98 1E-3 
+D11 50 30 DX 
+* 
+*******************OUTPUT STAGE**************** 
+F6 99 50 VA7 1 
+F5 99 38 VA8 1 
+D9 40 38 DX 
+D10 38 99 DX 
+VA7 99 40 0 
+**************** 
+G12 98 32 19 98 1E-3 
+R15 98 32 1E3 
+D3 32 36 DX 
+D4 37 32 DX 
+V5 35 37 0.3V 
+V4 36 35 0.3V 
+R16 34 35 30 
+E1 99 33 99 32 1 
+VA8 33 34 0V 
+L 35 96 50P 
+R17 96 97 40 
+* 
+***** MODELS USED ****** 
+.MODEL DX D(IS=1E-15) 
+.MODEL QX NPN(BF=6.25E4) 
+.ENDS 
+*////////////// MAX412B MACROMODEL ////////////////// 
+* 
+* connections:          non-inverting input 
+*                       |      inverting input 
+*                       |      |      positive power-supply 
+*                       |      |      |    negative power-supply 
+*                       |      |      |      |       output 
+*                       |      |      |      |       | 
+* NODE CONNECTIONS:     1      2      99     50      97 
+*  
+.SUBCKT MAX412B 1 2 99 50 97 
+****************INPUT STAGE********************** 
+* 
+IOS 2 1 40N 
+I1 4 50 2MA 
+GIN 2 1 2 1 50E-9 
+CIN 1 2 4PF 
+G16 0 1 106 0 .87E-3 
+G19 0 2 109 0 .87E-3 
+****VCCS NOISE INPUT CURRENTS**** 
+G1 5 99 5 99 38.5E-3 
+G2 6 99 6 99 38.5E-3 
+EOS 1 3 POLY(1) 98 30 .12M 1 
+*               ^       OFFSET VOLTAGE 
+EN 3 9 POLY(1) 103 0 0 1 
+Q1 5 2 4 QX 
+Q2 6 9 4 QX 
+Dsub 50 99 DX 
+*Fp2=65MHz, Second Pole 
+C4 5 6 23.5PF 
+* 
+*****************NOISE GENERATORS************** 
+* 
+***VOLTAGE NOISE GENERATOR*** 
+VN1 101 0 2V 
+VN2 0 102 2V 
+DN1 101 103 D1 
+DN2 103 102 D1 
+.MODEL D1 D(KF=4E-15 RS=580) 
+****CURRENT NOISE GENERATOR + IN**** 
+VN3 104 0 2V 
+VN4 0 105 2V 
+DN3 104 106 D2 
+DN4 106 105 D2 
+****CURRENT NOISE GENERATOR - IN**** 
+VN5 107 0 2V 
+VN6 0 108 2V 
+DN5 107 109 D2 
+DN6 109 108 D2 
+.MODEL D2 D(KF=3.1E-16 RS=300) 
+* 
+***************SECOND STAGE****************** 
+IS 99 50 .5m 
+*         SETS IS ^ 
+****OUTPUT VOLTAGE LIMITING**** 
+V2 99 11 1.7 
+D1 12 11 DX 
+D2 10 12 DX 
+V3 10 50 1.7 
+****LEVEL TRANSLATION **** 
+EH 99 98 99 50 0.5 
+****GAIN, 1ST POLE**** 
+G3 98 12 5 6 29.3E-3 
+*1ST POLE 21HZ,AVOL 1E6 
+G4 12 98 12 98 29.3E-9 
+C3 98 12 195E-12 
+* 
+**************FREQUENCY SHAPING STAGES******** 
+* 
+****POLE STAGE**** 
+G5 98 15 12 98 1E-3 
+G6 98 15 98 15 1E-3 
+D13 50 15 DX 
+*R5 98 15 1E3 
+C5 98 15 2.45E-12 
+*                  ^ POLE AT 65MEGHZ 
+****DELAY STAGE**** 
+ED 16 98 15 98 1 
+RD1 16 17 20 
+RD2 17 18 20 
+RD3 18 19 20 
+CD1 17 98 18PF 
+CD2 18 98 18PF 
+CD3 19 98 18PF 
+****COMMON-MODE STAGE**** 
+G11 98 30 4 98 316E-12 
+G13 30 98 30 98 1E-3 
+D11 50 30 DX 
+* 
+*******************OUTPUT STAGE**************** 
+F6 99 50 VA7 1 
+F5 99 38 VA8 1 
+D9 40 38 DX 
+D10 38 99 DX 
+VA7 99 40 0 
+**************** 
+G12 98 32 19 98 1E-3 
+R15 98 32 1E3 
+D3 32 36 DX 
+D4 37 32 DX 
+V5 35 37 0.3V 
+V4 36 35 0.3V 
+R16 34 35 30 
+E1 99 33 99 32 1 
+VA8 33 34 0V 
+L 35 96 50P 
+R17 96 97 40 
+* 
+***** MODELS USED ****** 
+.MODEL DX D(IS=1E-15) 
+.MODEL QX NPN(BF=6.25E4) 
+.ENDS 
+*////////////// MAX414 MACROMODEL ////////////////// 
+* 
+* connections:          non-inverting input 
+*                       |      inverting input 
+*                       |      |      positive power-supply 
+*                       |      |      |    negative power-supply 
+*                       |      |      |      |       output 
+*                       |      |      |      |       | 
+* NODE CONNECTIONS:     1      2      99     50      97 
+* 
+.SUBCKT MAX414 1 2  99 50 97 
+****************INPUT STAGE********************** 
+* 
+IOS 2 1 40N 
+I1 4 50 2MA 
+GIN 2 1 2 1 50E-9 
+CIN 1 2 4PF 
+G16 0 1 106 0 .87E-3 
+G19 0 2 109 0 .87E-3 
+****VCCS NOISE INPUT CURRENTS**** 
+G1 5 99 5 99 38.5E-3 
+G2 6 99 6 99 38.5E-3 
+EOS 1 3 POLY(1) 98 30 .15M 1 
+*               ^       OFFSET VOLTAGE 
+EN 3 9 POLY(1) 103 0 0 1 
+Q1 5 2 4 QX 
+Q2 6 9 4 QX 
+Dsub 50 99 DX 
+*Fp2=65MHz, Second Pole 
+C4 5 6 23.5PF 
+* 
+*****************NOISE GENERATORS************** 
+* 
+***VOLTAGE NOISE GENERATOR*** 
+VN1 101 0 2V 
+VN2 0 102 2V 
+DN1 101 103 D1 
+DN2 103 102 D1 
+.MODEL D1 D(KF=4E-15 RS=300) 
+****CURRENT NOISE GENERATOR + IN**** 
+VN3 104 0 2V 
+VN4 0 105 2V 
+DN3 104 106 D2 
+DN4 106 105 D2 
+****CURRENT NOISE GENERATOR - IN**** 
+VN5 107 0 2V 
+VN6 0 108 2V 
+DN5 107 109 D2 
+DN6 109 108 D2 
+.MODEL D2 D(KF=3.1E-16 RS=300) 
+* 
+***************SECOND STAGE****************** 
+IS 99 50 .5m 
+*         SETS IS ^ 
+****OUTPUT VOLTAGE LIMITING**** 
+V2 99 11 1.7 
+D1 12 11 DX 
+D2 10 12 DX 
+V3 10 50 1.7 
+****LEVEL TRANSLATION **** 
+EH 99 98 99 50 0.5 
+****GAIN, 1ST POLE**** 
+G3 98 12 5 6 29.3E-3 
+*1ST POLE 21HZ,AVOL 1E6 
+G4 12 98 12 98 29.3E-9 
+C3 98 12 195E-12 
+* 
+**************FREQUENCY SHAPING STAGES******** 
+* 
+****POLE STAGE**** 
+G5 98 15 12 98 1E-3 
+G6 98 15 98 15 1E-3 
+D13 50 15 DX 
+*R5 98 15 1E3 
+C5 98 15 2.45E-12 
+*                  ^ POLE AT 65MEGHZ 
+****DELAY STAGE**** 
+ED 16 98 15 98 1 
+RD1 16 17 20 
+RD2 17 18 20 
+RD3 18 19 20 
+CD1 17 98 18PF 
+CD2 18 98 18PF 
+CD3 19 98 18PF 
+****COMMON-MODE STAGE**** 
+G11 98 30 4 98 316E-12 
+G13 30 98 30 98 1E-3 
+D11 50 30 DX 
+* 
+*******************OUTPUT STAGE**************** 
+F6 99 50 VA7 1 
+F5 99 38 VA8 1 
+D9 40 38 DX 
+D10 38 99 DX 
+VA7 99 40 0 
+**************** 
+G12 98 32 19 98 1E-3 
+R15 98 32 1E3 
+D3 32 36 DX 
+D4 37 32 DX 
+V5 35 37 0.3V 
+V4 36 35 0.3V 
+R16 34 35 30 
+E1 99 33 99 32 1 
+VA8 33 34 0V 
+L 35 96 50P 
+R17 96 97 40 
+* 
+***** MODELS USED ****** 
+.MODEL DX D(IS=1E-15) 
+.MODEL QX NPN(BF=6.25E4) 
+.ENDS 
+*////////////// MAX414B MACROMODEL ////////////////// 
+* 
+* connections:          non-inverting input 
+*                       |      inverting input 
+*                       |      |      positive power-supply 
+*                       |      |      |    negative power-supply 
+*                       |      |      |      |       output 
+*                       |      |      |      |       | 
+* NODE CONNECTIONS:     1      2      99     50      97 
+* 
+.SUBCKT MAX414B 1 2  99 50 97 
+****************INPUT STAGE********************** 
+* 
+IOS 2 1 40N 
+I1 4 50 2MA 
+GIN 2 1 2 1 50E-9 
+CIN 1 2 4PF 
+G16 0 1 106 0 .87E-3 
+G19 0 2 109 0 .87E-3 
+****VCCS NOISE INPUT CURRENTS**** 
+G1 5 99 5 99 38.5E-3 
+G2 6 99 6 99 38.5E-3 
+EOS 1 3 POLY(1) 98 30 .15M 1 
+*               ^       OFFSET VOLTAGE 
+EN 3 9 POLY(1) 103 0 0 1 
+Q1 5 2 4 QX 
+Q2 6 9 4 QX 
+Dsub 50 99 DX 
+*Fp2=65MHz, Second Pole 
+C4 5 6 23.5PF 
+* 
+*****************NOISE GENERATORS************** 
+* 
+***VOLTAGE NOISE GENERATOR*** 
+VN1 101 0 2V 
+VN2 0 102 2V 
+DN1 101 103 D1 
+DN2 103 102 D1 
+.MODEL D1 D(KF=4E-15 RS=580) 
+****CURRENT NOISE GENERATOR + IN**** 
+VN3 104 0 2V 
+VN4 0 105 2V 
+DN3 104 106 D2 
+DN4 106 105 D2 
+****CURRENT NOISE GENERATOR - IN**** 
+VN5 107 0 2V 
+VN6 0 108 2V 
+DN5 107 109 D2 
+DN6 109 108 D2 
+.MODEL D2 D(KF=3.1E-16 RS=300) 
+* 
+***************SECOND STAGE****************** 
+IS 99 50 .5m 
+*         SETS IS ^ 
+****OUTPUT VOLTAGE LIMITING**** 
+V2 99 11 1.7 
+D1 12 11 DX 
+D2 10 12 DX 
+V3 10 50 1.7 
+****LEVEL TRANSLATION **** 
+EH 99 98 99 50 0.5 
+****GAIN, 1ST POLE**** 
+G3 98 12 5 6 29.3E-3 
+*1ST POLE 21HZ,AVOL 1E6 
+G4 12 98 12 98 29.3E-9 
+C3 98 12 195E-12 
+* 
+**************FREQUENCY SHAPING STAGES******** 
+* 
+****POLE STAGE**** 
+G5 98 15 12 98 1E-3 
+G6 98 15 98 15 1E-3 
+D13 50 15 DX 
+*R5 98 15 1E3 
+C5 98 15 2.45E-12 
+*                  ^ POLE AT 65MEGHZ 
+****DELAY STAGE**** 
+ED 16 98 15 98 1 
+RD1 16 17 20 
+RD2 17 18 20 
+RD3 18 19 20 
+CD1 17 98 18PF 
+CD2 18 98 18PF 
+CD3 19 98 18PF 
+****COMMON-MODE STAGE**** 
+G11 98 30 4 98 316E-12 
+G13 30 98 30 98 1E-3 
+D11 50 30 DX 
+* 
+*******************OUTPUT STAGE**************** 
+F6 99 50 VA7 1 
+F5 99 38 VA8 1 
+D9 40 38 DX 
+D10 38 99 DX 
+VA7 99 40 0 
+**************** 
+G12 98 32 19 98 1E-3 
+R15 98 32 1E3 
+D3 32 36 DX 
+D4 37 32 DX 
+V5 35 37 0.3V 
+V4 36 35 0.3V 
+R16 34 35 30 
+E1 99 33 99 32 1 
+VA8 33 34 0V 
+L 35 96 50P 
+R17 96 97 40 
+* 
+***** MODELS USED ****** 
+.MODEL DX D(IS=1E-15) 
+.MODEL QX NPN(BF=6.25E4) 
+.ENDS 
+

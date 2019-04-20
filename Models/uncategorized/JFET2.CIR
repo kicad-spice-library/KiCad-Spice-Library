@@ -1,0 +1,33 @@
+Example 9.2 Input characteristics of N-channel JFET
+
+.OPTION LIMPTS=500
+
+* Gate to source voltage of 0V
+
+VGS 1 0 DC 0V
+
+* A dummy voltage source of 0V
+
+VX 3 2 DC 0V
+
+* DC supply voltage of 12V
+
+VDD 3 0 DC 10V
+
+* J1 with model JMOD
+
+J1 2 1 0 JMOD
+
+.MODEL JMOD NJF (IS=100e-14 RD=10 RS=10 BETA=1E-3 VTO=-5)
+
+* VGS is swept from 0 to -5
+
+.DC VGS -5 0 0.1
+.PRINT DC I(VX)
+.PLOT DC I(VX)
+
+* Commands for Spice3
+*#run
+*#plot vx#branch
+
+.END

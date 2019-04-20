@@ -1,0 +1,137 @@
+* OP-497A SPICE Macro-model 4/91, Rev. B
+* AAG / PMI
+*
+* This version of the OP-497 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1991 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws. Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement. Before using the macro-
+* models the licensee should read this license. If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, load, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company. The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models. ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP-497A 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1 1 7 2500
+RIN2 2 8 2500
+R1 8 3 2.586E8
+R2 7 3 2.586E8
+R3 5 99 517.2
+R4 6 99 517.2
+CIN 7 8 3E-12
+C2 5 6 25.644E-12
+I1 4 50 0.1E-3
+IOS 7 8 50E-12
+EOS 9 7 POLY(1) 19 24 50E-6 1
+Q1 5 8 4 QX
+Q2 6 9 4 QX
+D1 8 9 DX
+D2 9 8 DX
+*
+EREF 98 0 24 0 1
+*
+* 1st GAIN STAGE
+*
+G1 98 12 5 6 165.88E-6
+R7 12 98 1E6
+E1 99 13 POLY(1) 99 24 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 24 50 -2.4 1
+D4 14 12 DX
+*
+* 2nd GAIN STAGE & DOMINANT POLE AT 0.22 HZ
+*
+G2 98 15 12 24 33.333E-6
+R8 15 98 361.72E6
+C3 15 98 2E-9
+V1 99 16 DC 1.275
+D5 15 16 DX
+V2 17 50 DC 1.275
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 281.17 HZ
+*
+ECM 18 98 3 24 1
+RCM1 18 19 1E6
+CCM 18 19 566.05E-12
+RCM2 19 98 1
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+ENZ 20 98 15 24 1E6
+RNZ1 20 21 1E6
+CNZ 20 21 -88.419E-15
+RNZ2 21 98 1
+*
+* POLE AT 6 MHZ
+*
+G3 98 22 21 24 1E-6
+R9 22 98 1E6
+C4 22 98 26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G4 98 23 22 24 1E-6
+R15 23 98 1E6
+C8 23 98 88.419E-15
+*
+* OUTPUT STAGE
+*
+R16 24 99 160k
+R17 24 50 160k
+ISY 99 50 431E-6
+D7 23 28 DX
+V3 28 27 DC 1.9
+D8 29 23 DX
+V4 27 29 DC 1.9
+D9 99 30 DX
+G5 30 50 23 27 5E-3
+D11 50 30 DY
+D10 99 31 DX
+G6 31 50 27 23 5E-3
+D12 50 31 DY
+G7 27 99 99 23 5E-3
+R18 27 99 200
+G8 50 27 23 50 5E-3
+R19 27 50 200
+L1 27 32 0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=500E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS OP-497A

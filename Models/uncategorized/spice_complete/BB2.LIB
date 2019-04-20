@@ -1,0 +1,2030 @@
+**********
+*  ------------------------------------------------------------------------ 
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+*  ------------------------------------------------------------------------ 
+**********
+*SRC=OPA603X;OPA603X;Opamps;Burr-Brown;High Speed, Current Feedback
+*SYM=BBOPAMP
+* OPA603X CURRENT-FEEDBACK AMPLIFIER "CIRCUIT MODEL" SUBCIRCUIT
+* "X" IS SIMPLIFIED CIRCUIT MODEL
+* CREATED USING BLOOD,SWEAT AND TEARS ON 10/12/90 AT 09:03AM
+* LAST BURR-BROWN ENGINEERING MODIFICATION MADE 5/23/91
+* MODIFIED 10/20/92 - SYNTAX ERRORS BCB
+*
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT OPA603X 3 4 1 2 5
+R0A 3 6 100
+R0B 3 7 100
+R0EA 10 8 21
+R0EB 11 9 21
+R1A 10 12 100
+R1B 11 13 100
+R1EA 14 4 21
+R1EB 15 4 21
+R2AT 1 16 1213.22365
+R2BT 2 17 1200
+R3 22 23 16.25
+R4A 24 5 3.25
+R4B 25 5 3.25
+X0A 2 6 8 2 XP4LC
+X0B 1 7 9 2 XN4LC
+X1A 16 12 14 2 XN4LC
+X1B 17 13 15 2 XP4LC
+X2A 20 16 18 2 XP4LC
+X2B 21 17 19 2 XN4LC
+C2B 17 21 0.75PF
+X3A 20 20 22 2 XN16HC
+X3B 21 21 23 2 XP16HC
+X4A1 1 20 24 2 XN16HC
+X4A2 1 20 24 2 XN16HC
+X4A3 1 20 24 2 XN16HC
+X4B1 2 21 25 2 XP16HC
+X4B2 2 21 25 2 XP16HC
+X4B3 2 21 25 2 XP16HC
+X6A1 18 18 26 2 XP16HC 
+X6A2 18 18 26 2 XP16HC 
+X6B1 19 19 27 2 XN16HC 
+X6B2 19 19 27 2 XN16HC 
+V6A 1 26 0
+V6B 27 2 0
+FB 1 28 POLY(2) V6A V6B 15UA -0.0025 -0.0025
+RB 28 2 500MEG
+CB 28 2 350PF
+DB1 28 2 DCLAMP
+DB2 2 28 DCLAMP
+GC 36 37 28 2 0.01
+R5A 30 32 21
+R5B 31 33 21
+R8A 34 36 21
+R8B 35 37 21
+X5A 10 36 32 2 XP4LC
+X5B 11 37 33 2 XN4LC
+X8A 1 30 34 2 XN4LC
+X8B 2 31 35 2 XP4LC
+X9A 1 1 30 2 XN4LC
+X9B 2 2 31 2 XP4LC
+IS 1 2 290UA
+RPS 1 2 21.6K
+XSCA 5 22 22 2 XN4LC
+XSCB 5 23 23 2 XP4LC
+.ENDS OPA603
+*INCLUDE BB2.LIB
+*
+.MODEL DCLAMP D
+*
+.SUBCKT XN4LC 1 2 3 SUB
+Q1 4 2 3 SUB N4
+RCDC 1 4 250
+RCAC 1 5 85
+CRC  4 5 1NF
+CS   1 0 0.45PF
+.MODEL N4 NPN IS=4.4FA BF=250 VA=100 IKF=14MA BR=0.1 
++RE=1.5 RB=200 RBM=75 IRB=22MA RC=0 CJE=2.2PF VJE=0.77 MJE=0.3
++CJC=0.98PF VJC=0.64 MJC=0.425 XCJC=0.2 CCS=0 VJS=0.75 MJS=0
++FC=0.9 TF=65P XTF=20 VTF=10 ITF=300MA TR=1US EG=1.20561 XTB=6M
++XTI=2.33 KF=0.16F
+.ENDS XN4LC
+*
+.SUBCKT XN16HC 1 2 3 SUB
+Q1 4 2 3 SUB N16HC 1
+RCDC 1 4 62.5
+RCAC 1 5 20
+CRC 5 4 100N
+CS 1 0 0.80PF
+.MODEL N16HC NPN IS=16FA BF=250 VA=100 IKF=56MA BR=0.1 
++RE=187.5M RB=50 RBM=9 IRB=176MA RC=0 CJE=11.2PF VJE=0.77 MJE=0.3
++CJC=2.929PF VJC=0.64 MJC=0.36 XCJC=0.2 CCS=0 VJS=0.75 MJS=0
++FC=0.8 TF=150P XTF=80 VTF=50 ITF=1.6 TR=1US EG=1.20561 XTB=6M
++XTI=2.33  KF=0.16F
+.ENDS XN16HC
+*
+.SUBCKT XP4LC 1 2 3 SUB
+Q1 4 2 3 SUB P4
+RCDC 1 4 300
+RCAC 1 5 100
+CRC  4 5 1NF
+CS   1 0 0.54PF
+.MODEL P4 PNP IS=4.4FA BF=100 VA=60 IKF=14MA BR=0.1 
++RE=3 RB=100 RBM=15 IRB=1.93MA RC=0 CJE=2PF VJE=0.77 MJE=0.3
++CJC=1.6PF VJC=0.64 MJC=0.425 XCJC=0.21 CCS=0 VJS=0.75 MJS=0
++FC=0.9 TF=150P XTF=20 ITF=160MA TR=1US EG=1.205612 XTB=6M
++XTI=2.33 KF=0.16F
+.ENDS XP4LC
+*
+.SUBCKT XP16HC 1 2 3 SUB
+Q1 4 2 3 SUB P16HC 1
+RCDC 1 4 75
+RCAC 1 5 75
+CRC 5 4 100N
+CS 1 0 0.93PF
+.MODEL P16HC PNP IS=16FA BF=100 VA=60 IKF=40MA BR=0.1 
++RE=0.3 RB=25 RBM=5 IRB=68MA RC=0 CJE=9.6PF VJE=0.6 MJE=0.3
++CJC=4.383PF VJC=0.64 MJC=0.3 XCJC=0.2 CCS=0 VJS=0.75 MJS=0
++FC=0.95 TF=100P XTF=25 VTF=100 ITF=500MA TR=1US EG=1.20561 XTB=6M
++XTI=2.33 KF=0.16F
+.ENDS XP16HC
+**********
+*SRC=OPA640X;OPA640X;Opamps;Burr-Brown;Wideband Voltage Feedback
+*SYM=BBOPA2
+*OPA640X - WIDEBAND VOLTAGE FEEDBACK OPERATIONAL AMPLIFIER MACROMODEL
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* NOTE : SUGGESTED TEST CIRCUIT
+*          X1       83  84  81  81  82  80  80  OPA640X
+*          VCC      80  0   DC 5V
+*          VEE      0   81  DC 5V
+*          CFB      83  82  .15E-12
+*          RFB      86  82  25
+*          LFB      83  86  2.2E-9
+*          VIN      85  0   AC 1 DC 0 PWL ( 0N -1 1N 1 20N 1 21N -1 )
+*          RSOURCE  85  84  25
+*          RL       82  0   100
+*          CL       82  0   2E-12
+*
+* CONNECTIONS:  INVERTING INPUT
+*               |   NON-INVERTING INPUT
+*               |   |   NEGATIVE POWER SUPPLY
+*               |   |   |   NEGATIVE OUTPUT POWER SUPPLY 
+*               |   |   |   |   OUTPUT
+*               |   |   |   |   |   POSITIVE POWER SUPPLY
+*               |   |   |   |   |   |   POSITIVE OUTPUT POWER SUPPLY
+*               |   |   |   |   |   |   |
+.SUBCKT OPA640X 13  14  11  9   12  10  8  
+*
+Q34      41  43  4   2 NPN1 10
+Q33      41  42  1   1 PNP1 10
+Q32      43  43  4   2 NPN1 20
+Q31      43  40  41  1 PNP1 36
+Q30      42  37  41  2 NPN1 36
+Q29      42  42  1   1 PNP1 20
+Q28      40  39  38  2 NPN1 2
+Q15      29  30  31  2 NPN1 4
+Q27      1   33  40  2 NPN1 24
+Q26      4   33  37  1 PNP1 24
+Q25      37  36  35  1 PNP1 2
+Q24      39  38  4   2 NPN1 1
+Q23      36  35  1   1 PNP1 1
+Q14      28  26  17  3 PNP1 4
+Q7       24  24  25  2 NPN1 1
+Q18      15  26  16  3 PNP1 4
+Q21      21  15  33  2 NPN1 2
+Q22      33  24  34  2 NPN1 2
+Q20      30  30  32  2 NPN1 4
+Q19      15  29  30  2 NPN1 4
+Q1       17  7   18  2 NPN1 12
+Q10      26  26  44  3 PNP1 1
+Q3       20  24  23  2 NPN1 8
+Q2       16  6   19  2 NPN1 12
+Q6       27  26  45  3 PNP1 1
+Q11      22  27  26  3 PNP1 1
+R3       18  20  60
+R5       19  20  60
+C2       21  22  20E-12
+C3       1   4   28E-12
+R11      21  44  2E3
+R8       21  45  2E3
+R12      21  17  250
+R22      2   4   20
+R2       2   22  20
+R4       23  22  125
+ISOUR    27  24  450E-6
+V1       28  29  3.26
+R13      31  22  80
+R15      32  22  80
+C8       30  22  1.0E-12
+C6       15  22  4.6E-12
+R16      34  22  320
+R14      21  16  250
+R9       25  22  1E3
+R18      1   35  450
+R19      38  4   450
+R20      41  5   10
+R21      1   3   20
+R1       3   21  20
+I1       36  39  500E-6
+*
+* PACKAGE PARASITICS
+*
+CINV     13  0   0.75E-12
+L10P     66  68  1.5E-9
+L6P      63  64  1.08E-9
+L2P      60  61  1.08E-9
+C1P      15  2   .15E-12
+C30P     77  2   .0425E-12
+C29P     5   2   .15E-12
+C2P      6   2   .15E-12
+L5P      65  7   .7E-9
+C3P      61  2   .0425E-12
+C4P      61  64  .05E-12
+C8P      7   2   .15E-12
+C9P      64  2   .0425E-12
+C10P     64  68  .05E-12
+C14P     2   2   .15E-12
+C15P     68  2   .0125E-12
+C16P     1   2   .15E-12
+C17P     71  2   .0125E-12
+C18P     71  74  .05E-12
+C22P     3   2   .15E-12
+C23P     74  2   .0425E-12
+C24P     74  77  .05E-12
+C31P     77  80  .05E-12
+C35P     4   2   .15E-12
+C36P     80  2   .0125E-12
+L1P      62  6   .7E-9
+L9P      69  2   .7E-9
+L14P     70  1   .7E-9
+L15P     72  71  1.5E-9
+L18P     73  3   .7E-9
+L19P     75  74  1.08E-9
+L22P     76  5   .7E-9
+L23P     78  77  1.08E-9
+L27P     79  4   .7E-9
+L28P     81  80  1.5E-9
+L31P     82  2   .7E-9
+L13P     2   67  .7E-9
+R1P      61  62  .01
+R2P      13  60  .1
+R6P      64  65  .01
+R7P      14  63  .1
+R11P     68  69  .01
+R12P     11  66  .1
+R16P     67  68  .01
+R17P     71  70  .01
+R18P     8   72  .1
+R22P     74  73  .01
+R23P     10  75  .1
+R27P     77  76  .01
+R28P     12  78  .1
+R33P     80  79  .01
+R34P     9   81  .1
+R38P     80  82  .01
+* 
+* MODELS USED
+*
+.MODEL NPN1 NPN
++ IS  = 4.647E-17  BF   = 2.293E+02  NF  = 1.000E+00  VAF = 4.398E+01
++ IKF = 7.233E-03  ISE  = 1.222E-14  NE  = 2.000E+00  BR  = 3.695E+01
++ NR  = 1.000E+00  VAR  = 1.494E+00  IKR = 1.667E+05  ISC = 1.057E-14
++ NC  = 1.653E+00  RB   = 3.170E+02  IRB = 0.000E+00  RBM = 1.500E+02
++ RE  = 1.133E+01  RC   = 2.768E+01  CJE = 2.070E-14  VJE = 7.414E-01
++ MJE = 4.950E-01  TF   = 1.150E-11  XTF = 2.452E+01  VTF = 1.029E+00
++ ITF = 1.878E-02  PTF  = 0.000E+00  CJC = 3.661E-14  VJC = 6.465E-01
++ MJC = 4.509E-01  XCJC = 1.270E-01  TR  = 3.240E-10  CJS = 5.326E-14
++ VJS = 5.291E-01  MJS  = 4.389E-01  XTB = 1.218E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 8.614E-01
+.MODEL PNP1 PNP
++ IS  = 2.628E-17  BF   = 1.478E+02  NF  = 1.000E+00  VAF = 3.106E+01
++ IKF = 3.115E-03  ISE  = 8.930E-17  NE  = 1.283E+00  BR  = 3.061E+03
++ NR  = 1.000E+00  VAR  = 1.448E+00  IKR = 5.000E-03  ISC = 1.061E-14
++ NC  = 1.634E+00  RB   = 2.794E+02  IRB = 0.000E+00  RBM = 1.544E+02
++ RE  = 7.452E+00  RC   = 1.142E+02  CJE = 2.038E-14  VJE = 7.470E-01
++ MJE = 4.930E-01  TF   = 1.434E-11  XTF = 2.216E+01  VTF = 1.072E+00
++ ITF = 2.397E-02  PTF  = 0.000E+00  CJC = 6.106E-14  VJC = 7.743E-01
++ MJC = 5.185E-01  XCJC = 8.499E-02  TR  = 6.500E-10  CJS = 2.855E-13
++ VJS = 9.063E-01  MJS  = 4.931E-01  XTB = 1.181E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 9.014E-01
+*
+.ENDS
+**********
+*SRC=OPA642X;OPA642X;Opamps;Burr-Brown;Wideband Low Distortion
+*SYM=BBOPA2
+*OPA642X - WIDEBAND LOW DISTORTION OPERATIONAL AMPLIFIER MACROMODEL
+*
+* CREATED 11/21/93  Doug Smith
+*
+* NOTE : SUGGESTED TEST CIRCUIT
+*          X1       93  94  91  91  92  90  90  OPA642
+*          VCC      90  0   5V
+*          VEE      0   91  5V
+*          RL       92  0   100
+*          CL       92  0   5E-12
+*          VIN      96  0   AC 1 DC 0 PWL ( 0NS -1 1N 1 20N 1 21N -1 )
+*          RSOURCE  96  94  20
+*          RFB      95  92  20
+*          LFB      93  95  2.2E-9
+*          CFB      93  92  .19E-12
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* CONNECTIONS:  INVERTING INPUT
+*               |   NON-INVERTING INPUT
+*               |   |   NEGATIVE POWER SUPPLY
+*               |   |   |   NEGATIVE OUTPUT POWER SUPPLY 
+*               |   |   |   |   OUTPUT
+*               |   |   |   |   |   POSITIVE POWER SUPPLY
+*               |   |   |   |   |   |   POSITIVE OUTPUT POWER SUPPLY
+*               |   |   |   |   |   |   |
+.SUBCKT OPA642X 13  14  11  9   12  10  8  
+*
+Q1       16  35  40  3 PNP1 4
+Q3       17  35  41  3 PNP1 4
+Q34      54  51  53  1 PNP1 36
+Q30      1   15  51  2 NPN1 20
+Q14      34  27  30  3 PNP1 1
+Q15      22  17  34  3 PNP1 2
+Q17      42  34  37  3 PNP1 4
+Q21      15  36  38  3 PNP1 4
+Q25      22  16  36  3 PNP1 2
+Q19      42  43  44  2 NPN1 4
+Q16      37  27  31  3 PNP1 3
+Q20      38  27  32  3 PNP1 3
+Q23      43  43  45  2 NPN1 4
+Q22      15  42  43  2 NPN1 4
+Q32      52  52  1   1 PNP1 20
+Q26      47  46  1   1 PNP1 1
+Q28      50  47  46  1 PNP1 2
+Q24      36  27  33  3 PNP1 1
+Q31      51  48  49  2 NPN1 2
+Q27      48  49  4   2 NPN1 1
+Q29      4   15  50  1 PNP1 20
+Q36      53  52  1   1 PNP1 20
+Q37      53  54  4   2 NPN1 20
+Q9       24  25  23  3 PNP1 2
+Q13      23  26  27  3 PNP1 1
+Q35      54  54  4   2 NPN1 20
+Q5       20  23  24  2 NPN1 8
+Q4       17  6   19  2 NPN1 12
+Q2       16  7   18  2 NPN1 12
+Q33      52  50  53  2 NPN1 36
+Q8       26  27  29  3 PNP1 1
+Q12      27  27  28  3 PNP1 1
+R26      1   3   20
+R24      3   21  20
+R1       21  40  250
+R4       21  41  250
+R2       18  20  75
+R5       19  20  75
+R27      2   4   20
+R25      2   22  20
+R3       24  22  125
+C2       21  22  18E-12
+C3       1   4   18E-12
+R23      53  5   5
+ISOUR    26  25  500E-6
+R11      21  28  500
+R8       21  29  500
+R9       25  22  1250
+R12      21  30  500
+R13      21  31  166
+R17      21  32  166
+R15      37  35  160
+R16      35  38  160
+R19      21  33  500
+R14      44  22  320
+R18      45  22  320
+C8       43  22  0.5E-12
+C6       15  22  0.56E-12
+R21      1   46  400
+C7       16  5   11E-12
+R22      49  4   400
+C1       17  22  11E-12
+I1       47  48  500E-6
+CA4      5   2   8.8E-12
+CA1      22  2   8.8E-12
+CA2      22  2   14.4E-12
+CA3      4   2   14.4E-12
+*
+* PACKAGE PARASITICS
+*
+CINV     13  0   0.75E-12
+L10P     66  68  1.5E-9
+L6P      63  64  1.08E-9
+L2P      60  61  1.08E-9
+C1P      15  2   .15E-12
+C30P     77  2   .0425E-12
+C29P     5   2   .15E-12
+C2P      6   2   .15E-12
+L5P      65  7   .7E-9
+C3P      61  2   .0425E-12
+C4P      61  64  .05E-12
+C8P      7   2   .15E-12
+C9P      64  2   .0425E-12
+C10P     64  68  .05E-12
+C14P     2   2   .15E-12
+C15P     68  2   .0125E-12
+C16P     1   2   .15E-12
+C17P     71  2   .0125E-12
+C18P     71  74  .05E-12
+C22P     3   2   .15E-12
+C23P     74  2   .0425E-12
+C24P     74  77  .05E-12
+C31P     77  80  .05E-12
+C35P     4   2   .15E-12
+C36P     80  2   .0125E-12
+L1P      62  6   .7E-9
+L9P      69  2   .7E-9
+L14P     70  1   .7E-9
+L15P     72  71  1.5E-9
+L18P     73  3   .7E-9
+L19P     75  74  1.08E-9
+L22P     76  5   .7E-9
+L23P     78  77  1.08E-9
+L27P     79  4   .7E-9
+L28P     81  80  1.5E-9
+L31P     82  2   .7E-9
+L13P     2   67  .7E-9
+R1P      61  62  .01
+R2P      13  60  .1
+R6P      64  65  .01
+R7P      14  63  .1
+R11P     68  69  .01
+R12P     11  66  .1
+R16P     67  68  .01
+R17P     71  70  .01
+R21P     8   72  .1
+R22P     74  73  .01
+R26P     10  75  .1
+R27P     77  76  .01
+R31P     12  78  .1
+R33P     80  79  .01
+R37P     9   81  .1
+R38P     80  82  .01
+*
+* MODELS USED
+*
+.MODEL NPN1 NPN
++ IS  = 4.647E-17  BF   = 2.293E+02  NF  = 1.000E+00  VAF = 4.398E+01
++ IKF = 7.233E-03  ISE  = 1.222E-14  NE  = 2.000E+00  BR  = 3.695E+01
++ NR  = 1.000E+00  VAR  = 1.494E+00  IKR = 1.667E+05  ISC = 1.057E-14
++ NC  = 1.653E+00  RB   = 3.170E+02  IRB = 0.000E+00  RBM = 1.500E+02
++ RE  = 1.133E+01  RC   = 2.768E+01  CJE = 2.070E-14  VJE = 7.414E-01
++ MJE = 4.950E-01  TF   = 1.150E-11  XTF = 2.452E+01  VTF = 1.029E+00
++ ITF = 1.878E-02  PTF  = 0.000E+00  CJC = 3.661E-14  VJC = 6.465E-01
++ MJC = 4.509E-01  XCJC = 1.270E-01  TR  = 3.240E-10  CJS = 5.326E-14
++ VJS = 5.291E-01  MJS  = 4.389E-01  XTB = 1.218E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 8.614E-01
+.MODEL PNP1 PNP
++ IS  = 2.628E-17  BF   = 1.478E+02  NF  = 1.000E+00  VAF = 3.106E+01
++ IKF = 3.115E-03  ISE  = 8.930E-17  NE  = 1.283E+00  BR  = 3.061E+03
++ NR  = 1.000E+00  VAR  = 1.448E+00  IKR = 5.000E-03  ISC = 1.061E-14
++ NC  = 1.634E+00  RB   = 2.794E+02  IRB = 0.000E+00  RBM = 1.544E+02
++ RE  = 7.452E+00  RC   = 1.142E+02  CJE = 2.038E-14  VJE = 7.470E-01
++ MJE = 4.930E-01  TF   = 1.434E-11  XTF = 2.216E+01  VTF = 1.072E+00
++ ITF = 2.397E-02  PTF  = 0.000E+00  CJC = 6.106E-14  VJC = 7.743E-01
++ MJC = 5.185E-01  XCJC = 8.499E-02  TR  = 6.500E-10  CJS = 2.855E-13
++ VJS = 9.063E-01  MJS  = 4.931E-01  XTB = 1.181E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 9.014E-01
+*
+.ENDS
+**********
+*SRC=OPA643X;OPA643X;Opamps;Burr-Brown;Wideband Low Distortion
+*SYM=BBOPA2
+*OPA643X -  WIDEBAND LOW DISTORTION OPERATIONAL AMPLIFIER MACROMODEL
+*
+* CREATED 11/21/93 Doug Smith
+*
+* NOTE : SUGGESTED TEST CIRCUIT
+*            X1       93  94  91  91  92  90  90  OPA643
+*            VCC      90  0   5V
+*            VEE      0   91  5V
+*            RL       92  0   100
+*            CL       92  0   5E-12
+*            VIN      96  0   AC 1 DC 0 PWL ( 0NS -0.2 1N 0.2 20N 0.2 21N -0.2 )
+*            RSOURCE  96  94  20
+*            RFB      95  92  400
+*            LFB      93  95  2.2E-9
+*            CFB      93  92  .19E-12
+*            RFF      93  97  100
+*            LFF      97  0   2.2E-9
+*            CFF      93  0   .19E-12
+*            .END
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* CONNECTIONS:  INVERTING INPUT
+*               |   NON-INVERTING INPUT
+*               |   |   NEGATIVE POWER SUPPLY
+*               |   |   |   NEGATIVE OUTPUT POWER SUPPLY 
+*               |   |   |   |   OUTPUT
+*               |   |   |   |   |   POSITIVE POWER SUPPLY
+*               |   |   |   |   |   |   POSITIVE OUTPUT POWER SUPPLY
+*               |   |   |   |   |   |   |
+.SUBCKT OPA643X 13  14  11  9   12  10  8  
+*
+Q1       16  35  40  3 PNP1 4
+Q3       17  35  41  3 PNP1 4
+Q34      54  51  53  1 PNP1 36
+Q30      1   15  51  2 NPN1 20
+Q14      34  27  30  3 PNP1 1
+Q15      22  17  34  3 PNP1 2
+Q17      42  34  37  3 PNP1 4
+Q21      15  36  38  3 PNP1 4
+Q25      22  16  36  3 PNP1 2
+Q19      42  43  44  2 NPN1 4
+Q16      37  27  31  3 PNP1 3
+Q20      38  27  32  3 PNP1 3
+Q23      43  43  45  2 NPN1 4
+Q22      15  42  43  2 NPN1 4
+Q32      52  52  1   1 PNP1 20
+Q26      47  46  1   1 PNP1 1
+Q28      50  47  46  1 PNP1 2
+Q24      36  27  33  3 PNP1 1
+Q31      51  48  49  2 NPN1 2
+Q27      48  49  4   2 NPN1 1
+Q29      4   15  50  1 PNP1 20
+Q36      53  52  1   1 PNP1 20
+Q37      53  54  4   2 NPN1 20
+Q9       24  25  23  3 PNP1 2
+Q13      23  26  27  3 PNP1 1
+Q35      54  54  4   2 NPN1 20
+Q5       20  23  24  2 NPN1 8
+Q4       17  6   19  2 NPN1 12
+Q2       16  7   18  2 NPN1 12
+Q33      52  50  53  2 NPN1 36
+Q8       26  27  29  3 PNP1 1
+Q12      27  27  28  3 PNP1 1
+R26      1   3   20
+R24      3   21  20
+R1       21  40  250
+R4       21  41  250
+R2       18  20  45
+R5       19  20  45
+R27      2   4   20
+R25      2   22  20
+R3       24  22  125
+C2       21  22  20E-12
+C3       1   4   20E-12
+R23      53  5   5
+ISOUR    26  25  500E-6
+R11      21  28  500
+R8       21  29  500
+R9       25  22  1250
+R12      21  30  500
+R13      21  31  166
+R17      21  32  166
+R15      37  35  160
+R16      35  38  160
+R19      21  33  500
+R14      44  22  320
+R18      45  22  320
+C8       43  22  0.75E-12
+C6       15  22  0.55E-12
+R21      1   46  400
+C7       16  5   3.5E-12
+R22      49  4   400
+C1       17  22  3.5E-12
+I1       47  48  500E-6
+CA4      5   2   2.8E-12
+CA1      22  2   2.8E-12
+CA2      22  2   16E-12
+CA3      4   2   16E-12
+*
+* PACKAGE PARASITICS
+*
+CINV     13  0   0.75E-12
+L10P     66  68  1.5E-9
+L6P      63  64  1.08E-9
+L2P      60  61  1.08E-9
+C1P      15  2   .15E-12
+C30P     77  2   .0425E-12
+C29P     5   2   .15E-12
+C2P      6   2   .15E-12
+L5P      65  7   .7E-9
+C3P      61  2   .0425E-12
+C4P      61  64  .05E-12
+C8P      7   2   .15E-12
+C9P      64  2   .0425E-12
+C10P     64  68  .05E-12
+C14P     2   2   .15E-12
+C15P     68  2   .0125E-12
+C16P     1   2   .15E-12
+C17P     71  2   .0125E-12
+C18P     71  74  .05E-12
+C22P     3   2   .15E-12
+C23P     74  2   .0425E-12
+C24P     74  77  .05E-12
+C31P     77  80  .05E-12
+C35P     4   2   .15E-12
+C36P     80  2   .0125E-12
+L1P      62  6   .7E-9
+L9P      69  2   .7E-9
+L14P     70  1   .7E-9
+L15P     72  71  1.5E-9
+L18P     73  3   .7E-9
+L19P     75  74  1.08E-9
+L22P     76  5   .7E-9
+L23P     78  77  1.08E-9
+L27P     79  4   .7E-9
+L28P     81  80  1.5E-9
+L31P     82  2   .7E-9
+L13P     2   67  .7E-9
+R1P      61  62  .01
+R2P      13  60  .1
+R6P      64  65  .01
+R7P      14  63  .1
+R11P     68  69  .01
+R12P     11  66  .1
+R16P     67  68  .01
+R17P     71  70  .01
+R21P     8   72  .1
+R22P     74  73  .01
+R26P     10  75  .1
+R27P     77  76  .01
+R31P     12  78  .1
+R33P     80  79  .01
+R37P     9   81  .1
+R38P     80  82  .01
+*
+* MODELS USED
+*
+.MODEL NPN1 NPN
++ IS  = 4.647E-17  BF   = 2.293E+02  NF  = 1.000E+00  VAF = 4.398E+01
++ IKF = 7.233E-03  ISE  = 1.222E-14  NE  = 2.000E+00  BR  = 3.695E+01
++ NR  = 1.000E+00  VAR  = 1.494E+00  IKR = 1.667E+05  ISC = 1.057E-14
++ NC  = 1.653E+00  RB   = 3.170E+02  IRB = 0.000E+00  RBM = 1.500E+02
++ RE  = 1.133E+01  RC   = 2.768E+01  CJE = 2.070E-14  VJE = 7.414E-01
++ MJE = 4.950E-01  TF   = 1.150E-11  XTF = 2.452E+01  VTF = 1.029E+00
++ ITF = 1.878E-02  PTF  = 0.000E+00  CJC = 3.661E-14  VJC = 6.465E-01
++ MJC = 4.509E-01  XCJC = 1.270E-01  TR  = 3.240E-10  CJS = 5.326E-14
++ VJS = 5.291E-01  MJS  = 4.389E-01  XTB = 1.218E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 8.614E-01
+.MODEL PNP1 PNP
++ IS  = 2.628E-17  BF   = 1.478E+02  NF  = 1.000E+00  VAF = 3.106E+01
++ IKF = 3.115E-03  ISE  = 8.930E-17  NE  = 1.283E+00  BR  = 3.061E+03
++ NR  = 1.000E+00  VAR  = 1.448E+00  IKR = 5.000E-03  ISC = 1.061E-14
++ NC  = 1.634E+00  RB   = 2.794E+02  IRB = 0.000E+00  RBM = 1.544E+02
++ RE  = 7.452E+00  RC   = 1.142E+02  CJE = 2.038E-14  VJE = 7.470E-01
++ MJE = 4.930E-01  TF   = 1.434E-11  XTF = 2.216E+01  VTF = 1.072E+00
++ ITF = 2.397E-02  PTF  = 0.000E+00  CJC = 6.106E-14  VJC = 7.743E-01
++ MJC = 5.185E-01  XCJC = 8.499E-02  TR  = 6.500E-10  CJS = 2.855E-13
++ VJS = 9.063E-01  MJS  = 4.931E-01  XTB = 1.181E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 9.014E-01
+*
+.ENDS
+**********
+*SRC=OPA644X;OPA644X;Opamps;Burr-Brown;Low Distortion Current Feedback
+*SYM=BBOPA2
+*OPA644X - LOW DISTORTION CURRENT FEEDBACK OPERATIONAL AMPLIFIER MACROMODEL
+*
+* CREATED 12/21/93 Doug Smith
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* NOTE : SUGGESTED TEST CIRCUIT
+*
+*X1       93  94  91  91  92  90  90  OPA644X
+*VEE      0   91  DC 5V
+*VCC      90  0   DC 5V
+*VIN      96  0   PWL ( 0NS -2 1N 2 49N 2 50N -2 )
+*V0       96  0   AC 1 DC 0 SIN ( 0 1 1MEG 0 0 0 )
+*RIN      96  94  50
+*CLOAD    92  0   5E-12
+*RLOAD    92  0   100
+*RFB      95  92  400
+*LFB      93  95  2.2E-9
+*CFB      93  92  .19E-12
+*.END
+*
+*
+* CONNECTIONS:  INVERTING INPUT
+*               |   NON-INVERTING INPUT
+*               |   |   NEGATIVE POWER SUPPLY
+*               |   |   |   NEGATIVE OUTPUT POWER SUPPLY 
+*               |   |   |   |   OUTPUT
+*               |   |   |   |   |   POSITIVE POWER SUPPLY
+*               |   |   |   |   |   |   POSITIVE OUTPUT POWER SUPPLY
+*               |   |   |   |   |   |   |
+.SUBCKT OPA644X 13  14  11  9   12  10  8  
+*
+Q11      29  21  26  3 PNP1 2
+Q14      30  24  28  2 NPN1 2
+Q41      1   48  16  2 NPN2 3
+Q42      4   49  16  1 PNP2 3
+Q6       19  24  27  2 NPN1 2
+Q9       17  19  24  2 NPN1 1
+Q8       18  20  22  3 PNP1 1
+Q44      51  48  52  2 NPN2 36
+Q45      50  49  52  1 PNP2 36
+Q10      18  22  21  3 PNP1 1
+Q38      4   36  48  1 PNP1 20
+Q17      32  30  54  3 PNP1 2
+Q39      1   36  49  2 NPN1 20
+Q12      29  29  7   2 NPN1 2
+Q13      30  30  7   3 PNP1 2
+Q16      31  29  54  2 NPN1 2
+Q43      51  51  1   1 PNP2 20
+Q46      50  50  4   2 NPN2 20
+Q47      52  51  1   1 PNP2 20
+Q48      52  50  4   2 NPN2 20
+Q3       20  21  25  3 PNP1 2
+C2       1   4   20E-12
+C1       17  18  28E-12
+ISOUR    20  19  DC 700E-6
+R34      2   4   20
+R2       2   18  20
+R33      1   3   20
+R1       3   17  20
+R7       27  18  1E3
+R28      24  18  10E3
+R10      28  18  1E3
+R26      52  5   10
+R5       17  25  1E3
+R27      17  21  10E3
+R9       17  26  1E3
+R18      38  39  266
+C8       15  16  2.0E-12
+C3       17  20  1.5E-12
+C4       17  19  1.5E-12
+C12      36  18  0.3E-12
+C1PP     18  2   22.4E-12
+C2PP     4   2   16E-12
+C4PP     19  2   1.2E-12
+C3PP     20  2   1.2E-12
+C8PP     16  2   1.6E-12
+C12PP    18  2   0.24E-12
+F1       17  33  V1 1
+V1       17  31  DC 2.1V
+V2       32  18  DC 2.1V
+F2       33  18  V2 1
+V3       33  59  DC 0
+F3       15  59  V3 1
+IOUT1    1   48  DC 1.8E-3
+IOUT2    49  4   DC 1.8E-3
+RE30     39  59  33.7
+RE29     37  38  2950
+CE29     37  38  0.42E-12
+CU29     37  35  32.32E-15
+G1       35  38  37 38 0.0305
+R029     35  38  39.84E3
+CO29     35  2   6.69E-15
+RB29     15  37  160
+RB33     59  40  6.2E3
+CS33     36  2   0.195E-12
+RO33     36  35  30.67E3
+G2       36  35  34 35 0.0188
+CE33     34  35  0.405E-12
+RE33     34  35  2364
+CU33     34  36  32.5E-15
+RBB33    40  34  120
+RE31     46  59  35.1
+RE32     44  45  1300
+CE32     44  45  0.613E-12
+G3       43  45  44 45 0.0295
+CU32     44  43  37.83E-15
+RO32     43  45  19.12E3
+CO32     43  2   0.15E-12
+RO34     36  43  65.36E3
+CO34     36  2   8.57E-15
+CU34     42  36  27.82E-15
+RE34     42  43  5319
+CE34     42  43  0.279E-12
+G4       36  43  42 43 0.0194
+RB34     59  41  6.2E3
+RB32     15  44  120
+R19      45  46  266
+RBB34    41  42  160
+R20      59  35  500
+R21      59  43  500
+C6       38  59  20E-15
+C7       45  59  20E-15
+R3       1   58  1080
+R4       58  4   1080
+E1       59  4   58 4 1
+R6       6   54  10
+*
+* PACKAGE PARASITICS
+*
+CINV     13  0   0.75E-12
+L10P     66  68  1.5E-9
+L6P      63  64  1.08E-9
+L2P      60  61  1.08E-9
+C1P      15  2   .15E-12
+C30P     77  2   .0425E-12
+C29P     5   2   .15E-12
+C2P      6   2   .15E-12
+L5P      65  7   .7E-9
+C3P      61  2   .0425E-12
+C4P      61  64  .05E-12
+C8P      7   2   .15E-12
+C9P      64  2   .0425E-12
+C10P     64  68  .05E-12
+C14P     2   2   .15E-12
+C15P     68  2   .0125E-12
+C16P     1   2   .15E-12
+C17P     71  2   .0125E-12
+C18P     71  74  .05E-12
+C22P     3   2   .15E-12
+C23P     74  2   .0425E-12
+C24P     74  77  .05E-12
+C31P     77  80  .05E-12
+C35P     4   2   .15E-12
+C36P     80  2   .0125E-12
+L1P      62  6   .7E-9
+L9P      69  2   .7E-9
+L14P     70  1   .7E-9
+L15P     72  71  1.5E-9
+L18P     73  3   .7E-9
+L19P     75  74  1.08E-9
+L22P     76  5   .7E-9
+L23P     78  77  1.08E-9
+L27P     79  4   .7E-9
+L28P     81  80  1.5E-9
+L31P     82  2   .7E-9
+L13P     2   67  .7E-9
+R1P      61  62  .01
+R2P      13  60  .1
+R6P      64  65  .01
+R7P      14  63  .1
+R11P     68  69  .01
+R12P     11  66  .1
+R16P     67  68  .01
+R17P     71  70  .01
+R18P     8   72  .1
+R22P     74  73  .01
+R23P     10  75  .1
+R27P     77  76  .01
+R28P     12  78  .1
+R33P     80  79  .01
+R34P     9   81  .1
+R38P     80  82  .01
+C37P     16  2   .15E-12
+* 
+* MODELS USED
+*
+.MODEL NPN1 NPN
++ IS  = 4.647E-17  BF   = 2.293E+02  NF  = 1.000E+00  VAF = 4.398E+01
++ IKF = 7.233E-03  ISE  = 1.222E-14  NE  = 2.000E+00  BR  = 3.695E+01
++ NR  = 1.000E+00  VAR  = 1.494E+00  IKR = 1.667E+05  ISC = 1.057E-14
++ NC  = 1.653E+00  RB   = 3.170E+02  IRB = 0.000E+00  RBM = 1.500E+02
++ RE  = 1.133E+01  RC   = 2.768E+01  CJE = 2.070E-14  VJE = 7.414E-01
++ MJE = 4.950E-01  TF   = 1.150E-11  XTF = 2.452E+01  VTF = 1.029E+00
++ ITF = 1.878E-02  PTF  = 0.000E+00  CJC = 3.661E-14  VJC = 6.465E-01
++ MJC = 4.509E-01  XCJC = 1.270E-01  TR  = 3.240E-10  CJS = 5.326E-14
++ VJS = 5.291E-01  MJS  = 4.389E-01  XTB = 1.218E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 8.614E-01
+.MODEL NPN2 NPN
++ IS  = 4.647E-17  BF   = 2.293E+02  NF  = 1.000E+00  VAF = 4.398E+01
++ IKF = 7.233E-03  ISE  = 1.222E-14  NE  = 2.000E+00  BR  = 3.695E+01
++ NR  = 1.000E+00  VAR  = 1.494E+00  IKR = 1.667E+05  ISC = 1.057E-14
++ NC  = 1.653E+00  RB   = 3.170E+02  IRB = 0.000E+00  RBM = 1.500E+02
++ RE  = 1.133E+01  RC   = 2.768E+01  CJE = 2.070E-14  VJE = 7.414E-01
++ MJE = 4.950E-01  TF   = 1.150E-11  XTF = 2.452E+01  VTF = 1.029E+00
++ ITF = 1.878E-02  PTF  = 0.000E+00  CJC = 1.831E-14  VJC = 6.465E-01
++ MJC = 4.509E-01  XCJC = 1.270E-01  TR  = 3.240E-10  CJS = 1.065E-14
++ VJS = 5.291E-01  MJS  = 4.389E-01  XTB = 1.218E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 8.614E-01
+.MODEL PNP1 PNP
++ IS  = 2.628E-17  BF   = 1.478E+02  NF  = 1.000E+00  VAF = 3.106E+01
++ IKF = 3.115E-03  ISE  = 8.930E-17  NE  = 1.283E+00  BR  = 3.061E+03
++ NR  = 1.000E+00  VAR  = 1.448E+00  IKR = 5.000E-03  ISC = 1.061E-14
++ NC  = 1.634E+00  RB   = 2.794E+02  IRB = 0.000E+00  RBM = 1.544E+02
++ RE  = 7.452E+00  RC   = 1.142E+02  CJE = 2.038E-14  VJE = 7.470E-01
++ MJE = 4.930E-01  TF   = 1.434E-11  XTF = 2.216E+01  VTF = 1.072E+00
++ ITF = 2.397E-02  PTF  = 0.000E+00  CJC = 6.106E-14  VJC = 7.743E-01
++ MJC = 5.185E-01  XCJC = 8.499E-02  TR  = 6.500E-10  CJS = 2.855E-13
++ VJS = 9.063E-01  MJS  = 4.931E-01  XTB = 1.181E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 9.014E-01
+.MODEL PNP2 PNP  
++ IS  = 2.628E-17  BF   = 1.478E+02  NF  = 1.000E+00  VAF = 3.106E+01
++ IKF = 3.115E-03  ISE  = 8.930E-17  NE  = 1.283E+00  BR  = 3.061E+03
++ NR  = 1.000E+00  VAR  = 1.448E+00  IKR = 5.000E-03  ISC = 1.061E-14
++ NC  = 1.634E+00  RB   = 2.794E+02  IRB = 0.000E+00  RBM = 1.544E+02
++ RE  = 7.452E+00  RC   = 1.142E+02  CJE = 2.038E-14  VJE = 7.470E-01
++ MJE = 4.930E-01  TF   = 1.434E-11  XTF = 2.216E+01  VTF = 1.072E+00
++ ITF = 2.397E-02  PTF  = 0.000E+00  CJC = 3.053E-14  VJC = 7.743E-01
++ MJC = 5.185E-01  XCJC = 8.499E-02  TR  = 6.500E-10  CJS = 0.571E-13
++ VJS = 9.063E-01  MJS  = 4.931E-01  XTB = 1.181E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 9.014E-01
+*
+.ENDS
+**********
+*SRC=OPA646X;OPA646X;Opamps;Burr-Brown;Low Noise, Wide Bandwidth
+*SYM=BBOPA2
+*OPA646X - LOW POWER, WIDE BANDWIDTH OPERATIONAL AMPLIFIER MACROMODEL
+*
+* CREATED 11/21/93 Doug Smith
+*
+* NOTE : SUGGESTED TEST CIRCUIT
+*            X1       83  84  81  81  82  80  80  OPA646X
+*            VCC      80  0   5V
+*            VEE      0   81  5V
+*            VIN      85  0   AC 1 DC 0 PWL ( 0N -1 1N 1 20N 1 21N -1 )
+*            RSOURCE  85  84  25
+*            RL       82  0   100
+*            CL       82  0   5E-12
+*            CFB      83  82  .15E-12
+*            RFB      86  82  25
+*            LFB      83  86  2.2E-9
+*           .END 
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* CONNECTIONS:  INVERTING INPUT
+*               |   NON-INVERTING INPUT
+*               |   |   NEGATIVE POWER SUPPLY
+*               |   |   |   NEGATIVE OUTPUT POWER SUPPLY 
+*               |   |   |   |   OUTPUT
+*               |   |   |   |   |   POSITIVE POWER SUPPLY
+*               |   |   |   |   |   |   POSITIVE OUTPUT POWER SUPPLY
+*               |   |   |   |   |   |   |
+.SUBCKT OPA646X 13  14  11  9   12  10  8  
+*
+Q31      1   42  41  1 NPN1 36
+Q32      4   43  41  1 PNP1 36
+Q30      42  40  43  2 NPN1 20
+Q29      4   36  43  1 PNP1 1
+Q28      1   35  42  2 NPN1 1
+Q27      43  40  42  1 PNP1 20
+Q24      36  24  37  2 NPN1 2
+Q15      30  32  31  2 NPN1 1
+Q22      39  15  45  2 NPN1 2
+Q21      38  15  44  1 PNP1 2
+Q19      35  26  34  1 PNP1 2
+Q11      29  26  17  3 PNP1 1
+Q7       24  24  25  2 NPN1 1
+Q16      15  26  16  3 PNP1 1
+Q23      36  36  45  1 PNP1 4
+Q20      35  35  44  2 NPN1 4
+Q25      21  17  39  2 NPN1 2
+Q26      22  30  38  3 PNP1 2
+Q18      32  32  33  2 NPN1 1
+Q17      15  30  32  2 NPN1 1
+Q10      22  27  26  3 PNP1 1
+Q3       20  24  23  2 NPN1 2
+Q2       16  6   19  2 NPN1 4
+Q1       17  7   18  2 NPN1 4
+Q6       27  26  28  3 PNP1 1
+R3       18  20  350
+R5       19  20  350
+R19      2   4   20
+R2       2   22  20
+R4       23  22  500
+R8       21  28  2.2E3
+R11      21  17  1E3
+R13      21  16  1E3
+R17      41  5   10
+R12      31  22  320
+R14      33  22  320
+R16      37  22  400
+R15      21  34  400
+R18      1   3   20
+R1       3   21  20
+C2       21  22  28E-12
+C3       1   4   28E-12
+C6       32  22  0.65E-12
+C7       15  22  0.75E-12
+R9       25  22  1E3
+ISOUR    27  24  200E-6
+V1       29  30  2.352
+*
+* PACKAGE PARASITICS
+*
+CINV     13  0   0.75E-12
+R38P     80  82  .01
+R33P     80  79  .01
+R28P     12  78  .1
+R27P     77  76  .01
+R23P     10  75  .1
+R22P     74  73  .01
+R18P     8   72  .1
+R17P     71  70  .01
+R16P     67  68  .01
+R14P     11  66  .1
+R11P     68  69  .01
+R9P      14  63  .1
+R6P      64  65  .01
+R4P      13  60  .1
+R1P      61  62  .01
+C6P      61  64  .05E-12
+C12P     64  68  .05E-12
+L13P     2   67  .7E-9
+L4P      60  61  1.08E-9
+L8P      63  64  1.08E-9
+L12P     66  68  1.5E-9
+L31P     82  2   .7E-9
+L28P     81  80  1.5E-9
+L27P     79  4   .7E-9
+L23P     78  77  1.08E-9
+L22P     76  5   .7E-9
+L19P     75  74  1.08E-9
+L18P     73  3   .7E-9
+L15P     72  71  1.5E-9
+L14P     70  1   .7E-9
+L9P      69  2   .7E-9
+L1P      62  6   .7E-9
+C36P     80  2   .0125E-12
+C35P     4   2   .15E-12
+C31P     77  80  .05E-12
+C24P     74  77  .05E-12
+C23P     74  2   .0425E-12
+C22P     3   2   .15E-12
+C18P     71  74  .05E-12
+C17P     71  2   .0125E-12
+C16P     1   2   .15E-12
+C15P     68  2   .0125E-12
+C14P     2   2   .15E-12
+C9P      64  2   .0425E-12
+C8P      7   2   .15E-12
+C3P      61  2   .0425E-12
+L5P      65  7   .7E-9
+C2P      6   2   .15E-12
+C29P     5   2   .15E-12
+C30P     77  2   .0425E-12
+C1P      15  2   .15E-12
+R34P     9   81  .1
+*
+* MODELS USED
+*
+.MODEL NPN1 NPN
++ IS  = 4.647E-17  BF   = 2.293E+02  NF  = 1.000E+00  VAF = 4.398E+01
++ IKF = 7.233E-03  ISE  = 1.222E-14  NE  = 2.000E+00  BR  = 3.695E+01
++ NR  = 1.000E+00  VAR  = 1.494E+00  IKR = 1.667E+05  ISC = 1.057E-14
++ NC  = 1.653E+00  RB   = 3.170E+02  IRB = 0.000E+00  RBM = 1.500E+02
++ RE  = 1.133E+01  RC   = 2.768E+01  CJE = 2.070E-14  VJE = 7.414E-01
++ MJE = 4.950E-01  TF   = 1.150E-11  XTF = 2.452E+01  VTF = 1.029E+00
++ ITF = 1.878E-02  PTF  = 0.000E+00  CJC = 3.661E-14  VJC = 6.465E-01
++ MJC = 4.509E-01  XCJC = 1.270E-01  TR  = 3.240E-10  CJS = 5.326E-14
++ VJS = 5.291E-01  MJS  = 4.389E-01  XTB = 1.218E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 8.614E-01
+.MODEL PNP1 PNP
++ IS  = 2.628E-17  BF   = 1.478E+02  NF  = 1.000E+00  VAF = 3.106E+01
++ IKF = 3.115E-03  ISE  = 8.930E-17  NE  = 1.283E+00  BR  = 3.061E+03
++ NR  = 1.000E+00  VAR  = 1.448E+00  IKR = 5.000E-03  ISC = 1.061E-14
++ NC  = 1.634E+00  RB   = 2.794E+02  IRB = 0.000E+00  RBM = 1.544E+02
++ RE  = 7.452E+00  RC   = 1.142E+02  CJE = 2.038E-14  VJE = 7.470E-01
++ MJE = 4.930E-01  TF   = 1.434E-11  XTF = 2.216E+01  VTF = 1.072E+00
++ ITF = 2.397E-02  PTF  = 0.000E+00  CJC = 6.106E-14  VJC = 7.743E-01
++ MJC = 5.185E-01  XCJC = 8.499E-02  TR  = 6.500E-10  CJS = 2.855E-13
++ VJS = 9.063E-01  MJS  = 4.931E-01  XTB = 1.181E+00  EG  = 1.184E+00
++ XTI = 2.000E+00  KF   = 0.000E+00  AF  = 1.000E+00  FC  = 9.014E-01
+*
+.ENDS
+**********
+*SRC=INA115E;INA115E;Inst. Amps;Burr-Brown;Precision,Low VOS 50uV
+*SYM=INA115
+* INA115E = 2 x A1_115E + A3_115E OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 1/10/94 BY JLA
+*
+* NODE ASSIGNMENTS OF SUBCKT INA115 CORRESPOND TO SURFACE MOUNT PACKAGE OF
+* BURR-BROWN'S INA115 (NO DIP AVAILABLE)
+*
+*
+* NOTE:  THE OUTPUT PERFORMANCE OF THE MACRO MODEL WILL BE ERRONEOUS IF
+*        NODE 12 (FEEDBACK) IS NOT CONNECTED PROPERLY.  THIS IS GENERALLY
+*        CONNECTED TO NODE 11 (OUTPUT).
+*
+* 
+* INA115E SUB-CIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |   FEEDBACK
+*                 |   |   |   |   |   |    REFERENCE
+*                 |   |   |   |   |   |    |   GAIN SET 1
+*                 |   |   |   |   |   |    |   |   GAIN SET 2
+*                 |   |   |   |   |   |    |   |   |   GAIN SENSE 1
+*                 |   |   |   |   |   |    |   |   |   |   GAIN SENSE 2
+*                 |   |   |   |   |   |    |   |   |   |   |
+.SUBCKT INA115E   5   4   13  7   11  12   10  3   14  2   15
+*
+* A1_115E SUBCIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X1                4   2   13  7   1   A1_115E
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X2                5   15  13  7   8   A1_115E
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X3                17  18  13  7   11   A3_115E
+*
+RFB1 1 3 25K
+RFB2 8 14 25K
+R1 1 18 25K
+R2 18 12 24.9985K
+R3 8 17 25K
+R4 17 10 25K
+C1 17 10 5P
+C2 18 12 5P
+CC1 1 3 5P
+CC2 8 14 5P
+*
+.ENDS
+*
+* A1_115E OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                |   INVERTING INPUT
+*                |   |   POSITIVE POWER SUPPLY
+*                |   |   |   NEGATIVE POWER SUPPLY
+*                |   |   |   |   OUTPUT
+*                |   |   |   |   |
+.SUBCKT A1_115E  1   2   3   4   5
+*
+C1 11 12 6.060E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 165.8E6 -20E6 20E6 20E6 -20E6
+GA 6 0 11 12 188.5E-6
+GCM 0 6 10 99 188.5E-12
+IEE 10 4 DC 27E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 5.305E3
+RC2 3 12 5.305E3
+RE1 13 10 4.348E3
+RE2 14 10 4.348E3
+REE 10 99 7.4074E6
+RO1 8 5 40
+RO2 7 99 320
+VB 9 0 DC 0
+VC 3 53 DC 1.672
+VE 54 4 DC 1.672
+VLIM 7 8 DC 0
+VLP 91 0 DC 2
+VLN 0 92 DC 2
+*
+* A1_115E "E" - ENHANCEMENTS
+*
+* OUTPUT SUPPLY MIRROR
+FQ3 0 20 POLY(1) VLIM 0 1
+DQ1 20 21 DX
+DQ2 22 20 DX
+VQ1 21 0 0
+VQ2 22 0 0
+FQ1 3 0 POLY(1) VQ1 0 1
+FQ2 0 4 POLY(1) VQ2 0 -1
+* QUIESCIENT CURRENT
+RQ 3 4 52.53E3
+* DIFF INPUT CAPACITANCE
+CDIF 1 2 3E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM 1 0 3E-12
+C2CM 2 0 3E-12
+* INPUT PROTECTION
+VS11 3 31 0
+FS11 0 3 VS11 1
+XS11 31 0 1 0 PSW1 {RON=10K ROFF=100G VON=15.6 VOFF=15.5}
+FS12 1 4 VS11 1
+VS21 32 4 0
+FS21 4 0 VS21 1
+XS21 0 32 1 0 PSW1 {RON=10K ROFF=100G VON=-15.6 VOFF=-15.5}
+FS22 3 1 VS21 1
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=36.00E3 NC=100 NR=100)
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+.ENDS
+*
+*
+* A3_115E OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_115E  1 2 3 4 5
+*
+C1 11 12 13.51E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 251.9E6 -30E6 30E6 30E6 -30E6
+GA 6 0 11 12 339.3E-6
+GCM 0 6 10 99 339.3E-12
+IEE 10 4 DC 18E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 2.947E3
+RC2 3 12 2.947E3
+RE1 13 10 74.778
+RE2 14 10 74.778
+REE 10 99 11.111E6
+RO1 8 5 13
+RO2 7 99 117
+VB 9 0 DC 0
+VC 3 53 DC 1.972
+VE 54 4 DC 1.972
+VLIM 7 8 DC 0
+VLP 91 0 DC 12
+VLN 0 92 DC 12
+*
+* A3_115E "E" - ENHANCEMENTS
+*
+* OUTPUT SUPPLY MIRROR
+FQ3 0 20 POLY(1) VLIM 0 1
+DQ1 20 21 DX
+DQ2 22 20 DX
+VQ1 21 0 0
+VQ2 22 0 0
+FQ1 3 0 POLY(1) VQ1 0 1
+FQ2 0 4 POLY(1) VQ2 0 -1
+* QUIESCIENT CURRENT
+RQ 3 4 30.123E3
+* DIFF INPUT CAPACITANCE
+CDIF 1 2 10E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM 1 0 5E-12
+C2CM 2 0 5E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=30.00E3)
+.ENDS
+**********
+*SRC=INA131E;INA131E;Inst. Amps;Burr-Brown;Precision Gain=100
+*SYM=INA131
+* INA131E = 2 x A1_131E + A3_131E OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 1/10/93 BY JLA.  INA114E.MOD MODIFIED TO INA131
+*
+* NODE ASSIGNMENTS OF SUBCKT INA131 CORRESPOND TO 8 PIN DIP PACKAGE OF
+* BURR-BROWN'S INA131
+*
+* 
+* INA131E SUB-CIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |   REFERENCE
+*                 |   |   |   |   |   |   GAIN SET 1
+*                 |   |   |   |   |   |   |   GAIN SET 2
+*                 |   |   |   |   |   |   |   |
+.SUBCKT INA131E   3   2   7   4   6   5   1   8
+*
+* A1_131E SUBCIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X1                2   1   7   4   10   A1_131E
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X2                3   8   7   4   11   A1_131E
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X3                13  12  7   4   6   A3_131E
+*
+RFB1 10 1 25K
+RFB2 11 8 25K
+R1 10 12 5K
+R2 12 6 24.9985K
+R3 11 13 5K
+R4 13 5 25K
+C1 12 6 5P
+C2 13 5 5P
+CC1 10 1 5P
+CC2 11 8 5P
+RG1 1 8 2631.58
+*
+.ENDS
+*
+* A1_131E OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                |   INVERTING INPUT
+*                |   |   POSITIVE POWER SUPPLY
+*                |   |   |   NEGATIVE POWER SUPPLY
+*                |   |   |   |   OUTPUT
+*                |   |   |   |   |
+.SUBCKT A1_131E  1   2   3   4   5
+*
+C1 11 12 6.060E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 165.8E6 -20E6 20E6 20E6 -20E6
+GA 6 0 11 12 188.5E-6
+GCM 0 6 10 99 188.5E-12
+IEE 10 4 DC 27E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 5.305E3
+RC2 3 12 5.305E3
+RE1 13 10 4.348E3
+RE2 14 10 4.348E3
+REE 10 99 7.4074E6
+RO1 8 5 40
+RO2 7 99 320
+VB 9 0 DC 0
+VC 3 53 DC 1.672
+VE 54 4 DC 1.672
+VLIM 7 8 DC 0
+VLP 91 0 DC 2
+VLN 0 92 DC 2
+*
+* A1_131E "E" - ENHANCEMENTS
+*
+* OUTPUT SUPPLY MIRROR
+FQ3 0 20 POLY(1) VLIM 0 1
+DQ1 20 21 DX
+DQ2 22 20 DX
+VQ1 21 0 0
+VQ2 22 0 0
+FQ1 3 0 POLY(1) VQ1 0 1
+FQ2 0 4 POLY(1) VQ2 0 -1
+* QUIESCIENT CURRENT
+RQ 3 4 52.53E3
+* DIFF INPUT CAPACITANCE
+CDIF 1 2 3E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM 1 0 3E-12
+C2CM 2 0 3E-12
+* INPUT PROTECTION
+VS11 3 31 0
+FS11 0 3 VS11 1
+XS11 31 0 1 0 PSW1 {RON=10K ROFF=100G VON=15.6 VOFF=15.5}
+FS12 1 4 VS11 1
+VS21 32 4 0
+FS21 4 0 VS21 1
+XS21 0 32 1 0 PSW1  {RON=10K ROFF=100G VON=-15.6 VOFF=-15.5}
+FS22 3 1 VS21 1
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=36.00E3 NC=100 NR=100)
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+.ENDS
+*
+*
+* A3_131E OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_131E  1 2 3 4 5
+*
+C1 11 12 13.51E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 251.9E6 -30E6 30E6 30E6 -30E6
+GA 6 0 11 12 339.3E-6
+GCM 0 6 10 99 339.3E-12
+IEE 10 4 DC 18E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 2.947E3
+RC2 3 12 2.947E3
+RE1 13 10 74.778
+RE2 14 10 74.778
+REE 10 99 11.111E6
+RO1 8 5 13
+RO2 7 99 117
+VB 9 0 DC 0
+VC 3 53 DC 1.972
+VE 54 4 DC 1.972
+VLIM 7 8 DC 0
+VLP 91 0 DC 12
+VLN 0 92 DC 12
+*
+* A3_131E "E" - ENHANCEMENTS
+*
+* OUTPUT SUPPLY MIRROR
+FQ3 0 20 POLY(1) VLIM 0 1
+DQ1 20 21 DX
+DQ2 22 20 DX
+VQ1 21 0 0
+VQ2 22 0 0
+FQ1 3 0 POLY(1) VQ1 0 1
+FQ2 0 4 POLY(1) VQ2 0 -1
+* QUIESCIENT CURRENT
+RQ 3 4 30.123E3
+* DIFF INPUT CAPACITANCE
+CDIF 1 2 10E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM 1 0 5E-12
+C2CM 2 0 5E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=30.00E3)
+.ENDS
+**********
+*SRC=OPA124E;OPA124E;Opamps;Burr-Brown;Low Noise 6nV/RTHz
+*SYM=BBOPAMP
+* OPA124E OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "E" IS ENHANCED MODEL
+* CREATED 11/8/93 BCB
+*
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT OPA124E  1 2 3 4 5
+*
+C1   11 12 72.79E-12
+C2    6  7 400.0E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2)  3 0   4 0  0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 4.717E6 -5E6 5E6 5E6 -5E6
+GA    6  0 11 12 5.027E-3
+GCM   0  6 10 99 15.90E-9
+ISS   3 10 DC 800.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  64 10 JX
+G11 2 4 POLY(4)  10 2   11 2   4 2   66 0  0 1E-12 1E-12 1E-12 400E-9
+G21 1 4 POLY(4)  10 1   12 1   4 1   68 0  0 1E-12 1E-12 1E-12 400E-9
+R2    6  9 100E3
+RD1   4 11 198.9
+RD2   4 12 198.9
+RO1   8  5 25
+RO2   7 99 75
+*  RP    3  4 12.00E3
+RSS  10 99 250.0E3
+VB    9  0 DC 0
+VC    3 53 DC 3
+VE   54  4 DC 3
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+*
+* OPA124 "E" - ENHANCEMENTS
+*
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  1.30E-3  1
+FQ2   0  4 POLY(1) VQ2  1.30E-3 -1
+* QUIESCIENT CURRENT
+RQ    3  4  7.5E4
+* DIFF INPUT CAPACITANCE
+CDIF  64  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  64  99 1.5E-12
+C2CM  2  99 1.5E-12
+* INPUT VOLTAGE NOISE 
+VN1 61 4  0.6
+VN2 4  62 0.6
+DN1 61 63 DY
+DN2 63 62 DY
+EN 64 1  63 4 1
+* INPUT CURRENT NOISE
+RN1 0 65 60.3865
+RN2 65 66 60.3865
+RN3 66 0 120.773
+RN4 0 67 60.3865
+RN5 67 68 60.3865
+RN6 68 0 120.773
+*
+.MODEL DY D(IS=3.8E-16 AF=1 KF=1.175E-16)
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=400.0E-15 BETA=15.79E-3 VTO=-1)
+.ENDS
+**********
+*SRC=OPA628M;OPA628M;Opamps;Burr-Brown;Low Distortion Wideband
+*SYM=BBOPAMP
+* OPA628M OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "M" IS  MULTIPLE POLE/ZERO TOPOLOGY
+* CREATED 7/16/93 BCB
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                |  INVERTING INPUT
+*                |  |  POSITIVE POWER SUPPLY
+*                |  |  |  NEGATIVE POWER SUPPLY
+*                |  |  |  |  OUTPUT
+*                |  |  |  |  |
+.SUBCKT OPA628M 3  2  7  4  6
+
+* INPUT STAGE (pole @ 220M Hz)
+Q1  13  2  15  N
+Q2  14  11  16  N
+R3  7  13  47.75
+R4  7  14  47.75
+C1  13  14  6E-12
+R5  15  12  42.55
+R6  16  12  42.55
+IEE  12  4  5.5E-3
+EOS  11  3  POLY(1)   33 9   500E-6  1
+R1  2  10  16E3
+R2  3  10  16E3
+CIN  2  3  2E-12
+IOS  2  3  0.3E-6
+
+* GAIN STAGE (pole @ 2K Hz)
+V21  7  21  2.736
+D21  23  21  DX
+V22  22  4  2.736
+D22  22  23  DX
+G21  7  23  POLY(1)   13 14    26.706E-3 20.94E-3
+G22  4  23  POLY(1)   13 14   -26.706E-3 20.94E-3
+R27  7  23  4.77E6
+R28  4  23  4.77E6
+C22  7  23  16.68E-12
+C23  4  23  16.68E-12
+
+* COMMON-MODE REJECTION STAGE (zero @ 300K Hz)
+R31  31  33  1E6
+R32  32  33  1E6
+G31  7  33  10  9  3.1623E-12
+G32  4  33  10  9  3.1623E-12
+L31  31  7  530.5E-3
+L32  32  4  530.5E-3
+
+* OUTPUT STAGE
+D3  23  71  DX
+D4  72  23  DX
+D5  7  73  DX
+D6  7  74  DX
+D7  4  73  DZ
+D8  4  74  DZ
+G14  73  4  6  23  1000
+G13  74  4  23  6  1000
+V3  71  6  -.9125
+V4  6  72  -.9125
+G11  6  7  7  23  1000
+G12  4  6  23  4  1000
+R23  7  6  0.001
+R24  4  6  0.001
+
+* CENTER OF SUPPLIES
+R9  7  9  16.359E3
+R10  4  9  16.359E3
+
+.MODEL  DX  D(IS=1E-15)
+.MODEL  N  NPN(BF=183)
+.MODEL  DZ  D(IS=1E-15 BV=50)
+
+.ENDS
+**********
+*SRC=INA115;INA115;Inst. Amps;Burr-Brown;Low VOS 50uV
+*SYM=INA115
+* INA115 = 2 x A1_115 + A3_115 OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 1/10/94 BY JLA
+*
+* NODE ASSIGNMENTS OF SUBCKT INA115 CORRESPOND TO SURFACE MOUNT PACKAGE OF
+* BURR-BROWN'S INA115 (NO DIP AVAILABLE)
+*
+*
+* NOTE:  THE OUTPUT PERFORMANCE OF THE MACRO MODEL WILL BE ERRONEOUS IF
+*        NODE 12 (FEEDBACK) IS NOT CONNECTED PROPERLY.  THIS IS GENERALLY
+*        CONNECTED TO NODE 11 (OUTPUT).
+*
+* 
+* INA115 SUB-CIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |   FEEDBACK
+*                 |   |   |   |   |   |    REFERENCE
+*                 |   |   |   |   |   |    |   GAIN SET 1
+*                 |   |   |   |   |   |    |   |   GAIN SET 2
+*                 |   |   |   |   |   |    |   |   |   GAIN SENSE 1
+*                 |   |   |   |   |   |    |   |   |   |   GAIN SENSE 2
+*                 |   |   |   |   |   |    |   |   |   |   |
+.SUBCKT INA115    5   4   13  7   11  12   10  3   14  2   15
+*
+* A1_115 SUBCIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X1                4   2   13  7   1   A1_115
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X2                5   15  13  7   8   A1_115
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X3                17  18  13  7   11   A3_115
+*
+RFB1 1 3 25K
+RFB2 8 14 25K
+R1 1 18 25K
+R2 18 12 24.9985K
+R3 8 17 25K
+R4 17 10 25K
+C1 17 10 5P
+C2 18 12 5P
+CC1 1 3 5P
+CC2 8 14 5P
+*
+.ENDS
+*
+* A1_115 OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                |   INVERTING INPUT
+*                |   |   POSITIVE POWER SUPPLY
+*                |   |   |   NEGATIVE POWER SUPPLY
+*                |   |   |   |   OUTPUT
+*                |   |   |   |   |
+.SUBCKT A1_115   1   2   3   4   5
+*
+C1 11 12 6.060E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 165.8E6 -20E6 20E6 20E6 -20E6
+GA 6 0 11 12 188.5E-6
+GCM 0 6 10 99 188.5E-12
+IEE 10 4 DC 27E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 5.305E3
+RC2 3 12 5.305E3
+RE1 13 10 4.348E3
+RE2 14 10 4.348E3
+REE 10 99 7.4074E6
+RO1 8 5 40
+RO2 7 99 320
+RP 3 4 52.53E3
+VB 9 0 DC 0
+VC 3 53 DC 1.672
+VE 54 4 DC 1.672
+VLIM 7 8 DC 0
+VLP 91 0 DC 2
+VLN 0 92 DC 2
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=36.00E3 NC=100 NR=100)
+.ENDS
+*
+*
+* A3_115 OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_115  1 2 3 4 5
+*
+C1 11 12 13.51E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 251.9E6 -30E6 30E6 30E6 -30E6
+GA 6 0 11 12 339.3E-6
+GCM 0 6 10 99 339.3E-12
+IEE 10 4 DC 18E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 2.947E3
+RC2 3 12 2.947E3
+RE1 13 10 74.778
+RE2 14 10 74.778
+REE 10 99 11.111E6
+RO1 8 5 13
+RO2 7 99 117
+RP 3 4 30.123E3
+VB 9 0 DC 0
+VC 3 53 DC 1.972
+VE 54 4 DC 1.972
+VLIM 7 8 DC 0
+VLP 91 0 DC 12
+VLN 0 92 DC 12
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=30.00E3)
+.ENDS
+**********
+*SRC=INA131;INA131;Inst. Amps;Burr-Brown;Precision Gain=100
+*SYM=INA131
+* INA131 = 2 x A1_131 + A3_131 OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 1/10/93 BY JLA.  INA114E.MOD MODIFIED TO INA131
+*
+* NODE ASSIGNMENTS OF SUBCKT INA131 CORRESPOND TO 8 PIN DIP PACKAGE OF
+* BURR-BROWN'S INA131
+*
+* 
+* INA131 SUB-CIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |   REFERENCE
+*                 |   |   |   |   |   |   GAIN SET 1
+*                 |   |   |   |   |   |   |   GAIN SET 2
+*                 |   |   |   |   |   |   |   |
+.SUBCKT INA131    3   2   7   4   6   5   1   8
+*
+* A1_131 SUBCIRCUIT
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X1                2   1   7   4   10   A1_131
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X2                3   8   7   4   11   A1_131
+*
+* CONNECTIONS:    NON-INVERTING INPUT
+*                 |   INVERTING INPUT
+*                 |   |   POSITIVE POWER SUPPLY
+*                 |   |   |   NEGATIVE POWER SUPPLY
+*                 |   |   |   |   OUTPUT
+*                 |   |   |   |   |
+X3                13  12  7   4   6   A3_131
+*
+RFB1 10 1 25K
+RFB2 11 8 25K
+R1 10 12 5K
+R2 12 6 24.9985K
+R3 11 13 5K
+R4 13 5 25K
+C1 12 6 5P
+C2 13 5 5P
+CC1 10 1 5P
+CC2 11 8 5P
+RG1 1 8 2631.58
+*
+.ENDS
+*
+* A1_131 OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                |   INVERTING INPUT
+*                |   |   POSITIVE POWER SUPPLY
+*                |   |   |   NEGATIVE POWER SUPPLY
+*                |   |   |   |   OUTPUT
+*                |   |   |   |   |
+.SUBCKT A1_131  1   2   3   4   5
+*
+C1 11 12 6.060E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 165.8E6 -20E6 20E6 20E6 -20E6
+GA 6 0 11 12 188.5E-6
+GCM 0 6 10 99 188.5E-12
+IEE 10 4 DC 27E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 5.305E3
+RC2 3 12 5.305E3
+RE1 13 10 4.348E3
+RE2 14 10 4.348E3
+REE 10 99 7.4074E6
+RO1 8 5 40
+RO2 7 99 320
+RP 3 4 52.53E3
+VB 9 0 DC 0
+VC 3 53 DC 1.672
+VE 54 4 DC 1.672
+VLIM 7 8 DC 0
+VLP 91 0 DC 2
+VLN 0 92 DC 2
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=36.00E3 NC=100 NR=100)
+.ENDS
+*
+*
+* A3_131 OPERATIONAL AMPLIFIER " MACROMODEL" SUBCIRCUIT
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_131   1 2 3 4 5
+*
+C1 11 12 13.51E-12
+C2 6 7 30.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2)  3 0   4 0  0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 251.9E6 -30E6 30E6 30E6 -30E6
+GA 6 0 11 12 339.3E-6
+GCM 0 6 10 99 339.3E-12
+IEE 10 4 DC 18E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 3 11 2.947E3
+RC2 3 12 2.947E3
+RE1 13 10 74.778
+RE2 14 10 74.778
+REE 10 99 11.111E6
+RO1 8 5 13
+RO2 7 99 117
+RP 3 4 30.123E3
+VB 9 0 DC 0
+VC 3 53 DC 1.972
+VE 54 4 DC 1.972
+VLIM 7 8 DC 0
+VLP 91 0 DC 12
+VLN 0 92 DC 12
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=30.00E3)
+.ENDS
+**********
+*SRC=OPA124;OPA124;Opamps;Burr-Brown;Low Noise 6nV/RTHz
+*SYM=BBOPAMP
+* OPA124 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED 11/8/93  BCB
+*
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT OPA124   1 2 3 4 5
+*
+C1   11 12 72.79E-12
+C2    6  7 400.0E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2)  3 0   4 0  0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 4.717E6 -5E6 5E6 5E6 -5E6
+GA    6  0 11 12 5.027E-3
+GCM   0  6 10 99 15.90E-9
+ISS   3 10 DC 800.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 198.9
+RD2   4 12 198.9
+RO1   8  5 25
+RO2   7 99 75
+RP    3  4 12.00E3
+RSS  10 99 250.0E3
+VB    9  0 DC 0
+VC    3 53 DC 3
+VE   54  4 DC 3
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=400.0E-15 BETA=15.79E-3 VTO=-1)
+.ENDS
+**********

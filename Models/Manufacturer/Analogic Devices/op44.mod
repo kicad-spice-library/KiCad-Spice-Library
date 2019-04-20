@@ -1,0 +1,191 @@
+* OP-44 SPICE Macro-model			   12/90, Rev. B
+*                                          ARG / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 4E-12 to 2E-12
+*
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws.  Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement.  Before using the macro-
+* models the licensee should read this license.  If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, load, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company.  The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models.  ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP-44  1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 60 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     541
+R4   6 50     541
+CIN  1  2     5E-12
+C2   5  6     2.452E-12
+I1  99  4     1.5E-3
+IOS  1  2     2E-12
+EOS  7  1     POLY(1)  22 26  0E-6  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 79 HZ
+*
+R7   9 99     241.8E6
+R8   9 50     241.8E6
+C3   9 99     8.333E-12
+C4   9 50     8.333E-12
+G1  99  9     POLY(1)   5  6  4.825E-3  1.848E-3
+G2   9 50     POLY(1)   6  5  4.825E-3  1.848E-3
+V1  99  8     -10
+V2  10 50     -10
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.3 MHZ / 3.25 MHZ
+*
+R9  11 99     1E6
+R10 11 50     1E6
+R11 12 99     667E3
+R12 13 50     667E3
+C5  11 12     73.46E-15
+C6  11 13     73.46E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+V3  99 14     2.5
+V4  15 50     3.1
+D3  11 14     DX
+D4  15 11     DX
+*
+* POLE AT 100 MHZ
+*
+R13 16 99     1E6
+R14 16 50     1E6
+C7  16 99     1.592E-15
+C8  16 50     1.592E-15
+G5  99 16     11 26  1E-6
+G6  16 50     26 11  1E-6
+*
+* POLE AT 100 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     1.592E-15
+C10 17 50     1.592E-15
+G7  99 17     16 26  1E-6
+G8  17 50     26 16  1E-6
+*
+* POLE AT 100 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C13 18 99     1.592E-15
+C14 18 50     1.592E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 100 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C15 19 99     1.592E-15
+C16 19 50     1.592E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* POLE AT 200 MHZ
+*
+R21 20 99     1E6
+R22 20 50     1E6
+C17 20 99     .796E-15
+C18 20 50     .796E-15
+G13 99 20     19 26  1E-6
+G14 20 50     26 19  1E-6
+*
+* POLE AT 200 MHZ
+*
+R23 21 99     1E6
+R24 21 50     1E6
+C19 21 99     .796E-15
+C20 21 50     .796E-15
+G15 99 21     20 26  1E-6
+G16 21 50     26 20  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 100 KHZ
+*
+R25 22 23     1E6
+R26 22 24     1E6
+L1  23 99     1.5915
+L2  24 50     1.5915
+D5  22 99     DX
+D6  50 22     DX
+G17 99 22     3  26  1.58E-11
+G18 22 50     26  3  1.58E-11
+*
+* POLE AT 200 MHZ
+*
+R27 25 99     1E6
+R28 25 50     1E6
+C21 25 99     .796E-15
+C22 25 50     .796E-15
+G19 99 25     21 26  1E-6
+G20 25 50     26 21  1E-6
+*
+* OUTPUT STAGE
+*
+R30 26 99     375.3E3
+R31 26 50     375.3E3
+R32 27 99     80
+R33 27 50     80
+L3  27 32     2.5E-7
+G21 30 50     25 27  12.5E-3
+G22 31 50     27 25  12.5E-3
+G23 27 99     99 25  12.5E-3
+G24 50 27     25 50  12.5E-3
+V6  28 27     0.5
+V7  27 29     0.3
+D7  25 28     DX
+D8  29 25     DX
+D9  99 30     DX
+D10 99 31     DX
+D11 50 30     DY
+D12 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.139E-3  VTO=-1.5  IS=8E-11)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS OP-44

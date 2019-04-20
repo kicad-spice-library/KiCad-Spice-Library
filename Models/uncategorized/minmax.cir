@@ -1,0 +1,36 @@
+Test to try out looping
+
+* include mydiode.lib
+.model D1N4009	D(Is=0.1p Rs=4 CJO=2p Tt=3n Bv=60 Ibv=0.1p)
+
+V1 1 0 sin (0 10 50)
+D1 1 2 D1N4009
+Rs 2 3
+C1 3 0
+RL 3 0
+
+.control
+save @d1[id] v(3)
+tran 100u 1 980u UIC
+plot @d1[id]
+plot v(3)
+
+* Find the min and max of v(3)
+
+let max = 1e-30
+let min = 1e30
+
+let kx = 0
+while kx <= 5
+    cross kk kx v(3)
+    print kx kk
+    if kk > max 
+        let max = kk
+    end
+    if kk < min
+        let min = kk
+    end
+    let kx = kx + 1 
+end
+print min max
+.endc

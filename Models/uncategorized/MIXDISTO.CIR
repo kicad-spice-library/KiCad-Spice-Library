@@ -1,0 +1,32 @@
+	Simple mixer circuit - diffpair fed by modulated Iee
+
+*the output is v(6)
+
+* harmonic analysis done with the following:
+v1 1 0  0v ac 1.0 distof1 0.001
+v2 7 0 0v ac 1.0 distof1 0.001
+.disto dec 20 1.0e3 1.0e8
+
+* intermodulation done with the following:
+*v1 1 0  0v ac 1.0 distof1 0.001
+*v2 7 0 0v ac 1.0 distof2 0.001
+*.disto dec 20 1.0e3 1.0e8 0.9
+
+
+q1 3 1 4 2 mod1 
+q2 6 0 4 2 mod1 
+rc1 5 3 10k
+rc2 5 6 10k
+vcc 5 0 10v
+qee 4 7 8 2 mod1
+re 8 2 9K
+vee 2 0 -10v
+
+* note - spectre does not implement rb nonlinearities
+
+*.model mod1 npn is=1.0e-16 bf=100 this model matches with spectre
+.model mod1 npn is=1e-16 bf=100 cjs=2.0e-12 tf=0.3e-9 cje=3.0e-12 cjc=2.0e-12  vaf=50 
+*the above model matches with spectre
+*.model mod1 npn is=1e-16 bf=100 cjs=2.0e-12 tr=6.0e-9 tf=0.3e-9 cje=3.0e-12 cjc=2.0e-12  vaf=50 this agrees with spectre
+*.model mod1 npn is=1e-16 bf=100 rb=100 cjs=2.0e-12 tf=0.3e-9 tr=6e-9 cje=3.0e-12 cjc=2.0e-12  vaf=50 this model causes bad match with spectre
+.end

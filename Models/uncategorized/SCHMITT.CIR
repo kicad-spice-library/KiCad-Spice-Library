@@ -1,0 +1,29 @@
+schmitt ckt - ecl compatible schmitt trigger
+.width in=72
+.opt acct list node lvlcod=2
+.tran 10ns 1000ns
+vin 1 0 pulse(-1.6 -1.2 10ns 400ns 400ns 100ns 10000ns)
+vee 8 0 -5
+rin 1 2 50
+rc1 0 3 50
+r1 3 5 185
+r2 5 8 760
+rc2 0 6 100
+re 4 8 260
+rth1 7 8 125
+rth2 7 0 85
+cload 7 0 5pf
+q1 3 2 4 qstd off
+q2 6 5 4 qstd
+q3 0 6 7 qstd
+q4 0 6 7 qstd
+.model qstd npn(is=1.0e-16 bf=50 br=0.1 rb=50 rc=10 tf=0.12ns tr=5ns
++   cje=0.4pf pe=0.8 me=0.4 cjc=0.5pf pc=0.8 mc=0.333 ccs=1pf va=50)
+.print tran v(1) v(3) v(5) v(6)
+.plot tran v(3) v(5) v(6) v(1)
+
+* Commands for Spice3
+*#destroy all
+*#run
+*#plot tran1.v(3) tran1.v(5) tran1.v(6) tran1.v(1)
+.end

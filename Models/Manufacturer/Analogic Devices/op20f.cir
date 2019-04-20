@@ -1,0 +1,121 @@
+* OP-20F SPICE Macro-model                  9/91, Rev. A
+*                                           JCB / PMI
+*
+* This version of the OP-20 model simulates the worst case
+* parameters of the 'F' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+*
+* Copyright 1991 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws.  Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement.  Before using the macro-
+* models the licensee should read this license.  If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, loan, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company.  The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models.  ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP-20F 1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 1.5 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16E3
+R4    6 50     5.16E3
+CIN   1  2     4E-12
+C2    5  6     15.42E-12
+I1    99 4     10E-6
+IOS   1  2     0.75E-9
+EOS   9  1     POLY(1)  24 27  250E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  50.27E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -1.475 1
+E2   12 50     POLY(1) 27 50 -1.475 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.2 HZ
+*
+R6   13 98     3.98E9
+C3   13 98     200E-12
+G2   98 13     10 27  5E-6
+V1   99 14     0.93
+V2   15 50     0.93
+D3   13 14     DX
+D4   15 13     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 316 HZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     504E-12
+E4   98 23     3  27  10
+*
+* POLE AT 600 KHZ
+*
+R9   25 98     1E6
+C5   25 98     265E-15
+G3   98 25     13 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     52E-6
+R10  27 99     833E3
+R11  27 50     833E3
+R12  30 99     2000
+R13  30 50     2000
+G4   28 50     25 30  0.5E-3
+G5   29 50     30 25  0.5E-3
+G6   30 99     99 25  0.5E-3
+G7   50 30     25 50  0.5E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 31     DX
+V3   31 30     2.4
+D10  32 25     DX
+V4   30 32     0.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=200)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS OP-20F

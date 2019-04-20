@@ -1,0 +1,39 @@
+Example 8.7 Astable multivibrator
+
+*.lib bipolar.lib
+*.include lf156.mod
+
+*.option resbranch capbranch
+*.option saveintnodes
+*.option bypass=1
+
+VCC 6 0 DC 5V
+RC1 6 1 1K
+RC2 6 2 1K
+R1  6 3 30K
+R2  6 4 30K
+C1  1 4 150PF
+C2  2 3 150PF
+
+* Q1 and Q2 with model QM and substrate connected to ground by default
+*  C B E
+Q1 1 3 0 QM
+Q2 2 4 0 QM
+
+
+* Model statement for NPN transistors
+
+.MODEL QM NPN (IS=2E-16 BF=50 BR=1 RB=5 RC=1 RE=0 TF=0.2NS TR=5NS)
+
+.NODESET V(1)=0 V(3)=0
+
+.TRAN 0.1US 10US
+.OP
+.PLOT TRAN V(1) V(2)
+
+* Commands for Spice3
+*#save v(1) v(2)
+*#run
+*#plot v(1) v(2)
+
+.END

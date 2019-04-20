@@ -1,0 +1,278 @@
+* MAX492 FAMILY MACROMODELS
+* -------------------------
+** FEATURES:
+* Low-Voltage Single-Supply Operation (+2.7V to +6V) 
+* Rail-to-Rail Output Swing 
+* 500kHz Gain-Bandwidth Product
+* Unity-Gain Stable
+* 200uV Offset Voltage
+* High Voltage Gain (108dB)
+* Available in 8-Pin DIP/SO/uMAX (Single MAX495)
+*              8-Pin DIP/SO (Dual MAX492)
+*             14-Pin DIP/SO (Quad MAX494)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX492         Dual, unity-gain-stable, 500kHz GBP        
+* MAX494         Quad, 150uA IDD, 500kHz GBP
+* MAX495         Single, 2.7V to 6V supply, 150uA IDD
+*
+*
+*   ////////////// MAX492 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX492 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:  111 112  99  50  97
+*
+*
+.SUBCKT MAX492 111 112 99 50 97
+*
+****************INPUT STAGE**********************
+RCM1 111 1 5000
+V12 99 113 .140
+D11 1 113 DX
+D12 114 1 DX
+V13 114 50 .140
+***********
+V14 99 115 .140
+D13 2 115 DX
+D14 116 2 DX
+V15 50 116 .140
+***********
+RCM2 112 2 5000
+*IOS 2 1 5N
+I1 4 50 75E-6
+RIN1 1 104 1E9
+RIN2 2 104 1E9
+R1 5 99 689.3
+R2 6 99 689.3
+EOS 1 9 POLY(1) 98 30 200U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 103 QX
+Q2 6 9 104 QX
+REE1 104 4 1
+REE2 103 4 1
+* Second Pole 
+C4 5 6 68PF
+***************SECOND STAGE******************
+*IS 99 50 .5m
+*  SETS IS ^
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .70
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .70
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 0.0012
+R4 12 98 1.6936E8
+C3 98 12 3.75E-10
+*
+****COMMON-MODE STAGE****
+G11 98 30 104 98 1E-8
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 12 98 1E-3
+R15 98 32 1E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 3.5V
+V4 36 35 3.5V
+R16 34 35 30
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 .1U
+R17 96 97 .01
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX NPN(BF=6.25E4)
+.ENDS
+*
+*   ////////////// MAX494 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX494 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:  111 112  99  50  97
+*
+*
+.SUBCKT MAX494 111 112 99 50 97
+*
+****************INPUT STAGE**********************
+RCM1 111 1 5000
+V12 99 113 .140
+D11 1 113 DX
+D12 114 1 DX
+V13 114 50 .140
+***********
+V14 99 115 .140
+D13 2 115 DX
+D14 116 2 DX
+V15 50 116 .140
+***********
+RCM2 112 2 5000
+*IOS 2 1 5N
+I1 4 50 75E-6
+RIN1 1 104 1E9
+RIN2 2 104 1E9
+R1 5 99 689.3
+R2 6 99 689.3
+EOS 1 9 POLY(1) 98 30 200U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 103 QX
+Q2 6 9 104 QX
+REE1 104 4 1
+REE2 103 4 1
+* Second Pole 
+C4 5 6 68PF
+***************SECOND STAGE******************
+*IS 99 50 .5m
+*  SETS IS ^
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .70
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .70
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 0.0012
+R4 12 98 1.6936E8
+C3 98 12 3.75E-10
+*
+****COMMON-MODE STAGE****
+G11 98 30 104 98 1E-8
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 12 98 1E-3
+R15 98 32 1E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 3.5V
+V4 36 35 3.5V
+R16 34 35 30
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 .1U
+R17 96 97 .01
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX NPN(BF=6.25E4)
+.ENDS
+*
+*   ////////////// MAX495 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX495 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:  111 112  99  50  97
+*
+*
+.SUBCKT MAX495 111 112 99 50 97
+*
+****************INPUT STAGE**********************
+RCM1 111 1 5000
+V12 99 113 .140
+D11 1 113 DX
+D12 114 1 DX
+V13 114 50 .140
+***********
+V14 99 115 .140
+D13 2 115 DX
+D14 116 2 DX
+V15 50 116 .140
+***********
+RCM2 112 2 5000
+*IOS 2 1 5N
+I1 4 50 75E-6
+RIN1 1 104 1E9
+RIN2 2 104 1E9
+R1 5 99 689.3
+R2 6 99 689.3
+EOS 1 9 POLY(1) 98 30 200U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 103 QX
+Q2 6 9 104 QX
+REE1 104 4 1
+REE2 103 4 1
+* Second Pole 
+C4 5 6 68PF
+***************SECOND STAGE******************
+*IS 99 50 .5m
+*  SETS IS ^
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .70
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .70
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 0.0012
+R4 12 98 1.6936E8
+C3 98 12 3.75E-10
+*
+****COMMON-MODE STAGE****
+G11 98 30 104 98 1E-8
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 12 98 1E-3
+R15 98 32 1E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 3.5V
+V4 36 35 3.5V
+R16 34 35 30
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 .1U
+R17 96 97 .01
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX NPN(BF=6.25E4)
+.ENDS
+

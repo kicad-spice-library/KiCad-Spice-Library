@@ -1,0 +1,149 @@
+**********
+* Copyright Intusoft 1986-1997
+* All Rights Reserved
+**********
+**********
+*SRC=UA741LIN;UA741LIN;Opamps;Intusoft;Linear Version
+*SYM=UA741
+.SUBCKT UA741LIN 2    3  6   7   4
+*             - IN + OUT VCC VEE
+RP 4 7 10K
+RXX 4 0 10MEG
+*
+IBP 3 0 80NA
+RIP 3 0 10MEG
+CIP 3 0 1.4PF
+IBN 2 0 100NA
+RIN 2 0 10MEG
+CIN 2 0 1.4PF
+VOFST 2 10 1MV
+RID 10 3 200K
+EA 11 0 10 3 1
+R1 11 12 5K
+R2 12 13 50K
+C1 12 0 13PF
+GA 0 14 0 13 2700
+C2 13 14 2.7PF
+RO 14 0 75
+L 14 6 30UHY
+RL 14 6 1000
+CL 6 0 3PF
+.ENDS
+**********
+*SRC=LF156LIN;LF156LIN;Opamps;Intusoft;Linear Version
+*SYM=LF156
+.SUBCKT LF156LIN 2    3  6   7   4
+*             - IN + OUT VCC VEE
+RP 4 7 6K
+RXX 4 0 10MEG
+*
+IBP 3 0 33E-12
+RIP 3 0 1E12
+CIP 3 0 3PF
+IBN 2 0 30E-12
+RIN 2 0 1E12
+CIN 2 0 3PF
+VOFST 2 10 3MV
+RID 10 3 1E12
+EA 11 0 10 3 1
+R1 11 12 5K
+R2 12 13 50K
+C1 12 0 6PF
+GA 0 14 0 13 2700
+C2 13 14 .7PF
+RO 14 0 75
+L 14 6 1UHY
+RL 14 6 100
+CL 6 0 3PF
+.ENDS
+**********
+*SRC=OPAMPL;OPAMPL;Generic Models;Linear Opamp;Bipolar Input
+*SYM=OPAMP
+.SUBCKT OPAMPL 2    3  6   7   4 {GAIN=??? FT=??? IOS=??? VOS=??? IBIAS=???}
+*             - IN + OUT VCC VEE
+*PARAMS ARE GAIN={GAIN} FT={FT} IOS={IOS} VOS={VOS} IBIAS={IBIAS}
+* VOS in Volts, IOS in Amps, IBIAS in Amps, 
+* FT(Gain Bandwidth) in Hz, GAIN (DC Gain) in Volts/Volt
+RP 4 7 10K
+RXX 4 0 10MEG
+*
+IBP 3 0 {IBIAS-IOS}
+RIP 3 0 10MEG
+CIP 3 0 1.4PF
+IBN 2 0 {IBIAS}
+RIN 2 0 10MEG
+CIN 2 0 1.4PF
+VOFST 2 10 {VOS}
+RID 10 3 200K
+EA 11 0 10 3 1
+R1 11 12 5K
+R2 12 13 50K
+C1 12 0 {13U/FT}
+GA 0 14 0 13 {GAIN*.0135}
+C2 13 14 {2.7U/FT}
+RO 14 0 75
+L 14 6 {30/FT}
+RL 14 6 1000
+CL 6 0 3PF
+.ENDS
+**********
+* SRC=OP1;OP1;Generic Models;Linear Opamp;Bipolar Version
+* SYM=OPAMP
+.SUBCKT OP1    2    3  6   7   4  {GAIN=??? FT=??? IOS=??? VOS=??? IBIAS=???}
+*              - IN + OUT VCC VEE
+*PARAMS ARE GAIN={GAIN} FT={FT} IOS={IOS} VOS={VOS} IBIAS={IBIAS}
+*Same as "OPAMP" except that the GAIN Parameter must be in DB
+* VOS in Volts, IOS in Amps, IBIAS in Amps, 
+* FT(Gain Bandwidth) in Hz, GAIN (DC Gain) in DB
+RP 4 7 10K
+RXX 4 0 10MEG
+*
+IBP 3 0 {IBIAS-IOS}
+RIP 3 0 10MEG
+CIP 3 0 1.4PF
+IBN 2 0 {IBIAS}
+RIN 2 0 10MEG
+CIN 2 0 1.4PF
+VOFST 2 10 {VOS}
+RID 10 3 200K
+EA 11 0 10 3 1
+R1 11 12 5K
+R2 12 13 50K
+C1 12 0 {13U/FT}
+GA 0 14 0 13 {10^(GAIN/20)*.0135}
+C2 13 14 {2.7U/FT}
+RO 14 0 75
+L 14 6 {30/FT}
+RL 14 6 1000
+CL 6 0 3PF
+.ENDS
+**********
+*SRC=FETAMPL;FETAMPL;Generic Models;Linear Opamp;FET Input
+*SYM=FETAMP
+.SUBCKT FETAMPL 2    3  6   7   4  {GAIN=??? FT=??? VOS=???}
+*               - IN + OUT VCC VEE
+*PARAMS ARE GAIN={GAIN} FT={FT} VOS={VOS}
+RP 4 7 6K
+RXX 4 0 10MEG
+*
+IBP 3 0 33E-12
+RIP 3 0 1E12
+CIP 3 0 3PF
+IBN 2 0 30E-12
+RIN 2 0 1E12
+CIN 2 0 3PF
+VOFST 2 10 {VOS}
+RID 10 3 1E12
+EA 11 0 10 3 1
+R1 11 12 5K
+R2 12 13 50K
+C1 12 0 {24U/FT}
+GA 0 14 0 13 {.0135*GAIN}
+C2 13 14 {2.33U/FT}
+RO 14 0 75
+L 14 6 {4U/FT}
+RL 14 6 100
+CL 6 0 3PF
+.ENDS
+**********
+

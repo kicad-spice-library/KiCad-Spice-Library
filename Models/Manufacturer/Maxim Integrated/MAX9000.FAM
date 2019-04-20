@@ -1,0 +1,789 @@
+* MAX9000 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* Op Amp + Comparator + Reference
+* Single +2.5V to +5.5V Supply Operation
+* Available in 8-Pin SO/uMAX (MAX9000)
+*              8-Pin SO/uMAX (MAX9002)
+*              8-Pin SO/uMAX (MAX9003)
+*	       8-Pin SO/uMAX (MAX9005)
+*
+*
+* PART NUMBER    DESCRIPTION
+* ___________    _____________________________________
+* MAX9000         Op Amp + Comparator + Reference (Op Amp Gain Stability = 1V/V)
+* MAX9002         Op Amp + Comparator (Op Amp Gain Stability = 1V/V)
+* MAX9003         Op Amp + Comparator + Reference (Op Amp Gain Stability = 10V/V)
+* MAX9005         Op Amp + Comparator (Op Amp Gain Stability = 10V/V)
+*
+*	The ShutDown feature is not modeled (MAX9001/MAX9004)
+*
+*   ////////////// MAX9000 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9000 DATA SHEET       <====
+*
+*
+* connections:   AMPIN+(3)
+*                |  AMPIN-(2) COMPIN+(5)    
+*                |  |         |   +V(8) -V(4)        
+*                |  |         |    |    |    REF&COMPIN-(6)  
+*                |  |         |    |    |    |    AMPOUT(1)
+*                |  |         |    |    |    |    |   COMPOUT(7)
+.subckt max9000  1  2         101  300  400  235  97  197
+*
+*=======================
+VREFCOMP 235 102 0V
+VSENSEP 300 3 0V
+VSENSEN 400 4 0V
+FSENSEP 300 0 VSENSEP -1
+FSENSEN 400 0 VSENSEN -1
+ISUPPLY 300 400 7UA
+*** ********************* MAX951 AMPLIFIER
+****************INPUT STAGE**********************
+I1 3 41 50U
+M1   5  2 41 3 MOSFET
+R3   5 4  2.6k
+***   was 5.269k
+*
+M2   6  7 41 3 MOSFET
+R4   6 4 2.6k
+CI1  1  0 2P
+CI2  2  0 2P
+DP1  1 3 DA
+DP2 4  1 DA
+DP3  2 3 DB
+DP4 4  2 DB
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 3 98 3 4 0.5 
+G0  98  9 5 6 4.566e-6
+VS 9 10 0V 
+R0  98  9 219E9
+C3 10 98 .711pf
+D1 9 139 DX
+D2 112 9 DX
+V11 3 139 .149V
+V12 112 4 .060V
+************      I2 3 4 -19U
+EOS 7 1 POLY(1) 16 98 0 1
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+G4 98 16 POLY(2) 1 98 2 98 0 1E-9 1E-9                       
+R13 98 16 40
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*C5 98 15 14.5N 
+*C5 98 15 3N
+*  
+*CCOMP 97 100 20000nf
+*RCOMP 100 9 100000
+*************OUTPUT STAGE****************
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 1V
+V4 36 35 1V
+*V5,V4 SET ISC
+R16 34 97 300
+E1 3 33 3 32 1
+VA8 33 34 0V
+RCON 35 97 300
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL MOSFET PMOS(VTO=-1.7 KP=5E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE
+*** ****************** MAX951/2 VOLTAGE REF. 
+*
+VREF 301 4 1.23V
+VSHORT 235 302 0V
+RIN200 301 302 1MEG
+F226 300 400 VA227 1
+F225 3 238 VA228 1
+D229 240 238 DX
+D230 238 3 DX
+VA227 3 240 0
+***=====================
+G232 0 232 301 302 1E-3
+R235 0 232 1E6
+C235 0 232 6800PF
+D223 232 236 DX2
+D224 237 232 DX2
+V225 235 237 1.8mV
+V224 236 235 .9mV
+R236 234 235 60
+E221 3 233 3 232 1
+VA228 233 234 0V
+*
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*.MODEL DX D(IS=1E-15) 
+***===============================
+*       COMPARATOR
+* 
+.model qin NPN(Is=800.0E-18 Bf=6.25E3)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=249.8E-9)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+.model qoc NPN(Is=800.0E-18 Bf=10.3E3 Cjc=1E-15 Tf=708E-12 Tr=166.7E-9)
+.MODEL DP D(N=0.001)
+*=======================
+  dp100    4  3 DX
+  f201    3  109 v101 1
+  iee200   107  500 dc 100.0E-6
+  q201    109  120  107 qin
+  q102    108  121  107 qin
+  q103    109  108  499 qmo
+  q104    108 108  499 qmi
+  VMB100 500 0 0V
+  VPB100 499 3 0V
+***================
+RIN101 102 123 20K
+RIN102 101 125 20K
+***
+DCM102 170 3 DP
+DCM101 4 124 DP
+VCM101 170 124 1.3V
+DCM103 4 126 DP
+VCM102 171 126 1.3V
+DCM104 171 3 DP
+***
+***=================
+EHYST100 123 120 POLY(1) 0 160 0 1
+VS102 121 125 0V
+***=================
+  e101   110  4  3  109  1
+  v101   110 111 dc 0
+  q105    105 111  144 qoc
+  VSHIFT100  144 500 0V
+  R155 499 105 1K
+  DP105 105 3 DP
+  DP106 4 105 DP
+***============= Hysterisis section
+GH100 0 151 197 0 .5E-6
+RH101 3 51 1E9
+RH102 4 51 1E9
+DP101 151 152 DP
+DP102 153 151 DP
+VP100 152 0 1V
+VP102 153 0 -1V
+***=================
+GHYST100 155 0 4 0 1E-6
+GREF100 0 155 235 4 1E-6 
+*NODE 235 STAYS SAME FOR BOTH AMPLIFIERS.
+RREF100 155 0 1E6
+DP110 155 156 DP
+DP120 157 155 DP
+VP110 156 0 50MV
+VP120 157 0 0MV
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT100 160 0 POLY(2) 151 0 155 0 0 0  0 0 1E-6
+RMULT100 160 0 1E6
+*================
+VVIRTUAL100 198 0 0V
+F105 3 138 VA108 1
+D109 140 138 DX
+D110 138 3 DX
+VA107 3 140 0
+F106 300  400 VA107 1
+G112 198 132 105 0 7.04E-3
+R115 198 132 142
+D103 136 141 DX
+D104 142 137 DX
+V105 134 136 -.63
+V104 137 134 -.65
+****V104,V105 SET ISC
+R116 141 197 300
+R117 142 197 300
+E111 3 133 3 132 1
+VA108 133 134 0V
+*========================
+.ends
+*
+*
+*
+*
+*   ////////////// MAX9002 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9000 DATA SHEET       <====
+*
+*
+* connections:   AMPIN+(3)
+*                |  AMPIN-(2) COMPIN+(5)    
+*                |  |         |   +V(8) -V(4)        
+*                |  |         |    |    |    REF&COMPIN-(6)  
+*                |  |         |    |    |    |    AMPOUT(1)
+*                |  |         |    |    |    |    |   COMPOUT(7)
+.subckt max9002  1  2         101  300  400  235  97  197
+*
+*=======================
+VREFCOMP 235 102 0V
+VSENSEP 300 3 0V
+VSENSEN 400 4 0V
+FSENSEP 300 0 VSENSEP -1
+FSENSEN 400 0 VSENSEN -1
+ISUPPLY 300 400 7UA
+*** ********************* MAX951 AMPLIFIER
+****************INPUT STAGE**********************
+I1 3 41 50U
+M1   5  2 41 3 MOSFET
+R3   5 4  2.6k
+***   was 5.269k
+*
+M2   6  7 41 3 MOSFET
+R4   6 4 2.6k
+CI1  1  0 2P
+CI2  2  0 2P
+DP1  1 3 DA
+DP2 4  1 DA
+DP3  2 3 DB
+DP4 4  2 DB
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 3 98 3 4 0.5 
+G0  98  9 5 6 4.566e-6
+VS 9 10 0V 
+R0  98  9 219E9
+C3 10 98 .711pf
+D1 9 139 DX
+D2 112 9 DX
+V11 3 139 .149V
+V12 112 4 .060V
+************      I2 3 4 -19U
+EOS 7 1 POLY(1) 16 98 0 1
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+G4 98 16 POLY(2) 1 98 2 98 0 1E-9 1E-9                       
+R13 98 16 40
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*C5 98 15 14.5N 
+*C5 98 15 3N
+*  
+*CCOMP 97 100 20000nf
+*RCOMP 100 9 100000
+*************OUTPUT STAGE****************
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 1V
+V4 36 35 1V
+*V5,V4 SET ISC
+R16 34 97 300
+E1 3 33 3 32 1
+VA8 33 34 0V
+RCON 35 97 300
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL MOSFET PMOS(VTO=-1.7 KP=5E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE
+*** ****************** MAX951/2 VOLTAGE REF. 
+*
+VREF 301 4 1.23V
+VSHORT 235 302 0V
+RIN200 301 302 1MEG
+F226 300 400 VA227 1
+F225 3 238 VA228 1
+D229 240 238 DX
+D230 238 3 DX
+VA227 3 240 0
+***=====================
+G232 0 232 301 302 1E-3
+R235 0 232 1E6
+C235 0 232 6800PF
+D223 232 236 DX2
+D224 237 232 DX2
+V225 235 237 1.8mV
+V224 236 235 .9mV
+R236 234 235 60
+E221 3 233 3 232 1
+VA228 233 234 0V
+*
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*.MODEL DX D(IS=1E-15) 
+***===============================
+*       COMPARATOR
+* 
+.model qin NPN(Is=800.0E-18 Bf=6.25E3)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=249.8E-9)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+.model qoc NPN(Is=800.0E-18 Bf=10.3E3 Cjc=1E-15 Tf=708E-12 Tr=166.7E-9)
+.MODEL DP D(N=0.001)
+*=======================
+  dp100    4  3 DX
+  f201    3  109 v101 1
+  iee200   107  500 dc 100.0E-6
+  q201    109  120  107 qin
+  q102    108  121  107 qin
+  q103    109  108  499 qmo
+  q104    108 108  499 qmi
+  VMB100 500 0 0V
+  VPB100 499 3 0V
+***================
+RIN101 102 123 20K
+RIN102 101 125 20K
+***
+DCM102 170 3 DP
+DCM101 4 124 DP
+VCM101 170 124 1.3V
+DCM103 4 126 DP
+VCM102 171 126 1.3V
+DCM104 171 3 DP
+***
+***=================
+EHYST100 123 120 POLY(1) 0 160 0 1
+VS102 121 125 0V
+***=================
+  e101   110  4  3  109  1
+  v101   110 111 dc 0
+  q105    105 111  144 qoc
+  VSHIFT100  144 500 0V
+  R155 499 105 1K
+  DP105 105 3 DP
+  DP106 4 105 DP
+***============= Hysterisis section
+GH100 0 151 197 0 .5E-6
+RH101 3 51 1E9
+RH102 4 51 1E9
+DP101 151 152 DP
+DP102 153 151 DP
+VP100 152 0 1V
+VP102 153 0 -1V
+***=================
+GHYST100 155 0 4 0 1E-6
+GREF100 0 155 235 4 1E-6 
+*NODE 235 STAYS SAME FOR BOTH AMPLIFIERS.
+RREF100 155 0 1E6
+DP110 155 156 DP
+DP120 157 155 DP
+VP110 156 0 50MV
+VP120 157 0 0MV
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT100 160 0 POLY(2) 151 0 155 0 0 0  0 0 1E-6
+RMULT100 160 0 1E6
+*================
+VVIRTUAL100 198 0 0V
+F105 3 138 VA108 1
+D109 140 138 DX
+D110 138 3 DX
+VA107 3 140 0
+F106 300  400 VA107 1
+G112 198 132 105 0 7.04E-3
+R115 198 132 142
+D103 136 141 DX
+D104 142 137 DX
+V105 134 136 -.63
+V104 137 134 -.65
+****V104,V105 SET ISC
+R116 141 197 300
+R117 142 197 300
+E111 3 133 3 132 1
+VA108 133 134 0V
+*========================
+.ends
+*
+*
+*
+*
+*   ////////////// MAX9003 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9000 DATA SHEET       <====
+*
+*
+* connections:   AMPIN+(3)
+*                |  AMPIN-(2) COMPIN+(5)    
+*                |  |         |   +V(8) -V(4)        
+*                |  |         |    |    |    REF&COMPIN-(6)  
+*                |  |         |    |    |    |    AMPOUT(1)
+*                |  |         |    |    |    |    |   COMPOUT(7)
+.subckt max9003  1  2         101  300  400  235  97  197
+*
+*=======================
+VREFCOMP 235 102 0V
+VSENSEP 300 3 0V
+VSENSEN 400 4 0V
+FSENSEP 300 0 VSENSEP -1
+FSENSEN 400 0 VSENSEN -1
+ISUPPLY 300 400 7UA
+*** *********************  AMPLIFIER
+****************INPUT STAGE**********************
+I1 3 41 50U
+M1   5  2 41 3 MOSFET
+R3   5 4  2.6k
+***   was 5.269k
+*
+M2   6  7 41 3 MOSFET
+R4   6 4 2.6k
+CI1  1  0 2P
+CI2  2  0 2P
+DP1  1 3 DA
+DP2 4  1 DA
+DP3  2 3 DB
+DP4 4  2 DB
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 3 98 3 4 0.5 
+G0  98  9 5 6 4.566e-6
+VS 9 10 0V 
+R0  98  9 219E9
+C3 10 98 .114pf
+D1 9 139 DX
+D2 112 9 DX
+V11 3 139 .149V
+V12 112 4 .060V
+************      I2 3 4 -19U
+EOS 7 1 POLY(1) 16 98 0 1
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+G4 98 16 POLY(2) 1 98 2 98 0 1E-9 1E-9                       
+R13 98 16 40
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*C5 98 15 14.5N 
+*C5 98 15 3N
+*  
+*CCOMP 97 100 20000nf
+*RCOMP 100 9 100000
+*************OUTPUT STAGE****************
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 1V
+V4 36 35 1V
+*V5,V4 SET ISC
+R16 34 97 300
+E1 3 33 3 32 1
+VA8 33 34 0V
+RCON 35 97 300
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL MOSFET PMOS(VTO=-1.7 KP=5E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE
+*** ****************** MAX951/2 VOLTAGE REF. 
+*
+VREF 301 4 1.23V
+VSHORT 235 302 0V
+RIN200 301 302 1MEG
+F226 300 400 VA227 1
+F225 3 238 VA228 1
+D229 240 238 DX
+D230 238 3 DX
+VA227 3 240 0
+***=====================
+G232 0 232 301 302 1E-3
+R235 0 232 1E6
+C235 0 232 6800PF
+D223 232 236 DX2
+D224 237 232 DX2
+V225 235 237 1.8mV
+V224 236 235 .9mV
+R236 234 235 60
+E221 3 233 3 232 1
+VA228 233 234 0V
+*
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*.MODEL DX D(IS=1E-15) 
+***===============================
+*       COMPARATOR
+* 
+.model qin NPN(Is=800.0E-18 Bf=6.25E3)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=249.8E-9)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+.model qoc NPN(Is=800.0E-18 Bf=10.3E3 Cjc=1E-15 Tf=708E-12 Tr=166.7E-9)
+.MODEL DP D(N=0.001)
+*=======================
+  dp100    4  3 DX
+  f201    3  109 v101 1
+  iee200   107  500 dc 100.0E-6
+  q201    109  120  107 qin
+  q102    108  121  107 qin
+  q103    109  108  499 qmo
+  q104    108 108  499 qmi
+  VMB100 500 0 0V
+  VPB100 499 3 0V
+***================
+RIN101 102 123 20K
+RIN102 101 125 20K
+***
+DCM102 170 3 DP
+DCM101 4 124 DP
+VCM101 170 124 1.3V
+DCM103 4 126 DP
+VCM102 171 126 1.3V
+DCM104 171 3 DP
+***
+***=================
+EHYST100 123 120 POLY(1) 0 160 0 1
+VS102 121 125 0V
+***=================
+  e101   110  4  3  109  1
+  v101   110 111 dc 0
+  q105    105 111  144 qoc
+  VSHIFT100  144 500 0V
+  R155 499 105 1K
+  DP105 105 3 DP
+  DP106 4 105 DP
+***============= Hysterisis section
+GH100 0 151 197 0 .5E-6
+RH101 3 51 1E9
+RH102 4 51 1E9
+DP101 151 152 DP
+DP102 153 151 DP
+VP100 152 0 1V
+VP102 153 0 -1V
+***=================
+GHYST100 155 0 4 0 1E-6
+GREF100 0 155 235 4 1E-6 
+*NODE 235 STAYS SAME FOR BOTH AMPLIFIERS.
+RREF100 155 0 1E6
+DP110 155 156 DP
+DP120 157 155 DP
+VP110 156 0 50MV
+VP120 157 0 0MV
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT100 160 0 POLY(2) 151 0 155 0 0 0  0 0 1E-6
+RMULT100 160 0 1E6
+*================
+VVIRTUAL100 198 0 0V
+F105 3 138 VA108 1
+D109 140 138 DX
+D110 138 3 DX
+VA107 3 140 0
+F106 300  400 VA107 1
+G112 198 132 105 0 7.04E-3
+R115 198 132 142
+D103 136 141 DX
+D104 142 137 DX
+V105 134 136 -.63
+V104 137 134 -.65
+****V104,V105 SET ISC
+R116 141 197 300
+R117 142 197 300
+E111 3 133 3 132 1
+VA108 133 134 0V
+*========================
+.ends
+*
+*
+*
+*
+*   ////////////// MAX9005 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9000 DATA SHEET       <====
+*
+*
+* connections:   AMPIN+(3)
+*                |  AMPIN-(2) COMPIN+(5)    
+*                |  |         |   +V(8) -V(4)        
+*                |  |         |    |    |    REF&COMPIN-(6)  
+*                |  |         |    |    |    |    AMPOUT(1)
+*                |  |         |    |    |    |    |   COMPOUT(7)
+.subckt max9005  1  2         101  300  400  235  97  197
+*
+*=======================
+VREFCOMP 235 102 0V
+VSENSEP 300 3 0V
+VSENSEN 400 4 0V
+FSENSEP 300 0 VSENSEP -1
+FSENSEN 400 0 VSENSEN -1
+ISUPPLY 300 400 7UA
+*** *********************  AMPLIFIER
+****************INPUT STAGE**********************
+I1 3 41 50U
+M1   5  2 41 3 MOSFET
+R3   5 4  2.6k
+***   was 5.269k
+*
+M2   6  7 41 3 MOSFET
+R4   6 4 2.6k
+CI1  1  0 2P
+CI2  2  0 2P
+DP1  1 3 DA
+DP2 4  1 DA
+DP3  2 3 DB
+DP4 4  2 DB
+************ GAIN, 1ST POLE, SLEW STAGE************
+EH 3 98 3 4 0.5 
+G0  98  9 5 6 4.566e-6
+VS 9 10 0V 
+R0  98  9 219E9
+C3 10 98 .114pf
+D1 9 139 DX
+D2 112 9 DX
+V11 3 139 .149V
+V12 112 4 .060V
+************      I2 3 4 -19U
+EOS 7 1 POLY(1) 16 98 0 1
+*CHANGE OFFSET VOLTAGE TO 0V FOR OPEN-LOOP, OTHERWISE VOS
+*********COMMON-MODE ZERO STAGE********
+G4 98 16 POLY(2) 1 98 2 98 0 1E-9 1E-9                       
+R13 98 16 40
+******* POLE STAGE **********
+G3 98 15 10 98 1E-3
+R12 98 15 1E3
+*C5 98 15 14.5N 
+*C5 98 15 3N
+*  
+*CCOMP 97 100 20000nf
+*RCOMP 100 9 100000
+*************OUTPUT STAGE****************
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+G12 98 32 15 98 1E-6
+*                ^ INSERT NODE FROM LAST STAGE HERE
+R15 98 32 1E6
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 1V
+V4 36 35 1V
+*V5,V4 SET ISC
+R16 34 97 300
+E1 3 33 3 32 1
+VA8 33 34 0V
+RCON 35 97 300
+******************************************
+.MODEL DA D(IS=100E-14 RS=.5K)
+.MODEL DB D(IS=100E-14 RS=.5K)
+.MODEL DX D(IS=100E-14)
+.MODEL MOSFET PMOS(VTO=-1.7 KP=5E-3)
+*VTO ESTABLISHES INPUT VOLT. RANGE
+*** ****************** MAX951/2 VOLTAGE REF. 
+*
+VREF 301 4 1.23V
+VSHORT 235 302 0V
+RIN200 301 302 1MEG
+F226 300 400 VA227 1
+F225 3 238 VA228 1
+D229 240 238 DX
+D230 238 3 DX
+VA227 3 240 0
+***=====================
+G232 0 232 301 302 1E-3
+R235 0 232 1E6
+C235 0 232 6800PF
+D223 232 236 DX2
+D224 237 232 DX2
+V225 235 237 1.8mV
+V224 236 235 .9mV
+R236 234 235 60
+E221 3 233 3 232 1
+VA228 233 234 0V
+*
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*.MODEL DX D(IS=1E-15) 
+***===============================
+*       COMPARATOR
+* 
+.model qin NPN(Is=800.0E-18 Bf=6.25E3)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=249.8E-9)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+.model qoc NPN(Is=800.0E-18 Bf=10.3E3 Cjc=1E-15 Tf=708E-12 Tr=166.7E-9)
+.MODEL DP D(N=0.001)
+*=======================
+  dp100    4  3 DX
+  f201    3  109 v101 1
+  iee200   107  500 dc 100.0E-6
+  q201    109  120  107 qin
+  q102    108  121  107 qin
+  q103    109  108  499 qmo
+  q104    108 108  499 qmi
+  VMB100 500 0 0V
+  VPB100 499 3 0V
+***================
+RIN101 102 123 20K
+RIN102 101 125 20K
+***
+DCM102 170 3 DP
+DCM101 4 124 DP
+VCM101 170 124 1.3V
+DCM103 4 126 DP
+VCM102 171 126 1.3V
+DCM104 171 3 DP
+***
+***=================
+EHYST100 123 120 POLY(1) 0 160 0 1
+VS102 121 125 0V
+***=================
+  e101   110  4  3  109  1
+  v101   110 111 dc 0
+  q105    105 111  144 qoc
+  VSHIFT100  144 500 0V
+  R155 499 105 1K
+  DP105 105 3 DP
+  DP106 4 105 DP
+***============= Hysterisis section
+GH100 0 151 197 0 .5E-6
+RH101 3 51 1E9
+RH102 4 51 1E9
+DP101 151 152 DP
+DP102 153 151 DP
+VP100 152 0 1V
+VP102 153 0 -1V
+***=================
+GHYST100 155 0 4 0 1E-6
+GREF100 0 155 235 4 1E-6 
+*NODE 235 STAYS SAME FOR BOTH AMPLIFIERS.
+RREF100 155 0 1E6
+DP110 155 156 DP
+DP120 157 155 DP
+VP110 156 0 50MV
+VP120 157 0 0MV
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT100 160 0 POLY(2) 151 0 155 0 0 0  0 0 1E-6
+RMULT100 160 0 1E6
+*================
+VVIRTUAL100 198 0 0V
+F105 3 138 VA108 1
+D109 140 138 DX
+D110 138 3 DX
+VA107 3 140 0
+F106 300  400 VA107 1
+G112 198 132 105 0 7.04E-3
+R115 198 132 142
+D103 136 141 DX
+D104 142 137 DX
+V105 134 136 -.63
+V104 137 134 -.65
+****V104,V105 SET ISC
+R116 141 197 300
+R117 142 197 300
+E111 3 133 3 132 1
+VA108 133 134 0V
+*========================
+.ends
+

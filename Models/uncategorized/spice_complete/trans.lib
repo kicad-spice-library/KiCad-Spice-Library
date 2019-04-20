@@ -1,0 +1,539 @@
+* This library consists of lossy transmission line models.
+*
+* These models are mainly for transient analysis as they
+* don't represent the frequency dependence that is needed for
+* the attenuation vs. frequency characteristic. They may still be
+* used in AC analysis, but won't realistically predict the attenuation
+* except at one frequency.
+*
+* The input parameters for these models is the frequency in Hz
+* and the actual length of the wire that is desired.
+* The default for attenuation is shown below with each model and includes
+* the unit of length used, and the default length is equal to 1.
+*
+* These parameters were taken from the "Handbook of Electronics
+* Calculations For Engineers and Technicians" by Kaufman and
+* Seidman, Second Edition, McGraw Hill.
+* 
+* The calculations below are in feet, so the velocity is taken as 9.82e8ft/s
+
+* RG-6A/U cable type: 75ohms, 66% velocity of propogation
+* default 2.9dB/100ft @ 100MHz
+.subckt RG6AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.008, 50Meg,.014, 100Meg,.029, 
++        200Meg,.043, 400Meg,.064, 1G,.11)}
+
+T1 AP AN BP BN RG6A
+
+.model RG6A TRN (len={length} r={(atten/8.686)*2*75}
++                c=20.6p     l=115.6n)
+.ends
+
+* RG-6/U cable type: 75ohms, 78% velocity of propogation
+* default 2.1dB/100ft @ 100MHz
+.subckt RG6U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0062, 50Meg,.015, 100Meg,.021, 
++        200Meg,.031, 400Meg,.044, 1G,.071)}
+
+T1 AP AN BP BN RG6
+
+.model RG6 TRN (len={length} r={(atten/8.686)*2*75}
++                c=17.4p     l=98.0n)
+.ends
+
+* RG-8/U cable type: 52ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG8U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG8
+
+.model RG8 TRN (len={length} r={(atten/8.686)*2*52}
++                c=29.7p     l=80.2n)
+.ends
+
+* RG-8A/U cable type: 52ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG8AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG8A
+
+.model RG8A TRN (len={length} r={(atten/8.686)*2*52}
++                c=29.7p     l=80.2n)
+.ends
+
+* RG-8/U+ cable type: 50ohms, 78% velocity of propogation
+* default 1.8dB/100ft @ 100MHz
+.subckt RG8U+ AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0049, 50Meg,.012, 100Meg,.018, 
++        200Meg,.026, 400Meg,.038, 1G,.062, 3G,.113)}
+
+T1 AP AN BP BN RG8+
+
+.model RG8+ TRN (len={length} r={(atten/8.686)*2*50}
++                c=26.1p     l=65.3n)
+.ends
+
+* RG-9B/U cable type: 50ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG9BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG9B
+
+.model RG9B TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-11/U cable type: 75ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG11U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG11
+
+.model RG11 TRN (len={length} r={(atten/8.686)*2*75}
++                c=20.6p     l=115.6n)
+.ends
+
+* RG-11A/U cable type: 75ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG11AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG11A
+
+.model RG11A TRN (len={length} r={(atten/8.686)*2*75}
++                c=20.6p     l=115.6n)
+.ends
+
+* RG-11/U+ cable type: 75ohms, 78% velocity of propogation
+* default 1.5dB/100ft @ 100MHz
+.subckt RG11U+ AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0041, 50Meg,.01, 100Meg,.015, 
++        200Meg,.022, 400Meg,.033, 1G,.056, 3G,.109)}
+
+T1 AP AN BP BN RG11+
+
+.model RG11+ TRN (len={length} r={(atten/8.686)*2*75}
++                c=17.4p     l=98.0n)
+.ends
+
+* RG-12A/U cable type: 75ohms, 66% velocity of propogation
+* default 2.15dB/100ft @ 100MHz
+.subckt RG12AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0065, 50Meg,.015, 100Meg,.0215, 
++        200Meg,.032, 400Meg,.047, 1G,.082, 3G,.18)}
+
+T1 AP AN BP BN RG12
+
+.model RG12 TRN (len={length} r={(atten/8.686)*2*75}
++                c=20.6p     l=115.6n)
+.ends
+
+* RG-22B/U cable type: 95ohms, 66% velocity of propogation
+* default 4.2dB/100ft @ 100MHz
+.subckt RG22BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.012, 50Meg,.028, 100Meg,.042, 
++        200Meg,.063, 400Meg,.095)}
+
+T1 AP AN BP BN RG22B
+
+.model RG22B TRN (len={length} r={(atten/8.686)*2*95}
++                c=16.2p     l=147.0n)
+.ends
+
+* RG-55/U cable type: 53.5ohms, 66% velocity of propogation
+* default 4.3dB/100ft @ 100MHz
+.subckt RG55U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0135, 50Meg,.03, 100Meg,.043, 
++        200Meg,.06, 400Meg,.088, 1G,.165)}
+
+T1 AP AN BP BN RG55
+
+.model RG55 TRN (len={length} r={(atten/8.686)*2*53.5}
++                c=28.8p     l=82.7n)
+.ends
+
+* RG-55B/U cable type: 53.5ohms, 66% velocity of propogation
+* default 4.3dB/100ft @ 100MHz
+.subckt RG55BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0135, 50Meg,.03, 100Meg,.043, 
++        200Meg,.06, 400Meg,.088, 1G,.165)}
+
+T1 AP AN BP BN RG55B
+
+.model RG55B TRN (len={length} r={(atten/8.686)*2*53.5}
++                c=28.8p     l=82.7n)
+.ends
+
+* RG-58/U cable type: 53.5ohms, 66% velocity of propogation
+* default 4.6dB/100ft @ 100MHz
+.subckt RG58U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.012, 50Meg,.031, 100Meg,.046, 
++        200Meg,.07, 400Meg,.1, 1G,.175)}
+
+T1 AP AN BP BN RG58
+
+.model RG58 TRN (len={length} r={(atten/8.686)*2*53.5}
++                c=28.8p     l=82.7n)
+.ends
+
+* RG-58A/U cable type: 50ohms, 66% velocity of propogation
+* default 4.9dB/100ft @ 100MHz
+.subckt RG58AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.014, 50Meg,.033, 100Meg,.049, 
++        200Meg,.073, 400Meg,.11, 1G,.2)}
+
+T1 AP AN BP BN RG58A
+
+.model RG58A TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-58C/U cable type: 50ohms, 66% velocity of propogation
+* default 4.9dB/100ft @ 100MHz
+.subckt RG58CU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.014, 50Meg,.033, 100Meg,.049, 
++        200Meg,.073, 400Meg,.11, 1G,.2)}
+
+T1 AP AN BP BN RG58C
+
+.model RG58C TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-58/U+ cable type: 50ohms, 78% velocity of propogation
+* default 4.8dB/100ft @ 100MHz
+.subckt RG58U+ AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.012, 50Meg,.031, 100Meg,.048, 
++        200Meg,.069, 400Meg,.101, 1G,.18)}
+
+T1 AP AN BP BN RG58+
+
+.model RG58+ TRN (len={length} r={(atten/8.686)*2*50}
++                c=26.1p     l=65.3n)
+.ends
+
+* RG-59/U cable type: 75ohms, 66% velocity of propogation
+* default 3.3dB/100ft @ 100MHz
+.subckt RG59U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.011, 50Meg,.023, 100Meg,.033, 
++        200Meg,.047, 400Meg,.067, 1G,.115)}
+
+T1 AP AN BP BN RG59
+
+.model RG59 TRN (len={length} r={(atten/8.686)*2*75}
++                c=20.6p     l=115.6n)
+.ends
+
+* RG-59B/U cable type: 75ohms, 66% velocity of propogation
+* default 3.3dB/100ft @ 100MHz
+.subckt RG59BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.011, 50Meg,.023, 100Meg,.033, 
++        200Meg,.047, 400Meg,.067, 1G,.115)}
+
+T1 AP AN BP BN RG59B
+
+.model RG59B TRN (len={length} r={(atten/8.686)*2*75}
++                c=20.6p     l=115.6n)
+.ends
+
+* RG-59/U+ cable type: 78ohms, 78% velocity of propogation
+* default 2.9dB/100ft @ 100MHz
+.subckt RG59U+ AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0095, 50Meg,.021, 100Meg,.029, 
++        200Meg,.041, 400Meg,.066, 1G,.11)}
+
+T1 AP AN BP BN RG59+
+
+.model RG59+ TRN (len={length} r={(atten/8.686)*2*78}
++                c=16.7p     l=102.1n)
+.ends
+
+* RG-62/U cable type: 93ohms, 84% velocity of propogation
+* default 2.8dB/100ft @ 100MHz
+.subckt RG62U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.009, 50Meg,.019, 100Meg,.028, 
++        200Meg,.037, 400Meg,.058, 1G,.085)}
+
+T1 AP AN BP BN RG62
+
+.model RG62 TRN (len={length} r={(atten/8.686)*2*93}
++                c=13.0p     l=113.1n)
+.ends
+
+* RG-62A/U cable type: 93ohms, 84% velocity of propogation
+* default 2.8dB/100ft @ 100MHz
+.subckt RG62AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.009, 50Meg,.019, 100Meg,.028, 
++        200Meg,.037, 400Meg,.058, 1G,.085)}
+
+T1 AP AN BP BN RG62A
+
+.model RG62A TRN (len={length} r={(atten/8.686)*2*93}
++                c=13.0p     l=113.1n)
+.ends
+
+* RG-63B/U cable type: 125ohms, 84% velocity of propogation
+* default 1.5dB/100ft @ 100MHz
+.subckt RG63BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.005, 50Meg,.011, 100Meg,.015, 
++        200Meg,.023, 400Meg,.034, 1G,.057)}
+
+T1 AP AN BP BN RG63B
+
+.model RG63B TRN (len={length} r={(atten/8.686)*2*125}
++                c=9.7p     l=151.5n)
+.ends
+
+* RG-71B/U cable type: 93ohms, 84% velocity of propogation
+* default 2.8dB/100ft @ 100MHz
+.subckt RG71BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.009, 50Meg,.019, 100Meg,.028, 
++        200Meg,.037, 400Meg,.058, 1G,.085, 3G,.186)}
+
+T1 AP AN BP BN RG71B
+
+.model RG71B TRN (len={length} r={(atten/8.686)*2*93}
++                c=13.0p     l=113.1n)
+.ends
+
+* RG-174/U cable type: 50ohms, 66% velocity of propogation
+* default 8.9dB/100ft @ 100MHz
+.subckt RG174U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.038, 50Meg,.065, 100Meg,.089, 
++        200Meg,.12, 400Meg,.175, 1G,.31)}
+
+T1 AP AN BP BN RG174
+
+.model RG174 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-178B/U cable type: 50ohms, 70% velocity of propogation
+* default 13.3dB/100ft @ 100MHz
+.subckt RG178BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.053, 50Meg,.1, 100Meg,.133, 
++        200Meg,.2, 400Meg,.275, 1G,.45)}
+
+T1 AP AN BP BN RG178B
+
+.model RG178B TRN (len={length} r={(atten/8.686)*2*50}
++                c=29.1p     l=72.7n)
+.ends
+
+* RG-179B/U cable type: 75ohms, 70% velocity of propogation
+* default 9.8dB/100ft @ 100MHz
+.subckt RG179BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.05, 50Meg,.079, 100Meg,.098, 
++        200Meg,.127, 400Meg,.158, 1G,.25)}
+
+T1 AP AN BP BN RG179B
+
+.model RG179B TRN (len={length} r={(atten/8.686)*2*75}
++                c=19.4p     l=109.1n)
+.ends
+
+* RG-180B/U cable type: 93ohms, 70% velocity of propogation
+* default 5.1dB/100ft @ 100MHz
+.subckt RG180BU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.031, 50Meg,.042, 100Meg,.051, 
++        200Meg,.073, 400Meg,.104, 1G,.165)}
+
+T1 AP AN BP BN RG180B
+
+.model RG180B TRN (len={length} r={(atten/8.686)*2*93}
++                c=15.6p     l=135.7n)
+.ends
+
+* RG-187A/U cable type: 75ohms, 70% velocity of propogation
+* default 9.8dB/100ft @ 100MHz
+.subckt RG187AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.05, 50Meg,.079, 100Meg,.098, 
++        200Meg,.127, 400Meg,.158, 1G,.25)}
+
+T1 AP AN BP BN RG187A
+
+.model RG187A TRN (len={length} r={(atten/8.686)*2*75}
++                c=19.4p     l=109.1n)
+.ends
+
+* RG-188A/U cable type: 50ohms, 70% velocity of propogation
+* default 13.3dB/100ft @ 100MHz
+.subckt RG188AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.038, 50Meg,.079, 100Meg,.115, 
++        200Meg,.15, 400Meg,.2, 1G,.3, 3G,.58)}
+
+T1 AP AN BP BN RG188A
+
+.model RG188A TRN (len={length} r={(atten/8.686)*2*50}
++                c=29.1p     l=72.7n)
+.ends
+
+* RG-195A/U cable type: 95ohms, 70% velocity of propogation
+* default 5.1dB/100ft @ 100MHz
+.subckt RG195AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.031, 50Meg,.042, 100Meg,.051, 
++        200Meg,.073, 400Meg,.104, 1G,.165)}
+
+T1 AP AN BP BN RG195A
+
+.model RG195A TRN (len={length} r={(atten/8.686)*2*95}
++                c=15.3p     l=138.3n)
+.ends
+
+* RG-196A/U cable type: 50ohms, 70% velocity of propogation
+* default 13.3dB/100ft @ 100MHz
+.subckt RG196AU AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.053, 50Meg,.1, 100Meg,.133, 
++        200Meg,.2, 400Meg,.275, 1G,.45)}
+
+T1 AP AN BP BN RG196A
+
+.model RG196A TRN (len={length} r={(atten/8.686)*2*50}
++                c=29.1p     l=72.7n)
+.ends
+
+* RG-212/U cable type: 50ohms, 66% velocity of propogation
+* default 2.4dB/100ft @ 100MHz
+.subckt RG212U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0065, 50Meg,.016, 100Meg,.024, 
++        200Meg,.036, 400Meg,.052, 1G,.088, 3G,.167)}
+
+T1 AP AN BP BN RG212
+
+.model RG212 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-213/U cable type: 50ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG213U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG213
+
+.model RG213 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-214/U cable type: 50ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG214U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG214
+
+.model RG214 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-215/U cable type: 50ohms, 66% velocity of propogation
+* default 2.2dB/100ft @ 100MHz
+.subckt RG215U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0066, 50Meg,.015, 100Meg,.022, 
++        200Meg,.032, 400Meg,.046, 1G,.09, 3G,.19)}
+
+T1 AP AN BP BN RG215
+
+.model RG215 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-217/U cable type: 50ohms, 66% velocity of propogation
+* default 1.4dB/100ft @ 100MHz
+.subckt RG217U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0041, 50Meg,.01, 100Meg,.014, 
++        200Meg,.021, 400Meg,.031, 1G,.058, 3G,.13)}
+
+T1 AP AN BP BN RG217
+
+.model RG217 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-218/U cable type: 50ohms, 66% velocity of propogation
+* default .81dB/100ft @ 100MHz
+.subckt RG218U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0023, 50Meg,.0056, 100Meg,.0081, 
++        200Meg,.012, 400Meg,.019, 1G,.038, 3G,.09)}
+
+T1 AP AN BP BN RG218
+
+.model RG218 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-219/U cable type: 50ohms, 66% velocity of propogation
+* default .81dB/100ft @ 100MHz
+.subckt RG219U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0023, 50Meg,.0056, 100Meg,.0081, 
++        200Meg,.012, 400Meg,.019, 1G,.038, 3G,.09)}
+
+T1 AP AN BP BN RG219
+
+.model RG219 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+
+* RG-223/U cable type: 50ohms, 66% velocity of propogation
+* default 4.3dB/100ft @ 100MHz
+.subckt RG223U AP AN BP BN
++ params: freq=100MEG length=1
++ atten={table(freq, 10Meg,.0135, 50Meg,.03, 100Meg,.043, 
++        200Meg,.06, 400Meg,.088, 1G,.165)}
+
+T1 AP AN BP BN RG223
+
+.model RG223 TRN (len={length} r={(atten/8.686)*2*50}
++                c=30.9p     l=77.0n)
+.ends
+

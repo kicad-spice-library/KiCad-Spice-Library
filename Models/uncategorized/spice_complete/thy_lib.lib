@@ -1,0 +1,581 @@
+******************************************************************
+*                                                                *
+*               Micro Cap IV Thyristor Library                   *
+*               Spectrum Software Rev. 2.00                      *
+*               All rights reserved                              *
+*                                                                *
+*   Information in this library was derived from:                *
+*                                                                *
+*     International Rectifer Power Modules PMD-1                 *
+*     Texas Instruments Power Products Data Book 1990            *
+*     Motorola Thyristor Device Data                             *
+*                                                                *
+*  Passed parameters follow the format:                          *
+*    SCR(IH,IGT,TON,VTMIN,VDRM,DVDT,TQ,K1,K2)                    *
+*                                                                *
+*    SCR - refers to the macro circuit SCR.CIR                   *
+*    IH - DC Holding Current                                     *
+*    IGT - Gate Trigger Current                                  *
+*    TON - Turn on time                                          *
+*    VTMIN - Minimum anode to cathode on state voltage           *
+*    VDRM - Maximum repetitive peak off-state voltage            *
+*    DVDT - Critical rate of rise of off-state voltage           *
+*    TQ - Turn of time                                           *
+*    K1 - DVDT adjustment (set to 1 unless otherwise specified)  *
+*    K2 - TQ adjustment (set to 1 unless otherwise specified)    *
+*                                                                *
+*    To use these parts, select the SCR macro from the Macro     *
+*    section of the Component Menu and place it in your circuit. *
+*    For the parameter enter one of the part names below, such   *
+*    as 2N3870. Then either include a .LIB statement in your    *
+*    circuit to access this library or enter a .define statement *
+*    on the schematic that defines the parameters for the SCR.   *
+*    For example:                                                *
+*        .define 2N3870 SCR(14m,9m,1u,1.5,100,50MEG,25u,.8,1)   *
+*                                                                *
+******************************************************************
+
+.macro 2N1595 SCR(5m,2m,.8u,1.1,50,30MEG,10u,1.45,24)
+.macro 2N1596 SCR(5m,2m,.8u,1.1,100,30MEG,10u,1.45,24)
+.macro 2N1597 SCR(5m,2m,.8u,1.1,200,30MEG,10u,1.45,24)
+.macro 2N1599 SCR(5m,2m,.8u,1.1,400,30MEG,10u,1.45,24)
+
+.macro MCR3818_2 SCR(50m,40m,1u,1,50,50MEG,20u,.5,1)
+.macro MCR3818_3 SCR(50m,40m,1u,1,100,50MEG,20u,.5,1)
+.macro MCR3818_4 SCR(50m,40m,1u,1,200,50MEG,20u,.5,1)
+.macro MCR3818_6 SCR(50m,40m,1u,1,400,50MEG,20u,.5,1)
+.macro MCR3818_8 SCR(50m,40m,1u,1,600,50MEG,20u,.5,1)
+.macro MCR3818_10 SCR(50m,40m,1u,1,800,50MEG,20u,.5,1)
+
+.macro 2N3870 SCR(14m,9m,1u,1.5,100,50MEG,25u,.8,1)
+.macro 2N3871 SCR(14m,9m,1u,1.5,200,50MEG,25u,.8,1)
+.macro 2N3872 SCR(14m,9m,1u,1.5,400,50MEG,25u,.8,1)
+.macro 2N3873 SCR(14m,9m,1u,1.5,600,50MEG,25u,.8,1)
+
+.macro MCR3896 SCR(14m,9m,1u,1.5,100,50MEG,25u,.8,1)
+.macro MCR3897 SCR(14m,9m,1u,1.5,200,50MEG,25u,.8,1)
+.macro MCR3898 SCR(14m,9m,1u,1.5,400,50MEG,25u,.8,1)
+.macro MCR3899 SCR(14m,9m,1u,1.5,600,50MEG,25u,.8,1)
+
+.macro 2N6171 SCR(14m,9m,1u,1.5,100,50MEG,25u,.8,1)
+.macro 2N6172 SCR(14m,9m,1u,1.5,200,50MEG,25u,.8,1)
+.macro 2N6173 SCR(14m,9m,1u,1.5,400,50MEG,25u,.8,1)
+.macro 2N6174 SCR(14m,9m,1u,1.5,600,50MEG,25u,.8,1)
+
+.macro 2N5060 SCR(5m,200u,3.2u,1,30,30MEG,10u,12,1)
+.macro 2N5061 SCR(5m,200u,3.2u,1,60,30MEG,10u,12,1)
+.macro 2N5062 SCR(5m,200u,3.2u,1,100,30MEG,10u,12,1)
+.macro 2N5063 SCR(5m,200u,3.2u,1,150,30MEG,10u,12,1)
+.macro 2N5064 SCR(5m,200u,3.2u,1,200,30MEG,10u,12,1)
+
+.macro MCR5164 SCR(50m,40m,1u,1,50,50MEG,30u,1.05,1)
+.macro MCR5165 SCR(50m,40m,1u,1,200,50MEG,30u,1.05,1)
+.macro MCR5166 SCR(50m,40m,1u,1,400,50MEG,30u,1.05,1)
+.macro MCR5167 SCR(50m,40m,1u,1,600,50MEG,30u,1.05,1)
+
+.macro 2N5168 SCR(50m,40m,1u,1,50,50MEG,30u,1.05,1)
+.macro 2N5169 SCR(50m,40m,1u,1,200,50MEG,30u,1.05,1)
+.macro 2N5170 SCR(50m,40m,1u,1,400,50MEG,30u,1.05,1)
+.macro 2N5171 SCR(50m,40m,1u,1,600,50MEG,30u,1.05,1)
+
+.macro 2N6167 SCR(3.5m,2.1m,1u,1.5,100,50MEG,40u,1,1)
+.macro 2N6168 SCR(3.5m,2.1m,1u,1.5,200,50MEG,40u,1,1)
+.macro 2N6169 SCR(3.5m,2.1m,1u,1.5,400,50MEG,40u,1,1)
+.macro 2N6170 SCR(3.5m,2.1m,1u,1.5,600,50MEG,40u,1,1)
+
+.macro 2N6394 SCR(6.2m,5m,1u,1.7,50,50MEG,35u,1,1)
+.macro 2N6395 SCR(6.2m,5m,1u,1.7,100,50MEG,35u,1,1)
+.macro 2N6396 SCR(6.2m,5m,1u,1.7,200,50MEG,35u,1,1)
+.macro 2N6397 SCR(6.2m,5m,1u,1.7,400,50MEG,35u,1,1)
+.macro 2N6398 SCR(6.2m,5m,1u,1.7,600,50MEG,35u,1,1)
+.macro 2N6399 SCR(6.2m,5m,1u,1.7,800,50MEG,35u,1,1)
+
+.macro 2N6400 SCR(6.2m,5m,1u,1,50,50MEG,35u,.8,1)
+.macro 2N6401 SCR(6.2m,5m,1u,1,100,50MEG,35u,.8,1)
+.macro 2N6402 SCR(6.2m,5m,1u,1,200,50MEG,35u,.8,1)
+.macro 2N6403 SCR(6.2m,5m,1u,1,400,50MEG,35u,.8,1)
+.macro 2N6404 SCR(6.2m,5m,1u,1,600,50MEG,35u,.8,1)
+.macro 2N6405 SCR(6.2m,5m,1u,1,800,50MEG,35u,.8,1)
+
+.macro C228A SCR(75m,40m,1u,1,100,50MEG,35u,1.1,1)
+.macro C228B SCR(75m,40m,1u,1,200,50MEG,35u,1.1,1)
+.macro C228D SCR(75m,40m,1u,1,400,50MEG,35u,1.1,1)
+.macro C228M SCR(75m,40m,1u,1,600,50MEG,35u,1.1,1)
+
+.macro C228A3 SCR(75m,40m,1u,1,100,50MEG,35u,1.1,1)
+.macro C228B3 SCR(75m,40m,1u,1,200,50MEG,35u,1.1,1)
+.macro C228D3 SCR(75m,40m,1u,1,400,50MEG,35u,1.1,1)
+.macro C228M3 SCR(75m,40m,1u,1,600,50MEG,35u,1.1,1)
+
+.macro MCR229A SCR(75m,40m,1u,1,100,50MEG,35u,1.1,1)
+.macro MCR229B SCR(75m,40m,1u,1,200,50MEG,35u,1.1,1)
+.macro MCR229D SCR(75m,40m,1u,1,400,50MEG,35u,1.1,1)
+.macro MCR229M SCR(75m,40m,1u,1,600,50MEG,35u,1.1,1)
+
+.macro MCR22_2 SCR(2m,30u,1.2u,1.2,50,25MEG,40u,78,1)
+.macro MCR22_3 SCR(2m,30u,1.2u,1.2,100,25MEG,40u,78,1)
+.macro MCR22_4 SCR(2m,30u,1.2u,1.2,200,25MEG,40u,78,1)
+.macro MCR22_6 SCR(2m,30u,1.2u,1.2,400,25MEG,40u,78,1)
+.macro MCR22_8 SCR(2m,30u,1.2u,1.2,600,25MEG,40u,78,1)
+
+.macro MCR218_2FP SCR(16m,10m,1.5u,1,50,100MEG,35u,1.3,1)
+.macro MCR218_4FP SCR(16m,10m,1.5u,1,200,100MEG,35u,1.3,1)
+.macro MCR218_6FP SCR(16m,10m,1.5u,1,400,100MEG,35u,1.3,1)
+.macro MCR218_8FP SCR(16m,10m,1.5u,1,600,100MEG,35u,1.3,1)
+.macro MCR218_10FP SCR(16m,10m,1.5u,1,800,100MEG,35u,1.3,1)
+
+.macro MCR264_2 SCR(30m,15m,1.5u,1.6,50,100MEG,35u,1.3,1)
+.macro MCR264_3 SCR(30m,15m,1.5u,1.6,100,100MEG,35u,1.3,1)
+.macro MCR264_4 SCR(30m,15m,1.5u,1.6,200,100MEG,35u,1.3,1)
+.macro MCR264_6 SCR(30m,15m,1.5u,1.6,400,100MEG,35u,1.3,1)
+.macro MCR264_8 SCR(30m,15m,1.5u,1.6,600,100MEG,35u,1.3,1)
+.macro MCR264_10 SCR(30m,15m,1.5u,1.6,800,100MEG,35u,1.3,1)
+
+.macro TIC126A SCR(40m,5m,.8u,1,100,100MEG,11u,6,8)
+.macro TIC126B SCR(40m,5m,.8u,1,200,100MEG,11u,6,8)
+.macro TIC126C SCR(40m,5m,.8u,1,300,100MEG,11u,6,8)
+.macro TIC126D SCR(40m,5m,.8u,1,400,100MEG,11u,6,8)
+.macro TIC126E SCR(40m,5m,.8u,1,500,100MEG,11u,6,8)
+.macro TIC126M SCR(40m,5m,.8u,1,600,100MEG,11u,6,8)
+.macro TIC126S SCR(40m,5m,.8u,1,700,100MEG,11u,6,8)
+.macro TIC126N SCR(40m,5m,.8u,1,800,100MEG,11u,6,8)
+
+.macro T50RIA10 SCR(200m,5m,.8u,1,100,100MEG,11u,6,8)
+.macro T50RIA20 SCR(200m,5m,.8u,1,200,100MEG,11u,6,8)
+.macro T50RIA40 SCR(200m,5m,.8u,1,400,100MEG,11u,6,8)
+.macro T50RIA60 SCR(200m,5m,.8u,1,600,100MEG,11u,6,8)
+.macro T50RIA80 SCR(200m,5m,.8u,1,800,100MEG,11u,6,8)
+.macro T50RIA100 SCR(200m,5m,.8u,1,1000,100MEG,11u,6,8)
+.macro T50RIA120 SCR(200m,5m,.8u,1,1200,100MEG,11u,6,8)
+
+.macro B25RIA10 SCR(100m,60m,.9u,.9,100,100MEG,110u,1,1)
+.macro B25RIA20 SCR(100m,60m,.9u,.9,200,100MEG,110u,1,1)
+.macro B25RIA40 SCR(100m,60m,.9u,.9,400,100MEG,110u,1,1)
+.macro B25RIA60 SCR(100m,60m,.9u,.9,600,100MEG,110u,1,1)
+.macro B25RIA80 SCR(100m,60m,.9u,.9,800,100MEG,110u,1,1)
+.macro B25RIA100 SCR(100m,60m,.9u,.9,1000,100MEG,110u,1,1)
+.macro B25RIA120 SCR(100m,60m,.9u,.9,1200,100MEG,110u,1,1)
+
+.macro B25H2S10 SCR(100m,60m,.9u,.9,100,100MEG,110u,1,1)
+.macro B25H2S20 SCR(100m,60m,.9u,.9,200,100MEG,110u,1,1)
+.macro B25H2S40 SCR(100m,60m,.9u,.9,400,100MEG,110u,1,1)
+.macro B25H2S60 SCR(100m,60m,.9u,.9,600,100MEG,110u,1,1)
+.macro B25H2S80 SCR(100m,60m,.9u,.9,800,100MEG,110u,1,1)
+.macro B25H2S100 SCR(100m,60m,.9u,.9,1000,100MEG,110u,1,1)
+.macro B25H2S120 SCR(100m,60m,.9u,.9,1200,100MEG,110u,1,1)
+
+******************** BEGIN PHILIPS SERIES ****************
+* 50
+.macro BT145_500R SCR(60m,35m,2u,1.5,500,200MEG,100u,1,1)
+.macro BT145_600R SCR(60m,35m,2u,1.5,600,200MEG,100u,1,1)
+.macro BT145_800R SCR(60m,35m,2u,1.5,800,200MEG,100u,1,1)
+
+.macro BT148_400R SCR(6m,200u,2u,1.8,400,5MEG,100u,1,1)
+.macro BT148_500R SCR(6m,200u,2u,1.8,500,5MEG,100u,1,1)
+.macro BT148_600R SCR(6m,200u,2u,1.8,600,5MEG,100u,1,1)
+
+.macro BT148W_400R SCR(6m,200u,2u,1.1,400,5MEG,100u,1,1)
+.macro BT148W_500R SCR(6m,200u,2u,1.1,500,5MEG,100u,1,1)
+.macro BT148W_600R SCR(6m,200u,2u,1.1,600,5MEG,100u,1,1)
+
+.macro BT149_B SCR(5m,200u,2u,1.35,200,25MEG,100u,1,1)
+.macro BT149_D SCR(5m,200u,2u,1.35,400,25MEG,100u,1,1)
+.macro BT149_E SCR(5m,200u,2u,1.35,500,25MEG,100u,1,1)
+.macro BT149_G SCR(5m,200u,2u,1.35,600,25MEG,100u,1,1)
+
+.macro BT150_B SCR(6m,200u,2u,1.5,500,5MEG,100u,1,1)
+
+.macro BT151_500R SCR(20m,15m,2u,1.5,500,200MEG,100u,1,1)
+.macro BT151_650R SCR(20m,15m,2u,1.5,650,200MEG,100u,1,1)
+.macro BT151_800R SCR(20m,15m,2u,1.5,800,200MEG,100u,1,1)
+
+.macro BT151F_500 SCR(20m,15m,2u,1.5,500,200MEG,100u,1,1)
+.macro BT151F_650 SCR(20m,15m,2u,1.5,650,200MEG,100u,1,1)
+.macro BT151F_800 SCR(20m,15m,2u,1.5,800,200MEG,100u,1,1)
+
+.macro BT152_400R SCR(60m,32m,2u,1.5,400,200MEG,100u,1,1)
+.macro BT152_600R SCR(60m,32m,2u,1.5,600,200MEG,100u,1,1)
+.macro BT152_800R SCR(60m,32m,2u,1.5,800,200MEG,100u,1,1)
+
+.macro BT169_B SCR(5m,200u,2u,.8,200,25MEG,100u,1,1)
+.macro BT169_D SCR(5m,200u,2u,.8,400,25MEG,100u,1,1)
+.macro BT169_E SCR(5m,200u,2u,.8,500,25MEG,100u,1,1)
+.macro BT169_G SCR(5m,200u,2u,.8,600,25MEG,100u,1,1)
+
+.macro BTA151_500R SCR(16m,4m,2u,1.5,500,200MEG,100u,1,1)
+.macro BTA151_650R SCR(16m,4m,2u,1.5,650,200MEG,100u,1,1)
+.macro BTA151_800R SCR(16m,4m,2u,1.5,800,200MEG,100u,1,1)
+
+.macro BTW38_600R SCR(75m,50m,2u,1.5,600,200MEG,35u,1,1)
+.macro BTW38_800R SCR(75m,50m,2u,1.5,800,200MEG,35u,1,1)
+.macro BTW38_1000R SCR(75m,50m,2u,1.5,1000,200MEG,35u,1,1)
+
+.macro BTW40_400R SCR(75m,50m,1.5u,1.5,400,100MEG,100u,1,1)
+.macro BTW40_600R SCR(75m,50m,1.5u,1.5,600,100MEG,100u,1,1)
+.macro BTW40_800R SCR(75m,50m,1.5u,1.5,800,100MEG,100u,1,1)
+
+.macro BTW42_600R SCR(75m,50m,2u,1.5,600,500MEG,35u,1,1)
+.macro BTW42_800R SCR(75m,50m,2u,1.5,800,500MEG,35u,1,1)
+.macro BTW42_1000R SCR(75m,50m,2u,1.5,1000,500MEG,35u,1,1)
+
+.macro BTW45_400R SCR(75m,50m,1.5u,1.5,400,200MEG,100u,1,1)
+.macro BTW45_600R SCR(75m,50m,1.5u,1.5,600,200MEG,100u,1,1)
+.macro BTW45_800R SCR(75m,50m,1.5u,1.5,800,200MEG,100u,1,1)
+.macro BTW45_1000R SCR(75m,50m,1.5u,1.5,1000,200MEG,100u,1,1)
+.macro BTW45_1200R SCR(75m,50m,1.5u,1.5,1200,200MEG,100u,1,1)
+
+.macro BTY79_400R SCR(75m,20m,2u,1.5,400,200MEG,35u,1,1)
+.macro BTY79_500R SCR(75m,20m,2u,1.5,500,200MEG,35u,1,1)
+.macro BTY79_600R SCR(75m,20m,2u,1.5,600,200MEG,35u,1,1)
+.macro BTY79_800R SCR(75m,20m,2u,1.5,800,200MEG,35u,1,1)
+.macro BTY79_1000R SCR(75m,20m,2u,1.5,1000,200MEG,35u,1,1)
+
+******************** BEGIN ADDITIONAL MOTOROLA SERIES ****************
+*  63
+
+.macro 2N682 SCR(7.3m,6m,2u,1.15,50,30MEG,100u,1,1)
+.macro 2N683 SCR(7.3m,6m,2u,1.15,100,30MEG,100u,1,1)
+.macro 2N685 SCR(7.3m,6m,2u,1.15,200,30MEG,100u,1,1)
+.macro 2N688 SCR(7.3m,6m,2u,1.15,400,30MEG,100u,1,1)
+.macro 2N690 SCR(7.3m,6m,2u,1.15,600,30MEG,100u,1,1)
+.macro 2N692 SCR(7.3m,6m,2u,1.15,800,30MEG,100u,1,1)
+
+.macro 2N1843 SCR(7m,6m,2u,1,50,30MEG,100u,1,1)
+.macro 2N1844 SCR(7m,6m,2u,1,100,30MEG,100u,1,1)
+.macro 2N1846 SCR(7m,6m,2u,1,200,30MEG,100u,1,1)
+.macro 2N1849 SCR(7m,6m,2u,1,400,30MEG,100u,1,1)
+
+.macro 2N1843A SCR(7m,6m,2u,1,50,30MEG,100u,1,1)
+.macro 2N1844A SCR(7m,6m,2u,1,100,30MEG,100u,1,1)
+.macro 2N1846A SCR(7m,6m,2u,1,200,30MEG,100u,1,1)
+.macro 2N1849A SCR(7m,6m,2u,1,400,30MEG,100u,1,1)
+
+.macro 2N2323 SCR(2m,200u,2u,1.5,50,30MEG,100u,1,1)
+.macro 2N2324 SCR(2m,200u,2u,1.5,100,30MEG,100u,1,1)
+.macro 2N2326 SCR(2m,200u,2u,1.5,200,30MEG,100u,1,1)
+.macro 2N2329 SCR(2m,200u,2u,1.5,400,30MEG,100u,1,1)
+
+.macro 2N4213 SCR(3m,100u,2u,1.5,50,25MEG,100u,1,1)
+.macro 2N4214 SCR(3m,100u,2u,1.5,100,25MEG,100u,1,1)
+.macro 2N4216 SCR(3m,100u,2u,1.5,200,25MEG,100u,1,1)
+.macro 2N4219 SCR(3m,100u,2u,1.5,400,25MEG,100u,1,1)
+
+.macro 2N6237 SCR(5m,200u,2u,1,50,10MEG,100u,1,1)
+.macro 2N6238 SCR(5m,200u,2u,1,100,10MEG,100u,1,1)
+.macro 2N6239 SCR(5m,200u,2u,1,200,10MEG,100u,1,1)
+.macro 2N6240 SCR(5m,200u,2u,1,400,10MEG,100u,1,1)
+.macro 2N6241 SCR(5m,200u,2u,1,600,10MEG,100u,1,1)
+
+.macro 2N6504 SCR(35m,15m,15u,.88,50,50MEG,35u,1,1)
+.macro 2N6505 SCR(35m,15m,15u,.88,100,50MEG,35u,1,1)
+.macro 2N6506 SCR(35m,15m,15u,.88,200,50MEG,35u,1,1)
+.macro 2N6507 SCR(35m,15m,15u,.88,400,50MEG,35u,1,1)
+.macro 2N6508 SCR(35m,15m,15u,.88,600,50MEG,35u,1,1)
+.macro 2N6509 SCR(35m,15m,15u,.88,800,50MEG,35u,1,1)
+
+.macro BRX44 SCR(5m,200u,2u,1.7,30,25MEG,100u,1,1)
+.macro BRX45 SCR(5m,200u,2u,1.7,60,25MEG,100u,1,1)
+.macro BRX46 SCR(5m,200u,2u,1.7,100,25MEG,100u,1,1)
+.macro BRX47 SCR(5m,200u,2u,1.7,200,25MEG,100u,1,1)
+.macro BRX48 SCR(5m,200u,2u,1.7,300,25MEG,100u,1,1)
+.macro BRX49 SCR(5m,200u,2u,1.7,400,25MEG,100u,1,1)
+
+.macro C106F SCR(3m,200u,1.2u,2.2,50,8MEG,40u,1,1)
+.macro C106A SCR(3m,200u,1.2u,2.2,100,8MEG,40u,1,1)
+.macro C106B SCR(3m,200u,1.2u,2.2,200,8MEG,40u,1,1)
+.macro C106D SCR(3m,200u,1.2u,2.2,400,8MEG,40u,1,1)
+.macro C106M SCR(3m,200u,1.2u,2.2,600,8MEG,40u,1,1)
+
+.macro C205Y SCR(5m,200u,2u,1.6,50,20MEG,15u,1,1)
+.macro C205YY SCR(5m,200u,2u,1.6,60,20MEG,15u,1,1)
+.macro C205A SCR(5m,200u,2u,1.6,100,20MEG,15u,1,1)
+.macro C205B SCR(5m,200u,2u,1.6,200,20MEG,15u,1,1)
+.macro C205D SCR(5m,200u,2u,1.6,400,20MEG,15u,1,1)
+
+.macro MCR68_2 SCR(15m,7m,1u,2.2,50,10MEG,100u,1,1)
+.macro MCR68_3 SCR(15m,7m,1u,2.2,100,10MEG,100u,1,1)
+.macro MCR68_6 SCR(15m,7m,1u,2.2,400,10MEG,100u,1,1)
+
+.macro MCR69_2 SCR(15m,7m,1u,1.8,50,10MEG,100u,1,1)
+.macro MCR69_3 SCR(15m,7m,1u,1.8,100,10MEG,100u,1,1)
+.macro MCR69_6 SCR(15m,7m,1u,1.8,400,10MEG,100u,1,1)
+
+.macro MCR72_2 SCR(6m,200u,1u,1.7,50,10MEG,100u,1,1)
+.macro MCR72_3 SCR(6m,200u,1u,1.7,100,10MEG,100u,1,1)
+.macro MCR72_4 SCR(6m,200u,1u,1.7,200,10MEG,100u,1,1)
+.macro MCR72_6 SCR(6m,200u,1u,1.7,400,10MEG,100u,1,1)
+.macro MCR72_8 SCR(6m,200u,1u,1.7,600,10MEG,100u,1,1)
+.macro MCR72_10 SCR(6m,200u,1u,1.7,800,10MEG,100u,1,1)
+
+.macro S2800F SCR(10m,8m,1.6u,1.7,50,100MEG,25u,1,1)
+.macro S2800A SCR(10m,8m,1.6u,1.7,100,100MEG,25u,1,1)
+.macro S2800B SCR(10m,8m,1.6u,1.7,200,100MEG,25u,1,1)
+.macro S2800D SCR(10m,8m,1.6u,1.7,400,100MEG,25u,1,1)
+.macro S2800M SCR(10m,8m,1.6u,1.7,600,100MEG,25u,1,1)
+.macro S2800N SCR(10m,8m,1.6u,1.7,800,100MEG,25u,1,1)
+
+******************************************************************
+*                                                                *
+*               TRIACs                                           *
+*               Spectrum Software Rev. 2.00                      *
+*               All rights reserved                              *
+*                                                                *
+*   Information in this library was derived from:                *
+*                                                                *
+*     Motorola Thyristor Device Data                             *
+*                                                                *
+*  Passed parameters follow the format:                          *
+*    TRIAC(IH,IGT,TON,VTMIN,VDRM,DVDT,TQ,K1,K2)                  *
+*                                                                *
+*    TRIAC - refers to the macro circuit TRIAC.CIR               *
+*    IH - DC Holding Current                                     *
+*    IGT - Gate Trigger Current                                  *
+*    TON - Turn on time                                          *
+*    VTMIN - Minimum anode to cathode on state voltage           *
+*    VDRM - Maximum repetitive peak off-state voltage            *
+*    DVDT - Critical rate of rise of off-state voltage           *
+*    TQ - Turn of time (assumed to be 0)                         *
+*    K1 - DVDT adjustment (set to 1 unless otherwise specified)  *
+*    K2 - TQ adjustment (set to 1 unless otherwise specified)    *
+*                                                                *
+*    To use these parts, select the Triac macro from the Macro   *
+*    section of the Component Menu and place it in your circuit. *
+*    For the parameter enter one of the part names below, such   *
+*    as T2N6157. Then either include a .LIB statement in your    *
+*    circuit to access this library or enter a .define statement *
+*    on the schematic that defines the parameters for the Triac. *
+*    For example:                                                *
+*      .define T2N6157 TRIAC(14m,9m,1u,1.5,100,50MEG,25u,.8,1)   *
+*                                                                *
+******************************************************************
+
+.macro 2N5444 TRIAC(10m,20m,1u,1.65,200,50MEG,0,1,1)
+.macro 2N5445 TRIAC(10m,20m,1u,1.65,400,30MEG,0,1,1)
+.macro 2N5446 TRIAC(10m,20m,1u,1.65,600,20MEG,0,1,1)
+.macro MAC5441 TRIAC(10m,20m,1u,1.65,200,50MEG,0,1,1)
+.macro MAC5442 TRIAC(10m,20m,1u,1.65,400,30MEG,0,1,1)
+.macro MAC5443 TRIAC(10m,20m,1u,1.65,600,20MEG,0,1,1)
+
+.macro 2N5567 TRIAC(25m,30m,1u,1.3,200,150MEG,0,1,1)
+.macro 2N5568 TRIAC(25m,30m,1u,1.3,400,100MEG,0,1,1)
+.macro MAC5569 TRIAC(25m,30m,1u,1.3,200,150MEG,0,1,1)
+.macro MAC5570 TRIAC(25m,30m,1u,1.3,400,100MEG,0,1,1)
+.macro MAC4121B TRIAC(25m,30m,1u,1.3,200,150MEG,0,1,1)
+.macro MAC4121D TRIAC(25m,30m,1u,1.3,400,100MEG,0,1,1)
+.macro MAC4111M TRIAC(25m,30m,1u,1.3,600,75MEG,0,1,1)
+.macro MAC4121M TRIAC(25m,30m,1u,1.3,600,75MEG,0,1,1)
+.macro MAC4121N TRIAC(25m,30m,1u,1.3,800,75MEG,0,1,1)
+
+.macro 2N5571 TRIAC(9m,9.6m,1u,1.3,200,150MEG,0,1,1)
+.macro 2N5572 TRIAC(9m,9.6m,1u,1.3,400,100MEG,0,1,1)
+.macro MAC5573 TRIAC(9m,9.6m,1u,1.3,200,150MEG,0,1,1)
+.macro MAC5574 TRIAC(9m,9.6m,1u,1.3,400,100MEG,0,1,1)
+.macro 2N6145 TRIAC(9m,9.6m,1u,1.3,200,150MEG,0,1,1)
+.macro 2N6146 TRIAC(9m,9.6m,1u,1.3,400,100MEG,0,1,1)
+.macro T4100M TRIAC(9m,9.6m,1u,1.3,600,75MEG,0,1,1)
+.macro MAC4110M TRIAC(9m,9.6m,1u,1.3,600,75MEG,0,1,1)
+.macro 2N6147 TRIAC(9m,9.6m,1u,1.3,600,75MEG,0,1,1)
+
+.macro 2N6157 TRIAC(8m,20m,1u,1.5,200,5MEG,0,1,1)
+.macro 2N6158 TRIAC(8m,20m,1u,1.5,400,5MEG,0,1,1)
+.macro 2N6159 TRIAC(8m,20m,1u,1.5,600,5MEG,0,1,1)
+.macro 2N6160 TRIAC(8m,20m,1u,1.5,200,5MEG,0,1,1)
+.macro 2N6161 TRIAC(8m,20m,1u,1.5,400,5MEG,0,1,1)
+.macro 2N6162 TRIAC(8m,20m,1u,1.5,600,5MEG,0,1,1)
+.macro 2N6163 TRIAC(8m,20m,1u,1.5,200,5MEG,0,1,1)
+.macro 2N6164 TRIAC(8m,20m,1u,1.5,400,5MEG,0,1,1)
+.macro 2N6165 TRIAC(8m,20m,1u,1.5,600,5MEG,0,1,1)
+
+.macro 2N6342 TRIAC(6m,12m,1.5u,1.3,200,5MEG,0,1,1)
+.macro 2N6343 TRIAC(6m,12m,1.5u,1.3,400,5MEG,0,1,1)
+.macro 2N6344 TRIAC(6m,12m,1.5u,1.3,600,5MEG,0,1,1)
+.macro 2N6345 TRIAC(6m,12m,1.5u,1.3,800,5MEG,0,1,1)
+.macro 2N6346 TRIAC(6m,12m,1.5u,1.3,200,5MEG,0,1,1)
+.macro 2N6347 TRIAC(6m,12m,1.5u,1.3,400,5MEG,0,1,1)
+.macro 2N6348 TRIAC(6m,12m,1.5u,1.3,600,5MEG,0,1,1)
+.macro 2N6349 TRIAC(6m,12m,1.5u,1.3,800,5MEG,0,1,1)
+
+.macro 2N6342A TRIAC(6m,12m,1.5u,1.3,200,5MEG,0,1,1)
+.macro 2N6343A TRIAC(6m,12m,1.5u,1.3,400,5MEG,0,1,1)
+.macro 2N6344A TRIAC(6m,12m,1.5u,1.3,600,5MEG,0,1,1)
+.macro 2N6345A TRIAC(6m,12m,1.5u,1.3,800,5MEG,0,1,1)
+.macro 2N6346A TRIAC(6m,12m,1.5u,1.3,200,5MEG,0,1,1)
+.macro 2N6347A TRIAC(6m,12m,1.5u,1.3,400,5MEG,0,1,1)
+.macro 2N6348A TRIAC(6m,12m,1.5u,1.3,600,5MEG,0,1,1)
+.macro 2N6349A TRIAC(6m,12m,1.5u,1.3,800,5MEG,0,1,1)
+
+.macro MAC15_4 TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15_6 TRIAC(6m,10m,1.5u,1.3,400,5MEG,0,1,1)
+.macro MAC15_8 TRIAC(6m,10m,1.5u,1.3,600,5MEG,0,1,1)
+.macro MAC15_10 TRIAC(6m,10m,1.5u,1.3,800,5MEG,0,1,1)
+.macro MAC15A4 TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15A6 TRIAC(6m,10m,1.5u,1.3,400,5MEG,0,1,1)
+.macro MAC15A8 TRIAC(6m,10m,1.5u,1.3,600,5MEG,0,1,1)
+.macro MAC15A10 TRIAC(6m,10m,1.5u,1.3,800,5MEG,0,1,1)
+
+.macro MAC15_4FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15_6FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15_8FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15_10FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15A4FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15A6FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15A8FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+.macro MAC15A10FP TRIAC(6m,10m,1.5u,1.3,200,5MEG,0,1,1)
+
+.macro MAC97_4 TRIAC(10m,10m,2u,1.9,200,25MEG,0,1,1)
+.macro MAC97_6 TRIAC(10m,10m,2u,1.9,400,25MEG,0,1,1)
+.macro MAC97_8 TRIAC(10m,10m,2u,1.9,600,25MEG,0,1,1)
+.macro MAC97A4 TRIAC(10m,10m,2u,1.9,200,25MEG,0,1,1)
+.macro MAC97A6 TRIAC(10m,10m,2u,1.9,400,25MEG,0,1,1)
+.macro MAC97A8 TRIAC(10m,10m,2u,1.9,600,25MEG,0,1,1)
+
+.macro MAC210_4 TRIAC(6m,12m,1.5u,1.2,200,100MEG,0,1,1)
+.macro MAC210_6 TRIAC(6m,12m,1.5u,1.2,400,100MEG,0,1,1)
+.macro MAC210_8 TRIAC(6m,12m,1.5u,1.2,600,100MEG,0,1,1)
+.macro MAC210_10 TRIAC(6m,12m,1.5u,1.2,800,100MEG,0,1,1)
+.macro MAC210A4 TRIAC(6m,12m,1.5u,1.2,200,100MEG,0,1,1)
+.macro MAC210A6 TRIAC(6m,12m,1.5u,1.2,400,100MEG,0,1,1)
+.macro MAC210A8 TRIAC(6m,12m,1.5u,1.2,600,100MEG,0,1,1)
+.macro MAC210A10 TRIAC(6m,12m,1.5u,1.2,800,100MEG,0,1,1)
+
+.macro MAC210_4FP TRIAC(6m,12m,1.5u,1.2,200,100MEG,0,1,1)
+.macro MAC210_6FP TRIAC(6m,12m,1.5u,1.2,400,100MEG,0,1,1)
+.macro MAC210_8FP TRIAC(6m,12m,1.5u,1.2,600,100MEG,0,1,1)
+.macro MAC210_10FP TRIAC(6m,12m,1.5u,1.2,800,100MEG,0,1,1)
+.macro MAC210A4FP TRIAC(6m,12m,1.5u,1.2,200,100MEG,0,1,1)
+.macro MAC210A6FP TRIAC(6m,12m,1.5u,1.2,400,100MEG,0,1,1)
+.macro MAC210A8FP TRIAC(6m,12m,1.5u,1.2,600,100MEG,0,1,1)
+.macro MAC210A10FP TRIAC(6m,12m,1.5u,1.2,800,100MEG,0,1,1)
+
+.macro MAC212_4 TRIAC(6m,12m,1.5u,1.3,200,100MEG,0,1,1)
+.macro MAC212_6 TRIAC(6m,12m,1.5u,1.3,400,100MEG,0,1,1)
+.macro MAC212_8 TRIAC(6m,12m,1.5u,1.3,600,100MEG,0,1,1)
+.macro MAC212_10 TRIAC(6m,12m,1.5u,1.3,800,100MEG,0,1,1)
+.macro MAC212A4 TRIAC(6m,12m,1.5u,1.3,200,100MEG,0,1,1)
+.macro MAC212A6 TRIAC(6m,12m,1.5u,1.3,400,100MEG,0,1,1)
+.macro MAC212A8 TRIAC(6m,12m,1.5u,1.3,600,100MEG,0,1,1)
+.macro MAC212A10 TRIAC(6m,12m,1.5u,1.3,800,100MEG,0,1,1)
+
+.macro MAC212_4FP TRIAC(6m,12m,1.5u,1.3,200,100MEG,0,1,1)
+.macro MAC212_6FP TRIAC(6m,12m,1.5u,1.3,400,100MEG,0,1,1)
+.macro MAC212_8FP TRIAC(6m,12m,1.5u,1.3,600,100MEG,0,1,1)
+.macro MAC212_10FP TRIAC(6m,12m,1.5u,1.3,800,100MEG,0,1,1)
+.macro MAC212A4FP TRIAC(6m,12m,1.5u,1.3,200,100MEG,0,1,1)
+.macro MAC212A6FP TRIAC(6m,12m,1.5u,1.3,400,100MEG,0,1,1)
+.macro MAC212A8FP TRIAC(6m,12m,1.5u,1.3,600,100MEG,0,1,1)
+.macro MAC212A10FP TRIAC(6m,12m,1.5u,1.3,800,100MEG,0,1,1)
+
+.macro MAC213_4 TRIAC(100m,100m,1.5u,1.3,200,500MEG,0,1,1)
+.macro MAC213_6 TRIAC(100m,100m,1.5u,1.3,400,500MEG,0,1,1)
+.macro MAC213_8 TRIAC(100m,100m,1.5u,1.3,600,500MEG,0,1,1)
+.macro MAC213_10 TRIAC(100m,100m,1.5u,1.3,800,500MEG,0,1,1)
+
+.macro MAC218_4 TRIAC(50m,50m,1.5u,1.7,200,100MEG,0,1,1)
+.macro MAC218_6 TRIAC(50m,50m,1.5u,1.7,400,100MEG,0,1,1)
+.macro MAC218_8 TRIAC(50m,50m,1.5u,1.7,600,100MEG,0,1,1)
+.macro MAC218_10 TRIAC(50m,50m,1.5u,1.7,800,100MEG,0,1,1)
+.macro MAC218A4 TRIAC(50m,50m,1.5u,1.7,200,100MEG,0,1,1)
+.macro MAC218A6 TRIAC(50m,50m,1.5u,1.7,400,100MEG,0,1,1)
+.macro MAC218A8 TRIAC(50m,50m,1.5u,1.7,600,100MEG,0,1,1)
+.macro MAC218A10 TRIAC(50m,50m,1.5u,1.7,800,100MEG,0,1,1)
+
+.macro MAC218_4FP TRIAC(50m,50m,1.5u,1.7,200,100MEG,0,1,1)
+.macro MAC218_6FP TRIAC(50m,50m,1.5u,1.7,400,100MEG,0,1,1)
+.macro MAC218_8FP TRIAC(50m,50m,1.5u,1.7,600,100MEG,0,1,1)
+.macro MAC218_10FP TRIAC(50m,50m,1.5u,1.7,800,100MEG,0,1,1)
+.macro MAC218A4FP TRIAC(50m,50m,1.5u,1.7,200,100MEG,0,1,1)
+.macro MAC218A6FP TRIAC(50m,50m,1.5u,1.7,400,100MEG,0,1,1)
+.macro MAC218A8FP TRIAC(50m,50m,1.5u,1.7,600,100MEG,0,1,1)
+.macro MAC218A10FP TRIAC(50m,50m,1.5u,1.7,800,100MEG,0,1,1)
+
+.macro MAC223_4 TRIAC(10m,20m,1.5u,1.4,200,40MEG,0,1,1)
+.macro MAC223_6 TRIAC(10m,20m,1.5u,1.4,400,40MEG,0,1,1)
+.macro MAC223_8 TRIAC(10m,20m,1.5u,1.4,600,40MEG,0,1,1)
+.macro MAC223_10 TRIAC(10m,20m,1.5u,1.4,800,40MEG,0,1,1)
+.macro MAC223A4 TRIAC(10m,20m,1.5u,1.4,200,40MEG,0,1,1)
+.macro MAC223A6 TRIAC(10m,20m,1.5u,1.4,400,40MEG,0,1,1)
+.macro MAC223A8 TRIAC(10m,20m,1.5u,1.4,600,40MEG,0,1,1)
+.macro MAC223A10 TRIAC(10m,20m,1.5u,1.4,800,40MEG,0,1,1)
+
+.macro MAC223_4FP TRIAC(10m,20m,1.5u,1.4,200,40MEG,0,1,1)
+.macro MAC223_6FP TRIAC(10m,20m,1.5u,1.4,400,40MEG,0,1,1)
+.macro MAC223_8FP TRIAC(10m,20m,1.5u,1.4,600,40MEG,0,1,1)
+.macro MAC223_10FP TRIAC(10m,20m,1.5u,1.4,800,40MEG,0,1,1)
+.macro MAC223A4FP TRIAC(10m,20m,1.5u,1.4,200,40MEG,0,1,1)
+.macro MAC223A6FP TRIAC(10m,20m,1.5u,1.4,400,40MEG,0,1,1)
+.macro MAC223A8FP TRIAC(10m,20m,1.5u,1.4,600,40MEG,0,1,1)
+.macro MAC223A10FP TRIAC(10m,20m,1.5u,1.4,800,40MEG,0,1,1)
+
+.macro MAC224_4 TRIAC(30m,25m,1.5u,1.4,200,50MEG,0,1,1)
+.macro MAC224_6 TRIAC(30m,25m,1.5u,1.4,400,50MEG,0,1,1)
+.macro MAC224_8 TRIAC(30m,25m,1.5u,1.4,600,50MEG,0,1,1)
+.macro MAC224_10 TRIAC(30m,25m,1.5u,1.4,800,50MEG,0,1,1)
+.macro MAC224A4 TRIAC(30m,25m,1.5u,1.4,200,50MEG,0,1,1)
+.macro MAC224A6 TRIAC(30m,25m,1.5u,1.4,400,50MEG,0,1,1)
+.macro MAC224A8 TRIAC(30m,25m,1.5u,1.4,600,50MEG,0,1,1)
+.macro MAC224A10 TRIAC(30m,25m,1.5u,1.4,800,50MEG,0,1,1)
+
+.macro MAC228_4 TRIAC(15m,5m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC228_6 TRIAC(15m,5m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC228_8 TRIAC(15m,5m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC228_10 TRIAC(15m,5m,1.5u,1.8,800,25MEG,0,1,1)
+.macro MAC228A4 TRIAC(15m,5m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC228A6 TRIAC(15m,5m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC228A8 TRIAC(15m,5m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC228A10 TRIAC(15m,5m,1.5u,1.8,800,25MEG,0,1,1)
+
+.macro MAC228_4FP TRIAC(15m,5m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC228_6FP TRIAC(15m,5m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC228_8FP TRIAC(15m,5m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC228_10FP TRIAC(15m,5m,1.5u,1.8,800,25MEG,0,1,1)
+.macro MAC228A4FP TRIAC(15m,5m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC228A6FP TRIAC(15m,5m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC228A8FP TRIAC(15m,5m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC228A10FP TRIAC(15m,5m,1.5u,1.8,800,25MEG,0,1,1)
+
+.macro MAC229_4 TRIAC(15m,10m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC229_6 TRIAC(15m,10m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC229_8 TRIAC(15m,10m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC229_10 TRIAC(15m,10m,1.5u,1.8,800,25MEG,0,1,1)
+.macro MAC229A4 TRIAC(15m,10m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC229A6 TRIAC(15m,10m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC229A8 TRIAC(15m,10m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC229A10 TRIAC(15m,10m,1.5u,1.8,800,25MEG,0,1,1)
+
+.macro MAC229_4FP TRIAC(15m,10m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC229_6FP TRIAC(15m,10m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC229_8FP TRIAC(15m,10m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC229_10FP TRIAC(15m,10m,1.5u,1.8,800,25MEG,0,1,1)
+.macro MAC229A4FP TRIAC(15m,10m,1.5u,1.8,200,25MEG,0,1,1)
+.macro MAC229A6FP TRIAC(15m,10m,1.5u,1.8,400,25MEG,0,1,1)
+.macro MAC229A8FP TRIAC(15m,10m,1.5u,1.8,600,25MEG,0,1,1)
+.macro MAC229A10FP TRIAC(15m,10m,1.5u,1.8,800,25MEG,0,1,1)
+
+.macro MAC245B TRIAC(50m,50m,1.5u,1.65,200,50MEG,0,1,1)
+.macro MAC245D TRIAC(50m,50m,1.5u,1.65,400,50MEG,0,1,1)
+.macro MAC245M TRIAC(50m,50m,1.5u,1.65,600,50MEG,0,1,1)
+.macro MAC245N TRIAC(50m,50m,1.5u,1.65,800,50MEG,0,1,1)
+
+.macro MAC250B TRIAC(50m,50m,1.5u,1.65,200,100MEG,0,1,1)
+.macro MAC250D TRIAC(50m,50m,1.5u,1.65,400,100MEG,0,1,1)
+.macro MAC250M TRIAC(50m,50m,1.5u,1.65,600,100MEG,0,1,1)
+.macro MAC250N TRIAC(50m,50m,1.5u,1.65,800,100MEG,0,1,1)
+.macro MAC250B3 TRIAC(50m,50m,1.5u,1.65,200,100MEG,0,1,1)
+.macro MAC250D3 TRIAC(50m,50m,1.5u,1.65,400,100MEG,0,1,1)
+.macro MAC250M3 TRIAC(50m,50m,1.5u,1.65,600,100MEG,0,1,1)
+
+.macro MAC310_4 TRIAC(15m,5m,1.5u,2,200,25MEG,0,1,1)
+.macro MAC310_6 TRIAC(15m,5m,1.5u,2,400,25MEG,0,1,1)
+.macro MAC310_8 TRIAC(15m,5m,1.5u,2,600,25MEG,0,1,1)
+.macro MAC310A4 TRIAC(15m,5m,1.5u,2,200,25MEG,0,1,1)
+.macro MAC310A6 TRIAC(15m,5m,1.5u,2,400,25MEG,0,1,1)
+.macro MAC310A8 TRIAC(15m,5m,1.5u,2,600,25MEG,0,1,1)
+
+.macro MAC320_4 TRIAC(6m,50m,1.5u,1.4,200,50MEG,0,1,1)
+.macro MAC320_6 TRIAC(6m,50m,1.5u,1.4,400,50MEG,0,1,1)
+.macro MAC320_8 TRIAC(6m,50m,1.5u,1.4,600,50MEG,0,1,1)
+.macro MAC320_10 TRIAC(6m,50m,1.5u,1.4,800,50MEG,0,1,1)
+.macro MAC320A4 TRIAC(6m,50m,1.5u,1.4,200,50MEG,0,1,1)
+.macro MAC320A6 TRIAC(6m,50m,1.5u,1.4,400,50MEG,0,1,1)
+.macro MAC320A8 TRIAC(6m,50m,1.5u,1.4,600,50MEG,0,1,1)
+.macro MAC320A10 TRIAC(6m,50m,1.5u,1.4,800,50MEG,0,1,1)

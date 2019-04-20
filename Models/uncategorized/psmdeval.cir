@@ -1,0 +1,19 @@
+* FILENAME: psmdeval.CIR
+* FUNCTION: EVALUATE implementation of PS model
+* use B for pspice, J for spice3f5
+J1 2 1 0 psmod
+vdd 2 0 dc 5
+vgg 1 0 dc -.5
+*USE NJF FOR SPICE3F5, GASFET FOR PSPICE
+* level=2 for spice3f5, level=4 for pspice
+.model psmod NJF level=2 ACGAM=.11 BETA=.3 CGD=200F CGS=820F DELTA=.1 FC=.3
++ HFETA=.1 HFE1=.05 HFE2=.17 HFGAM=.09 HFG1=.06 HFG2=.01 IBD=800P IS=1.1P 
++ LFGAM=.03 LFG1=.008 LFG2=0 MVST=.04 N=1.15 P=2.4 Q=2 RS=.7 RD=1 TAUD=10U 
++ TAUG=1M VBD=1.2 VBI=0.8 VST=0.07 VTO=-1.5 XC=0.2 XI=0.18 Z=0.34
+.control
+dc vdd 0 5 .1 vgg -1.5 .5 .5
+plot -i(vdd)
+*.probe 
+.endc
+.END
+

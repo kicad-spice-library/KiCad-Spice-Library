@@ -1,0 +1,398 @@
+   BJTdriver -- 2in st. lin -- 20in coupled line -- 2in st line -- DiodeCircuit
+
+* This unclassified circuit is from Raytheon, courtesy Gerry Marino.
+* 
+*                                      _______
+* -------- 2in  _________________ 2in  |     |
+* | BJT  |______|               |______|Diode|
+* |      |------|               |------|     |
+* | Drvr | line |   2-wire      | line |rcvr.|
+* --------      |   coupled     |      |_____|
+*               |  transmission |
+* |-/\/\/\/\----|   line        |-------\/\/\/\/\----|
+* |  50ohms     |               |         50ohms     |
+* |             |               |                    |
+* Ground        -----------------                   Ground
+*                      
+*
+* Each inch of the lossy line is modelled by 10 LRC lumps in the 
+* Raytheon model.
+
+* The line parameters (derived from the Raytheon input file) are:
+* L = 9.13nH per inch
+* C = 3.65pF per inch
+* R = 0.2 ohms per inch
+* K = 0.482 [coupling coefficient; K = M/sqrt(L1*L2)]
+* Cc = 1.8pF per inch
+*
+* coupled ltra model generated  using the standalone program
+* multi_decomp
+
+* the circuit
+*tran 0.1ns 60ns
+
+v1 1 0 0v pulse(0 4 1ns 1ns 1ns 20ns 40ns)
+*v1 1 0 4v pulse(4 0 1ns 1ns 1ns 20ns 40ns)
+vcc 10 0 5v
+
+* series termination
+*x1 1 oof 10 bjtdrvr
+*rseries oof 2 50
+
+x1 1 2 10 bjtdrvr
+rt1 3 0 50
+
+
+* convolution model
+x2 2 3 4 5 conv2wetcmodel
+
+* rlc segments model
+*x2 2 3 4 5 rlc2wetcmodel
+
+x3 4 dioload
+rt2 5 0 50
+
+
+
+*.model qmodn npn(bf=100 rb=100 cje=0.09375pF cjc=0.28125pF is=1e-12
+*+pe=0.5 pc=0.5)
+.model qmodn npn(bf=100 rb=100 cje=0.09375pF cjc=0.28125pF is=1e-12
++pe=0.5 pc=0.5)
+
+.model qmodpd npn(bf=100 rb=100 cje=0.08187pF cjc=0.2525pF is=1e-12
++pe=0.5 pc=0.5)
+*.model qmodpd npn(bf=100 rb=100  cje=0.08187pF cjc=0.15pF is=1e-12
+.model qmodpdmine npn(bf=100 rb=100  cje=0.08187pF cjc=0.05pF is=1e-12
++pe=0.5 pc=0.5)
+
+.model dmod1 d(n=2.25 is=1.6399e-4 bv=10)
+*.model dmod1 d
+
+.model dmod2 d
+
+.model dmod d(vj=0.3v)
+
+*.model diod1 d(1.0 tt=0.75ns vj=0.6 rs=909 bv=10)
+.model diod1 d(tt=0.75ns vj=0.6 rs=909 bv=10)
+
+*.model diod2 d(1.0 tt=0.5ns vj=0.3 rs=100 bv=10)
+.model diod2 d(tt=0.5ns vj=0.3 rs=100 bv=10)
+
+.options itl5=0 acct reltol=1e-3 abstol=1e-12
+.tran 0.1ns 60ns
+
+
+*.tran 1e-9 1e-8
+
+* bjt driver - 19=input, 268=output, 20=vcc; wierd node numbers from 
+* the Raytheon file
+
+.subckt bjtdrvr 19 268 20
+q1 22 18 13 qmodn
+q2 18 16 13 qmodn
+qd2 21 9 0 qmodn
+q4 14 14 0 qmodn
+q3 16 15 14 qmodpd
+q5 8 13 17 qmodn
+q6 25 12 0 qmodn
+q7 6 17 0 qmodpd
+qd1 26 10 0 qmodn
+q8 7 11 10 qmodn
+*q10 268 17 0 qmodpd
+q10 268 17 0 qmodpdmine
+q9 7 10 268 qmodn
+
+d1 0 19 dmod1
+d2 18 19 dmod2
+d3 13 19 dmod
+dq1 18 22 dmod
+dq2 16 18 dmod
+d502 9 21 dmod
+dq3 15 16 dmod
+d10 24 8 dmod
+d4 15 6 dmod
+dq6 12 25 dmod
+dq7 17 6 dmod
+dd1 17 10 dmod
+d7 11 6 dmod
+dd2 17 26 dmod
+d9 23 6 dmod
+dq8 11 7 dmod
+d501 17 268 dmod
+dq9 10 7 dmod
+d14 20 27 dmod
+d8 0 268 dmod
+
+r1 18 20 6k
+r2 22 20 2.2k
+r4 0 13 7k
+rd1 9 13 2k
+rd2 21 13 3k
+r3 16 20 10k
+r5 15 20 15k
+r9 0 17 4k
+r6 24 20 750
+r10 12 17 2k
+r12 24 11 1.5k
+r11 25 17 3k
+r15 23 20 10k
+r13 0 10 15k
+r14 7 27 12
+
+.ends bjtdrvr
+
+* subckt dioload - diode load: input=28, output=4, vcc=5
+
+.subckt dioload 28
+*comment out everything in dioload except d5 and r503, and watch
+* the difference in results obtained between a tran 0.1ns 20ns and
+* a tran 0.01ns 20ns
+vccint 5 0 5v
+
+c1 28 0 5pF
+r503 0 4 5.55
+r4 0 28 120k
+r5 1 5 7.5k
+
+d5 4 28 diod2
+d1 1 28 diod1
+d4 2 0 diod1
+d3 3 2 diod1
+d2 1 3 diod1
+.ends dioload
+
+* subckt rlclump - one RLC lump of the lossy line
+
+.subckt rlclump 1 2
+*r1 1 3 0.02
+*c1 3 0 0.365pF
+*l1 3 2 0.913nH
+
+l1 1 3 0.913nH
+c1 2 0 0.365pF
+r1 3 2 0.02
+
+*r1 1 3 0.01
+*c1 3 0 0.1825pF
+*l1 3 4 0.4565nH
+*r2 4 5 0.01
+*c2 5 0 0.1825pF
+*l2 5 2 0.4565nH
+
+*c1 1 0 0.365pF
+*l1 1 2 0.913nH
+.ends lump
+
+.subckt rlconeinch 1 2
+x1 1 3 rlclump
+x2 3 4 rlclump
+x3 4 5 rlclump
+x4 5 6 rlclump
+x5 6 7 rlclump
+x6 7 8 rlclump
+x7 8 9 rlclump
+x8 9 10 rlclump
+x9 10 11 rlclump
+x10 11 2 rlclump
+.ends rlconeinch
+
+.subckt rlctwoinch 1 2
+x1 1 3 rlconeinch
+x2 3 2 rlconeinch
+.ends rlctwoinch
+
+.subckt rlcfourinch 1 2
+x1 1 3 rlconeinch
+x2 3 4 rlconeinch
+x3 4 5 rlconeinch
+x4 5 2 rlconeinch
+.ends rlcfourinch
+
+.subckt rlcfiveinch 1 2
+x1 1 3 rlconeinch
+x2 3 4 rlconeinch
+x3 4 5 rlconeinch
+x4 5 6 rlconeinch
+x5 6 2 rlconeinch
+.ends rlcfiveinch
+
+.subckt rlctwentyrlcfourinch 1 2
+x1 1 3 rlcfiveinch
+x2 3 4 rlcfiveinch
+x3 4 5 rlcfiveinch
+x4 5 6 rlcfiveinch
+x5 6 2 rlcfourinch
+.ends rlctwentyrlcfourinch
+
+.subckt rlclumpstub A B C D
+x1 A int1 rlcfiveinch
+x2 int1 int2 rlcfiveinch
+x3 int2 1 rlcfiveinch
+x4 1 2 rlcfourinch
+x5 1 int3 rlcfiveinch
+x6 int3 B rlconeinch
+x7 2 C rlcfiveinch
+x8 2 D rlcfourinch
+.ends rlclumpstub
+
+.subckt ltrastub A B C D
+o1 A 0 1 0 lline15in
+o2 1 0 B 0 lline6in
+o3 1 0 2 0 lline4in
+o4 2 0 C 0 lline5in
+o5 2 0 D 0 lline4in
+.ends ltrastub
+
+*modelling using R and lossless lines
+
+*5 segments per inch
+.model llfifth ltra nocontrol rel=10 r=0 g=0 l=9.13e-9
++c=3.65e-12 len=0.2 steplimit quadinterp
+
+.subckt xlump 1 2 
+o1 1 0 3 0 llfifth
+r1 2 3 0.04
+.ends xlump
+
+.subckt xoneinch 1 2
+x1 1 3 xlump
+x2 3 4 xlump
+x3 4 5 xlump
+x4 5 6 xlump
+x5 6 2 xlump
+*x5 6 7 xlump
+*x6 7 8 xlump
+*x7 8 9 xlump
+*x8 9 10 xlump
+*x9 10 11 xlump
+*x10 11 2 xlump
+.ends xoneinch
+
+.subckt xFourinch 1 2
+x1 1 3 xoneinch
+x2 3 4 xoneinch
+x3 4 5 xoneinch
+x4 5 2 xoneinch
+.ends xfourinch
+
+.subckt xfiveinch 1 2
+x1 1 3 xoneinch
+x2 3 4 xoneinch
+x3 4 5 xoneinch
+x4 5 6 xoneinch
+x5 6 2 xoneinch
+.ends xfiveinch
+
+.subckt xlumpstub A B C D
+x1 A int1 xfiveinch
+x2 int1 int2 xfiveinch
+x3 int2 1 xfiveinch
+x4 1 2 xfourinch
+x5 1 int3 xfiveinch
+x6 int3 B xoneinch
+x7 2 C xfiveinch
+x8 2 D xfourinch
+.ends xlumpstub
+
+* modelling a 2 wire coupled system using RLC lumps
+* 10 segments per inch
+*
+* 1---xxxxx----2
+* 3---xxxxx----4
+
+.subckt rlc2wlump 1 3 2 4
+l1 1 5 0.913nH
+c1 2 0 0.365pF
+r1 5 2 0.02
+l2 3 6 0.913nH
+c2 4 0 0.365pF
+r2 6 4 0.02
+cmut 2 4 0.18pF
+k12 l1 l2 0.482
+.ends rlc2wlump
+
+.subckt rlc2woneinch 1 2 3 4
+x1 1 2 5 6 rlc2wlump
+x2 5 6 7 8  rlc2wlump
+x3 7 8 9 10 rlc2wlump
+x4 9 10 11 12 rlc2wlump
+x5 11 12 13 14 rlc2wlump
+x6 13 14 15 16 rlc2wlump
+x7 15 16 17 18 rlc2wlump
+x8 17 18 19 20 rlc2wlump
+x9 19 20 21 22 rlc2wlump
+x10 21 22 3 4 rlc2wlump
+.ends rlc2woneinch
+
+.subckt rlc2wfiveinch 1 2 3 4
+x1 1 2 5 6 rlc2woneinch
+x2 5 6 7 8 rlc2woneinch
+x3 7 8 9 10 rlc2woneinch
+x4 9 10 11 12 rlc2woneinch
+x5 11 12 3 4 rlc2woneinch
+.ends rlc2wfiveinch
+
+.subckt rlc2wtwentyinch 1 2 3 4
+x1 1 2 5 6 rlc2wfiveinch
+x2 5 6 7 8 rlc2wfiveinch
+x3 7 8 9 10 rlc2wfiveinch
+x4 9 10 3 4 rlc2wfiveinch
+.ends rlc2wtwentyinch
+
+.subckt rlc2wetcmodel 1 2 3 4
+x1 1 5 rlctwoinch
+x2 5 2 6 4 rlc2wtwentyinch
+x3 6 3 rlctwoinch
+.ends rlc2wetcmodel
+
+* Subcircuit conv2wtwentyinch
+* conv2wtwentyinch is a subcircuit that models a 2-conductor transmission line with
+* the following parameters: l=9.13e-09, c=3.65e-12, r=0.2, g=0,
+* inductive_coeff_of_coupling k=0.482, inter-line capacitance cm=1.8e-12,
+* length=20. Derived parameters are: lm=4.40066e-09, ctot=5.45e-12.
+* 
+* It is important to note that the model is a simplified one - the
+* following assumptions are made: 1. The self-inductance l, the
+* self-capacitance ctot (note: not c), the series resistance r and the
+* parallel capacitance g are the same for all lines, and 2. Each line
+* is coupled only to the two lines adjacent to it, with the same
+* coupling parameters cm and lm. The first assumption imply that edge
+* effects have to be neglected. The utility of these assumptions is
+* that they make the sL+R and sC+G matrices symmetric, tridiagonal and
+* Toeplitz, with useful consequences.
+* 
+* It may be noted that a symmetric two-conductor line will be
+* accurately represented by this model.
+
+* Lossy line models
+.model mod1_conv2wtwentyinch ltra rel=1.2 nocontrol r=0.2 l=4.72933999088e-09 g=0 c=7.25000000373e-12 len=20
+.model mod2_conv2wtwentyinch ltra rel=1.2 nocontrol r=0.2 l=1.35306599818e-08 g=0 c=3.65000000746e-12 len=20
+
+* subcircuit m_conv2wtwentyinch - modal transformation network for conv2wtwentyinch
+.subckt m_conv2wtwentyinch 1 2 3 4
+v1 5 0 0v
+v2 6 0 0v
+f1 0 3 v1 0.707106779721
+f2 0 3 v2 -0.707106782652
+f3 0 4 v1 0.707106781919
+f4 0 4 v2 0.707106780454
+e1 7 5 3 0 0.707106780454
+e2 1 7 4 0 0.707106782652
+e3 8 6 3 0 -0.707106781919
+e4 2 8 4 0 0.707106779721
+.ends m_conv2wtwentyinch
+
+* Subckt conv2wtwentyinch
+.subckt conv2wtwentyinch 1 2 3 4
+x1 1 2 5 6 m_conv2wtwentyinch
+o1 5 0 7 0 mod1_conv2wtwentyinch
+o2 6 0 8 0 mod2_conv2wtwentyinch
+x2 3 4 7 8 m_conv2wtwentyinch
+.ends conv2wtwentyinch
+
+.model convtwoinch ltra r=0.2 l=9.13e-9 c=3.65e-12 len=2.0 rel=1.2 nocontrol
+.subckt conv2wetcmodel 1 2 3 4
+o1 1 0 5 0 convtwoinch
+x1 5 2 6 4 conv2wtwentyinch
+o2 6 0 3 0 convtwoinch
+.ends conv2wetcmodel

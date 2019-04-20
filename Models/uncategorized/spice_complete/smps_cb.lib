@@ -1,0 +1,1597 @@
+* ---------------------------------------------------------- *
+* Micro-Cap generic models library for PWM controllers working in
+* These models require Micro-Cap Version 6.05 or higher
+* Voltage Mode (PWMVM) or Current Mode (PWMCM)
+* Models developped by Christophe BASSO, Toulouse (FRANCE)
+* Please report any bugs or non-convergence problems to:
+* CBASSO@WANADOO.FR
+* ---------------------------------------------------------- *
+******
+***** Subcircuit List ******
+; Switched Models
+;PWMCM
+;PWMVM
+;PUSH_CM
+;PUSH_VM
+;HALF_CM
+;HALF_VM
+;FULL_CM
+;FULL_VM
+;2SWITCHCM
+;608PWM  unused in sample circuits
+;MOC8101 used in A_FLYBACK
+;TL431   used in A_FLYBACK
+
+;Averaged Models
+;PWMCCM 
+;PWMDCM 
+;BOOSTDCM
+;BOOSTCCM
+;BUCKCCM
+;BUCKDCM
+;FLYBACKCCM
+;FLYBACKDCM
+;FWDDCM
+;FWDCCM
+;FLYBACKVM
+;FLYBACKCM
+;DEADTIME
+;DEADSYNC
+;DEADDRV
+;BUCKVM
+;BUCKCM
+;FORWARDVM
+;FORWARDCM
+;BOOSTVM
+;BOOSTCM
+;SEPICVM
+;SEPICCM
+;SIM_VM
+;SERPA
+;SERIPA
+;AMPSIMP
+;308PWMX7
+	.SUBCKT PWMCM 1   2   3    4  5	    6 	PARAMS:
+*	          OUT GND COMP FB SENSE VOSC
++REF=2.5, PERIOD=5U, DUTYMAX=0.8, RAMP=5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, VOUTLO=100M, RATIO=0.333
+*			  OUT GND COMP FB SENS OSC
+*	
+*	
+*	Generic Model for Current Mode PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: October 25th 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle
+* RAMP		; ramp amplitude for compensation
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+* RATIO		; maximum peak current at max output error level
+			; (CM only)
+***********************************************
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++				VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+ELIM 500 2 VALUE = { V(3)*RATIO }				; max peak current = VOH*RATIO / Rsense
+XCOM 5 500 12 COMP				; limit comparator
+XFFL 11 82 14 13 FFLOP				; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock set pulses
+VRAMP 6 2 PULSE 0 {RAMP} 0 {PERIOD-2N} 1N 1N {PERIOD}
+VDUT 80 2 PULSE 0 5 {PERIOD*DUTYMAX} 1N 1N {(PERIOD-PERIOD*DUTYMAX)-2N} {PERIOD} ; max. duty cycle (=delay/period) delay=period-(tr+tf+tpuls)
+XOR1 11 14 81 OR2				; Clock OR FFlopD
+XOR2 80 12 82 OR2				; IMAX OR MAXduty Reset
+E_BOUT 15 2 VALUE = { IF ( V(81) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT 15 1 {ROUT}				; output resistor
+.ENDS PWMCM
+******
+.SUBCKT 2SWITCHCM 1    8   7    2   3    4  5    6 PARAMS:
+* 				  OUT1 GNF OUT2 GND COMP FB SENS OSC
++REF=2.5, PERIOD=5U, DUTYMAX=0.8, RAMP=5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, VOUTLO=100M, RATIO=0.333
+*			  	
+*	Generic Model for 2 switch Current Mode PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: October 1999
+*
+VREF 10 2 {REF}							; reference voltage
+XCOM 5 500 12 COMP						; limit comparator
+ELIM 500 2 VALUE = { V(3)*RATIO }		; max peak current = VOH*RATIO / Rsense
+XFFL 11 82 14 13 FFLOP					; RS latch flipflop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}; Clock set pulses
+VDUT 80 2 PULSE 0 5 {PERIOD*DUTYMAX} 1N 1N {(PERIOD-PERIOD*DUTYMAX)-2N} {PERIOD}
+VRAMP 6 2 PULSE 0 {RAMP} 0 {PERIOD-2N} 1N 1N {PERIOD}
+XOR1 11 14 81 OR2						; Clock OR FFlopD
+XOR2 80 12 82 OR2						; IMAX OR MAXduty Reset
+EOUT1 25 8 VALUE = { IF ( V(81) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT1 25 1 {ROUT}							; Output resistor 1
+RDUMF 8 2 10MEG
+EOUT2 250 2 VALUE = { IF ( V(81) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT2 250 7 {ROUT}						; Output resistor 2
+CP1 110 0 {1/(6.28*(GAIN/100U)*POLE)}
+E1 50 0 110 0 1
+R9 50 200 5
+D14 200 130 DMOD
+IS1 130 0 {ISINK/100}
+Q1 0 130 160 QPMOD
+IS2 70 3 {ISOURCE}
+D12 3 70 DMOD
+D15 0 110 DCLAMP
+G1 0 110 10 4 100U
+V1 70 0 {VHIGH-0.6}
+V2 3 160 {VLOW-40M}
+RP1 110 0 {GAIN/100U}
+.MODEL QPMOD PNP
+.MODEL DCLAMP D (RS=10 BV=10 IBV=0.01)
+.MODEL DMOD D
+.ENDS
+******
+.SUBCKT PWMVM 1   2   3    4  5		PARAMS:
+*	      	  OUT GND COMP FB IMAX
++REF=2.5, PERIOD=5U, DUTYMAX=0.8, IMAX=2.5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, DUTYMIN=0.1, VOUTLO=100M
+*	
+*	Generic Model for Voltage Mode PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: October 26th 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle
+* DUTYMIN	; minimum duty cycle
+* IMAX		; max voltage upon (external) RSENSE resistor 
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+.PARAM VP = { (VLOW*DUTYMAX-VHIGH*DUTYMIN+VHIGH-VLOW)/(DUTYMAX-DUTYMIN) }	; valley ramp voltage
+.PARAM VV = { (VLOW-DUTYMIN*VP)/(1-DUTYMIN)}								; peak ramp voltage
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+VRAMP 16 2 PULSE {VV} {VP} 0 {PERIOD-2N} 1N 1N {PERIOD} ; comparison ramp
+XCOM1 16 3 18 COMP				; PWM comparator
+XCOM2 5 19 12 COMP				; I limit comparator
+VLIMT 19 2 {IMAX}				; I limit level (Max voltage upon external sense resistor)
+XOR2 12 18 20 OR2				; Reset by IMAX OR PWM
+XFFL 11 20 14 13 FFLOP				; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock set pulses
+E_BOUT 15 2 VALUE = { IF ( V(14) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT 15 1 {ROUT}				; output resitor
+.ENDS PWMVM
+************
+.SUBCKT PUSH_CM 1    7    2   3    4  5    6 PARAMS:
+*			    OUT1 OUT2 GND COMP FB SENS OSC
++REF=2.5, PERIOD=5U, DEAD=0.95, RAMP=5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, VOUTLO=100M, RATIO=0.333
+*	
+*	Generic Model for Current Mode Push-Pull PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: November 18th 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DEAD	 	; dead time between OUT1 and OUT2
+* RAMP		; ramp amplitude for compensation
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}							; reference voltage
+XCOM 5 500 12 COMP						; limit comparator
+ELIM 500 2 VALUE = { V(3)*RATIO }		; max peak current = VOH*RATIO / Rsense
+XFFL1 82 11 14 13 FFLOP					; RS latch flipflop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}; Clock reset pulses
+VDUT 80 2 PULSE 0 5 {PERIOD*DEAD} 1N 1N {(PERIOD-PERIOD*DEAD)-2N} {PERIOD}
+VRAMP 6 2 PULSE 0 {RAMP} 0 {PERIOD-2N} 1N 1N {PERIOD}
+XOR1 11 14 81 OR2						; Clock OR FFlopD
+XOR2 80 12 82 OR2						; IMAX OR MAXduty set
+XNOR1 301 81 303 NOR2 
+XNOR2 300 81 304 NOR2
+XFFL2 81 300 2 2 300 301 TOGGLE
+E_BOUT1 15 2 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT1	15 1 {ROUT}				; output resitor
+E_BOUT2 250 2 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT2 250 7 {ROUT}				; output resitor
+.ENDS PUSH_CM 
+******
+.SUBCKT PUSH_VM 1    7    2   3    4  5		PARAMS:
+*	      	    OUT1 OUT2 GND COMP FB IMAX
++REF=2.5, PERIOD=5U, DUTYMAX=0.95, IMAX=2.5, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, DUTYMIN=0.1, VOUTLO=100M
+*	
+*	Generic Model for Voltage Mode Push-Pull PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: November 18th 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle (naturally limited at 0.5 or less)
+* DUTYMIN	; minimum duty cycle
+* IMAX		; max voltage upon (external) RSENSE resistor 
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+.PARAM VP = { (VLOW*DUTYMAX-VHIGH*DUTYMIN+VHIGH-VLOW)/(DUTYMAX-DUTYMIN) }	; valley ramp voltage
+.PARAM VV = { (VLOW-DUTYMIN*VP)/(1-DUTYMIN)}								; peak ramp voltage
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+VRAMP 16 2 PULSE {VV} {VP} 0 {PERIOD-2N} 1N 1N {PERIOD} ; comparison ramp
+XCOM1 16 3 18 COMP				; PWM comparator
+XCOM2 5 19 12 COMP				; I limit comparator
+VLIMT 19 2 {IMAX}				; I limit level (Max voltage upon external sense resistor)
+XOR2 12 18 20 OR2				; Set by IMAX OR PWM
+XFFL 20 11 14 13 FFLOP			; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock Reset pulses
+XNOR1 301 14 303 NOR2 
+XNOR2 300 14 304 NOR2
+XFFL2 14 300 2 2 300 301 TOGGLE
+E_BOUT1 15 2 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT1	15 1 {ROUT}				; output resitor
+E_BOUT2 250 2 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT2 250 7 {ROUT}				; output resitor
+.ENDS PUSH_VM
+********
+.SUBCKT HALF_CM 1   8   7      2   3    4  5	    6 	PARAMS:
+*	            OUT GNF OUT2   GND COMP FB SENSE VOSC
++REF=2.5, PERIOD=5U, DUTYMAX=0.95, RAMP=5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, VOUTLO=100M, RATIO=0.333
+*	
+*	Generic Model for Current Mode Half-bridge PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: November 21st 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle on both outputs
+* RAMP		; ramp amplitude for compensation
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++				VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+ELIM 500 2 VALUE = { V(3)*RATIO }				; max peak current = VOH*RATIO / Rsense
+XCOM 5 500 12 COMP				; limit comparator
+XFFL 82 11 14 13 FFLOP				; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock set pulses
+VRAMP 6 2 PULSE 0 {RAMP} 0 {PERIOD-2N} 1N 1N {PERIOD}
+VDUT 80 2 PULSE 0 5 {PERIOD*DUTYMAX} 1N 1N {(PERIOD-PERIOD*DUTYMAX)-2N} {PERIOD} ; max. duty cycle (=delay/period) delay=period-(tr+tf+tpuls)
+XOR1 11 14 81 OR2				; Clock OR FFlopD
+XOR2 80 12 82 OR2				; IMAX OR MAXduty Reset
+XNOR1 301 81 303 NOR2
+XNOR2 300 81 304 NOR2
+XFFL2 81 300 2 2 300 301 TOGGLE
+E_BOUT1 25 8 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT1 25 1 {ROUT}							; Output resistor 1
+RDUMF 8 2 10MEG
+E_BOUT2 250 2 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT2 250 7 {ROUT}
+.ENDS HALF_CM
+***********
+.SUBCKT HALF_VM 1    8   7    2   3    4  5		PARAMS:
+*	      	    OUT1 GNF OUT2 GND COMP FB IMAX
++REF=2.5, PERIOD=5U, DUTYMAX=0.8, IMAX=2.5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, DUTYMIN=0.1, VOUTLO=100M
+*	
+*	Generic Model for Voltage Mode Half-Bridge PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: November 21st 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle
+* DUTYMIN	; minimum duty cycle
+* IMAX		; max voltage upon (external) RSENSE resistor 
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+.PARAM VP = { (VLOW*DUTYMAX-VHIGH*DUTYMIN+VHIGH-VLOW)/(DUTYMAX-DUTYMIN) }	; valley ramp voltage
+.PARAM VV = { (VLOW-DUTYMIN*VP)/(1-DUTYMIN)}								; peak ramp voltage
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+VRAMP 16 2 PULSE {VV} {VP} 0 {PERIOD-2N} 1N 1N {PERIOD} ; comparison ramp
+XCOM1 16 3 18 COMP				; PWM comparator
+XCOM2 5 19 12 COMP				; I limit comparator
+VLIMT 19 2 {IMAX}				; I limit level (Max voltage upon external sense resistor)
+XOR2 12 18 20 OR2				; Reset by IMAX OR PWM
+XFFL 20 11 14 13 FFLOP				; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock set pulses
+XNOR1 301 14 303 NOR2
+XNOR2 300 14 304 NOR2
+XFFL2 14 300 2 2 300 301 TOGGLE
+E_BOUT1 25 8 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT1 25 1 {ROUT}							; Output resistor 1
+RDUMF 8 2 10MEG
+E_BOUT2 250 2 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT2 250 7 {ROUT}						; Output resistor 2
+.ENDS HALF_VM
+***********
+.SUBCKT FULL_CM 1    8    7    9    16   15   2   3    4  5    6  PARAMS:
+*			    OUT1 GNF1 OUT2 OUT3 GNF3 OUT4 GND COMP FB SENS OSC
++REF=2.5, PERIOD=5U, DUTYMAX=0.95, RAMP=5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, VOUTLO=100M, RATIO=0.333
+*	
+*	Generic Model for Current Mode full-bridge PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: November 21st 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle on both outputs
+* RAMP		; ramp amplitude for compensation
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++				VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+XCOM 5 500 12 COMP				; limit comparator
+ELIM 500 2 VALUE = { V(3)*RATIO }				; max peak current = VOH*RATIO / Rsense
+XFFL 82 11 14 13 FFLOP				; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock set pulses
+VRAMP 6 2 PULSE 0 {RAMP} 0 {PERIOD-2N} 1N 1N {PERIOD}
+VDUT 80 2 PULSE 0 5 {PERIOD*DUTYMAX} 1N 1N {(PERIOD-PERIOD*DUTYMAX)-2N} {PERIOD} ; max. duty cycle (=delay/period) delay=period-(tr+tf+tpuls)
+XOR1 11 14 81 OR2				; Clock OR FFlopD
+XOR2 80 12 82 OR2				; IMAX OR MAXduty Reset
+XNOR1 301 81 303 NOR2
+XNOR2 300 81 304 NOR2
+XFFL2 81 300 2 2 300 301 TOGGLE
+E_BOUT1 25 8 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+; AVT
+;ROUT1 25 1 {RO}							; Output resistor 1
+ROUT1 25 1 {ROUT}							; Output resistor 1
+RDUMF1 8 2 10MEG
+E_BOUT2 250 2 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+; AVT
+;ROUT2 250 7 {RO}						; Output resistor 2
+ROUT2 250 7 {ROUT}						; Output resistor 2
+E_BOUT3 255 16 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+; AVT
+;ROUT3 255 9 {RO}						; Output resistor 3
+ROUT3 255 9 {ROUT}						; Output resistor 3
+RDUMF3 16 2 10MEG
+E_BOUT4 256 2 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+; AVT
+;ROUT4 256 15 {RO}
+ROUT4 256 15 {ROUT}
+.ENDS FULL_CM
+************
+.SUBCKT FULL_VM 1    8    7    9    36   15   2   3    4  5 PARAMS:
+*			    OUT1 GNF1 OUT2 OUT3 GNF3 OUT4 GND COMP FB IMAX
++REF=2.5, PERIOD=5U, DUTYMAX=0.8, IMAX=2.5V, VOUTHI=15V, 
++ROUT=10, VHIGH=3, ISINK=15M, ISOURCE=500U, 
++VLOW=100M, POLE=30, GAIN=31622, DUTYMIN=0.1, VOUTLO=100M
+*	
+*	Generic Model for Voltage Mode Full-Bridge PWM controller
+*	Developed by Christophe BASSO, France
+*	PSpice compatible format
+*	Last modified: November 21st 1996
+*
+***** Generic PWM controller parameters *******
+* REF 		; internal reference voltage
+* PERIOD	; switching period
+* DUTYMAX 	; maximum duty cycle
+* DUTYMIN	; minimum duty cycle
+* IMAX		; max voltage upon (external) RSENSE resistor 
+* VOUTHI	; driver output voltage high
+* VOUTLO	; driver output voltage low
+* ROUT		; driver output resistor
+***** Internal error amplifier parameters *****
+* VHIGH		; maximum output voltage
+* VLOW		; minimum output voltage
+* ISINK		; sink capability
+* ISOURCE	; source capability
+* POLE		; first pole in Hertz
+* GAIN		; DC open-loop gain (default=90dB)
+***********************************************
+.PARAM VP = { (VLOW*DUTYMAX-VHIGH*DUTYMIN+VHIGH-VLOW)/(DUTYMAX-DUTYMIN) }	; valley ramp voltage
+.PARAM VV = { (VLOW-DUTYMIN*VP)/(1-DUTYMIN)}								; peak ramp voltage
+XERR 10 4 3 2 ERRAMP PARAMS:	VHIGH={VHIGH} ISINK={ISINK} ISOURCE={ISOURCE} ; error amplifier
++VLOW={VLOW} POLE={POLE} GAIN={GAIN}
+VREF 10 2 {REF}					; reference voltage
+VRAMP 16 2 PULSE {VV} {VP} 0 {PERIOD-2N} 1N 1N {PERIOD} ; comparison ramp
+XCOM1 16 3 18 COMP				; PWM comparator
+XCOM2 5 19 12 COMP				; I limit comparator
+VLIMT 19 2 {IMAX}				; I limit level (Max voltage upon external sense resistor)
+XOR2 12 18 20 OR2				; Reset by IMAX OR PWM
+XFFL 20 11 14 13 FFLOP				; flip-flop
+RDUM 13 2 1MEG
+VCLK 11 2 PULSE 0 5 0 1N 1N 10N {PERIOD}	; Clock set pulses
+XNOR1 301 14 303 NOR2
+XNOR2 300 14 304 NOR2
+XFFL2 14 300 2 2 300 301 TOGGLE
+E_BOUT1 25 8 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT1 25 1 {ROUT}							; Output resistor 1
+RDUMF1 8 2 10MEG
+E_BOUT2 250 2 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+; AVT
+;ROUT2 250 7 {RO}						; Output resistor 2
+ROUT2 250 7 {ROUT}						; Output resistor 2
+E_BOUT3 255 36 VALUE = { IF ( V(304) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT3 255 9 {ROUT}						; Output resistor 3
+RDUMF3 36 2 10MEG
+E_BOUT4 256 2 VALUE = { IF ( V(303) > 3.5, {VOUTHI}, {VOUTLO} ) }
+ROUT4 256 15 {ROUT}
+.ENDS FULL_VM
+**** MC44608 Shunt regulator Pulse Width Modulator ****
+.SUBCKT 608PWM 1  2
+* 			   FB Out_Duty
+RSUPP 1 0 4.3k			; Internal supply current
+RGAIN1 1 70 20			; Dynamic zener resistance
+XERR 71 70 72 AMP	; Internal error amplifier
+VREF 71 0 5V			; Internal reference voltage
+XPCH 73 72 70 PCHAN		; P-channel MOSFET
+RGAIN2 73 0 150		; I/V converter
+DCLP 73 74 DCLAMP		; Negative clamp
+VCLP1 74 0 180mV		; lower duty-cycle limit
+VD 75 0 740mV			; upper duty-cycle limit
+E1 76 0 75 73 1			; decreasing duty-cycle
+RF 76 140 100
+CF 140 0 227nF
+
+; AVT
+E2 2 0 TABLE {V(140)} =  15M,15M 740m,740m
+;B2 2 0 V=V(140)>740mV ? 740mV : V(140)<15mV ? 15mV : V(140)
+
+
+.MODEL DCLAMP D (RS=1.5 CJO=4PF IS=7E-09 N=2 VJ=.6V    
++ TT=6E-09 M=.45 BV=100V)
+.ENDS 608PWM
+**************
+.SUBCKT PCHAN 30 40 50
+M1 30 20 50 50 MOD1 L=1U W=1U
+RG 40 20 167
+RL 30 50 50E6
+.MODEL MOD1 PMOS VTO=-1.709 RS=3.091 RD=0.979 IS=1E-15 KP=0.146
++CGSO=26P CGDO=4P CBD=12P PB=1
+.ENDS PCHAN
+
+.SUBCKT AMP 1 5 2
+*               + - OUT
+G1 0 4 1 5 100u
+R1 4 0 300Meg		 ; 90dB OL
+C1 4 0 53pF IC=8.5   ; 10Hz pole
+E1 2 0 4 0 1
+V1 3 0 500mV
+D2 3 4 DCLP
+
+; AVT
+;.MODEL DCLP D (BV=8.7 CJO=40PF IS=7E-09 M=.45 N=2 RS=.8)
+;+ TT=10E-09 VJ=.6V)
+.MODEL DCLP D (BV=8.7 CJO=40PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=10E-09 VJ=.6V)
+
+.ENDS AMP
+**** ERROR AMPLIFIER MODEL ****
+.SUBCKT ERRAMP 20 8  3  21 PARAMS: ISINK= 15M, ISOURCE=500U, VHIGH=2.8, VLOW=100M, POLE=30, GAIN=31622
+*   	       +  - OUT GND
+RIN 20 8 8MEG
+CP1 11 21 {1/(6.28*(GAIN/100u)*POLE)}
+E1 5 21 11 21 1
+R9 5 2 5
+D14 2 13 DMOD
+IS 13 21 {ISINK/100}	; mA
+Q1 21 13 16 QPMOD
+ISRC 7 3 {ISOURCE}		; uA
+D12 3 7 DMOD
+D15 21 11 DCLAMP
+G1 21 11 20 8 100u
+V1 7 21 {VHIGH-0.6V}
+V4 3 16 {VLOW-38MV}
+RP1 11 21 {GAIN/100u}
+.MODEL QPMOD PNP
+.MODEL DCLAMP D (RS=10 BV=10 IBV=10m)
+.MODEL DMOD D (TT=1N CJO=10P)
+.ENDS ERRAMP 
+**** 2 INPUT COMPARATOR ****
+.SUBCKT COMP 1 2 3
+*            + - S
+E_B1 4 0 VALUE = { IF ( V(1) > V(2), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS COMP
+**** 2 INPUT OR CIRCUIT ****
+.SUBCKT OR2 1 2 3
+E_B1 4 0 VALUE = { IF ( (V(1)>800M) | (V(2)>800M), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS OR2
+****
+**** 2 INPUT NOR CIRCUIT ****
+.SUBCKT NOR2 1 2 3
+E_B1 4 0 VALUE = { IF ( (V(1)>800M) | (V(2)>800M), 0, 5V ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS NOR2
+****
+.SUBCKT FFLOP 6 8 2 1
+*             S R Q Q\
+E_BQB 10 0 VALUE = { IF ( (V(8)<800M) & (V(2)>800M), 0, 5V ) }
+E_BQ  20 0 VALUE = { IF ( (V(6)<800M) & (V(1)>800M), 0, 5V ) }
+RD1   10 1 100
+CD1   1 0 10P IC=5
+RD2   20 2 100
+CD2   2 0 10P IC=0
+.ENDS FFLOP
+**** 2 INPUT AND CIRCUIT ****
+.SUBCKT AND2 1 2 3
+E_B1 4 0 VALUE = { IF ( (V(1)>800M) & (V(2)>800M), 5V, 0 ) }
+RD 4 3 100
+CD 3 0 100P
+.ENDS AND2
+****
+.SUBCKT NAND3_0 1 2 3 4
+E_B1 5 0 VALUE = { IF ( (V(1)>800M) & (V(2)>800M) & (V(3)>800M), 0V, 5V ) }
+R1 5 4 400
+C1 4 0 20P IC=0
+.ENDS NAND3_0
+*****
+.SUBCKT NAND3_1 1 2 3 4
+E_B1 5 0 VALUE = { IF ( (V(1)>800M) & (V(2)>800M) & (V(3)>800M), 0V, 5V ) }
+R1 5 4 400
+C1 4 0 20P IC=5
+.ENDS NAND3_1
+*****
+.SUBCKT INV 1 2
+E_B1 3 0 VALUE = { IF ( V(1)>800M, 0, 5V ) }
+R1 3 2 100
+C1 2 0 10P IC=5
+.ENDS INV
+**** TOGGLE CIRCUIT ****
+.SUBCKT TOGGLE 1  2 11 12 5  6
+*            CLK D R  S  QB Q 
+X1 7 4 2 8 NAND3_0
+X2 8 3 10 9 NAND3_0
+X3 1 8 10 7 NAND3_1
+X4 4 9 1 10 NAND3_0
+X5 4 7 6 5 NAND3_1
+X6 5 10 3 6 NAND3_0
+X7 11 4 INV
+X8 12 3 INV
+.ENDS TOGGLE
+**** MULTI-WINDING TRANSFORMER ****
+.SUBCKT XFMR2 1 2 3 4 10 11 PARAMS: RATIO1=1 RATIO2=1
+RP 1 2 1MEG
+;E1 5 4 VALUE = { V(1,2)*RATIO1 }
+E1 5 4 1 2 {RATIO1}
+;G1 1 2 VALUE = { I(VM1)*RATIO1 }
+F1 1 2 VM1 {RATIO1}
+RS1 6 3 1U
+VM1 5 6
+;E2 20 11 VALUE = { V(2,1)*RATIO2 }
+E2 20 11 2 1 {RATIO2}
+;G2 2 1 VALUE = { I(VM2)*RATIO2 }
+F2 2 1 VM2 {RATIO2}
+RS2 21 10 1U
+VM2 20 21 
+.ENDS XFMR2
+**** SINGLE WINDING TRANSFORMER ****
+.SUBCKT XFMR1 1 2 3 4 PARAMS: RATIO=1
+RP 1 2 1MEG
+E1 5 4 1 2 {RATIO}
+F1 1 2 VM  {RATIO}
+RS 6 3 1U
+VM 5 6 
+.ENDS XFMR1
+********
+.SUBCKT XFMR-TAP 1 2 3 4 5 PARAMS: RATIO=3.91
+;E1 7 8 VALUE = { V(1,2)*RATIO }
+E1 7 8 1 2 {RATIO}
+;G1 1 2 VALUE = { I(VM1)*RATIO }
+F1 1 2 VM1 {RATIO}
+RP 1 2 1MEG
+RS 6 3 1U
+VM1 7 6
+;E2 9 5 VALUE = { V(1,2)*RATIO } 
+E2 9 5 1 2 {RATIO} 
+;G2 1 2 VALUE = { I(VM2)*RATIO }
+F2 1 2 VM2 {RATIO}
+R5 8 4 1U
+VM2 9 8
+.ENDS XFMR-TAP
+***********
+		.SUBCKT MOC8101 1 2 3   5
+* ISOLATOR      A C COL EMITTER
+RB 4 0 100Meg
+VM 1 6
+D1 6 2 LED
+H1 7 0 VM .0055
+R1 7 8 1K
+C1 8 0 3.35nF
+G1 3 4 8 0 1
+Q1 3 4 5 MPSA06
+.MODEL LED D(N=1.7 RS=.7 CJO=23.9P IS=85.3p BV=6 IBV=10U 
++ VJ=0.75 M=0.333 TT=4.32U)
+.MODEL MPSA06 NPN (IS=15.2F NF=1 BF=589 VAF=98.6 IKF=90M ISE=3.34P NE=2 
++ BR=4 NR=1 VAR=16 IKR=0.135 RE=0.343 RB=1.37 RC=0.137 XTB=1.5
++ CJE=9.67P VJE=1.1 MJE=0.5 CJC=7.34P VJC=0.3 MJC=0.3 TF=10.29n TR=276N)
+.ENDS MOC8101
+**********
+.SUBCKT TL431 7 6 11
+*             K A FDBK
+.MODEL DCLAMP D (IS=13.5N RS=25M N=1.59 
++ CJO=45P VJ=.75 M=.302 TT=50.4N BV=34V IBV=1MA)
+V1 1 6 2.495
+R1 6 2 15.6
+C1 2 6 .5U
+R2 2 3 100
+C2 3 4 .08U
+R3 4 6 10
+G2 6 8 3 6 1.73
+D1 5 8 DCLAMP
+D2 7 8 DCLAMP
+V4 5 6 2
+G1 6 2 1 11 0.11
+.ENDS
+**********
+********************************
+*
+* Deadtime generator library
+* developed by Christophe BASSO
+* OrCAD's PSpice compatible
+* Last modified November 99
+*
+********************************
+.SUBCKT DEADTIME 1   50  110  51 100 PARAMS: DT=500N, VHIGH=10V, VLOW=100M, RS=10
+*
+*
+* Nodes:
+* Clock_In GateUpper SourceUpper GateLower Ground
+* Parameters:
+* DT     : Dead time in seconds
+* VHIGH  : High voltage output in Volts
+* VLOW   : Low voltage output in Volts
+* RS     : GateUpper to SourceUpper resistance
+*
+* Dead-time generation for half-bridge or synchronous rectification
+* Implementing an upper floating N MOS and a lower N channel
+* Developed by Christophe BASSO (FRANCE)
+*
+RIN 1 100 1MEG
+EB6 17 100 Value = { IF ( V(1,100)>2V, 10, 0 ) }
+R3 17 18 1k
+C3 18 100 {DT/(1000*4.14)}
+EB4 21 100 Value = { IF ( V(25,19)<100MV, {VLOW}, {VHIGH} ) }
+RCQ 21 60 100
+CCQ 60 100 10P
+EBQ 61 110 Value = { V(60,100) }
+RDUM1 50 100 100MEG
+RDUM2 110 100 100MEG
+RSQ 61 50 {RS}
+R4 22 23 1k
+C4 23 100 {DT/(1000*4.14)}
+EB5 24 100 Value = { IF (V(26,20)<100MV, {VLOW}, {VHIGH} ) }
+RCQB 24 70 100
+CCQB 70 100 10P
+EBQB 71 100 Value = { V(70,100) }
+RSQB 71 51 {RS}
+R5 17 25 1k
+C5 25 100 {DT/(1000*41.4)}
+R6 22 26 1k
+C6 26 100 {DT/(1000*41.4)}
+D3 23 22 DISCH
+D4 18 17 DISCH
+EB1 22 100 Value = { IF (V(1,100)>2V, 0, 10 ) }
+EB2 19 100 Value = { IF ( V(17,18)<100MV, 0, 10 ) }
+EB3 20 100 Value = { IF ( V(22,23)<100MV, 0, 10 ) }
+.MODEL DISCH D BV=100V CJO=4PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=6E-09 VJ=.6V
+.ENDS
+********
+.SUBCKT DEADSYNC 1 50 51 110 120 PARAMS: DT=500N, RS=10
+*
+* Nodes:
+* Clock_In Nchannel Pchannel Vcc Gnd
+* Parameters:
+* DT     : Dead time in seconds
+* RS     : GateUpper to SourceUpper resistance
+*
+* Synchronous rectification using a lower N MOS and an upper P MOS
+* Developed by Christophe BASSO (FRANCE)
+* No discrete driver
+RIN 1 0 1MEG
+EB6 17 0 Value = { IF ( V(1)>2V, 10, 0 ) }
+R3 17 18 1k
+C3 18 0 {DT/(1000*4.14)}
+EB4 21 0 Value = { IF ( V(25,19)<100MV, 100mV, V(110,120) ) }
+RCQ 21 60 100
+CCQ 60 0 10P
+EBQ 61 0 Value = { V(60) }
+RSQ 61 50 {RS}
+R4 22 23 1k
+C4 23 0 {DT/(1000*4.14)}
+EB5 24 0 Value = { IF (V(26,20)<100MV, V(110,120), 100mV ) }
+RCQB 24 70 100
+CCQB 70 0 10P
+EBQB 71 0 Value = { V(70) }
+RSQB 71 51 {RS}
+R5 17 25 1k
+C5 25 0 {DT/(1000*41.4)}
+R6 22 26 1k
+C6 26 0 {DT/(1000*41.4)}
+D3 23 22 DISCH
+D4 18 17 DISCH
+EB1 22 0 Value = { IF ( V(1)>2V, 0, 10 ) }
+EB2 19 0 Value = { IF ( V(17,18)<100MV, 0, 10 ) }
+EB3 20 0 Value = { IF ( V(22,23)<100MV, 0, 10 ) }
+.MODEL DISCH D BV=100V CJO=4PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=6E-09 VJ=.6V
+.ENDS
+********
+.SUBCKT DEADDRV 1 50 51 80 100 PARAMS: DT=500N
+*
+* Nodes:
+* Clock_In Nchannel Pchannel Vcc Ground
+* Parameters:
+* DT     : Dead time in seconds
+*
+* Synchronous rectification using a lower N MOS and an upper P MOS
+* With UC384X-like output drivers
+* Developed by Christophe BASSO (FRANCE)
+RIN 1 100 1MEG
+EB6 17 100 Value = { IF ( V(1,100)>2V, 10, 0 ) }
+R3 17 18 1k
+C3 18 100 {DT/(1000*4.14)}
+EB4 21 100 Value = { IF ( V(25,19)<100MV, 100M, V(80,100) ) }
+RCQ 21 60 100
+CCQ 60 100 10P
+EBQ 61 100 Value = { V(60) }
+XDRVQ 80 100 61 50 DRIVER
+EB5 24 100 Value = { IF ( V(26,20)<100MV, V(80,100), 100M ) }
+RCQB 24 70 100
+CCQB 70 100 10P
+EBQB 71 100 Value = { V(70,100) }
+XDRVQB 80 100 71 51 DRIVER
+R4 22 23 1k
+C4 23 100 {DT/(1000*4.14)}
+R5 17 25 1k
+C5 25 100 {DT/(1000*41.4)}
+R6 22 26 1k
+C6 26 100 {DT/(1000*41.4)}
+D3 23 22 DISCH
+D4 18 17 DISCH
+EB1 22 100 Value = { IF ( V(1,100)>2V, 0, 10 ) }
+EB2 19 100 Value = { IF ( V(17,18)<100MV, 0, 10 ) }
+EB3 20 100 Value = { IF ( V(22,23)<100MV, 0, 10 ) }
+.MODEL DISCH D BV=100V CJO=4PF IS=7E-09 M=.45 N=2 RS=.8
++ TT=6E-09 VJ=.6V
+.ENDS
+*********
+.SUBCKT NEWDT CLK GU SU QL PARAMS: DT=500N VHIGH=10V VLOW=100M RS=10
+* Clock_In GateUpper SourceUpper GateLower
+* 
+* DT: Dead time in seconds
+* VHIGH: Output level when high
+* VLOW: Output level when low
+* RS: Driver's output resistance
+*
+EBU1 1 0 VALUE = { IF ( (V(CLK)>800M) & (V(TD1)>800M), {VHIGH}, {VLOW} ) }
+EBU2 4 SU VALUE = { V(1) }
+RSU 4 GU {RS}
+RFLO SU 0 1G
+EBL 2 0 VALUE = { IF ( (V(CLKB)>800M) & (V(TD2)>800M), {VHIGH}, {VLOW} ) }
+RSL 2 QL {RS}
+X1 CLK TD1 DL PARAMS: TD={DT}
+X2 CLKB TD2 DL PARAMS: TD={DT}
+X3 CLK CLKB INV
+.ENDS
+**********
+.SUBCKT DL 1 2 PARAMS: TD=500n
+*
+RIN 1 0 1E15
+E1 3 0 1 0 1
+T1 3 0 2 0 Z0=1 TD={TD}
+R1 2 0 1
+.ENDS DL
+**** 1 INPUT INVERTER ****
+.SUBCKT INV 1 2
+EB1 4 0 VALUE = { IF ( V(1)>800M, 0, 5V ) }
+RD 4 2 100
+CD 2 0 10P
+.ENDS INV
+*****************
+.SUBCKT DRIVER  4  7  3  12
+*               +V -V IN OUT
+.MODEL QMOD NPN RC=1.5  RE=.5 RB=100  IKF=0.5
+.MODEL QMOD2 NPN
+.MODEL QIN NPN BF=100 BR=2 IS=1E-16 VAF=50 
++ CJE=1.5P CJC=.15P TR=1N TF=4N
+.MODEL DMOD D RS=1 IS=0.4U
+I3 4 8 100U
+D3 8 4 DMOD
+D4 12 8 DMOD
+Q3 8 1 9 QIN
+Q4 12 9 7 QMOD
+Q5 4 8 6 QMOD
+I4 7 1 .9M
+R1 3 2 10K
+Q8 1 2 7 QIN
+Q2 4 6 12 QMOD2
+.ENDS
+********
+* -------------------------------------------------------- *
+* Micro-Cap AC (only) models library for SMPS
+* These models require Micro-Cap Version 6.05 or higher
+* operating in Continuous Conduction Mode (CCM) or 
+* Discontinuous Conduction Mode (DCM)
+* Models originally developed by Raymond RIDLEY in SPICE2
+* SPICE3 version by Christophe BASSO, Toulouse (FRANCE)
+* Please report any bugs or non-convergence problems to:
+* CBASSO@WANADOO.FR
+* Last modified: September 26th 1999
+* -------------------------------------------------------- *
+.SUBCKT PWMCCM 1 2 3 4 5 PARAMS: RI=0.33 L=37.5U FS=50K RL=1 D=0.45 VAP=11 VAC=6 IC=0.8 VP=2
+*              A P C C'Control
+.PARAM TS = {1/FS}	; Switching time
+;.PARAM PI = 3.14159	; PI constant
+.PARAM KF= {-(D*TS*RI/L)*(1-D/2)}
+.PARAM KR= {((1-D)^2*TS*RI)/(2*L)}
+**** PWM Switch model ****
+E2 7 1 VALUE = { V(17)*(VAP/D) }
+G1 1 2 VALUE = { V(17)*IC }
+Gxf 7 2 VALUE = { I(Vxf)*D }
+Exf 9 2 VALUE = { V(7,2)*D }
+Vxf 9 3 0                               
+Rvc 5 0 10MEG                            
+**** He(s) Circuit ****
+Hi 10 0  Vxf  1                                
+C1 10 12 {TS/PI}
+L1 12 13 {TS/PI}                        
+C2 13 14 {TS/PI}
+Re 14 15  -1.57                            
+E1 15 0 12 0 -1E6                            
+R2 12 0 10MEG                            
+**** Summing gains ****
+Ed 16 0 VALUE = { V(1,4)*KF + V(4,2)*KR + V(15)*RI + V(5) }
+Rd 16 0 10MEG                            
+**** Modulator Gain ****
+EFm 17 0 VALUE = { V(16)*1/(VP+(VAC*TS*RI/L)) }
+RFm 17 0 10MEG  
+.ENDS PWMCCM
+**************
+.SUBCKT PWMDCM 1 2 3 4 5 PARAMS: RI=0.33 L=37.5U FS=50K RL=1 D=0.45 VAP=11 VAC=6 VCP=5 IC=0.8 IA=0.16 IP=0.64 VP=2V
+*              A P C C'Control
+.PARAM TS = {1/FS}	; Switching time
+.PARAM KF = {-(D*TS*RI/L)}
+**** PWM Switch Model ****
+Ri 1 3 { VAC/IA }
+Gdi 1 3 VALUE= { V(17)*2*IA/D }
+Gf 2 3 VALUE = { V(1,3)*2*IP/VAC }
+Gdo 2 3 VALUE = { V(17)*2*IP/D }
+Ro 2 3 { VCP/IP }
+Rvc 5 0 10MEG
+**** Summing Gains ****
+Ed 16 0 VALUE = { V(1,4)*KF + V(5) }
+Rd 16 0 10MEG
+**** Modulator Gain ****
+EFm 17 0 VALUE = { V(16)*1/(VP+(VAC*TS*RI/L)) }
+RFm 17 0 10MEG
+.ENDS PWMDCM
+**************
+.SUBCKT BOOSTDCM Vin Vout Gnd Control D PARAMS: RI=0.803 L=2.93U RS=90M FS=219K VOUT=12V RL=12 VIN=9.9V MC=1 VR=2
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={SQRT(2*L*VOUT*(VOUT/VIN-1)/VIN*FS/RL)}	; DC duty cycle for Discontinuous mode
+.PARAM VAP={-VOUT}
+.PARAM VAC={-VIN}
+.PARAM VCP={-VOUT+VIN}
+.PARAM IA={-((VOUT^2)/RL/VIN)*D}
+.PARAM IP={-VOUT/RL}
+.PARAM IC={-VOUT/RL/(1-D)}
+.PARAM VP={-VAC*(1/FS)*RI*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vin LL {RS}
+L LL C {L}
+X1 Gnd Vout C Vin Control PWMDCM PARAMS: RI={-RI} L={L} FS={FS} RL={RL} D={D}
++ VAP={VAP} VAC={VAC} VCP={VCP} IC={IC} IA={IA} IP={IP} VP={VP}
+.ENDS
+***********
+.SUBCKT BOOSTCCM Vin Vout Gnd Control D PARAMS: RI=0.4 L=140U RS=190M FS=100K VOUT=100V RL=50 VIN=48V MC=1.5 VR=2V
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={(VOUT-VIN)/VOUT}	; DC duty cycle for Continuous mode
+.PARAM VAP={-VOUT}
+.PARAM VAC={-VIN}
+.PARAM VCP={-VOUT+VIN}
+.PARAM IA={-((VOUT^2)/RL/VIN)*D}
+.PARAM IP={-VOUT/RL}
+.PARAM IC={-VOUT/RL/(1-D)}
+.PARAM VP={-VAC*(1/FS)*RI*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vin LL {RS}
+L LL C {L}
+X1 Gnd Vout C Vin Control PWMCCM PARAMS: RI={-RI} L={L} FS={FS} D={D} VAP={VAP} VAC={VAC} IC={IC} VP={VP}
+.ENDS
+**********
+.SUBCKT BUCKDCM Vin Vout Gnd Control D PARAMS: RI=0.33 L=37.5U RS=20M FS=50K VOUT=5V RL=6.25 VIN=25V MC=1 VR=2V
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={SQRT((M^2*8*L)/(((2-M)^2-M^2)*RL*(1/FS)))} ; DC Duty cycle for discontinuous mode
+.PARAM M={VOUT/VIN}	; Conversion ratio
+.PARAM VAP={VIN}
+.PARAM VAC={VIN-VOUT}
+.PARAM VCP={VOUT}
+.PARAM IC={VOUT/RL}
+.PARAM IA={(VOUT/RL)*M}
+.PARAM IP={IC-IA}
+.PARAM VP= {VAC*(1/FS)*RI*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vout LL {RS}
+L LL C {L}
+X1 Vin Gnd C Vout Control PWMDCM PARAMS: RI={RI} L={L} FS={FS} RL={RL} D={D} VAP={VAP} 
++ VAC={VAC} VCP={VCP} IC={IC} IA={IA} IP={IP} VP={VP}
+.ENDS
+***********
+.SUBCKT BUCKCCM Vin Vout Gnd Control D PARAMS: RI=0.33 L=37.5U RS=20M FS=50K VOUT=5 RL=1 VIN=11V MC=32 VR=2V
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={(VOUT/VIN)*(RL+RS)/RL}	; DC duty cycle for continuous mode
+.PARAM M={VOUT/VIN}	; Conversion ratio
+.PARAM VAP={VIN}
+.PARAM VAC={VIN-VOUT}
+.PARAM VCP={VOUT}
+.PARAM IC={VOUT/RL}
+.PARAM IA={(VOUT/RL)*M}
+.PARAM IP={IC-IA}
+.PARAM VP= {VAC*(1/FS)*RI*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vout LL {RS}
+L LL C {L}
+X1 Vin Gnd C Vout Control PWMCCM PARAMS: RI={RI} L={L} FS={FS} D={D} VAP={VAP} VAC={VAC} IC={IC} VP={VP}
+.ENDS
+*********
+.SUBCKT FLYBACKCCM Vin Vout Gnd Control D PARAMS: RI=0.15 Lsec=79.86U RS=10M FS=80K VOUT=12 RL=2.4 VIN=12V N=1.1 MC=1 VR=2.5V
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={VOUT/((VIN*N)+VOUT)}	; DC duty cycle for Continuous mode
+.PARAM VAP={(VIN*N)+VOUT}
+.PARAM VAC={VIN*N}
+.PARAM VCP={VOUT}
+.PARAM IA={(VOUT^2/RL)/VAC}
+.PARAM IP={VOUT/RL}
+.PARAM IC={VOUT/RL/(1-D)}
+.PARAM RSENS={RI*N}	; Current gain pushed to the secondary
+; AVT
+;.PARAM VP= {VAC*(1/FS)*RSENS*(MC-1)/L}
+.PARAM VP= {VAC*(1/FS)*RSENS*(MC-1)/Lsec}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vout P {RS}
+L Gnd C {Lsec}
+X2 Vin TR XFMR PARAMS: N={N}
+X1 TR P C Gnd Control PWMCCM PARAMS: RI={RSENS} L={Lsec} FS={FS} D={D} VAP={VAP} VAC={VAC} IC={IC} VP={VP}
+.ENDS
+*********
+.SUBCKT FLYBACKDCM Vin Vout Gnd Control D PARAMS: RI=6.06 Lsec=16uH RS=16.9M FS=100K VOUT=15 RL=15 VIN=330V N=0.045 MC=1 VR=1.7V
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={(VOUT/(VIN*N))*SQRT(2*Lsec*FS/RL)}	; DC duty cycle for Discontinuous mode
+.PARAM VAP={(VIN*N)+VOUT}
+.PARAM VAC={VIN*N}
+.PARAM VCP={VOUT}
+.PARAM IA={(VOUT^2/RL)/VAC}
+.PARAM IP={VOUT/RL}
+.PARAM IC={(VOUT/RL)/(1-D)}
+.PARAM RSENS={RI*N}	; Current gain pushed to the secondary
+.PARAM VP= {VAC*(1/FS)*RSENS*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vout P {RS}
+L Gnd C {Lsec}
+X2 Vin TR XFMR PARAMS: N={N}
+X1 TR P C Gnd Control PWMDCM PARAMS: RI={RSENS} L={Lsec} FS={FS} RL={RL} D={D} VAP={VAP}
++ VAC={VAC} VCP={VCP} IC={IC} IA={IA} IP={IP} VP={VP}
+.ENDS
+*********
+.SUBCKT FWDDCM Vin Vout Gnd Control D PARAMS: RI=5.49 L=100U RS=70M FS=200K VOUT=28 RL=277 VIN=165V N=0.4 MC=1.825 VR=2
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM M={VOUT/VIN}	; Conversion ratio
+.PARAM D={SQRT(((M/N)^2*8*L)/(((2-(M/N))^2-(M/N)^2)*RL*(1/FS)))}	; DC duty cycle in discontinuous mode
+.PARAM VAP={VIN*N}
+.PARAM VAC={VIN*N-VOUT}
+.PARAM VCP={VOUT}
+.PARAM IC={VOUT/RL}
+.PARAM IA={(VOUT^2/RL)/VAP}
+.PARAM IP={IC-IA}
+.PARAM RSENS={RI*N}	; Current gain pushed to the secondary
+.PARAM VP= {VAC*(1/FS)*RSENS*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vout LL {RS}
+L LL C {L}
+X2 Vin IN XFMR PARAMS: N={N}
+X1 IN Gnd C Vout Control PWMDCM PARAMS: RI={RSENS} L={L} FS={FS} RL={RL} D={D} VAP={VAP}
++ VAC={VAC} VCP={VCP} IC={IC} IA={IA} IP={IP} VP={VP}
+.ENDS
+*********
+.SUBCKT FWDCCM Vin Vout Gnd Control D PARAMS: RI=1.228 L=100U RS=70M FS=200K VOUT=28 RL=7 VIN=165V N=0.4 MC=1 VR=2
+* To toggle into Voltage-Mode, put RI=0 and VP becomes VR (The PWM sawtooth amplitude)
+.PARAM D={(VOUT/(VIN*N))}	; DC duty cycle for continuous mode
+.PARAM M={VOUT/VIN}
+.PARAM VAP={VIN*N}
+.PARAM VAC={VIN*N-VOUT}
+.PARAM VCP={VOUT}
+.PARAM IC={VOUT/RL}
+.PARAM IA={(VOUT^2/RL)/VAP}
+.PARAM IP={IC-IA}
+.PARAM RSENS={RI*N}	; Current gain pushed to the secondary
+.PARAM VP= {VAC*(1/FS)*RSENS*(MC-1)/L}
+* .PARAM VP=VR ; Put RI=0 and remove this start (while puting it at the above line) turns into VM
+EBD D 0 VALUE = {D}
+RL Vout LL {RS}
+L LL C {L}
+X2 Vin IN XFMR PARAMS: N={N}
+X1 IN Gnd C Vout Control PWMCCM PARAMS: RI={RSENS} L={L} FS={FS} D={D} VAP={VAP} VAC={VAC} IC={IC} VP={VP}
+.ENDS
+*********
+.SUBCKT XFMR 1  2 PARAMS: N=1
+*            In Out
+Gxf 1  0  VALUE = { I(Vxf)*N }
+Exf 3  0  VALUE = { V(1)*N }
+Vxf 3  2  0                                
+.ENDS XFMR
+*********
+
+* ------------------------------------------------------------ *
+*
+* Original models from Ben-Gurion University (ISRAEL)
+* http://www.ee.bgu.ac.il/~pel
+* Models translated by Christophe BASSO, Toulouse (FRANCE)
+* These models automatically toggle between DCM and CCM
+* Please report bugs to CBASSO@WANADOO.FR
+* Micro-Cap compatible
+* These models require Micro-Cap Version 6.05 or higher
+* Last modified: October 10th 1999
+*
+* VM extension: voltage-mode models
+* CM extension: current-mode models with:
+* RI = current sense element
+* MC = ramp compensation in V/s
+*
+* ------------------------------------------------------------ *
+.SUBCKT FLYBACKVM DON IN OUT GND PARAMS: FS=75K L=180U
+* Set N to 1 if an external XFMR is used
+GIN IN GND VALUE = { I(VLM)*V(DON)/(V(DON)+V(DOFF)) }
+ELM OUT1 GND VALUE = { V(IN)*V(DON)-V(OUT)*V(DOFF) }
+RM OUT1 5 1M
+LM 5 8 {L}
+VLM 8 GND
+GOUT GND OUT VALUE = { I(VLM)*V(DOFF)/(V(DON)+V(DOFF)) }
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D1 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{FS}*{L}/(V(DON))/(V(IN))-V(DON) }
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+*******
+.SUBCKT FLYBACKCM CONTROL IN OUT GND PARAMS: FS={FS} L={FS} MC={MC} RI={RI}
+* Set N to 1 if an external XFMR is used
+GIN IN GND VALUE = { I(VLM)*V(DON)/(V(DON)+V(DOFF)) }
+ELM OUT1 GND VALUE = { V(IN)*V(DON)-V(OUT)*V(DOFF) }
+RM OUT1 5 1M
+LM 5 8 {L}
+VLM 8 GND
+GOUT GND OUT VALUE = { I(VLM)*V(DOFF)/(V(DON)+V(DOFF)) }
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D1 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{FS}*{L}/(V(DON))/(V(IN))-V(DON) }
+EDON  DON GND TABLE { ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN))/{L})) } 
++ ( (10m,10m) (.999,.999) )
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+*******
+
+.SUBCKT BUCKVM DON IN OUT GND PARAMS: FS=200k L=60u RS=50m
+GA IN GND VALUE = { I(VLM)*V(DON)/(V(DON)+V(DOFF)) }
+GB B GND VALUE = { V(DOFF)*I(VLM)/(V(DON)+V(DOFF)) }
+D1 GND B DBREAK
+ELM OUT1 GND VALUE = { V(DON)*V(IN,C)+V(DOFF)*V(B,C) }
+RM OUT1 5 {RS}
+LM 5 8 {L}
+VLM 8 GND
+GC GND C VALUE = { I(VLM) }
+Rx C OUT 1u
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D3 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{L}/({1/FS}*(V(IN)-V(C))*V(DON))-V(DON) }
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+***********
+.SUBCKT BUCKCM CONTROL IN OUT GND PARAMS: FS={FS} L={L} RS={RS} MC={MC} RI={RI}
+GA IN GND VALUE = { I(VLM)*V(DON)/(V(DON)+V(DOFF)) }
+GB B GND VALUE = { V(DOFF)*I(VLM)/(V(DON)+V(DOFF)) }
+D1 GND B DBREAK
+ELM OUT1 GND VALUE = { V(DON)*V(IN,C)+V(DOFF)*V(B,C) }
+RM OUT1 5 {RS}
+LM 5 8 {L}
+VLM 8 GND
+GC GND C VALUE = { I(VLM) }
+Rx C OUT 1u
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D3 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{L}/({1/FS}*(V(IN)-V(C))*V(DON))-V(DON) }
+EDON  DON GND TABLE { ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN,C))/{L})) } 
++ ( (10m,10m) (.999,.999) )
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+*********
+.SUBCKT FORWARDVM DON IN OUT GND PARAMS: FS={FS} Ls={Ls} RS={L} N={N}
+.PARAM L={Ls/N^2}
+GA IN GND VALUE = { I(VLM)*V(DON)/(V(DON)+V(DOFF)) }
+GB B GND VALUE = { V(DOFF)*I(VLM)/(V(DON)+V(DOFF)) }
+D1 GND B DBREAK
+ELM OUT1 GND VALUE = { V(DON)*V(IN,C)+V(DOFF)*V(B,C) }
+RM OUT1 5 {RS}
+LM 5 8 {L}
+VLM 8 GND
+GC GND C VALUE = { I(VLM) }
+Rx C OUT 1u
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D3 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{L}/({1/FS}*(V(IN)-V(C))*V(DON))-V(DON) }
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+***********
+.SUBCKT FORWARDCM CONTROL IN OUT GND PARAMS: FS={FS} Ls={Ls} RS={RS} MC={MC} RI={RI} N={N}
+.PARAM L={Ls/N^2}
+GA IN GND VALUE = { I(VLM)*V(DON)/(V(DON)+V(DOFF)) }
+GB B GND VALUE = { V(DOFF)*I(VLM)/(V(DON)+V(DOFF)) }
+D1 GND B DBREAK
+ELM OUT1 GND VALUE = { V(DON)*V(IN,C)+V(DOFF)*V(B,C) }
+RM OUT1 5 {RS}
+LM 5 8 {L}
+VLM 8 GND
+GC GND C VALUE = { I(VLM) }
+Rx C OUT 1u
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D3 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{L}/({1/FS}*(V(IN)-V(C))*V(DON))-V(DON) }
+EDON  DON GND TABLE { ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN,C))/{L})) } 
++ ( (10m,10m) (.999,.999) )
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+***********
+.SUBCKT BOOSTVM DON IN OUT GND PARAMS: FS=200k L=2.5u RS=20m
+GC IN GND VALUE = { I(VLM) }
+ELM OUT1 GND VALUE = { -(V(DON)*V(GND,IN)+V(DOFF)*V(B,IN)) }
+RM OUT1 5 {RS}
+LM 5 8 {L}
+VLM 8 GND
+GB GND B VALUE = { V(DOFF)*I(VLM)/(V(DON)+V(DOFF)) }
+D5 B OUT DBREAK
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D3 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{L}/({1/FS}*V(IN)*(V(DON)))-V(DON) }
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+************
+.SUBCKT BOOSTCM CONTROL IN OUT GND PARAMS: RI=100 FS=200k MC=1.5 L=2.5u RS=.02
+GC IN GND VALUE = { I(VLM) }
+ELM OUT1 GND VALUE = { -(V(DON)*V(GND,IN)+V(DOFF)*V(B,IN)) }
+RM OUT1 5 {RS}
+LM 5 8 {L}
+VLM 8 GND
+GB GND B VALUE = { V(DOFF)*I(VLM)/(V(DON)+V(DOFF)) }
+D5 B OUT DBREAK
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D3 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE = { 1-V(DON)-9M }
+EDOFF 7 GND VALUE = { 2*I(VLM)*{L}/({1/FS}*V(IN)*(V(DON)))-V(DON) }
+EDON  DON GND TABLE { ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN))/{L})) } 
++ ( (10m,10m) (.999,.999) )
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+******
+.SUBCKT SEPICVM DON IN GND CP CS PARAMS: RON=50M LP=9.75u LS=9.75u
+GCS GND CS VALUE = { -I(LP)*V(DON)+I(LS)*(1-V(DON)) }
+RCS CS GND 1E6
+GVDON  GND DION VALUE = { I(Ls)+I(Lp) }
+ELS 1 GND VALUE = { (I(LS)+I(LP))*RON*V(DON)+(V(CS)+V(dion)+v(cp))*(1-v(Don)) }
+ELP 7 GND VALUE = { (v(cs)-(I(LS)+I(LP))*RON)*v(Don)-(v(dion)+v(cp))*(1-v(Don)) }
+GCP GND CP VALUE = { (I(LS)+I(LP))*(1-v(Don)) }
+D1  DION GND DBREAK
+LS IN 100 {LS}
+RLS 100 1 .001
+LP 7 3 {LP}
+RLP 3 GND .001
+RDON DON GND 1MEG
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+******
+.SUBCKT SEPICCM CONTROL IN GND CP CS PARAMS: RON={RON} LP={LP} LS={LS} MC={MC} RI={RI} FS={FS}
+GCS GND CS VALUE = { -I(LP)*V(DON)+I(LS)*(1-V(DON)) }
+RCS CS GND 1MEG
+GVDON  GND DION VALUE = { I(Ls)+I(Lp) }
+ELS 1 GND VALUE = { (I(LS)+I(LP))*RON*V(DON)+(V(CS)+V(dion)+v(cp))*(1-v(Don)) }
+ELP 7 GND VALUE = { (v(cs)-(I(LS)+I(LP))*RON)*v(Don)-(v(dion)+v(cp))*(1-v(Don)) }
+GCP GND CP VALUE = { (I(LS)+I(LP))*(1-v(Don)) }
+D1  DION GND DBREAK
+LS IN 100 {LS}
+RLS 100 1 1m
+LP 7 3 {LP}
+RLP 3 GND 1m
+EDON  DON GND TABLE { ((V(CONTROL)-(I(LS)+I(LP))*{RI})*{FS})/({MC}+0.5*{RI}*
++((V(IN)/{LS})+(V(CS)/{LP})))} ( (10m,10m) (.999,.999) )
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+******
+.SUBCKT SIM_VM a b c DON PARAMS: FS=100k L=50u RS=100m
+GA a 0 VALUE = { I(VIL)*V(DON)/(V(DON)+V(DOFF)) }
+GB 0 b VALUE = { (VIL)*V(DOFF)/(V(DON)+V(DOFF)) }
+GC 0 c VALUE = { I(VIL) }
+EL el 0 VALUE = { V(a,c)*V(DON)+V(b,c)*V(DOFF) }
+L1 el erl {L}
+RL erl vil {RS}
+vil vil 0 0
+EDOFF doffc 0 VALUE = { (2*I(VIL)*{L}*{FS}/(V(a,c)*V(DON)))-V(DON) }
+Rdoffc doffc 0 10E10
+Rlmt doffc doff 1
+Dlmtz 0 doff Dclamp
+Dlmtc doff doffm Dclamp
+Eclamp doffm 0 VALUE = { 1-V(DON) }
+Rdoff doff 0 10E10
+.Model Dclamp D (N=0.01 Rs=10m TT=10n)
+.ENDS
+*******
+* Series-parallel model
+.SUBCKT SERPA FREQ IN GND OUT PARAMS: LR=78U CS=43N CP=43N
+.PARAM PI=3.14159
+RDUM IN GND 100Meg
+EW W GND VALUE = { 2*pi*V(FREQ) }
+Ein FUND GND VALUE = { 4/pi*V(IN) }
+ERac RAC GND VALUE = { 1u + (pi*pi/8)*abs(v(out)/(-i(ecp)+1u)) }
+Ecp OUT GND VALUE = { v(fund)*(2/pi)*v(w)*cs*v(rac)/sqrt(v(den1)*v(den1)+v(den2)*v(den2)) }
+Eden1 den1 GND VALUE = { 1-v(w)*v(w)*Lr*Cs }
+Eden2 den2 GND VALUE = { v(w)*v(rac)*(Cs+Cp-V(w)*V(w)*Cs*Cp*Lr) }
+.ENDS
+* Series-parallel model
+.SUBCKT SERIPA FREQ IN GND OUT PARAMS: LR=78U CS=43N CP=43N
+;.PARAM PI=3.14159
+RDUM IN GND 100Meg
+EW W GND VALUE = { 2*pi*V(FREQ) }
+Ein FUND GND VALUE = { 4/pi*V(IN) }
+;ERac RAC GND VALUE = { 1u + (pi*pi/8)*abs(v(out)/(1u    - i(ecp))) } ; Old Version
+ERac RAC GND VALUE = { (pi*pi/8)*abs((1p+v(out))/i(ecp)  )   } ; New Version
+Ecp OUT GND VALUE = { v(fund)*(2/pi)*v(w)*cs*v(rac)/sqrt(v(den1)*v(den1)+v(den2)*v(den2)) }
+Eden1 den1 GND VALUE = { 1-v(w)*v(w)*Lr*Cs }
+Eden2 den2 GND VALUE = { v(w)*v(rac)*(Cs+Cp-V(w)*V(w)*Cs*Cp*Lr) }
+.ENDS
+
+; AVT Added AMPSIMP changed 100u to 1000u
+.SUBCKT AMPSIMP 1 5 2 PARAMS: POLE=30 GAIN=30000 VHIGH=4V VLOW=5mV
+*               + - OUT
+.PARAM GG={1000u}
+G1 0 4 1 5 {GG}
+R1 4 0 {GAIN/GG}
+C1 4 0 {1/(6.28*(GAIN/GG)*POLE)}
+E1 2 0 4 0 1
+V1 3 0 DC={500m+VLOW}
+D2 3 4 DCLP
+.MODEL DCLP D BV={VHIGH-(500m+VLOW)} CJO=4PF IS=7E-09 M=.45 N=2 RS=.8 TT=6E-09 VJ=.6V
+.ENDS
+*******
+.SUBCKT 308PWMX7 1 2
+* 			  FB Out_Duty
+RSUPP 1 0 4.3k			; Internal supply current
+RGAIN1 1 70 20			; Dynamic zener resistance
+XERR 71 70 72 ERRAMP	; Internal error amplifier
+VREF 71 0 5V			; Internal reference voltage
+XPCH 73 72 70 PCHAN	; P-channel MOSFET
+RGAIN2 73 0 150		; I/V converter
+DCLP 73 74 DCLAMP		; Negative clamp
+VCLP1 74 0 180mV		; lower duty-cycle limit
+VD 75 0 740mV			; upper duty-cycle limit
+E1 76 0 75 73 1		; decreasing duty-cycle
+RF 76 140 100
+CF 140 0 227nF
+EB2 2 0 TABLE {V(140)} = 15mV,15mV 740mV,740mV
+.MODEL DCLAMP D (RS=1.5 CJO=4PF IS=7E-09 N=2 VJ=.6V TT=6E-09 M=.45 BV=100V)
+**** INTERNAL P-CHANNEL MODEL ****
+.SUBCKT PCHAN 30 40 50
+* NODES: DRAIN GATE SOURCE
+M1 30 20 50 50 MOD1 L=1U W=1U
+RG 40 20 167
+RL 30 50 50E6
+.MODEL MOD1 PMOS VTO=-1.709 RS=3.091 RD=0.979 IS=1E-15 KP=0.146
++CGSO=26P CGDO=4P CBD=12P PB=1
+.ENDS
+.SUBCKT ERRAMP 1 5 2
+*               + - OUT
+G1 0 4 1 5 100u
+R1 4 0 300Meg		 ; 90dB OL
+C1 4 0 53pF IC=8.5   ; 10Hz pole
+E1 2 0 4 0 1
+V1 3 0 500mV
+D2 3 4 DCLP
+.MODEL DCLP D (BV=8.7 CJO=40PF IS=7E-09 M=.45 N=2 RS=.8 TT=10E-09 VJ=.6V)
+.ENDS
+.ENDS
+* ------------------------------------------------------------ *
+*
+* ON Semiconductor
+* NCP1200 model developed by Christophe BASSO, Toulouse (FRANCE)
+* e-mail: christophe.basso@onsemi.com
+* Micro-Cap 6 compatible
+*
+* Last modified: May 3rd 2000 AVT
+* 
+* This simplified models accounts for propagation delays 
+* and includes the complete overcharge detection scheme
+*
+* ------------------------------------------------------------ *
+**********
+*SRC=NCP1200;NCP1200;MOTOROLA;SMPS Controller;Low-cost 40kHz
+*SYM=NCP1200 
+; AVT
+.SUBCKT NCP1200 1   2  3  4   5   6  8  PARAMS: FS=40K
+*               Adj FB CS Gnd Drv Vcc   HV
+**** ESD NETWORK ****
+D1 4 1 DCLAMP1
+D2 4 2 DCLAMP1
+D3 4 3 DCLAMP1
+D4 4 5 DCLAMP2
+D5 4 6 DCLAMP2
+**** SELF-SUPPLY ****
+G2 8 6 VALUE = {IF(V(11) > 3.5 , 0 , 4m)}
+XCOMP1 6 10 UVLO COMP2
+E5 10 4 VALUE={IF(V(UVLO) < 3.5 , 12 , 10)}
+X2 UVLO OVERLATCH 11 OR2
+XUVLO6 100 6 110 COMP2
+X50 110 OVERLATCH UVLO6 AND2
+VUVLO6 100 4 6.5
+**** OUTPUT PULSE VALIDATION ****
+XPULS UVLO OVER PULSOK NC4 TFFLOP ; turns the pulses on at UVLOh
+* S R Q Q\
+RDUM4 OVER 4 100k
+**** CURRENT CONSUMPTION ****
+ISUPP1 6 4 300u
+GSUPP2 6 4 VALUE={IF(V(PULSOK) > 3.5 ,100u , 0)}
+GSUPPDRV 6 4 VALUE= {IF(I(VPW) > 0 , I(VPW) , 0)}
+**** CLOCK SECTION ****
+VCLOCK clk1 4 PULSE 0 10 0 10n 10n 100n {1/Fs}
+VMDUTY MDUTY 4 PULSE 0 10 {0.8/Fs} 10n 10n 100n {1/FS}
+XRESET clk1 200 clk2 AND2
+EINVRST 200 4 VALUE={IF(V(SKIP)<800mV , 3.5 , 0)}
+XFFLOP clk2 RST Q NC1 TFFLOP
+RNC1 NC1 4 100k
+XRST MDUTY IMAX SKIP RST OR3
+**** CURRENT SENSE ****
+EVREF REF 4 VALUE={IF(V(6) > 4.8V , 4.8 , V(6))}
+RFB REF 2 6k
+RDUPP 2 290 57k
+RDLOW 290 4 20k
+ECLIP ISET 4 VALUE={IF(V(290) > 1 , 1 , V(290))}
+XCOMP2 LEBO ISET OVERI COMP2
+XPROPDEL OVERI IMAX UTD PARAMS: TD1=200ns ; propagation delay
+XDEL3 Q 30 UTD PARAMS: TD1=250ns
+ELEB LEBO 4 VALUE={IF(V(30) > 3 , V(3) , 0)}
+**** OVERLOAD SECTION ****
+EOVER 50 4 VALUE={IF((V(ISET)>990m) & (V(PULSOK)>3.5) , 10 , 0)}
+XOVER UVLO 50 OVER AND2I ; UVLO low and OVL, latches off the pulses
+XLATCH OVER UVLO6 OVERLATCH NC5 TFFLOP ; latches off the current source
+RNC5 NC5 4 100k
+**** SKIP CYCLE SECTION ****
+RADJU REF 1 70k
+RADJL 1 4 23.3k
+XSKIP 150 2 SKIP COMP2
+EHYST 150 4 VALUE={IF(V(SKIP) < 3.5 , V(1) , V(1)+100m)}
+**** DRIVER SECTION ****
+EDRVU 90 4 VALUE={IF((V(PULSOK)>3) & (V(Q)>3) , V(6) , 100m)}
+VPW 90 91
+RON 91 5 36
+ROFF 90 250 18
+DOFF 5 250 DSTD
+****
+.MODEL DSTD D RS=100M CJO=15pF TT=50n N=0.2
+.MODEL DCLAMP1 D BV=10
+.MODEL DCLAMP2 D BV=20
+.ENDS NCP1200
+*INCLUDE NCP1200.LIB
+************
+* ON Semiconductor
+* NCP1200 model developed by Christophe BASSO, Toulouse (FRANCE)
+* e-mail: christophe.basso@onsemi.com
+* Micro-Cap 6 compatible
+*
+* Last modified: May 3rd 2000 AVT
+* NCP1200 average FLYBACK AC model DCM and CCM modes
+* FLYBACK average model made by Ben-Gurion University (ISRAEL)
+* http://www.ee.bgu.ac.il/~pel
+*
+*SRC=NCP1200_Av;NCP1200_Av;MOTOROLA;SMPS Controller;Average model
+*SYM=NCP1200_A
+.SUBCKT NCP1200_Av In Out Gnd FB CTRL PARAMS: FS=40K L=2.7u MC=0.0 RI=2.7
+GGIN IN GND VALUE={I(VLM)*V(DON)/(V(DON)+V(DOFF))}
+EELM OUT1 GND VALUE = {V(IN)*V(DON)-V(OUT)*V(DOFF)}
+RM OUT1 5 1M
+LM 5 8 {L}
+VLM 8 GND
+GGOUT GND OUT VALUE = {I(VLM)*V(DOFF)/(V(DON)+V(DOFF))}
+ee1 avt1 0 value={((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN))/{L}))}
+EDON DON GND VALUE = {IF ( ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN))/{L})) < 10m , 10m 
++ , IF( ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN))/{L})) > .999 , .999
++ , ((V(CONTROL)-I(VLM)*{RI})*{FS})/({MC}+((0.5*{RI}*V(IN))/{L})) ) ) } 
+VCLP VC 0 9M
+D2 VC DOFF DBREAK
+D1 DOFF 6 DBREAK
+R4 DOFF 7 10
+EDOFFM 6 GND VALUE={1-V(DON)-9M}
+EDOFF 7 GND VALUE={2*I(VLM)*{FS}*{L}/(V(DON)+.1n)/(V(IN)+.1n)-V(DON)}
+E1 CONTROL 0 VALUE = {IF(V(CTRL)/4 > 1 , 1 , V(CTRL)/4)}
+Vref 50 GND DC=4.8V
+Rfb 50 FB 6k
+.MODEL DBREAK D (TT=1N CJO=10P N=0.01)
+.ENDS
+***********
+**** SUBCIRCUIT MODELS ****
+.SUBCKT UTD 1 2 PARAMS:TD1=200N
+*
+*Parameters K=GAIN TD=DELAY
+RIN 1 0 1E15
+E1 3 0 1 0 1
+T1 3 0 2 0 Z0=1 TD={TD1}
+R1 2 0 1
+.ENDS
+**** 2 INPUT COMPARATOR ****
+.SUBCKT COMP2 1 2 3
+*             + - S
+E1 4 0 VALUE={IF(V(1) > V(2) , 5 , 0)}
+RD 4 3 100
+CD 3 0 10P
+.ENDS COMP2
+**** 4 INPUT OR GATE ****
+.SUBCKT OR3 1 2 3 6
+E1 5 0 VALUE= {IF((V(1)>800M) | (V(2)>800M) | (V(3)>800M) , 5 , 0)}
+RD 5 6 100
+CD 6 0 10P
+.ENDS OR3
+**** 2 INPUT OR GATE ****
+.SUBCKT OR2 1 2 3
+E1 4 0 VALUE= {IF((V(1)>800M) | (V(2)>800M) , 5 , 0 )}
+RD 4 3 100
+CD 3 0 10P
+.ENDS OR2
+**** 2 INPUT AND CIRCUIT ****
+.SUBCKT AND2 1 2 3
+E1 4 0 VALUE= {IF((V(1)>800M) & (V(2)>800M) , 5 , 0)}
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND2
+**** 2 INPUT AND CIRCUIT ****
+.SUBCKT AND2I 1 2 3
+E1 4 0 VALUE = {IF((V(1)<800M) & (V(2)>800M) , 5 , 0)}
+RD 4 3 100
+CD 3 0 10P
+.ENDS AND2I
+**** 2 INPUT NOR CIRCUIT ****
+.SUBCKT NOR2 1 2 3
+E1 4 0 VALUE = {IF((V(1)>800M) | (V(2)>800M) , 0 , 5)}
+RD 4 3 100
+CD 3 0 10P
+.ENDS NOR2
+****
+.SUBCKT TFFLOP 6 8 2 1
+*              S R Q Q\
+EQB   10 0 VALUE={IF((V(8)<800M) & (V(2)>800M) , 0 , 10)}
+EQ    20 0 VALUE={IF((V(6)<800M) & (V(1)>800M) , 0 , 10)}
+RD1   10 1 100
+CD1   1 0 10p IC=5
+RD2   20 2 100
+CD2   2 0 10p IC=0
+.ENDS TFFLOP
+*******
+.TRAN 2e-008 1e-006 0 
+.DC 0 0 10 0.5
+.AC DEC 25 1e+006 1e+008
+.TEMP 27

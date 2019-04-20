@@ -1,0 +1,45 @@
+*2N2222 Singly-balanced mixer circuit
+*.TRAN 10US 1MS
+*.TRAN 10us 100us
+*.TRAN 10US 250US
+.TRAN 10US 500US
+.PROBE
+
+V1 1 0 DC 12V
+V2 2 0 DC 1.6V
+*+	SIN(1.6V 1V 100KHZ 0 0 0)
++	PULSE(.6V 2.6V 0s 30ns 30ns 5us 10us)
+V3 3 0 DC 3.5
++	SIN(3.5 .01V 103KHZ 0 0 0)
+V4 4 0 DC 3.5
++	SIN(3.5V -0.1V 103KHZ 0 0 0)
+Q1 1 3 5 Q2N2222
+Q2 6 4 5 Q2N2222
+Q3 5 2 7 Q2N2222
+R1 1 6 2200
+*C1 6 0 0.02UF
+*R2 7 0 470
+R2 7 8 470
+D1 8 0 diode
+.model Q2N2222 NPN(Is=14.34f Xti=3 Eg=1.11 Vaf=74.03 Bf=2555.9 Ne=1.307
++ Ise=14.34f Ik=.2847 Xtb=1.5 Br=6.092 Nc=2 Isc=0 Ikr=0 Rc=1
++ Cjc=7.306p Mjc=.3416 Vjc=.75 Fc=.5 Cje=22.01p Mje=.377 Vje=.75
++ Tr=4.91n Tf=4111.1p Itf=.6 Vtf=1.7 Xtf=3 Rb=10)
+*	National pid=19 case TO18
+.model diode D is=1.0e-14 tt=0.1n cjo=2p
+
+
+* -- All these command are run by WinSpice as if they had been typed from the
+* -- command line.
+
+*#save all @q1[ie] @q2[ie] @q3[ie] @d1[id]
+*#run
+*#rusage everything
+*#settype current @q1[ie] @q2[ie] @q3[ie] @d1[id]
+*#plot v(6)
+*#plot @q1[ie]
+*#plot @q2[ie]
+*#plot @q3[ie]
+*#plot @d1[id]
+
+.END

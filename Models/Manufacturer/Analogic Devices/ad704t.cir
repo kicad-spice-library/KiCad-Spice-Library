@@ -1,0 +1,132 @@
+* AD704T SPICE Macro-model 9/91, Rev. B
+* AAG / PMI
+*
+* This version of the AD704 model simulates the worst case 
+* parameters of the 'T' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Revision History:
+* REV B
+* Updated op amp architecture implemented.
+*
+* Copyright 1991 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws. Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement. Before using the macro-
+* models the licensee should read this license. If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, load, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company. The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models. ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | |  positive supply
+*              | |  |  negative supply
+*              | |  |  |  output
+*              | |  |  |  |
+.SUBCKT AD704T 1 2 99 50 28
+*
+* INPUT STAGE & POLE AT 3 MHz
+*
+IOS 1 2 DC 75E-12
+CIN 1 2 2E-12
+R1 2 3 1.3263E8
+R2 1 3 1.3263E8
+EOS 9 1 POLY(1) 16 22 100E-6 1
+D1 2 9 DX
+D2 9 2 DX
+Q1 5 2 10 QX
+Q2 6 9 11 QX
+R3 99 5 530.51
+R4 99 6 530.51
+C2 5 6 50E-12
+R5 10 4 13.314
+R6 11 4 13.314
+I1 4 50 100E-6
+*
+* GAIN STAGE & DOMINANT POLE AT 2.25 HZ
+*
+EREF 98 0 22 0 1
+G1 98 12 5 6 1.885E-3
+R7 12 98 106.1E6
+C3 12 98 666.67E-12
+V1 99 13 DC 2.3625
+D3 12 13 DX
+V2 14 50 DC 2.3625
+D4 14 12 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 6.3 kHZ
+*
+ECM 15 98 3 22 3.1623
+RCM1 15 16 1E6
+CCM 15 16 25.165E-12
+RCM2 16 98 1
+*
+* ZERO-POLE PAIR AT 165 kHz / 430 kHz
+*
+GZP1 98 17 12 22 1E-6
+RZP1 17 18 1E6
+RZP2 18 98 1.6061E6
+LZP 18 98 594.45E-3
+*
+* NEGATIVE ZERO AT -3 MHz
+*
+ENZ 19 98 17 22 1E6
+RNZ1 19 20 1
+CNZ 19 20 -53.052E-9
+RNZ2 20 98 1E-6
+*
+* POLE AT 10 MHz
+*
+G2 98 21 20 22 1E-6
+R10 21 98 1E6
+C5 21 98 15.915E-15
+*
+* OUTPUT STAGE
+*
+IDC 99 50 DC 485E-6
+RDC1 99 22 1E6
+RDC2 22 50 1E6
+DO1 99 23 DX
+GO1 23 50 27 21 2E-3
+DO2 50 23 DY
+DO3 99 24 DX
+GO2 24 50 21 27 2E-3 
+DO4 50 24 DY
+VSC1 25 27 3.15
+DSC1 21 25 DX
+VSC2 27 26 3.15
+DSC2 26 21 DX
+GO3 27 99 99 21 2E-3 
+GO4 50 27 21 50 2E-3 
+RO1 99 27 500
+RO2 27 50 500
+LO 27 28 265E-9
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=2.5E5)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS AD704T

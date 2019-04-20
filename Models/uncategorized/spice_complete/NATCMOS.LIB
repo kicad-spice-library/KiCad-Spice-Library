@@ -1,0 +1,5866 @@
+**********
+* Library of National Semiconductor CMOS OP-AMP Macromodels.
+* File:  NSCMOSOA.LIB
+*
+* This library of macromodels is being supplied to users as
+* an aid to circuit designs.  While it reflects reasonably 
+* close similarity to the actual device in terms of
+* performance, it is not suggested as a replacement for
+* breadboarding.  Simulation should be used as a supplement
+* to traditional lab testing.
+*
+* Users should very carefully note the following factors
+* regarding these models:
+*
+* 1. Model performance in general will reflect typical
+* baseline specs for a given device, and certain aspects of
+* performance may not be modeled fully.
+*
+* 2. While reasonable care has been taken in their
+* preparation, we cannot be responsible for correct
+* application on any and all computer systems.
+*
+* 3. Model users are hereby notified that these models are
+* supplied "as is", with no direct or implied responsibility
+* on the part of National Semiconductor for their operation
+* within a customer circuit or system.  Further, National
+* Semiconductor reserves the right to change these models
+* without prior notice.
+*
+* 4. In all cases, the current data sheet information for a
+* given real device is your final design guideline, and is
+* the only actual performance guarantee.  For further
+* technical information, refer to individual device data
+* sheets.
+*
+* 5. The current models presently do not simulate
+* temperature or noise effects correctly. 
+*
+* 6. Please send us your comments.  Thank you for choosing
+*  to use National Semiconductor Amplifier Products
+*
+* Models developed and under copyright by:
+* National Semiconductor Corporation
+* Amplifier Products Applications Engineering, M/S: C2-505
+* 2900 Semiconductor Drive  
+* P.O. Box 58090
+* Santa Clara, CA 95052-8090 
+* 
+* For ordering or technical information on these models, contact:
+* National Semiconductor's Customer Response Center
+*                 7:00 A.M.--7:00 P.M.  U.S. Central Time
+*                                (800) 272-9959
+* 
+* Revision History:
+* 3.00   06-Dec-93  D. Stolitzka     Added LMC6001/A models
+* 2.70   07-Sep-93  D. Stolitzka     Model Updates
+* 2.61   15-Mar-93  D. Stolitzka/HG  Corrected multipole interaction
+* 2.60   04-Mar-93  D. Stolitzka/HG  Added LMC and LPC models, see
+*                                    the WHATSNEW.TXT file.
+* 2.50   06-Mar-92  D. Hindi         Models added, begin history.
+* 
+**********
+* SRC=LMC660N;LMC660N;Opamps;NAT-"LMxxx";CMOS Input
+*
+* LMC660C/E CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC660N     1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =              2fA
+* Slew rate =                        1.1V/uS
+* Gain-bandwidth product =           1.4 MHz 
+* Low supply current =                 375uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  11.35N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 6M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4  48.19U
+I2  99 50 308.1U
+* Load dependent pole
+L1  22 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.47K
+R4  6  50 5.47K
+R5  98 9  1E7
+R8  99 49 133.3K
+R9  49 50 133.3K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 900
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.721V
+V3  10 96 0.721V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.45 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC660AN;LMC660AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC660AM/AI CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC660AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =              2fA
+* Slew rate =                        1.1V/uS
+* Gain-bandwidth product =           1.4 MHz 
+* Low supply current =                 375uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  11.35N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4  48.19U
+I2  99 50 308.1U
+* Load dependent pole
+L1  22 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.47K
+R4  6  50 5.47K
+R5  98 9  1E7
+R8  99 49 133.3K
+R9  49 50 133.3K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 900
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.721V
+V3  10 96 0.721V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.45 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC662N;LMC662N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC662C/E CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC662N     1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =              2fA
+* Slew rate =                        1.1V/uS
+* Gain-bandwidth product =           1.4 MHz 
+* Low supply current =                 375uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  11.35N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 6M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4  48.19U
+I2  99 50 308.1U
+* Load dependent pole
+L1  22 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.47K
+R4  6  50 5.47K
+R5  98 9  1E7
+R8  99 49 133.3K
+R9  49 50 133.3K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 900
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.721V
+V3  10 96 0.721V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.45 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC662AN;LMC662AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP
+* LMC662AM/AI CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC662AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =              2fA
+* Slew rate =                        1.1V/uS
+* Gain-bandwidth product =           1.4 MHz 
+* Low supply current =                 375uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  11.35N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4  48.19U
+I2  99 50 308.1U
+* Load dependent pole
+L1  22 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.47K
+R4  6  50 5.47K
+R5  98 9  1E7
+R8  99 49 133.3K
+R9  49 50 133.3K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 900
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.721V
+V3  10 96 0.721V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.45 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6001N;LMC6001N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6001I Precision CMOS Single Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6001N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current (max) =      100fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA
+*
+* NOTE: This CMOS electrometer simulates guaranteed (100% tested)
+*       input offset voltage (VOS) & input bias current (IB)
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DD
+DP3 2  99 DB
+DP4 50 2  DC
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 800U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+* Input bias and offset current differences
+.MODEL  DA D    (IS=500FA)
+.MODEL  DB D    (IS=500FA)
+.MODEL  DC D    (IS=405FA)
+.MODEL  DD D    (IS=400FA)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6001AN;LM6001AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6001AM/AI Precision CMOS Single Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6001AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             25fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA
+*
+* NOTE: This CMOS electrometer simulates guaranteed (100% tested)
+*       input offset voltage (VOS) & input bias current (IB)
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DD
+DP3 2  99 DB
+DP4 50 2  DC
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 350U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+* Input bias and offset current differences
+.MODEL  DA D    (IS=425FA)
+.MODEL  DB D    (IS=425FA)
+.MODEL  DC D    (IS=405FA)
+.MODEL  DD D    (IS=400FA)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6022N;LMC6022N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6022I Low Power CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6022N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             9mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  43uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 9M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 37.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6024N;LMC6024N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6024I Low Power CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6024N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             9mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  40uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 9M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 34.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6032N;LMC6032N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6032I CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6032N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             9mV
+* Ultra low input current =              2fA
+* Slew rate =                        1.1V/uS
+* Gain-bandwidth product =           1.4 MHz 
+* Low supply current =                 375uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  11.35N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 9M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4  48.19U
+I2  99 50 308.1U
+* Load dependent pole
+L1  22 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.47K
+R4  6  50 5.47K
+R5  98 9  1E7
+R8  99 49 133.3K
+R9  49 50 133.3K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 900
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.721V
+V3  10 96 0.721V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.45 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6034N;LMC6034N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6034I CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6034N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             9mV
+* Ultra low input current =              2fA
+* Slew rate =                        1.1V/uS
+* Gain-bandwidth product =           1.4 MHz 
+* Low supply current =                 375uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  11.35N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 9M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4  48.19U
+I2  99 50 308.1U
+* Load dependent pole
+L1  22 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.47K
+R4  6  50 5.47K
+R5  98 9  1E7
+R8  99 49 133.3K
+R9  49 50 133.3K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 900
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.721V
+V3  10 96 0.721V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.45 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6041N;LMC6041N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6041I CMOS Single Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6041N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =              2fA
+* Slew rate =                        .02V/uS
+* Gain-bandwidth product =             75kHz 
+* Low supply current =                  14uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 75E-3 Hz pole capacitor
+C3  98 9  212N
+* 170.3 kHz pole capacitor
+C4  6  5  17.2P
+* 1.0 MHz pole capacitor
+C5  98 15 228.5F
+* Drain-substrate capacitor
+C6  50 4  10P
+* 1.0 MHz pole capacitor
+C7  98 11 110.7F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 6M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 8.89E-8 8.89E-8
+I1  99 4  2.054U
+I2  99 50 11.9U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 148M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 26.3K
+R4  6  50 26.3K
+R5  98 9  1E7
+R8  99 49 1.5E6
+R9  49 50 1.5E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.707V
+V3  10 96 0.696V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6041AN;LM6041AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6041AI CMOS Single Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6041AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =              2fA
+* Slew rate =                        .02V/uS
+* Gain-bandwidth product =             75kHz 
+* Low supply current =                  14uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 75E-3 Hz pole capacitor
+C3  98 9  212N
+* 170.3 kHz pole capacitor
+C4  6  5  17.2P
+* 1.0 MHz pole capacitor
+C5  98 15 228.5F
+* Drain-substrate capacitor
+C6  50 4  10P
+* 1.0 MHz pole capacitor
+C7  98 11 110.7F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 8.89E-8 8.89E-8
+I1  99 4  2.054U
+I2  99 50 11.9U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 148M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 26.3K
+R4  6  50 26.3K
+R5  98 9  1E7
+R8  99 49 1.5E6
+R9  49 50 1.5E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.707V
+V3  10 96 0.696V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6042N;LMC6042N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6042I CMOS Dual Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6042N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =              2fA
+* Slew rate =                        .02V/uS
+* Gain-bandwidth product =             75kHz 
+* Low supply current =                  10uA
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 75E-3 Hz pole capacitor
+C3  98 9  212N
+* 170.3 kHz pole capacitor
+C4  6  5  17.2P
+* 1.0 MHz pole capacitor
+C5  98 15 228.5F
+* Drain-substrate capacitor
+C6  50 4  10P
+* 1.0 MHz pole capacitor
+C7  98 11 110.7F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 6M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 8.89E-8 8.89E-8
+I1  99 4  2.054U
+I2  99 50 6.9U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 148M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 26.3K
+R4  6  50 26.3K
+R5  98 9  1E7
+R8  99 49 1.5E6
+R9  49 50 1.5E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.707V
+V3  10 96 0.696V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6042AN;LM6042AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6042AI CMOS Dual Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6042AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =              2fA
+* Slew rate =                        .02V/uS
+* Gain-bandwidth product =             75kHz 
+* Low supply current =                  10uA
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 75E-3 Hz pole capacitor
+C3  98 9  212N
+* 170.3 kHz pole capacitor
+C4  6  5  17.2P
+* 1.0 MHz pole capacitor
+C5  98 15 228.5F
+* Drain-substrate capacitor
+C6  50 4  10P
+* 1.0 MHz pole capacitor
+C7  98 11 110.7F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 8.89E-8 8.89E-8
+I1  99 4  2.054U
+I2  99 50 6.9U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 148M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 26.3K
+R4  6  50 26.3K
+R5  98 9  1E7
+R8  99 49 1.5E6
+R9  49 50 1.5E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.707V
+V3  10 96 0.696V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6044N;LMC6044N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6044I CMOS Quad Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6044N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =              2fA
+* Slew rate =                        .02V/uS
+* Gain-bandwidth product =             75kHz 
+* Low supply current =                  10uA
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 75E-3 Hz pole capacitor
+C3  98 9  212N
+* 170.3 kHz pole capacitor
+C4  6  5  17.2P
+* 1.0 MHz pole capacitor
+C5  98 15 228.5F
+* Drain-substrate capacitor
+C6  50 4  10P
+* 1.0 MHz pole capacitor
+C7  98 11 110.7F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 6M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 8.89E-8 8.89E-8
+I1  99 4  2.054U
+I2  99 50 6.9U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 148M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 26.3K
+R4  6  50 26.3K
+R5  98 9  1E7
+R8  99 49 1.5E6
+R9  49 50 1.5E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.707V
+V3  10 96 0.696V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6044AN;LM6044AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6044AI CMOS Quad Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6044AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =              2fA
+* Slew rate =                        .02V/uS
+* Gain-bandwidth product =             75kHz 
+* Low supply current =                  10uA
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 75E-3 Hz pole capacitor
+C3  98 9  212N
+* 170.3 kHz pole capacitor
+C4  6  5  17.2P
+* 1.0 MHz pole capacitor
+C5  98 15 228.5F
+* Drain-substrate capacitor
+C6  50 4  10P
+* 1.0 MHz pole capacitor
+C7  98 11 110.7F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 8.89E-8 8.89E-8
+I1  99 4  2.054U
+I2  99 50 6.9U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 148M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 26.3K
+R4  6  50 26.3K
+R5  98 9  1E7
+R8  99 49 1.5E6
+R9  49 50 1.5E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 75
+* +Rout
+R17 23 25 70
+* +Isc slope control
+R18 20 29 144.6K
+* -Isc slope control
+R19 21 30 185K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.707V
+V3  10 96 0.696V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=1.3E-14)
+.MODEL  DB D    (IS=1.2E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6061N;LMC6061N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP
+*LMC6061I Precision CMOS Single Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6061N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current =             10fA
+* Slew rate =                       .035V/uS
+* Gain-bandwidth product =            100kHz 
+* Low supply current =                  20uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 25.5E-3 kHz pole capacitor
+C3  98 9  623.7N
+* 522 kHz pole capacitor   
+C4  6  5  1.95P
+* 522 kHz pole capacitor   
+C5  98 15 304.6F
+* Drain-substrate capacitor
+C6  50 4  23P
+* 522 kHz pole capacitor   
+C7  98 11 303.8F
+C8  22 28 39.7P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+EOS 7  1  POLY(1) 16 49 800U 1
+* Input offset voltage -|
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+I1  99 4  3.678U
+I2  99 50 14.4U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 485M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.25E6
+R9  49 50 1.25E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 67.4
+* +Rout
+R17 23 25 97.4
+* +Isc slope control
+R18 20 29 24K
+* -Isc slope control
+R19 21 30 125K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.738V
+V3  10 96 0.742V
+V4  29 22 1.678V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.39 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6061AN;LM6061AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6061AM/AI Precision CMOS Single Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6061AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             10fA
+* Slew rate =                       .035V/uS
+* Gain-bandwidth product =            100kHz 
+* Low supply current =                  20uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 25.5E-3 kHz pole capacitor
+C3  98 9  623.7N
+* 522 kHz pole capacitor   
+C4  6  5  1.95P
+* 522 kHz pole capacitor   
+C5  98 15 304.6F
+* Drain-substrate capacitor
+C6  50 4  23P
+* 522 kHz pole capacitor   
+C7  98 11 303.8F
+C8  22 28 39.7P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+EOS 7  1  POLY(1) 16 49 350U 1
+* Input offset voltage -|
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+I1  99 4  3.678U
+I2  99 50 14.4U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 485M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.25E6
+R9  49 50 1.25E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 67.4
+* +Rout
+R17 23 25 97.4
+* +Isc slope control
+R18 20 29 24K
+* -Isc slope control
+R19 21 30 125K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.738V
+V3  10 96 0.742V
+V4  29 22 1.678V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.39 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6062N;LMC6062N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6062I Precision CMOS Dual Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6062N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current =             10fA
+* Slew rate =                       .035V/uS
+* Gain-bandwidth product =            100kHz 
+* Low supply current =                  16uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 25.5E-3 kHz pole capacitor
+C3  98 9  623.7N
+* 522 kHz pole capacitor   
+C4  6  5  1.95P
+* 522 kHz pole capacitor   
+C5  98 15 304.6F
+* Drain-substrate capacitor
+C6  50 4  23P
+* 522 kHz pole capacitor   
+C7  98 11 303.8F
+C8  22 28 39.7P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+EOS 7  1  POLY(1) 16 49 800U 1
+* Input offset voltage -|
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+I1  99 4  3.678U
+I2  99 50 10.4U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 485M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.25E6
+R9  49 50 1.25E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 67.4
+* +Rout
+R17 23 25 97.4
+* +Isc slope control
+R18 20 29 24K
+* -Isc slope control
+R19 21 30 125K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.738V
+V3  10 96 0.742V
+V4  29 22 1.678V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.39 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6062AN;LM6062AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6062AM/AI Precision CMOS Dual Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6062AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             10fA
+* Slew rate =                       .035V/uS
+* Gain-bandwidth product =            100kHz 
+* Low supply current =                  16uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 25.5E-3 kHz pole capacitor
+C3  98 9  623.7N
+* 522 kHz pole capacitor   
+C4  6  5  1.95P
+* 522 kHz pole capacitor   
+C5  98 15 304.6F
+* Drain-substrate capacitor
+C6  50 4  23P
+* 522 kHz pole capacitor   
+C7  98 11 303.8F
+C8  22 28 39.7P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+EOS 7  1  POLY(1) 16 49 350U 1
+* Input offset voltage -|
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+I1  99 4  3.678U
+I2  99 50 10.4U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 485M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.25E6
+R9  49 50 1.25E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 67.4
+* +Rout
+R17 23 25 97.4
+* +Isc slope control
+R18 20 29 24K
+* -Isc slope control
+R19 21 30 125K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.738V
+V3  10 96 0.742V
+V4  29 22 1.678V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.39 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6064N;LMC6064N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6064I Precision CMOS Quad Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6064N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current =             10fA
+* Slew rate =                       .035V/uS
+* Gain-bandwidth product =            100kHz 
+* Low supply current =                  16uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 25.5E-3 kHz pole capacitor
+C3  98 9  623.7N
+* 522 kHz pole capacitor   
+C4  6  5  1.95P
+* 522 kHz pole capacitor   
+C5  98 15 304.6F
+* Drain-substrate capacitor
+C6  50 4  23P
+* 522 kHz pole capacitor   
+C7  98 11 303.8F
+C8  22 28 39.7P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+EOS 7  1  POLY(1) 16 49 800U 1
+* Input offset voltage -|
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+I1  99 4  3.678U
+I2  99 50 10.4U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 485M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.25E6
+R9  49 50 1.25E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 67.4
+* +Rout
+R17 23 25 97.4
+* +Isc slope control
+R18 20 29 24K
+* -Isc slope control
+R19 21 30 125K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.738V
+V3  10 96 0.742V
+V4  29 22 1.678V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.39 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6064AN;LM6064AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6064AM/AI Precision CMOS Quad Micropower Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6064AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             10fA
+* Slew rate =                       .035V/uS
+* Gain-bandwidth product =            100kHz 
+* Low supply current =                  16uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 25.5E-3 kHz pole capacitor
+C3  98 9  623.7N
+* 522 kHz pole capacitor   
+C4  6  5  1.95P
+* 522 kHz pole capacitor   
+C5  98 15 304.6F
+* Drain-substrate capacitor
+C6  50 4  23P
+* 522 kHz pole capacitor   
+C7  98 11 303.8F
+C8  22 28 39.7P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+EOS 7  1  POLY(1) 16 49 350U 1
+* Input offset voltage -|
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+I1  99 4  3.678U
+I2  99 50 10.4U
+* Load dependent pole
+L1  22 28 15.6M
+* CMRR zero
+L2  16 17 485M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.25E6
+R9  49 50 1.25E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 67.4
+* +Rout
+R17 23 25 97.4
+* +Isc slope control
+R18 20 29 24K
+* -Isc slope control
+R19 21 30 125K
+R21 98 15 1E6
+R22 22 28 7K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.738V
+V3  10 96 0.742V
+V4  29 22 1.678V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.39 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6081N;LMC6081N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6081I Precision CMOS Single Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6081N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current =             10fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 800U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6081AN;LM6081AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6081AM/AI Precision CMOS Single Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6081AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             10fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 350U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6082N;LMC6082N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6082I Precision CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6082N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current =             10fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 800U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6082AN;LM6082AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6082AM/AI Precision CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6082AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             10fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 350U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6084N;LMC6084N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6084I Precision CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6084N    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           800uV
+* Ultra low input current =             10fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 800U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6084AN;LM6084AN;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP 
+* LMC6084AM/AI Precision CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LM6084AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =           350uV
+* Ultra low input current =             10fA
+* Slew rate =                        1.5V/uS
+* Gain-bandwidth product =            1.3MHz 
+* Supply current =                     450uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.634 Hz pole capacitor
+C3  98 9  9.715N
+* 1.1 MHz pole capacitor
+C4  6  5  13.95P
+* 4.98 MHz pole capacitor
+C5  98 15 31.9F
+* Drain-substrate capacitor
+C6  50 4  3P
+* 28.6 MHz pole capacitor
+C7  98 11 5.62F
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  18 20 DX
+D4  21 18 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 350U 1
+EP  97 0  99    0  1.0
+E1  97 19 99    18 1.0
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 1.26E-8 1.26E-8
+G5  98 18 15    49 1U
+I1  99 4  33.46U
+I2  99 50 366.5U
+* Load dependent pole 
+L1  22 28 80.4U
+* CMR lead inductor
+L2  16 17 73.1M
+* 3.30 MHz lead inductor
+L3  98 3  48.2M
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 5.18K
+R4  6  50 5.18K
+R5  98 9  1E7
+R8  99 49 50K
+R9  49 50 50K
+R10 18 3  1E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 70.7
+* +Rout
+R17 23 25 80.3
+* +Isc slope control
+R18 20 29 64K
+* -Isc slope control
+R19 21 30 130K
+R21 98 15 1E6
+R22 22 28 636
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.713V
+V3  10 96 0.710V
+V4  29 22 1.170V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=2.5E-14)
+.MODEL  DB D    (IS=2.0E-14)
+.MODEL  DX D    (IS=1.0E-14)
+.MODEL  MX PMOS (VTO=-2.456 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6482N;LMC6482N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP
+*LMC6482 CMOS Dual OP-AMP MACRO-MODEL
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6482N    1   2  99  50  40
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             10fA
+*Slew rate =                        1.2V/uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1/2 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*INPUT STAGE
+*
+I1  99  4 17U
+M1   5  2 4 99 MOSFET
+R3   5 50 5.651K
+M2   6  7 4 99 MOSFET
+R4   6 50 5.651K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DB
+DP3  2 99 DB
+DP4 50  2 DA
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+*COMMON MODE EFFECT
+*
+I2  99 50 420.5U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 .5E-3 1
+*Offset voltage..........^
+R8  99 49 40K
+R9  49 50 40K
+*
+*POLE STAGE
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+*POLE/ZERO STAGE
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*
+*COMMON-MODE ZERO STAGE
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+*SECOND STAGE
+*
+EH  99 98 99 49 1
+G1  98 29 18 49 5.6667E-6 
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+G6  38 40 49 29 16.667E-3  
+R16 38 40 2.3886K  
+V4  30 40 .77
+D5  30 99 DX
+V5  40 31 .77
+D6  50 31 DX
+*Fp1=2.343 Hz
+C3  29 39 17P
+R6  39 40 1K
+*
+*MODELS USED
+.MODEL DA D(IS=2E-14)
+.MODEL DB D(IS=1E-14)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+**********
+*SRC=LMC6484N;LMC6484N;Opamps;NAT-"LMxxx";CMOS Input
+*SYM=NATOPAMP
+*LMC6484 CMOS Quad OP-AMP MACRO-MODEL
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6484N    1   2  99  50  40
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             10fA
+*Slew rate =                        1.2V/uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1/4 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*INPUT STAGE
+*
+I1  99  4 17U
+M1   5  2 4 99 MOSFET
+R3   5 50 5.651K
+M2   6  7 4 99 MOSFET
+R4   6 50 5.651K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DB
+DP3  2 99 DB
+DP4 50  2 DA
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+*COMMON MODE EFFECT
+*
+I2  99 50 420.5U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 .5E-3 1
+*Offset voltage..........^
+R8  99 49 40K
+R9  49 50 40K
+*
+*POLE STAGE
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+*POLE/ZERO STAGE
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*
+*COMMON-MODE ZERO STAGE
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+*SECOND STAGE
+*
+EH  99 98 99 49 1
+G1  98 29 18 49 5.6667E-6 
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+*OUTPUT STAGE
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+G6  38 40 49 29 16.667E-3  
+R16 38 40 2.3886K  
+V4  30 40 .77
+D5  30 99 DX
+V5  40 31 .77
+D6  50 31 DX
+*Fp1=2.343 Hz
+C3  29 39 17P
+R6  39 40 1K
+*
+*MODELS USED
+.MODEL DA D(IS=2E-14)
+.MODEL DB D(IS=1E-14)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+**********
+*SRC=LPC660N;LPC660N;Opamps;NAT-"LPxxx";CMOS Input
+*SYM=NATOPAMP
+* LPC660I Low Power CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LPC660N     1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  40uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 6M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 34.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LPC660AN;LPC660AN;Opamps;NAT-"LPxxx";CMOS Input
+*SYM=NATOPAMP 
+* LPC660AM/AI Low Power CMOS Quad Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LPC660AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  40uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/4 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 3M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 34.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LPC661N;LPC661N;Opamps;NAT-"LPxxx";CMOS Input
+*SYM=NATOPAMP 
+* LPC661I Low Power CMOS Single Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LPC661N     1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  58uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 6M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 49.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LPC661AN;LPC661AN;Opamps;NAT-"LPxxx";CMOS Input
+*SYM=NATOPAMP 
+* LPC661AM/AI Low Power CMOS Single Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LPC661AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  58uA
+*
+* NOTE: - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 3M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 49.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LPC662N;LPC662N;Opamps;NAT-"LPxxx";CMOS Input
+*SYM=NATOPAMP 
+* LPC662I Low Power CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LPC662N     1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             6mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  43uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 6M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 37.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LPC662AN;LPC662AN;Opamps;NAT-"LPxxx";CMOS Input
+*SYM=NATOPAMP 
+* LPC662AM/AI Low Power CMOS Dual Operational Amplifier
+* 
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LPC662AN    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) =             3mV
+* Ultra low input current =             40fA
+* Slew rate =                        .11V/uS
+* Gain-bandwidth product =            350kHz 
+* Low supply current =                  43uA/Amplifier
+*
+* NOTE: - Model is for single device only and simulated
+*         supply current is 1/2 of total device current.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P                                   
+CI2 2  50 2P                                
+* 89.2E-3 Hz pole capacitor  
+C3  98 9  178.2N                               
+* 604.1 kHz pole capacitor 
+C4  6  5  1.68P                                 
+* 1.98 MHz pole capacitor    
+C5  98 15 80F                                  
+* Drain-substrate capacitance
+C6  50 4  5P                                   
+* 10 MHz pole capacitor 
+C7  98 11 15.8F                                 
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  15 20 DX
+D4  21 15 DX
+D5  26 24 DX
+D6  25 27 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage--|      
+EOS 7  1  POLY(1) 16 49 3M 1                   
+EP  97 0  99    0  1.0
+E1  97 19 99    15 1.0
+* Sourcing load +Vs current 
+F1  99 0  VA2   1                              
+* Sinking load -Vs current
+F2  0  50 VA3   1                              
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR   
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8 
+I1  99 4  3.678U
+I2  99 50 37.8U
+* Load dependent pole  
+L1  22 28 2.06M                              
+* CMRR lead  
+L2  16 17 79.2M                                
+M1  5  2  4     99 MX
+M2  6  7  4     99 MX
+R3  5  50 78.2K
+R4  6  50 78.2K
+R5  98 9  1E7
+R8  99 49 1.66E6
+R9  49 50 1.66E6
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout  
+R16 23 24 75                                   
+* +Rout     
+R17 23 25 70                                
+* +Isc slope control      
+R18 20 29 144.6K                             
+* -Isc slope control 
+R19 21 30 185K                                
+R21 98 15 1E6
+R22 22 28 4.54K
+VA1 19 23 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.750V
+V3  10 96 0.742V
+V4  29 22 0.63V
+V5  22 30 0.63V
+V6  26 22 0.63V
+V7  22 27 0.63V
+.MODEL  DA D    (IS=5E-14)
+.MODEL  DB D    (IS=4E-14)
+.MODEL  DX D    (IS=1E-14)
+.MODEL  MX PMOS (VTO=-2.19 KP=7.0547E-4)
+.ENDS
+**********
+*SRC=LMC6462A;LMC6462A;Opamps;NAT-"LMxxx";Low V Micropower Amp
+*SYM=NATOPAMP
+*
+*LMC6462A CMOS Dual OP-AMP MACRO-MODEL
+*     
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6462A    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             150fA
+*Slew rate =                        0.02V uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1 2 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*   INPUT STAGE  * 
+*
+I1  99  4 6.9U
+M1   5  2 4 99 MOSFET
+R3   5 50 3.79K
+M2   6  7 4 99 MOSFET
+R4   6 50 3.79K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DC
+DP3  2 99 DB
+DP4 50  2 DC
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+*  COMMON MODE EFFECT  
+*
+I2 50 99 6.8U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 0.5E-3 1
+*Offset voltage..........
+R8  99 49 250K
+R9  49 50 250K
+*
+*   POLE STAGE    
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+*POLE ZERO STAGE  
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*COMMON-MODE ZERO STAGE 
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+*SECOND STAGE  *
+*
+EH  97 98 99 49 1
+G1  98 29 18 49 5.6667E-6
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+*OUTPUT STAGE  *
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+GN3 98 115 40 49 1U
+RN21 98 115 1MEG
+EN1 97 123 99 115 1
+RN17 123 125 180
+RN16 123 124 130
+DN6 125 127 DX
+DN5 126 124 DX
+VN7 28 127 0.63
+VN6 126 28 0.63
+DN3 115 120 DX
+RN18 120 129 350K
+VN4 129 28 .27
+DN4 121 115 DX
+RN19 130 121 350K
+VN5 28 130 .27
+ENP 97 0 99 0 1
+ENN 0 96 0 50 1
+DN7 28 99 DX
+DN8 50 28 DX
+*
+*
+G6  38 40 49 29 16.667E-3
+R16 38 40 2.3886K
+V4  30 40 .77
+D5  30 97 DX
+V5  40 31 .77
+D6  96 31 DX
+*Fp1=7.96 Hz
+C3  29 39 280P
+R6  39 40 1K
+*
+*   MODELS USED  *
+*
+.MODEL DA D(IS=1.075E-12)
+.MODEL DB D(IS=1.15E-12)
+.MODEL DC D(IS=1E-12)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+*
+********
+*SRC=LMC6462B;LMC6462B;Opamps;NAT-"LMxxx";Low V Micropower Amp
+*SYM=NATOPAMP
+*LMC6462B CMOS Dual OP-AMP MACRO-MODEL
+*     
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6462B    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             150fA
+*Slew rate =                        0.02V uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1 2 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*   INPUT STAGE  * 
+*
+I1  99  4 6.9U
+M1   5  2 4 99 MOSFET
+R3   5 50 3.79K
+M2   6  7 4 99 MOSFET
+R4   6 50 3.79K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DC
+DP3  2 99 DB
+DP4 50  2 DC
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+*  COMMON MODE EFFECT  
+*
+I2 50 99 6.8U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 3.0E-3 1
+*Offset voltage..........
+R8  99 49 250K
+R9  49 50 250K
+*
+*   POLE STAGE    
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+*POLE ZERO STAGE  
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*COMMON-MODE ZERO STAGE 
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+*SECOND STAGE  *
+*
+EH  97 98 99 49 1
+G1  98 29 18 49 5.6667E-6
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+*OUTPUT STAGE  *
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+GN3 98 115 40 49 1U
+RN21 98 115 1MEG
+EN1 97 123 99 115 1
+RN17 123 125 180
+RN16 123 124 130
+DN6 125 127 DX
+DN5 126 124 DX
+VN7 28 127 0.63
+VN6 126 28 0.63
+DN3 115 120 DX
+RN18 120 129 350K
+VN4 129 28 .27
+DN4 121 115 DX
+RN19 130 121 350K
+VN5 28 130 .27
+ENP 97 0 99 0 1
+ENN 0 96 0 50 1
+DN7 28 99 DX
+DN8 50 28 DX
+*
+*
+G6  38 40 49 29 16.667E-3
+R16 38 40 2.3886K
+V4  30 40 .77
+D5  30 97 DX
+V5  40 31 .77
+D6  96 31 DX
+*Fp1=7.96 Hz
+C3  29 39 280P
+R6  39 40 1K
+*
+*   MODELS USED  *
+*
+.MODEL DA D(IS=1.075E-12)
+.MODEL DB D(IS=1.15E-12)
+.MODEL DC D(IS=1E-12)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+*
+********
+*SRC=LMC6464A;LMC6464A;Opamps;NAT-"LMxxx";Low V Micropower Amp
+*SYM=NATOPAMP
+*LMC6464A CMOS Quad OP-AMP MACRO-MODEL
+*     
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6464A    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             150fA
+*Slew rate =                        0.02V uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1 4 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*   INPUT STAGE  * 
+*
+I1  99  4 6.9U
+M1   5  2 4 99 MOSFET
+R3   5 50 3.79K
+M2   6  7 4 99 MOSFET
+R4   6 50 3.79K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DC
+DP3  2 99 DB
+DP4 50  2 DC
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+*  COMMON MODE EFFECT  
+*
+I2 50 99 6.8U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 0.5E-3 1
+*Offset voltage..........
+R8  99 49 250K
+R9  49 50 250K
+*
+*   POLE STAGE    
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+*POLE ZERO STAGE  
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*COMMON-MODE ZERO STAGE 
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+*SECOND STAGE  *
+*
+EH  97 98 99 49 1
+G1  98 29 18 49 5.6667E-6
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+*OUTPUT STAGE  *
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+GN3 98 115 40 49 1U
+RN21 98 115 1MEG
+EN1 97 123 99 115 1
+RN17 123 125 180
+RN16 123 124 130
+DN6 125 127 DX
+DN5 126 124 DX
+VN7 28 127 0.63
+VN6 126 28 0.63
+DN3 115 120 DX
+RN18 120 129 350K
+VN4 129 28 .27
+DN4 121 115 DX
+RN19 130 121 350K
+VN5 28 130 .27
+ENP 97 0 99 0 1
+ENN 0 96 0 50 1
+DN7 28 99 DX
+DN8 50 28 DX
+*
+*
+G6  38 40 49 29 16.667E-3
+R16 38 40 2.3886K
+V4  30 40 .77
+D5  30 97 DX
+V5  40 31 .77
+D6  96 31 DX
+*Fp1=7.96 Hz
+C3  29 39 280P
+R6  39 40 1K
+*
+*   MODELS USED  *
+*
+.MODEL DA D(IS=1.075E-12)
+.MODEL DB D(IS=1.15E-12)
+.MODEL DC D(IS=1E-12)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+*
+********
+*SRC=LMC6464B;LMC6464B;Opamps;NAT-"LMxxx";Low V Micropower Amp
+*SYM=NATOPAMP
+*LMC6464B CMOS Quad OP-AMP MACRO-MODEL
+*     
+*
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6464B    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             150fA
+*Slew rate =                        0.02V uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1 4 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*   INPUT STAGE  * 
+*
+I1  99  4 6.9U
+M1   5  2 4 99 MOSFET
+R3   5 50 3.79K
+M2   6  7 4 99 MOSFET
+R4   6 50 3.79K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DC
+DP3  2 99 DB
+DP4 50  2 DC
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+  COMMON MODE EFFECT  
+*
+I2 50 99 6.8U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 3.0E-3 1
+*Offset voltage..........
+R8  99 49 250K
+R9  49 50 250K
+*
+*   POLE STAGE    
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+*POLE ZERO STAGE  
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*COMMON-MODE ZERO STAGE 
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+*SECOND STAGE  *
+*
+EH  97 98 99 49 1
+G1  98 29 18 49 5.6667E-6
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+*OUTPUT STAGE  *
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+GN3 98 115 40 49 1U
+RN21 98 115 1MEG
+EN1 97 123 99 115 1
+RN17 123 125 180
+RN16 123 124 130
+DN6 125 127 DX
+DN5 126 124 DX
+VN7 28 127 0.63
+VN6 126 28 0.63
+DN3 115 120 DX
+RN18 120 129 350K
+VN4 129 28 .27
+DN4 121 115 DX
+RN19 130 121 350K
+VN5 28 130 .27
+ENP 97 0 99 0 1
+ENN 0 96 0 50 1
+DN7 28 99 DX
+DN8 50 28 DX
+*
+*
+G6  38 40 49 29 16.667E-3
+R16 38 40 2.3886K
+V4  30 40 .77
+D5  30 97 DX
+V5  40 31 .77
+D6  96 31 DX
+*Fp1=7.96 Hz
+C3  29 39 280P
+R6  39 40 1K
+*
+*   MODELS USED  *
+*
+.MODEL DA D(IS=1.075E-12)
+.MODEL DB D(IS=1.15E-12)
+.MODEL DC D(IS=1E-12)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+*
+********
+*SRC=LMC6582A;LMC6582A;Opamps;NAT-"LMxxx";Low V RR I/O Amp
+*SYM=NATOPAMP
+*LMC6582A CMOS DUAL OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6582A    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 1mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 1M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2  18  7 32    97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4 11.5U
+I2  99 50 680U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4  99 MPX
+M2  6  18 4  99 MPX
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  99 49 25K
+R9  49 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+VA1 22 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.ENDS
+*
+********
+*SRC=LMC6582B;LMC6582B;Opamps;NAT-"LMxxx";Low V RR I/O Amp
+*SYM=NATOPAMP
+*LMC6582B CMOS DUAL OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6582B    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 3mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2  18  7 32    97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4 11.5U
+I2  99 50 680U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4  99 MPX
+M2  6  18 4  99 MPX
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  99 49 25K
+R9  49 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+VA1 22 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.ENDS
+*
+********
+*SRC=LMC6584A;LMC6584A;Opamps;NAT-"LMxxx";Low V RR I/O Amp
+*SYM=NATOPAMP
+*LMC6584A CMOS QUAD OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6584A    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 1mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 1M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2  18  7 32    97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4 11.5U
+I2  99 50 680U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4  99 MPX
+M2  6  18 4  99 MPX
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  99 49 25K
+R9  49 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+VA1 22 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.ENDS
+*
+********
+*SRC=LMC6584B;LMC6584B;Opamps;NAT-"LMxxx";Low V RR I/O Amp
+*SYM=NATOPAMP
+*LMC6584B CMOS QUAD OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT LMC6584B    1   2  99  50  28
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 3mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2  18  7 32    97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+I1  99 4 11.5U
+I2  99 50 680U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4  99 MPX
+M2  6  18 4  99 MPX
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  99 49 25K
+R9  49 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+VA1 22 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.ENDS
+*
+********
+*SRC=LMC6681A;LMC6681A;Opamps;NAT-"LMxxx";RR I/O Amp w/Shutdown
+*SYM=NATOP2
+*LMC6681A CMOS Single OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |   Shutdown
+*                   |   |   |   |   |   |
+.SUBCKT LMC6681A    1   2  99  50  28  33
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 1mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+CSD1 41 40 100P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 1M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2 18 7 32 97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+G5  99 4  39 45 11.5U
+G6  99 50 39 45 340U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MPX
+M2  6  18 4     99 MPX
+M3 41 33 40 40 MN1
+M4 45 41 39 39 MP2
+M5 45 41 40 40 MN3 
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  42 44 25K
+R9  44 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+R24 99 49 10MEG
+R25 49 50 10MEG
+R26 33 50 20MEG
+R27 39 41 250K
+XS1 99 42 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+XS2 22 36 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+VA1 36 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+V9 39 49 1
+V10 49 40 1
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MP2 PMOS (VTO=0, KP=7.0547E-4)
+.MODEL MN3 NMOS (VTO=0, KP=7.0547E-4)
+.ENDS
+*
+********
+*SRC=LMC6681B;LMC6681B;Opamps;NAT-"LMxxx";RR I/O Amp w/Shutdown
+*SYM=NATOP2
+*LMC6681B CMOS Single OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |   Shutdown
+*                   |   |   |   |   |   |
+.SUBCKT LMC6681B    1   2  99  50  28  33
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 3mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+CSD1 41 40 100P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2 18 7 32 97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+G5  99 4  39 45 11.5U
+G6  99 50 39 45 340U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MPX
+M2  6  18 4     99 MPX
+M3 41 33 40 40 MN1
+M4 45 41 39 39 MP2
+M5 45 41 40 40 MN3 
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  42 44 25K
+R9  44 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+R24 99 49 10MEG
+R25 49 50 10MEG
+R26 33 50 20MEG
+R27 39 41 250K
+XS1 99 42 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01} 
+XS2 22 36 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDSVA1 36 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+V9 39 49 1
+V10 49 40 1
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MP2 PMOS (VTO=0, KP=7.0547E-4)
+.MODEL MN3 NMOS (VTO=0, KP=7.0547E-4)
+.ENDS
+*
+********
+*SRC=LMC6682A;LMC6682A;Opamps;NAT-"LMxxx";RR I/O Amp w/Shutdown
+*SYM=NATOP2
+*LMC6682A CMOS DUAL OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |   Shutdown
+*                   |   |   |   |   |   |
+.SUBCKT LMC6682A    1   2  99  50  28  33
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 1mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+CSD1 41 40 100P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 1M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2 18 7 32 97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+G5  99 4  39 45 11.5U
+G6  99 50 39 45 340U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MPX
+M2  6  18 4     99 MPX
+M3 41 33 40 40 MN1
+M4 45 41 39 39 MP2
+M5 45 41 40 40 MN3 
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  42 44 25K
+R9  44 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+R24 99 49 10MEG
+R25 49 50 10MEG
+R26 33 50 20MEG
+R27 39 41 250K
+XS1 99 42 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01} 
+XS2 22 36 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+VA1 36 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+V9 39 49 1
+V10 49 40 1
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MP2 PMOS (VTO=0, KP=7.0547E-4)
+.MODEL MN3 NMOS (VTO=0, KP=7.0547E-4)
+.ENDS
+*
+********
+*SRC=LMC6682B;LMC6682B;Opamps;NAT-"LMxxx";RR I/O Amp w/Shutdown
+*SYM=NATOP2
+*LMC6682B CMOS DUAL OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |   Shutdown
+*                   |   |   |   |   |   |
+.SUBCKT LMC6682B    1   2  99  50  28  33
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 3mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+CSD1 41 40 100P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2 18 7 32 97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+G5  99 4  39 45 11.5U
+G6  99 50 39 45 340U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MPX
+M2  6  18 4     99 MPX
+M3 41 33 40 40 MN1
+M4 45 41 39 39 MP2
+M5 45 41 40 40 MN3 
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  42 44 25K
+R9  44 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+R24 99 49 10MEG
+R25 49 50 10MEG
+R26 33 50 20MEG
+R27 39 41 250K
+X 99 42 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01} 
+XS2 22 36 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+VA1 36 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+V9 39 49 1
+V10 49 40 1
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MP2 PMOS (VTO=0, KP=7.0547E-4)
+.MODEL MN3 NMOS (VTO=0, KP=7.0547E-4)
+.ENDS
+*
+********
+*SRC=LMC6684A;LMC6684A;Opamps;NAT-"LMxxx";RR I/O Amp w/Shutdown
+*SYM=NATOP2
+*LMC6684A CMOS QUAD OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |   Shutdown
+*                   |   |   |   |   |   |
+.SUBCKT LMC6684A    1   2  99  50  28  33
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 1mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+CSD1 41 40 100P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 1M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2 18 7 32 97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+G5  99 4  39 45 11.5U
+G6  99 50 39 45 340U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MPX
+M2  6  18 4     99 MPX
+M3 41 33 40 40 MN1
+M4 45 41 39 39 MP2
+M5 45 41 40 40 MN3 
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  42 44 25K
+R9  44 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+R24 99 49 10MEG
+R25 49 50 10MEG
+R26 33 50 20MEG
+R27 39 41 250K
+X 99 42 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01} 
+XS2 22 36 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+VA1 36 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+V9 39 49 1
+V10 49 40 1
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MP2 PMOS (VTO=0, KP=7.0547E-4)
+.MODEL MN3 NMOS (VTO=0, KP=7.0547E-4)
+.ENDS
+*
+********
+*SRC=LMC6684B;LMC6684B;Opamps;NAT-"LMxxx";RR I/O Amp w/Shutdown
+*SYM=NATOP2
+*LMC6684B CMOS QUAD OP-AMP MACRO-MODEL
+*     
+*
+* Connections:      Non-inverting input
+*                   |   Inverting input
+*                   |   |   Positive power supply
+*                   |   |   |   Negative power supply
+*                   |   |   |   |   Output
+*                   |   |   |   |   |   Shutdown
+*                   |   |   |   |   |   |
+.SUBCKT LMC6684B    1   2  99  50  28  33
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+* Features:
+* Operates from single supply
+* Rail-to-rail output swing
+* Low offset voltage (max) = 3mV@5V
+* Slew rate = 1.2V uS
+* Gain-bandwidth product = 1.2 MHz 
+* Amplifier shut-down
+* Power is for one amplifier
+*
+* NOTE: - Model is for single device only and simulated.
+*       - Noise is not modeled.
+*       - Asymmetrical gain is not modeled.
+*
+CI1 1  50 2P
+CI2 2  50 2P
+* 1.4 Hz pole capacitor
+C3  98 9  5.85N
+* 2.95 MHz pole capacitor
+C4  6  5  4.93P
+* Drain-substrate capacitor
+C6  50 4  10P
+* 35 MHz pole capacitor
+C7  98 11 4.54F
+COUT 28 0 10P
+CSD1 41 40 100P
+DP1 1  99 DA
+DP2 50 1  DX
+DP3 2  99 DB
+DP4 50 2  DX
+D1  9  8  DX
+D2  10 9  DX
+D3  29 22 DX
+D4  22 30 DX
+D5  22 26 DX
+D6  27 22 DX
+D7  22 99 DX
+D8  50 22 DX
+D9  0  14 DX
+D10 12 0  DX
+D11 31 32 DX
+EH  97 98 99    49 1.0
+EN  0  96 0     50 1.0
+* Input offset voltage -|
+EOS 7  1  POLY(1) 16 49 3M 1
+EP  97 0  99    0  1.0
+E1  97 23 99    15 1.0
+E2 18 7 32 97 1E-3
+* Sourcing load +Vs current
+F1  99 0  VA2   1
+* Sinking load -Vs current
+F2  0  50 VA3   1
+F3  13 0  VA1   1
+G1  98 9  5     6  0.1
+G2  98 11 9     49 1U
+G3  98 15 11    49 1U
+* DC CMRR
+G4  98 16 POLY(2) 1 49 2 49 0 3.54E-8 3.54E-8
+G5  99 4  39 45 11.5U
+G6  99 50 39 45 340U
+* Load dependent pole
+L1 19 28 40.4U
+* CMR lead
+L2  16 17 7.95M
+M1  5  2  4     99 MPX
+M2  6  18 4     99 MPX
+M3 41 33 40 40 MN1
+M4 45 41 39 39 MP2
+M5 45 41 40 40 MN3 
+R3  5  50 3.60K
+R4  6  50 3.60K
+R5  98 9  1E7
+R8  42 44 25K
+R9  44 50 25K
+R12 98 11 1E6
+R13 98 17 1K
+* -Rout
+R16 23 24 55
+* +Rout
+R17 23 25 55
+* +Isc slope control
+R18 15 20 1MEG
+* -Isc slope control
+R19 21 15 400K
+R21 98 15 1E6
+R22 19 28 900
+R23 32 97 100K
+R24 99 49 10MEG
+R25 49 50 10MEG
+R26 33 50 20MEG
+R27 39 41 250K
+X 99 42 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01} 
+XS2 22 36 41 49 PSW1 {RON=1 ROFF=1E+8 VON=0.01 VOFF=-0.01}
+.SUBCKT PSW1 1 2 3   4 {RON=1 ROFF=1MEG VON=1 VOFF=0}
+*Connections + - NC+ NC-
+* VON > Voff Case
+* IF VC > VON THEN RS=RON, IF VC < VOFF THEN RS=ROFF, ELSE
+* RS = exp(Lm + 3*Lr*(Vc-Vm)/(2*Vd) - 2*Lr*(Vc-Vm)^3/Vd^3)
+B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
++ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+.ENDS
+VA1 36 19 0V
+VA2 14 13 0V
+VA3 13 12 0V
+V2  97 8  0.66V
+V3  10 96 0.66V
+V4  20 29 0.13V
+V5  30 21 0.13V
+V6  24 26 0.63V
+V7  27 25 0.63V
+V8 31 96 3.6V 
+V9 39 49 1
+V10 49 40 1
+*
+.MODEL DA D    (IS=250E-15)
+.MODEL DB D    (IS=175E-15)
+.MODEL DX D    (IS=100E-15)
+.MODEL MPX PMOS (VTO=-.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MN1 NMOS (VTO=.6 KP=7.0547E-4 GAMMA=1.1)
+.MODEL MP2 PMOS (VTO=0, KP=7.0547E-4)
+.MODEL MN3 NMOS (VTO=0, KP=7.0547E-4)
+.ENDS
+*******

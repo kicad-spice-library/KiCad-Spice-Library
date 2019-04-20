@@ -1,0 +1,345 @@
+**********
+*Motorola ECL SPICE Models 
+*Date:5/4/94
+**********
+*       ECLinPS I/O Modelling Kit - Netlist Schematics         *
+*                                                              *
+*     The purpose of this document is to provide the netlists  *
+* for the various schematics supplied in the ECLinPS I/O SPICE *
+* Modelling Kit Application Note.  This information will save  *
+* design engineers who have no schematic capture tools         *
+* at their disposal the task of producing the SPICE netlists   *
+* for the schematics. To use these netlists it will require    *
+* a copy of the ECLinPS I/O SPICE Modelling Kit application    *
+* note.  This note is required to identify the appropriate     *
+* input and output models for a specific device as well as the *
+* appropriate package model and ESD structure.  In addition a  *
+* copy of this note will help visualize the netlists and ease  *
+* the building of the simulation circuits.  The note also      *
+* provides suggestions on simulating the various ECLinPS and   *
+* ECLinPS Lite devices.                                        *
+************
+*                   Netlist Organization                       *
+*                                                              *
+*     The netlists are organized as a group of subcircuits so  *
+* that the user can simply build a simulation netlist by       *
+* calling the appropriate subcircuit models.  In this way any  *
+* problems associated with commonality in node numbering       *
+* or component naming due to the use of multiple copies of a   *
+* schematic will be eliminated.                                *
+*     There are a group of GLOBAL nodes for the schematics,    *
+* they are as follows:                                         *
+*                                                              *
+*                VCC = Node (100)                              *
+*                VEE = Node (200)                              *
+*                VBB = Node (300)                              *
+*                VCS = Node (400)                              *
+*                                                              *
+* A detailed discussion on these nodes can be found in the     *
+* application note. Notice that the subcircuit models all      *
+* list these nodes in the external node list parameters.       *
+* This will serve to simplify building the individual netlists *
+* into interconnect simulation netlists.                       *
+***********
+*     All of the subcircuits are labeled as to what they rep-  *
+* represent (ie. typical input gate) and are cross referen-    *
+* ced to the figure numbers in the application note.  In       *
+* addition all of the subcircuits list the node numbers for    *
+* the specified inputs and outputs for the cell.  This will    *
+* ease the task of interconnecting the simulation netlist.     *
+* The component labels used in the netlists are identical to   *
+* those on the schematics in the application note.  With the   *
+* simplicity of the models this should allow the user to trace *
+* the netlists back to the schematics.                         *
+*     The output netlists all include the temperature compen-  *
+* sation network circuitry for the 100E style output buffers.  *
+* The components which make up the temperature compensation    *
+* networks  are QT1, QT2 and RTC.  For simulating 10E style    *
+* outputs these components should either be deleted or         *
+* commented out of the subcircuit netlists.                    *
+*   The user may notice that there are four terminals on       *
+* the transistor models.  The fouth terminal represents the    *
+* the connection to the substrate and is always biased to VEE. *
+*                                                              *
+**********
+*                     Subcircuit Netlists                      *
+*                                                              *
+*               Typical Input Gate (Figure 1)                  *
+*                                                              *
+* IN = Node (601) Q = Node (612) QB = Node (611)               *
+**********
+*SRC=TYPIN;TYPIN;ECL;ECLinPS;
+*SYM=TYPIN
+.SUBCKT TYPIN 100 200 300 400 601 612 611
+*connections  Vcc Vee Vbb Vcs In  Q   QB
+Q5 100 2 611 200 TN6
+Q1 2 601 4 200 TN6
+Q9 7 400 8 200 TN6
+Q4 100 3 612 200 TN6
+Q6 611 611 6 200 TN6
+Q8 6 400 9 200 TN6
+Q2 3 300 4 200 TN6
+Q3 4 400 5 200 TN6
+Q7 612 612 7 200 TN6
+RPD 601 200 50K
+R2 1 2 270 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+R4 5 200 325 RMOD
+R1 100 1 250 RMOD
+R3 1 3 270  RMOD
+R5 9 200 650 RMOD
+R6 8 200 650 RMOD
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+*                                                              *
+* IN = Node (602) Q = Node (622) QB = Node (621)               *
+**********
+*SRC=TYPOUT;TYPOUT;ECL;ECLinPS;
+*SYM=TYPIN
+.SUBCKT TYPOUT 100 200 300 400 602 622 621
+*connections   Vcc Vee Vbb Vcs In  Q   QB
+Q2 22 300 23 200 TN13P5
+QT1 22 22 25 200 TN4
+QT2 25 25 22 200 TN4
+Q3 23 400 24 200 TN13P5
+Q1 28 602 23 200 TN13P5
+Q5 100 28 621 200 TNECLIPS
+Q4 100 22 622 200 TNECLIPS
+R1 28 100 300 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+RTC 28 25 180 RMOD
+R3 200 24 130 RMOD
+R2 22 100 300 RMOD
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+*                                                              *
+* IN = Node (603) Qa = Node (632) QaB = Node (631)             *
+* Qb = Node (634) QbB = Node (633)                             *
+**********
+*SRC=MULTIOUT;MULTIOUT;ECL;ECLinPS;
+*SYM=MULTIOUT
+.SUBCKT MULTIOUT 100 200 300 400 603 632 631 634 633
+* connections    Vcc Vee Vbb Vcs In  Qa  QaB Qb  QbB
+Q2b 38 300 36 200 TN13P5
+Q2a 38 300 36 200 TN13P5
+QT1 38 38 37 200 TN4
+QT2 37 37 38 200 TN4
+Q3a 36 400 34 200 TN13P5
+Q3b 36 400 34 200 TN13P5
+Q1a 35 603 36 200 TN13P5
+Q1b 35 603 36 200 TN13P5
+Q7 100 35 633 200 TNECLIPS
+Q6 100 38 634 200 TNECLIPS
+Q5 100 35 631 200 TNECLIPS
+Q4 100 38 632 200 TNECLIPS
+R1 35 100 150 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+RTC 35 37 80 RMOD
+R3 200 34 65 RMOD
+R2 38 100 150 RMOD
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+*                                                              *
+* In = Node (604) BUSB = Node (641)                            *
+**********
+*SRC=BUSOUT;BUSOUT;ECL;ECLinPS;
+*SYM=BUSOUT
+.SUBCKT BUSOUT 100 200 300 400 604 641
+*connections   Vcc Vee Vbb Vcs In  BUSB
+Q2c 41 300 47 200 TN13P5
+Q2b 41 300 47 200 TN13P5
+Q2a 41 300 47 200 TN13P5
+QT1 41 41 43 200 TN4
+Q3c 47 400 48 200 TN13P5
+Q3b 47 400 48 200 TN13P5
+Q1a 40 604 47 200 TN13P5
+Q3d 47 400 48 200 TN13P5
+Q1b 40 604 47 200 TN13P5
+Q1c 40 600447 200 TN13P5
+Q5a 100 40 641 200 TNECLIPS
+Q5b 100 40 641 200 TNECLIPS
+R3 40 44 60 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+R1 44 100 100 RMOD
+RTC 44 43 90 RMOD
+R5 200 48 43 RMOD
+R4 41 42 60 RMOD
+R2 42 100 100 RMOD
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+*                                                              *
+* IN = Node (605) Q = Node (652) QB = Node (651)               *
+**********
+*SRC=2XOUT;2XOUT;ECL;ECLinPS;
+*SYM=TYPIN
+.SUBCKT 2XOUT 100 200 300 400 605 652 651
+*connections  Vcc Vee Vbb Vcs In  Q   QB
+Q2b 53 300 56 200 TN13P5
+Q2a 53 300 56 200 TN13P5
+QT1 53 53 57 200 TN4
+QT2 57 57 53 200 TN4
+Q3a 56 400 52 200 TN13P5
+Q3b 56 400 52 200 TN13P5
+Q1a 51 605 56 200 TN13P5
+Q1b 51 605 56 200 TN13P5
+Q5 100 51 651 200 TNECLIPS
+Q4 100 53 652 200 TNECLIPS
+R1 51 100 150 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+RTC 51 57 80 RMOD
+R3 200 52 65 RMOD
+R2 53 100 150 RMOD
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+*                                                               *
+* IN = Node (606) Q = Node (662) QB = Node (661)                *
+**********
+*SRC=3XOUT;3XOUT;ECL;ECLinPS;
+*SYM=TYPIN
+.SUBCKT 3XOUT 100 200 300 400 606 662 661
+*connections  Vcc Vee Vbb Vcs In  Q   QB
+Q2a 63 300 65 200 TN13P5
+Q2b 63 300 65 200 TN13P5
+Q2c 63 300 65 200 TN13P5
+QT1 63 63 66 200 TN4
+QT2 66 66 63 200 TN4
+Q3a 65 400 64 200 TN13P5
+Q3b 65 400 64 200 TN13P5
+Q1a 60 606 65 200 TN13P5
+Q3c 65 400 64 200 TN13P5
+Q2b 60 606 65 200 TN13P5
+Q3c 60 606 65 200 TN13P5
+Q5 100 60 661 200 TNECLIPS
+Q4 100 63 662 200 TNECLIPS
+R1 60 100 100 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+RTC 60 66 60 RMOD
+R3 200 64 43 RMOD
+R2 63 100 100 RMOD
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+*                                                               *
+*                                                               *
+* ECLinPS Package Model (28-lead PLCC)                          *
+* EXT = Node (84) INT = Node (81)                               *
+**********
+*SRC=PKGTYP;PKGTYP;ECL;ECLinPS;
+*SYM=PKG
+.SUBCKT PKGTYP 84 81
+*TYPICAL PACKAGE MODEL
+CPKG 82 0 1.2PF
+RPKG1 84 82 750
+RPKG2 82 83 750
+RPKG3 83 81 .2
+LPKG1 84 82 2.8NH
+LPKG2 82 83 2.8NH
+.ENDS
+**********
+* ECLinPS Lite Package Model (8-lead SOIC)                      *
+* EXT = Node (88) INT = Node (89)                               *
+**********
+*SRC=PKG8;PKG8;ECL;ECLinPS;
+*SYM=PKG
+.SUBCKT PKG8 88 89
+CPKG 82 0 0.8PF
+RPKG1 88 82 750
+RPKG2 82 83 750
+RPKG3 83 89 .1
+LPKG1 88 82 1.5NH
+LPKG2 82 83 1.5NH
+.ENDS
+**********
+* ECLinPS ESD Structure                                         *
+* IN = Node (90)                                                *
+**********
+*SRC=ESDSTD;ESDSTD;ECL;ECLinPS;
+*SYM=ESD
+.SUBCKT ESDSTD 90 200
+QESD1 90 200 200 200 TN6
+QESD2 90 200 200 200 TN6
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+* ECLinPS Lite ESD Structure                                    *
+* IN = Node (95) OUT = Node (96)                                *
+**********
+*SRC=ESDLITE;ESDLITE;ECL;ECLinPS;
+*SYM=ESD
+.SUBCKT ESDLITE 95 96 100 200
+DESD1 95 100 CBVCC
+DESD2 200 95 CBSUB
+RB 95 96 185 RMOD
+.MODEL RMOD R TC1=.405M TC2=2.6U
+.ENDS
+*INCLUDE ECL2.LIB
+**********
+* SPICE Transistor/Diode Parameters 
+**********
+* 1.75u x 4.0u emitter     C-EB
+.MODEL TN4         NPN
++(IS  = 5.27E-18  BF  = 120   NF  = 1    VAF = 30   IKF = 6.48mA
++ ISE = 2.75E-16  BR  = 10    NE  = 2    VAR =  5   IKR = 567uA
++ IRB =  8.1uA    RB  = 461.6 RBM =142.5 RE  = 21.6 RC  = 83.1
++ CJE = 19.9fF    VJE = .9    MJE = .4              XTB = 0.73
++ CJC = 25.1fF    VJC = .67   MJC = .32  XCJC= .3
++ CJS = 49.6fF    VJS = .6    MJS = .4   FC  = .9
++ TF  = 8pS       TR  = 1nS   XTF = 10   VTF = 1.4V ITF = 17.0mA
++ ISC=0   EG=1.11   XTI=5.2   PTF=0   KF=0   AF=1   NR=1   NC=2)
+**********
+* 1.75u x 4.75u emitter     C-EB
+.MODEL TN4P75      NPN
++(IS  = 6.50E-18  BF  = 120   NF  = 1    VAF = 30   IKF = 8.0mA
++ ISE = 3.40E-16  BR  = 10    NE  = 2    VAR =  5   IKR = 700uA
++ IRB = 10.0uA    RB  = 378.5 RBM =120.0 RE  = 17.5 RC  = 74.0
++ CJE = 23.6fF    VJE = .9    MJE = .4              XTB = 0.73
++ CJC = 27.4fF    VJC = .67   MJC = .32  XCJC= .3
++ CJS = 53.8fF    VJS = .6    MJS = .4   FC  = .9
++ TF  = 8pS       TR  = 1nS   XTF = 10   VTF = 1.4V ITF = 21.0mA
++ ISC=0   EG=1.11   XTI=5.2   PTF=0   KF=0   AF=1   NR=1   NC=2)
+**********
+.MODEL TN6         NPN
++(IS  = 8.56E-18  BF  = 120   NF  = 1    VAF = 30   IKF = 10.5mA
++ ISE = 4.48E-16  BR  = 10    NE  = 2    VAR =  5   IKR = 922uA
++ IRB = 13.2uA    RB  = 291.4 RBM = 95.0 RE  = 13.3 RC  = 62.7
++ CJE = 29.9fF    VJE = .9    MJE = .4              XTB = 0.73
++ CJC = 31.2fF    VJC = .67   MJC = .32  XCJC= .3
++ CJS = 60.9fF    VJS = .6    MJS = .4   FC  = .9
++ TF  = 8pS       TR  = 1nS   XTF = 10   VTF = 1.4V ITF = 27.6mA
++ ISC=0   EG=1.11   XTI=5.2   PTF=0   KF=0   AF=1   NR=1   NC=2)
+* 1.75u x 6.0u emitter     C-EB
+**********
+* 1.75u x 13.5u emitter     C-EB
+.MODEL TN13P5     NPN
++(IS  = 2.09E-17  BF  = 120   NF  = 1    VAF = 30   IKF = 25.7mA
++ ISE = 1.09E-15  BR  = 10    NE  = 2    VAR =  5   IKR = 2.25mA
++ IRB = 32.2uA    RB  = 122.6 RBM = 42.2 RE  = 5.44 RC  = 32.8
++ CJE = 67.4fF    VJE = .9    MJE = .4              XTB = 0.73
++ CJC = 53.8fF    VJC = .67   MJC = .32  XCJC= .3
++ CJS = 103fF     VJS = .6    MJS = .4   FC  = .9
++ TF  = 8pS       TR  = 1nS   XTF = 10   VTF = 1.4V ITF = 67.5mA
++ ISC=0   EG=1.11   XTI=5.2  PTF=0   KF=0   AF=1   NR=1   NC=2)
+**********
+* 6 x 2.00u x 19.0u emitter     6 emitters, double collector
+.MODEL TNECLIPS   NPN
++(IS  = 2.27E-16  BF  = 120   NF  = 1    VAF = 30   IKF = 279mA
++ ISE = 1.19E-14  BR  = 10    NE  = 2    VAR =  5   IKR = 24.4mA
++ IRB =  349uA    RB  = 15.98 RBM = 4.17 RE  = .501 RC  = 11.1
++ CJE = 611fF     VJE = .9    MJE = .4              XTB = 0.73
++ CJC = 440fF     VJC = .67   MJC = .32  XCJC= .3
++ CJS = 668fF     VJS = .6    MJS = .4   FC  = .9
++ TF  = 8pS       TR  = 1nS   XTF = 10   VTF = 1.4V ITF = 733mA
++ ISC=0   EG=1.11   XTI=4.0   PTF=0   KF=0   AF=1   NR=1   NC=2)
+**********
+* ECLinPS Lite ESD Diodes
+.MODEL CBVCC D
++ ( IS = 1.00E-15  CJO = 527fF  Vj = 0.545  M = 0.32  BV = 14.5
++   IBV = 0.1E-6  XTI = 5  TT = 1nS )
+**********
+.MODEL CBSUB D ( IS = 1.00E-15  CJO = 453fF  TT = 1nS )
+**********

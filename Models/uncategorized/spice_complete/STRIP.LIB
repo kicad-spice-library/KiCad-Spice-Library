@@ -1,0 +1,41 @@
+**********
+* Copyright Intusoft 1995-1997
+* All Rights Reserved
+**********
+**********
+*SRC=MSTRIP;MSTRIP;Interconnects;Generic;Microstrip
+*SYM=MSTRIP
+.SUBCKT MSTRIP 1 3 {SIGMA=2.74E-8 D=10U ER=3.7 ER0=8.85P LTH=1 WTH=11U HTH=2U LEN=.16}
+*Generic Model for Microstrip Style Interconnect
+*
+*Geometric Values: 2um thick (hth), 11um wide (wth), 1m long (lth), 
+*and 10um (d) above the ground. 
+*(Note: The subcircuit parameters are shown in parentheses.)
+*Material: aluminum - resistivity (sigma) = 2.74e-8 Ohms-m 
+*Constants: SiO2 dielectric, (er) =3.7, er0 = 8.85p MKS units, u0 = 4e-7 * pi
+*speed of light in free space = v0 = 1/sqrt(u0 * er0) = 2.9986e8 MKS units
+*
+*Line parameter calculations (per meter):
+*Capacitance: parallel plate
+*C = er * er0 * Area1 / d = 3.7 * 8.85p * 11u * 1 / 10u = 36.02e-12 F/m
+*   + 30% (for fringing effects) = 46.8 pF/m
+*
+*C_freespace = C0 = C/er = 46.8p/3.7 = 12.65 pF/m
+*v0 = 2.9986e8 = 1/sqrt(L*C0) => L = 1/(C0 * v02)
+*L = 1/(12.65p * 8.9916e16) = 0.8792 uH/m
+*
+*R = sigma * lth / Area2 = 2.74e-8 * 1 / (11u * 2u) = 1245.45 Ohms/m
+*
+*Transmission line parameters:
+*Nominal z0 = sqrt(L/C) = 137Ohms, td = sqrt(LC) = 6.4ns/m
+*
+*XTMP 2 3 LLINEG {SIGMA=2.74E-8 D=10U ER=3.7 
+*+ ER0=8.85P LTH=1 WTH=11U HTH=2U LEN=.16} ; 16cm line length
+*
+O1 1 0 3 0 LOSSY
+.MODEL LOSSY LTRA rel=1.8 len={LEN}
++ r={SIGMA*LTH/(WTH*HTH)} g=0 ;ohms/m 
++ l={1/(1.3*8.85P*(LTH*WTH)/D*(2.9986E8^2))}H/m
++ c={1.3*ER*8.85P*(LTH*WTH)/D}F/m 
+.ENDS
+**********

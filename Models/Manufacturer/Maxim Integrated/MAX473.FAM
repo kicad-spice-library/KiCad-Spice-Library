@@ -1,0 +1,273 @@
+* MAX473 FAMILY MACROMODELS
+* -------------------------
+** FEATURES:
+* 15V/uS Min Slew Rate 
+* +3V Single-Supply Operation
+* Guaranteed 10MHz Unity-Gain Bandwidth
+* Input Voltage Range Includes Negative Rail
+* Rail-to-Rail output Swing (to within +/-50mV)
+* Available in 8-Pin DIP/SO/uMAX (Single MAX473)
+*              8-Pin DIP/SO (Dual MAX474)
+*             14-Pin DIP/SO (Quad MAX475)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX473         Single, unity-gain-stable,15V/uS SR        
+* MAX474         Dual, rail-to-rail output swing
+* MAX475         Quad, unity-gain-stable, 10MHz GBP
+*
+*
+*   ////////////// MAX473 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX473 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX473 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 20N
+I1 99 4 2E-3
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  134.96
+R2 6 50  134.96
+EOS 1 9 POLY(1) 98 30  .7M 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 109 QX
+Q2 6 9 110 QX
+RDEG1 110 4 134.96
+RDEG2 109 4 134.96
+* Second Pole 
+C4 5 6 8.8E-12
+***************SECOND STAGE******************
+IS 99 50 .1E-3
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 17
+RD2 17 18 17
+RD3 18 19 17
+RD4 19 20 17
+CD1 17 98 17PF
+CD2 18 98 17PF
+CD3 19 98 17PF
+CD4 20 98 17PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 .0074
+R4 12 98 7E6
+*C3 98 12 1.11E-10 
+C3 98 12 .74E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 3.1623E-8
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 40
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.0002U
+RL2 96 97 2
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 .1MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=12500)
+.ENDS
+*
+*   ////////////// MAX474 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX474 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX474 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 20N
+I1 99 4 2E-3
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  134.96
+R2 6 50  134.96
+EOS 1 9 POLY(1) 98 30  .7M 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 109 QX
+Q2 6 9 110 QX
+RDEG1 110 4 134.96
+RDEG2 109 4 134.96
+* Second Pole 
+C4 5 6 8.8E-12
+***************SECOND STAGE******************
+IS 99 50 .1E-3
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 17
+RD2 17 18 17
+RD3 18 19 17
+RD4 19 20 17
+CD1 17 98 17PF
+CD2 18 98 17PF
+CD3 19 98 17PF
+CD4 20 98 17PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 .0074
+R4 12 98 7E6
+*C3 98 12 1.11E-10 
+C3 98 12 .74E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 3.1623E-8
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 40
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.0002U
+RL2 96 97 2
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 .1MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=12500)
+.ENDS
+*
+*   ////////////// MAX475 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX475 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX475 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 20N
+I1 99 4 2E-3
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  134.96
+R2 6 50  134.96
+EOS 1 9 POLY(1) 98 30  .7M 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 109 QX
+Q2 6 9 110 QX
+RDEG1 110 4 134.96
+RDEG2 109 4 134.96
+* Second Pole 
+C4 5 6 8.8E-12
+***************SECOND STAGE******************
+IS 99 50 .1E-3
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 17
+RD2 17 18 17
+RD3 18 19 17
+RD4 19 20 17
+CD1 17 98 17PF
+CD2 18 98 17PF
+CD3 19 98 17PF
+CD4 20 98 17PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 .0074
+R4 12 98 7E6
+*C3 98 12 1.11E-10 
+C3 98 12 .74E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 3.1623E-8
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 40
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.0002U
+RL2 96 97 2
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 .1MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=12500)
+.ENDS

@@ -1,0 +1,57 @@
+**********
+* Copyright Intusoft 1997
+* All Rights Reserved
+**********
+******************
+*SRC=FTUBE;FTUBE;Tubes;Fluorescent;
+*SYM=FLUOR
+* FLUORESCENT TUBE MODEL
+* DEVELOPED BY CHRISTOPHE BASSO
+*
+* LAST MODIFIED: MARCH 9th 97
+*
+.SUBCKT FTUBE 1  2  3  4 {VTHRES=250 VARC=50 ISUS=100M}
+*Connections: F1 F1 F2 F2
+*Parameters:
+* VTHRES = COLD VOLTAGE AT WHICH THE LAMP STRIKES in Volts
+* THIS VALUE DIMINISHES IF CURRENT FIRST FLOWS VIA FILAMENTS
+* VARC = VOLTAGE CORRESPONDING TO THE LAMP ARC VOLTAGE in Volts
+* ISUS = CURRENT UNDER WHICH THE ARC IS STOPPED in Amps
+*
+RDUM1 2 4 100MEG
+VDUM 1 10		   ; Lamp current measurement
+RFIL1 1 20 2.5	   ; Filament resistance 1
+VFIL 20 2		   ; Filament current measurement
+RFIL2 3 4 2.5	   ; Filament resistance 2
+CPAR  1 3 1P	   ; Open-lamp capacitance
+RLEAK 1 3 10MEG	   ; Leakage current
+RNEG 10 11 -0.2	   ; Negative behavior once struck
+DTRK1 12 11 DCLAMP ; Lamp voltage once struck, polar +
+DSRK2 12 16 DCLAMP ; Lamp voltage once struck, polar -
+* RSTK 11 16 190   ; For pure resistive behavior
+CARC 1 16 100P     ; Arc capacitance
+X1 16 3 13 SWITCH
+BARC 15 0 V = ABS(V(1,3)) > {VTHRES} ? 100V : ABS(I(VDUM)) > {ISUS} ? 100V : 
++ ABS(V(1,3)) > V(14) ? 100V : V(19) > 3V ? 100V : 10N
+RDEL 15 13 100
+CDEL 15 13 10P
+* OPERATING VOLTAGE ONCE STRUCK *
+CDIF 13 17 1N
+RDIF 17 0 10K
+BDIF 18 0 V = V(17) > 10 ? 100 : ABS(I(VDUM)) > {ISUS} ? 10 : 0
+RINT 18 19 50K	; time constant approximation
+CINT 19 0 3NF
+* PREHEATING SECTION *
+BPRE 14 0 I = V(14) > {VTHRES/2} ? ABS(I(VFIL)) : 0
+CPRE 14 0 50U IC={VTHRES}
+RDUM2 14 0 100MEG
+.MODEL DCLAMP D BV={VARC}
+.MODEL DDIS D RS=10
+.ENDS
+.SUBCKT SWITCH 1 2 3
+R1 1 2 1E10
+G1 1 2 POLY(2) 1 2 3 0 0 0 0 0 1
+.ENDS
+********
+
+

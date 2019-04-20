@@ -1,0 +1,235 @@
+**********
+* Copyright Intusoft 1996-1997
+* All Rights Reserved
+**********
+*************
+* Capacitor Subcircuit Models
+* For more info see the November 1995/January 1996 Intusoft Newsletters and
+* "SPICE Modeling of Capacitors" by John Prymak. Kemet Electronics Corp.
+* 
+* IMPORTANT NOTE: These models use the key word FREQ in the B element 
+* expression. This capability is only available in IsSpice4 version 7.6
+* or greater
+*************
+* Capacitor Subcircuit Notes
+* Rnom is the minimum resistance at self-resonance (Fres)
+
+* The self resonance is widened out by the 1.5 factor (in the Log expression), 
+* chosen as a best fit to actual data.
+
+* The typical capacitance variation is 10% lot-lot and for ESR 20% within 
+* a lot. ESR lot-lot may be greater.
+
+* Except for NP0 and C0G caps, the bias voltage will have a 
+* suppressive effect on ESR and capacitance.
+
+* Ttest is the temperature of the capacitor. It may also be set to 
+* "TEMP" (= to the .Options TEMP value).
+
+* RCP and CP create a secondary or parallel resonance that represents 
+* a capacitance that shunts the RLC elements due mainly to the capacitance 
+* from the termination faces separated the length of the chip.
+
+* Lx is used to keep the parallel resonance in check and account for the pads.
+* Rx is a resistor that keeps the impedance reasonable at very high frequencies.
+* Rx + Rcp should approach the impedance of free space, 377Ohms. A default value
+* of 150 Ohms has been used but this value should be adjusted to 
+* (377- (1000*Rnom)).
+
+* CP is dependent on the body and chip size.
+
+* Vbias is the dc bias voltage across the capacitor. If the value is not known
+* you should run an operating point analysis to find the value which can then
+* be inserted back into the model.
+
+* The FREQ variable is 0 during the transient (time) analysis. This will
+* tend to make the ESR very high.
+
+* RESR = Rnom * Temperature term * (1 + (Frequency term * Bias term))
+* CNOM = Cnom * Bias term * Temperature term
+**********************
+* Parameters Passed into the capacitor subcircuits
+*************
+* TTest - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* Rnom - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fres - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* VB   - DC bias applied to capacitor in Volts
+* Vnom - the voltage at which the capacitance has declined by -20% in Volts
+* CP   - parallel resonance frequency capacitance = 1/(2pi sqrt(Esl*CP)) in Farads
+* Esl  - Effective series inductance in Henries
+************
+*SRC=CAPX7R;CAPX7R;Capacitors;Ceramic;Generic X7R
+*SYM=CAP2
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CAPX7R 4 5 {TTest=27 Cnom=.1U Rnom=.067 Fres=5MEG VB=0 Vnom=30 CP=1P Esl=2n}
+* TTest - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* Rnom - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fres - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* VB   - DC bias applied to capacitor in Volts
+* Vnom - the voltage at which the capacitance has declined by -20% in Volts
+* CP   - parallel resonance frequency capacitance = 1/(2pi sqrt(Esl*CP)) in Farads
+* Esl  - Effective series inductance in Henries
+RP 1 5 {1000/Cnom * 5^((25-TTest)/100)} ; 1000Ohms-farad/capacitance
+RESR 1 3 R = {Rnom} * {5^((25-TTest)/100)} * (1+10^(Abs(Log({Fres}/(Freq+1m)))-1.5)) * {(1-(VB*0.2/Vnom))}  
+CNOM 6 5 {Cnom * (1-(VB*0.2/Vnom)) * (1-((((TTest-30)/85)^2) * .12))}  
+RCP 1 2 {1000*Rnom} ; parallel resonant RC
+CP 2 5 {CP}
+LESL 3 6 {ESL} ; Esl
+LX 4 1 .1nh ; External_Inductance
+RX 4 1 150 ;  RX + RCP ->> 377Ohms or {377 - (1000*Rnom)}
+.ENDS
+*************
+*SRC=CAPY5V;CAPY5V;Capacitors;Ceramic;Generic Y5V
+*SYM=CAP2
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CAPY5V 4 5 {TTest=27 Cnom=.1U Rnom=.067 Fres=5MEG VB=0 Vnom=30 CP=1P Esl=2n}
+* TTest - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* Rnom - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fres - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* VB   - DC bias applied to capacitor in Volts
+* Vnom - the voltage at which the capacitance has declined by -20% in Volts
+* CP   - parallel resonance frequency capacitance = 1/(2pi sqrt(Esl*CP)) in Farads
+* Esl  - Effective series inductance in Henries
+RP 1 5 {1000/Cnom * 5^((25-TTest)/100)}  ; 1000Ohms-farad/capacitance
+RESR 1 3 R = {Rnom} * {5^((25-TTest)/100)} * (1+10^(Abs(Log({Fres}/(Freq+1m)))-1.5)) * {(1-(VB*0.2/Vnom))}
+CNOM 6 5 {Cnom * (1-(VB*0.2/Vnom)) * (1-((((TTest-15)/70)^2) * .8))}  
+RCP 1 2 {1000*Rnom} ; parallel resonant RC
+CP 2 5 {CP}
+LESL 3 6 {ESL} ; Esl
+LX 4 1 .1nh ; Lead_Inductance
+RX 4 1 150 ;  RX + RCP ->> 377Ohms
+.ENDS
+***********
+*SRC=CAPZ5U;CAPZ5U;Capacitors;Ceramic;Generic Z5U
+*SYM=CAP2
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CAPZ5U 4 5 {TTest=27 Cnom=.1U Rnom=.067 Fres=5MEG VB=0 Vnom=30 CP=1P Esl=2n}
+* TTest - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* Rnom - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fres - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* VB   - DC bias applied to capacitor in Volts
+* Vnom - the voltage at which the capacitance has declined by -20% in Volts
+* CP   - parallel resonance frequency capacitance = 1/(2pi sqrt(Esl*CP)) in Farads
+* Esl  - Effective series inductance in Henries
+RP 1 5 {1000/Cnom * 5^((25-TTest)/100)}  ; 1000Ohms-farad/capacitance
+RESR 1 3 R = {Rnom} * {5^((25-TTest)/100)} * (1+10^(Abs(Log({Fres}/(Freq+1m)))-1.5)) * {(1-(VB*0.2/Vnom))}  
+CNOM 6 5 {Cnom * (1-(VB*0.2/Vnom)) * (1-((((TTest-15)/70)^2) * .8))}  
+RCP 1 2 {1000*Rnom} ; parallel resonant RC
+CP 2 5 {CP}
+LESL 3 6 {ESL} ; Esl
+LX 4 1 .1nh ; Lead_Inductance
+RX 4 1 150 ;  RX + RCP ->> 377Ohms
+.ENDS
+***********
+*SRC=CAPNP0;CAPNP0;Capacitors;Ceramic;Generic NP0
+*SYM=CAP2
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CAPNP0 4 5 {TTest=27 Cnom=.1U Rnom=.067 Fres=5MEG VB=0 Vnom=30 CP=1P Esl=2n}
+* TTest - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* Rnom - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fres - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* VB   - DC bias applied to capacitor in Volts
+* Vnom - the voltage at which the capacitance has declined by -20% in Volts
+* CP   - parallel resonance frequency capacitance = 1/(2pi sqrt(Esl*CP)) in Farads
+* Esl  - Effective series inductance in Henries
+RP 1 5 {1000/Cnom * 5^((25-TTest)/100)} ; 1000Ohms-farad/capacitance
+RESR 1 3 R = {Rnom} * {5^((25-TTest)/100)} * (1+10^(ABS(LOG({Fres}/(freq+1m)))-1.5)) ; no bias effects
+CNOM 6 5 {Cnom * 5^((25-TTest)/100)} ; no bias effects
+RCP 1 2 {1000*Rnom} ; parallel resonant RC
+CP 2 5 {CP}
+LESL 3 6 {ESL} ; Esl
+LX 4 1 .1nh ;  Lead_Inductance
+RX 4 1 150 ;  RX + RCP ->> 377Ohms
+.ENDS
+************
+*SRC=CAPC0G;CAPC0G;Capacitors;Ceramic;Generic C0G
+*SYM=CAP2
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CAPC0G 4 5 {TTest=27 Cnom=.1U Rnom=.067 Fres=5MEG VB=0 Vnom=30 CP=1P Esl=2n}
+* TTest - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* Rnom - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fres - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* VB   - DC bias applied to capacitor in Volts
+* Vnom - the voltage at which the capacitance has declined by -20% in Volts
+* CP   - parallel resonance frequency capacitance = 1/(2pi sqrt(Esl*CP)) in Farads
+* Esl  - Effective series inductance in Henries
+RP 1 5 {1000/Cnom * 5^((25-TTest)/100)} ; 1000Ohms-farad/capacitance
+RESR 1 3 R = {Rnom} * {3^((25-TTest)/100)} * (1+10^(ABS(LOG({Fres}/(freq+1m)))-1.5)) ; no bias effects
+CNOM 6 5 {Cnom} ; no bias or temperature effects
+RCP 1 2 {1000*Rnom} ; parallel resonant RC
+CP 2 5 {CP}
+LESL 3 6 {ESL} ; Esl
+LX 4 1 .1nh ;  Lead_Inductance
+RX 4 1 150 ;  RX + RCP ->> 377Ohms
+.ENDS
+************
+*SRC=CAPX7R1206;CX7R1206;Capacitors;Ceramic;.22uF
+*SYM=CAP2
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CX7R1206 4 5 {TTest=27 Vbias=0} ; X7R 1206 .22uF ceramic cap model
+* TTest - ambient temperature in degrees C
+* VBias - DC bias applied to capacitor in Volts
+RP 1 5 R = 4.5455G * {5^((25-TTest)/100)}
+RESR 1 3 R = .067 * {5^((25-TTest)/100)} * 
++ (1+(10^(Abs(Log(6.38MEG/(Freq+1u)))-1.5) * {(1-(Vbias*0.2/30))}))
+CNOM 6 5 C = .1u * {(1-(Vbias*0.2/30))} * {1-((((TTest-30)/85)^2) * .12)}  
+RCP 1 2 67.0 
+CP 2 5 8.4p
+LESL 3 6 2.83nH
+LX 4 1 .1nH
+.ENDS
+*************
+*SRC=CAPTANT;CAPTANT;Capacitors;Tantalum;Generic
+*SYM=CAPTANT
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT CAPTANT 1 8 {Esl=1n R=.06 Fx=3 Cnom=1u Temp=25} ; Tantalum
+* Temp - ambient temperature in degrees C
+* Cnom - Nominal Capacitance in Farads
+* R - Reistive element close to ESR minimum at self-resonance in Ohms
+* Fx   - self resonance frequency = 1/(2pi sqrt(Esl*Cnom)) in Hz
+* Esl  - Effective series inductance in Henries
+RP 1 8 {1000/Cnom} ; =1000ohm-farad/Cap (in farads)
+CP 1 9 {100 * Cnom*1.03226} ; 100*Cn
+RCP 8 9 {R * 1K} ; typical parallel resonant RC, 1000 * Rnom
+LESL 1 2 {Esl} ; typical effective series inductance
+RS 2 3 R = {R * 4^((25-Temp)/100)} * (1+ (10^({Fx} - Abs(log(Freq))) + 10^(Abs(log(Freq))-7)))
+* Esr = Rt + Rt * (10^(Fx - Abs(log(Freq))) + 10^(Abs(log(Freq))-7))
+C1 3 8 {Cnom*1.03226/32} ; Cn/32
+RC1 3 4 {R * 4^((25-Temp)/100)}
+C2 4 8 {Cnom*1.03226/16} ; Cn/16
+RC2 4 5 {R * 4^((25-Temp)/100)}
+C3 5 8 {Cnom*1.03226/8} ; Cn/8
+RC3 5 6 {R * 4^((25-Temp)/100)}
+C4 6 8 {Cnom*1.03226/4} ; Cn/4
+RC4 6 7 {R * 4^((25-Temp)/100)}
+C5 7 8 {Cnom*1.03226/2} ; Cn/2
+.ENDS
+***********
+*SRC=T491D476M010;T491476;Capacitors;Tantalum;22uF
+*SYM=CAPTANT
+*HELP issyntax.hlp "Capacitor Subcircuit Models - CAP.LIB"
+.SUBCKT T491476 1 8
+*T491D476M010 - 22uF tantalum capacitor model
+RP 1 8 45.455MEG 
+CP 1 9 2.2710M 
+RCP 8 9 60.000  
+LESL 1 2 2.5000N 
+RS 2 3 R = 60M + 60M * (10^(3  - ABS(LOG(FREQ))) + 10^(ABS(LOG(FREQ))-7))
+C1 3 8 709.68N 
+RC 3 4 60.000M
+C2 4 8 1.4194U 
+RC2 4 5 60.000M
+C3 5 8 2.8387U 
+RC3 5 6 60.000M
+C4 6 8 5.6774U 
+RC4 6 7 60.000M
+C5 7 8 11.355U 
+.ENDS
+***************
+

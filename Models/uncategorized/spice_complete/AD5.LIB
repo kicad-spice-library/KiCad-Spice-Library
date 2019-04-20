@@ -1,0 +1,3990 @@
+**********
+* Copyright 1993 by Analog Devices
+**********
+*SRC=AD600;AD600;Opamps;AD-"ADxxx";
+*SYM=AD600
+* AD600 SPICE Macro-model               Rev. A, 2/93
+*                                       ARG / PMI
+* Node assignments
+*                input HI
+*                |  input LO
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |  control HI
+*                |  |  |  |  |  |  control LO
+*                |  |  |  |  |  |  |  gate input
+*                |  |  |  |  |  |  |  |  output common
+*                |  |  |  |  |  |  |  |  |
+.SUBCKT AD600    3  2  99 50 48 40 41 70 12
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+EOS  11   5    POLY(2) 12 2 38 98 100E-6 8.84E-3 8.84E-3
+RCM  12   98   40E3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+E1   7    50   POLY(1) 40 41 2.8 2.4
+E2   13   50   POLY(1) 41 40 2.8 2.4
+RB1  7    29   640
+RB2  29   30   640
+RB3  30   31   640
+RB4  31   32   640
+RB5  32   33   640
+RB6  33   34   640
+RB7  34   13   640
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+RC   40   41   15E6
+CCTL 40   41   10.610E-15
+I1   6    50   1.8E-3
+R1   99   1    243.153
+R2   99   4    243.153
+*
+* GAIN STAGE AND DOMINANT POLE AT 273HZ
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   8    4 1 4.113E-3
+R5   8    98   243.153E6
+C1   8    98   24E-13
+V1   99   9    2.7
+V2   10   50   2.7
+D1   8    9    DX
+D2   10   8    DX
+*
+* POLE AT 100MHZ
+*
+G5   98   35   8 98 1E-6
+R11  35   98   1E6
+C2   35   98   1.592E-15
+*
+* POLE AT 100MHZ
+*
+G6   98   36   35 98 1E-6
+R12  36   98   1E6
+C4   36   98   1.592E-15
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 200KHZ
+*
+ECM  37   98   5 98 1
+R13  37   38   71.536
+R14  38   98   1
+C5   37   38   11.124E-9
+*
+* POLE AT 200MHZ
+*
+G3   98   45   36 98 1E-6
+R10  45   98   1E6
+C3   45   98   .796E-15
+RGAT 70   98   30E3
+MSW  45   71   98   50   MSWITCH W=100U L=10U
+EGAT 71   98   POLY(1) 70 98 -5 3
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1) 99 50 -11E-3 1.1E-3
+FSY  99   50   POLY(2) V7 V8 18.9E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99   99 45 250E-3
+GO2  50   48   45 50 250E-3
+V4   48   46   -.516
+V5   47   48   -.516
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44   48 45 250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF   11   48   2.242E3
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=1000)
+.MODEL MSWITCH NMOS(VTO=2 KP=20)
+.ENDS
+**********
+*SRC=AD600J;AD600J;Opamps;AD-"ADxxx";
+*SYM=AD600
+* AD600J SPICE Macro-model              Rev. A, 2/93
+*                                       ARG / PMI
+* Node assignments
+*                input HI
+*                |  input LO
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |  control HI
+*                |  |  |  |  |  |  control LO
+*                |  |  |  |  |  |  |  gate input
+*                |  |  |  |  |  |  |  |  output common
+*                |  |  |  |  |  |  |  |  |
+.SUBCKT AD600J   3  2  99 50 48 40 41 70 12
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+EOS  11   5    POLY(2) 12 2 38 98 420E-6 8.84E-3 8.84E-3
+RCM  12   98   40E3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+E1   7    50   POLY(1) 40 41 2.8 2.4
+E2   13   50   POLY(1) 41 40 2.8 2.4
+RB1  7    29   640
+RB2  29   30   640
+RB3  30   31   640
+RB4  31   32   640
+RB5  32   33   640
+RB6  33   34   640
+RB7  34   13   640
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+RC   40   41   15E6
+CCTL 40   41   10.610E-15
+I1   6    50   1.8E-3
+R1   99   1    243.153
+R2   99   4    243.153
+*
+* GAIN STAGE AND DOMINANT POLE AT 273HZ
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   8    4 1 4.113E-3
+R5   8    98   243.153E6
+C1   8    98   24E-13
+V1   99   9    3.2
+V2   10   50   3.2
+D1   8    9    DX
+D2   10   8    DX
+*
+* POLE AT 100MHZ
+*
+G5   98   35   8 98 1E-6
+R11  35   98   1E6
+C2   35   98   1.592E-15
+*
+* POLE AT 100MHZ
+*
+G6   98   36   35 98 1E-6
+R12  36   98   1E6
+C4   36   98   1.592E-15
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 200KHZ
+*
+ECM  37   98   5 98 1
+R13  37   38   71.536
+R14  38   98   1
+C5   37   38   11.124E-9
+*
+* POLE AT 200MHZ
+*
+G3   98   45   36 98 1E-6
+R10  45   98   1E6
+C3   45   98   .796E-15
+RGAT 70   98   30E3
+MSW  45   71   98   50   MSWITCH W=100U L=10U
+EGAT 71   98   POLY(1) 70 98 -5 3
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1) 99 50 -11E-3 1.1E-3
+FSY  99   50   POLY(2) V7 V8 21.2E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99   99 45 250E-3
+GO2  50   48   45 50 250E-3
+V4   48   46   -.516
+V5   47   48   -.516
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44   48 45 250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF   11   48   2.242E3
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=1000)
+.MODEL MSWITCH NMOS(VTO=2 KP=20)
+.ENDS
+**********
+*SRC=AD602;AD602;Opamps;AD-"ADxxx";
+*SYM=AD600
+* AD602 SPICE Macro-model               Rev. A, 2/93
+*                                       ARG / PMI
+* Node assignments
+*                input HI
+*                |  input LO
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |  control HI
+*                |  |  |  |  |  |  control LO
+*                |  |  |  |  |  |  |  gate input
+*                |  |  |  |  |  |  |  |  output common
+*                |  |  |  |  |  |  |  |  |
+.SUBCKT AD602    3  2  99 50 48 40 41 70 12
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+EOS  11   5    POLY(2) 12 2 38 98 135E-6 8.84E-3 8.84E-3
+RCM  12   98   40E3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+E1   7    50   POLY(1) 40 41 2.8 2.4
+E2   13   50   POLY(1) 41 40 2.8 2.4
+RB1  7    29   640
+RB2  29   30   640
+RB3  30   31   640
+RB4  31   32   640
+RB5  32   33   640
+RB6  33   34   640
+RB7  34   13   640
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+RC   40   41   15E6
+CCTL 40   41   10.610E-15
+I1   6    50   1.8E-3
+R1   99   1    243.153
+R2   99   4    243.153
+*
+* GAIN STAGE AND DOMINANT POLE AT 87HZ
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   8    4 1 4.113E-3
+R5   8    98   243.153E6
+C1   8    98   75E-13
+V1   99   9    2.7
+V2   10   50   2.7
+D1   8    9    DX
+D2   10   8    DX
+*
+* POLE AT 100MHZ
+*
+G5   98   35   8 98 1E-6
+R11  35   98   1E6
+C2   35   98   1.592E-15
+*
+* POLE AT 100MHZ
+*
+G6   98   36   35 98 1E-6
+R12  36   98   1E6
+C4   36   98   1.592E-15
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 1MHZ
+*
+ECM  37   98   5 98 1
+R13  37   38   71.536
+R14  38   98   1
+C5   37   38   2.225E-9
+*
+* POLE AT 200MHZ
+*
+G3   98   45   36 98 1E-6
+R10  45   98   1E6
+C3   45   98   .796E-15
+RGAT 70   98   30E3
+MSW  45   71   98   50   MSWITCH W=100U L=10U
+EGAT 71   98   POLY(1) 70 98 -5 3
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1) 99 50 -11E-3 1.1E-3
+FSY  99   50   POLY(2) V7 V8 18.9E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99   99 45 250E-3
+GO2  50   48   45 50 250E-3
+V4   48   46   -.516
+V5   47   48   -.516
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44   48 45 250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF   11   48   695.37
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=1000)
+.MODEL MSWITCH NMOS(VTO=2 KP=20)
+.ENDS
+**********
+*SRC=AD602J;AD602J;Opamps;AD-"ADxxx";
+*SYM=AD600
+* AD602J SPICE Macro-model              Rev. A, 2/93
+*                                       ARG / PMI
+* Node assignments
+*                input HI
+*                |  input LO
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |  control HI
+*                |  |  |  |  |  |  control LO
+*                |  |  |  |  |  |  |  gate input
+*                |  |  |  |  |  |  |  |  output common
+*                |  |  |  |  |  |  |  |  |
+.SUBCKT AD602J   3  2  99 50 48 40 41 70 12
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+EOS  11   5    POLY(2) 12 2 38 98 820E-6 8.84E-3 8.84E-3
+RCM  12   98   40E3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+E1   7    50   POLY(1) 40 41 2.8 2.4
+E2   13   50   POLY(1) 41 40 2.8 2.4
+RB1  7    29   640
+RB2  29   30   640
+RB3  30   31   640
+RB4  31   32   640
+RB5  32   33   640
+RB6  33   34   640
+RB7  34   13   640
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+RC   40   41   15E6
+CCTL 40   41   10.610E-15
+I1   6    50   1.8E-3
+R1   99   1    243.153
+R2   99   4    243.153
+*
+* GAIN STAGE AND DOMINANT POLE AT 87HZ
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   8    4 1 4.113E-3
+R5   8    98   243.153E6
+C1   8    98   75E-13
+V1   99   9    3.2
+V2   10   50   3.2
+D1   8    9    DX
+D2   10   8    DX
+*
+* POLE AT 100MHZ
+*
+G5   98   35   8 98 1E-6
+R11  35   98   1E6
+C2   35   98   1.592E-15
+*
+* POLE AT 100MHZ
+*
+G6   98   36   35 98 1E-6
+R12  36   98   1E6
+C4   36   98   1.592E-15
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 1MHZ
+*
+ECM  37   98   5 98 1
+R13  37   38   71.536
+R14  38   98   1
+C5   37   38   2.225E-9
+*
+* POLE AT 200MHZ
+*
+G3   98   45   36 98 1E-6
+R10  45   98   1E6
+C3   45   98   .796E-15
+RGAT 70   98   30E3
+MSW  45   71   98   50   MSWITCH W=100U L=10U
+EGAT 71   98   POLY(1) 70 98 -5 3
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1) 99 50 -11E-3 1.1E-3
+FSY  99   50   POLY(2) V7 V8 21.2E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99   99 45 250E-3
+GO2  50   48   45 50 250E-3
+V4   48   46   -.516
+V5   47   48   -.516
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44   48 45 250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF   11   48   695.37
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=1000)
+.MODEL MSWITCH NMOS(VTO=2 KP=20)
+.ENDS
+**********
+*SRC=AD780;AD780;Opamps;AD-"ADxxx";
+*SYM=AD780
+* AD780 SPICE Macromodel 5/93, Rev. A
+* AAG / PMI
+*
+*  NODE NUMBERS
+*              VIN
+*              |  TEMP
+*              |  |  GND
+*              |  |  |  TRIM
+*              |  |  |  |  VOUT
+*              |  |  |  |  |  RANGE
+*              |  |  |  |  |  |
+.SUBCKT AD780  2  3  4  5  6  8
+*
+* BANDGAP REFERENCE
+*
+I1 4 40 DC 1.21417E-3
+R1 40 4 1E3 RMOD
+.MODEL RMOD R TC1=3E-6
+EN 10 40 42 0 1
+G1 4 10 2 4 4.85668E-9
+F1 4 10 POLY(2) VS1 VS2 0 2.42834E-5 3.8E-5
+Q1 2 10 11 QT
+I2 11 4 DC 12.84E-6
+R2 11 3 1E3
+I3 3 4 DC 0
+*
+* NOISE VOLTAGE GENERATOR
+*
+VN1 41 0 DC 2
+DN1 41 42 DEN
+DN2 42 43 DEN
+VN2 0 43 DC 2
+*
+* INTERNAL OP AMP
+*
+G2 4 12 10 20 1.93522E-4
+R3 12 4 2.5837E9
+C1 12 4 6.8444E-11
+D1 12 13 DX
+V1 2 13 DC 1.2
+*
+* SECONDARY POLE @ 508 kHz
+*
+G3 4 14 12 4 1E-6
+R4 14 4 1E6
+C2 14 4 3.1831E-13
+*
+* OUTPUT STAGE
+*
+ISY 2 4 4.3282E-4
+FSY 2 4 V1 -1
+RSY 2 4 500E3
+*
+G4 4 15 14 4 25E-6
+R5 15 4 40E3
+Q2 4 15 16 QP
+I4 2 16 DC 100E-6
+Q3 4 16 18 QP
+R6 18 23 15
+R7 16 21 150E3
+R8 2 17 34.6
+Q4 17 16 19 QN
+R9 21 20 6.46E3
+R10 20 4 6.1E3
+R11 20 5 53E3
+R12 20 8 15.6E3
+I5 5 4 DC 0
+I6 8 4 DC 0
+VS1 21 19 DC 0
+VS2 23 21 DC 0
+L1 21 6 1E-7
+*
+* OUTPUT CURRENT LIMIT
+*
+FSC 15 4 VSC 1
+VSC 2 22 DC 0
+QSC 22 2 17 QN
+*
+.MODEL QT NPN(IS=1.53E-16 BF=1E4)
+.MODEL QN NPN(IS=1E-15 BF=1E3)
+.MODEL QP PNP(IS=1E-15 BF=1E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DEN D(IS=1E-12 RS=2.425E+05 AF=1 KF=6.969E-16)
+.ENDS
+**********
+*SRC=AD780A;AD780A;Opamps;AD-"ADxxx";
+*SYM=AD780
+* AD780A SPICE Macromodel 5/93, Rev. A
+* AAG / PMI
+*
+*  NODE NUMBERS
+*              VIN
+*               |  TEMP
+*               |  |  GND
+*               |  |  |  TRIM
+*               |  |  |  |  VOUT
+*               |  |  |  |  |  RANGE
+*               |  |  |  |  |  |
+.SUBCKT AD780A  2  3  4  5  6  8
+*
+* BANDGAP REFERENCE
+*
+I1 4 40 DC 1.21174E-3
+R1 40 4 1E3 RMOD
+.MODEL RMOD R TC1=7E-6
+EN 10 40 42 0 1
+G1 4 10 2 4 4.85668E-9
+F1 4 10 POLY(2) VS1 VS2 0 2.42834E-5 3.8E-5
+Q1 2 10 11 QT
+I2 11 4 DC 12.84E-6
+R2 11 3 1E3
+I3 3 4 DC 0
+*
+* NOISE VOLTAGE GENERATOR
+*
+VN1 41 0 DC 2
+DN1 41 42 DEN
+DN2 42 43 DEN
+VN2 0 43 DC 2
+*
+* INTERNAL OP AMP
+*
+G2 4 12 10 20 1.93522E-4
+R3 12 4 2.5837E9
+C1 12 4 6.8444E-11
+D1 12 13 DX
+V1 2 13 DC 1.2
+*
+* SECONDARY POLE @ 508 kHz
+*
+G3 4 14 12 4 1E-6
+R4 14 4 1E6
+C2 14 4 3.1831E-13
+*
+* OUTPUT STAGE
+*
+ISY 2 4 6.8282E-4
+FSY 2 4 V1 -1
+RSY 2 4 500E3
+*
+G4 4 15 14 4 25E-6
+R5 15 4 40E3
+Q2 4 15 16 QP
+I4 2 16 DC 100E-6
+Q3 4 16 18 QP
+R6 18 23 15
+R7 16 21 150E3
+R8 2 17 34.6
+Q4 17 16 19 QN
+R9 21 20 6.46E3
+R10 20 4 6.1E3
+R11 20 5 53E3
+R12 20 8 15.6E3
+I5 5 4 DC 0
+I6 8 4 DC 0
+VS1 21 19 DC 0
+VS2 23 21 DC 0
+L1 21 6 1E-7
+*
+* OUTPUT CURRENT LIMIT
+*
+FSC 15 4 VSC 1
+VSC 2 22 DC 0
+QSC 22 2 17 QN
+*
+.MODEL QT NPN(IS=1.68E-16 BF=1E4)
+.MODEL QN NPN(IS=1E-15 BF=1E3)
+.MODEL QP PNP(IS=1E-15 BF=1E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DEN D(IS=1E-12 RS=2.425E+05 AF=1 KF=6.969E-16)
+.ENDS
+**********
+*SRC=AD780B;AD780B;Opamps;AD-"ADxxx";
+*SYM=AD780
+* AD780B SPICE Macromodel 5/93, Rev. A
+* AAG / PMI
+*
+*  NODE NUMBERS
+*              VIN
+*               |  TEMP
+*               |  |  GND
+*               |  |  |  TRIM
+*               |  |  |  |  VOUT
+*               |  |  |  |  |  RANGE
+*               |  |  |  |  |  |
+.SUBCKT AD780B  2  3  4  5  6  8
+*
+* BANDGAP REFERENCE
+*
+I1 4 40 DC 1.21369E-3
+R1 40 4 1E3 RMOD
+.MODEL RMOD R TC1=3E-6
+EN 10 40 42 0 1
+G1 4 10 2 4 4.85668E-9
+F1 4 10 POLY(2) VS1 VS2 0 2.42834E-5 3.8E-5
+Q1 2 10 11 QT
+I2 11 4 DC 12.84E-6
+R2 11 3 1E3
+I3 3 4 DC 0
+*
+* NOISE VOLTAGE GENERATOR
+*
+VN1 41 0 DC 2
+DN1 41 42 DEN
+DN2 42 43 DEN
+VN2 0 43 DC 2
+*
+* INTERNAL OP AMP
+*
+G2 4 12 10 20 1.93522E-4
+R3 12 4 2.5837E9
+C1 12 4 6.8444E-11
+D1 12 13 DX
+V1 2 13 DC 1.2
+*
+* SECONDARY POLE @ 508 kHz
+*
+G3 4 14 12 4 1E-6
+R4 14 4 1E6
+C2 14 4 3.1831E-13
+*
+* OUTPUT STAGE
+*
+ISY 2 4 6.8282E-4
+FSY 2 4 V1 -1
+RSY 2 4 500E3
+*
+G4 4 15 14 4 25E-6
+R5 15 4 40E3
+Q2 4 15 16 QP
+I4 2 16 DC 100E-6
+Q3 4 16 18 QP
+R6 18 23 15
+R7 16 21 150E3
+R8 2 17 34.6
+Q4 17 16 19 QN
+R9 21 20 6.46E3
+R10 20 4 6.1E3
+R11 20 5 53E3
+R12 20 8 15.6E3
+I5 5 4 DC 0
+I6 8 4 DC 0
+VS1 21 19 DC 0
+VS2 23 21 DC 0
+L1 21 6 1E-7
+*
+* OUTPUT CURRENT LIMIT
+*
+FSC 15 4 VSC 1
+VSC 2 22 DC 0
+QSC 22 2 17 QN
+*
+.MODEL QT NPN(IS=1.56E-16 BF=1E4)
+.MODEL QN NPN(IS=1E-15 BF=1E3)
+.MODEL QP PNP(IS=1E-15 BF=1E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DEN D(IS=1E-12 RS=2.425E+05 AF=1 KF=6.969E-16)
+.ENDS
+**********
+*SRC=AD780S;AD780S;Opamps;AD-"ADxxx";
+*SYM=AD780
+* AD780S SPICE Macromodel 5/93, Rev. A
+* AAG / PMI
+*
+*  NODE NUMBERS
+*              VIN
+*               |  TEMP
+*               |  |  GND
+*               |  |  |  TRIM
+*               |  |  |  |  VOUT
+*               |  |  |  |  |  RANGE
+*               |  |  |  |  |  |
+.SUBCKT AD780S  2  3  4  5  6  8
+*
+* BANDGAP REFERENCE
+*
+I1 4 40 DC 1.21174E-3
+R1 40 4 1E3 RMOD
+.MODEL RMOD R TC1=20E-6
+EN 10 40 42 0 1
+G1 4 10 2 4 4.85668E-9
+F1 4 10 POLY(2) VS1 VS2 0 2.42834E-5 7.6E-5
+Q1 2 10 11 QT
+I2 11 4 DC 12.84E-6
+R2 11 3 1E3
+I3 3 4 DC 0
+*
+* NOISE VOLTAGE GENERATOR
+*
+VN1 41 0 DC 2
+DN1 41 42 DEN
+DN2 42 43 DEN
+VN2 0 43 DC 2
+*
+* INTERNAL OP AMP
+*
+G2 4 12 10 20 1.93522E-4
+R3 12 4 2.5837E9
+C1 12 4 6.8444E-11
+D1 12 13 DX
+V1 2 13 DC 1.2
+*
+* SECONDARY POLE @ 508 kHz
+*
+G3 4 14 12 4 1E-6
+R4 14 4 1E6
+C2 14 4 3.1831E-13
+*
+* OUTPUT STAGE
+*
+ISY 2 4 9.8282E-4
+FSY 2 4 V1 -1
+RSY 2 4 500E3
+*
+G4 4 15 14 4 25E-6
+R5 15 4 40E3
+Q2 4 15 16 QP
+I4 2 16 DC 100E-6
+Q3 4 16 18 QP
+R6 18 23 15
+R7 16 21 150E3
+R8 2 17 34.6
+Q4 17 16 19 QN
+R9 21 20 6.46E3
+R10 20 4 6.1E3
+R11 20 5 53E3
+R12 20 8 15.6E3
+I5 5 4 DC 0
+I6 8 4 DC 0
+VS1 21 19 DC 0
+VS2 23 21 DC 0
+L1 21 6 1E-7
+*
+* OUTPUT CURRENT LIMIT
+*
+FSC 15 4 VSC 1
+VSC 2 22 DC 0
+QSC 22 2 17 QN
+*
+.MODEL QT NPN(IS=1.68E-16 BF=1E4)
+.MODEL QN NPN(IS=1E-15 BF=1E3)
+.MODEL QP PNP(IS=1E-15 BF=1E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DEN D(IS=1E-12 RS=2.425E+05 AF=1 KF=6.969E-16)
+.ENDS
+**********
+*SRC=AD817;AD817;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD817 SPICE Macro-model               Rev. A, 11/92
+*                                       ARG / ADI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD817    2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 160MHZ
+*
+I1   8    50   1E-3
+Q1   4    1    6    QN
+Q2   5    3    7    QN
+CIN  1    2    1.5PF
+R1   99   4    1.188K
+R2   99   5    1.188K
+C1   4    5    4.187E-13
+R3   6    8    1.137K
+R4   7    8    1.137K
+IOS  1    2    12.5E-9
+EOS  3    2    POLY(1) 15 98 0.5E-3 10
+*
+* GAIN STAGE AND DOMINANT POLE AT 8.8KHZ
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   9    4 5 .8415E-3
+R5   9    98   5.942E6
+C2   9    98   3.045E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   1.83
+V2   11   50   1.83
+*
+* COMMON MODE STAGE WITH ZERO AT 3.16KHZ
+*
+ECM  14   98   POLY(2) 1 98 2 98 0 0.5 0.5
+R7   14   15   1E6
+C4   14   15   5.036E-11
+R8   15   98   1
+*
+*POLE AT 120MHZ
+*
+GP2  98   31   9 98 1E-6
+RP2  31   98   1E6
+CP2  31   98   1.326E-15
+*
+*ZERO AT 60MHZ
+*
+EZ1  32   98   31 98 1E6
+RZ1  32   33   1E6   
+RZ2  33   98   1
+CZ1  32   33   2.65E-15
+*
+*ZERO AT 100MHZ
+*
+EZ2  34   98   33 98 1E6
+RZ3  34   35   1E6
+RZ4  35   98   1
+CZ2  34   35   1.59E-15
+*
+*POLE AT 120MHZ
+*
+GP3  98   36   35 98 1E-6
+RP3  36   98   1E6
+CP3  36   98   1.326E-15
+*
+*POLE AT 160MHZ
+*
+GP10  98   40   36 98 1E-6
+RP10  40   98   1E6
+CP10  40   98   .995E-15
+*
+* OUTPUT STAGE
+*
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+GSY  99   50   99 50 7.692E-6
+FSY  99   50   POLY(2) V7 V8 5.77E-3  1  1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.04
+V6   42   40   0.04
+LO   45   46   .06E-9
+*
+* MODELS USED
+*
+.MODEL DX D
+.MODEL QN NPN(BF=151.52)
+.ENDS
+**********
+*SRC=AD817A;AD817A;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD817A SPICE Macro-model              Rev. A  11/92
+*                                       ARG / ADI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD817A   2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 160MHZ
+*
+I1   8    50   1E-3
+Q1   4    1    6    QN
+Q2   5    3    7    QN
+CIN  1    2    1.5PF
+R1   99   4    1.085K
+R2   99   5    1.085K
+C1   4    5    4.187E-13
+R3   6    8    1.033K
+R4   7    8    1.033K
+IOS  1    2    100E-9
+EOS  3    2    POLY(1) 15 98 2E-3 50.119
+*
+* GAIN STAGE AND DOMINANT POLE AT 8.8KHZ
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   9    4 5 .922E-3
+R5   9    98   4.341E6
+C2   9    98   3.333E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   2.43
+V2   11   50   2.43
+*
+* COMMON MODE STAGE WITH ZERO AT 15.849KHZ
+*
+ECM  14   98   POLY(2) 1 98 2 98 0 0.5 0.5
+R7   14   15   1E6
+C4   14   15   10.042E-12
+R8   15   98   1
+*
+*POLE AT 120MHZ
+*
+GP2  98   31   9 98 1E-6
+RP2  31   98   1E6
+CP2  31   98   1.326E-15
+*
+*ZERO AT 60MHZ
+*
+EZ1  32   98   31 98 1E6
+RZ1  32   33   1E6   
+RZ2  33   98   1
+CZ1  32   33   2.65E-15
+*
+*ZERO AT 100MHZ
+*
+EZ2  34   98   33 98 1E6
+RZ3  34   35   1E6
+RZ4  35   98   1
+CZ2  34   35   1.59E-15
+*
+*POLE AT 120MHZ
+*
+GP3  98   36   35 98 1E-6
+RP3  36   98   1E6
+CP3  36   98   1.326E-15
+*
+*POLE AT 160MHZ
+*
+GP10  98   40   36 98 1E-6
+RP10  40   98   1E6
+CP10  40   98   .995E-15
+*
+* OUTPUT STAGE
+*
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC  0
+V8   98   62   DC  0
+GSY  99   50   99 50 7.692E-6
+FSY  99   50   POLY(2) V7 V8 6.27E-3  1  1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.04
+V6   42   40   0.04
+LO   45   46   .06E-9
+*
+* MODELS USED
+*
+.MODEL DX D
+.MODEL QN NPN(BF=75.758)
+.ENDS
+**********
+*SRC=AD818;AD818;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD818 SPICE Model                     Rev. A, 4/93
+*                                       ARG / PMI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD818    2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 400MHZ
+*
+I1   4    50   1E-3
+CIN  1    2    1.5E-12
+IOS  2    1    12.5E-9
+Q1   5    1    7    QN
+Q2   6    3    8    QN
+R3   99   5    833
+R4   99   6    833
+R5   7    4    782
+R6   8    4    782
+C1   5    6    239E-15
+EOS  3    2    POLY(1) 13 98 500E-6 0.1
+*
+* GAIN STAGE AND DOMINANT POLE AT 10.6KHZ
+*
+EREF 98   0    39 0 1
+G1   98   9    5 6 1.2E-3
+R7   9    98   7.5E6
+C2   9    98   2E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   1.8
+V2   11   50   1.8
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 100HZ
+*
+ECM  12   98   POLY(2) 1 39 2 39 0 0.5 0.5
+R8   12   13   1E6
+R9   13   98   10
+C3   12   13   1.592E-9
+*
+* NEGATIVE ZERO AT 150MHZ
+*
+E1   14   98   9 39 1E6
+R11  14   15   1
+R12  15   98   1E-6
+FNZ  14   15   VNZ -1
+ENZ  16   98   14 15 1
+VNZ  17   98   DC 0
+CNZ  16   17   1.061E-9
+*
+* ZERO/POLE AT 20MHZ/25MHZ
+*
+E2   18   98   15 39 1.25
+R13  18   19   1
+R14  19   98   4
+C5   18   19   7.958E-9
+*
+* POLE AT 400MHZ
+*
+G2   98   40   19 39 1E-6
+R10  40   98   1E6
+C4   40   98   .398E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   65E3
+RS2  39   50   65E3
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 5.77E-3 1 1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.18
+V6   42   40   0.18
+LO   45   46   5E-8
+.MODEL QN NPN(BF=151.52)
+.MODEL DX D
+.ENDS
+**********
+*SRC=AD818A;AD818A;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD818A SPICE Model                    Rev. A, 4/93
+*                                       ARG / PMI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD818A   2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 400MHZ
+*
+I1   4    50   1E-3
+CIN  1    2    1.5E-12
+IOS  2    1    100E-9
+Q1   5    1    7    QN
+Q2   6    3    8    QN
+R3   99   5    750
+R4   99   6    750
+R5   7    4    698
+R6   8    4    698
+C1   5    6    239E-15
+EOS  3    2    POLY(1) 13 98 2E-3 5
+*
+* GAIN STAGE AND DOMINANT POLE AT 15.9KHZ
+*
+EREF 98   0    39 0 1
+G1   98   9    5 6 1.333E-3
+R7   9    98   4.5E6
+C2   9    98   2.222E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   2.2
+V2   11   50   2.2
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 5KHZ
+*
+ECM  12   98   POLY(2) 1 39 2 39 0 0.5 0.5
+R8   12   13   1E6
+R9   13   98   10
+C3   12   13   31.831E-9
+*
+* NEGATIVE ZERO AT 150MHZ
+*
+E1   14   98   9 39 1E6
+R11  14   15   1
+R12  15   98   1E-6
+FNZ  14   15   VNZ -1
+ENZ  16   98   14 15 1
+VNZ  17   98   DC 0
+CNZ  16   17   1.061E-9
+*
+* ZERO/POLE AT 20MHZ/25MHZ
+*
+E2   18   98   15 39 1.25
+R13  18   19   1
+R14  19   98   4
+C5   18   19   7.958E-9
+*
+* POLE AT 400MHZ
+*
+G2   98   40   19 39 1E-6
+R10  40   98   1E6
+C4   40   98   .398E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   65E3
+RS2  39   50   65E3
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 6.27E-3 1 1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.18
+V6   42   40   0.18
+LO   45   46   5E-8
+.MODEL QN NPN(BF=75.758)
+.MODEL DX D
+.ENDS
+**********
+*SRC=AD826;AD826;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD826 SPICE Macro-model               Rev. A, 11/92
+*                                       ARG / ADI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD826    2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 160MHZ
+*
+I1   8    50   1E-3
+Q1   4    1    6    QN
+Q2   5    3    7    QN
+CD   1    2    1.5E-12
+CC1  1    0    2.4E-12
+CC2  2    0    2.4E-12
+R1   99   4    1.114E3
+R2   99   5    1.114E3
+C1   4    5    .446E-12
+R3   6    8    1.062E3
+R4   7    8    1.062E3
+IOS  1    2    25E-9
+EOS  3    2    POLY(1) 15 39 0.5E-3 .1
+*
+* GAIN STAGE AND DOMINANT POLE AT 8.333KHZ
+*
+EREF 98   0    39 0 1
+G1   98   9    4 5 .898E-3
+R5   9    98   6.685E6
+C2   9    98   2.857E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   1.83
+V2   11   50   1.83
+*
+* COMMON MODE STAGE WITH ZERO AT 316HZ
+*
+ECM  14   98   POLY(2) 1 39 2 39 0 0.5 0.5
+R7   14   15   1E6
+C4   14   15   503.3E-12
+R8   15   98   10
+*
+*POLE AT 120MHZ
+*
+GP2  98   31   9 39 1E-6
+RP2  31   98   1E6
+CP2  31   98   1.326E-15
+*
+*ZERO AT 75MHZ
+*
+EZ1  32   98   31 39 1E6
+RZ1  32   33   1E6   
+RZ2  33   98   1
+CZ1  32   33   2.12E-15
+*
+*ZERO AT 100MHZ
+*
+EZ2  34   98   33 39 1E6
+RZ3  34   35   1E6
+RZ4  35   98   1
+CZ2  34   35   1.59E-15
+*
+*POLE AT 160MHZ
+*
+GP3  98   36   35 39 1E-6
+RP3  36   98   1E6
+CP3  36   98   .995E-15
+*
+*POLE AT 160MHZ
+*
+GP10 98   40   36 39 1E-6
+RP10 40   98   1E6
+CP10 40   98   .995E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   65.217E3
+RS2  39   50   65.217E3
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 5.77E-3 1 1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   .4
+V6   42   40   .4
+LO   45   46   .06E-9
+*
+* MODELS USED
+*
+.MODEL DX D(IS=1E-12)
+.MODEL QN NPN(BF=150.52)
+.ENDS
+**********
+*SRC=AD826A;AD826A;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD826A SPICE Macro-model              Rev. A, 11/92
+*                                       ARG / ADI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD826A   2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 160MHZ
+*
+I1   8    50   1E-3
+Q1   4    1    6    QN
+Q2   5    3    7    QN
+CD   1    2    1.5E-12
+CC1  1    0    2.4E-12
+CC2  2    0    2.4E-12
+R1   99   4    955
+R2   99   5    955
+C1   4    5    .521E-12
+R3   6    8    903
+R4   7    8    903
+IOS  1    2   150E-9
+EOS  3    2    POLY(1) 15 39 2E-3 5
+*
+* GAIN STAGE AND DOMINANT POLE AT 12.5KHZ
+*
+EREF 98   0    39 0 1
+G1   98   9    4 5 1.047E-3
+R5   9    98   3.820E6
+C2   9    98   3.333E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   2.25
+V2   11   50   2.25
+*
+* COMMON MODE STAGE WITH ZERO AT 15.811KHZ
+*
+ECM  14   98   POLY(2) 1 39 2 39 0 0.5 0.5
+R7   14   15   1E6
+C4   14   15   10.066E-12
+R8   15   98   10
+*
+*POLE AT 120MHZ
+*
+GP2  98   31   9 39 1E-6
+RP2  31   98   1E6
+CP2  31   98   1.326E-15
+*
+*ZERO AT 75MHZ
+*
+EZ1  32   98   31 39 1E6
+RZ1  32   33   1E6   
+RZ2  33   98   1
+CZ1  32   33   2.12E-15
+*
+*ZERO AT 100MHZ
+*
+EZ2  34   98   33 39 1E6
+RZ3  34   35   1E6
+RZ4  35   98   1
+CZ2  34   35   1.59E-15
+*
+*POLE AT 160MHZ
+*
+GP3  98   36   35 39 1E-6
+RP3  36   98   1E6
+CP3  36   98   .995E-15
+*
+*POLE AT 160MHZ
+*
+GP10 98   40   36 39 1E-6
+RP10 40   98   1E6
+CP10 40   98   .995E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   20.548E3
+RS2  39   50   20.548E3
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 5.77E-3 1 1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.4
+V6   42   40   0.4
+LO   45   46   .06E-9
+*
+* MODELS USED
+*
+.MODEL DX D(IS=1E-12)
+.MODEL QN NPN(BF=74.76)
+.ENDS
+**********
+*SRC=AD828;AD828;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD828 SPICE Model                     Rev. A, 4/93
+*                                       ARG / PMI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD828    2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 500MHZ
+*
+I1   4    50   1E-3
+CIN  1    2    1.5E-12
+CC1  1    0    .5E-12
+CC2  2    0    .5E-12
+IOS  2    1    25E-9
+Q1   5    1    7    QN
+Q2   6    3    8    QN
+R3   99   5    884
+R4   99   6    884
+R5   7    4    832
+R6   8    4    832
+C1   5    6    180E-15
+EOS  3    2    POLY(1) 21 98 500E-6 0.1
+*
+* GAIN STAGE AND DOMINANT POLE AT 10KHZ
+*
+EREF 98   0    39 0 1
+G1   98   9    5 6 1.131E-3
+R7   9    98   7.958E6
+C2   9    98   2E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   1.8
+V2   11   50   1.8
+*
+* NEGATIVE ZERO AT 150MHZ
+*
+E1   14   98   9 39 1E6
+R11  14   15   1
+R12  15   98   1E-6
+FNZ  14   15   VNZ -1
+ENZ  16   98   14 15 1
+VNZ  17   98   DC 0
+CNZ  16   17   1.061E-9
+*
+* ZERO/POLE AT 60MHZ/75MHZ
+*
+E2   18   98   15 39 1.25
+R13  18   19   1
+R14  19   98   4
+C5   18   19   2.653E-9
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 100HZ
+*
+ECM  20   98   POLY(2) 1 39 2 39 0 0.5 0.5
+R8   20   21   1E6
+R9   21   98   10
+C3   20   21   1.592E-9
+*
+* POLE AT 400MHZ
+*
+G2   98   40   19 39 1E-6
+R10  40   98   1E6
+C4   40   98   .398E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   65E3
+RS2  39   50   65E3
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 5.77E-3 1 1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.4
+V6   42   40   0.4
+LO   45   46   5E-8
+.MODEL QN NPN(BF=150.52)
+.MODEL DX D(IS=1E-12)
+.ENDS
+**********
+*SRC=AD828A;AD828A;Opamps;AD-"ADxxx";
+*SYM=ADOPAMP
+* AD828A SPICE Model                    Rev. A, 4/93
+*                                       ARG / PMI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD828A   2  1  99 50 46
+*
+* INPUT STAGE AND POLE AT 500MHZ
+*
+I1   4    50   1E-3
+CIN  1    2    1.5E-12
+CC1  1    0    .5E-12
+CC2  2    0    .5E-12
+IOS  2    1    150E-9
+Q1   5    1    7    QN
+Q2   6    3    8    QN
+R3   99   5    796
+R4   99   6    796
+R5   7    4    744
+R6   8    4    744
+C1   5    6    200E-15
+EOS  3    2    POLY(1) 21 98 2E-3 0.5
+*
+* GAIN STAGE AND DOMINANT POLE AT 15KHZ
+*
+EREF 98   0    39 0 1
+G1   98   9    5 6 1.257E-3
+R7   9    98   4.775E6
+C2   9    98   2.222E-12
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   2.4
+V2   11   50   2.4
+*
+* NEGATIVE ZERO AT 150MHZ
+*
+E1   14   98   9 39 1E6
+R11  14   15   1
+R12  15   98   1E-6
+FNZ  14   15   VNZ -1
+ENZ  16   98   14 15 1
+VNZ  17   98   DC 0
+CNZ  16   17   1.061E-9
+*
+* ZERO/POLE AT 60MHZ/75MHZ
+*
+E2   18   98   15 39 1.25
+R13  18   19   1
+R14  19   98   4
+C5   18   19   2.653E-9
+*
+* COMMON MODE GAIN STAGE WITH ZERO AT 5KHZ
+*
+ECM  20   98   POLY(2) 1 39 2 39 0 0.5 0.5
+R8   20   21   1E6
+R9   21   98   100
+C3   20   21   31.831E-12
+*
+* POLE AT 400MHZ
+*
+G2   98   40   19 39 1E-6
+R10  40   98   1E6
+C4   40   98   .398E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   20.548E3
+RS2  39   50   20.548E3
+RO1  99   45   16
+RO2  45   50   16
+G7   45   99   99 40 62.5E-3
+G8   50   45   40 50 62.5E-3
+G9   98   60   45 40 62.5E-3
+D7   60   61   DX
+D8   62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 5.77E-3 1 1
+D9   41   45   DX
+D10  45   42   DX
+V5   40   41   0.4
+V6   42   40   0.4
+LO   45   46   5E-8
+.MODEL QN NPN(BF=74.76)
+.MODEL DX D(IS=1E-12)
+.ENDS
+**********
+*SRC=AD830;AD830;Opamps;AD-"ADxxx";
+*SYM=AD830
+* AD830  SPICE Macro-model                  5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                X1 input
+*                | X2 input
+*                | | Y1 input
+*                | | | Y2 input
+*                | | | | negative supply
+*                | | | | | output
+*                | | | | | | positive supply
+*                | | | | | | |
+.SUBCKT AD830    1 2 3 4 5 7 8
+*
+* X1-X2 INPUT STAGE
+*
+Q1   17  1   9   QX
+Q2   18  11  10  QX
+R1   9   12  1100
+R2   10  12  1100
+I1   12  5   2E-3
+EOS1 2   11  POLY(1) 31 98  1.5E-3  1
+IOS1 1   2   0.5E-7
+C1   1   2   2E-12
+RD1  1   2   1.93E6
+*
+* Y1-Y2 INPUT STAGE
+*
+Q3   17  3   14  QX
+Q4   18  13  15  QX
+R3   14  16  1100
+R4   15  16  1100
+I2   16  5   2.02E-3
+VOS2 4   13  1.5E-3
+IOS2 3   4   0.5E-7
+C2   3   4   2E-12
+RD2  3   4   1.93E6
+*
+VC1  32  17  DC  0.4
+VC2  33  18  DC  0.4
+D7   8   32  DX
+D8   8   33  DX
+*
+EREF 98  0   24  0  1
+*
+* TRANSCONDUCTANCE STAGE & DOMINANT POLE AT 17.9 KHZ
+*
+R7   19  98  2.46E6
+C3   19  98  3.62E-12
+F1   98  19  POLY(2)  VC1  VC2  0   1   -1
+V2   8   20  1.7
+V3   21  5   1.7
+D1   19  20  DX
+D2   21  19  DX
+*
+* POLE AT 250 MHZ
+*
+R6   22  98   1E6
+C4   22  98   637E-18
+G2   98  22   19  98  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 100 KHZ
+*
+R10  30  31   1E6
+R11  31  98   1
+C7   30  31   3.18E-12
+E3   98  30   POLY(2)  1 98 2 98  0  5  5
+*
+* POLE AT 200 MHZ
+*
+R12  23 98   1E6
+C8   23 98   796E-18
+G4   98 23   22  98  1E-6
+*
+* OUTPUT STAGE
+*
+R13  24  8   500E3
+R14  24  5   500E3
+FSY  8   5   POLY(2) V7 V8 10E-3 1 1
+R15  29  8   34
+R16  29  5   34
+L1   29  7   6E-10
+G7   29  8   8  23  2.94E-2
+G8   5  29   23  5  2.94E-2
+V4   25 29   0.74
+V5   29 26   0.74
+D3   23 25   DX
+D4   26 23   DX
+G5   98 70   29 23 2.94E-2
+D5   70 71   DX
+D6   72 70   DX
+V7   71 98   DC 0
+V8   98 72   DC 0
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=202)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=AD830A;AD830A;Opamps;AD-"ADxxx";
+*SYM=AD830
+* AD830A SPICE Macro-model                  5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                X1 input
+*                | X2 input
+*                | | Y1 input
+*                | | | Y2 input
+*                | | | | negative supply
+*                | | | | | output
+*                | | | | | | positive supply
+*                | | | | | | |
+.SUBCKT AD830A   1 2 3 4 5 7 8
+*
+* X1-X2 INPUT STAGE
+*
+Q1   17  1   9   QX
+Q2   18  11  10  QX
+R1   9   12  1000
+R2   10  12  1000
+I1   12  5   2E-3
+EOS1 2   11  POLY(1) 31 98  3E-3  1
+IOS1 1   2   5E-7
+C1   1   2   2E-12
+*
+* Y1-Y2 INPUT STAGE
+*
+Q3   17  3   14  QX
+Q4   18  13  15  QX
+R3   14  16  1000
+R4   15  16  1000
+I2   16  5   2.02E-3
+VOS2 4   13  3E-3
+IOS2 3   4   5E-7
+C2   3   4   2E-12
+*
+VC1  32  17  DC  0.4
+VC2  33  18  DC  0.4
+D7   8   32  DX
+D8   8   33  DX
+*
+EREF 98  0   24  0  1
+*
+* TRANSCONDUCTANCE STAGE & DOMINANT POLE AT 25.3 KHZ
+*
+R7   19  98  1.58E6
+C3   19  98  3.98E-12
+F1   98  19  POLY(2)  VC1  VC2  0   1   -1
+V2   8   20  3.6
+V3   21  5   3.6
+D1   19  20  DX
+D2   21  19  DX
+*
+* POLE AT 250 MHZ
+*
+R6   22  98   1E6
+C4   22  98   637E-18
+G2   98  22   19  98  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 160 KHZ
+*
+R10  30  31   316E3
+R11  31  98   1
+C7   30  31   3.18E-12
+E3   98  30   POLY(2)  1 98 2 98  0  5  5
+*
+* POLE AT 200 MHZ
+*
+R12  23 98   1E6
+C8   23 98   796E-18
+G4   98 23   22  98  1E-6
+*
+* OUTPUT STAGE
+*
+R13  24  8   500E3
+R14  24  5   500E3
+FSY  8   5   POLY(2) V7 V8 13E-3 1 1
+R15  29  8   34
+R16  29  5   34
+L1   29  7   6E-10
+G7   29  8   8  23  2.94E-2
+G8   5  29   23  5  2.94E-2
+V4   25 29   0.74
+V5   29 26   0.74
+D3   23 25   DX
+D4   26 23   DX
+G5   98 70   29 23 2.94E-2
+D5   70 71   DX
+D6   72 70   DX
+V7   71 98   DC 0
+V8   98 72   DC 0
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=105)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=AD830J;AD830J;Opamps;AD-"ADxxx";
+*SYM=AD830
+* AD830J SPICE Macro-model                  5/93  Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                X1 input
+*                | X2 input
+*                | | Y1 input
+*                | | | Y2 input
+*                | | | | negative supply
+*                | | | | | output
+*                | | | | | | positive supply
+*                | | | | | | |
+.SUBCKT AD830J   1 2 3 4 5 7 8
+*
+* X1-X2 INPUT STAGE
+*
+Q1   17  1   9   QX
+Q2   18  11  10  QX
+R1   9   12  1000
+R2   10  12  1000
+I1   12  5   2E-3
+EOS1 2   11  POLY(1) 31 98  3E-3  1
+IOS1 1   2   5E-7
+C1   1   2   2E-12
+*
+* Y1-Y2 INPUT STAGE
+*
+Q3   17  3   14  QX
+Q4   18  13  15  QX
+R3   14  16  1000
+R4   15  16  1000
+I2   16  5   2.02E-3
+VOS2 4   13  3E-3
+IOS2 3   4   5E-7
+C2   3   4   2E-12
+*
+VC1  32  17  DC  0.4
+VC2  33  18  DC  0.4
+D7   8   32  DX
+D8   8   33  DX
+*
+EREF 98  0   24  0  1
+*
+* TRANSCONDUCTANCE STAGE & DOMINANT POLE AT 25.3 KHZ
+*
+R7   19  98  1.58E6
+C3   19  98  3.98E-12
+F1   98  19  POLY(2)  VC1  VC2  0   1   -1
+V2   8   20  3.6
+V3   21  5   3.6
+D1   19  20  DX
+D2   21  19  DX
+*
+* POLE AT 250 MHZ
+*
+R6   22  98   1E6
+C4   22  98   637E-18
+G2   98  22   19  98  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 160 KHZ
+*
+R10  30  31   316E3
+R11  31  98   1
+C7   30  31   3.18E-12
+E3   98  30   POLY(2)  1 98 2 98  0  5  5
+*
+* POLE AT 200 MHZ
+*
+R12  23 98   1E6
+C8   23 98   796E-18
+G4   98 23   22  98  1E-6
+*
+* OUTPUT STAGE
+*
+R13  24  8   500E3
+R14  24  5   500E3
+FSY  8   5   POLY(2) V7 V8 13E-3 1 1
+R15  29  8   34
+R16  29  5   34
+L1   29  7   6E-10
+G7   29  8   8  23  2.94E-2
+G8   5  29   23  5  2.94E-2
+V4   25 29   0.74
+V5   29 26   0.74
+D3   23 25   DX
+D4   26 23   DX
+G5   98 70   29 23 2.94E-2
+D5   70 71   DX
+D6   72 70   DX
+V7   71 98   DC 0
+V8   98 72   DC 0
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=105)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=AD830S;AD830S;Opamps;AD-"ADxxx";
+*SYM=AD830
+* AD830S SPICE Macro-model                  5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                X1 input
+*                | X2 input
+*                | | Y1 input
+*                | | | Y2 input
+*                | | | | negative supply
+*                | | | | | output
+*                | | | | | | positive supply
+*                | | | | | | |
+.SUBCKT AD830S   1 2 3 4 5 7 8
+*
+* X1-X2 INPUT STAGE
+*
+Q1   17  1   9   QX
+Q2   18  11  10  QX
+R1   9   12  1000
+R2   10  12  1000
+I1   12  5   2E-3
+EOS1 2   11  POLY(1) 31 98  3E-3  1
+IOS1 1   2   5E-7
+C1   1   2   2E-12
+*
+* Y1-Y2 INPUT STAGE
+*
+Q3   17  3   14  QX
+Q4   18  13  15  QX
+R3   14  16  1000
+R4   15  16  1000
+I2   16  5   2.02E-3
+VOS2 4   13  3E-3
+IOS2 3   4   5E-7
+C2   3   4   2E-12
+*
+VC1  32  17  DC  0.4
+VC2  33  18  DC  0.4
+D7   8   32  DX
+D8   8   33  DX
+*
+EREF 98  0   24  0  1
+*
+* TRANSCONDUCTANCE STAGE & DOMINANT POLE AT 25.3 KHZ
+*
+R7   19  98  1.58E6
+C3   19  98  3.98E-12
+F1   98  19  POLY(2)  VC1  VC2  0   1   -1
+V2   8   20  3.6
+V3   21  5   3.6
+D1   19  20  DX
+D2   21  19  DX
+*
+* POLE AT 250 MHZ
+*
+R6   22  98   1E6
+C4   22  98   637E-18
+G2   98  22   19  98  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 160 KHZ
+*
+R10  30  31   316E3
+R11  31  98   1
+C7   30  31   3.18E-12
+E3   98  30   POLY(2)  1 98 2 98  0  5  5
+*
+* POLE AT 200 MHZ
+*
+R12  23 98   1E6
+C8   23 98   796E-18
+G4   98 23   22  98  1E-6
+*
+* OUTPUT STAGE
+*
+R13  24  8   500E3
+R14  24  5   500E3
+FSY  8   5   POLY(2) V7 V8 13E-3 1 1
+R15  29  8   34
+R16  29  5   34
+L1   29  7   6E-10
+G7   29  8   8  23  2.94E-2
+G8   5  29   23  5  2.94E-2
+V4   25 29   0.74
+V5   29 26   0.74
+D3   23 25   DX
+D4   26 23   DX
+G5   98 70   29 23 2.94E-2
+D5   70 71   DX
+D6   72 70   DX
+V7   71 98   DC 0
+V8   98 72   DC 0
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=105)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=ADG411;ADG411;Analog Switch;Analog Devices;
+*SYM=ADSWIT1
+* ADG411  SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG411   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=90E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=70E-6
+IL1   1   5   5E-9
+C1    20  4   40P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=2000E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=1000E-6
+EPN1  24  4   21  4   1
+ECN1  25  4   13  21  1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   0.04E-9
+I2    13  2   0.04E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=90E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=70E-6
+IL2   16  5   5E-9
+C3    30  4   40P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=2000E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=1000E-6
+EPN2  34  4   31  4   1
+ECN2  35  4   13  31  1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  0.04E-9
+I4    13  15  0.04E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=90E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=70E-6
+IL3   9   5   5E-9
+C5    40  4   40P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=2000E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=1000E-6
+EPN3  44  4   41  4   1
+ECN3  45  4   13  41  1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  0.04E-9
+I6    13  10  0.04E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=90E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=70E-6
+IL4   8   5   5E-9
+C7    50  4   40P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=2000E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=1000E-6
+EPN4  54  4   51  4   1
+ECN4  55  4   13  51  1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   0.04E-9
+I8    13  7   0.04E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.ENDS
+**********
+*SRC=ADG411B;ADG411B;Analog Switch;Analog Devices;
+*SYM=ADSWIT1
+* ADG411B SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG411B  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=100E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=70E-6
+IL1   1   5   500E-9
+C1    20  4   70P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=650E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=300E-6
+EPN1  24  4   21  4   1
+ECN1  25  4   13  21  1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   20E-9
+I2    13  2   20E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=100E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=70E-6
+IL2   16  5   500E-9
+C3    30  4   70P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=650E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=300E-6
+EPN2  34  4   31  4   1
+ECN2  35  4   13  31  1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  20E-9
+I4    13  15  20E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=100E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=70E-6
+IL3   9   5   500E-9
+C5    40  4   70P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=650E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=300E-6
+EPN3  44  4   41  4   1
+ECN3  45  4   13  41  1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  20E-9
+I6    13  10  20E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=100E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=70E-6
+IL4   8   5   500E-9
+C7    50  4   70P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=650E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=300E-6
+EPN4  54  4   51  4   1
+ECN4  55  4   13  51  1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   20E-9
+I8    13  7   20E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+IDD   13  4    5E-6
+IL    12  5    5E-6
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.ENDS
+**********
+*SRC=ADG411T;ADG411T;Analog Switch;Analog Devices;
+*SYM=ADSWIT1
+* ADG411T SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG411T  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=100E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=70E-6
+IL1   1   5   500E-9
+C1    20  4   70P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=650E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=300E-6
+EPN1  24  4   21  4   1
+ECN1  25  4   13  21  1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   20E-9
+I2    13  2   20E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=100E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=70E-6
+IL2   16  5   500E-9
+C3    30  4   70P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=650E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=300E-6
+EPN2  34  4   31  4   1
+ECN2  35  4   13  31  1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  20E-9
+I4    13  15  20E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=100E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=70E-6
+IL3   9   5   500E-9
+C5    40  4   70P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=650E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=300E-6
+EPN3  44  4   41  4   1
+ECN3  45  4   13  41  1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  20E-9
+I6    13  10  20E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=100E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=70E-6
+IL4   8   5   500E-9
+C7    50  4   70P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=650E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=300E-6
+EPN4  54  4   51  4   1
+ECN4  55  4   13  51  1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   20E-9
+I8    13  7   20E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+IDD   13  4    5E-6
+IL    12  5    5E-6
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.ENDS
+**********
+*SRC=ADG412;ADG412;Analog Switch;Analog Devices;
+*SYM=ADSWIT2
+* ADG412  SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG412   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=110E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=55E-6
+IL1   1   5   5E-9
+C1    20  4   40P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=2000E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=1000E-6
+EPN1  24  13  21  4   -1
+ECN1  25  13  13  21  -1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   0.04E-9
+I2    13  2   0.04E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=110E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=55E-6
+IL2   16  5   5E-9
+C3    30  4   40P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=2000E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=1000E-6
+EPN2  34  13  31  4   -1
+ECN2  35  13  13  31  -1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  0.04E-9
+I4    13  15  0.04E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=110E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=55E-6
+IL3   9   5   5E-9
+C5    40  4   40P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=2000E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=1000E-6
+EPN3  44  13  41  4   -1
+ECN3  45  13  13  41  -1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  0.04E-9
+I6    13  10  0.04E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=110E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=55E-6
+IL4   8   5   5E-9
+C7    50  4   40P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=2000E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=1000E-6
+EPN4  54  13  51  4   -1
+ECN4  55  13  13  51  -1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   0.04E-9
+I8    13  7   0.04E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.ENDS
+**********
+*SRC=ADG412B;ADG412B;Analog Switch;Analog Devices;
+*SYM=ADSWIT2
+* ADG412B SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG412B  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=110E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=55E-6
+IL1   1   5   500E-9
+C1    20  4   65P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=650E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=300E-6
+EPN1  24  13  21  4   -1
+ECN1  25  13  13  21  -1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   20E-9
+I2    13  2   20E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=110E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=55E-6
+IL2   16  5   500E-9
+C3    30  4   65P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=650E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=300E-6
+EPN2  34  13  31  4   -1
+ECN2  35  13  13  31  -1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  20E-9
+I4    13  15  20E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=110E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=55E-6
+IL3   9   5   500E-9
+C5    40  4   65P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=650E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=300E-6
+EPN3  44  13  41  4   -1
+ECN3  45  13  13  41  -1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  20E-9
+I6    13  10  20E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=110E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=55E-6
+IL4   8   5   500E-9
+C7    50  4   65P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=650E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=300E-6
+EPN4  54  13  51  4   -1
+ECN4  55  13  13  51  -1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   20E-9
+I8    13  7   20E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+IDD   13  4    5E-6
+IL    12  5    5E-6
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=0.1 RS=0.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.ENDS
+**********
+*SRC=ADG412T;ADG412T;Analog Switch;Analog Devices;
+*SYM=ADSWIT2
+* ADG412T SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG412T  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=110E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=55E-6
+IL1   1   5   500E-9
+C1    20  4   65P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=650E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=300E-6
+EPN1  24  13  21  4   -1
+ECN1  25  13  13  21  -1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   20E-9
+I2    13  2   20E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=110E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=55E-6
+IL2   16  5   500E-9
+C3    30  4   65P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=650E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=300E-6
+EPN2  34  13  31  4   -1
+ECN2  35  13  13  31  -1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  20E-9
+I4    13  15  20E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=110E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=55E-6
+IL3   9   5   500E-9
+C5    40  4   65P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=650E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=300E-6
+EPN3  44  13  41  4   -1
+ECN3  45  13  13  41  -1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  20E-9
+I6    13  10  20E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=110E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=55E-6
+IL4   8   5   500E-9
+C7    50  4   65P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=650E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=300E-6
+EPN4  54  13  51  4   -1
+ECN4  55  13  13  51  -1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   20E-9
+I8    13  7   20E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+IDD   13  4    5E-6
+IL    12  5    5E-6
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=0.1 RS=0.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.ENDS
+**********
+*SRC=ADG413;ADG413;Analog Switch;Analog Devices;
+*SYM=ADSWIT1
+* ADG413  SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG413   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=110E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=55E-6
+IL1   1   5   5E-9
+C1    20  4   40P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=2000E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=1000E-6
+EPN1  24  13  21  4   -1
+ECN1  25  13  13  21  -1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   0.04E-9
+I2    13  2   0.04E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=90E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=70E-6
+IL2   16  5   5E-9
+C3    30  4   40P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=2000E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=1000E-6
+EPN2  34  4   31  4   1
+ECN2  35  4   13  31  1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  0.04E-9
+I4    13  15  0.04E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=90E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=70E-6
+IL3   9   5   5E-9
+C5    40  4   40P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=2000E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=1000E-6
+EPN3  44  4   41  4   1
+ECN3  45  4   13  41  1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  0.04E-9
+I6    13  10  0.04E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=110E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=55E-6
+IL4   8   5   5E-9
+C7    50  4   40P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=2000E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=1000E-6
+EPN4  54  13  51  4   -1
+ECN4  55  13  13  51  -1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   0.04E-9
+I8    13  7   0.04E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=ADG413B;ADG413B;Analog Switch;Analog Devices;
+*SYM=ADSWIT1
+* ADG413B SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG413B  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=110E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=55E-6
+IL1   1   5   500E-9
+C1    20  4   65P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=650E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=300E-6
+EPN1  24  13  21  4   -1
+ECN1  25  13  13  21  -1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   20E-9
+I2    13  2   20E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=100E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=70E-6
+IL2   16  5   500E-9
+C3    30  4   70P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=650E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=300E-6
+EPN2  34  4   31  4   1
+ECN2  35  4   13  31  1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  20E-9
+I4    13  15  20E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=100E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=70E-6
+IL3   9   5   500E-9
+C5    40  4   70P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=650E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=300E-6
+EPN3  44  4   41  4   1
+ECN3  45  4   13  41  1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  20E-9
+I6    13  10  20E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=110E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=55E-6
+IL4   8   5   500E-9
+C7    50  4   65P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=650E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=300E-6
+EPN4  54  13  51  4   -1
+ECN4  55  13  13  51  -1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   20E-9
+I8    13  7   20E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+IDD   13  4    5E-6
+IL    12  5    5E-6
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=ADG413T;ADG413T;Analog Switch;Analog Devices;
+*SYM=ADSWIT2
+* ADG413T SPICE Macro-model                 5/93, Rev. A
+*                                           JCB / PMI
+* Node assignments
+*                IN1 
+*                | D1
+*                | | S1
+*                | | | VSS
+*                | | | | GND
+*                | | | | | S4
+*                | | | | | | D4
+*                | | | | | | | IN4
+*                | | | | | | | | IN3
+*                | | | | | | | | | D3
+*                | | | | | | | | | |  S3
+*                | | | | | | | | | |  |  VL
+*                | | | | | | | | | |  |  |  VDD
+*                | | | | | | | | | |  |  |  |  S2
+*                | | | | | | | | | |  |  |  |  |  D2
+*                | | | | | | | | | |  |  |  |  |  |  IN2
+*                | | | | | | | | | |  |  |  |  |  |  |
+.SUBCKT ADG413T  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+*
+* SWITCH 1
+*
+MP1   20  1   12  12  PCNTRL  L=6E-6 W=110E-6
+MN1   20  1   5   5   NCNTRL  L=6E-6 W=55E-6
+IL1   1   5   500E-9
+C1    20  4   65P
+MP2   21  22  13  13  PCNTRL  L=6E-6 W=20E-6
+MN2   21  22  4   4   NCNTRL  L=6E-6 W=20E-6
+C2    21  4   20P
+E1    22  26  POLY(2) 20 5 12 5 0 9 -4.5
+E2    26  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP3   2   24  3   13   PSW  L=6E-6 W=650E-6
+MN3   2   25  3   4    NSW  L=6E-6 W=300E-6
+EPN1  24  13  21  4   -1
+ECN1  25  13  13  21  -1
+CS1   3   5   7.4E-12
+CD1   2   5   7.4E-12
+CSD1  2   3   1.3E-12
+I1    13  3   20E-9
+I2    13  2   20E-9
+*
+* SWITCH 2
+*
+MP4   30  16  12  12  PCNTRL  L=6E-6 W=100E-6
+MN4   30  16  5   5   NCNTRL  L=6E-6 W=70E-6
+IL2   16  5   500E-9
+C3    30  4   70P
+MP5   31  32  13  13  PCNTRL  L=6E-6 W=20E-6
+MN5   31  32  4   4   NCNTRL  L=6E-6 W=20E-6
+C4    31  4   20P
+E3    32  36  POLY(2) 30 5 12 5 0 9 -4.5
+E4    36  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP6   15  34  14  13   PSW  L=6E-6 W=650E-6
+MN6   15  35  14  4    NSW  L=6E-6 W=300E-6
+EPN2  34  4   31  4   1
+ECN2  35  4   13  31  1
+CS2   14  5   7.4E-12
+CD2   15  5   7.4E-12
+CSD2  15  14  1.3E-12
+I3    13  14  20E-9
+I4    13  15  20E-9
+*
+* SWITCH 3
+*
+MP7   40  9   12  12  PCNTRL  L=6E-6 W=100E-6
+MN7   40  9   5   5   NCNTRL  L=6E-6 W=70E-6
+IL3   9   5   500E-9
+C5    40  4   70P
+MP8   41  42  13  13  PCNTRL  L=6E-6 W=20E-6
+MN8   41  42  4   4   NCNTRL  L=6E-6 W=20E-6
+C6    41  4   20P
+E5    42  46  POLY(2) 40 5 12 5 0 9 -4.5
+E6    46  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP9   10  44  11  13   PSW  L=6E-6 W=650E-6
+MN9   10  45  11  4    NSW  L=6E-6 W=300E-6
+EPN3  44  4   41  4   1
+ECN3  45  4   13  41  1
+CS3   11  5   7.4E-12
+CD3   10  5   7.4E-12
+CSD3  10  11  1.3E-12
+I5    13  11  20E-9
+I6    13  10  20E-9
+*
+* SWITCH 4
+*
+MP10  50  8   12  12  PCNTRL  L=6E-6 W=110E-6
+MN10  50  8   5   5   NCNTRL  L=6E-6 W=55E-6
+IL4   8   5   500E-9
+C7    50  4   65P
+MP11  51  52  13  13  PCNTRL  L=6E-6 W=20E-6
+MN11  51  52  4   4   NCNTRL  L=6E-6 W=20E-6
+C8    51  4   20P
+E7    52  56  POLY(2) 50 5 12 5 0 9 -4.5
+E8    56  0   POLY(2) 13 0 4 0 0 0.5 0.5
+MP12  7   54  6   13   PSW  L=6E-6 W=650E-6
+MN12  7   55  6   4    NSW  L=6E-6 W=300E-6
+EPN4  54  13  51  4   -1
+ECN4  55  13  13  51  -1
+CS4   6   5   7.4E-12
+CD4   7   5   7.4E-12
+CSD4  7   6   1.3E-12
+I7    13  6   20E-9
+I8    13  7   20E-9
+*
+* CROSSTALK CAPACITORS
+*
+CS12  3   14   0.09E-12
+CD12  2   15   0.09E-12
+CS13  3   11   0.09E-12
+CD13  2   10   0.09E-12
+CS14  3   6    0.09E-12
+CD14  2   7    0.09E-12
+CS23  14  11   0.09E-12
+CD23  15  10   0.09E-12
+CS24  14  6    0.09E-12
+CD24  15  7    0.09E-12
+CS34  11  6    0.09E-12
+CD34  10  7    0.09E-12
+*
+IDD   13  4    5E-6
+IL    12  5    5E-6
+*
+.MODEL  PCNTRL  PMOS(VTO=-2 RD=0.1 RS=0.1)
+.MODEL  NCNTRL  NMOS(VTO=1 RD=.1 RS=.1)
+.MODEL  PSW     PMOS(LEVEL=1 GAMMA=0.3772 PHI=0.5 RS=1
++ UO=242.3 TOX=100E-9 LAMBDA=0.2 CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12 CJ=120E-12
++ CJSW=597E-6 JS=3.2E-6 KF=1E-30 AF=1)
+.MODEL  NSW     NMOS(LEVEL=1  GAMMA=1.432 PHI=0.7 RS=5
++ UO=577.7 TOX=100E-9 LAMBDA=1E-6  CGSO=172.6E-12 
++ CGDO=172.6E-12 CGBO=69.1E-12  CJ=170E-6
++ CJSW=298E-6 JS=2.7E-6  KF=3.6E-29 AF=1)
+.MODEL DX   D(IS=1E-15)
+.ENDS
+**********
+*SRC=OP285A;OP285A;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP-285 SPICE Macro-model              6/92, Rev. A
+*                                       ARG / PMI
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | | positive supply
+*               | | |  negative supply
+*               | | |  |  output
+*               | | |  |  |
+*               | | |  |  |
+.SUBCKT OP285A  1 2 99 50 34
+*
+* INPUT STAGE & POLE AT 100 MHZ
+*
+R3   5 51     2.188
+R4   6 51     2.188
+CIN  1  2     1.5E-12
+C2   5  6     364E-12
+I1   97 4     100E-3
+IOS  1  2     1E-9
+EOS  9  3     POLY(1)  26 28  35E-6   1
+Q1   5  2  7  QX
+Q2   6  9  8  QX
+R5   7  4     1.672
+R6   8  4     1.672
+D1   2 36     DZ
+D2   1 36     DZ
+EN   3  1     10  0  1
+GN1  0  2     13  0  1
+GN2  0  1     16  0  1
+*
+EREF 98 0     28  0  1
+EP   97 0     99  0  1
+EM   51 0     50  0  1
+*
+* VOLTAGE NOISE SOURCE
+*
+DN1  35 10    DEN
+DN2  10 11    DEN
+VN1  35  0    DC 2
+VN2  0  11    DC 2
+*
+* CURRENT NOISE SOURCE
+*
+DN3  12 13    DIN
+DN4  13 14    DIN
+VN3  12  0    DC 2
+VN4  0  14    DC 2
+CN1  13  0    7.53E-3
+*
+* CURRENT NOISE SOURCE
+*
+DN5  15 16    DIN
+DN6  16 17    DIN
+VN5  15  0    DC 2
+VN6  0  17    DC 2
+CN2  16  0    7.53E-3
+*
+* GAIN STAGE & DOMINANT POLE AT 32 HZ
+*
+R7  18 98     1.09E6
+C3  18 98     4.55E-9
+G1  98 18     5  6  4.57E-1
+V2  97 19     1.4
+V3  20 51     1.4
+D3  18 19     DX
+D4  20 18     DX
+*
+* POLE/ZERO PAIR AT 1.5MHz/2.7MHz
+*
+R8  21 98     1E3
+R9  21 22     1.25E3
+C4  22 98     47.2E-12
+G2  98 21     18 28  1E-3
+*
+* POLE AT 100 MHZ
+*
+R10 23 98     1
+C5  23 98     1.59E-9
+G3  98 23     21 28  1
+*
+* POLE AT 100 MHZ
+*
+R11 24 98     1
+C6  24 98     1.59E-9
+G4  98 24     23 28  1
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1 kHZ
+*
+R12 25 26     1E6
+C7  25 26     159.155E-12
+R13 26 98     1
+E2  25 98     POLY(2) 1 98 2 98 0 2.506 2.506
+*
+* POLE AT 100 MHZ
+*
+R14 27 98     1
+C8  27 98     1.59E-9
+G5  98 27     24 28  1
+*
+* OUTPUT STAGE
+*
+R15 28 99     100E3
+R16 28 50     100E3
+C9  28 50     1E-6
+ISY 99 50     1.85E-3
+R17 29 99     100
+R18 29 50     100
+L2  29 34     1E-9
+G6  32 50     27 29  10E-3
+G7  33 50     29 27  10E-3
+G8  29 99     99 27  10E-3
+G9  50 29     27 50  10E-3
+V4  30 29     1.3
+V5  29 31     3.8
+F1  29  0     V4  1
+F2  0  29     V5  1
+D5  27 30     DX
+D6  31 27     DX
+D7  99 32     DX
+D8  99 33     DX
+D9  50 32     DY
+D10 50 33     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=5E5)
+.MODEL DX   D(IS=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50)
+.MODEL DZ   D(IS=1E-15 BV=7.0)
+.MODEL DEN  D(IS=1E-12 RS=4.35K KF=1.95E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=77.3E-6 KF=3.38E-15 AF=1)
+.ENDS
+**********
+*SRC=OP285GA;OP285GA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP-285G SPICE Macro-model                 4/92  Rev. A
+*                                           ARG / PMI
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | | positive supply
+*               | | |  negative supply
+*               | | |  |  output
+*               | | |  |  |
+*               | | |  |  |
+.SUBCKT OP285GA 1 2 99 50 34
+*
+* INPUT STAGE & POLE AT 100 MHZ
+*
+R3   5 51     1.492
+R4   6 51     1.492
+CIN  1  2     1.5E-12
+C2   5  6     533E-12
+I1   97 4     100E-3
+IOS  1  2     25E-9
+EOS  9  3     POLY(1)  26 28  1.0E-3  1
+Q1   5  2  7  QX
+Q2   6  9  8  QX
+R5   7  4     0.976
+R6   8  4     0.976
+D1   2 36     DZ
+D2   1 36     DZ
+EN   3  1     10  0  1
+GN1  0  2     13  0  1
+GN2  0  1     16  0  1
+*
+EREF 98 0     28  0  1
+EP   97 0     99  0  1
+EM   51 0     50  0  1
+*
+* VOLTAGE NOISE SOURCE
+*
+DN1  35 10    DEN
+DN2  10 11    DEN
+VN1  35  0    DC 2
+VN2  0  11    DC 2
+*
+* CURRENT NOISE SOURCE
+*
+DN3  12 13    DIN
+DN4  13 14    DIN
+VN3  12  0    DC 2
+VN4  0  14    DC 2
+CN1  13  0    7.53E-3
+*
+* CURRENT NOISE SOURCE
+*
+DN5  15 16    DIN
+DN6  16 17    DIN
+VN5  15  0    DC 2
+VN6  0  17    DC 2
+CN2  16  0    7.53E-3
+*
+* GAIN STAGE & DOMINANT POLE AT 64 HZ
+*
+R7  18 98     3.73E5
+C3  18 98     6.67E-9
+G1  98 18     5  6  6.70E-1
+V2  97 19     1.76
+V3  20 51     1.76
+D3  18 19     DX
+D4  20 18     DX
+*
+* POLE/ZERO PAIR AT 1.5MHz/2.7MHz
+*
+R8  21 98     1E3
+R9  21 22     1.25E3
+C4  22 98     47.2E-12
+G2  98 21     18 28  1E-3
+*
+* POLE AT 100 MHZ
+*
+R10 23 98     1
+C5  23 98     1.59E-9
+G3  98 23     21 28  1
+*
+* POLE AT 100 MHZ
+*
+R11 24 98     1
+C6  24 98     1.59E-9
+G4  98 24     23 28  1
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 20 kHZ
+*
+R12 25 26     1E6
+C7  25 26     7.958E-12
+R13 26 98     1
+E2  25 98     POLY(2) 1 98 2 98 0 100 0 100
+*
+* POLE AT 100 MHZ
+*
+R14 27 98     1
+C8  27 98     1.59E-9
+G5  98 27     24 28  1
+*
+* OUTPUT STAGE
+*
+R15 28 99     100E3
+R16 28 50     100E3
+C9  28 50     1E-6
+ISY 99 50     2.35E-3
+R17 29 99     100
+R18 29 50     100
+L2  29 34     1E-9
+G6  32 50     27 29  10E-3
+G7  33 50     29 27  10E-3
+G8  29 99     99 27  10E-3
+G9  50 29     27 50  10E-3
+V4  30 29     3.8
+V5  29 31     1.3
+F1  29  0     V4  1
+F2  0  29     V5  1
+D5  27 30     DX
+D6  31 27     DX
+D7  99 32     DX
+D8  99 33     DX
+D9  50 32     DY
+D10 50 33     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=1.43E5)
+.MODEL DX   D(IS=1E-12)
+.MODEL DY   D(IS=1E-15 BV=50)
+.MODEL DZ   D(IS=1E-15 BV=7.0)
+.MODEL DEN  D(IS=1E-12 RS=4.35K KF=1.95E-15 AF=1)
+.MODEL DIN  D(IS=1E-12 RS=77.3E-6 KF=3.38E-15 AF=1)
+.ENDS
+**********
+*SRC=OP292A;OP292A;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP292 SPICE Macro-model               Rev. B, 3/95
+*                                       ARG / ADSC
+*
+* Copyright 1993 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP292A    2  1  99 50 34
+*
+* INPUT STAGE AND POLE AT 40MHZ
+*
+I1   99   4    50E-6
+IOS  2    1    10E-9
+EOS  2    3    POLY(1) 21 30 1.5E-3 75
+CIN  1    2    3E-12
+Q1   5    1    7    QP
+Q2   6    3    8    QP
+R3   5    50   2E3
+R4   6    50   2E3
+R5   4    7    966
+R6   4    8    966
+C1   5    6    .995E-12
+*
+* GAIN STAGE
+*
+EREF 98   0    30 0 1
+G1   98   9    5 6 500E-6
+R7   9    98   210.819E3
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   .6
+V2   11   50   .6
+*
+* ZERO/POLE AT 6MHZ/12MHZ
+*
+E1   12   98   9 30 2
+R8   12   13   1
+R9   13   98   1
+C3   12   13   26.526E-9
+*
+* ZERO AT 15MHZ
+*
+E2   14   98   13 30 1E6
+R10  14   15   1E6
+R11  15   98   1
+C4   14   15   10.610E-15
+*
+* COMMON MODE STAGE WITH ZERO AT 40KHZ
+*
+ECM  20   98   POLY(2) 1 30 2 30 0 0.5 0.5
+R20  20   21   1E6
+R21  21   98   1
+C5   20   21   3.979E-12
+*
+* POLE AT 100MHZ
+*
+G2   98   16   15 30 1
+R12  16   98   1
+C6   16   98   1.592E-9
+*
+* OUTPUT STAGE
+*
+RS1  99   30   1E6
+RS2  30   50   1E6
+ISY  99   50   .44E-3
+G3   31   50   POLY(1) 16 30 -1.635E-6 4E-6
+R16  31   50   1E6
+DCL  50   31   DZ
+I2   99   32   250E-6
+RCL  33   50   56
+M1   32   31   50   50   MN L=9E-6 W=1000E-6 AD=15E-9 AS=15E-9
+M2   34   31   50   50   MN L=9E-6 W=1000E-6 AD=15E-9 AS=15E-9
+CC   31   32   14E-12
+Q3   99   32   34   QNA
+Q4   33   32   34   QPA
+Q5   31   33   50   QNA
+.MODEL QNA NPN(IS=1.19E-16 BF=253 NF=0.99 VAF=193 IKF=2.76E-3
++ ISE=2.57E-13 NE=5 BR=0.4 NR=0.988 VAR=15 IKR=1.465E-4
++ ISC=6.9E-16 NC=0.99 RB=2.0E3 IRB=7.73E-6 RBM=132.8 RE=4 RC=209
++ CJE=2.1E-13 VJE=0.573 MJE=0.364 FC=0.5 CJC=1.64E-13 VJC=0.534 MJC=0.5
++ CJS=1.37E-12 VJS=0.59 MJS=0.5 TF=0.43E-9 PTF=30)
+.MODEL QPA PNP(IS=5.21E-17 BF=131 NF=0.99 VAF=62 IKF=8.35E-4
++ ISE=1.09E-14 NE=2.61 BR=0.5 NR=0.984 VAR=15 IKR=3.96E-5
++ ISC=7.58E-16 NC=0.985 RB=1.52E3 IRB=1.67E-5 RBM=368.5 RE=6.31 RC=354.4
++ CJE=1.1E-13 VJE=0.745 MJE=0.33 FC=0.5 CJC=2.37E-13 VJC=0.762 MJC=0.4
++ CJS=7.11E-13 VJS=0.45 MJS=0.412 TF=1.0E-9 PTF=30) 
+.MODEL MN NMOS(LEVEL=3 VTO=1.3 RS=0.3 RD=0.3 
++ TOX=8.5E-8 LD=1.48E-6 NSUB=1.53E16 UO=650 DELTA=10 VMAX=2E5
++ XJ=1.75E-6 KAPPA=0.8 ETA=0.066 THETA=0.01 TPG=1 CJ=2.9E-4 PB=0.837
++ MJ=0.407 CJSW=0.5E-9 MJSW=0.33)
+* WD=1E-6
+.MODEL QP PNP(BF=61.5)
+.MODEL DX D
+.MODEL DZ D(BV=3.6)
+.ENDS
+**********
+*SRC=OP467A;OP467A;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP-467 SPICE Macro-model              5/92, Rev. A
+*                                       ARG / PMI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP467A   1  2  99 50 27
+*
+* INPUT STAGE
+*
+I1   4    50   10E-3
+CIN  1    2    1E-12
+IOS  1    2    5E-9
+Q1   5    2    8    QN
+Q2   6    7    9    QN
+R3   99   5    185.681
+R4   99   6    185.681
+R5   8    4    180.508
+R6   9    4    180.508
+EOS  7    1    POLY(1) 14 20 50E-6 1
+EREF 98   0    20 0 1
+*
+* GAIN STAGE AND DOMINANT POLE AT 1.5KHZ
+*
+R7   10   0    3.714E6
+C2   10   0    28.571E-12
+G1   0    10   5 6 5.386E-3
+V1   99   11   1.6
+V2   12   50   1.6
+D1   10   11   DX
+D2   12   10   DX
+RC   10   28   1.4E3
+CC   28   27   12E-12
+*
+* COMMON MODE STAGE WITH ZERO AT 1.26KHZ
+*
+ECM  13   98   POLY(2) 1 20 2 20 0 0.5 0.5
+R8   13   14   1E6
+R9   14   98   25.119
+C3   13   14   126.721E-12
+*
+* POLE AT 400E6
+*
+R10  15   98   1E6
+C4   15   98   0.398E-15
+G2   98   15   10 20 1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99   50   -8.183E-3
+RMP1 99   20   96.429E3
+RMP2 20   50   96.429E3
+RO1  99   26   200
+RO2  26   50   200
+L1   26   27   1E-7
+GO1  26   99   99 15 5E-3
+GO2  50   26   15 50 5E-3
+G4   23   50   15 26 5E-3
+G5   24   50   26 15 5E-3
+V3   21   26   50
+V4   26   22   50
+D3   15   21   DX
+D4   22   15   DX
+D5   99   23   DX
+D6   99   24   DX
+D7   50   23   DY
+D8   50   24   DY
+*
+* MODELS USED
+*
+.MODEL QN NPN(BF=33.333E3)
+.MODEL DX D
+.MODEL DY D(BV=50)
+.ENDS
+**********
+*SRC=OP467CA;OP467CA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP-467 SPICE Macro-model              5/92, Rev. A
+*                                       ARG / PMI
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP467CA  1  2  99 50 27
+*
+* INPUT STAGE
+*
+I1   4    50   14.142E-3
+CIN  1    2    1E-12
+IOS  1    2    5E-9
+Q1   5    2    8    QN
+Q2   6    7    9    QN
+R3   99   5    131.296
+R4   99   6    131.296
+R5   8    4    127.639
+R6   9    4    127.639
+EOS  7    1    POLY(1) 14 20 50E-6 1
+EREF 98   0    20 0 1
+*
+* GAIN STAGE AND DOMINANT POLE AT 1.5KHZ
+*
+R7   10   0    2.626E6
+C2   10   0    40.406E-12
+G1   0    10   5 6 7.616E-3
+V1   99   11   1.6
+V2   12   50   1.6
+D1   10   11   DX
+D2   12   10   DX
+RC   10   28   1.4E3
+CC   28   27   12E-12
+*
+* COMMON MODE STAGE WITH ZERO AT 1.26KHZ
+*
+ECM  13   98   POLY(2) 1 20 2 20 0 0.5 0.5
+R8   13   14   1E6
+R9   14   98   25.119
+C3   13   14   126.721E-12
+*
+* POLE AT 400E6
+*
+R10  15   98   1E6
+C4   15   98   0.398E-15
+G2   98   15   10 20 1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99   50   1.7E-3
+RMP1 99   20   75E3
+RMP2 20   50   75E3
+RO1  99   26   200
+RO2  26   50   200
+L1   26   27   1E-7
+GO1  26   99   99 15 5E-3
+GO2  50   26   15 50 5E-3
+G4   23   50   15 26 5E-3
+G5   24   50   26 15 5E-3
+V3   21   26   50
+V4   26   22   50
+D3   15   21   DX
+D4   22   15   DX
+D5   99   23   DX
+D6   99   24   DX
+D7   50   23   DY
+D8   50   24   DY
+*
+* MODELS USED
+*
+.MODEL QN NPN(BF=47.141E3)
+.MODEL DX D
+.MODEL DY D(BV=50)
+.ENDS
+**********
+*SRC=OP492A;OP492A;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP492 SPICE Macro-model               Rev. B, 3/95
+*                                       ARG / ADSC
+*
+* Copyright 1993 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP492A   2  1  99 50 34
+*
+* INPUT STAGE AND POLE AT 40MHZ
+*
+I1   99   4    50E-6
+IOS  2    1    10E-9
+EOS  2    3    POLY(1) 21 30 1.5E-3 75
+CIN  1    2    3E-12
+Q1   5    1    7    QP
+Q2   6    3    8    QP
+R3   5    50   2E3
+R4   6    50   2E3
+R5   4    7    966
+R6   4    8    966
+C1   5    6    .995E-12
+*
+* GAIN STAGE
+*
+EREF 98   0    30 0 1
+G1   98   9    5 6 500E-6
+R7   9    98   210.819E3
+D1   9    10   DX
+D2   11   9    DX
+V1   99   10   .6
+V2   11   50   .6
+*
+* ZERO/POLE AT 6MHZ/12MHZ
+*
+E1   12   98   9 30 2
+R8   12   13   1
+R9   13   98   1
+C3   12   13   26.526E-9
+*
+* ZERO AT 15MHZ
+*
+E2   14   98   13 30 1E6
+R10  14   15   1E6
+R11  15   98   1
+C4   14   15   10.610E-15
+*
+* COMMON MODE STAGE WITH ZERO AT 40KHZ
+*
+ECM  20   98   POLY(2) 1 30 2 30 0 0.5 0.5
+R20  20   21   1E6
+R21  21   98   1
+C5   20   21   3.979E-12
+*
+* POLE AT 100MHZ
+*
+G2   98   16   15 30 1
+R12  16   98   1
+C6   16   98   1.592E-9
+*
+* OUTPUT STAGE
+*
+RS1  99   30   1E6
+RS2  30   50   1E6
+ISY  99   50   .44E-3
+G3   31   50   POLY(1) 16 30 -1.635E-6 4E-6
+R16  31   50   1E6
+DCL  50   31   DZ
+I2   99   32   250E-6
+RCL  33   50   56
+M1   32   31   50   50   MN L=9E-6 W=1000E-6 AD=15E-9 AS=15E-9
+M2   34   31   50   50   MN L=9E-6 W=1000E-6 AD=15E-9 AS=15E-9
+CC   31   32   14E-12
+Q3   99   32   34   QNA
+Q4   33   32   34   QPA
+Q5   31   33   50   QNA
+.MODEL QNA NPN(IS=1.19E-16 BF=253 NF=0.99 VAF=193 IKF=2.76E-3
++ ISE=2.57E-13 NE=5 BR=0.4 NR=0.988 VAR=15 IKR=1.465E-4
++ ISC=6.9E-16 NC=0.99 RB=2.0E3 IRB=7.73E-6 RBM=132.8 RE=4 RC=209
++ CJE=2.1E-13 VJE=0.573 MJE=0.364 FC=0.5 CJC=1.64E-13 VJC=0.534 MJC=0.5
++ CJS=1.37E-12 VJS=0.59 MJS=0.5 TF=0.43E-9 PTF=30)
+.MODEL QPA PNP(IS=5.21E-17 BF=131 NF=0.99 VAF=62 IKF=8.35E-4
++ ISE=1.09E-14 NE=2.61 BR=0.5 NR=0.984 VAR=15 IKR=3.96E-5
++ ISC=7.58E-16 NC=0.985 RB=1.52E3 IRB=1.67E-5 RBM=368.5 RE=6.31 RC=354.4
++ CJE=1.1E-13 VJE=0.745 MJE=0.33 FC=0.5 CJC=2.37E-13 VJC=0.762 MJC=0.4
++ CJS=7.11E-13 VJS=0.45 MJS=0.412 TF=1.0E-9 PTF=30) 
+.MODEL MN NMOS(LEVEL=3 VTO=1.3 RS=0.3 RD=0.3 
++ TOX=8.5E-8 LD=1.48E-6 NSUB=1.53E16 UO=650 DELTA=10 VMAX=2E5
++ XJ=1.75E-6 KAPPA=0.8 ETA=0.066 THETA=0.01 TPG=1 CJ=2.9E-4 PB=0.837
++ MJ=0.407 CJSW=0.5E-9 MJSW=0.33)
+* WD=1E-6
+.MODEL QP PNP(BF=61.5)
+.MODEL DX D
+.MODEL DZ D(BV=3.6)
+.ENDS
+************
+

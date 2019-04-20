@@ -1,0 +1,91 @@
+* MAX4473 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 1.2mA Supply Current
+* Rail-to-Rail Error Amplifier Output
+* 2MHZ Gain-Bandwidth Product - Error Amplifier
+* 1.8 V/us Slew Rate - Error Amplifier
+* Available in 8-Pin SO/uMAX
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________
+* MAX4473        Low-Cost, Low-Voltage, PA Power Control Amplifier for GSM Applications
+*
+*
+*   ////////////// MAX4473 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4473 DATA SHEET       <====
+*
+*  connections:
+*               PC(pin 4)
+*               |    SR3(pin 6)
+*               |    |     SR2(pin 2, non-inverting input)
+*               |    |     |   SR1(pin 1, inverting input)
+*               |    |     |   |   positive power-supply(pin 8)
+*               |    |     |   |   |   negative power-supply(pin 5)
+*               |    |     |   |   |   |    output(pin 7)
+*               |    |     |   |   |   |    |
+* NODE CONNECT: 304  306   1   2  199  250  97
+*
+* Shutdown is not modeled
+*
+.SUBCKT MAX4473 304 306 1 2 199 250 97
+**************** PC input with V/I converter ****
+R401 304 302 100K
+c402 302 0 1pf
+ECVS 305 0 302,0 .25
+VSENSEPC 305 306 0V
+FCCCS 2 0 VSENSEPC 1
+****************INPUT STAGE**********************
+I1 99 4 1E-3
+vbiase1 199 99 -100MV
+VBIASE 250 50 100MV
+*RIN1 2 104 10k
+*RIN2 104 1 10k
+R1 5 50  52
+R2 6 50  52
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 401 QX
+Q2 6 1 402 QX
+r110 401 4 52
+r120 402 4 52
+* Second Pole 
+C4 5 6 .75nf
+***************SECOND STAGE******************
+IS 99 50 .1E-3
+*  SETS IS ^
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .78
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .78
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE*************
+G3 98 12 5 6 7e-3
+R4 12 98 450Meg
+*C3 98 12 1.11E-10 
+C3 98 12 200p
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 12 98 1E-6
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 1E6
+D3 32 36 Dx
+D4 37 32 Dx
+V5 97 37 .5V
+V4 36 97 .5V
+R16 34 97 47
+*R16 OPEN-LOOP OUTPUT IMP.
+E1 99 33 99 32 1
+VA8 33 34 0V
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=125000)
+.ENDS
+

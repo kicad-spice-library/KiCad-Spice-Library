@@ -1,0 +1,57 @@
+Sample Input File for STAG v2.1
+
+* B M Tenbroek
+* Department of Electronics and Computer Science
+* University of Southampton
+* Southampton SO17 1 BJ, United Kingdom
+
+** STAG v2.1 Sample NMOS and PMOS Models with Typical Parameters **
+
+.MODEL NMOS_STAG NSOI LEVEL=3
++  tpg     = 1         tof     = 25E-9     tb      = 300E-9    tob     = 300E-9
++  nssf    = 1E10      nssb    = 1E11      nsub    = 1E+17     ld      = 1E-7 
++  rs      = 50        rd      = 50        vt0     = 1         sigma   = 1E-9 
++  deltal  = 1E-8      deltaw  = 1E-8      u0      = 500       theta   = 0.05 
++  chifb   = -0.0015   k       = 1.5       vsat    = 1E7       lambda  = 1E-8 
++  js      = 1E-9      etad    = 2         js1     = 1E-12     etad1   = 1 
++  alpha0  = 1E5       beta0   = 1.92E6    chibeta = 1e3       lm      = 1E-7
++  eta     = 1         betabjt = 1e-11     tauf    = 1e-10     taur    = 1e-8
++  tnom    = 27        nlev    = 1         af      = 1         kf      = 1e-26
++  cj      = 1e-3      cgfbo   = 1e-10     cgfso   = 1e-10     cgfdo   = 1e-10
+
+.MODEL PMOS_STAG PSOI LEVEL=3
++  tpg     = 1         tof     = 25E-9     tb      = 300E-9    tob     = 300E-9
++  nssf    = 1E10      nssb    = 1E11      nsub    = 1E+17     ld      = 1E-7 
++  rs      = 50        rd      = 50        vt0     = -1        sigma   = 1E-9 
++  deltal  = 1E-8      deltaw  = 1E-8      u0      = 300       theta   = 0.05 
++  chifb   = -0.0015   k       = 1.5       vsat    = 5E6       lambda  = 1E-8 
++  js      = 1E-9      etad    = 2         js1     = 1E-12     etad1   = 1 
++  alpha0  = 1E5       beta0   = 3E6       chibeta = 1e3       lm      = 1E-7
++  eta     = 1         betabjt = 5e-12     tauf    = 1e-10     taur    = 1e-8
++  tnom    = 27        nlev    = 1         af      = 1         kf      = 1e-26
++  cj      = 1e-3      cgfbo   = 1e-10     cgfso   = 1e-10     cgfdo   = 1e-10
+
+** STAG v2.1 Device Element Line with Thermal Resistance and Capacitance **
+
+A1 Drain Gate Source Substrate Body Temperature NMOS_STAG W=10u L=1u RT=5000 CT=1E-10
+
+** Recommended Options for STAG v2.1 **
+
+.OPTIONS GMIN=1E-25 ITL1=1000 ITL4=1000
+
+** Simulation of sample NMOS floating body IV characteristic **
+
+VS    Source    0 0
+VD    Drain     0 5
+VG    Gate      0 5
+VSUB  Substrate 0 0
+
+.DC VD 0 5 0.1 VG 1 5 1
+
+* plot -i(vd) to show characteristics
+
+*#destroy all
+*#run
+*#plot -vd#branch
+
+.end

@@ -1,0 +1,319 @@
+* MAX9201 FAMILY MACROMODELS
+* -------------------------
+* Rev. 0, 6/2001
+* -------------------------
+* FEATURES:
+* Fast, 7ns Propagation Delay
+* Low Power: 9mW
+* MAX9201 - Available in 16-Pin TSSOP or Narrow SO
+* MAX9202 - Available in 14-Pin TSSOP or Narrow SO
+* MAX9203 - Available in 8-Pin SOT23 or Narrow SO
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________
+* MAX9201        Quad, High-Speed Comparator
+* MAX9202        Dual, High-Speed Comparator
+* MAX9203        Single, High-Speed Comparator
+*
+* LATCH is not modeled
+*
+*   ////////////// MAX9201 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9201 DATA SHEET       <====
+*
+* connections:        non-inverting input, +IN
+*                     |   inverting input, -IN
+*                     |   |   positive power-supply, V+
+*                     |   |   |  negative power-supply, V-
+*                     |   |   |   |  ground
+*                     |   |   |   |   |    output
+*                     |   |   |   |   |     |
+* NODE CONNECTIONS:   1   2   3   4   1000  97
+*
+.subckt max9201   1 2 3 4  1001 97
+*
+  f101    3  9 v1 1
+  Iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  Q2    8  21  7 qin
+  Q3    9  8  399 qmo
+  Q4    8  8  399 qmi
+  VMB 400 4 0V
+  VPB 399 3 0V
+Ibiase 1 2 1.25ua
+***note data sheet specifies +/-5uA, so this is left up to the user, change 0uA to user specified
+***================
+VIN1 2 23 .95
+VIN2 1 25 .95
+***
+Isupply 4 3 2.2ma
+IPSUP 3 0 .8ma
+INSUP 0 4 .8ma
+***
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=100)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  1000  3  9  2
+  v1   10 11 dc 0
+  q5    5 11  1000 qoc
+  *clamps output, Q5 collector load.
+  R55 3 5 1meg
+  DP5 5 3 DP
+rdamp 1001 1000 100
+  DP6 1000 5 DP
+***============= Hysterisis section
+GH 0 51 97 101 1E-6
+ECM 101 0 3 4 0.5
+RCM 101 0 10MEG
+****==============COMPARATOR POINT FOR CREATING LOGIC OUTPUT, +-1, hi,lo.
+RH1 3 51 1E11
+RH2 4 51 1E11
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+***=================
+IHYST 55 0 -.1E-9
+*GENERATES 2MV OF HYST.
+RREF 55 0 1E6
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*================
+VVIRTUAL 98 0 0V
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+F6 3  4 VA7 1
+G12 98 32 5 0 7.04E-3
+R15 98 32 140
+CRF 98 32 1p
+*CRF assists with rise/fall time tweak
+D3 36 41 DP
+D4 42 37 DP
+V4 37 34 0
+V5 34 36 0
+***V4,V5 SET ISC, V4 VOL, V5 VOH.
+R16 41 97 15
+*was 150
+R17 42 97 15
+E11 3 33 3 32 1
+VA8 33 34 0V
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=2.069E+4 Cjc=1E-15 Tf=5.42E-13 Tr=2.7e-9)
+*Tr delay positive 
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=5e-9)
+*trmo falling delay
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+.ends
+*
+*
+*
+*
+*   ////////////// MAX9202 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9201 DATA SHEET       <====
+*
+* connections:        non-inverting input, +IN
+*                     |   inverting input, -IN
+*                     |   |   positive power-supply, V+
+*                     |   |   |  negative power-supply, V-
+*                     |   |   |   |  ground
+*                     |   |   |   |   |   output
+*                     |   |   |   |   |   |
+* NODE CONNECTIONS:   1   2   3   4   1000  97
+*
+.subckt max9202   1 2 3 4  1001 97
+*
+  f101    3  9 v1 1
+  Iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  Q2    8  21  7 qin
+  Q3    9  8  399 qmo
+  Q4    8  8  399 qmi
+  VMB 400 4 0V
+  VPB 399 3 0V
+Ibiase 1 2 1.25ua
+***note data sheet specifies +/-5uA, so this is left up to the user, change 0uA to user specified
+***================
+VIN1 2 23 .95
+VIN2 1 25 .95
+***
+Isupply 4 3 2.2ma
+IPSUP 3 0 .8ma
+INSUP 0 4 .8ma
+***
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=100)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  1000  3  9  2
+  v1   10 11 dc 0
+  q5    5 11  1000 qoc
+  *clamps output, Q5 collector load.
+  R55 3 5 1meg
+  DP5 5 3 DP
+rdamp 1001 1000 100
+  DP6 1000 5 DP
+***============= Hysterisis section
+GH 0 51 97 101 1E-6
+ECM 101 0 3 4 0.5
+RCM 101 0 10MEG
+****==============COMPARATOR POINT FOR CREATING LOGIC OUTPUT, +-1, hi,lo.
+RH1 3 51 1E11
+RH2 4 51 1E11
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+***=================
+IHYST 55 0 -.1E-9
+*GENERATES 2MV OF HYST.
+RREF 55 0 1E6
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*================
+VVIRTUAL 98 0 0V
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+F6 3  4 VA7 1
+G12 98 32 5 0 7.04E-3
+R15 98 32 140
+CRF 98 32 1p
+*CRF assists with rise/fall time tweak
+D3 36 41 DP
+D4 42 37 DP
+V4 37 34 0
+V5 34 36 0
+***V4,V5 SET ISC, V4 VOL, V5 VOH.
+R16 41 97 15
+*was 150
+R17 42 97 15
+E11 3 33 3 32 1
+VA8 33 34 0V
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=2.069E+4 Cjc=1E-15 Tf=5.42E-13 Tr=2.7e-9)
+*Tr delay positive 
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=5e-9)
+*trmo falling delay
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+.ends
+*
+*
+*
+*
+*   ////////////// MAX9203 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX9201 DATA SHEET       <====
+*
+* connections:        non-inverting input, +IN
+*                     |   inverting input, -IN
+*                     |   |   positive power-supply, V+
+*                     |   |   |  negative power-supply, V-
+*                     |   |   |   |  ground
+*                     |   |   |   |   |   output
+*                     |   |   |   |   |   |
+* NODE CONNECTIONS:   1   2   3   4   1000  97
+*
+.subckt max9203   1 2 3 4  1001 97
+*
+  f101    3  9 v1 1
+  Iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  Q2    8  21  7 qin
+  Q3    9  8  399 qmo
+  Q4    8  8  399 qmi
+  VMB 400 4 0V
+  VPB 399 3 0V
+Ibiase 1 2 1.25ua
+***note data sheet specifies +/-5uA, so this is left up to the user, change 0uA to user specified
+***================
+VIN1 2 23 .95
+VIN2 1 25 .95
+***
+Isupply 4 3 2.2ma
+IPSUP 3 0 .8ma
+INSUP 0 4 .8ma
+***
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=100)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  1000  3  9  2
+  v1   10 11 dc 0
+  q5    5 11  1000 qoc
+  *clamps output, Q5 collector load.
+  R55 3 5 1meg
+  DP5 5 3 DP
+rdamp 1001 1000 100
+  DP6 1000 5 DP
+***============= Hysterisis section
+GH 0 51 97 101 1E-6
+ECM 101 0 3 4 0.5
+RCM 101 0 10MEG
+****==============COMPARATOR POINT FOR CREATING LOGIC OUTPUT, +-1, hi,lo.
+RH1 3 51 1E11
+RH2 4 51 1E11
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+***=================
+IHYST 55 0 -.1E-9
+*GENERATES 2MV OF HYST.
+RREF 55 0 1E6
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS.
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*================
+VVIRTUAL 98 0 0V
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+F6 3  4 VA7 1
+G12 98 32 5 0 7.04E-3
+R15 98 32 140
+CRF 98 32 1p
+*CRF assists with rise/fall time tweak
+D3 36 41 DP
+D4 42 37 DP
+V4 37 34 0
+V5 34 36 0
+***V4,V5 SET ISC, V4 VOL, V5 VOH.
+R16 41 97 15
+*was 150
+R17 42 97 15
+E11 3 33 3 32 1
+VA8 33 34 0V
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=2.069E+4 Cjc=1E-15 Tf=5.42E-13 Tr=2.7e-9)
+*Tr delay positive 
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=5e-9)
+*trmo falling delay
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+.ends
+

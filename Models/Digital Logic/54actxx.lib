@@ -1,0 +1,471 @@
+*********************************************************
+*    ADVANCED CMOS (ACT) DIGITAL LIBRARY BASED ON THE   *
+*        NATIONAL SEMICONDUCTOR FACT ADVANCED CMOS 	    *
+*			 DATA HANDBOOK		  	   	                *
+*									                    *
+*DEVELOPPED FOR INTUSOFT BY JEAN-CLAUDE MBOLI		    *
+*Phone:(33) 4 76 44 43 30	    Fax:(33) 4 76 44 43 52  * 
+*e-mail:101736.631@compuserve.com				        *
+*					*				                    *
+*				February 1997			                *
+*				  	*				                    *
+*********************************************************
+**********************
+*SRC=54ACT00;54ACT00;CMOS;54ACTxx;2 input NAND gate
+*SYM=NAND2
+*54ACT00 QUAD 2-INPUT NAND GATE
+***
+.subckt 54act00 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout J14A 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+
+anand [in1 in2] out ls_nand 
+.model ls_nand d_nand(rise_delay=5.5n fall_delay=4.8n)
+.ends
+*
+*
+**********************
+*SRC=54ACT74;54ACT74;CMOS;54ACTxx;D Flip-Flop
+*SYM=T7474
+*54ACT74 DUAL D-TYPE EDGE-TRIGGERED 
+*FLIP-FLOPS WITH PRESET & CLEAR 
+***
+.subckt 54act74 clrbar d clk prebar q qbar
+*FAMILY  TTLin TTLin TTLin TTLin TTLout TTLout
+*pinout J14A 1 2 3 4 5 6;13 12 11 10 9 8:VCC=14 GND=7
+
+adff d clk prebar clrbar q qbar ls_dff
+
+.model ls_dff d_dff(clk_delay=1p rise_delay=6.3n 
++ fall_delay=6.8n ic=1)
+.ends
+*
+*
+**********************
+*SRC=54ACT109;54ACT109;CMOS;54ACTxx;J-K Flip-Flop
+*SYM=T74109
+*54ACT109 DUAL J-KBAR EDGE-TRIGGERED FLIP-FLOPS
+*WITH PRESET AND CLEAR
+***
+.subckt 54act109 clk prebar clrbar j kbar q qbar
+*FAMILY TTLin TTLin TTLin TTLin  TTLin TTLout TTLout
+*pinout J14A 4 5 1 2 3 6 7;12 11 15 14 13 10 9:VCC=16 GND=8
+
+ajk j k clk pre clr q qbar ls_jkff
+ainv1 prebar pre ls_inv
+ainv2 clrbar clr ls_inv
+ainv3 kbar k ls_inv
+
+.model ls_jkff d_jkff(clk_delay=1p set_delay=1p
++ reset_delay=1p rise_delay=7.5n fall_delay=6.5n)
+.model ls_inv d_inverter
+.ends
+*
+*
+**********************
+*SRC=54ACT138;54ACT138;CMOS;54ACTxx;3-to-8 Decoders
+*SYM=T74138
+*54ACT138 3-LINE TO 8-LINE DECODERS/DEMULTIPLEXERS
+***
+.subckt 54act138 a b c g1 g2ab g2bb y0 y1 y2 y3 y4 y5 y6 y7
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLout TTLout TTLout
++ TTLout TTLout TTLout TTLout TTLout
+*pinout M16A 1 2 3 6 4 5 15 14 13 12 11 10 9 7:VCC=16 GND=8
+
+ainv1 a ab inv
+ainv2 b bb inv
+ainv3 c cb inv
+ainv4 g1 g1b inv
+
+anor [g2ab g2bb g1b] en nor
+
+anand0 [ab bb cb en] iy0 nand
+anand1 [a bb cb en] iy1 nand
+anand2 [ab b cb en] iy2 nand
+anand3 [a b cb en] iy3 nand
+anand4 [ab bb c en] iy4 nand
+anand5 [a bb c en] iy5 nand
+anand6 [ab b c en] iy6 nand
+anand7 [a b c en] iy7 nand
+
+abuf0 iy0 y0 buf
+abuf1 iy1 y1 buf
+abuf2 iy2 y2 buf
+abuf3 iy3 y3 buf
+abuf4 iy4 y4 buf
+abuf5 iy5 y5 buf
+abuf6 iy6 y6 buf
+abuf7 iy7 y7 buf
+
+.model inv d_inverter
+.model buf d_buffer
+.model nor d_nor(rise_delay=7n fall_delay=7n)
+.model nand d_nand(rise_delay=7n fall_delay=7n)
+
+.ends
+*
+*
+**********************
+*SRC=54ACT139;54ACT139;CMOS;54ACTxx;2-to-4 Decoders
+*SYM=T74139
+*54ACT139 DUAL 2-LINE TO 4-LINE DECODERS/DEMULTIPLEXERS
+***
+.subckt 54act139 a b gb y0 y1 y2 y3
+*FAMILY TTLin TTLin TTLin TTLout TTLout TTLout TTLout
+*pinout M16A 2 3 1 4 5 6 7;14 13 15 12 11 10 9:VCC=16 GND=8
+
+ainv1 a ab inv
+ainv2 b bb inv
+ainv3 gb en invmod
+
+anand0 [ab bb en] iy0 nand
+anand1 [a bb en] iy1 nand
+anand2 [ab b en] iy2 nand
+anand3 [a b en] iy3 nand
+
+abuf0 iy0 y0 buf
+abuf1 iy1 y1 buf
+abuf2 iy2 y2 buf
+abuf3 iy3 y3 buf
+
+.model inv d_inverter
+.model buf d_buffer
+.model invmod d_inverter(rise_delay=6.5n fall_delay=6.5n)
+.model nand d_nand(rise_delay=6.5n fall_delay=6n)
+
+.ends
+*
+**********************
+*SRC=54ACT151;54ACT151;CMOS;54ACTxx;Multiplexer
+*SYM=T74151A
+*54ACT151 MULTIPLEXER/DATA SELECTOR 8-1 LINE 
+***
+.subckt 54act151 ebar s0 s1 s2 i0 i1 i2 i3 i4 i5 i6 i7 z zbar
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLout TTLout
+*pinout M16A 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+
+x1 i0 i1 s0 a1 mux2-1
+x2 i2 i3 s0 a2 mux2-1
+x3 i4 i5 s0 a3 mux2-1
+x4 i6 i7 s0 a4 mux2-1
+x5 a1 a2 s1 b1 mux2-1
+x6 a3 a4 s1 b2 mux2-1
+x7 b1 b2 s2 y mux2-1
+
+ainv1 ebar e ls_inva
+ainv2 y yb ls_inv
+atri1 y e z ls_tri
+atri2 yb e zbar ls_tri
+
+.subckt mux2-1 a b c y
+ainv c cb inv
+aand1 [a cb] p1 and
+aand2 [b c] p2 and
+aor [p1 p2] y or
+.model and d_and
+.model or d_or
+.model inv d_inverter
+.ends mux2-1
+
+.model ls_inva d_inverter(rise_delay=1n fall_delay=1n)
+.model ls_inv d_inverter
+.model ls_tri d_tristate(delay=9n)
+
+.ends
+*
+*
+**********************
+*SRC=54ACT153;54ACT153;CMOS;54ACTxx;Multiplexer
+*SYM=T74153
+*54ACT153 DUAL 4-LINE TO 1-LINE DATA SELECTORS/MULTIPLEXERS 
+***
+.subckt 54act153 eabar ebbar s0 s1 i0a i1a i2a i3a
++ i0b i1b i2b i3b za zb
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin 
++ TTLin TTLin TTLin TTLin TTLout TTLout
+*pinout M16A 1 15 14 2 6 5 4 3 10 11 12 13 7 9:VCC=16 GND=8
+
+x1 i0a i1a s0 a1 mux2-1
+x2 i2a i3a s0 a2 mux2-1
+x3 a1 a2 s1 ya mux2-1
+
+x4 i0b i1b s0 b1 mux2-1
+x5 i2b i3b s0 b2 mux2-1
+x6 b1 b2 s1 yb mux2-1
+
+ainv1 eabar ea ls_inva
+ainv2 ebbar eb ls_inva
+atri1 ya ea z ls_tri
+atri2 yb eb zb ls_tri
+
+.subckt mux2-1 a b c y
+ainv c cb inv
+aand1 [a cb] p1 and
+aand2 [b c] p2 and
+aor [p1 p2] y or
+.model and d_and
+.model or d_or
+.model inv d_inverter
+.ends mux2-1
+
+.model ls_inva d_inverter(rise_delay=1n fall_delay=1n)
+
+.model ls_tri d_tristate(delay=8n)
+
+.ends
+*
+*
+**********************
+*SRC=54ACT157;54ACT157;CMOS;54ACTxx;Multiplexer
+*SYM=T74157
+*54ACT157 QUAD 2-LINE TO 1-LINE DATA
+*SELECTORS/MULTIPLEXERS 
+***
+.subckt 54act157 strb selectab 1a 1b 1y
++ 2a 2b 2y 3a 3b 3y 4a 4b 4y
+*FAMILY TTLin TTLin TTLin TTLin TTLout
++ TTLin TTLin TTLout TTLin TTLin TTLout TTLin TTLin TTLout
+*pinout M16A 15 1 2 3 4 5 6 7 11 10 9 14 13 12:VCC=16 GND=8
+
+abuf1 strb gb buf1
+abuf2 selectab abb buf2
+ainv1 gb g inv
+ainv2 abb s inv
+
+aand1 [1a s g] a1 and
+aand2 [1b abb g] a2 and
+aora [a1 a2] 1y ls_or
+
+aand3 [2a s g] b1 and
+aand4 [2b abb g] b2 and
+aorb [b1 b2] 2y ls_or
+
+aand5 [3a s g] c1 and
+aand6 [3b abb g] c2 and
+aorc [c1 c2] 3y ls_or
+
+aand7 [4a s g] d1 and
+aand8 [4b abb g] d2 and
+aord [d1 d2] 1y ls_or
+
+.model inv d_inverter
+.model buf1 d_buffer
+.model buf2 d_buffer
+.model and d_and
+.model ls_or d_or(rise_delay=7n fall_delay=7n)
+.ends
+*
+*
+**********************
+*SRC=54ACT158;54ACT158;CMOS;54ACTxx;Multiplexer
+*SYM=T74158
+*54ACT158 QUADRUPLE 2-LINE TO 1-LINE DATA
+*SELECTORS/MULTIPLEXERS 
+***
+.subckt 54act158 strb selectab 1a 1b 1y
++ 2a 2b 2y 3a 3b 3y 4a 4b 4y
+*FAMILY TTLin TTLin TTLin TTLin TTLout
++ TTLin TTLin TTLout TTLin TTLin TTLout TTLin TTLin TTLout
+*pinout M16A 15 1 2 3 4 5 6 7 11 10 9 14 13 12:VCC=16 GND=8
+
+abuf1 strb gb buf1
+abuf2 selectab abb buf2
+ainv1 gb g inv
+ainv2 abb s inv
+
+aand1 [1a s g] a1 and
+aand2 [1b abb g] a2 and
+anora [a1 a2] 1y ls_nor
+
+aand3 [2a s g] b1 and
+aand4 [2b abb g] b2 and
+anorb [b1 b2] 2y ls_nor
+
+aand5 [3a s g] c1 and
+aand6 [3b abb g] c2 and
+anorc [c1 c2] 3y ls_nor
+
+aand7 [4a s g] d1 and
+aand8 [4b abb g] d2 and
+anord [d1 d2] 4y ls_nor
+
+.model inv d_inverter
+.model buf1 d_buffer(rise_delay=1p fall_delay=1p)
+.model buf2 d_buffer(rise_delay=1p fall_delay=1p)
+.model and d_and
+.model ls_nor d_nor(rise_delay=6n fall_delay=6n)
+.ends
+*
+*
+**********************
+*SRC=54ACT161;54ACT161;CMOS;54ACTxx;Binary Counter
+*SYM=T74161
+*54ACT161 SYNCHRONOUS 4-BIT BINARY COUNTER
+*WITH DIRECT CLEAR
+***
+.subckt 54act161 clk enp ent clrb loadb a b c d
++ qa qb qc qd rco
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin 
++ TTLout TTLout TTLout TTLout TTLout
+*pinout M16A 2 7 10 1 9 3 4 5 6 14 13 12 11 15:VCC=16 GND=8
+
+ainv1 loadb ld inv
+ainv2 clrb clr inv
+
+aand1 [enp ent] en and
+aand2 [en qa] 1 and
+aand3 [en qa qb] 2 and
+aand4 [en qa qb qc] 3 and
+aand5 [ent qa qb qc qd] rco ls_and
+
+x1 ld en a clk clr qa jk_bloc 
+x2 ld 1 b clk clr qb jk_bloc 
+x3 ld 2 c clk clr qc jk_bloc 
+x4 ld 3 d clk clr qd jk_bloc 
+
+.subckt jk_bloc ld en d clk clr q
+anand1 [ld 2] 1 nand
+anand2 [ld d] 2 nand
+aor [en ld] 3 or
+aand1 [1 3] j and
+aand2 [2 3] k and
+ajk j k clk l clr q qb ls_jkff
+al l low
+.model low d_pulldown
+.model nand d_nand
+.model or d_or
+.model and d_and
+.model ls_jkff d_jkff(reset_delay=1p
++ rise_delay=6n fall_delay=6n) 
+
+.ends jk_bloc
+
+.model and d_and
+.model inv d_inverter
+.model or d_or
+.model ls_and d_and(rise_delay=1n fall_delay=1n)
+
+.ends
+
+*
+*
+**********************
+*SRC=54ACT163;54ACT163;CMOS;54ACTxx;4-bit counter
+*SYM=T74163
+*54ACT163 SYNCHRONOUS 4-BIT BINARY COUNTER
+***
+.subckt 54ACT163 clk enp ent clrb loadb a b c d
++ qa qb qc qd rco
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin 
++ TTLout TTLout TTLout TTLout TTLout
+*pinout M16A 2 7 10 1 9 3 4 5 6 14 13 12 11 15:VCC=16 GND=8
+
+ainv1 clrb clr inva
+anor1 [loadb clr] lc nor
+anor2 [clr lc] u1 nor
+aand1 [enp ent] en and
+
+xa clk lc u1 a en en qa qab d_bloc
+xb clk lc u1 b en qa qb qbb d_bloc
+xc clk lc u1 c en rc qc qcb d_bloc
+xd clk lc u1 d en rd qd qdb d_bloc
+
+anorc [qab qbb] rc nor
+anord [qab abb qcb] rd nor
+
+aandrco [qa qb qc qd ent] rco andmod
+
+.subckt d_bloc clk ld u1 a en r1 q qb
+aand1 [a ld] a1 and
+aand2 [ox u1] a2 and
+axnor [ix qb] ox xnor
+aand3 [en r1] ix and
+aor [a1 a2] d or
+ad d clk h h q qb ls_dff
+al h high
+.model high d_pullup
+.model xnor d_xnor
+.model or d_or
+.model ls_dff d_dff(rise_delay=6n fall_delay=6n) 
+.ends d_bloc
+
+.model and d_and
+.model nand d_nand
+.model nor d_nor
+.model inv d_inverter
+.model or d_or
+.model andmod d_and(rise_delay=1n fall_delay=1n)
+.model inva d_inverter
+
+.ends
+*
+*
+**********************
+*SRC=54ACT174;54ACT174;CMOS;54ACTxx;D-type Flip-Flop
+*SYM=T74174
+*54ACT174 HEX D-TYPE FLIP-FLOPS WITH CLEAR
+***
+.subckt 54act174 clrb clk d1 d2 d3 d4 d5 d6 q1 q2 q3 q4 q5 q6
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLout TTLout TTLout TTLout TTLout TTLout
+*pinout M16A 1 9 3 4 6 11 13 14 2 5 7 10 12 15:VCC=16 GND=8
+
+adff1 d1 clk pre clrb q1 q1b ls_dff 
+adff2 d2 clk pre clrb q2 q2b ls_dff
+adff3 d3 clk pre clrb q3 q3b ls_dff
+adff4 d4 clk pre clrb q4 q4b ls_dff
+adff5 d5 clk pre clrb q5 q5b ls_dff
+adff6 d6 clk pre clrb q6 q6b ls_dff
+
+
+aone pre plup
+
+.model ls_dff d_dff(rise_delay=7n fall_delay=7.3n)
+.model plup d_pullup
+
+.ends
+*
+*
+**********************
+*SRC=54ACT175;54ACT175;CMOS;54ACTxx;D-type Flip-Flop
+*SYM=T74175
+*54ACT175 QUAD D-TYPE FLIP-FLOPS WITH CLEAR
+***
+.subckt 54act175 clrb clk d1 d2 d3 d4
++ q1 q2 q3 q4 q1b q2b q3b q4b
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLout
++ TTLout TTLout TTLout TTLout TTLout TTLout TTLout
+*pinout M16A 1 9 4 5 12 13 2 7 10 15 3 6 11 14:VCC=16 GND=8
+
+adff1 d1 clk pre clrb q1 q1b ls_dff 
+adff2 d2 clk pre clrb q2 q2b ls_dff
+adff3 d3 clk pre clrb q3 q3b ls_dff
+adff4 d4 clk pre clrb q4 q4b ls_dff
+
+aone pre plup
+
+.model ls_dff d_dff(nreset_delay=1p
++ rise_delay=6.5n fall_delay=7n)
+.model plup d_pullup
+
+.ends
+*
+*
+**********************
+*SRC=54ACT251;54ACT251;CMOS;54ACTxx;Multiplexer
+*SYM=T74251
+*54ACT251 MULTIPLEXER/DATA SELECTOR 8-1 LINE 
+*WITH 3-STATE OUTPUTS
+***
+.subckt 54act251 gb a b c d0 d1 d2 d3 d4
++ d5 d6 d7 y w
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLin TTLout TTLout
+*pinout M16A 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+
+xmux gb a b c d0 d1 d2 d3 d4 d5 d6 d7 y w 54act151
+
+.ends
+*
+***************
+

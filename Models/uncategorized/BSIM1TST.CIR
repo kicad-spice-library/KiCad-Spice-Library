@@ -1,0 +1,112 @@
+Test of MOS BSIM1 implementation; DC transfer curve
+****************************************************************** 
+MN1 13 2 0 4 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN2 23 2 0 5 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN3 33 2 0 6 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN4 43 2 0 7 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+MN5 53 2 0 8 NMOS L=10U W=50.0U AD=100P AS=100P PD=40U PS=40U   
+VDS 3 0 0.05    
+VGS 2 0 0
+V1 3 13 0       
+V2 3 23 0       
+V3 3 33 0       
+V4 3 43 0       
+V5 3 53 0       
+VBS1 4 0 0      
+VBS2 5 0 -1
+VBS3 6 0 -2     
+VBS4 7 0 -3
+VBS5 8 0 -4     
+*************************************************************** 
+.OPTIONS LIMPTS=5000 ACCT       
+.DC VGS 0 5 0.01
+.PRINT DC I(V1) I(V2) I(V3) I(V4) I(V5) 
+*.PLOT DC I(V1) I(V2) I(V3) I(V4) I(V5) 
+*.OPTIONS LIMPTS=501 ACCT       
+*VGS  2  0  PWL(0 0 5 5)
+*.TRAN 0 5 0.01
+*.PRINT TRAN I(V1) I(V2) I(V3) I(V4) I(V5) 
+
+* Commands for Spice3
+*#run
+*#plot v1#branch v2#branch v3#branch v4#branch v5#branch
+
+***** MODEL PARAMETERS TEMP2 ********************       
+.MODEL  NMOS   NMOS     
++           LEVEL = 4.00000E+000
++             TOX = 3.00000E-002
++             VDD = 5.00000E+000
++            TEMP = 2.70000E+001
++              DL = 7.97991E-001
++              DW = 4.77402E-001
++             VFB = -1.0087E+000
++             PHI = 7.96434E-001
++              K1 = 1.31191E+000
++              K2 = 1.46640E-001
++             ETA = -1.0027E-003
++             MUZ = 5.34334E+002
++              U0 = 4.38497E-002
++              U1 = -5.7332E-002
++             X2E = -7.6911E-004
++             X3E = 7.86777E-004
++            X2MZ = 8.25434E+000
++             MUS = 5.40612E+002
++            X2MS = -1.2992E+001
++            X3MS = -9.4035E+000
++            X2U0 = 1.06821E-003
++            X2U1 = -1.9209E-002
++            X3U1 = 7.76925E-003
++            LVFB = -2.1402E-001
++            WVFB = 3.44354E-001
++             LK1 = 3.23395E-001
++             WK1 = -5.7698E-001
++             LK2 = 1.68585E-001
++             WK2 = -1.8796E-001
++            LETA = -9.4847E-003
++            WETA = 1.47316E-002
++             LU0 = 6.38105E-002
++             WU0 = -6.1053E-002
++             LU1 = 1.01174E+000
++             WU1 = 1.62706E-002
++            LX2E = 9.62411E-003
++            WX2E = -3.7951E-003
++            LX3E = 7.35448E-004
++            WX3E = -1.7796E-003
++           LX2MZ = -2.4197E+001
++           WX2MZ = 1.95696E+001
++            LMUS = 6.21401E+002
++            WMUS = -1.9190E+002
++           LX2MS = -6.4900E+001
++           WX2MS = 4.29043E+001
++           LX3MS = 1.18239E+002
++           WX3MS = -2.9747E+001
++           LX2U0 = -8.0958E-003
++           WX2U0 = 4.03379E-003
++           LX2U1 = -7.4573E-002
++           WX2U1 = 1.47520E-002
++           LX3U1 = -1.0940E-001
++           WX3U1 = -8.3353E-003
++              N0 = 1.55
++              NB = 0.09
++              ND = 0.0 
++             LN0 = 0.0 
++             WN0 = 0.0 
++             LNB = 0.0 
++             WNB = 0.0 
++             LND = 0.0 
++             WND = 0.0 
++            CGDO = 2.70000E-010
++            CGSO = 2.70000E-010
++            CGBO = 1.40000E-010
++           XPART = 1.0
++             RSH = 35.0
++              CJ = 2.75E-4     
++             CJSW = 1.90E-10   
++             JS = 1.0E-8     
++              PB = 0.7
++             PBSW = 0.8
++              MJ = 0.5 
++             MJSW = 0.33       
++             WDF = 0.0
+*****                                        *****      
+.END    

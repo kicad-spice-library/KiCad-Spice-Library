@@ -1,0 +1,20 @@
+*********
+*SRC=ADC8;ADC8;ADCs;Generic;8 bit A-to-D Converter
+*SYM=adc8
+.SUBCKT ADC8 Vin Vref d7 d6 d5 d4 d3 d2 d1 d0
+b1 Vinx Vin V=v(vref)/512  ; an analog add 1/2 lsb
+X1 Vinx Vref 1 d7x ADC1 {  }
+b2 d7 0 V=v(d7x) >.6 ? 0 : 5 ; invert the sign bit
+X2 1 Vref 2 d6 ADC1 {  }
+X3 2 Vref 3 d5 ADC1 {  }
+X4 3 Vref 8 d4 ADC1 {  }
+X5 8 Vref 11 d3 ADC1 {  }
+X6 11 Vref 12 d2 ADC1 {  }
+X7 12 Vref 13 d1 ADC1 {  }
+X8 13 Vref 18 d0 ADC1 {  }
+.SUBCKT ADC1 Vin Vref Vout Dout 
+B2 Dout 0 V=v(Vin) > 0 ? 5 : 0
+B3 Vout 0 V=v(Vin)  > 0 ? 2*(v(Vin) - v(vref))  : 2*(v(Vin) + v(vref))
+.ENDS 
+.ENDS 
+*********

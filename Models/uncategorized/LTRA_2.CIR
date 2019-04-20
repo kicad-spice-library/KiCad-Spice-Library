@@ -1,0 +1,527 @@
+ 	Example 3 for interconnect simulation
+
+* From neug1, Mosaic aluminum lines. 2um thick, 11um wide. Assuming
+* 10um above the ground.
+* Material: aluminum; resistivity (sigma) = 2.74uohm-cm = 2.74e-8 ohm-m 
+* Dielectric: SiO2, dielectric constant (epsilon) =3.7 
+* epsilon0 = 8.85e-12 MKS units
+* mu0 = 4e-7*PI
+* speed of light in free space = 1/sqrt(mu0*epsilon0) = 2.9986e8 MKS units
+*
+*  Line parameter calculations:
+*  capacitance: parallel plate
+*  C = epsilon*epsilon0 * A / l
+*  C = 3.7*8.85e-12 * 11e-6 * 1(metre) / 10e-6 = 36.02e-12 F/m
+*    + 30% = 46.8e-12 F/m = 0.468pF/cm
+*
+*  C_freespace = 46.8e-12/epsilon = 12.65e-12 F/m
+*  speed of light in free space v0 = 2.9986e8 = 1/sqrt(L0*C0)
+*  => L0 = 1/C0*v0^2
+*  L0 = 1/(12.65e-12 * 8.9916e16) = 1/113.74e4 = 0.008792e-4 H/m
+*    = 0.8792 uH/m = 8.792nH/cm
+*  
+*  R = sigma * l / A = 2.74e-8 * 1 / (11e-6*2e-6) = 1245.45 ohms/m
+*    = 12.45ohms/cm
+*
+*  transmission line parameters:
+*  	nominal z0 = sqrt(L/C) = 137 ohms
+*	td = sqrt(LC) = 64.14e-12 secs/cm = 0.064ns/cm
+*
+*
+
+
+vcc vcc 0 5
+*v1 1 0 0v pulse(0 5 1ns 0.1ns 0.1ns 5ns 100ns)
+v1 1 0 0v pulse(0 5 0.1ns 0.1ns 0.1ns 1ns 100ns)
+rs 1 2 10
+*xdrv 1 2 vcc bjtdrvr
+*xrcv 3 4 vcc bjtdrvr
+*xrcv 3 4 vcc dioload
+d1 3 vcc diod
+d2 0 3 diod
+*cl 3 0 1pF
+*o1 2 0 3 0 lline
+x1 2 3 sixteencm
+*x1 2 3 xonecm
+
+.model diod d
+.model lline ltra rel=1.8 r=12.45 g=0 l=8.792e-9 c=0.468e-12 len=16 steplimit
+
+* 1cm
+* 2cm
+* 4cm
+* 6cm
+* 8cm
+* 10cm
+* 12cm
+*.tran 0.001ns 15ns 0 0.1ns
+* 24cm
+.tran 0.001ns 10ns 0 0.1ns
+* onecm10
+*.tran 0.001ns 10ns 0 0.01ns
+
+
+* 1. define the subckt r10 to be one tenth of the resistance per cm.
+* 2. define the subckt onecm to be one of onecm10 (modelled using
+* 10 segments), onecm8, onecm4, onecm2 and lump1. Then use
+* the subckts onecm, fourcm, fivecm, tencm, twelvecm,
+* twentyfourcm in the circuit. The line is modelled as rlc segments.
+* 3. define the subckt xonecm to be one of xonecm10, xonecm8,
+* xonecm4, xonecm2 and xlump1. Use the subckts xonecm,
+* xfourcm, xfivecm, xtencm, xtwelvecm, xtwentyfourcm in the
+* circuit. The line will be modelled as r-lossless lumps.
+
+.subckt xonecm 1 2
+*x1 1 2 xlump1
+x1 1 2 xonecm4
+.ends xonecm
+
+.subckt onecm 1 2
+*x1 1 2 lump1
+x1 1 2 onecm4
+.ends onecm
+
+.subckt r10 1 2
+r1 1 2 1.245
+.ends r10
+
+* ECL driver and diode receiver models - from Raytheon
+
+.model qmodn npn(bf=100 rb=100 cje=0.09375pF cjc=0.28125pF is=1e-12
++pe=0.5 pc=0.5)
+
+.model qmodpd npn(bf=100 rb=100 cje=0.08187pF cjc=0.2525pF is=1e-12
++pe=0.5 pc=0.5)
+*.model qmodpdmine npn(bf=100 rb=100  cje=0.08187pF cjc=0.15pF is=1e-12
+.model qmodpdmine npn(bf=100 rb=100  cje=0.08187pF cjc=0.05pF is=1e-12
++pe=0.5 pc=0.5)
+
+.model dmod1 d(n=2.25 is=1.6399e-4 bv=10)
+
+.model dmod2 d
+
+.model dmod d(vj=0.3v)
+
+*.model diod1 d(1.0 tt=0.75ns vj=0.6 rs=909 bv=10)
+.model diod1 d(tt=0.75ns vj=0.6 rs=909 bv=10)
+
+*.model diod2 d(1.0 tt=0.5ns vj=0.3 rs=100 bv=10)
+.model diod2 d(tt=0.5ns vj=0.3 rs=100 bv=10)
+
+* bjt driver - 19=input, 268=output, 20=vcc; wierd node numbers from 
+* the Raytheon file
+
+.subckt bjtdrvr 19 268 20
+q1 22 18 13 qmodn
+q2 18 16 13 qmodn
+qd2 21 9 0 qmodn
+q4 14 14 0 qmodn
+q3 16 15 14 qmodpd
+q5 8 13 17 qmodn
+q6 25 12 0 qmodn
+q7 6 17 0 qmodpd
+qd1 26 10 0 qmodn
+q8 7 11 10 qmodn
+q10 268 17 0 qmodpdmine
+*q10 268 17 0 qmodpd
+q9 7 10 268 qmodn
+
+d1 0 19 dmod1
+d2 18 19 dmod2
+d3 13 19 dmod
+dq1 18 22 dmod
+dq2 16 18 dmod
+d502 9 21 dmod
+dq3 15 16 dmod
+d10 24 8 dmod
+d4 15 6 dmod
+dq6 12 25 dmod
+dq7 17 6 dmod
+dd1 17 10 dmod
+d7 11 6 dmod
+dd2 17 26 dmod
+d9 23 6 dmod
+dq8 11 7 dmod
+d501 17 268 dmod
+dq9 10 7 dmod
+d14 20 27 dmod
+d8 0 268 dmod
+
+r1 18 20 6k
+r2 22 20 2.2k
+r4 0 13 7k
+rd1 9 13 2k
+rd2 21 13 3k
+r3 16 20 10k
+r5 15 20 15k
+r9 0 17 4k
+r6 24 20 750
+r10 12 17 2k
+r12 24 11 1.5k
+r11 25 17 3k
+r15 23 20 10k
+r13 0 10 15k
+r14 7 27 12
+
+.ends bjtdrvr
+
+* subckt dioload - diode load: input=28, output=4, vcc=5
+
+.subckt dioload 28 4 5
+c1 28 0 5pF
+r503 0 4 5.55
+r4 0 28 120k
+r5 1 5 7.5k
+
+d5 4 28 diod2
+d1 1 28 diod1
+d4 2 0 diod1
+d3 3 2 diod1
+d2 1 3 diod1
+.ends dioload
+
+* End ECL driver and Diode receiver models from Raytheon
+
+*10 segments per cm
+.subckt lump10 1 2
+l1 1 3 0.0.8792nH
+c1 2 0 0.0468pF
+x1 3 2 r10
+.ends lump10
+
+*1 segment per cm
+.subckt lump1 1 2
+l1 1 3 8.792nH
+c1 2 0 0.468pF
+x1 3 4 r10
+x2 4 5 r10
+x3 5 6 r10
+x4 6 7 r10
+x5 7 8 r10
+x6 8 9 r10
+x7 9 10 r10
+x8 10 11 r10
+x9 11 12 r10
+x10 12 2 r10
+.ends lump1
+
+*2 segments per cm
+.subckt lump2 1 2
+l1 1 3 4.396nH
+c1 2 0 0.234pF
+x1 3 4 r10
+x2 4 5 r10
+x3 5 6 r10
+x4 6 7 r10
+x5 7 2 r10
+.ends lump2
+
+*4 segments per cm
+.subckt lump4 1 2
+l1 1 3 2.198nH
+c1 2 0 0.117pF
+x1 3 4 r10
+x2 4 5 r10
+x3 5 2 r10
+x4 5 2 r10
+.ends lump4
+
+*8 segments per cm
+.subckt lump8 1 2
+l1 1 3 1.099nH
+c1 2 0 0.0585pF
+x1 3 4 r10
+x2 4 2 r10
+x3 4 2 r10
+x4 4 2 r10
+x5 4 2 r10
+.ends lump8
+
+.subckt onecm10 1 2
+x1 1 3 lump10
+x2 3 4 lump10
+x3 4 5 lump10
+x4 5 6 lump10
+x5 6 7 lump10
+x6 7 8 lump10
+x7 8 9 lump10
+x8 9 10 lump10
+x9 10 11 lump10
+x10 11 2 lump10
+.ends onecm10
+
+.subckt onecm8 1 2
+x1 1 3 lump8
+x2 3 4 lump8
+x3 4 5 lump8
+x4 5 6 lump8
+x5 6 7 lump8
+x6 7 8 lump8
+x7 8 9 lump8
+x8 9 2 lump8
+.ends onecm8
+
+.subckt onecm4 1 2
+x1 1 3 lump4
+x2 3 4 lump4
+x3 4 5 lump4
+x4 5 2 lump4
+.ends onecm4
+
+.subckt onecm2 1 2
+x1 1 3 lump2
+x2 3 2 lump2
+.ends onecm2
+
+.subckt twocm 1 2
+x1 1 3 onecm
+x2 3 2 onecm
+.ends twocm
+
+.subckt threecm 1 2
+x1 1 3 onecm
+x2 3 4 onecm
+x3 4 2 onecm
+.ends threecm
+
+.subckt fourcm 1 2
+x1 1 3 onecm
+x2 3 4 onecm
+x3 4 5 onecm
+x4 5 2 onecm
+.ends fourcm
+
+.subckt fivecm 1 2
+x1 1 3 onecm
+x2 3 4 onecm
+x3 4 5 onecm
+x4 5 6 onecm
+x5 6 2 onecm
+.ends fivecm
+
+.subckt sixcm 1 2
+x1 1 3 fivecm
+x2 3 2 onecm
+.ends sixcm
+
+.subckt sevencm 1 2
+x1 1 3 sixcm
+x2 3 2 onecm
+.ends sevencm
+
+.subckt eightcm 1 2
+x1 1 3 sevencm
+x2 3 2 onecm
+.ends eightcm
+
+.subckt ninecm 1 2
+x1 1 3 eightcm
+x2 3 2 onecm
+.ends ninecm
+
+.subckt tencm 1 2
+x1 1 3 fivecm
+x2 3 2 fivecm
+.ends tencm
+
+.subckt elevencm 1 2
+x1 1 3 tencm
+x2 3 2 onecm
+.ends elevencm
+
+.subckt twelvecm 1 2
+x1 1 3 tencm
+x2 3 4 onecm
+x3 4 2 onecm
+.ends twelvecm
+
+.subckt sixteencm 1 2
+x1 1 3 eightcm
+x2 3 2 eightcm
+.ends sixteencm
+
+.subckt twentyfourcm 1 2
+x1 1 3 twelvecm
+x2 3 2 twelvecm
+.ends twentyfourcm
+
+
+*modelling using R and lossless lines
+* 10 segments per cm
+.model lless10 ltra nocontrol rel=10 r=0 g=0 l=8.792e-9
++c=0.468e-12 len=0.1 steplimit quadinterp
+
+* 8 segments per cm
+.model lless8 ltra nocontrol rel=10 r=0 g=0 l=8.792e-9
++c=0.468e-12 len=0.125 steplimit quadinterp
+
+* 4 segments per cm
+.model lless4 ltra nocontrol rel=10 r=0 g=0 l=8.792e-9
++c=0.468e-12 len=0.25 steplimit quadinterp
+
+* 2 segments per cm
+.model lless2 ltra nocontrol rel=10 r=0 g=0 l=8.792e-9
++c=0.468e-12 len=0.5 steplimit quadinterp
+
+* 1 segment per cm
+.model lless1 ltra nocontrol rel=10 r=0 g=0 l=8.792e-9
++c=0.468e-12 len=1 steplimit quadinterp
+
+*10 segments per cm
+.subckt xlump10 1 2
+o1 1 0 3 0 lless10
+x1 3 2 r10
+.ends xlump10
+
+*1 segment per cm
+.subckt xlump1 1 2
+o1 1 0 3 0 lless1
+x1 3 4 r10
+x2 4 5 r10
+x3 5 6 r10
+x4 6 7 r10
+x5 7 8 r10
+x6 8 9 r10
+x7 9 10 r10
+x8 10 11 r10
+x9 11 12 r10
+x10 12 2 r10
+.ends xlump1
+
+*2 segments per cm
+.subckt xlump2 1 2
+o1 1 0 3 0 lless2
+x1 3 4 r10
+x2 4 5 r10
+x3 5 6 r10
+x4 6 7 r10
+x5 7 2 r10
+.ends xlump2
+
+*4 segments per cm
+.subckt xlump4 1 2
+o1 1 0 3 0 lless4
+x1 3 4 r10
+x2 4 5 r10
+x3 5 2 r10
+x4 5 2 r10
+.ends xlump4
+
+*8 segments per cm
+.subckt xlump8 1 2
+o1 1 0 3 0 lless8
+x1 3 4 r10
+x2 4 2 r10
+x3 4 2 r10
+x4 4 2 r10
+x5 4 2 r10
+.ends xlump8
+
+.subckt xonecm10 1 2
+x1 1 3 xlump10
+x2 3 4 xlump10
+x3 4 5 xlump10
+x4 5 6 xlump10
+x5 6 7 xlump10
+x6 7 8 xlump10
+x7 8 9 xlump10
+x8 9 10 xlump10
+x9 10 11 xlump10
+x10 11 2 xlump10
+.ends xonecm10
+
+.subckt xonecm8 1 2
+x1 1 3 xlump8
+x2 3 4 xlump8
+x3 4 5 xlump8
+x4 5 6 xlump8
+x5 6 7 xlump8
+x6 7 8 xlump8
+x7 8 9 xlump8
+x8 9 2 xlump8
+.ends xonecm8
+
+.subckt xonecm4 1 2
+x1 1 3 xlump4
+x2 3 4 xlump4
+x3 4 5 xlump4
+x4 5 2 xlump4
+.ends xonecm4
+
+.subckt xonecm2 1 2
+x1 1 3 xlump2
+x2 3 2 xlump2
+.ends xonecm2
+
+
+.subckt xtwocm 1 2
+x1 1 3 xonecm
+x2 3 2 xonecm
+.ends xtwocm
+
+.subckt xthreecm 1 2
+x1 1 3 xonecm
+x2 3 4 xonecm
+x3 4 2 xonecm
+.ends xthreecm
+
+.subckt xfourcm 1 2
+x1 1 3 xonecm
+x2 3 4 xonecm
+x3 4 5 xonecm
+x4 5 2 xonecm
+.ends xfourcm
+
+.subckt xfivecm 1 2
+x1 1 3 xonecm
+x2 3 4 xonecm
+x3 4 5 xonecm
+x4 5 6 xonecm
+x5 6 2 xonecm
+.ends xfivecm
+
+.subckt xsixcm 1 2
+x1 1 3 xfivecm
+x2 3 2 xonecm
+.ends xsixcm
+
+.subckt xsevencm 1 2
+x1 1 3 xsixcm
+x2 3 2 xonecm
+.ends xsevencm
+
+.subckt xeightcm 1 2
+x1 1 3 xsevencm
+x2 3 2 xonecm
+.ends xeightcm
+
+.subckt xninecm 1 2
+x1 1 3 xeightcm
+x2 3 2 xonecm
+.ends xninecm
+
+.subckt xtencm 1 2
+x1 1 3 xfivecm
+x2 3 2 xfivecm
+.ends xtencm
+
+.subckt xelevencm 1 2
+x1 1 3 xtencm
+x2 3 2 xonecm
+.ends xelevencm
+
+.subckt xtwelvecm 1 2
+x1 1 3 xtencm
+x2 3 4 xonecm
+x3 4 2 xonecm
+.ends xtwelvecm
+
+.subckt xsixteencm 1 2
+x1 1 3 xeightcm
+x2 3 2 xeightcm
+.ends xsixteencm
+
+.subckt xtwentyfourcm 1 2
+x1 1 3 xtwelvecm
+x2 3 2 xtwelvecm
+.ends xtwentyfourcm

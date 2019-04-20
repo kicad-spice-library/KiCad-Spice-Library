@@ -1,0 +1,32 @@
+phonoamp
+*SPICE_NET
+.AC DEC 40 1HZ 100KHZ
+C1 1 3 .18UF
+C2 3 2 .18UF
+R2 3 4 27K
+E1_AMP 9 0 2 6 1MEG
+R3 5 4 15
+R4 4 0 150
+C3 5 6 100UF
+C4 6 7 5.6NF
+R5 8 9 6.8K
+R6 6 7 560K
+R7 7 8 47K
+C5 7 8 1.5NF
+V1 1 0 AC 1
+R1 1 2 390K
+
+.PRINT AC VDB(9) VDB(2)
+.PRINT AC  VM(2)  VP(2)  VM(9)  VP(9) 
+
+* Commands for Spice3
+*#run
+*#set units=degrees
+*#plot db(mag(v(9)))
+*#plot db(mag(v(2)))
+*#plot ph(v(9))
+*#plot ph(v(2))
+* Plot input impedance
+*#plot mag(v(1)/v1#branch)
+
+.END

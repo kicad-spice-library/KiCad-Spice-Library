@@ -1,0 +1,104 @@
+* MAX4108 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 400MHz -3dB Bandwidth
+* 20mA Typical Supply Current
+* 90mA Output Drive
+* 1200V/uS Slew Rate
+* Available in 8-Pin SO 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX4108        400MHz, Ultra-Low-Distortion Op Amp  
+*
+*
+*   ////////////// MAX4108 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4108 DATA SHEET       <====
+*
+* connections:          non-inverting input
+*                       |       inverting input
+*                       |       |       positive power-supply
+*                       |       |       |       negative power-supply
+*                       |       |       |       |       output
+*                       |       |       |       |       |
+* OUTPUT CONNECTS:      1       2       99      50      97
+*
+* NOTE OFFSET HAS NOT BEEN ADDED TO THIS MODEL 
+*
+.SUBCKT MAX4108 1 2 99 50 97
+****************INPUT STAGE**********************
+*
+IOS 2 1 50N
+I1 4 50 2MA
+GIN 2 1 2 1 50E-9
+G1 5 99 5 99 38.5E-3
+G2 6 99 6 99 38.5E-3
+vos 1 3 0v
+*EOS 1 3 POLY(1) 98 30 0 .63
+*               ^       OFFSET VOLTAGE
+
+*****OFFSET VOLTAGE MUST BE 0V TO PERFORM SMALL-SIGNAL ANALYSIS*****
+Vn 3 9 0v
+*EN 3 9 POLY(1) 103 0 0 .70
+Q1 5 2 401 QX
+Q2 6 9 402 QX
+RDEG1 401 4 208 
+RDEG2 402 4 208
+Dsub 50 99 DX
+*C4 5 6 7PF
+*
+***************SECOND STAGE******************
+IS 99 50 18mA
+*         SETS IS ^
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 .5
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 .5
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 .0042
+*27.1
+*1ST POLE 21HZ,AVOL 1E6
+R4 12 98 2.387E7
+C3 98 12 1.72E-13
+* 1.667e-12
+*   
+**************FREQUENCY SHAPING STAGES********
+*
+****POLE STAGE****
+G5 98 15 12 98 1E-3 
+R5 98 15 1E3
+C5 98 15 3.3E-13
+****COMMON-MODE STAGE****
+G11 98 30 4 98 316E-12
+G13 30 98 30 98 1E-3
+D11 50 30 DX
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 15 98 1E-3
+R15 98 32 1E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 4V
+V4 36 35 4V
+R16 34 35 30
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 50P
+R17 96 97 20
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX NPN(BF=83.3)
+*BF IS SET FOR FOR INPUT BIAS
+.ends
+

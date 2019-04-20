@@ -1,0 +1,2242 @@
+************
+*SYM=AD603
+*SRC=AD603;AD603;Opamps;AD-"ADxxx";VGA
+* AD603 SPICE Macro-model               Rev. A, 12/94
+*                                       ARG / PMI
+*
+* Copyright 1993 by Analog Devices
+*
+* Node assignments
+*                vinp
+*                |  common
+*                |  |  vpos
+*                |  |  |  vneg
+*                |  |  |  |  vout
+*                |  |  |  |  |  gpos
+*                |  |  |  |  |  |  gneg
+*                |  |  |  |  |  |  |  fdbk
+*                |  |  |  |  |  |  |  |
+.SUBCKT AD603    3  2  99 50 48 40 41 49
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+CIN  3    2    2E-12
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+VOS  11   5    0.1E-3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+Q100 50   51   7    QP
+Q101 50   52   13   QP
+R100 51   50   950
+R101 52   50   950
+G10  50   51   POLY(1)  40 41  2E-3 3.5E-3
+G11  50   52   POLY(1)  41 40  2E-3 3.5E-3
+RB1  7    29   700
+RB2  29   30   700
+RB3  30   31   700
+RB4  31   32   700
+RB5  32   33   700
+RB6  33   34   700
+RB7  34   13   700
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+Q17  61   62   1    QN
+Q18  64   62   4    QN
+R102 61   62   12E3
+R103 64   62   12E3
+RC   40   41   50E6
+CCTL 40   41   3.183E-15
+IGP  40   0    205E-9
+IGN  41   0    195E-9
+I1   6    50   2.5E-3
+R1   99   61   2E3
+R2   99   64   2E3
+*
+* 1ST GAIN STAGE
+*
+EREF 98   0    POLY(2)  99 0   50 0  0 0.5 0.5
+G1   98   8     64 61  0.84
+R5   8    98   1
+E1   99   9    POLY(1)  99 98  -0.535 1
+E2   10   50   POLY(1)  98 50  -0.535 1
+D1   8    9    DX
+D2   10   8    DX
+*
+* 2ND GAIN STAGE AND DOMINANT POLE AT 317KHZ
+*
+G2   98   58    8 98  1.667E-3
+R6   58   98   55.2273E3
+C1   58   98   9.091E-12
+V1   99   59   2.7
+V2   60   50   2.7
+D3   58   59   DX
+D4   60   58   DX
+*
+* POLE AT 250MHZ
+*
+G5   98   35    58 98  1
+R11  35   98   1
+C2   35   98   0.637E-9
+*
+* POLE AT 300MHZ
+*
+G6   98   36    35 98  1
+R12  36   98   1
+C4   36   98   0.531E-9
+*
+* POLE AT 300MHZ
+*
+G7   98   37    36 98  1
+R13  37   98   1
+C5   37   98   0.531E-9
+*
+* POLE AT 300MHZ
+*
+G3   98   45    37 98  1E-3
+R10  45   98   1E3
+C3   45   98   0.531E-12
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1)  99 50  -16E-3 1.6E-3
+FSY  99   50   POLY(2) V7 V8 8.01E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99    99 45  250E-3
+GO2  50   48    45 50  250E-3
+V4   48   46   -0.7
+V5   47   48   -0.7
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44    48 45  250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF1  48   49   6.44E3
+RF2  11   49   694
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=200 IS=1E-14 RB=20 KF=1E-16 AF=1)
+.MODEL QP PNP(BF=1000 IS=1E-14)
+.ENDS
+************
+*SYM=AD603
+*SRC=AD603A;AD603A;Opamps;AD-"ADxxx";VGA
+* AD603A SPICE Macro-model              Rev. A, 12/94
+*                                       ARG / PMI
+*
+* This version of the AD603 model simulates the worst-case
+* parameters of the 'A' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1993 by Analog Devices
+*
+* Node assignments
+*                vinp
+*                |  common
+*                |  |  vpos
+*                |  |  |  vneg
+*                |  |  |  |  vout
+*                |  |  |  |  |  gpos
+*                |  |  |  |  |  |  gneg
+*                |  |  |  |  |  |  |  fdbk
+*                |  |  |  |  |  |  |  |
+.SUBCKT AD603A   3  2  99 50 48 40 41 49
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+CIN  3    2    2E-12
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+VOS  11   5    0.45E-3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+Q100 50   51   7    QP
+Q101 50   52   13   QP
+R100 51   50   950
+R101 52   50   950
+G10  50   51   POLY(1)  40 41  2E-3 3.5E-3
+G11  50   52   POLY(1)  41 40  2E-3 3.5E-3
+RB1  7    29   700
+RB2  29   30   700
+RB3  30   31   700
+RB4  31   32   700
+RB5  32   33   700
+RB6  33   34   700
+RB7  34   13   700
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+Q17  61   62   1    QN
+Q18  64   62   4    QN
+R102 61   62   12E3
+R103 64   62   12E3
+RC   40   41   50E6
+CCTL 40   41   3.183E-15
+IGP  40   0    205E-9
+IGN  41   0    195E-9
+I1   6    50   2.5E-3
+R1   99   61   2E3
+R2   99   64   2E3
+*
+* 1ST GAIN STAGE
+*
+EREF 98   0    POLY(2)  99 0   50 0  0 0.5 0.5
+G1   98   8     64 61  0.84
+R5   8    98   1
+E1   99   9    POLY(1)  99 98  -0.535 1
+E2   10   50   POLY(1)  98 50  -0.535 1
+D1   8    9    DX
+D2   10   8    DX
+*
+* 2ND GAIN STAGE AND DOMINANT POLE AT 317KHZ
+*
+G2   98   58    8 98  1.667E-3
+R6   58   98   55.2273E3
+C1   58   98   9.091E-12
+V1   99   59   3.2
+V2   60   50   3.2
+D3   58   59   DX
+D4   60   58   DX
+*
+* POLE AT 250MHZ
+*
+G5   98   35    58 98  1
+R11  35   98   1
+C2   35   98   0.637E-9
+*
+* POLE AT 300MHZ
+*
+G6   98   36    35 98  1
+R12  36   98   1
+C4   36   98   0.531E-9
+*
+* POLE AT 300MHZ
+*
+G7   98   37    36 98  1
+R13  37   98   1
+C5   37   98   0.531E-9
+*
+* POLE AT 300MHZ
+*
+G3   98   45    37 98  1E-3
+R10  45   98   1E3
+C3   45   98   0.531E-12
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1)  99 50  -16E-3 1.6E-3
+FSY  99   50   POLY(2) V7 V8 12.51E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99    99 45  250E-3
+GO2  50   48    45 50  250E-3
+V4   48   46   -0.7
+V5   47   48   -0.7
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44    48 45  250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF1  48   49   6.44E3
+RF2  11   49   694
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=200 IS=1E-14 RB=20 KF=1E-16 AF=1)
+.MODEL QP PNP(BF=1000 IS=1E-14)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=AD795;AD795;Opamps;AD-"ADxxx";FET Input, Low Power
+* AD795 SPICE Macro-model                   11/94, Rev. A
+*                                           JOM / ADSC
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD795    1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    .719
+R4   6  50    .719
+CIN  1   2    2E-12
+C2   5   6    1.383E-9
+I1   99  4    100E-3
+IOS  1   2    0.1E-12
+EOS  65  1    POLY(1)  17 24  50E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+GB1  2  50    POLY(3) 4 2 5 2 50 2 0 1E-12 1E-12 1E-12
+GB2  7  50    POLY(3) 4 7 6 7 50 7 0 1E-12 1E-12 1E-12
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    8E3
+RS2  42 43    1.2E9
+CS1  42 43    398E-11
+RS3  43 44    1.2E9
+CS2  43 44    398E-11
+RS4  44 45    8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    41.5
+RN6  47 48    41.5
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    41.5
+RN8  61 62    41.5
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 2.213 HZ
+*
+R5   9  98    719203
+C3   9  98    1.00E-7
+G1   98  9    5  6  1.39
+V2   99  8    3.025
+V3   10 50    3.025
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     1E6
+R7   12 98     1
+E2   11 98     9  24  1E6
+VX1  84  0    
+EX1  83  0     11 12  1
+FX1  11 12     VX1  -1
+CX1  83 84     10.6E-15
+*
+* POLE AT 20 MHZ
+*
+R8   13 98     1E3
+C5   13 98     7.96E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 20 MHZ
+*
+R9   14 98     1E3
+C6   14 98     7.96E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 20 MHZ
+*
+R10  15 98     1E3
+C7   15 98     7.96E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 300 HZ
+*
+R11  16 17     1E6
+C8   16 17     5.3E-10
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  1.585  1.585
+*
+* POLE AT 20 MHZ
+*
+R13  18 98     1E3
+C9   18 98     7.96E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+FSY  99 50     POLY(2) V7 V8 -98.7E-3 1 1
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+F1   29  0     V4  1
+F2   0  29     V5  1
+G6   98 70     29 18 2.78E-3
+D5   70 71     DX
+D6   72 70     DX
+V7   71 98     DC 0
+V8   98 72     DC 0
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=9.67  VTO=-2.000  IS=0.50E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.ENDS AD795
+************
+*SYM=ADOPAMP
+*SRC=AD795J;AD795J;Opamps;AD-"ADxxx";FET Input, Low Power
+* AD795J SPICE Macro-model                  11/94, Rev. A
+*                                           JOM / ADSC
+*
+* This version of the AD795 model simulates the worst case 
+* parameters of the 'J' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD795J   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    .719
+R4   6  50    .719
+CIN  1   2    2E-12
+C2   5   6    1.3835E-9
+I1   99  4    100E-3
+IOS  1   2    1.00E-12
+EOS  65  1    POLY(1)  17 24  500E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+GB1  2  50    POLY(3) 4 2 5 2 50 2 0 1E-12 1E-12 1E-12
+GB2  7  50    POLY(3) 4 7 6 7 50 7 0 1E-12 1E-12 1E-12
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    79.8E-11
+RS3  43 44    1.2E9
+CS2  43 44    79.8E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    144
+RN6  47 48    144
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    144
+RN8  61 62    144
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 7 HZ
+*
+R5   9  98    2.2737E5
+C3   9  98    1.00E-7
+G1   98  9    5  6  1.39
+V2   99  8    4.525
+V3   10 50    4.525
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     1E6
+R7   12 98     1
+E2   11 98     9  24  1E6
+VX1  84  0
+EX1  83  0     11 12  1
+FX1  11 12     VX1  -1
+CX1  83 84     10.6E-15
+*
+* POLE AT 20 MHZ
+*
+R8   13 98     1E3
+C5   13 98     7.96E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 20 MHZ
+*
+R9   14 98     1E3
+C6   14 98     7.96E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 20 MHZ
+*
+R10  15 98     1E3
+C7   15 98     7.96E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3000 HZ
+*
+R11  16 17     1E6
+C8   16 17     5.3E-11
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  15.848  15.848
+*
+* POLE AT 20 MHZ
+*
+R13  18 98     1E3
+C9   18 98     7.96E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+FSY  99 50     POLY(2) V7 V8 -98.5E-3 1 1
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+F1   29  0     V4  1
+F2   0  29     V5  1
+G6   98 70     29 18 2.78E-3
+D5   70 71     DX
+D6   72 70     DX
+V7   71 98     DC 0
+V8   98 72     DC 0
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=9.6605  VTO=-2.000  IS=1.5E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.ENDS AD795J
+************
+*SYM=ADOPAMP
+*SRC=AD795K;AD795K;Opamps;AD-"ADxxx";FET Input, Low Power
+* AD795K SPICE Macro-model                  11/94, Rev. A
+*                                           JOM / ADSC
+*
+* This version of the AD795 model simulates the worst case 
+* parameters of the 'K' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT AD795K   1 2 99 50 30
+*
+* INPUT STAGE & POLE AT 40 MHZ
+*
+R3   5  50    .719
+R4   6  50    .719
+CIN  1   2    2E-12
+C2   5   6    1.3835E-9
+I1   99  4    100E-3
+IOS  1   2    0.5E-12
+EOS  65  1    POLY(1)  17 24  250E-6  1
+J1   5   2    4   JX
+J2   6   7    4   JX
+EN   7  65    43  0  1
+GN1  0   1    47  0  1E-6
+GN2  0   2    61  0  1E-6
+GB1  2  50    POLY(3) 4 2 5 2 50 2 0 1E-12 1E-12 1E-12
+GB2  7  50    POLY(3) 4 7 6 7 50 7 0 1E-12 1E-12 1E-12
+*
+EREF 98  0    24  0   1
+*
+* VOLTAGE NOISE GENERATOR
+*
+VN1  41  0    DC 2
+RS1  41 42    11.8E3
+RS2  42 43    1.2E9
+CS1  42 43    100E-11
+RS3  43 44    1.2E9
+CS2  43 44    100E-11
+RS4  44 45    11.8E3
+VN2  0  45    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN3  46  0    DC 2
+RN5  46 47    75.4
+RN6  47 48    75.4
+VN4  0  48    DC 2
+*
+* CURRENT NOISE GENERATOR
+*
+VN5  60  0    DC 2
+RN7  60 61    75.4
+RN8  61 62    75.4
+VN6  0  62    DC 2
+*  
+* SECOND STAGE & POLE AT 7 HZ
+*
+R5   9  98    2.2737e5
+C3   9  98    1.00E-7
+G1   98  9    5  6  1.39
+V2   99  8    4.525
+V3   10 50    4.525
+D1   9   8    DX
+D2   10  9    DX
+*
+* NEGATIVE ZERO AT 15 MHZ
+*
+R6   11 12     1E6
+R7   12 98     1
+E2   11 98     9  24  1E6
+VX1  84  0 
+EX1  83  0     11 12  1
+FX1  11 12     VX1  -1
+CX1  83 84     10.6E-15
+*
+* POLE AT 20 MHZ
+*
+R8   13 98     1E3
+C5   13 98     7.96E-12
+G2   98 13     12 24  1E-3
+*
+* POLE AT 20 MHZ
+*
+R9   14 98     1E3
+C6   14 98     7.96E-12
+G3   98 14     13 24  1E-3
+*
+* POLE AT 20 MHZ
+*
+R10  15 98     1E3
+C7   15 98     7.96E-12
+G4   98 15     14 24  1E-3
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1900 HZ
+*
+R11  16 17     1E6
+C8   16 17     8.37E-11
+R12  17 98     1
+E3   16 98     POLY(2) 1  98  2  98  0  10  10
+*
+* POLE AT 20 MHZ
+*
+R13  18 98     1E3
+C9   18 98     7.96E-12
+G5   98 18     15 24  1E-3
+*
+* OUTPUT STAGE
+*
+R14  24 99     2000E3
+R15  24 50     2000E3
+FSY  99 50     POLY(2) V7 V8 -98.7E-3 1 1
+R16  29 99     360
+R17  29 50     360
+L1   29 30     1E-8
+G8   29 99     99 18  2.78E-3
+G9   50 29     18 50  2.78E-3
+V4   25 29     2.0
+V5   29 26     2.0
+D3   18 25     DX
+D4   26 18     DX
+F1   29  0     V4  1
+F2   0  29     V5  1
+G6   98 70     29 18 2.78E-3
+D5   70 71     DX
+D6   72 70     DX
+V7   71 98     DC 0
+V8   98 72     DC 0
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=9.6605  VTO=-2.000  IS=0.50E-12 RD=0.1
++ RS=0.1 CGD=1E-15 CGS=1E-15)
+.MODEL DX   D(IS=1E-15 RS=10 CJO=1E-15)
+.ENDS AD795K
+************
+*SYM=ADOPAMP
+*SRC=AD8001A;AD8001A;Opamps;AD-"ADxxx";
+*AD8001A SPICE Macro Model       9/94, Rev. A
+* AAG/ADSC
+*
+* Copyright 1994 by Analog Devices, Inc.
+*
+* Node assignments
+*               Non-inverting input
+*               | Inverting input
+*               | | Positive supply
+*               | | | Negative supply
+*               | | | | Output
+*               | | | | |
+.SUBCKT AD8001A 3 2 7 4 6
+*
+* INPUT STAGE
+*
+CIN 3 4 1.5E-12
+GB1 7 3 POLY(1) 3 100  3E-6 0.2E-6 
+EOS 9 3 POLY(1) 23 100  2E-3 1 
+Q1 7 9 10 QN
+I1 10 4 DC 2.568E-4
+I2 7 11 DC 2.568E-4
+Q2 4 9 11 QP
+R1 7 14 1E3
+V1 7 17 DC 6.96561E-2
+D1 17 14 DX
+Q3 14 11 15 QN
+Q4 16 10 15 QP
+R2 16 4 1E3
+D2 16 18 DX
+V2 18 4 DC 6.96561E-2
+LIN- 15 2 0.1E-9
+GB2 7 2 POLY(1) 3 100  5E-6 0.3E-6 
+CS1 7 2 0.03E-12
+CS2 2 4 0.03E-12
+*
+* GAIN STAGE AND DOMINANT POLE AT 230 kHz
+*
+EREF 100 0 POLY(2)  7 0   4 0   0 0.5 0.5 
+G1 100 19 7 14 1E-3
+G2 19 100 16 4 1E-3
+R3 19 100 1.24E6
+C1 19 100 5.580468E-13
+V3 7 20 DC 2.3747
+D3 19 20 DX
+D4 21 19 DX
+V4 21 4 DC 2.3747
+*
+* COMMON-MODE REJECTION NETWORK WITH ZERO AT 22 MHz
+*
+ECM 100 22 3 100 19.95
+RCM1 22 23 1E4
+CCM 22 23 7.2343E-13
+RCM2 23 100 1
+*
+* POLE AT 800 MHz
+*
+G4 100 24 19 100 1E-6
+R5 24 100 1E6
+C3 24 100 1.9894368E-16
+*
+* POLE AT 4 GHz
+*
+G5 100 25 24 100 1E-6
+R6 25 100 1E6
+C4 25 100 3.9788736E-17
+*
+* OUTPUT STAGE
+*
+VW 25 30 DC 0
+*
+FSY 7 4 POLY(2) VSY1 VSY2  4.2326E-3 1 1 
+GSY 100 35 33 30 4.6728972E-2
+DSY1 35 36 DX
+VSY1 36 100 DC 0
+DSY2 37 35 DX
+VSY2 100 37 DC 0
+DSC1 30 31 DX
+VSC1 31 33 DC 0.62526
+DSC2 32 30 DX
+VSC2 33 32 DC 0.62526
+GO1 33 7 7 30 4.6728972E-2
+RO1 7 33 21.4
+GO2 4 33 30 4 4.6728972E-2
+RO2 33 4 21.4
+LO 33 6 7E-9
+*
+.MODEL QN NPN(BF=100 IS=1E-15)
+.MODEL QP PNP(BF=100 IS=1E-15)
+.MODEL DX D(IS=1E-15)
+*
+.ENDS AD8001A
+************
+*SYM=ADOPAMP
+*SRC=AD8001AN;AD8001AN;Opamps;AD-"ADxxx";
+*AD8001AN SPICE Macro Model       9/94, Rev. A
+*                                 AAG/ADSC
+*
+* This version of the AD8001 model simulates the worst case 
+* parameters of the 'A' grade in the N package (PDIP).  The worst case
+* parameters used correspond to those in the data sheet.
+* This model was developed using the +-5V specifications.
+*
+* Copyright 1994 by Analog Devices, Inc.
+*
+* Node assignments
+*                Non-inverting input
+*                | Inverting input
+*                | | Positive supply
+*                | | | Negative supply
+*                | | | | Output
+*                | | | | |
+.SUBCKT AD8001AN 3 2 7 4 6
+*
+* INPUT STAGE
+*
+CIN 3 4 1.5E-12
+GB1 7 3 POLY(1) 3 100  6E-6 0.3E-6 
+EOS 9 3 POLY(1) 23 100  5E-3 1 
+Q1 7 9 10 QN
+I1 10 4 DC 2.568E-4
+I2 7 11 DC 2.568E-4
+Q2 4 9 11 QP
+R1 7 14 1E3
+V1 7 17 DC -6.34541E-2
+D1 17 14 DX
+Q3 14 11 15 QN
+Q4 16 10 15 QP
+R2 16 4 1E3
+D2 16 18 DX
+V2 18 4 DC -6.34541E-2
+LIN- 15 2 0.1E-9
+GB2 7 2 POLY(1) 3 100  25E-6 1E-6 
+CS1 7 2 0.03E-12
+CS2 2 4 0.03E-12
+*
+* GAIN STAGE AND DOMINANT POLE AT 891 kHz
+*
+EREF 100 0 POLY(2)  7 0   4 0   0 0.5 0.5 
+G1 100 19 7 14 1E-3
+G2 19 100 16 4 1E-3
+R3 19 100 3.196E5
+C1 19 100 5.58902E-13
+V3 7 20 DC 2.8108
+D3 19 20 DX
+D4 21 19 DX
+V4 21 4 DC 2.8108
+*
+* COMMON-MODE REJECTION NETWORK WITH ZERO AT 34.87 MHz
+*
+ECM 100 22 3 100 31.668
+RCM1 22 23 1E4
+CCM 22 23 4.56424E-13
+RCM2 23 100 1
+*
+* POLE AT 800 MHz
+*
+G4 100 24 19 100 1E-6
+R5 24 100 1E6
+C3 24 100 1.9894368E-16
+*
+* POLE AT 4 GHz
+*
+G5 100 25 24 100 1E-6
+R6 25 100 1E6
+C4 25 100 3.9788736E-17
+*
+* OUTPUT STAGE
+*
+VW 25 30 DC 0
+*
+FSY 7 4 POLY(2) VSY1 VSY2  4.7326E-3 1 1 
+GSY 100 35 33 30 4.6728972E-2
+DSY1 35 36 DX
+VSY1 36 100 DC 0
+DSY2 37 35 DX
+VSY2 100 37 DC 0
+DSC1 30 31 DX
+VSC1 31 33 DC 0.3615
+DSC2 32 30 DX
+VSC2 33 32 DC 0.3615
+GO1 33 7 7 30 4.6728972E-2
+RO1 7 33 21.4
+GO2 4 33 30 4 4.6728972E-2
+RO2 33 4 21.4
+LO 33 6 7E-9
+*
+.MODEL QN NPN(BF=100 IS=1E-15)
+.MODEL QP PNP(BF=100 IS=1E-15)
+.MODEL DX D(IS=1E-15)
+*
+.ENDS AD8001AN
+************
+*SYM=ADOPAMP
+*SRC=AD8001AR;AD8001AR;Opamps;AD-"ADxxx";
+*AD8001AR SPICE Macro Model       9/94, Rev. A
+*                                 AAG/ADSC
+*
+* This version of the AD8001 model simulates the worst case 
+* parameters of the 'A' grade in the R package (SOIC).  The worst case
+* parameters used correspond to those in the data sheet.
+* This model was developed using the +-5V specifications.
+*
+* Copyright 1994 by Analog Devices, Inc.
+*
+* Node assignments
+*                Non-inverting input
+*                | Inverting input
+*                | | Positive supply
+*                | | | Negative supply
+*                | | | | Output
+*                | | | | |
+.SUBCKT AD8001AR 3 2 7 4 6
+*
+* INPUT STAGE
+*
+CIN 3 4 1.5E-12
+GB1 7 3 POLY(1) 3 100  6E-6 0.3E-6 
+EOS 9 3 POLY(1) 23 100  5E-3 1 
+Q1 7 9 10 QN
+I1 10 4 DC 2.568E-4
+I2 7 11 DC 2.568E-4
+Q2 4 9 11 QP
+R1 7 14 1E3
+V1 7 17 DC -4.41135E-2
+D1 17 14 DX
+Q3 14 11 15 QN
+Q4 16 10 15 QP
+R2 16 4 1E3
+D2 16 18 DX
+V2 18 4 DC -4.41135E-2
+LIN- 15 2 0.1E-9
+GB2 7 2 POLY(1) 3 100  25E-6 1E-6 
+CS1 7 2 0.03E-12
+CS2 2 4 0.03E-12
+*
+* GAIN STAGE AND DOMINANT POLE AT 860 kHz
+*
+EREF 100 0 POLY(2)  7 0   4 0   0 0.5 0.5 
+G1 100 19 7 14 1E-3
+G2 19 100 16 4 1E-3
+R3 19 100 3.196E5
+C1 19 100 5.79048E-13
+V3 7 20 DC 2.8108
+D3 19 20 DX
+D4 21 19 DX
+V4 21 4 DC 2.8108
+*
+* COMMON-MODE REJECTION NETWORK WITH ZERO AT 34.87 MHz
+*
+ECM 100 22 3 100 31.668
+RCM1 22 23 1E4
+CCM 22 23 4.56424E-13
+RCM2 23 100 1
+*
+* POLE AT 800 MHz
+*
+G4 100 24 19 100 1E-6
+R5 24 100 1E6
+C3 24 100 1.9894368E-16
+*
+* POLE AT 4 GHz
+*
+G5 100 25 24 100 1E-6
+R6 25 100 1E6
+C4 25 100 3.9788736E-17
+*
+* OUTPUT STAGE
+*
+VW 25 30 DC 0
+*
+FSY 7 4 POLY(2) VSY1 VSY2  4.7326E-3 1 1 
+GSY 100 35 33 30 4.6728972E-2
+DSY1 35 36 DX
+VSY1 36 100 DC 0
+DSY2 37 35 DX
+VSY2 100 37 DC 0
+DSC1 30 31 DX
+VSC1 31 33 DC 0.3615
+DSC2 32 30 DX
+VSC2 33 32 DC 0.3615
+GO1 33 7 7 30 4.6728972E-2
+RO1 7 33 21.4
+GO2 4 33 30 4 4.6728972E-2
+RO2 33 4 21.4
+LO 33 6 7E-9
+*
+.MODEL QN NPN(BF=100 IS=1E-15)
+.MODEL QP PNP(BF=100 IS=1E-15)
+.MODEL DX D(IS=1E-15)
+*
+.ENDS AD8001AR
+************
+*SYM=ADOPAMP
+*SRC=AD824;AD824;Opamps;AD-"ADxxx";
+* AD824 SPICE Macro-model               9/94, Rev. A
+*                                       ARG / PMI
+*
+* Copyright 1993 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD824    1  2  99 50 25
+*
+* INPUT STAGE & POLE AT 3.1MHZ
+*
+R3   5    99   1.193E3
+R4   6    99   1.193E3
+CIN  1    2    4E-12
+C2   5    6    19.229E-12
+I1   4    50   108E-6
+IOS  1    2    1E-12
+EOS  7    1    POLY(1)  12 98  100E-6 1
+J1   4    2    5    JX
+J2   4    7    6    JX
+*
+* GAIN STAGE & DOMINANT POLE
+*
+EREF 98   0     30 0  1
+R5   9    98   2.205E6
+C3   9    25   54E-12
+G1   98   9     6 5  0.838E-3
+V1   8    98   -1
+V2   98   10   -1
+D1   9    10   DX
+D2   8    9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1KHZ
+*
+R21  11   12   1E6
+R22  12   98   100
+C14  11   12   159E-12
+E13  11   98   POLY(2)  2 98   1 98  0 0.5 0.5
+*
+* POLE AT 10MHZ
+*
+R23  18   98   1E6
+C15  18   98   15.9E-15
+G15  98   18    9 98  1E-6
+*
+* OUTPUT STAGE
+*
+ES   26   98    18 98  1
+RS   26   22   500
+IB1  98   21   2.404E-3
+IB2  23   98   2.404E-3
+D10  21   98   DY
+D11  98   23   DY
+C16  20   25   2E-12
+C17  24   25   2E-12
+DQ1  97   20   DQ
+Q2   20   21   22  NPN
+Q3   24   23   22  PNP
+DQ2  24   51   DQ
+Q5   25   20   97  PNP 20
+Q6   25   24   51  NPN 20
+VP   96   97   0
+VN   51   52   0
+EP   96   0     99 0  1
+EN   52   0     50 0  1
+R25  30   99   5E6
+R26  30   50   5E6
+FSY1 99   0    VP 1
+FSY2 0    50   VN 1
+DC1  25   99   DX
+DC2  50   25   DX
+*
+* MODELS USED
+*
+.MODEL JX NJF(BETA=3.2526E-3 VTO=-2.000 IS=2E-12)
+.MODEL NPN NPN(BF=120 VAF=150 VAR=15 RB=2E3
++ RE=4 RC=550 IS=1E-16)
+.MODEL PNP PNP(BF=120 VAF=150 VAR=15 RB=2E3
++ RE=4 RC=750 IS=1E-16)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D
+.MODEL DQ D(IS=1E-16)
+.ENDS AD824
+************
+*SYM=ADOPAMP
+*SRC=AD824A;AD824A;Opamps;AD-"ADxxx";
+* AD824A SPICE Macro-model              9/94, Rev. A
+*                                       ARG / PMI
+*
+* This version of the AD824 model simulates the worst-case
+* parameters of the 'A' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1993 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD824A   1  2  99 50 25
+*
+* INPUT STAGE & POLE AT 3.1MHZ
+*
+R3   5    99   1.193E3
+R4   6    99   1.193E3
+CIN  1    2    4E-12
+C2   5    6    19.229E-12
+I1   4    50   108E-6
+IOS  1    2    10E-12
+EOS  7    1    POLY(1)  12 98  1E-3 1
+J1   4    2    5    JX
+J2   4    7    6    JX
+*
+* GAIN STAGE & DOMINANT POLE
+*
+EREF 98   0     30 0  1
+R5   9    98   2.205E6
+C3   9    25   54E-12
+G1   98   9     6 5  0.838E-3
+V1   8    98   -1
+V2   98   10   -1
+D1   9    10   DX
+D2   8    9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1KHZ
+*
+R21  11   12   1E6
+R22  12   98   100
+C14  11   12   159E-12
+E13  11   98   POLY(2)  2 98   1 98  0 0.5 0.5
+*
+* POLE AT 10MHZ
+*
+R23  18   98   1E6
+C15  18   98   15.9E-15
+G15  98   18    9 98  1E-6
+*
+* OUTPUT STAGE
+*
+ES   26   98    18 98  1
+RS   26   22   2.4E3
+IB1  98   21   2.404E-3
+IB2  23   98   2.404E-3
+D10  21   98   DY
+D11  98   23   DY
+C16  20   25   2E-12
+C17  24   25   2E-12
+DQ1  97   20   DQ
+Q2   20   21   22  NPN
+Q3   24   23   22  PNP
+DQ2  24   51   DQ
+Q5   25   20   97  PNP 20
+Q6   25   24   51  NPN 20
+VP   96   97   0
+VN   51   52   0
+EP   96   0     99 0  1
+EN   52   0     50 0  1
+R25  30   99   25E3
+R26  30   50   25E3
+FSY1 99   0    VP 1
+FSY2 0    50   VN 1
+DC1  25   99   DX
+DC2  50   25   DX
+*
+* MODELS USED
+*
+.MODEL JX NJF(BETA=3.2526E-3 VTO=-2.000 IS=25E-12)
+.MODEL NPN NPN(BF=120 VAF=150 VAR=15 RB=2E3
++ RE=4 RC=650 IS=1E-16)
+.MODEL PNP PNP(BF=120 VAF=150 VAR=15 RB=2E3
++ RE=4 RC=1E3 IS=1E-16)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D
+.MODEL DQ D(IS=1E-16)
+.ENDS AD824A
+************
+*SYM=ADOPAMP
+*SRC=AD824B;AD824B;Opamps;AD-"ADxxx";
+* AD824B SPICE Macro-model              9/94, Rev. A
+*                                       ARG / PMI
+*
+* This version of the AD824 model simulates the worst-case
+* parameters of the 'B' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1993 by Analog Devices, Inc.
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT AD824B   1  2  99 50 25
+*
+* INPUT STAGE & POLE AT 3.1MHZ
+*
+R3   5    99   1.193E3
+R4   6    99   1.193E3
+CIN  1    2    4E-12
+C2   5    6    19.229E-12
+I1   4    50   108E-6
+IOS  1    2    10E-12
+EOS  7    1    POLY(1)  12 98  0.5E-3 1
+J1   4    2    5    JX
+J2   4    7    6    JX
+*
+* GAIN STAGE & DOMINANT POLE
+*
+EREF 98   0     30 0  1
+R5   9    98   2.205E6
+C3   9    25   54E-12
+G1   98   9     6 5  0.838E-3
+V1   8    98   -1
+V2   98   10   -1
+D1   9    10   DX
+D2   8    9    DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1KHZ
+*
+R21  11   12   1E6
+R22  12   98   100
+C14  11   12   159E-12
+E13  11   98   POLY(2)  2 98   1 98  0 0.5 0.5
+*
+* POLE AT 10MHZ
+*
+R23  18   98   1E6
+C15  18   98   15.9E-15
+G15  98   18    9 98  1E-6
+*
+* OUTPUT STAGE
+*
+ES   26   98    18 98  1
+RS   26   22   2.4E3
+IB1  98   21   2.404E-3
+IB2  23   98   2.404E-3
+D10  21   98   DY
+D11  98   23   DY
+C16  20   25   2E-12
+C17  24   25   2E-12
+DQ1  97   20   DQ
+Q2   20   21   22  NPN
+Q3   24   23   22  PNP
+DQ2  24   51   DQ
+Q5   25   20   97  PNP 20
+Q6   25   24   51  NPN 20
+VP   96   97   0
+VN   51   52   0
+EP   96   0     99 0  1
+EN   52   0     50 0  1
+R25  30   99   25E3
+R26  30   50   25E3
+FSY1 99   0    VP 1
+FSY2 0    50   VN 1
+DC1  25   99   DX
+DC2  50   25   DX
+*
+* MODELS USED
+*
+.MODEL JX NJF(BETA=3.2526E-3 VTO=-2.000 IS=25E-12)
+.MODEL NPN NPN(BF=120 VAF=150 VAR=15 RB=2E3
++ RE=4 RC=650 IS=1E-16)
+.MODEL PNP PNP(BF=120 VAF=150 VAR=15 RB=2E3
++ RE=4 RC=1E3 IS=1E-16)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D
+.MODEL DQ D(IS=1E-16)
+.ENDS AD824B
+************
+*SYM=ADOPAMP
+*SRC=OP191;OP191;Opamps;AD-"OPxxx";
+* OP191 SPICE Macro-model               Rev. A, 12/94
+*                                       ARG / PMI
+*
+* Copyright 1994 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP191    1  2  99 50 45
+*
+* INPUT STAGE
+*
+I1   99   7    8.06E-6
+Q1   6    4    7    QP
+Q2   5    3    7    QP
+D1   3    99   DX
+D2   4    99   DX
+D3   3    4    DX
+D4   4    3    DX
+R1   3    8    5E3
+R2   4    2    5E3
+R3   5    50   6.4654E3
+R4   6    50   6.4654E3
+EOS  8    1    POLY(1)  16 39  -80E-6 1
+IOS  3    4    50E-12
+GB1  3    98    21 98  50E-9
+GB2  4    98    21 98  50E-9
+CIN  1    2    1E-12
+*
+* 1ST GAIN STAGE
+*
+EREF 98   0     39 0  1
+G1   98   9     6 5  31.667E-6
+R7   9    98   1E6
+EC1  99   10   POLY(1)  99 39  -0.52 1
+EC2  11   50   POLY(1)  39 50  -0.52 1
+D5   9    10   DX
+D6   11   9    DX
+*
+* 2ND GAIN STAGE AND DOMINANT POLE AT 36HZ
+*
+G2   98   12    9 39  8E-6
+R8   12   98   276.311E6
+C2   12   98   16E-12
+D7   12   13   DX
+D8   14   12   DX
+V1   99   13   0.58
+V2   14   50   0.58
+*
+* COMMON MODE STAGE
+*
+ECM  15   98   POLY(2)  1 39   2 39  0 0.5 0.5
+R9   15   16   1E6
+R10  16   98   10
+*
+* POLE AT 2.5MHZ
+*
+G3   98   18    12 39  1E-6
+R11  18   98   1E6
+C4   18   98   63.662E-15
+*
+* BIAS CURRENT-VS-COMMON MODE VOLTAGE
+*
+EP   97   0     99 0  1
+VB   99   17   1.3
+RB   17   50   1E9
+E3   19   0     15 17  16
+D13  19   20   DX
+R12  20   0    1E6
+G4   98   21    20 0  1E-3
+R13  21   98   5E3
+D14  21   22   DY
+E4   97   22   POLY(1)  99 98  -0.765 1
+*
+* POLE AT 100MHZ
+*
+G6   98   40    18 39  1E-6
+R20  40   98   1E6
+C10  40   98   1.592E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   109.375E3
+RS2  39   50   109.375E3
+RO1  99   45   41.667
+RO2  45   50   41.667
+G7   45   99    99 40  24E-3
+G8   50   45    40 50  24E-3
+G9   98   60    45 40  24E-3
+D9   60   61   DX
+D10  62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 0.207E-3  1  1
+D11  41   45   DZ
+D12  45   42   DZ
+V5   40   41   0.131
+V6   42   40   0.131
+.MODEL DX D
+.MODEL DY D(IS=1E-9)
+.MODEL DZ D(IS=1E-6)
+.MODEL QP PNP(BF=133.333)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=OP191G;OP191G;Opamps;AD-"OPxxx";
+* OP191G SPICE Macro-model              Rev. A, 12/94
+*                                       ARG / PMI
+*
+* This version of the OP191 model simulates the worst-case
+* parameters of the 'G' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1994 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP191G   1  2  99 50 45
+*
+* INPUT STAGE
+*
+I1   99   7    8.1E-6
+Q1   6    4    7    QP
+Q2   5    3    7    QP
+D1   3    99   DX
+D2   4    99   DX
+D3   3    4    DX
+D4   4    3    DX
+R1   3    8    5E3
+R2   4    2    5E3
+R3   5    50   6.4654E3
+R4   6    50   6.4654E3
+EOS  8    1    POLY(1)  16 39  -0.5E-3 1.778
+IOS  3    4    4E-9
+GB1  3    98    21 98  83.333E-9
+GB2  4    98    21 98  83.333E-9
+CIN  1    2    1E-12
+*
+* 1ST GAIN STAGE
+*
+EREF 98   0     39 0  1
+G1   98   9     6 5  31.416E-6
+R7   9    98   1E6
+EC1  99   10   POLY(1)  99 39  -0.52 1
+EC2  11   50   POLY(1)  39 50  -0.52 1
+D5   9    10   DX
+D6   11   9    DX
+*
+* 2ND GAIN STAGE AND DOMINANT POLE AT 100HZ
+*
+G2   98   12    9 39  8E-6
+R8   12   98   99.472E6
+C2   12   98   16E-12
+D7   12   13   DX
+D8   14   12   DX
+V1   99   13   0.58
+V2   14   50   0.58
+*
+* COMMON MODE STAGE
+*
+ECM  15   98   POLY(2)  1 39   2 39  0 0.5 0.5
+R9   15   16   1E6
+R10  16   98   100
+*
+* POLE AT 2.5MHZ
+*
+G3   98   18    12 39  1E-6
+R11  18   98   1E6
+C4   18   98   63.662E-15
+*
+* BIAS CURRENT-VS-COMMON MODE VOLTAGE
+*
+EP   97   0     99 0  1
+VB   99   17   1.3
+RB   17   50   1E9
+E3   19   0     15 17  16
+D13  19   20   DX
+R12  20   0    1E6
+G4   98   21    20 0  1E-3
+R13  21   98   5E3
+D14  21   22   DY
+E4   97   22   POLY(1)  99 98  -0.765 1
+*
+* POLE AT 100MHZ
+*
+G6   98   40    18 39  1E-6
+R20  40   98   1E6
+C10  40   98   1.592E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   109.375E3
+RS2  39   50   109.375E3
+RO1  99   45   41.667
+RO2  45   50   41.667
+G7   45   99    99 40  24E-3
+G8   50   45    40 50  24E-3
+G9   98   60    45 40  24E-3
+D9   60   61   DX
+D10  62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 0.367E-3  1  1
+D11  41   45   DZ
+D12  45   42   DZ
+V5   40   41   0.131
+V6   42   40   0.131
+.MODEL DX D
+.MODEL DY D(IS=1E-9)
+.MODEL DZ D(IS=1E-6)
+.MODEL QP PNP(BF=80)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=OP279;OP279;Opamps;AD-"OPxxx";
+* OP279 SPICE Macro-model               Rev. A, 7/94
+*                                       ARG / PMI
+*
+* Copyright 1994 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP279    3  2  99 50 45
+*
+* INPUT STAGE AND POLE AT 6MHZ
+*
+I1   1    50   60.2E-6
+Q1   5    2    7    QN
+Q2   6    4    8    QN
+D1   4    2    DX
+D2   2    4    DX
+R1   1    7    1.628E3
+R2   1    8    1.628E3
+R3   5    99   2.487E3
+R4   6    99   2.487E3
+C1   5    6    5.333E-12
+EOS  4    3    POLY(1)  16 39  0.25E-3 50.118
+IOS  2    3    5E-9
+GB1  2    98    24 98  100E-9
+GB2  4    98    24 98  100E-9
+CIN  2    3    1E-12
+*
+* GAIN STAGE AND DOMINANT POLE AT 16HZ
+*
+EREF 98   0     39 0  1
+G1   98   9     5 6  402.124E-6
+R7   9    98   497.359E6
+C2   9    98   20E-12
+V1   99   10   0.58
+V2   11   50   0.47
+D5   9    10   DX
+D6   11   9    DX
+*
+* COMMON MODE STAGE WITH ZERO AT 10KHZ
+*
+ECM  15   98   POLY(2)  3 39   2 39  0 0.5 0.5
+R9   15   16   1E6
+R10  16   98   10
+C3   15   16   15.915E-12
+*
+* ZERO AT 1.5MHZ
+*
+E1   14   98    9 39  1E6
+R5   14   18   1E6
+R6   18   98   1
+C4   14   18   106.103E-15
+*
+* BIAS CURRENT-VS-COMMON MODE VOLTAGE
+*
+EP   97   0     99 0  1
+EN   51   0     50 0  1
+V3   20   21   1.6
+V4   22   23   2.8
+R12  97   20   530
+R13  23   51   1E3
+D13  15   21   DX
+D14  22   15   DX
+FIB  98   24   POLY(2) V3 V4 0 -1 1
+RIB  24   98   10E3
+E3   97   25   POLY(1)  99 39  -1.63 1
+E4   26   51   POLY(1)  39 50  -2.73 1
+D15  24   25   DX
+D16  26   24   DX
+*
+* POLE AT 6MHZ
+*
+G6   98   40    18 39  1E-6
+R20  40   98   1E6
+C10  40   98   26.526E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   6.0345E3
+RS2  39   50   6.0345E3
+RO1  99   45   40
+RO2  45   50   40
+G7   45   99    99 40  25E-3
+G8   50   45    40 50  25E-3
+G9   98   60    45 40  25E-3
+D9   60   61   DX
+D10  62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 1.711E-3  1  1
+D11  41   45   DZ
+D12  45   42   DZ
+V5   40   41   1.54
+V6   42   40   1.54
+.MODEL DX D
+.MODEL DZ D(IS=1E-6)
+.MODEL QN NPN(BF=300)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=OP279G;OP279G;Opamps;AD-"OPxxx";
+* OP279G SPICE Macro-model              Rev. A, 7/94
+*                                       ARG / PMI
+*
+* This version of the OP279 model simulates the worst-case
+* parameters of the 'G' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1994 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP279G   3  2  99 50 45
+*
+* INPUT STAGE AND POLE AT 5MHZ
+*
+I1   1    50   60.6E-6
+Q1   5    2    7    QN
+Q2   6    4    8    QN
+D1   4    2    DX
+D2   2    4    DX
+R1   1    7    1.633E3
+R2   1    8    1.633E3
+R3   5    99   2.487E3
+R4   6    99   2.487E3
+C1   5    6    6.4E-12
+EOS  4    3    POLY(1)  16 39  4E-3 1
+IOS  2    3    25E-9
+GB1  2    98    24 98  100E-9
+GB2  4    98    24 98  100E-9
+CIN  2    3    1E-12
+*
+* GAIN STAGE AND DOMINANT POLE AT 64HZ
+*
+EREF 98   0     39 0  1
+G1   98   9     5 6  402.124E-6
+R7   9    98   124.34E6
+C2   9    98   20E-12
+V1   99   10   0.58
+V2   11   50   0.47
+D5   9    10   DX
+D6   11   9    DX
+*
+* COMMON MODE STAGE WITH ZERO AT 20KHZ
+*
+ECM  15   98   POLY(2)  3 39   2 39  0 0.5 0.5
+R9   15   16   1E6
+R10  16   98   1E3
+C3   15   16   7.958E-12
+*
+* ZERO AT 1.5MHZ
+*
+E1   14   98    9 39  1E6
+R5   14   18   1E6
+R6   18   98   1
+C4   14   18   106.103E-15
+*
+* BIAS CURRENT-VS-COMMON MODE VOLTAGE
+*
+EP   97   0     99 0  1
+EN   51   0     50 0  1
+V3   20   21   1.6
+V4   22   23   2.8
+R12  97   20   530
+R13  23   51   1E3
+D13  15   21   DX
+D14  22   15   DX
+FIB  98   24   POLY(2) V3 V4 0 -1 1
+RIB  24   98   10E3
+E3   97   25   POLY(1)  99 39  -1.63 1
+E4   26   51   POLY(1)  39 50  -2.73 1
+D15  24   25   DX
+D16  26   24   DX
+*
+* POLE AT 6MHZ
+*
+G6   98   40    18 39  1E-6
+R20  40   98   1E6
+C10  40   98   26.526E-15
+*
+* OUTPUT STAGE
+*
+RS1  99   39   6.0345E3
+RS2  39   50   6.0345E3
+RO1  99   45   40
+RO2  45   50   40
+G7   45   99    99 40  25E-3
+G8   50   45    40 50  25E-3
+G9   98   60    45 40  25E-3
+D9   60   61   DX
+D10  62   60   DX
+V7   61   98   DC 0
+V8   98   62   DC 0
+FSY  99   50   POLY(2) V7 V8 2.611E-3  1  1
+D11  41   45   DZ
+D12  45   42   DZ
+V5   40   41   0.95
+V6   42   40   0.95
+.MODEL DX D
+.MODEL DZ D(IS=1E-6)
+.MODEL QN NPN(BF=100)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=OP284;OP284;Opamps;AD-"OPxxx";
+* OP284 SPICE Macro-model               11/95 / Rev. B
+*                                       ARG / ADSC
+*
+* Revision History:
+*
+*     Rev. B
+* Changed input transistor betas to conform to final data sheet
+* Ios typical spec of 60nA.
+*
+*
+* Copyright 1993 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP284    1  2  99 50 45
+*
+* INPUT STAGE
+*
+Q1   5    2    3    QIN 1
+Q2   6    11   3    QIN 1
+Q3   7    2    4    QIP 1
+Q4   8    11   4    QIP 1
+DC1  2    11   DC
+DC2  11   2    DC
+Q5   4    9    99   QIP 1
+Q6   9    9    99   QIP 1
+Q7   3    10   50   QIN 1
+Q8   10   10   50   QIN 1
+R1   99   5    4E3
+R2   99   6    4E3
+R3   7    50   4E3
+R4   8    50   4E3
+IREF 9    10   50.5E-6
+EOS  1    11   POLY(2) 22 98 14 98 -25E-6 1E-2 1
+IOS  2    1    5E-9
+CIN  1    2    2E-12
+GN1  98   1    17 98  1E-3
+GN2  98   2    23 98  1E-3
+*
+* VOLTAGE NOISE SOURCE WITH FLICKER NOISE
+*
+VN1  13   98   DC 2
+VN2  98   15   DC 2
+DN1  13   14   DEN
+DN2  14   15   DEN
+*
+* CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+VN3  16   98   DC 2
+VN4  98   18   DC 2
+DN3  16   17   DIN
+DN4  17   18   DIN
+*
+* 2ND CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+VN5  19   98   DC 2
+VN6  98   24   DC 2
+DN5  19   23   DIN
+DN6  23   24   DIN
+*
+* GAIN STAGE
+*
+EREF 98   0    POLY(2) 99 0   50 0  0 0.5 0.5
+G1   98   20   POLY(2) 6 5   8 7  0 0.5E-3 0.5E-3
+R9   20   98   1E3
+*
+* COMMON MODE STAGE WITH ZERO AT 100HZ
+*
+ECM  98   21   POLY(2)  1 98   2 98  0 0.5 0.5
+R10  21   22   1
+R11  22   98   100E-6
+C4   21   22   1.592E-3
+*
+* NEGATIVE ZERO AT 20MHZ
+*
+E1   27   98   20 98  1E6
+R17  27   28   1
+R18  28   98   1E-6
+C8   25   26   7.958E-9
+ENZ  25   98   27 28 1
+VNZ  26   98   DC 0
+FNZ  27   28   VNZ -1
+*
+* POLE AT 40MHZ
+*
+G4   98   29   28 98 1
+R19  29   98   1
+C9   29   98   3.979E-9
+*
+* POLE AT 40MHZ
+*
+G5   98   30   29 98 1
+R20  30   98   1
+C10  30   98   3.979E-9
+*
+* OUTUT STAGE
+*
+ISY  99   50   0.276E-3
+GIN  50   31   POLY(1) 30 98 .862574E-6 505.879E-6
+RIN  31   50   2.75E6
+VB   99   32   0.7
+Q11  32   31   33   QON 1
+R21  33   34   4.5E3
+I1   34   50   50E-6
+R22  99   35   6E3
+Q12  36   36   35   QOP 1
+I2   36   50   50E-6
+R23  99   37   2.6E3
+R24  34   38   5E3
+Q13  39   36   37   QOP 1
+Q14  39   38   40   QON 1.5
+R25  40   50   40
+Q15  39   39   41   QON 1
+R26  41   42   1E3
+R27  99   43   220
+Q16  44   44   43   QOP 1.5
+Q17  44   39   42   QON 1
+R28  42   50   2E3
+VSCP 99   97   DC 0
+FSCP 46   99   VSCP 1
+RSCP 46   99   40
+Q20  44   46   99   QOP 1
+Q18  45   44   97   QOP 4.5
+Q19  45   34   51   QON 4.5
+VSCN 51   50   DC 0
+FSCN 50   47   VSCN 1
+RSCN 47   50   40
+Q21  34   47   50   QON 1
+CC2  31   45   20E-12
+CF1  31   34   15E-12
+CF2  31   42   15E-12
+CO1  34   45   15E-12
+CO2  42   45   5E-12
+D3   45   99   DX
+D4   50   45   DX
+.MODEL DC D(IS=130E-21)
+.MODEL DX D
+.MODEL DEN D(RS=100 KF=12E-15 AF=1)
+.MODEL DIN D(RS=5.358 KF=56E-15 AF=1)
+.MODEL QIN NPN(BF=120 VA=200 IS=0.5E-16)
+.MODEL QIP PNP(BF=90 VA=60 IS=0.5E-16)
+.MODEL QON NPN(BF=200 VA=200 IS=0.5E-16 RC=50)
+.MODEL QOP PNP(BF=200 VA=200 IS=0.5E-16 RC=160)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=OP284E;OP284E;Opamps;AD-"OPxxx";
+* OP284E SPICE Macro-model              11/95 / Rev. B
+*                                       ARG / ADSC
+*
+* Revision History:
+*
+*     Rev. B
+* Changed the short-circuit output current limit from +/- 7.5mA
+* to +/- 6.5mA to reflect final data sheet limits.
+*
+* Changed Vos spec to conform to final data sheet value of
+* 65uV, up from 50uV.
+*
+* This version of the OP284 model simulates the worst-case
+* parameters of the 'E' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1993 by Analog Devices
+*
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP284E   1  2  99 50 45
+*
+* INPUT STAGE
+*
+Q1   5    2    3    QIN 1
+Q2   6    11   3    QIN 1
+Q3   7    2    4    QIP 1
+Q4   8    11   4    QIP 1
+DC1  2    11   DC
+DC2  11   2    DC
+Q5   4    9    99   QIP 1
+Q6   9    9    99   QIP 1
+Q7   3    10   50   QIN 1
+Q8   10   10   50   QIN 1
+R1   99   5    4E3
+R2   99   6    4E3
+R3   7    50   4E3
+R4   8    50   4E3
+IREF 9    10   50.5E-6
+EOS  1    11   POLY(2) 22 98 14 98 -65E-6 501.2E-3 1
+IOS  2    1    25E-9
+CIN  1    2    2E-12
+GN1  98   1    17 98 1E-3
+GN2  98   2    23 98 1E-3
+*
+* VOLTAGE NOISE SOURCE WITH FLICKER NOISE
+*
+VN1  13   98   DC 2
+VN2  98   15   DC 2
+DN1  13   14   DEN
+DN2  14   15   DEN
+*
+* CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+VN3  16   98   DC 2
+VN4  98   18   DC 2
+DN3  16   17   DIN
+DN4  17   18   DIN
+*
+* 2ND CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+VN5  19   98   DC 2
+VN6  98   24   DC 2
+DN5  19   23   DIN
+DN6  23   24   DIN
+*
+* GAIN STAGE
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   20   POLY(2) 6 5 8 7 0 0.5E-3 0.5E-3
+R9   20   98   1E3
+*
+* COMMON MODE STAGE WITH ZERO AT 5KHZ
+*
+ECM  98   21   POLY(2) 1 98 2 98 0 0.5 0.5
+R10  21   22   1
+R11  22   98   100E-6
+C4   21   22   31.756E-6
+*
+* NEGATIVE ZERO AT 20MHZ
+*
+E1   27   98   20 98 1
+R17  27   28   1
+R18  28   98   1E-6
+C8   25   26   7.958E-9
+ENZ  25   98   27 28 1
+VNZ  26   98   DC 0
+FNZ  27   28   VNZ -1
+*
+* POLE AT 40MHZ
+*
+G4   98   29   28 98 1E6
+R19  29   98   1
+C9   29   98   3.979E-9
+*
+* POLE AT 40MHZ
+*
+G5   98   30   29 98 1
+R20  30   98   1
+C10  30   98   3.979E-9
+*
+* OUTUT STAGE
+*
+ISY  99   50   0.526E-3
+GIN  50   31   POLY(1) 30 98 0.862574E-6 511.855E-6
+RIN  31   50   2.75E6
+VB   99   32   0.7
+Q11  32   31   33   QON 1
+R21  33   34   4.5E3
+I1   34   50   50E-6
+R22  99   35   6E3
+Q12  36   36   35   QOP 1
+I2   36   50   50E-6
+R23  99   37   2.6E3
+R24  34   38   5E3
+Q13  39   36   37   QOP 1
+Q14  39   38   40   QON 1.5
+R25  40   50   40
+Q15  39   39   41   QON 1
+R26  41   42   1E3
+R27  99   43   220
+Q16  44   44   43   QOP 1.5
+Q17  44   39   42   QON 1
+R28  42   50   2E3
+VSCP 99   97   DC 0
+FSCP 46   99   VSCP 1
+RSCP 46   99   125
+Q20  44   46   99   QOP 1
+Q18  45   44   97   QOP 4.5
+Q19  45   34   51   QON 4.5
+VSCN 51   50   DC 0
+FSCN 50   47   VSCN 1
+RSCN 47   50   122
+Q21  34   47   50   QON 1
+CC2  31   45   20E-12
+CF1  31   34   15E-12
+CF2  31   42   15E-12
+CO1  34   45   15E-12
+CO2  42   45   5E-12
+D3   45   99   DX
+D4   50   45   DX
+.MODEL DC D(IS=130E-21)
+.MODEL DX D
+.MODEL DEN D(RS=100 KF=12E-15 AF=1)
+.MODEL DIN D(RS=5.358 KF=56E-15 AF=1)
+.MODEL QIN NPN(BF=250 VA=200 IS=0.5E-16)
+.MODEL QIP PNP(BF=60 VA=100 IS=0.5E-16)
+.MODEL QON NPN(BF=200 VA=200 IS=0.5E-16 RC=140)
+.MODEL QOP PNP(BF=200 VA=200 IS=0.5E-16 RC=210)
+.ENDS
+************
+*SYM=ADOPAMP
+*SRC=OP284F;OP284F;Opamps;AD-"OPxxx";
+* OP284F SPICE Macro-model              11/95 / Rev. B
+*                                       ARG / ADSC
+*
+* Revision History:
+*
+*     Rev. B
+* Changed the short-circuit output current limit from +/- 7.5mA
+* to +/- 6.5mA to reflect final data sheet limits.
+*
+* Changed Vos spec to conform to final data sheet value of
+* 125uV, up from 50uV.
+*
+* This version of the OP284 model simulates the worst-case
+* parameters of the 'F' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1993 by Analog Devices
+* Node assignments
+*                non-inverting input
+*                |  inverting input
+*                |  |  positive supply
+*                |  |  |  negative supply
+*                |  |  |  |  output
+*                |  |  |  |  |
+.SUBCKT OP284F   1  2  99 50 45
+*
+* INPUT STAGE
+*
+Q1   5    2    3    QIN 1
+Q2   6    11   3    QIN 1
+Q3   7    2    4    QIP 1
+Q4   8    11   4    QIP 1
+DC1  2    11   DC
+DC2  11   2    DC
+Q5   4    9    99   QIP 1
+Q6   9    9    99   QIP 1
+Q7   3    10   50   QIN 1
+Q8   10   10   50   QIN 1
+R1   99   5    4E3
+R2   99   6    4E3
+R3   7    50   4E3
+R4   8    50   4E3
+IREF 9    10   50.5E-6
+EOS  1    11   POLY(2) 22 98 14 98 -125E-6 501.2E-3 1
+IOS  2    1    25E-9
+CIN  1    2    2E-12
+GN1  98   1    17 98 1E-3
+GN2  98   2    23 98 1E-3
+*
+* VOLTAGE NOISE SOURCE WITH FLICKER NOISE
+*
+VN1  13   98   DC 2
+VN2  98   15   DC 2
+DN1  13   14   DEN
+DN2  14   15   DEN
+*
+* CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+VN3  16   98   DC 2
+VN4  98   18   DC 2
+DN3  16   17   DIN
+DN4  17   18   DIN
+*
+* 2ND CURRENT NOISE SOURCE WITH FLICKER NOISE
+*
+VN5  19   98   DC 2
+VN6  98   24   DC 2
+DN5  19   23   DIN
+DN6  23   24   DIN
+*
+* GAIN STAGE
+*
+EREF 98   0    POLY(2) 99 0 50 0 0 0.5 0.5
+G1   98   20   POLY(2) 6 5 8 7 0 0.5E-3 0.5E-3
+R9   20   98   1E3
+*
+* COMMON MODE STAGE WITH ZERO AT 5KHZ
+*
+ECM  98   21   POLY(2) 1 98 2 98 0 0.5 0.5
+R10  21   22   1
+R11  22   98   100E-6
+C4   21   22   31.756E-6
+*
+* NEGATIVE ZERO AT 20MHZ
+*
+E1   27   98   20 98 1
+R17  27   28   1
+R18  28   98   1E-6
+C8   25   26   7.958E-9
+ENZ  25   98   27 28 1
+VNZ  26   98   DC 0
+FNZ  27   28   VNZ -1
+*
+* POLE AT 40MHZ
+*
+G4   98   29   28 98 1E6
+R19  29   98   1
+C9   29   98   3.979E-9
+*
+* POLE AT 40MHZ
+*
+G5   98   30   29 98 1
+R20  30   98   1
+C10  30   98   3.979E-9
+*
+* OUTUT STAGE
+*
+ISY  99   50   0.526E-3
+GIN  50   31   POLY(1) 30 98 0.862574E-6 511.855E-6
+RIN  31   50   2.75E6
+VB   99   32   0.7
+Q11  32   31   33   QON 1
+R21  33   34   4.5E3
+I1   34   50   50E-6
+R22  99   35   6E3
+Q12  36   36   35   QOP 1
+I2   36   50   50E-6
+R23  99   37   2.6E3
+R24  34   38   5E3
+Q13  39   36   37   QOP 1
+Q14  39   38   40   QON 1.5
+R25  40   50   40
+Q15  39   39   41   QON 1
+R26  41   42   1E3
+R27  99   43   220
+Q16  44   44   43   QOP 1.5
+Q17  44   39   42   QON 1
+R28  42   50   2E3
+VSCP 99   97   DC 0
+FSCP 46   99   VSCP 1
+RSCP 46   99   125
+Q20  44   46   99   QOP 1
+Q18  45   44   97   QOP 4.5
+Q19  45   34   51   QON 4.5
+VSCN 51   50   DC 0
+FSCN 50   47   VSCN 1
+RSCN 47   50   122
+Q21  34   47   50   QON 1
+CC2  31   45   20E-12
+CF1  31   34   15E-12
+CF2  31   42   15E-12
+CO1  34   45   15E-12
+CO2  42   45   5E-12
+D3   45   99   DX
+D4   50   45   DX
+.MODEL DC D(IS=130E-21)
+.MODEL DX D
+.MODEL DEN D(RS=100 KF=12E-15 AF=1)
+.MODEL DIN D(RS=5.358 KF=56E-15 AF=1)
+.MODEL QIN NPN(BF=250 VA=200 IS=0.5E-16)
+.MODEL QIP PNP(BF=60 VA=100 IS=0.5E-16)
+.MODEL QON NPN(BF=200 VA=200 IS=0.5E-16 RC=140)
+.MODEL QOP PNP(BF=200 VA=200 IS=0.5E-16 RC=210)
+.ENDS
+***********

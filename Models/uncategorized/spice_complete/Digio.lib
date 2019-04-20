@@ -1,0 +1,2653 @@
+***** The following digital default timing models are used in the digital
+***** libraries.  All of these models have zero delays and zero constraints.
+
+* STANDARD GATES
+.model D0_GATE ugate ()
+
+* TRI-STATE GATES
+.model D0_TGATE utgate ()
+
+* EDGE TRIGGERED FLIP-FLOPS
+.model D0_EFF ueff ()
+
+* GATED LATCHES
+.model D0_GFF ugff ()
+
+* PROGRAMMABLE LOGIC DEVICES
+.model D0_PLD upld ()
+
+
+***** SAMPLE DIGITAL DEVICE DELAYS*****
+
+* STANDARD GATE
+.model DLY_TTL ugate (tplhty=11ns tplhmx=22ns tphlty=8ns tphlmx=15ns)
+
+* TRI-STATE GATE
+.model DLY_TRI utgate (tplhty=12ns tplhmx=18ns tphlty=12ns tphlmx=18ns
++     tpzlty=20ns tpzlmx=30ns tpzhty=15ns tpzhmx=23ns
++     tplzty=10ns tplzmx=20ns tphzty=15ns tphzmx=25ns)
+
+* EDGE TRIGGERED FLIP-FLOP
+.model DLY_EFF ueff (tppcqlhty=16ns tppcqlhmx=25ns tppcqhlty=25ns
++     tppcqhlmx=40ns twpclmn=25ns tpclkqlhty=16ns tpclkqlhmx=25ns
++     tpclkqhlty=25ns tpclkqhlmx=40ns twclklmn=25ns twclkhmn=25ns
++     tsudclkmn=15ns tsupcclkhmn=10ns thdclkmn=5ns)
+
+* GATED LATCH
+.model DLY_GFF ugff (tppcqlhty=16ns tppcqlhmx=25ns tppcqhlty=25ns
++     tppcqhlmx=40ns twpclmn=25ns tpgqlhty=16ns tpgqlhmx=25ns
++     tpgqhlty=25ns tpgqhlmx=40ns twghmn=30ns tsudgmn=15ns
++     tsupcghmn=10ns thdgmn=5ns)
+
+
+*****74/TTL POWER SUPPLY SUBCIRCUIT*****
+
+.subckt DIGIFPWR AGND
++  optional: DPWR=$G_DPWR DGND=$G_DGND
++  params: VOLTAGE=5 REFERENCE=0
+V1 DPWR AGND {VOLTAGE}
+R1 DPWR AGND 1E9
+V2 DGND AGND {REFERENCE}
+R2 DGND AGND 1E9
+R3 AGND 0 1m
+.ends
+
+
+*****CD4000 POWER SUPPLY SUBCIRCUIT*****
+.param CD4000_VDD=5V
+.param CD4000_VSS=0V
+
+.subckt CD4000_PWR AGND
++  optional: VDD=$G_CD4000_VDD VSS=$G_CD4000_VSS
++  params: VOLTAGE={CD4000_VDD} REFERENCE={CD4000_VSS}
+V1 VDD AGND {VOLTAGE}
+R1 VDD AGND 1E9
+V2 VSS AGND {REFERENCE}
+R2 VSS AGND 1E9
+R3 AGND 0 1m
+.ends
+
+
+*****ECL 10K POWER SUPPLY SUBCIRCUIT*****
+
+.subckt ECL_10K_PWR AGND
++  optional: VCC1=$G_ECL_10K_VCC1 VCC2=$G_ECL_10K_VCC2
++            VEE=$G_ECL_10K_VEE VTT=$G_ECL_10K_VTT
++  params: VOLT1=0 VOLT2=0 REF=-5.2 REFTT=-2
+V1 VCC1 AGND {VOLT1}
+R1 VCC1 AGND 1E9
+V2 VCC2 AGND {VOLT2}
+R2 VCC2 AGND 1E9
+V3 VEE AGND {REF}
+R3 VEE AGND 1E9
+V4 VTT AGND {REFTT}
+R4 VTT AGND 1E9
+R5 AGND 0 1m
+.ends
+
+
+*****ECL 100K POWER SUPPLY SUBCIRCUIT*****
+
+.subckt ECL_100K_PWR AGND
++  optional: VCC1=$G_ECL_100K_VCC1 VCC2=$G_ECL_100K_VCC2
++            VEE=$G_ECL_100K_VEE VTT=$G_ECL_100K_VTT
++  params: VOLT1=0 VOLT2=0 REF=-4.5 REFTT=-2
+V1 VCC1 AGND {VOLT1}
+R1 VCC1 AGND 1E9
+V2 VCC2 AGND {VOLT2}
+R2 VCC2 AGND 1E9
+V3 VEE AGND {REF}
+R3 VEE AGND 1E9
+V4 VTT AGND {REFTT}
+R4 VTT AGND 1E9
+R5 AGND 0 1m
+.ends
+
+
+***** DEFAULT I/O MODELS*****
+
+.model IO_DFT uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATODDEFAULT" ATOD2="ATODDEFAULT_NX"
++  ATOD3="ATODDEFAULT" ATOD4="ATODDEFAULT_NX"
++  DTOA1="DTOADEFAULT" DTOA2="DTOADEFAULT"
++  DTOA3="DTOADEFAULT" DTOA4="DTOADEFAULT"
++  DIGPOWER="DIGIFPWR")
+
+.model IO_DFT_OC uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATODDEFAULT" ATOD2="ATODDEFAULT_NX"
++  ATOD3="ATODDEFAULT" ATOD4="ATODDEFAULT_NX"
++  DTOA1="DTOADEFAULT_OC" DTOA2="DTOADEFAULT_OC"
++  DTOA3="DTOADEFAULT_OC" DTOA4="DTOADEFAULT_OC"
++  DIGPOWER="DIGIFPWR")
+
+* DEFAULT ATOD SUBCIRCUIT INTERFACES
+.subckt ATODDEFAULT A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DODFT DGTLNET=D IO_DFT
+C1 A DGND {CAPACITANCE+.1P}
+.ends
+
+.subckt ATODDEFAULT_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DODFT_NX DGTLNET=D IO_DFT
+C1 A DGND {CAPACITANCE+.1P}
+.ends
+
+* DEFAULT DTOA SUBCIRCUIT INTERFACES
+.subckt DTOADEFAULT D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DINDFT DGTLNET=D IO_DFT
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOADEFAULT_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DINDFT_OC DGTLNET=D IO_DFT_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* DEFAULT DIGITAL INPUT and OUTPUT MODELS
+.model DODFT doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=7
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.5  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DODFT_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=7)
+
+.model DINDFT dinput (
++  s0name="0"  s0tsw=3ns  s0rlo=7.1   s0rhi=170   ;@6.8 ohms, .2V
++  s1name="1"  s1tsw=3ns  s1rlo=415   s1rhi=195   ;@133 ohms, 3.4V
++  s2name="F"  s2tsw=3ns  s2rlo=41.8  s2rhi=107   ;@30.1 ohms, 1.4V
++  s3name="R"  s3tsw=3ns  s3rlo=41.8  s3rhi=107   ;@30.1 ohms, 1.4V
++  s4name="X"  s4tsw=3ns  s4rlo=41.8  s4rhi=107   ;@30.1 ohms, 1.4V
++  s5name="Z"  s5tsw=3ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DINDFT_OC dinput (
++  s0name="0"  s0tsw=3ns  s0rlo=7.1   s0rhi=170   ;@6.8 ohms, .2V
++  s1name="1"  s1tsw=3ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=3ns  s2rlo=41.8  s2rhi=107   ;@30.1 ohms, 1.4V
++  s3name="R"  s3tsw=3ns  s3rlo=41.8  s3rhi=107   ;@30.1 ohms, 1.4V
++  s4name="X"  s4tsw=3ns  s4rlo=41.8  s4rhi=107   ;@30.1 ohms, 1.4V
++  s5name="Z"  s5tsw=3ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+***** STIMULUS I/O MODELS*****
+* This model was created to allow the stimulus an I/O model
+* that would have a greater strength than the other I/O models.
+* Since there is no input, the AtoD section has been omitted.
+
+.model IO_STM uio (
++  DRVH=0 DRVL=0
++  DTOA1="DTOA_STM" DTOA2="DTOA_STM"
++  DTOA3="DTOA_STM" DTOA4="DTOA_STM"
++  DIGPOWER="DIGIFPWR")
+
+.model IO_STM_OC uio (
++  DRVH=1MEG DRVL=0
++  DTOA1="DTOA_STM_OC" DTOA2="DTOA_STM_OC"
++  DTOA3="DTOA_STM_OC" DTOA4="DTOA_STM_OC"
++  DIGPOWER="DIGIFPWR")
+
+* STIMULUS DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_STM D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DINSTM DGTLNET=D IO_STM
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_STM_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DINSTM_OC DGTLNET=D IO_STM_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* STIMULUS DIGITAL INPUT MODELS
+.model DINSTM dinput (
++  s0name="0"  s0tsw=500ps  s0rlo=.1    s0rhi=1K
++  s1name="1"  s1tsw=500ps  s1rlo=1K    s1rhi=.1
++  s2name="F"  s2tsw=500ps  s2rlo=.139  s2rhi=.357   ;@.1 ohms, 1.4V
++  s3name="R"  s3tsw=500ps  s3rlo=.139  s3rhi=.357   ;@.1 ohms, 1.4V
++  s4name="X"  s4tsw=500ps  s4rlo=.139  s4rhi=.357   ;@.1 ohms, 1.4V
++  s5name="Z"  s5tsw=500ps  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DINSTM_OC dinput (
++  s0name="0"  s0tsw=500ps  s0rlo=.1    s0rhi=1K
++  s1name="1"  s1tsw=500ps  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=500ps  s2rlo=.139  s2rhi=.357   ;@.1 ohms, 1.4V
++  s3name="R"  s3tsw=500ps  s3rlo=.139  s3rhi=.357   ;@.1 ohms, 1.4V
++  s4name="X"  s4tsw=500ps  s4rlo=.139  s4rhi=.357   ;@.1 ohms, 1.4V
++  s5name="Z"  s5tsw=500ps  s5rlo=1Meg  s5rhi=1Meg)
+
+
+***** STANDARD 74TTL I/O MODELS*****
+
+* These parts were derived from the TI TTL Logic Data Book, 1988
+* Pages 1-51, 2-4 to 5, 2-11, 2-69
+* The open collector tsw parameters were measured with
+* a 4k ohm pullup resistor.
+
+.model IO_STD uio (
++  DRVH=130 DRVL=130
++  ATOD1="ATOD_STD" ATOD2="ATOD_STD_NX"
++  ATOD3="ATOD_STD" ATOD4="ATOD_STD_NX"
++  DTOA1="DTOA_STD" DTOA2="DTOA_STD"
++  DTOA3="DTOA_STD" DTOA4="DTOA_STD"
++  TSWHL1=3.310ns TSWHL2=3.310ns
++  TSWHL3=3.310ns TSWHL4=3.310ns
++  TSWLH1=2.115ns TSWLH2=2.115ns
++  TSWLH3=2.115ns TSWLH4=2.115ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_STD_OC uio (
++  DRVH=1MEG DRVL=130
++  ATOD1="ATOD_STD" ATOD2="ATOD_STD_NX"
++  ATOD3="ATOD_STD" ATOD4="ATOD_STD_NX"
++  DTOA1="DTOA_STD_OC" DTOA2="DTOA_STD_OC"
++  DTOA3="DTOA_STD_OC" DTOA4="DTOA_STD_OC"
++  TSWHL1=3.516ns TSWHL2=3.516ns
++  TSWHL3=3.516ns TSWHL4=3.516ns
++  TSWLH1=1.898ns TSWLH2=1.898ns
++  TSWLH3=1.898ns TSWLH4=1.898ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_STD_OC_ST uio (
++  DRVH=1MEG DRVL=130
++  ATOD1="ATOD_STD_ST" ATOD2="ATOD_STD_ST"
++  ATOD3="ATOD_STD_ST" ATOD4="ATOD_STD_ST"
++  DTOA1="DTOA_STD_OC" DTOA2="DTOA_STD_OC"
++  DTOA3="DTOA_STD_OC" DTOA4="DTOA_STD_OC"
++  TSWHL1=3.516ns TSWHL2=3.516ns
++  TSWHL3=3.516ns TSWHL4=3.516ns
++  TSWLH1=1.898ns TSWLH2=1.898ns
++  TSWLH3=1.898ns TSWLH4=1.898ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_STD_ST uio (
++  DRVH=130 DRVL=130
++  ATOD1="ATOD_STD_ST" ATOD2="ATOD_STD_ST"
++  ATOD3="ATOD_STD_ST" ATOD4="ATOD_STD_ST"
++  DTOA1="DTOA_STD" DTOA2="DTOA_STD"
++  DTOA3="DTOA_STD" DTOA4="DTOA_STD"
++  TSWHL1=3.310ns TSWHL2=3.310ns
++  TSWHL3=3.310ns TSWHL4=3.310ns
++  TSWLH1=2.115ns TSWLH2=2.115ns
++  TSWLH3=2.115ns TSWLH4=2.115ns
++  DIGPOWER="DIGIFPWR")
+
+
+* STANDARD TTL ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_STD A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74 DGTLNET=D IO_STD
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 4K
+Q1 2 1 A Q74
+D1 DGND A D74CLMP
+D2 2 3 D74
+D3 3 DGND D74
+.ends
+
+.subckt ATOD_STD_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74_NX DGTLNET=D IO_STD
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 4K
+Q1 2 1 A Q74
+D1 DGND A D74CLMP
+D2 2 3 D74
+D3 3 DGND D74
+.ends
+
+.subckt ATOD_STD_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74_ST DGTLNET=D IO_STD_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 4K
+Q1 2 1 A Q74
+D1 DGND A D74CLMP
+D2 2 3 D74
+D3 3 DGND D74
+.ends
+
+* STANDARD TTL DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_STD D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74 DGTLNET=D IO_STD
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_STD_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74_OC DGTLNET=D IO_STD_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* STANDARD TTL DIGITAL INPUT and OUTPUT MODELS
+.model DO74 doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=5.5
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.5  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=5.5)
+
+.model DO74_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.7
++  s1name="1"  s1vlo=.9    s1vhi=5.5)
+
+.model DIN74 dinput (
++  s0name="0"  s0tsw=3.5ns  s0rlo=7.1   s0rhi=170   ;@6.8 ohms, .2V
++  s1name="1"  s1tsw=7.5ns  s1rlo=415   s1rhi=195   ;@133 ohms, 3.4V
++  s2name="F"  s2tsw=3.5ns  s2rlo=41.8  s2rhi=107   ;@30.1 ohms, 1.4V
++  s3name="R"  s3tsw=3.5ns  s3rlo=41.8  s3rhi=107   ;@30.1 ohms, 1.4V
++  s4name="X"  s4tsw=3.5ns  s4rlo=41.8  s4rhi=107   ;@30.1 ohms, 1.4V
++  s5name="Z"  s5tsw=3.5ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74_OC dinput (
++  s0name="0"  s0tsw=3.5ns  s0rlo=7.1   s0rhi=170   ;@6.8 ohms, .2V
++  s1name="1"  s1tsw=7.5ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=3.5ns  s2rlo=41.8  s2rhi=107   ;@30.1 ohms, 1.4V
++  s3name="R"  s3tsw=3.5ns  s3rlo=41.8  s3rhi=107   ;@30.1 ohms, 1.4V
++  s4name="X"  s4tsw=3.5ns  s4rlo=41.8  s4rhi=107   ;@30.1 ohms, 1.4V
++  s5name="Z"  s5tsw=7.5ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74AC I/O MODELS*****
+
+* These parts were derived from the National FACT Advanced CMOS
+* Data Book, 1993. Pages 1-3 to 20, 4-7, 4-8
+* TI Advanced CMOS Logic Data Book, 1993 Pages 2-4, 2-5, 2-53
+* The open collector tsw parameters were measured with a
+* 1K ohm pullup resistor.
+
+.model IO_AC uio (
++  DRVH=20 DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_AC" ATOD2="ATOD_AC_NX"
++  ATOD3="ATOD_AC" ATOD4="ATOD_AC_NX"
++  DTOA1="DTOA_AC" DTOA2="DTOA_AC"
++  DTOA3="DTOA_AC" DTOA4="DTOA_AC"
++  TSWHL1=769ps TSWHL2=769ps
++  TSWHL3=769ps TSWHL4=769ps
++  TSWLH1=2.971ns TSWLH2=2.971ns
++  TSWLH3=2.971ns TSWLH4=2.971ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AC_OC uio (
++  DRVH=1MEG DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_AC" ATOD2="ATOD_AC_NX"
++  ATOD3="ATOD_AC" ATOD4="ATOD_AC_NX"
++  DTOA1="DTOA_AC_OC" DTOA2="DTOA_AC_OC"
++  DTOA3="DTOA_AC_OC" DTOA4="DTOA_AC_OC"
++  TSWHL1=1.088ns TSWHL2=1.088ns
++  TSWHL3=1.088ns TSWHL4=1.088ns
++  TSWLH1=2.949ns TSWLH2=2.949ns
++  TSWLH3=2.949ns TSWLH4=2.949ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AC_OC_ST uio (
++  DRVH=1MEG DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_AC_ST" ATOD2="ATOD_AC_ST"
++  ATOD3="ATOD_AC_ST" ATOD4="ATOD_AC_ST"
++  DTOA1="DTOA_AC_OC" DTOA2="DTOA_AC_OC"
++  DTOA3="DTOA_AC_OC" DTOA4="DTOA_AC_OC"
++  TSWHL1=1.088ns TSWHL2=1.088ns
++  TSWHL3=1.088ns TSWHL4=1.088ns
++  TSWLH1=2.949ns TSWLH2=2.949ns
++  TSWLH3=2.949ns TSWLH4=2.949ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AC_ST uio (
++  DRVH=20 DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_AC_ST" ATOD2="ATOD_AC_ST"
++  ATOD3="ATOD_AC_ST" ATOD4="ATOD_AC_ST"
++  DTOA1="DTOA_AC" DTOA2="DTOA_AC"
++  DTOA3="DTOA_AC" DTOA4="DTOA_AC"
++  TSWHL1=769ps TSWHL2=769ps
++  TSWHL3=769ps TSWHL4=769ps
++  TSWLH1=2.971ns TSWLH2=2.971ns
++  TSWLH3=2.971ns TSWLH4=2.971ns
++  DIGPOWER="DIGIFPWR")
+
+* 74AC ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_AC A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74AC DGTLNET=D IO_AC
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_AC_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74AC_NX DGTLNET=D IO_AC
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_AC_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74AC_ST DGTLNET=D IO_AC_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+* 74AC DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_AC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74AC DGTLNET=D IO_AC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_AC_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74AC_OC DGTLNET=D IO_AC_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74AC DIGITAL INPUT and OUTPUT MODELS
+* All voltages were interpolated at VCC=5V.
+* The _ST voltages were calculated as typical from the max values.
+.model DO74AC doutput (
++  s0name="X"  s0vlo=1.5   s0vhi=3.5
++  s1name="1"  s1vlo=3.5   s1vhi=7
++  s2name="F"  s2vlo=2.45  s2vhi=3.5
++  s3name="F"  s3vlo=1.5   s3vhi=2.55
++  s4name="X"  s4vlo=1.5   s4vhi=3.5
++  s5name="0"  s5vlo=-.5  s5vhi=1.5
++  s6name="R"  s6vlo=1.5   s6vhi=2.55
++  s7name="R"  s7vlo=2.45  s7vhi=3.5)
+
+.model DO74AC_NX doutput (
++  s0name="0"  s0vlo=-.5  s0vhi=2.5
++  s1name="1"  s1vlo=2.5   s1vhi=7)
+
+.model DO74AC_ST doutput (
++  s0name="0"  s0vlo=-.5  s0vhi=2.95
++  s1name="1"  s1vlo=1.6    s1vhi=7)
+
+.model DIN74AC dinput (
++  s0name="0"  s0tsw=2ns  s0rlo=1     s0rhi=5000
++  s1name="1"  s1tsw=3ns  s1rlo=500   s1rhi=1
++  s2name="F"  s2tsw=2ns  s2rlo=26.8  s2rhi=26.8   ;@13.4 ohms, 2.5V
++  s3name="R"  s3tsw=2ns  s3rlo=26.8  s3rhi=26.8   ;@13.4 ohms, 2.5V
++  s4name="X"  s4tsw=2ns  s4rlo=26.8  s4rhi=26.8   ;@13.4 ohms, 2.5V
++  s5name="Z"  s5tsw=2ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74AC_OC dinput (
++  s0name="0"  s0tsw=2ns  s0rlo=1     s0rhi=5000
++  s1name="1"  s1tsw=3ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=2ns  s2rlo=26.8  s2rhi=26.8   ;@13.4 ohms, 2.5V
++  s3name="R"  s3tsw=2ns  s3rlo=26.8  s3rhi=26.8   ;@13.4 ohms, 2.5V
++  s4name="X"  s4tsw=2ns  s4rlo=26.8  s4rhi=26.8   ;@13.4 ohms, 2.5V
++  s5name="Z"  s5tsw=2ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74ACT I/O MODELS*****
+
+* These parts were derived from the National FACT Advanced CMOS
+* Data Book, 1993. Pages 4-8
+* TI Advanced CMOS Logic Data Book, 1993 Pages 2-8, 2-57
+* The open collector tsw parameters were measured with a
+* 1K ohm pullup resistor.
+
+.model IO_ACT uio (
++  DRVH=20 DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_ACT" ATOD2="ATOD_ACT_NX"
++  ATOD3="ATOD_ACT" ATOD4="ATOD_ACT_NX"
++  DTOA1="DTOA_AC" DTOA2="DTOA_AC"
++  DTOA3="DTOA_AC" DTOA4="DTOA_AC"
++  TSWHL1=769ps TSWHL2=769ps
++  TSWHL3=769ps TSWHL4=769ps
++  TSWLH1=2.971ns TSWLH2=2.971ns
++  TSWLH3=2.971ns TSWLH4=2.971ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ACT_OC uio (
++  DRVH=1MEG DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_ACT" ATOD2="ATOD_ACT_NX"
++  ATOD3="ATOD_ACT" ATOD4="ATOD_ACT_NX"
++  DTOA1="DTOA_AC_OC" DTOA2="DTOA_AC_OC"
++  DTOA3="DTOA_AC_OC" DTOA4="DTOA_AC_OC"
++  TSWHL1=1.088ns TSWHL2=1.088ns
++  TSWHL3=1.088ns TSWHL4=1.088ns
++  TSWLH1=2.949ns TSWLH2=2.949ns
++  TSWLH3=2.949ns TSWLH4=2.949ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ACT_OC_ST uio (
++  DRVH=1MEG DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_ACT_ST" ATOD2="ATOD_ACT_ST"
++  ATOD3="ATOD_ACT_ST" ATOD4="ATOD_ACT_ST"
++  DTOA1="DTOA_AC_OC" DTOA2="DTOA_AC_OC"
++  DTOA3="DTOA_AC_OC" DTOA4="DTOA_AC_OC"
++  TSWHL1=1.088ns TSWHL2=1.088ns
++  TSWHL3=1.088ns TSWHL4=1.088ns
++  TSWLH1=2.949ns TSWLH2=2.949ns
++  TSWLH3=2.949ns TSWLH4=2.949ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ACT_ST uio (
++  DRVH=20 DRVL=10
++  INLD=4.5pF
++  ATOD1="ATOD_ACT_ST" ATOD2="ATOD_ACT_ST"
++  ATOD3="ATOD_ACT_ST" ATOD4="ATOD_ACT_ST"
++  DTOA1="DTOA_AC" DTOA2="DTOA_AC"
++  DTOA3="DTOA_AC" DTOA4="DTOA_AC"
++  TSWHL1=769ps TSWHL2=769ps
++  TSWHL3=769ps TSWHL4=769ps
++  TSWLH1=2.971ns TSWLH2=2.971ns
++  TSWLH3=2.971ns TSWLH4=2.971ns
++  DIGPOWER="DIGIFPWR")
+
+* 74ACT ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_ACT A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74ACT DGTLNET=D IO_ACT
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_ACT_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74ACT_NX DGTLNET=D IO_ACT
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_ACT_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74ACT_ST DGTLNET=D IO_ACT_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+* 74ACT DIGITAL OUTPUT MODELS
+* All voltages were interpolated at VCC=5V.
+.model DO74ACT doutput (
++  s0name="X"  s0vlo=.8   s0vhi=2
++  s1name="1"  s1vlo=2   s1vhi=6.5
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8   s3vhi=1.45
++  s4name="X"  s4vlo=.8   s4vhi=2
++  s5name="0"  s5vlo=-.5  s5vhi=.8
++  s6name="R"  s6vlo=.8   s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74ACT_NX doutput (
++  s0name="0"  s0vlo=-.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=6.5)
+
+.model DO74ACT_ST doutput (
++  s0name="0"  s0vlo=-.5  s0vhi=1.7
++  s1name="1"  s1vlo=.9    s1vhi=6.5)
+
+
+*****74ALS I/O MODELS (00)*****
+
+* These parts were derived from the TI ALS/AS Logic Data Book, 1986
+* Pages 2-4, 2-8, 4-14 to 24
+* The open collector tsw parameters were measured with a
+* 2k ohm pullup resistor.
+
+.model IO_ALS00 uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATOD_ALS00" ATOD2="ATOD_ALS00_NX"
++  ATOD3="ATOD_ALS00" ATOD4="ATOD_ALS00_NX"
++  DTOA1="DTOA_ALS00" DTOA2="DTOA_ALS00"
++  DTOA3="DTOA_ALS00" DTOA4="DTOA_ALS00"
++  TSWHL1=1.37ns TSWHL2=1.37ns
++  TSWHL3=1.37ns TSWHL4=1.37ns
++  TSWLH1=3.12ns TSWLH2=3.12ns
++  TSWLH3=3.12ns TSWLH4=3.12ns
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS00_OC uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATOD_ALS00" ATOD2="ATOD_ALS00_NX"
++  ATOD3="ATOD_ALS00" ATOD4="ATOD_ALS00_NX"
++  DTOA1="DTOA_ALS00_OC" DTOA2="DTOA_ALS00_OC"
++  DTOA3="DTOA_ALS00_OC" DTOA4="DTOA_ALS00_OC"
++  TSWHL1=2.057ns TSWHL2=2.057ns
++  TSWHL3=2.057ns TSWHL4=2.057ns
++  TSWLH1=950ps TSWLH2=950ps
++  TSWLH3=950ps TSWLH4=950ps
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS00_OC_ST uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATOD_ALS00_ST" ATOD2="ATOD_ALS00_ST"
++  ATOD3="ATOD_ALS00_ST" ATOD4="ATOD_ALS00_ST"
++  DTOA1="DTOA_ALS00_OC" DTOA2="DTOA_ALS00_OC"
++  DTOA3="DTOA_ALS00_OC" DTOA4="DTOA_ALS00_OC"
++  TSWHL1=2.057ns TSWHL2=2.057ns
++  TSWHL3=2.057ns TSWHL4=2.057ns
++  TSWLH1=950ps TSWLH2=950ps
++  TSWLH3=950ps TSWLH4=950ps
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS00_ST uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATOD_ALS00_ST" ATOD2="ATOD_ALS00_ST"
++  ATOD3="ATOD_ALS00_ST" ATOD4="ATOD_ALS00_ST"
++  DTOA1="DTOA_ALS00" DTOA2="DTOA_ALS00"
++  DTOA3="DTOA_ALS00" DTOA4="DTOA_ALS00"
++  TSWHL1=1.37ns TSWHL2=1.37ns
++  TSWHL3=1.37ns TSWHL4=1.37ns
++  TSWLH1=3.12ns TSWLH2=3.12ns
++  TSWLH3=3.12ns TSWLH4=3.12ns
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+* 74ALS(00) ATOD SUBCIRCUIT INTERFACES
+* The resistance was determined by taking R1 on Pg. 4-14
+* and multiplying by the factor of 10, where 10 was calculated
+* by taking the typical IIL divided by the value given on Pg. 4-14
+
+.subckt ATOD_ALS00 A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74ALS00 DGTLNET=D IO_ALS00
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 370K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+.subckt ATOD_ALS00_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74ALS00_NX DGTLNET=D IO_ALS00
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 370K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+.subckt ATOD_ALS00_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74ALS00_ST DGTLNET=D IO_ALS00_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 370K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+* 74ALS(00) DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_ALS00 D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74ALS00 DGTLNET=D IO_ALS00
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_ALS00_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74ALS00_OC DGTLNET=D IO_ALS00_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74ALS(00) DIGITAL INPUT and OUTPUT MODELS
+.model DO74ALS00 doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=7
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.5  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74ALS00_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=7)
+
+.model DO74ALS00_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.7
++  s1name="1"  s1vlo=.9    s1vhi=7)
+
+*switching times derived at 50pF
+.model DIN74ALS00 dinput (
++  s0name="0"  s0tsw=2ns  s0rlo=24.2  s0rhi=460     ;@23 ohms, .25V
++  s1name="1"  s1tsw=4ns  s1rlo=134   s1rhi=69      ;@45.5 ohms, 3.3V
++  s2name="F"  s2tsw=2ns  s2rlo=45.5  s2rhi=111.5   ;@32.3 ohms, 1.45V
++  s3name="R"  s3tsw=2ns  s3rlo=45.5  s3rhi=111.5   ;@32.3 ohms, 1.45V
++  s4name="X"  s4tsw=2ns  s4rlo=45.5  s4rhi=111.5   ;@32.3 ohms, 1.45V
++  s5name="Z"  s5tsw=2ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74ALS00_OC dinput (
++  s0name="0"  s0tsw=2ns  s0rlo=24.2  s0rhi=460     ;@23 ohms, .25V
++  s1name="1"  s1tsw=4ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=2ns  s2rlo=45.5  s2rhi=111.5   ;@32.3 ohms, 1.45V
++  s3name="R"  s3tsw=2ns  s3rlo=45.5  s3rhi=111.5   ;@32.3 ohms, 1.45V
++  s4name="X"  s4tsw=2ns  s4rlo=45.5  s4rhi=111.5   ;@32.3 ohms, 1.45V
++  s5name="Z"  s5tsw=4ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74ALS I/O MODELS (000)*****
+
+* These parts were derived from the TI ALS/AS Logic Data Book, 1986
+* Pages 2-826, 2-832, 4-14 to 24
+* The open collector tsw parameters were measured with a
+* 680 ohm pullup resistor.
+
+.model IO_ALS000 uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATOD_ALS00" ATOD2="ATOD_ALS00_NX"
++  ATOD3="ATOD_ALS00" ATOD4="ATOD_ALS00_NX"
++  DTOA1="DTOA_ALS000" DTOA2="DTOA_ALS000"
++  DTOA3="DTOA_ALS000" DTOA4="DTOA_ALS000"
++  TSWHL1=1.714ns TSWHL2=1.714ns
++  TSWHL3=1.714ns TSWHL4=1.714ns
++  TSWLH1=1.934ns TSWLH2=1.934ns
++  TSWLH3=1.934ns TSWLH4=1.934ns
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS000_OC uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATOD_ALS00" ATOD2="ATOD_ALS00_NX"
++  ATOD3="ATOD_ALS00" ATOD4="ATOD_ALS00_NX"
++  DTOA1="DTOA_ALS000_OC" DTOA2="DTOA_ALS000_OC"
++  DTOA3="DTOA_ALS000_OC" DTOA4="DTOA_ALS000_OC"
++  TSWHL1=2.019ns TSWHL2=2.019ns
++  TSWHL3=2.019ns TSWHL4=2.019ns
++  TSWLH1=327ps TSWLH2=327ps
++  TSWLH3=327ps TSWLH4=327ps
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS000_OC_ST uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATOD_ALS00_ST" ATOD2="ATOD_ALS00_ST"
++  ATOD3="ATOD_ALS00_ST" ATOD4="ATOD_ALS00_ST"
++  DTOA1="DTOA_ALS000_OC" DTOA2="DTOA_ALS000_OC"
++  DTOA3="DTOA_ALS000_OC" DTOA4="DTOA_ALS000_OC"
++  TSWHL1=2.019ns TSWHL2=2.019ns
++  TSWHL3=2.019ns TSWHL4=2.019ns
++  TSWLH1=327ps TSWLH2=327ps
++  TSWLH3=327ps TSWLH4=327ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS000_ST uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATOD_ALS00_ST" ATOD2="ATOD_ALS00_ST"
++  ATOD3="ATOD_ALS00_ST" ATOD4="ATOD_ALS00_ST"
++  DTOA1="DTOA_ALS000" DTOA2="DTOA_ALS000"
++  DTOA3="DTOA_ALS000" DTOA4="DTOA_ALS000"
++  TSWHL1=1.714ns TSWHL2=1.714ns
++  TSWHL3=1.714ns TSWHL4=1.714ns
++  TSWLH1=1.934ns TSWLH2=1.934ns
++  TSWLH3=1.934ns TSWLH4=1.934ns
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_ALS_25 uio (
++  DRVH=75 DRVL=75
++  ATOD1="ATOD_ALS00" ATOD2="ATOD_ALS00_NX"
++  ATOD3="ATOD_ALS00" ATOD4="ATOD_ALS00_NX"
++  DTOA1="DTOA_ALS000" DTOA2="DTOA_ALS000"
++  DTOA3="DTOA_ALS000" DTOA4="DTOA_ALS000"
++  TSWHL1=1.714ns TSWHL2=1.714ns
++  TSWHL3=1.714ns TSWHL4=1.714ns
++  TSWLH1=1.934ns TSWLH2=1.934ns
++  TSWLH3=1.934ns TSWLH4=1.934ns
+*+  TPWRT=2.95ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+* 74ALS(000) DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_ALS000 D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74ALS000 DGTLNET=D IO_ALS000
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_ALS000_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74ALS000_OC DGTLNET=D IO_ALS000_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74ALS(000) DIGITAL INPUT MODELS
+*switching times derived at 50pF
+.model DIN74ALS000 dinput (
++  s0name="0"  s0tsw=2ns    s0rlo=7.9   s0rhi=150     ;@7.5 ohms, .25V
++  s1name="1"  s1tsw=3.5ns  s1rlo=126   s1rhi=70.9    ;@45.5 ohms, 3.2V
++  s2name="F"  s2tsw=2ns    s2rlo=26.1  s2rhi=63.9    ;@18.5 ohms, 1.45V
++  s3name="R"  s3tsw=2ns    s3rlo=26.1  s3rhi=63.9    ;@18.5 ohms, 1.45V
++  s4name="X"  s4tsw=2ns    s4rlo=26.1  s4rhi=63.9    ;@18.5 ohms, 1.45V
++  s5name="Z"  s5tsw=2ns    s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74ALS000_OC dinput (
++  s0name="0"  s0tsw=2ns    s0rlo=7.9   s0rhi=150     ;@7.5 ohms, .25V
++  s1name="1"  s1tsw=3.5ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=2ns    s2rlo=26.1  s2rhi=63.9    ;@18.5 ohms, 1.45V
++  s3name="R"  s3tsw=2ns    s3rlo=26.1  s3rhi=63.9    ;@18.5 ohms, 1.45V
++  s4name="X"  s4tsw=2ns    s4rlo=26.1  s4rhi=63.9    ;@18.5 ohms, 1.45V
++  s5name="Z"  s5tsw=3.5ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74AS I/O MODELS (00)*****
+
+* These parts were derived from the TI ALS/AS Logic Data Book, 1986
+* Pages 2-5, 2-136, 2-593, 4-14 to 24
+* The open collector tsw parameters were measured with a
+* 500 ohm pullup resistor.
+
+.model IO_AS00 uio (
++  DRVH=26 DRVL=26
++  ATOD1="ATOD_AS00" ATOD2="ATOD_AS00_NX"
++  ATOD3="ATOD_AS00" ATOD4="ATOD_AS00_NX"
++  DTOA1="DTOA_AS00" DTOA2="DTOA_AS00"
++  DTOA3="DTOA_AS00" DTOA4="DTOA_AS00"
++  TSWHL1=1.102ns TSWHL2=1.102ns
++  TSWHL3=1.102ns TSWHL4=1.102ns
++  TSWLH1=1.180ns TSWLH2=1.180ns
++  TSWLH3=1.180ns TSWLH4=1.180ns
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS00_OC uio (
++  DRVH=1MEG DRVL=26
++  ATOD1="ATOD_AS00" ATOD2="ATOD_AS00_NX"
++  ATOD3="ATOD_AS00" ATOD4="ATOD_AS00_NX"
++  DTOA1="DTOA_AS00_OC" DTOA2="DTOA_AS00_OC"
++  DTOA3="DTOA_AS00_OC" DTOA4="DTOA_AS00_OC"
++  TSWHL1=1.266ns TSWHL2=1.266ns
++  TSWHL3=1.266ns TSWHL4=1.266ns
++  TSWLH1=231ps TSWLH2=231ps
++  TSWLH3=231ps TSWLH4=231ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS00_OC_ST uio (
++  DRVH=1MEG DRVL=26
++  ATOD1="ATOD_AS00_ST" ATOD2="ATOD_AS00_ST"
++  ATOD3="ATOD_AS00_ST" ATOD4="ATOD_AS00_ST"
++  DTOA1="DTOA_AS00_OC" DTOA2="DTOA_AS00_OC"
++  DTOA3="DTOA_AS00_OC" DTOA4="DTOA_AS00_OC"
++  TSWHL1=1.266ns TSWHL2=1.266ns
++  TSWHL3=1.266ns TSWHL4=1.266ns
++  TSWLH1=231ps TSWLH2=231ps
++  TSWLH3=231ps TSWLH4=231ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS00_ST uio (
++  DRVH=26 DRVL=26
++  ATOD1="ATOD_AS00_ST" ATOD2="ATOD_AS00_ST"
++  ATOD3="ATOD_AS00_ST" ATOD4="ATOD_AS00_ST"
++  DTOA1="DTOA_AS00" DTOA2="DTOA_AS00"
++  DTOA3="DTOA_AS00" DTOA4="DTOA_AS00"
++  TSWHL1=1.102ns TSWHL2=1.102ns
++  TSWHL3=1.102ns TSWHL4=1.102ns
++  TSWLH1=1.180ns TSWLH2=1.180ns
++  TSWLH3=1.180ns TSWLH4=1.180ns
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+* 74AS(00) ATOD SUBCIRCUIT INTERFACES
+* The resistance was determined by taking R1 on Pg. 4-15
+* and multiplying by the factor of 10, where 10 was calculated
+* by taking the typical IIL divided by the value given on Pg. 4-14
+
+.subckt ATOD_AS00 A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74AS00 DGTLNET=D IO_AS00
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 100K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+.subckt ATOD_AS00_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74AS00_NX DGTLNET=D IO_AS00
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 100K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+.subckt ATOD_AS00_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74AS00_ST DGTLNET=D IO_AS00_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 100K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+* 74AS(00) DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_AS00 D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74AS00 DGTLNET=D IO_AS00
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_AS00_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74AS00_OC DGTLNET=D IO_AS00_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74AS(00) DIGITAL INPUT and OUTPUT MODELS
+.model DO74AS00 doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=7
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.2  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74AS00_NX doutput (
++  s0name="0"  s0vlo=-1.2  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=7)
+
+.model DO74AS00_ST doutput (
++  s0name="0"  s0vlo=-1.2  s0vhi=1.7
++  s1name="1"  s1vlo=.9    s1vhi=7)
+
+*switching times derived at 50pF
+.model DIN74AS00 dinput (
++  s0name="0"  s0tsw=1.25ns  s0rlo=6.45  s0rhi=85.7   ;@6 ohms, .35V
++  s1name="1"  s1tsw=2.25ns  s1rlo=73.5  s1rhi=37.9   ;@25 ohms, 3.3V
++  s2name="F"  s2tsw=1.25ns  s2rlo=17.4  s2rhi=40.6   ;@12.2 ohms, 1.5V
++  s3name="R"  s3tsw=1.25ns  s3rlo=17.4  s3rhi=40.6   ;@12.2 ohms, 1.5V
++  s4name="X"  s4tsw=1.25ns  s4rlo=17.4  s4rhi=40.6   ;@12.2 ohms, 1.5V
++  s5name="Z"  s5tsw=1.25ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74AS00_OC dinput (
++  s0name="0"  s0tsw=1.25ns  s0rlo=6.45  s0rhi=85.7   ;@6 ohms, .35V
++  s1name="1"  s1tsw=2.25ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=1.25ns  s2rlo=17.4  s2rhi=40.6   ;@12.2 ohms, 1.5V
++  s3name="R"  s3tsw=1.25ns  s3rlo=17.4  s3rhi=40.6   ;@12.2 ohms, 1.5V
++  s4name="X"  s4tsw=1.25ns  s4rlo=17.4  s4rhi=40.6   ;@12.2 ohms, 1.5V
++  s5name="Z"  s5tsw=2.25ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74AS I/O MODELS (000)*****
+
+* These parts were derived from the TI ALS/AS Logic Data Book, 1986
+* Pages 2-827, 4-14 to 24
+* The open collector tsw parameters were measured with a
+* 500 ohm pullup resistor.
+
+.model IO_AS000 uio (
++  DRVH=26 DRVL=26
++  ATOD1="ATOD_AS00" ATOD2="ATOD_AS00_NX"
++  ATOD3="ATOD_AS00" ATOD4="ATOD_AS00_NX"
++  DTOA1="DTOA_AS000" DTOA2="DTOA_AS000"
++  DTOA3="DTOA_AS000" DTOA4="DTOA_AS000"
++  TSWHL1=1.302ns TSWHL2=1.302ns
++  TSWHL3=1.302ns TSWHL4=1.302ns
++  TSWLH1=750ps TSWLH2=750ps
++  TSWLH3=750ps TSWLH4=750ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS000_OC uio (
++  DRVH=1MEG DRVL=26
++  ATOD1="ATOD_AS00" ATOD2="ATOD_AS00_NX"
++  ATOD3="ATOD_AS00" ATOD4="ATOD_AS00_NX"
++  DTOA1="DTOA_AS000_OC" DTOA2="DTOA_AS000_OC"
++  DTOA3="DTOA_AS000_OC" DTOA4="DTOA_AS000_OC"
++  TSWHL1=1.562ns TSWHL2=1.562ns
++  TSWHL3=1.562ns TSWHL4=1.562ns
++  TSWLH1=236ps TSWLH2=236ps
++  TSWLH3=236ps TSWLH4=236ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS000_OC_ST uio (
++  DRVH=1MEG DRVL=26
++  ATOD1="ATOD_AS00_ST" ATOD2="ATOD_AS00_ST"
++  ATOD3="ATOD_AS00_ST" ATOD4="ATOD_AS00_ST"
++  DTOA1="DTOA_AS000_OC" DTOA2="DTOA_AS000_OC"
++  DTOA3="DTOA_AS000_OC" DTOA4="DTOA_AS000_OC"
++  TSWHL1=1.562ns TSWHL2=1.562ns
++  TSWHL3=1.562ns TSWHL4=1.562ns
++  TSWLH1=236ps TSWLH2=236ps
++  TSWLH3=236ps TSWLH4=236ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS000_ST uio (
++  DRVH=26 DRVL=26
++  ATOD1="ATOD_AS00_ST" ATOD2="ATOD_AS00_ST"
++  ATOD3="ATOD_AS00_ST" ATOD4="ATOD_AS00_ST"
++  DTOA1="DTOA_AS000" DTOA2="DTOA_AS000"
++  DTOA3="DTOA_AS000" DTOA4="DTOA_AS000"
++  TSWHL1=1.302ns TSWHL2=1.302ns
++  TSWHL3=1.302ns TSWHL4=1.302ns
++  TSWLH1=750ps TSWLH2=750ps
++  TSWLH3=750ps TSWLH4=750ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_AS_25 uio (
++  DRVH=51 DRVL=51
++  ATOD1="ATOD_AS00" ATOD2="ATOD_AS00_NX"
++  ATOD3="ATOD_AS00" ATOD4="ATOD_AS00_NX"
++  DTOA1="DTOA_AS000" DTOA2="DTOA_AS000"
++  DTOA3="DTOA_AS000" DTOA4="DTOA_AS000"
++  TSWHL1=1.302ns TSWHL2=1.302ns
++  TSWHL3=1.302ns TSWHL4=1.302ns
++  TSWLH1=750ps TSWLH2=750ps
++  TSWLH3=750ps TSWLH4=750ps
+*+  TPWRT=1.6ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+* 74AS(000) DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_AS000 D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74AS000 DGTLNET=D IO_AS000
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_AS000_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74AS000_OC DGTLNET=D IO_AS000_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74AS(000) DIGITAL INPUT MODELS
+*switching times derived at 50pF
+.model DIN74AS000 dinput (
++  s0name="0"  s0tsw=1.55ns  s0rlo=3.22  s0rhi=42.5   ;@3 ohms, .35V
++  s1name="1"  s1tsw=1.25ns  s1rlo=27.8  s1rhi=15.6   ;@10 ohms, 3.2V
++  s2name="F"  s2tsw=1.25ns  s2rlo=7.75  s2rhi=19.0   ;@5.5 ohms, 1.45V
++  s3name="R"  s3tsw=1.25ns  s3rlo=7.75  s3rhi=19.0   ;@5.5 ohms, 1.45V
++  s4name="X"  s4tsw=1.25ns  s4rlo=7.75  s4rhi=19.0   ;@5.5 ohms, 1.45V
++  s5name="Z"  s5tsw=1.25ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74AS000_OC dinput (
++  s0name="0"  s0tsw=1.55ns  s0rlo=3.22  s0rhi=42.5   ;@3 ohms, .35V
++  s1name="1"  s1tsw=1.25ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=1.25ns  s2rlo=7.75  s2rhi=19.0   ;@5.5 ohms, 1.45V
++  s3name="R"  s3tsw=1.25ns  s3rlo=7.75  s3rhi=19.0   ;@5.5 ohms, 1.45V
++  s4name="X"  s4tsw=1.25ns  s4rlo=7.75  s4rhi=19.0   ;@5.5 ohms, 1.45V
++  s5name="Z"  s5tsw=1.25ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74F I/O MODELS*****
+
+* These parts were derived from the FAST ADVANCED SCHOTTKEY TTL LOGIC
+* Data Book, 1988
+* Pages 1-4 to 7, 2-5, 4-7, 4-28
+* The open collector tsw parameters were measured with a
+* 500 ohm pullup resistor.
+
+.model IO_F uio (
++  DRVH=45 DRVL=45
++  ATOD1="ATOD_F" ATOD2="ATOD_F_NX"
++  ATOD3="ATOD_F" ATOD4="ATOD_F_NX"
++  DTOA1="DTOA_F" DTOA2="DTOA_F"
++  DTOA3="DTOA_F" DTOA4="DTOA_F"
++  TSWHL1=1.351ns TSWHL2=1.351ns
++  TSWHL3=1.351ns TSWHL4=1.351ns
++  TSWLH1=1.010ns TSWLH2=1.010ns
++  TSWLH3=1.010ns TSWLH4=1.010ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_F_25 uio (
++  DRVH=70 DRVL=70
++  ATOD1="ATOD_F" ATOD2="ATOD_F_NX"
++  ATOD3="ATOD_F" ATOD4="ATOD_F_NX"
++  DTOA1="DTOA_F" DTOA2="DTOA_F"
++  DTOA3="DTOA_F" DTOA4="DTOA_F"
++  TSWHL1=1.351ns TSWHL2=1.351ns
++  TSWHL3=1.351ns TSWHL4=1.351ns
++  TSWLH1=1.010ns TSWLH2=1.010ns
++  TSWLH3=1.010ns TSWLH4=1.010ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_F_30 uio (
++  DRVH=75 DRVL=75
++  ATOD1="ATOD_F" ATOD2="ATOD_F_NX"
++  ATOD3="ATOD_F" ATOD4="ATOD_F_NX"
++  DTOA1="DTOA_F" DTOA2="DTOA_F"
++  DTOA3="DTOA_F" DTOA4="DTOA_F"
++  TSWHL1=1.351ns TSWHL2=1.351ns
++  TSWHL3=1.351ns TSWHL4=1.351ns
++  TSWLH1=1.010ns TSWLH2=1.010ns
++  TSWLH3=1.010ns TSWLH4=1.010ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_F_OC uio (
++  DRVH=1MEG DRVL=45
++  ATOD1="ATOD_F" ATOD2="ATOD_F_NX"
++  ATOD3="ATOD_F" ATOD4="ATOD_F_NX"
++  DTOA1="DTOA_F_OC" DTOA2="DTOA_F_OC"
++  DTOA3="DTOA_F_OC" DTOA4="DTOA_F_OC"
++  TSWHL1=1.567ns TSWHL2=1.567ns
++  TSWHL3=1.567ns TSWHL4=1.567ns
++  TSWLH1=245ps TSWLH2=245ps
++  TSWLH3=245ps TSWLH4=245ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_F_OC_30 uio (
++  DRVH=1MEG DRVL=75
++  ATOD1="ATOD_F" ATOD2="ATOD_F_NX"
++  ATOD3="ATOD_F" ATOD4="ATOD_F_NX"
++  DTOA1="DTOA_F_OC" DTOA2="DTOA_F_OC"
++  DTOA3="DTOA_F_OC" DTOA4="DTOA_F_OC"
++  TSWHL1=1.567ns TSWHL2=1.567ns
++  TSWHL3=1.567ns TSWHL4=1.567ns
++  TSWLH1=245ps TSWLH2=245ps
++  TSWLH3=245ps TSWLH4=245ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_F_OC_ST uio (
++  DRVH=1MEG DRVL=45
++  ATOD1="ATOD_F_ST" ATOD2="ATOD_F_ST"
++  ATOD3="ATOD_F_ST" ATOD4="ATOD_F_ST"
++  DTOA1="DTOA_F_OC" DTOA2="DTOA_F_OC"
++  DTOA3="DTOA_F_OC" DTOA4="DTOA_F_OC"
++  TSWHL1=1.567ns TSWHL2=1.567ns
++  TSWHL3=1.567ns TSWHL4=1.567ns
++  TSWLH1=245ps TSWLH2=245ps
++  TSWLH3=245ps TSWLH4=245ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_F_ST uio (
++  DRVH=45 DRVL=45
++  ATOD1="ATOD_F_ST" ATOD2="ATOD_F_ST"
++  ATOD3="ATOD_F_ST" ATOD4="ATOD_F_ST"
++  DTOA1="DTOA_F" DTOA2="DTOA_F"
++  DTOA3="DTOA_F" DTOA4="DTOA_F"
++  TSWHL1=1.351ns TSWHL2=1.351ns
++  TSWHL3=1.351ns TSWHL4=1.351ns
++  TSWLH1=1.010ns TSWLH2=1.010ns
++  TSWLH3=1.010ns TSWLH4=1.010ns
++  DIGPOWER="DIGIFPWR")
+
+* 74F ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_F A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74F DGTLNET=D IO_F
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 10K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+.subckt ATOD_F_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74F_NX DGTLNET=D IO_F
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 10K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+.subckt ATOD_F_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74F_ST DGTLNET=D IO_F_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 10K
+D1 DGND A D74SCLMP
+D2 1 A D74
+D3 1 2 D74
+D4 2 A D74S
+D5 2 3 D74
+D6 3 DGND D74
+.ends
+
+* 74F DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_F D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74F DGTLNET=D IO_F
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_F_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74F_OC DGTLNET=D IO_F_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74F DIGITAL INPUT and OUTPUT MODELS
+.model DO74F doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=7
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.2  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74F_NX doutput (
++  s0name="0"  s0vlo=-1.2  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=7)
+
+.model DO74F_ST doutput (
++  s0name="0"  s0vlo=-1.2  s0vhi=1.7
++  s1name="1"  s1vlo=.9    s1vhi=7)
+
+* VOH and VOL extrapolated from output voltage versus output
+* current curves by using the current conditions on 4-7
+* switching times derived at 50pF and 25C
+.model DIN74F dinput (
++  s0name="0"  s0tsw=1.55ns  s0rlo=7.34  s0rhi=152    ;@7 ohms, .23V
++  s1name="1"  s1tsw=1.95ns  s1rlo=141   s1rhi=66.4   ;@45 ohms, 3.4V
++  s2name="F"  s2tsw=1.55ns  s2rlo=25.3  s2rhi=59.0   ;@17.7 ohms, 1.5V
++  s3name="R"  s3tsw=1.55ns  s3rlo=25.3  s3rhi=59.0   ;@17.7 ohms, 1.5V
++  s4name="X"  s4tsw=1.55ns  s4rlo=25.3  s4rhi=59.0   ;@17.7 ohms, 1.5V
++  s5name="Z"  s5tsw=1.55ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74F_OC dinput (
++  s0name="0"  s0tsw=1.55ns  s0rlo=7.34  s0rhi=152    ;@7 ohms, .23V
++  s1name="1"  s1tsw=1.95ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=1.55ns  s2rlo=25.3  s2rhi=59.0   ;@17.7 ohms, 1.5V
++  s3name="R"  s3tsw=1.55ns  s3rlo=25.3  s3rhi=59.0   ;@17.7 ohms, 1.5V
++  s4name="X"  s4tsw=1.55ns  s4rlo=25.3  s4rhi=59.0   ;@17.7 ohms, 1.5V
++  s5name="Z"  s5tsw=1.95ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74H I/O MODELS*****
+
+* These parts were derived from the TI TTL Logic Data Book, Vol 2, 1985
+* Pages 1-22, 3-4, 3-6, 3-14
+* The open collector tsw parameters were measured with a
+* 280 ohm pullup resistor.
+
+.model IO_H uio (
++  DRVH=58 DRVL=58
++  ATOD1="ATOD_H" ATOD2="ATOD_H_NX"
++  ATOD3="ATOD_H" ATOD4="ATOD_H_NX"
++  DTOA1="DTOA_H" DTOA2="DTOA_H"
++  DTOA3="DTOA_H" DTOA4="DTOA_H"
++  TSWHL1=2.854ns TSWHL2=2.854ns
++  TSWHL3=2.854ns TSWHL4=2.854ns
++  TSWLH1=834ps TSWLH2=834ps
++  TSWLH3=834ps TSWLH4=834ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_H_OC uio (
++  DRVH=1MEG DRVL=58
++  ATOD1="ATOD_H" ATOD2="ATOD_H_NX"
++  ATOD3="ATOD_H" ATOD4="ATOD_H_NX"
++  DTOA1="DTOA_H_OC" DTOA2="DTOA_H_OC"
++  DTOA3="DTOA_H_OC" DTOA4="DTOA_H_OC"
++  TSWHL1=2.928ns TSWHL2=2.928ns
++  TSWHL3=2.928ns TSWHL4=2.928ns
++  TSWLH1=490ps TSWLH2=490ps
++  TSWLH3=490ps TSWLH4=490ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_H_OC_ST uio (
++  DRVH=1MEG DRVL=58
++  ATOD1="ATOD_H_ST" ATOD2="ATOD_H_ST"
++  ATOD3="ATOD_H_ST" ATOD4="ATOD_H_ST"
++  DTOA1="DTOA_H_OC" DTOA2="DTOA_H_OC"
++  DTOA3="DTOA_H_OC" DTOA4="DTOA_H_OC"
++  TSWHL1=2.928ns TSWHL2=2.928ns
++  TSWHL3=2.928ns TSWHL4=2.928ns
++  TSWLH1=490ps TSWLH2=490ps
++  TSWLH3=490ps TSWLH4=490ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_H_ST uio (
++  DRVH=58 DRVL=58
++  ATOD1="ATOD_H_ST" ATOD2="ATOD_H_ST"
++  ATOD3="ATOD_H_ST" ATOD4="ATOD_H_ST"
++  DTOA1="DTOA_H" DTOA2="DTOA_H"
++  DTOA3="DTOA_H" DTOA4="DTOA_H"
++  TSWHL1=2.854ns TSWHL2=2.854ns
++  TSWHL3=2.854ns TSWHL4=2.854ns
++  TSWLH1=834ps TSWLH2=834ps
++  TSWLH3=834ps TSWLH4=834ps
++  DIGPOWER="DIGIFPWR")
+
+* 74H ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_H A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74H DGTLNET=D IO_H
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 2.8K
+Q1 2 1 A Q74
+D1 DGND A D74CLMP
+D2 2 3 D74
+D3 3 DGND D74
+.ends
+
+.subckt ATOD_H_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74H_NX DGTLNET=D IO_H
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 2.8K
+Q1 2 1 A Q74
+D1 DGND A D74CLMP
+D2 2 3 D74
+D3 3 DGND D74
+.ends
+
+.subckt ATOD_H_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74H_ST DGTLNET=D IO_H_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 2.8K
+Q1 2 1 A Q74
+D1 DGND A D74CLMP
+D2 2 3 D74
+D3 3 DGND D74
+.ends
+
+* 74H DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_H D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74H DGTLNET=D IO_H
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_H_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74H_OC DGTLNET=D IO_H_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74H DIGITAL INPUT and OUTPUT MODELS
+.model DO74H doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=5.5
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.5  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74H_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=5.5)
+
+.model DO74H_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.7
++  s1name="1"  s1vlo=.9    s1vhi=5.5)
+
+*The resistance below is taken from the standard TTL model.
+.model DIN74H dinput (
++  s0name="0"  s0tsw=3ns  s0rlo=7.1   s0rhi=170   ;@6.8 ohms, .2V
++  s1name="1"  s1tsw=3ns  s1rlo=443   s1rhi=190   ;@133 ohms, 3.5V
++  s2name="F"  s2tsw=3ns  s2rlo=41.8  s2rhi=107   ;@30.1 ohms, 1.4V
++  s3name="R"  s3tsw=3ns  s3rlo=41.8  s3rhi=107   ;@30.1 ohms, 1.4V
++  s4name="X"  s4tsw=3ns  s4rlo=41.8  s4rhi=107   ;@30.1 ohms, 1.4V
++  s5name="Z"  s5tsw=3ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74H_OC dinput (
++  s0name="0"  s0tsw=3ns  s0rlo=7.1   s0rhi=170   ;@6.8 ohms, .2V
++  s1name="1"  s1tsw=3ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=3ns  s2rlo=41.8  s2rhi=107   ;@30.1 ohms, 1.4V
++  s3name="R"  s3tsw=3ns  s3rlo=41.8  s3rhi=107   ;@30.1 ohms, 1.4V
++  s4name="X"  s4tsw=3ns  s4rlo=41.8  s4rhi=107   ;@30.1 ohms, 1.4V
++  s5name="Z"  s5tsw=3ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74HC I/O MODELS*****
+
+* These parts were derived from the Philips High Speed CMOS Logic Family
+* Pages 32-71, 91-93
+* TI High-Speed CMOS Logic Data Book, 1989 Pages 2-4, 2-21, 2-59, 4-50
+* The open collector tsw parameters were measured with a
+* 1K ohm pullup resistor.
+
+.model IO_HC uio (
++  DRVH=50 DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HC" ATOD2="ATOD_HC_NX"
++  ATOD3="ATOD_HC" ATOD4="ATOD_HC_NX"
++  DTOA1="DTOA_HC" DTOA2="DTOA_HC"
++  DTOA3="DTOA_HC" DTOA4="DTOA_HC"
++  TSWHL1=3.472ns TSWHL2=3.472ns
++  TSWHL3=3.472ns TSWHL4=3.472ns
++  TSWLH1=3.209ns TSWLH2=3.209ns
++  TSWLH3=3.209ns TSWLH4=3.209ns
+*+  TPWRT=2.3ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_HC_OC uio (
++  DRVH=1MEG DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HC" ATOD2="ATOD_HC_NX"
++  ATOD3="ATOD_HC" ATOD4="ATOD_HC_NX"
++  DTOA1="DTOA_HC_OC" DTOA2="DTOA_HC_OC"
++  DTOA3="DTOA_HC_OC" DTOA4="DTOA_HC_OC"
++  TSWHL1=4.083ns TSWHL2=4.083ns
++  TSWHL3=4.083ns TSWHL4=4.083ns
++  TSWLH1=1.237ns TSWLH2=1.237ns
++  TSWLH3=1.237ns TSWLH4=1.237ns
+*+  TPWRT=2.3ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_HC_OC_ST uio (
++  DRVH=1MEG DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HC_ST" ATOD2="ATOD_HC_ST"
++  ATOD3="ATOD_HC_ST" ATOD4="ATOD_HC_ST"
++  DTOA1="DTOA_HC_OC" DTOA2="DTOA_HC_OC"
++  DTOA3="DTOA_HC_OC" DTOA4="DTOA_HC_OC"
++  TSWHL1=4.083ns TSWHL2=4.083ns
++  TSWHL3=4.083ns TSWHL4=4.083ns
++  TSWLH1=1.237ns TSWLH2=1.237ns
++  TSWLH3=1.237ns TSWLH4=1.237ns
+*+  TPWRT=2.3ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_HC_ST uio (
++  DRVH=50 DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HC_ST" ATOD2="ATOD_HC_ST"
++  ATOD3="ATOD_HC_ST" ATOD4="ATOD_HC_ST"
++  DTOA1="DTOA_HC" DTOA2="DTOA_HC"
++  DTOA3="DTOA_HC" DTOA4="DTOA_HC"
++  TSWHL1=3.472ns TSWHL2=3.472ns
++  TSWHL3=3.472ns TSWHL4=3.472ns
++  TSWLH1=3.209ns TSWLH2=3.209ns
++  TSWLH3=3.209ns TSWLH4=3.209ns
+*+  TPWRT=2.3ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+* 74HC ATOD SUBCIRCUIT INTERFACES
+* The E voltage source is used to normalize the input
+* voltage.
+.subckt ATOD_HC A D DPWR DGND
++  params: CAPACITANCE=0
+O1 AN DGND DO74HC DGTLNET=D IO_HC
+C1 A DGND {CAPACITANCE+.1P}
+E1 AN DGND VALUE={V(A,DGND)/(V(DPWR,DGND)+1m)}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_HC_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 AN DGND DO74HC_NX DGTLNET=D IO_HC
+C1 A DGND {CAPACITANCE+.1P}
+E1 AN DGND VALUE={V(A,DGND)/(V(DPWR,DGND)+1m)}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_HC_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 AN DGND DO74HC_ST DGTLNET=D IO_HC_ST
+C1 A DGND {CAPACITANCE+.1P}
+E1 AN DGND VALUE={V(A,DGND)/(V(DPWR,DGND)+1m)}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+* 74HC DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_HC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74HC DGTLNET=D IO_HC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_HC_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74HC_OC DGTLNET=D IO_HC_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74HC DIGITAL INPUT and OUTPUT MODELS
+* The voltages were interpolated for 5V
+.model DO74HC doutput (
++  s0name="X"  s0vlo=.2    s0vhi=.7
++  s1name="1"  s1vlo=.7     s1vhi=1.1
++  s2name="F"  s2vlo=.43  s2vhi=.7
++  s3name="F"  s3vlo=.2    s3vhi=.47
++  s4name="X"  s4vlo=.2    s4vhi=.7
++  s5name="0"  s5vlo=-.3  s5vhi=.2
++  s6name="R"  s6vlo=.2    s6vhi=.47
++  s7name="R"  s7vlo=.43  s7vhi=.7)
+
+.model DO74HC_NX doutput (
++  s0name="0"  s0vlo=-.3  s0vhi=.45
++  s1name="1"  s1vlo=.45   s1vhi=1.1)
+
+.model DO74HC_ST doutput (
++  s0name="0"  s0vlo=-.3  s0vhi=.54
++  s1name="1"  s1vlo=.34    s1vhi=1.1)
+
+* The voltage values for VCC=5V were interpolated from the
+* 4.5V and 6V entries of the standard outputs
+.model DIN74HC dinput (
++  s0name="0"  s0tsw=4ns  s0rlo=41.2  s0rhi=1332  ;@40 ohms, .15V
++  s1name="1"  s1tsw=4ns  s1rlo=1251  s1rhi=46.7  ;@45 ohms, 4.82V
++  s2name="F"  s2tsw=4ns  s2rlo=80.6  s2rhi=89.4  ;@42.4 ohms, 2.37V
++  s3name="R"  s3tsw=4ns  s3rlo=80.6  s3rhi=89.4  ;@42.4 ohms, 2.37V
++  s4name="X"  s4tsw=4ns  s4rlo=80.6  s4rhi=89.4  ;@42.4 ohms, 2.37V
++  s5name="Z"  s5tsw=4ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74HC_OC dinput (
++  s0name="0"  s0tsw=4ns  s0rlo=41.2  s0rhi=1332  ;@40 ohms, .15V
++  s1name="1"  s1tsw=4ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=4ns  s2rlo=80.6  s2rhi=89.4  ;@42.4 ohms, 2.37V
++  s3name="R"  s3tsw=4ns  s3rlo=80.6  s3rhi=89.4  ;@42.4 ohms, 2.37V
++  s4name="X"  s4tsw=4ns  s4rlo=80.6  s4rhi=89.4  ;@42.4 ohms, 2.37V
++  s5name="Z"  s5tsw=4ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74HCT I/O MODELS*****
+
+* These parts were derived from the Philips High Speed CMOS Logic Family
+* Pages 55, 66, 148
+* TI High-Speed CMOS Logic Data Book, 1989 Pages 2-8
+* The open collector tsw parameters were measured with a
+* 1K ohm pullup resistor.
+
+.model IO_HCT uio (
++  DRVH=50 DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HCT" ATOD2="ATOD_HCT_NX"
++  ATOD3="ATOD_HCT" ATOD4="ATOD_HCT_NX"
++  DTOA1="DTOA_HC" DTOA2="DTOA_HC"
++  DTOA3="DTOA_HC" DTOA4="DTOA_HC"
++  TSWHL1=3.472ns TSWHL2=3.472ns
++  TSWHL3=3.472ns TSWHL4=3.472ns
++  TSWLH1=3.209ns TSWLH2=3.209ns
++  TSWLH3=3.209ns TSWLH4=3.209ns
+*+  TPWRT=2.7ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_HCT_OC uio (
++  DRVH=1MEG DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HCT" ATOD2="ATOD_HCT_NX"
++  ATOD3="ATOD_HCT" ATOD4="ATOD_HCT_NX"
++  DTOA1="DTOA_HC_OC" DTOA2="DTOA_HC_OC"
++  DTOA3="DTOA_HC_OC" DTOA4="DTOA_HC_OC"
++  TSWHL1=4.083ns TSWHL2=4.083ns
++  TSWHL3=4.083ns TSWHL4=4.083ns
++  TSWLH1=1.237ns TSWLH2=1.237ns
++  TSWLH3=1.237ns TSWLH4=1.237ns
+*+  TPWRT=2.7ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_HCT_OC_ST uio (
++  DRVH=1MEG DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HCT_ST" ATOD2="ATOD_HCT_ST"
++  ATOD3="ATOD_HCT_ST" ATOD4="ATOD_HCT_ST"
++  DTOA1="DTOA_HC_OC" DTOA2="DTOA_HC_OC"
++  DTOA3="DTOA_HC_OC" DTOA4="DTOA_HC_OC"
++  TSWHL1=4.083ns TSWHL2=4.083ns
++  TSWHL3=4.083ns TSWHL4=4.083ns
++  TSWLH1=1.237ns TSWLH2=1.237ns
++  TSWLH3=1.237ns TSWLH4=1.237ns
+*+  TPWRT=2.7ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+.model IO_HCT_ST uio (
++  DRVH=50 DRVL=50
++  INLD=3p
++  ATOD1="ATOD_HCT_ST" ATOD2="ATOD_HCT_ST"
++  ATOD3="ATOD_HCT_ST" ATOD4="ATOD_HCT_ST"
++  DTOA1="DTOA_HC" DTOA2="DTOA_HC"
++  DTOA3="DTOA_HC" DTOA4="DTOA_HC"
++  TSWHL1=3.472ns TSWHL2=3.472ns
++  TSWHL3=3.472ns TSWHL4=3.472ns
++  TSWLH1=3.209ns TSWLH2=3.209ns
++  TSWLH3=3.209ns TSWLH4=3.209ns
+*+  TPWRT=2.7ns Not Yet Supported
++  DIGPOWER="DIGIFPWR")
+
+* 74HCT ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_HCT A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74HCT DGTLNET=D IO_HCT
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_HCT_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74HCT_NX DGTLNET=D IO_HCT
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+.subckt ATOD_HCT_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74HCT_ST DGTLNET=D IO_HCT_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 A 1 100
+D1 1 DPWR D74
+R2 1 2 170
+C2 2 0 1P
+.ends
+
+* 74HCT DIGITAL OUTPUT MODELS
+.model DO74HCT doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=7
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.5  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74HCT_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4  s1vhi=7)
+
+.model DO74HCT_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.5
++  s1name="1"  s1vlo=.92   s1vhi=7)
+
+
+*****74LS I/O MODELS*****
+
+* These parts were derived from the TI TTL Logic Data Book, 1988
+* Pages 1-52, 2-4, 2-6, 2-12, 2-80
+* The open collector tsw parameters were measured with a
+* 2K ohm pullup resistor.
+
+.model IO_LS uio (
++  DRVH=120 DRVL=120
++  ATOD1="ATOD_LS" ATOD2="ATOD_LS_NX"
++  ATOD3="ATOD_LS" ATOD4="ATOD_LS_NX"
++  DTOA1="DTOA_LS" DTOA2="DTOA_LS"
++  DTOA3="DTOA_LS" DTOA4="DTOA_LS"
++  TSWHL1=4.724ns TSWHL2=4.724ns
++  TSWHL3=4.724ns TSWHL4=4.724ns
++  TSWLH1=1.814ns TSWLH2=1.814ns
++  TSWLH3=1.814ns TSWLH4=1.814ns
++  DIGPOWER="DIGIFPWR")
+
+.model IO_LS_OC uio (
++  DRVH=1MEG DRVL=120
++  ATOD1="ATOD_LS" ATOD2="ATOD_LS_NX"
++  ATOD3="ATOD_LS" ATOD4="ATOD_LS_NX"
++  DTOA1="DTOA_LS_OC" DTOA2="DTOA_LS_OC"
++  DTOA3="DTOA_LS_OC" DTOA4="DTOA_LS_OC"
++  TSWHL1=5.215ns TSWHL2=5.215ns
++  TSWHL3=5.215ns TSWHL4=5.215ns
++  TSWLH1=959ps TSWLH2=959ps
++  TSWLH3=959ps TSWLH4=959ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_LS_OC_ST uio (
++  DRVH=1MEG DRVL=120
++  ATOD1="ATOD_LS_ST" ATOD2="ATOD_LS_ST"
++  ATOD3="ATOD_LS_ST" ATOD4="ATOD_LS_ST"
++  DTOA1="DTOA_LS_OC" DTOA2="DTOA_LS_OC"
++  DTOA3="DTOA_LS_OC" DTOA4="DTOA_LS_OC"
++  TSWHL1=5.215ns TSWHL2=5.215ns
++  TSWHL3=5.215ns TSWHL4=5.215ns
++  TSWLH1=959ps TSWLH2=959ps
++  TSWLH3=959ps TSWLH4=959ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_LS_ST uio (
++  DRVH=120 DRVL=120
++  ATOD1="ATOD_LS_ST" ATOD2="ATOD_LS_ST"
++  ATOD3="ATOD_LS_ST" ATOD4="ATOD_LS_ST"
++  DTOA1="DTOA_LS" DTOA2="DTOA_LS"
++  DTOA3="DTOA_LS" DTOA4="DTOA_LS"
++  TSWHL1=4.724ns TSWHL2=4.724ns
++  TSWHL3=4.724ns TSWHL4=4.724ns
++  TSWLH1=1.814ns TSWLH2=1.814ns
++  TSWLH3=1.814ns TSWLH4=1.814ns
++  DIGPOWER="DIGIFPWR")
+
+* 74LS ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_LS A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74LS DGTLNET=D IO_LS
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 20K
+D1 DGND A D74SCLMP
+D2 1 A D74S
+D3 1 2 D74
+D4 2 DGND D74
+.ends
+
+.subckt ATOD_LS_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74LS_NX DGTLNET=D IO_LS
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 20K
+D1 DGND A D74SCLMP
+D2 1 A D74S
+D3 1 2 D74
+D4 2 DGND D74
+.ends
+
+.subckt ATOD_LS_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74LS_ST DGTLNET=D IO_LS_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 20K
+D1 DGND A D74SCLMP
+D2 1 A D74S
+D3 1 2 D74
+D4 2 DGND D74
+.ends
+
+* 74LS DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_LS D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74LS DGTLNET=D IO_LS
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_LS_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74LS_OC DGTLNET=D IO_LS_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74LS DIGITAL INPUT and OUTPUT MODELS
+.model DO74LS doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=7
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.5  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74LS_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=7)
+
+.model DO74LS_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=1.6
++  s1name="1"  s1vlo=.8    s1vhi=7)
+
+.model DIN74LS dinput (
++  s0name="0"  s0tsw=5.2ns  s0rlo=6.32  s0rhi=120    ;@6 ohms, .25V
++  s1name="1"  s1tsw=4.6ns  s1rlo=172   s1rhi=80.9   ;@55 ohms, 3.4V
++  s2name="F"  s2tsw=4.6ns  s2rlo=26.4  s2rhi=58.8   ;@18.2 ohms, 1.55V
++  s3name="R"  s3tsw=4.6ns  s3rlo=26.4  s3rhi=58.8   ;@18.2 ohms, 1.55V
++  s4name="X"  s4tsw=4.6ns  s4rlo=26.4  s4rhi=58.8   ;@18.2 ohms, 1.55V
++  s5name="Z"  s5tsw=4.6ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74LS_OC dinput (
++  s0name="0"  s0tsw=5.2ns  s0rlo=6.32  s0rhi=120    ;@6 ohms, .25V
++  s1name="1"  s1tsw=4.6ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=4.6ns  s2rlo=26.4  s2rhi=58.8   ;@18.2 ohms, 1.55V
++  s3name="R"  s3tsw=4.6ns  s3rlo=26.4  s3rhi=58.8   ;@18.2 ohms, 1.55V
++  s4name="X"  s4tsw=4.6ns  s4rlo=26.4  s4rhi=58.8   ;@18.2 ohms, 1.55V
++  s5name="Z"  s5tsw=4.6ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****74S I/O MODELS*****
+
+* These parts were derived from the TI TTL Logic Data Book, 1988
+* Pages 1-53, 2-4, 2-7, 2-23, 2-399
+* The open collector tsw parameters were measured with a
+* 280 ohm pullup resistor.
+
+.model IO_S uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATOD_S" ATOD2="ATOD_S_NX"
++  ATOD3="ATOD_S" ATOD4="ATOD_S_NX"
++  DTOA1="DTOA_S" DTOA2="DTOA_S"
++  DTOA3="DTOA_S" DTOA4="DTOA_S"
++  TSWHL1=1.538ns TSWHL2=1.538ns
++  TSWHL3=1.538ns TSWHL4=1.538ns
++  TSWLH1=749ps TSWLH2=749ps
++  TSWLH3=749ps TSWLH4=749ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_S_OC uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATOD_S" ATOD2="ATOD_S_NX"
++  ATOD3="ATOD_S" ATOD4="ATOD_S_NX"
++  DTOA1="DTOA_S_OC" DTOA2="DTOA_S_OC"
++  DTOA3="DTOA_S_OC" DTOA4="DTOA_S_OC"
++  TSWHL1=1.737ns TSWHL2=1.737ns
++  TSWHL3=1.737ns TSWHL4=1.737ns
++  TSWLH1=122ps TSWLH2=122ps
++  TSWLH3=122ps TSWLH4=122ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_S_OC_ST uio (
++  DRVH=1MEG DRVL=50
++  ATOD1="ATOD_S_ST" ATOD2="ATOD_S_ST"
++  ATOD3="ATOD_S_ST" ATOD4="ATOD_S_ST"
++  DTOA1="DTOA_S_OC" DTOA2="DTOA_S_OC"
++  DTOA3="DTOA_S_OC" DTOA4="DTOA_S_OC"
++  TSWHL1=1.737ns TSWHL2=1.737ns
++  TSWHL3=1.737ns TSWHL4=1.737ns
++  TSWLH1=122ps TSWLH2=122ps
++  TSWLH3=122ps TSWLH4=122ps
++  DIGPOWER="DIGIFPWR")
+
+.model IO_S_ST uio (
++  DRVH=50 DRVL=50
++  ATOD1="ATOD_S_ST" ATOD2="ATOD_S_ST"
++  ATOD3="ATOD_S_ST" ATOD4="ATOD_S_ST"
++  DTOA1="DTOA_S" DTOA2="DTOA_S"
++  DTOA3="DTOA_S" DTOA4="DTOA_S"
++  TSWHL1=1.538ns TSWHL2=1.538ns
++  TSWHL3=1.538ns TSWHL4=1.538ns
++  TSWLH1=749ps TSWLH2=749ps
++  TSWLH3=749ps TSWLH4=749ps
++  DIGPOWER="DIGIFPWR")
+
+* 74S ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_S A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74S DGTLNET=D IO_S
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 2.8K
+Q1 2 1 A Q74
+D1 1 2 D74S
+D2 DGND A D74SCLMP
+D3 2 3 D74
+D4 3 DGND D74
+.ends
+
+.subckt ATOD_S_NX A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74S_NX DGTLNET=D IO_S
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 2.8K
+Q1 2 1 A Q74
+D1 1 2 D74S
+D2 DGND A D74SCLMP
+D3 2 3 D74
+D4 3 DGND D74
+.ends
+
+.subckt ATOD_S_ST A D DPWR DGND
++  params: CAPACITANCE=0
+O1 A DGND DO74S_ST DGTLNET=D IO_S_ST
+C1 A DGND {CAPACITANCE+.1P}
+R1 DPWR 1 2.8K
+Q1 2 1 A Q74
+D1 1 2 D74S
+D2 DGND A D74SCLMP
+D3 2 3 D74
+D4 3 DGND D74
+.ends
+
+* 74S DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_S D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74S DGTLNET=D IO_S
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_S_OC D A DPWR DGND
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 A DGND DPWR DIN74S_OC DGTLNET=D IO_S_OC
+CLOAD A DGND {CAPACITANCE+.1p}
+.ends
+
+* 74S DIGITAL INPUT and OUTPUT MODELS
+.model DO74S doutput (
++  s0name="X"  s0vlo=.8    s0vhi=2
++  s1name="1"  s1vlo=2     s1vhi=5.5
++  s2name="F"  s2vlo=1.35  s2vhi=2
++  s3name="F"  s3vlo=.8    s3vhi=1.45
++  s4name="X"  s4vlo=.8    s4vhi=2
++  s5name="0"  s5vlo=-1.2  s5vhi=.8
++  s6name="R"  s6vlo=.8    s6vhi=1.45
++  s7name="R"  s7vlo=1.35  s7vhi=2)
+
+.model DO74S_NX doutput (
++  s0name="0"  s0vlo=-1.2  s0vhi=1.4
++  s1name="1"  s1vlo=1.4   s1vhi=5.5)
+
+.model DO74S_ST doutput (
++  s0name="0"  s0vlo=-1.2  s0vhi=1.77
++  s1name="1"  s1vlo=1.22    s1vhi=5.5)
+
+*tsw parameters taken @15pF and 25C
+.model DIN74S dinput (
++  s0name="0"  s0tsw=1.7ns  s0rlo=12.9  s0rhi=171    ;@12 ohms, .35V
++  s1name="1"  s1tsw=1.5ns  s1rlo=172   s1rhi=80.9   ;@55 ohms, 3.4V
++  s2name="F"  s2tsw=1.5ns  s2rlo=37.8  s2rhi=80.3   ;@25.7 ohms, 1.6V
++  s3name="R"  s3tsw=1.5ns  s3rlo=37.8  s3rhi=80.3   ;@25.7 ohms, 1.6V
++  s4name="X"  s4tsw=1.5ns  s4rlo=37.8  s4rhi=80.3   ;@25.7 ohms, 1.6V
++  s5name="Z"  s5tsw=1.5ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN74S_OC dinput (
++  s0name="0"  s0tsw=1.7ns  s0rlo=12.9  s0rhi=171    ;@12 ohms, .35V
++  s1name="1"  s1tsw=1.5ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=1.5ns  s2rlo=37.8  s2rhi=80.3   ;@25.7 ohms, 1.6V
++  s3name="R"  s3tsw=1.5ns  s3rlo=37.8  s3rhi=80.3   ;@25.7 ohms, 1.6V
++  s4name="X"  s4tsw=1.5ns  s4rlo=37.8  s4rhi=80.3   ;@25.7 ohms, 1.6V
++  s5name="Z"  s5tsw=1.5ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****CD4000B I/O MODELS*****
+
+* These parts were derived from the Motorola CMOS Logic Data book
+* Pages 4-2 to 4-5 and the Harris CMOS Logic Selection Guide
+* Pages 5-9 to 5-15 and the National CMOS Logic Data book
+* Page 5-216
+* The open collector tsw parameters were measured with a
+* 1k ohm pullup resistor.
+
+.model IO_4000B uio (
++  DRVH=1250 DRVL=1250
++  ATOD1="ATOD_4000B" ATOD2="ATOD_4000B_NX"
++  ATOD3="ATOD_4000B" ATOD4="ATOD_4000B_NX"
++  DTOA1="DTOA_4000B" DTOA2="DTOA_4000B"
++  DTOA3="DTOA_4000B" DTOA4="DTOA_4000B"
++  TSWHL1=9.972ns TSWHL2=9.972ns
++  TSWHL3=9.972ns TSWHL4=9.972ns
++  TSWLH1=8.593ns TSWLH2=8.593ns
++  TSWLH3=8.593ns TSWLH4=8.593ns
++  DIGPOWER="CD4000_PWR")
+
+.model IO_4000B_OC uio (
++  DRVH=1MEG DRVL=1250
++  ATOD1="ATOD_4000B" ATOD2="ATOD_4000B_NX"
++  ATOD3="ATOD_4000B" ATOD4="ATOD_4000B_NX"
++  DTOA1="DTOA_4000B_OC" DTOA2="DTOA_4000B_OC"
++  DTOA3="DTOA_4000B_OC" DTOA4="DTOA_4000B_OC"
++  TSWHL1=10.00ns TSWHL2=10.00ns
++  TSWHL3=10.00ns TSWHL4=10.00ns
++  TSWLH1=1.319ns TSWLH2=1.319ns
++  TSWLH3=1.319ns TSWLH4=1.319ns
++  DIGPOWER="CD4000_PWR")
+
+.model IO_4000B_OC_ST uio (
++  DRVH=1MEG DRVL=1250
++  ATOD1="ATOD_4000B_ST" ATOD2="ATOD_4000B_ST"
++  ATOD3="ATOD_4000B_ST" ATOD4="ATOD_4000B_ST"
++  DTOA1="DTOA_4000B_OC" DTOA2="DTOA_4000B_OC"
++  DTOA3="DTOA_4000B_OC" DTOA4="DTOA_4000B_OC"
++  TSWHL1=10.00ns TSWHL2=10.00ns
++  TSWHL3=10.00ns TSWHL4=10.00ns
++  TSWLH1=1.319ns TSWLH2=1.319ns
++  TSWLH3=1.319ns TSWLH4=1.319ns
++  DIGPOWER="CD4000_PWR")
+
+.model IO_4000B_ST uio (
++  DRVH=1250 DRVL=1250
++  ATOD1="ATOD_4000B_ST" ATOD2="ATOD_4000B_ST"
++  ATOD3="ATOD_4000B_ST" ATOD4="ATOD_4000B_ST"
++  DTOA1="DTOA_4000B" DTOA2="DTOA_4000B"
++  DTOA3="DTOA_4000B" DTOA4="DTOA_4000B"
++  TSWHL1=9.972ns TSWHL2=9.972ns
++  TSWHL3=9.972ns TSWHL4=9.972ns
++  TSWLH1=8.593ns TSWLH2=8.593ns
++  TSWLH3=8.593ns TSWLH4=8.593ns
++  DIGPOWER="CD4000_PWR")
+
+* CD4000B ATOD SUBCIRCUIT INTERFACES
+* The values at 3 volts have been interpolated from the 5 volt
+* values.
+.subckt ATOD_4000B A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN 0 DO4000B DGTLNET=D IO_4000B
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.8) (5,3) (10,6) (15,8)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A,VSS)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+.subckt ATOD_4000B_NX A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN 0 DO4000B_NX DGTLNET=D IO_4000B
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.8) (5,3) (10,6) (15,8)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A,VSS)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+.subckt ATOD_4000B_ST A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN 0 DO4000B_ST DGTLNET=D IO_4000B_ST
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.8) (5,3) (10,6) (15,8)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A,VSS)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+* CD4000B DTOA SUBCIRCUIT INTERFACES
+* The values at 3 volts have been interpolated from the 5 volt
+* values.
+.subckt DTOA_4000B D A VDD VSS
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+E1 VIOH 0 TABLE {V(VDD,VSS)} = (3,9.6e-5) (5,.16m) (10,.4m) (15,1.2m)
+R1 VIOH 0 1E6
+E2 VIOL 0 TABLE {V(VDD,VSS)} = (3,.26m) (5,.44m) (10,1.1m) (15,3m)
+R2 VIOL 0 1E6
+RPOW VDD VDDRES {.05/(V(VIOH)+1n)}
+RGND VSS VSSRES {.05/(V(VIOL)+1n)}
+N1 A VSSRES VDDRES DIN4000B DGTLNET=D IO_4000B
+CLOAD A VSS {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_4000B_OC D A VDD VSS
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+E1 VIOH 0 TABLE {V(VDD,VSS)} = (3,9.6e-5) (5,.16m) (10,.4m) (15,1.2m)
+R1 VIOH 0 1E6
+E2 VIOL 0 TABLE {V(VDD,VSS)} = (3,.26m) (5,.44m) (10,1.1m) (15,3m)
+R2 VIOL 0 1E6
+RPOW VDD VDDRES {.05/(V(VIOH)+.1u)}
+RGND VSS VSSRES {.05/(V(VIOL)+.1u)}
+N1 A VSSRES VDDRES DIN4000B_OC DGTLNET=D IO_4000B_OC
+CLOAD A VSS {CAPACITANCE+.1p}
+.ends
+
+* CD4000B DIGITAL INPUT and OUTPUT MODELS
+.model DO4000B doutput (
++  s0name="X"  s0vlo=-.5   s0vhi=.5
++  s1name="1"  s1vlo=.5   s1vhi=1.5
++  s2name="F"  s2vlo=-.025  s2vhi=.5
++  s3name="F"  s3vlo=-.5   s3vhi=.025
++  s4name="X"  s4vlo=-.5   s4vhi=.5
++  s5name="0"  s5vlo=-1.5   s5vhi=-.5
++  s6name="R"  s6vlo=-.5   s6vhi=.025
++  s7name="R"  s7vlo=-.025  s7vhi=.5)
+
+.model DO4000B_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=0
++  s1name="1"  s1vlo=0  s1vhi=1.5)
+
+.model DO4000B_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=.25
++  s1name="1"  s1vlo=-.25  s1vhi=1.5)
+
+.model DIN4000B dinput (
++  s0name="0"  s0tsw=10ns  s0rlo=1     s0rhi=11K
++  s1name="1"  s1tsw=10ns  s1rlo=30.8K   s1rhi=1
++  s2name="F"  s2tsw=10ns  s2rlo=1K   s2rhi=1K
++  s3name="R"  s3tsw=10ns  s3rlo=1K   s3rhi=1K
++  s4name="X"  s4tsw=10ns  s4rlo=1K   s4rhi=1K
++  s5name="Z"  s5tsw=10ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN4000B_OC dinput (
++  s0name="0"  s0tsw=10ns  s0rlo=1     s0rhi=11K
++  s1name="1"  s1tsw=10ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=10ns  s2rlo=1K   s2rhi=1K
++  s3name="R"  s3tsw=10ns  s3rlo=1K   s3rhi=1K
++  s4name="X"  s4tsw=10ns  s4rlo=1K   s4rhi=1K
++  s5name="Z"  s5tsw=10ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+*****CD4000UB I/O MODELS*****
+
+* These parts were derived from the Motorola CMOS Logic Data book
+* Pages 4-2 to 4-5 and the Harris CMOS Logic Selection Guide
+* Pages 5-9 to 5-15 and Harris Apnote AN6558.1 Page 8-11
+* and the National CMOS Logic Data book Page 5-216
+* The open collector tsw parameters were measured with a
+* 1k ohm pullup resistor.
+
+.model IO_4000UB uio (
++  DRVH=625 DRVL=625
++  ATOD1="ATOD_4000UB" ATOD2="ATOD_4000UB_NX"
++  ATOD3="ATOD_4000UB" ATOD4="ATOD_4000UB_NX"
++  DTOA1="DTOA_4000UB" DTOA2="DTOA_4000UB"
++  DTOA3="DTOA_4000UB" DTOA4="DTOA_4000UB"
++  TSWHL1=9.998ns TSWHL2=9.998ns
++  TSWHL3=9.998ns TSWHL4=9.998ns
++  TSWLH1=9.098ns TSWLH2=9.098ns
++  TSWLH3=9.098ns TSWLH4=9.098ns
++  DIGPOWER="CD4000_PWR")
+
+.model IO_4000UB_OC uio (
++  DRVH=1MEG DRVL=625
++  ATOD1="ATOD_4000UB" ATOD2="ATOD_4000UB_NX"
++  ATOD3="ATOD_4000UB" ATOD4="ATOD_4000UB_NX"
++  DTOA1="DTOA_4000UB_OC" DTOA2="DTOA_4000UB_OC"
++  DTOA3="DTOA_4000UB_OC" DTOA4="DTOA_4000UB_OC"
++  TSWHL1=10.01ns TSWHL2=10.01ns
++  TSWHL3=10.01ns TSWHL4=10.01ns
++  TSWLH1=1.770ns TSWLH2=1.770ns
++  TSWLH3=1.770ns TSWLH4=1.770ns
++  DIGPOWER="CD4000_PWR")
+
+.model IO_4000UB_OC_ST uio (
++  DRVH=1MEG DRVL=625
++  ATOD1="ATOD_4000UB_ST" ATOD2="ATOD_4000UB_ST"
++  ATOD3="ATOD_4000UB_ST" ATOD4="ATOD_4000UB_ST"
++  DTOA1="DTOA_4000UB_OC" DTOA2="DTOA_4000UB_OC"
++  DTOA3="DTOA_4000UB_OC" DTOA4="DTOA_4000UB_OC"
++  TSWHL1=10.01ns TSWHL2=10.01ns
++  TSWHL3=10.01ns TSWHL4=10.01ns
++  TSWLH1=1.770ns TSWLH2=1.770ns
++  TSWLH3=1.770ns TSWLH4=1.770ns
++  DIGPOWER="CD4000_PWR")
+
+.model IO_4000UB_ST uio (
++  DRVH=625 DRVL=625
++  ATOD1="ATOD_4000UB_ST" ATOD2="ATOD_4000UB_ST"
++  ATOD3="ATOD_4000UB_ST" ATOD4="ATOD_4000UB_ST"
++  DTOA1="DTOA_4000UB" DTOA2="DTOA_4000UB"
++  DTOA3="DTOA_4000UB" DTOA4="DTOA_4000UB"
++  TSWHL1=9.998ns TSWHL2=9.998ns
++  TSWHL3=9.998ns TSWHL4=9.998ns
++  TSWLH1=9.098ns TSWLH2=9.098ns
++  TSWLH3=9.098ns TSWLH4=9.098ns
++  DIGPOWER="CD4000_PWR")
+
+* CD4000UB ATOD SUBCIRCUIT INTERFACES
+* The values at 3 volts have been interpolated from the 5 volt
+* values.
+.subckt ATOD_4000UB A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN 0 DO4000UB DGTLNET=D IO_4000UB
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.2) (5,2) (10,4) (15,5)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A,VSS)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+.subckt ATOD_4000UB_NX A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN 0 DO4000UB_NX DGTLNET=D IO_4000UB
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.2) (5,2) (10,4) (15,5)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A,VSS)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+* No UB Schmitt triggers were available so the values from the
+* CD4093B from National were used instead.
+.subckt ATOD_4000UB_ST A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN 0 DO4000UB_ST DGTLNET=D IO_4000UB_ST
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.2) (5,2) (10,4) (15,5)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A,VSS)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+* CD4000UB DTOA SUBCIRCUIT INTERFACES
+* The values at 3 volts have been interpolated from the 5 volt
+* values.
+.subckt DTOA_4000UB D A VDD VSS
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+E1 VIOH 0 TABLE {V(VDD,VSS)} = (3,.12m) (5,.2m) (10,.5m) (15,1.5m)
+R1 VIOH 0 1E6
+E2 VIOL 0 TABLE {V(VDD,VSS)} = (3,.31m) (5,.51m) (10,1.3m) (15,3.4m)
+R2 VIOL 0 1E6
+RPOW VDD VDDRES {.05/(V(VIOH)+1n)}
+RGND VSS VSSRES {.05/(V(VIOL)+1n)}
+N1 A VSSRES VDDRES DIN4000UB DGTLNET=D IO_4000UB
+CLOAD A VSS {CAPACITANCE+.1p}
+.ends
+
+.subckt DTOA_4000UB_OC D A VDD VSS
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+E1 VIOH 0 TABLE {V(VDD,VSS)} = (3,.12m) (5,.2m) (10,.5m) (15,1.5m)
+R1 VIOH 0 1E6
+E2 VIOL 0 TABLE {V(VDD,VSS)} = (3,.31m) (5,.51m) (10,1.3m) (15,3.4m)
+R2 VIOL 0 1E6
+RPOW VDD VDDRES {.05/(V(VIOH)+.1u)}
+RGND VSS VSSRES {.05/(V(VIOL)+.1u)}
+N1 A VSSRES VDDRES DIN4000UB_OC DGTLNET=D IO_4000UB_OC
+CLOAD A VSS {CAPACITANCE+.1p}
+.ends
+
+* CD4000UB DIGITAL INPUT and OUTPUT MODELS
+.model DO4000UB doutput (
++  s0name="X"  s0vlo=-.5   s0vhi=.5
++  s1name="1"  s1vlo=.5   s1vhi=1.5
++  s2name="F"  s2vlo=-.025  s2vhi=.5
++  s3name="F"  s3vlo=-.5   s3vhi=.025
++  s4name="X"  s4vlo=-.5   s4vhi=.5
++  s5name="0"  s5vlo=-1.5   s5vhi=-.5
++  s6name="R"  s6vlo=-.5   s6vhi=.025
++  s7name="R"  s7vlo=-.025  s7vhi=.5)
+
+.model DO4000UB_NX doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=0
++  s1name="1"  s1vlo=0  s1vhi=1.5)
+
+.model DO4000UB_ST doutput (
++  s0name="0"  s0vlo=-1.5  s0vhi=.25
++  s1name="1"  s1vlo=-.25  s1vhi=1.5)
+
+.model DIN4000UB dinput (
++  s0name="0"  s0tsw=10ns  s0rlo=1     s0rhi=9.45K
++  s1name="1"  s1tsw=10ns  s1rlo=24.65K   s1rhi=1
++  s2name="F"  s2tsw=10ns  s2rlo=1K   s2rhi=1K
++  s3name="R"  s3tsw=10ns  s3rlo=1K   s3rhi=1K
++  s4name="X"  s4tsw=10ns  s4rlo=1K   s4rhi=1K
++  s5name="Z"  s5tsw=10ns  s5rlo=1Meg  s5rhi=1Meg)
+
+.model DIN4000UB_OC dinput (
++  s0name="0"  s0tsw=10ns  s0rlo=1     s0rhi=9.45K
++  s1name="1"  s1tsw=10ns  s1rlo=1Meg  s1rhi=1Meg
++  s2name="F"  s2tsw=10ns  s2rlo=1K   s2rhi=1K
++  s3name="R"  s3tsw=10ns  s3rlo=1K   s3rhi=1K
++  s4name="X"  s4tsw=10ns  s4rlo=1K   s4rhi=1K
++  s5name="Z"  s5tsw=10ns  s5rlo=1Meg  s5rhi=1Meg)
+
+
+***** ECL 10K I/O MODELS*****
+
+* These parts were derived from the Motorola MECL Data Book, 1993
+* Pages 1-5 to 1-15 and Analysis and Design of Digital Integrated
+* Circuits Pages 259-265
+
+.model IO_10K_IN uio (
++  DRVH=245 DRVL=245
++  ATOD1="ATOD_10K" ATOD2="ATOD_10K_NX"
++  ATOD3="ATOD_10K" ATOD4="ATOD_10K_NX"
++  DTOA1="DTOA_10K" DTOA2="DTOA_10K"
++  DTOA3="DTOA_10K" DTOA4="DTOA_10K"
++  DIGPOWER="ECL_10K_PWR")
+
+.model IO_10K_OUT uio (
++  DRVH=7 DRVL=1Meg
++  ATOD1="ATOD_10K" ATOD2="ATOD_10K_NX"
++  ATOD3="ATOD_10K" ATOD4="ATOD_10K_NX"
++  DTOA1="DTOA_10K" DTOA2="DTOA_10K"
++  DTOA3="DTOA_10K" DTOA4="DTOA_10K"
++  TSWHL1=1n TSWHL2=1n
++  TSWHL3=1n TSWHL4=1n
++  TSWLH1=1n TSWLH2=1n
++  TSWLH3=1n TSWLH4=1n
++  DIGPOWER="ECL_10K_PWR")
+
+
+*ECL 10K Pulldown Resistor for Input Pins
+.model IO_10K_PULLDN uio (
++  DRVH=1MEG DRVL=50k
++  ATOD1="ATOD_10K" ATOD2="ATOD_10K_NX"
++  ATOD3="ATOD_10K" ATOD4="ATOD_10K_NX"
++  DTOA1="PULLDOWN_DTOA_ECL" DTOA2="PULLDOWN_DTOA_ECL"
++  DTOA3="PULLDOWN_DTOA_ECL" DTOA4="PULLDOWN_DTOA_ECL"
++  DIGPOWER="ECL_10K_PWR")
+
+
+* ECL 10K ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_10K A D VCC1 VEE
++  params: CAPACITANCE=0
+O1 A VCC1 DO10K DGTLNET=D IO_10K_IN
+R1 A VEE 50K
+C1 A VCC1 {CAPACITANCE+.01P}
+.ends
+
+.subckt ATOD_10K_NX A D VCC1 VEE
++  params: CAPACITANCE=0
+O1 A VCC1 DO10K_NX DGTLNET=D IO_10K_IN
+R1 A VEE 50K
+C1 A VCC1 {CAPACITANCE+.01P}
+.ends
+
+
+* ECL 10K DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_10K D A VCC2 VEE
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 AIN VEE VCC2 DIN10K DGTLNET=D IO_10K_OUT
+R1 AIN VCC2 1E9
+E1 AOUT VCC2 AIN VCC2 1
+R2 AOUT A 7
+R3 A VCC2 1E9
+CLOAD A VCC2 {CAPACITANCE+.01p}
+.ends
+
+
+* ECL 10K DIGITAL INPUT and OUTPUT MODELS
+.model DO10K doutput (
++  s0name="X"  s0vlo=-1.85    s0vhi=-.81
++  s1name="1"  s1vlo=-.81     s1vhi=0
++  s2name="F"  s2vlo=-1.38  s2vhi=-.81
++  s3name="F"  s3vlo=-1.85    s3vhi=-1.28
++  s4name="X"  s4vlo=-1.85    s4vhi=-.81
++  s5name="0"  s5vlo=-5.2  s5vhi=-1.85
++  s6name="R"  s6vlo=-1.85    s6vhi=-1.28
++  s7name="R"  s7vlo=-1.38  s7vhi=-.81)
+
+.model DO10K_NX doutput (
++  s0name="0"  s0vlo=-5.2  s0vhi=-1.29
++  s1name="1"  s1vlo=-1.29   s1vhi=0)
+
+.model DIN10K dinput (
++  s0name="0"  s0tsw=1ns  s0rlo=3.06Meg   s0rhi=1.49Meg  ;@1Meg ohms, -1.7V
++  s1name="1"  s1tsw=1ns  s1rlo=40.45     s1rhi=8.45     ;@7 ohms, -.9V
++  s2name="F"  s2tsw=1ns  s2rlo=2.02Meg   s2rhi=666K     ;@500K ohms, -1.29V
++  s3name="R"  s3tsw=1ns  s3rlo=28.20     s3rhi=9.29     ;@7 ohms, -1.29V
++  s4name="X"  s4tsw=1ns  s4rlo=28.20     s4rhi=9.29     ;@7 ohms, -1.29V
++  s5name="Z"  s5tsw=1ns  s5rlo=3.06Meg   s5rhi=1.49Meg)
+
+
+***** ECL 100K I/O MODELS*****
+
+* These parts were derived from the National F100K ECL Data Book, 1992
+* Pages 5-3 to 5-8
+
+.model IO_100K_IN uio (
++  DRVH=245 DRVL=245
++  ATOD1="ATOD_100K" ATOD2="ATOD_100K_NX"
++  ATOD3="ATOD_100K" ATOD4="ATOD_100K_NX"
++  DTOA1="DTOA_100K" DTOA2="DTOA_100K"
++  DTOA3="DTOA_100K" DTOA4="DTOA_100K"
++  DIGPOWER="ECL_100K_PWR")
+
+.model IO_100K_OUT uio (
++  DRVH=7 DRVL=1MEG
++  ATOD1="ATOD_100K" ATOD2="ATOD_100K_NX"
++  ATOD3="ATOD_100K" ATOD4="ATOD_100K_NX"
++  DTOA1="DTOA_100K" DTOA2="DTOA_100K"
++  DTOA3="DTOA_100K" DTOA4="DTOA_100K"
++  TSWHL1=.4n TSWHL2=.4n
++  TSWHL3=.4n TSWHL4=.4n
++  TSWLH1=.4n TSWLH2=.4n
++  TSWLH3=.4n TSWLH4=.4n
++  DIGPOWER="ECL_100K_PWR")
+
+.model IO_100K_OUTZ uio (
++  DRVH=7 DRVL=1MEG
++  ATOD1="ATOD_100K" ATOD2="ATOD_100K_NX"
++  ATOD3="ATOD_100K" ATOD4="ATOD_100K_NX"
++  DTOA1="DTOA_100KZ" DTOA2="DTOA_100KZ"
++  DTOA3="DTOA_100KZ" DTOA4="DTOA_100KZ"
++  TSWHL1=.4n TSWHL2=.4n
++  TSWHL3=.4n TSWHL4=.4n
++  TSWLH1=.4n TSWLH2=.4n
++  TSWLH3=.4n TSWLH4=.4n
++  DIGPOWER="ECL_100K_PWR")
+
+
+*ECL 100K Pulldown Resistor for Input Pins
+.model IO_100K_PULLDN uio (
++  DRVH=1MEG DRVL=50k
++  ATOD1="ATOD_100K" ATOD2="ATOD_100K_NX"
++  ATOD3="ATOD_100K" ATOD4="ATOD_100K_NX"
++  DTOA1="PULLDOWN_DTOA_ECL" DTOA2="PULLDOWN_DTOA_ECL"
++  DTOA3="PULLDOWN_DTOA_ECL" DTOA4="PULLDOWN_DTOA_ECL"
++  DIGPOWER="ECL_100K_PWR")
+
+
+* ECL 100K ATOD SUBCIRCUIT INTERFACES
+.subckt ATOD_100K A D VCC1 VEE
++  params: CAPACITANCE=0
+O1 A VCC1 DO100K DGTLNET=D IO_100K_IN
+R1 A VEE 50K
+C1 A VCC1 {CAPACITANCE+.01P}
+.ends
+
+.subckt ATOD_100K_NX A D VCC1 VEE
++  params: CAPACITANCE=0
+O1 A VCC1 DO100K_NX DGTLNET=D IO_100K_IN
+R1 A VEE 50K
+C1 A VCC1 {CAPACITANCE+.01P}
+.ends
+
+
+* ECL 100K DTOA SUBCIRCUIT INTERFACES
+.subckt DTOA_100K D A VCC2 VEE
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 AIN VEE VCC2 DIN100K DGTLNET=D IO_100K_OUT
+R1 AIN VCC2 1E9
+E1 AOUT VCC2 AIN VCC2 1
+R2 AOUT A 7
+R3 A VCC2 1E9
+CLOAD A VCC2 {CAPACITANCE+.01p}
+.ends
+
+.subckt DTOA_100KZ D A VCC2 VEE
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+N1 AIN VEE VCC2 DIN100KZ DGTLNET=D IO_100K_OUT
+R1 AIN VCC2 1E9
+E1 AOUT VCC2 AIN VCC2 1
+R2 AOUT A 7
+R3 A VCC2 1E9
+CLOAD A VCC2 {CAPACITANCE+.01p}
+.ends
+
+* ECL 100K DIGITAL INPUT and OUTPUT MODELS
+.model DO100K doutput (
++  s0name="X"  s0vlo=-1.475    s0vhi=-1.165
++  s1name="1"  s1vlo=-1.165     s1vhi=.5
++  s2name="F"  s2vlo=-1.37  s2vhi=-1.165
++  s3name="F"  s3vlo=-1.475    s3vhi=-1.27
++  s4name="X"  s4vlo=-1.475    s4vhi=-1.165
++  s5name="0"  s5vlo=-4.5  s5vhi=-1.475
++  s6name="R"  s6vlo=-1.475    s6vhi=-1.27
++  s7name="R"  s7vlo=-1.37  s7vhi=-1.165)
+
+.model DO100K_NX doutput (
++  s0name="0"  s0vlo=-4.5  s0vhi=-1.32
++  s1name="1"  s1vlo=-1.32   s1vhi=.5)
+
+.model DIN100K dinput (
++  s0name="0"  s0tsw=.4ns  s0rlo=2.64Meg   s0rhi=1.61Meg  ;@1Meg ohms, -1.705V
++  s1name="1"  s1tsw=.4ns  s1rlo=33.02     s1rhi=8.88     ;@7 ohms, -.955V
++  s2name="F"  s2tsw=.4ns  s2rlo=1.70Meg   s2rhi=706K     ;@500K ohms, -1.32V
++  s3name="R"  s3tsw=.4ns  s3rlo=23.91     s3rhi=9.90     ;@7 ohms, -1.32V
++  s4name="X"  s4tsw=.4ns  s4rlo=23.91     s4rhi=9.90     ;@7 ohms, -1.32V
++  s5name="Z"  s5tsw=.4ns  s5rlo=2.64Meg   s5rhi=1.61Meg)
+
+.model DIN100KZ dinput (
++  s0name="0"  s0tsw=.4ns  s0rlo=2.64Meg   s0rhi=1.61Meg  ;@1Meg ohms, -1.705V
++  s1name="1"  s1tsw=.4ns  s1rlo=33.02     s1rhi=8.88     ;@7 ohms, -.955V
++  s2name="F"  s2tsw=.4ns  s2rlo=1.70Meg   s2rhi=706K     ;@500K ohms, -1.32V
++  s3name="R"  s3tsw=.4ns  s3rlo=23.91     s3rhi=9.90     ;@7 ohms, -1.32V
++  s4name="X"  s4tsw=.4ns  s4rlo=23.91     s4rhi=9.90     ;@7 ohms, -1.32V
++  s5name="Z"  s5tsw=.4ns  s5rlo=2.31Meg   s5rhi=1.77Meg) ;@1Meg ohms, -1.95V
+
+***** Pullup and Pulldown Resistor Subcircuit Interfaces *****
+* These must be referenced by an I/O model.  The DRVH and DRVL parameters
+* control the size of the resistors.
+
+.subckt PULLUP_DTOA  D A  DPWR DGND
++   params: DRVL=0 DRVH=0 CAPACITANCE=0
+RUP A DPWR {DRVH}
+.ends
+
+.subckt PULLDOWN_DTOA  D A  DPWR DGND
++   params: DRVL=0 DRVH=0 CAPACITANCE=0
+RDN A DGND {DRVL}
+.ends
+
+.subckt PULLDOWN_DTOA_ECL  D A  VCC1 VEE
++   params: DRVL=50K DRVH=1MEG CAPACITANCE=0
+RDN A VEE {DRVL}
+.ends
+
+*I/O Model for 555 Macro
+.param V555_VDD=5V
+.param V555_VSS=0V
+
+.subckt 555_PWR AGND
++  optional: VDD=$G_555_VDD VSS=$G_555_VSS
++  params: VOLTAGE={V555_VDD} REFERENCE={V555_VSS}
+V1 VDD AGND {VOLTAGE}
+R1 VDD AGND 1E9
+V2 VSS AGND {REFERENCE}
+R2 VSS AGND 1E9
+R3 AGND 0 1m
+.ends
+
+.model IO_555 uio (
++  DRVH=625 DRVL=625
++  ATOD1="ATOD_555" ATOD2="ATOD_555_NX"
++  ATOD3="ATOD_555" ATOD4="ATOD_555_NX"
++  DTOA1="DTOA_555" DTOA2="DTOA_555"
++  DTOA3="DTOA_555" DTOA4="DTOA_555"
++  TSWHL1=9.972ns TSWHL2=9.972ns
++  TSWHL3=9.972ns TSWHL4=9.972ns
++  TSWLH1=8.593ns TSWLH2=8.593ns
++  TSWLH3=8.593ns TSWLH4=8.593ns
++  DIGPOWER="555_PWR")
+
+.subckt ATOD_555 A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN VSS DO555 DGTLNET=D IO_555
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.8) (5,3) (10,6) (15,8)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+.subckt ATOD_555_NX A D VDD VSS
++  params: CAPACITANCE=0
+O1 AIN VSS DO555_NX DGTLNET=D IO_555
+C1 A VSS {CAPACITANCE+.1P}
+E1 VTH 0 TABLE {V(VDD,VSS)} = (3,1.8) (5,3) (10,6) (15,8)
+R1 VTH 0 1E6
+E2 AIN 0 VALUE={(V(A)-V(VDD,VSS)/2)/((V(VDD,VSS)-V(VTH))+1m)}
+D1 A VDD D74CLMP
+D2 VSS A D74CLMP
+.ends
+
+.subckt DTOA_555 D A VDD VSS
++  params: CAPACITANCE=0 DRVH=0 DRVL=0
+E1 VIOH 0 TABLE {V(VDD,VSS)} = (3,9.6e-5) (5,.16m) (10,.4m) (15,1.2m)
+R1 VIOH 0 1E6
+E2 VIOL 0 TABLE {V(VDD,VSS)} = (3,.26m) (5,.44m) (10,1.1m) (15,3m)
+R2 VIOL 0 1E6
+RPOW VDD VDDRES {.05/(V(VIOH)+1n)}
+RGND VSS VSSRES {.05/(V(VIOL)+1n)}
+N1 A VSSRES VDDRES DIN555 DGTLNET=D IO_555
+CLOAD A VSS {CAPACITANCE+.1p}
+.ends
+
+.model DO555 doutput (
++  s0name="X"  s0vlo=-.5   s0vhi=.5
++  s1name="1"  s1vlo=.5   s1vhi=2
++  s2name="F"  s2vlo=-.025  s2vhi=.5
++  s3name="F"  s3vlo=-.5   s3vhi=.025
++  s4name="X"  s4vlo=-.5   s4vhi=.5
++  s5name="0"  s5vlo=-2   s5vhi=-.5
++  s6name="R"  s6vlo=-.5   s6vhi=.025
++  s7name="R"  s7vlo=-.025  s7vhi=.5)
+
+.model DO555_NX doutput (
++  s0name="0"  s0vlo=-2  s0vhi=0
++  s1name="1"  s1vlo=0  s1vhi=2)
+
+.model DIN555 dinput (
++  s0name="0"  s0tsw=10ns  s0rlo=1     s0rhi=11K
++  s1name="1"  s1tsw=10ns  s1rlo=30.8K   s1rhi=1
++  s2name="F"  s2tsw=10ns  s2rlo=1K   s2rhi=1K
++  s3name="R"  s3tsw=10ns  s3rlo=1K   s3rhi=1K
++  s4name="X"  s4tsw=10ns  s4rlo=1K   s4rhi=1K
++  s5name="Z"  s5tsw=10ns  s5rlo=1Meg  s5rhi=1Meg)
+
+* INTERFACE MODEL STATEMENTS
+* These model parameters were taken from the book:
+* Analysis and Design of Digital Integrated Circuits
+* David Hodges and Horace Jackson
+* 1988, McGraw Hill, p.286-287
+* The current limiting resistances of the D74 (RS=10) were added to
+* the RC parameter in the Q74 model.
+
+.model Q74 npn (ISE=1E-16 ISC=4E-16 BF=49 BR=.33 CJE=1P CJC=.5P VJE=.9
++        VJC=.8 MJE=.5 MJC=.33 TF=.2N TR=10N CJS=3P VJS=.7
++        RC=40 MJS=.33)
+
+.model D74SCLMP d (IS=1E-12 VJ=.7 CJO=.2P M=.5 EG=.69 XTI=2)
+
+.model D74S d (IS=1E-12 VJ=.7 CJO=.2P M=.5 EG=.69 XTI=2)
+
+.model D74 d (IS=1E-14 CJO=5P M=.5)
+
+.model D74CLMP d (IS=1E-14 CJO=5P M=.5 RS=0)
+
+* SUBCKT TO TEST .LIB HIERARCHY
+.SUBCKT SUBTEST 1A 1Y
+R1 1A 1Y SUBMOD 1
+.MODEL SUBMOD RES (R=4)
+.ENDS
+
+

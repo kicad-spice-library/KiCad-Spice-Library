@@ -1,0 +1,184 @@
+* AD630B SPICE Macro-model              2/92, Rev. B
+*                                       ARG / PMI
+*
+* This version of the AD630 model simulates the worst case
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* The information on this diskette is protected under the
+* United States copyright laws.  Analog Devices, Inc.("ADI")
+* hereby grants users of these macro-models hereto referred
+* to as licensee, a nonexclusive, nontransferable license to
+* use these macro-models as long as the licensee abides by
+* the terms of this agreement.  Before using the macro-
+* models the licensee should read this license.  If the
+* licensee does not accept these terms, this diskette should
+* be returned to ADI within 30 days.
+*
+* The licensee may not sell, loan, rent, lease, or license
+* the macro-models, in whole, in part, or in modified form,
+* to anyone outside the licensee's company.  The licensee
+* may modify these macro-models to suit his specific
+* applications, and the licensee may make copies of this 
+* diskette or macromodels for use within his company only.
+*
+* These macro-models are provided "AS IS, WHERE IS, AND WITH
+* NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+* In no event will ADI be liable for special, collateral,
+* incidental, or consequential damages in connection with or
+* arising out of the use of these macro-models.  ADI
+* reserves the right to make changes to the products and the
+* macro-models without prior notice.
+*
+*
+* Node assignments
+*              chan A non-inverting input
+*              |  chan A inverting input
+*              |  |  RIN A
+*              |  |  |  chan B non-inverting input
+*              |  |  |  |  chan B inverting input
+*              |  |  |  |  |  RIN B
+*              |  |  |  |  |  |  sel A
+*              |  |  |  |  |  |  |  sel B
+*              |  |  |  |  |  |  |  |  RB
+*              |  |  |  |  |  |  |  |  |  RF
+*              |  |  |  |  |  |  |  |  |  |  RA
+*              |  |  |  |  |  |  |  |  |  |  |  comp
+*              |  |  |  |  |  |  |  |  |  |  |  |  status
+*              |  |  |  |  |  |  |  |  |  |  |  |  |  pos supply
+*              |  |  |  |  |  |  |  |  |  |  |  |  |  |  neg supply
+*              |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  output
+*              |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+.SUBCKT AD630B 11 10 19 21 20 24 25 29 47 49 48 52 51 99 50 46
+*
+* COMPARATOR
+*
+V1   99   97   1
+I1   97   1    100.2E-6
+D1   1    97   DX
+Q1   3    2    1    QP
+Q2   5    4    1    QP
+R1   3    50   40E3
+R2   5    50   40E3
+R4   25   2    1E3
+R5   29   4    1E3
+*
+* COMPARATOR GAIN AND CLAMP
+*
+EREF 98   0    100 0 1
+E1   6    98   5 3 12.931E3
+R3   6    7    1E6
+D2   7    8    DX
+D3   9    7    DX
+V6   8    98   .2429
+V7   98   9    .2429
+Q7   51   53   50   QN
+G11  99   53   7 100 100E-6
+D14  53   99   DY
+*
+* CHANNEL A AMPLIFIER AND POLE AT 1.7MHZ
+*
+R6   10   13   5E11
+R7   11   13   5E11
+IOS1 11   10   16.667E-9
+CIN1 10   11   1E-12
+Q3   14   10   16   QN
+Q4   15   12   17   QN
+R8   99   14   12.736E3
+R9   99   15   12.736E3
+C1   14   15   3.675E-12
+R10  16   18   12.220E3
+R11  17   18   12.220E3
+G2   18   50   7 100 100.2E-6
+D4   50   18   DZ
+R17  19   11   2.5E3
+EOS1 12   11   POLY(1) 35 100 100E-6 1
+*
+* CHANNEL B AMPLIFIER
+*
+R12  20   23   5E11
+R13  23   21   5E11
+IOS2 21   20   16.667E-9
+CIN2 20   21   1E-12
+Q5   14   20   26   QN
+Q6   15   22   27   QN
+R14  26   28   12.220E3
+R15  27   28   12.220E3
+G3   28   50   100 7 100.2E-6
+D5   50   28   DZ
+R18  24   21   2.5E3
+EOS2 22   21   POLY(1) 37 100 100E-6 1
+*
+* GAIN STAGE, SLEW RATE, AND DOMINANT POLE AT 56.23HZ
+*
+G1   98   30   15 14 78.518E-6
+RPI  30   98   12.736E3
+C2   30   33   2.222E-12
+GM1  33   98   30 0 100E-3
+RL   33   98   1E6
+CC   30   52   2.75E-12
+D6   33   31   DX
+D7   32   33   DX
+V2   99   31   5.34
+V3   32   50   5.34
+*
+* AMP A COMMON MODE STAGE AND ZERO AT 1KHZ
+*
+R20  34   35   1E6
+R21  35   98   1
+C3   34   35   159.2E-12
+ECMA 34   98   13 100 31.62
+*
+* AMP B COMMON MODE STAGE AND ZERO AT 1KHZ
+*
+R22  36   37   1E6
+R23  37   98   1
+C4   36   37   159.2E-12
+ECMB 36   98   23 100 31.62
+*
+* POLE AT 20MHZ
+*
+G5   98   39   33 100 1E-6
+R25  39   98   1E6
+C6   39   98   7.958E-15
+*
+* POLE AT 20MHZ
+*
+G6   98   40   39 100 1E-6
+R26  40   98   1E6
+C7   40   98   7.958E-15
+*
+* OUTPUT STAGE
+*
+ISY  99   50   4.3E-3
+R27  99   100  32.86E3
+R28  100  50   32.86E3
+R29  99   45   200
+R30  45   50   200
+L1   45   46   1E-10
+G9   45   99   99 40 5E-3
+G10  50   45   40 50 5E-3
+G7   43   50   40 45 5E-3
+G8   44   50   45 40 5E-3
+V4   41   45   1.9
+V5   45   42   1.9
+D8   40   41   DX
+D9   42   40   DX
+D10  99   43   DX
+D11  99   44   DX
+D12  50   43   DY
+D13  50   44   DY
+R31  46   49   10E3
+R32  49   47   10E3
+R33  49   48   5E3
+.MODEL QP PNP(BF=166.667)
+.MODEL QN NPN(BF=166.667)
+.MODEL DX D
+.MODEL DY D(BV=50)
+.MODEL DZ D(BV=30)
+.ENDS AD630B

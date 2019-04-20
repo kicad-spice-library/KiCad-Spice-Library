@@ -1,0 +1,2730 @@
+**********
+*SRC=ELH0002;ELH0002;Buffers;Elantec;Current Amplifier
+*SYM=ELH0002
+ELH0002 MACROMODEL
+* 
+* CONNECTIONS  INPUT
+*              |  V1+
+*              |  |  V2+ 
+*              |  |  |  V1-
+*              |  |  |  |  V2-
+*              |  |  |  |  |  OUTPUT
+*              |  |  |  |  |    |
+.SUBCKT ELH0002 8  1  2  7  6    4 
+* MODELS 
+.MODEL QP PNP (IS=10E-14 BF=300 VAF=60 IKF=200MA VAR=6V BR=9
++ RB=30 CJE=40PF CJC=15PF TF=1NS XTB=2.0)
+.MODEL QN NPN (IS=10E-14 BF=200 VAF=200 IKF=200MA VAR=12V BR=8
++ RB=30 CJE=27PF CJC=10PF TF=1NS XTB=2.0)
+*
+* RESISTORS 
+*          
+R1 1 10 5K
+R2 11 7 5K
+R3 3 4 2.0
+R4 5 4 2.0
+*
+* TRANSISTORS
+*
+Q1 7 8 10 QP
+Q4 6 11 5 QP    
+Q2 1 8 11 QN    
+Q3 2 10 3 QN
+.ENDS
+**********
+*SRC=ELH0032E;ELH0032E;Opamps;Elantec;Fast, 70MHz, 500V/us
+*SYM=ELH0032
+*ELH0032 MACROMODEL
+* 
+* CONNECTIONS +INPUT
+*              |  -INPUT
+*              |  |  +VSUPPLY
+*              |  |  |  -VSUPPLY
+*              |  |  |  |  COMP 3
+*              |  |  |  |  |  COMP 4
+*              |  |  |  |  |    | COMP 2
+*              |  |  |  |  |    |   | OUTPUT
+*              |  |  |  |  |    |   |   |
+*              |  |  |  |  |    |   |   |
+.SUBCKT ELH0032E  6  5  12 10 3    4   2   11
+*
+* MODELS 
+*
+.MODEL QFA NJF (VTO=-2.5V BETA=1.11E-3 CGD=2PF CGS=5PF)
+* M=.3744
+.MODEL QP PNP (IS=5E-14 BF=150 VAF=100 IKF=100MA TF=.53NS VTF=0 ISE=1NA
++ CJC=4PF CJE=5.7PF TR=170NS RB=3 BR=5 MJE=.32 MJC=.43 XTB=2.1 NE=4 
++ ISC=1NA NC=4 ITF=.4 VTF=4 XTF=6)
+*
+.MODEL QN NPN (IS=5E-14 BF=150 VAF=800 IKF=200MA TF=.53NS VTF=0
++ CJC=4PF CJE=5PF RB=3 BR=5 MJE=.42 MJC=.23 TR=200NS XTB=2.1
++ ISE=4NA NE=4 ISC=4NA NC=4 ITF=.4 VTF=4 XTF=2)
+*
+.MODEL QFB NJF (VTO=-2.8V BETA=4E-3 CGD=7PF CGS=8PF LAMBDA=4E-3)  
+*
+.MODEL ZENER D (BV=2.49V IBV=1MA)
+*
+* RESISTORS AND CAPACITORS
+*
+R1 12 4 700
+R2 12 3 700
+R3 12 105 160
+R4 103 100 10
+R5 108 100 10
+R6 12 101 22K
+R7 113 11 10
+R8 11 112 10
+R9 102 10 407      
+CS2 10 116 100PF
+*
+* TRANSISTORS & DIODES
+*
+J1A 4 5 103 QFA     
+J1B 3 6 108 QFA
+J2 111 10 116 QFB
+Q1 104 4 105 QP
+Q2 2 3 105 QP
+Q3 114 11 104 QP
+Q4 12 2 113 QN
+Q5 10 111 112 QP
+Q6 2 2 110 QN     
+Q7 111 111 110 QP
+Q8 100 101 102 QN
+D1 10 117 ZENER
+Q9 101 101 117 QN
+Q10 114 114 10 QN
+Q11 116 114 10 QN
+.ENDS
+**********
+*SRC=ELH0033;ELH0033;Buffers;Elantec;Fast Amplifier 1500V/us
+*SYM=ELH0033
+*ELH0033 MACROMODEL
+* 
+* CONNECTIONS  INPUT
+*              |  V+
+*              |  |  VC+ 
+*              |  |  |  V-
+*              |  |  |  |  VC-
+*              |  |  |  |  |  OUTPUT
+*              |  |  |  |  |    |
+.SUBCKT ELH0033  5  12 1  10 9    11
+*
+* MODELS
+*
+.MODEL QN NPN (IS=5E-14 BF=150 VAF=100 RC=1 RB=5 RE=1 IKF=200MA
++ CJE=5PF CJC=5PF MJE=.42 MJC=.23 TF=.3NS TR=200NS BR=5 VTF=0)
+*
+.MODEL QP PNP (IS=5E-14 BF=150 VAF=100 RC=.2 RB=3 RE=1 IKF=100MA
++ CJE=5.7PF CJC=4PF TF=.3NS MJE=.32 MJC=.43 TR=170NS BR=5 VTF=0)
+*
+.MODEL QF NJF (VTO=-3V BETA=4.0E-3 CGD=4PF CGS=10PF LAMBDA=671.0E-6)
+*
+* RESISTORS 
+*
+R1 20 21 58.33
+R2 27 10 58.33
+R3 22 11 2
+R4 11 23 2
+*
+* TRANSISTORS
+* 
+J1 12 5 20 QF    
+J4 24 10 26 QF     
+Q2 21 21 25 QN     
+Q3 24 24 25 QP    
+Q5 1 21 22 QN     
+Q6 9 24 23 QP    
+Q7 26 26 27 QN    
+.ENDS
+**********
+*SRC=ELH0101E;ELH0101E;Opamps;Elantec;Power, 10V/us, 5A Peak Out
+*SYM=ELH0101
+*ELH0101 MACROMODEL
+* CONNECTIONS +INPUT 
+*                | -INPUT
+*                |    |   V+
+*                |    |   |  ISC+
+*                |    |   |   |  FEEDBACK
+*                |    |   |   |    |   V-
+*                |    |   |   |    |   |  ISC-
+*                |    |   |   |    |   |  |  OUTPUT
+*                |    |   |   |    |   |  |    |
+.SUBCKT ELH0101E  6    5   2   1    3   7  8    4 
+*
+X1               6    5   2   7    21 LF156
+* CONNECTIONS:  IN+  IN-  V+  V-  OUT
+* LF156 MODEL COURTESY OF LINERAR TECHNOLOGY CORP.
+*
+X2               21       2   1    3   7  8    4 BUFFER
+.ENDS
+.SUBCKT BUFFER   21       2   1    3   7  8    4
+*
+* RESISTORS 
+*
+R1 3 27 10
+R2 26 3 10
+R3 30 7 50
+R4 2 23 50
+R5 29 7 2K
+R6 2 22 2K
+R7 27 28 10
+R8 24 26 10
+*
+* TRANSISTORS 
+*
+Q1 4 30 8 QND   
+D1 8 4 DCLAMP
+Q2 4 23 1 QPD   
+D2 4 1 DCLAMP
+Q3 7 21 22 QP    
+Q4 23 22 24 QN    
+Q5 21 21 26 QN    
+Q6 23 1 2 QP    
+Q7 2 21 29 QN    
+Q8 27 27 21 QN     
+Q9 30 29 28 QP    
+Q10 30 8 7 QN    
+*
+* MODELS 
+*
+.MODEL QPD PNP (IS=88.013E-12 IKF=5A TF=32NS VAF=50V CJE=45PF CJC=60PF
++ XTB=2.1 BF=12000 NE=4 ISE=1E-10)
+.MODEL QND NPN (IS=88.013E-12 IKF=5A TF=32NS VAF=50V CJE=45PF CJC=60PF
++ XTB=2.1 BF=12000 NE=4 ISE=1E-10)
+.MODEL DCLAMP D (IS=10E-28 TT=100NS)
+.MODEL QP PNP (IS=10E-15 XTI=3 EG=1.11V VAF=91V BF=200 NE=2.321 ISE=6.2FA
++ IKF=500MA XTB=2.1 BR=3.3 NC=2 CJC=14.6PF VJC=0.75V MJC=0.3333 FC=0.5 CJE=20PF
++ VJE=0.75V MJE=0.3333 TR=29NS TF=0.4NS ITF=0.4 VTF=10 XTF=2 RB=10
+.MODEL QN NPN (IS=3E-15 XTI=3 EG=1.11V VAF=151V BF=220 NE=1.541 ISE=14FA
++ IKF=500MA XTB=2.1 BR=6 NC=2 CJC=14.6PF VJC=0.75V MJC=0.3333 FC=0.5 CJE=26PF
++ VJE=0.75V MJE=0.3333 TR=51NS TF=0.4NS ITF=0.6 VTF=1.7 XTF=2 RB=10
+.ENDS
+*
+* LF156 SUBCIRCUIT
+*
+* CONNECTIONS:  +INPUT 
+*                 |  -INPUT 
+*                 |    |   V+ 
+*                 |    |   |  V- 
+*                 |    |   |  |   OUTPUT 
+*                 |    |   |  |     |
+.SUBCKT LF156     6    5   2  7     21
+*
+* INPUT STAGE
+*
+VCM2 40 7  2
+RD1 40 80 1.06K
+RD2 40 90 1.06K
+J1  80 102 12 JM1 
+J2  90 103 12 JM2 
+CIN 5 6 4PF
+RG1 5 102 2
+RG2 6 103 2
+*
+* CM CLAMP 
+*
+DCM1 107 103 DM4 
+DCM2 105 107 DM4 
+VCMC 105 7 4V
+ECMP 106 7 103 7 1 
+RCMP 107 106 10K
+DCM3 109 102 DM4 
+DCM4 105 109 DM4 
+ECMN 108 2 102 2 1 
+RCMN 109 108 10K
+*
+C1  80 90 15PF
+ISS 2 12 0.48MA
+GOSIT 2 12 90 80 2.4E-4
+*
+* INTERMEDIATE STAGE
+*
+GCM 0 88 12 0  9.425E-9
+GA  88 0 80 90 9.425E-4
+R2  88 0 100K
+C2  91 88 30PF
+GB  91 0 88 0 28.6
+RO2 91 0 74
+*
+* OUTPUT STAGE
+*
+RSO 91 21 1
+ECL 18 0 91 21 20.69
+GCL 0 88 20 0  1
+RCL 20 0 1K
+D1 18 20 DM1  
+D2 20 18 DM1  
+D3A 131 70 DM3 
+D3B 13 131 DM3 
+GPL 0 88 70 2  1
+VC 13 21 3.1552V
+RPLA 2 70  10K
+RPLB 2 131 100K
+D4A 60 141 DM3 
+D4B 141 14 DM3 
+GNL 0 88 60 7  1
+VE 21 14 3.1552V
+RNLA 60 7  10K
+RNLB 141 7 100K
+IP 2 7  4.52MA
+DSUB 7 2  DM2  
+*
+* MODELS 
+*
+.MODEL JM1 PJF (IS=3.15E-11 BETA=9.2528E-4 VTO=-1.0)
+.MODEL JM2 PJF (IS=2.85E-11 BETA=9.2528E-4 VTO=-0.999)
+.MODEL DM1  D  (IS=1.0E-15)
+.MODEL DM2  D  (IS=8.0E-16 BV=52.8)
+.MODEL DM3  D  (IS=1.0E-16)
+.MODEL DM4  D  (IS=1.0E-9)
+.ENDS
+**********
+*SRC=EL400;EL400E;Opamps;Elantec;Transimped., 700V/us
+*SYM=ELOPAMP
+*EL400 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL400E          3  2  7  4  6
+*
+* INPUT STAGE 
+*
+E1 10 0 3 0 1.0
+R1 2 11 25  
+L1 11 12 9NH
+VIS 10 9 0V 
+H4 9 12 V1  1.0
+H1 13 0 VIS 1.0
+R2 13 0 1K
+V1 23 0 0V
+R4 23 0 1K
+IVOS 0 23 5MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 15 0 13 0 1.0  
+R5 15 0 1K
+R6 15 16 1K
+L2 16 17 0.1UH
+C1 17 0 0.1PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 18 17 0 1.0
+ROL 18 0 125K
+C2 18 0 2.8PF
+*
+* OUTPUT STAGE 
+*
+Q1 4 18 19 QP 
+Q2 7 18 20 QN 
+Q3 7 19 21 QN 
+Q4 4 20 22 QP 
+R7 21 6 2
+R8 22 6 2
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS 7 4 9MA
+IINN 0 2 8UA
+IINP 0 3 8UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=200 TF=0.05NS)
+.MODEL QP PNP(IS=5E-15 BF=200 TF=0.05NS)
+*
+.ENDS
+**********
+*SRC=EL2001;EL2001;Buffers;Elantec;Amplifier Low Power 70MHz
+*SYM=EL2001
+*EL2001 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       |  +VSUPPLY
+*                       |   |  -VSUPPLY
+*                       |   |   |  OUTPUT
+*                       |   |   |  |  
+.SUBCKT EL2001          2   1   4  7  
+*
+* INPUT STAGE 
+*
+E1 10 0 2 0 1.0
+R1 10 0 1K  
+RH 10 11 150  
+CH 11 0 9PF    
+RC 11 12 100
+CC 12 0 4PF
+E2 13 0 12 0 1.0
+*
+* OUTPUT STAGE 
+*
+Q1 4 13 14 QP  
+Q2 1 13 15 QN 
+Q3 1 14 16 QN  
+Q4 4 15 19 QP 
+R2 16 7 1 
+R3 19 7 1 
+I1 1 14 0.9MA
+I2 15 4 0.9MA
+*
+* BIAS CURRENT
+*
+IINP 2 0 1UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=150 RB=200 PTF=45 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=150 RB=200 PTF=45 TF=0.1NS)
+*
+.ENDS
+**********
+*SRC=EL2002;EL2002;Buffers;Elantec;Amplifier Low Power 180MHz
+*SYM=EL2002
+*EL2002 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       |  +VSUPPLY
+*                       |   |  -VSUPPLY
+*                       |   |   |  OUTPUT
+*                       |   |   |  |  
+.SUBCKT EL2002          2   1   4  7  
+*
+* INPUT STAGE 
+*
+E1 10 0 2 0 1.0
+R1 10 0 1K  
+RH 10 11 150  
+CH 11 0 2PF    
+RC 11 12 100
+CC 12 0 3PF
+E2 13 0 12 0 1.0
+*
+* OUTPUT STAGE 
+*
+Q1 4 13 14 QP  
+Q2 1 13 15 QN 
+Q3 1 14 16 QN  
+Q4 4 15 19 QP 
+R2 16 7 1 
+R3 19 7 1 
+I1 1 14 2MA
+I2 15 4 2MA
+*
+* BIAS CURRENT
+*
+IINP 2 0 3UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=150 RB=200 PTF=45 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=150 RB=200 PTF=45 TF=0.1NS)
+*
+.ENDS
+**********
+*SRC=EL2003;EL2003;Line Drivers;Elantec;Video 100MHz
+*SYM=EL2003
+*EL2003 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       |  +VSUPPLY
+*                       |   |  -VSUPPLY
+*                       |   |   |  OUTPUT
+*                       |   |   |  |  
+.SUBCKT EL2003          2   1   4  7  
+*
+* INPUT STAGE 
+*
+E1 10 0 2 0 1.0
+R1 10 0 1K  
+RH 10 11 150  
+CH 11 0 10PF    
+RC 11 12 100
+CC 12 0 3PF
+E2 13 0 12 0 1.0
+*
+* OUTPUT STAGE 
+*
+Q1 4 13 14 QP  
+Q2 1 13 15 QN 
+Q3 1 14 16 QN  
+Q4 4 15 19 QP 
+R2 16 7 5 
+R3 19 7 5 
+C1 14 0 3PF
+C2 15 0 3PF
+I1 1 14 3MA
+I2 15 4 3MA
+*
+* BIAS CURRENT
+*
+IINP 2 0 5UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=150 RB=350 PTF=45 CJC=2PF TF=0.3NS)
+.MODEL QP PNP(IS=5E-15 BF=150 RB=350 PTF=45 CJC=2PF TF=0.3NS)
+*
+.ENDS
+**********
+*SRC=EL2004;EL2004;Buffers;Elantec;FET 350MHz
+*SYM=EL2004
+*EL2004 MACROMODEL
+* 
+* CONNECTIONS  INPUT
+*              |  V+
+*              |  |  VC+ 
+*              |  |  |  V-
+*              |  |  |  |  VC-
+*              |  |  |  |  |  OUTPUT
+*              |  |  |  |  |    |
+.SUBCKT EL2004 5  12 1  10 9    11
+*
+* MODELS
+*
+.MODEL QN NPN (IS=5E-14 BF=150 VAF=100 RC=1 RB=5 RE=1 IKF=200MA
++ CJE=5PF CJC=5PF MJE=.42 MJC=.23 TF=.3NS TR=200NS BR=5 VTF=0)
+*
+.MODEL QP PNP (IS=5E-14 BF=150 VAF=100 RC=.2 RB=3 RE=1 IKF=100MA
++ CJE=5.7PF CJC=4PF TF=.3NS MJE=.32 MJC=.43 TR=170NS BR=5 VTF=0)
+*
+.MODEL QF NJF (VTO=-3V BETA=4.0E-3 CGD=4PF CGS=10PF LAMBDA=671.0E-6)
+*
+* RESISTORS 
+*
+R1 20 21 58.33
+R2 27 10 58.33
+R3 22 11 2
+R4 11 23 2
+*
+* TRANSISTORS
+* 
+J1 12 5 20 QF    
+J4 24 10 26 QF     
+Q2 21 21 25 QN     
+Q3 24 24 25 QP    
+Q5 1 21 22 QN     
+Q6 9 24 23 QP    
+Q7 26 26 27 QN    
+.ENDS
+**********
+*SRC=EL2005;EL2005;Buffers;Elantec;Fast, High Accuracy
+*SYM=EL2005
+*EL2005 MACROMODEL
+* 
+* CONNECTIONS INPUT
+*              |  V+
+*              |  |  VC+ 
+*              |  |  |  V-
+*              |  |  |  |  VC-
+*              |  |  |  |  |  OUTPUT
+*              |  |  |  |  |    |
+.SUBCKT EL2005 5  12 1  10 9    11
+*
+* MODELS
+*
+.MODEL QN NPN (IS=5E-14 BF=150 VAF=100 RC=1 RB=5 RE=1 IKF=200MA
++ CJE=5PF CJC=5PF MJE=.42 MJC=.23 TF=.3NS TR=200NS BR=5 VTF=0)
+*
+.MODEL QP PNP (IS=5E-14 BF=150 VAF=100 RC=.2 RB=3 RE=1 IKF=100MA
++ CJE=5.7PF CJC=4PF TF=.3NS MJE=.32 MJC=.43 TR=170NS BR=5 VTF=0)
+*
+.MODEL QFA NJF (VTO=-8V BETA=2.344E-3 CGD=10PF CGS=7PF LAMBDA=671E-6)
+*
+.MODEL QFB NJF(VTO=-4V BETA=1.06E-3 CGD=3PF CGD=3PF)
+*
+* RESISTORS
+* 
+R1 21 22 30
+R2 7 10 30
+R3 25 11 3
+R4 11 26 3
+*
+* TRANSISTORS
+*
+J1A 20 5 21 QFB   
+J1B 28 10 27 QFB   
+J2 12 11 20 QFA   
+J4 24 10 28 QFA   
+Q3 22 22 23 QN
+Q4 1 22 25 QN
+Q5 24 24 23 QP    
+Q6 9 24 26 QP
+Q7 27 27 7 QN    
+.ENDS
+**********
+*SRC=EL2006E;EL2006E;Opamps;Elantec;FET Input, 450V/us
+*SYM=EL2006
+*EL2006 MACROMODEL
+*
+* CONNECTIONS +INPUT
+*              | -INPUT
+*              | |  +VSUPPLY
+*              | |  |  -VSUPPLY
+*              | |  |  |  COMP 3
+*              | |  |  |  | COMP 4
+*              | |  |  |  | | COMP 2
+*              | |  |  |  | | | OUTPUT
+*              | |  |  |  | | | |
+.SUBCKT EL2006E 6 5  12 10 3 4 2 11
+* MODELS
+.MODEL QFA NJF (VTO=-2.5V BETA=1.11E-3 CGD=2PF CGS=5PF)
+.MODEL QP PNP (IS=5E-14 BF=150 VAF=100 IKF=100MA TF=.53NS VTF=0 ISE=1NA
++ CJC=4PF CJE=5.7PF TR=170NS RB=3 BR=5 MJE=.32 MJC=.43 XTB=2.1 NE=4
++ ISC=1NA NC=4 ITF=.4 VTF=4 XTF=6)
+.MODEL QN NPN (IS=5E-14 BF=150 VAF=800 IKF=200MA TF=.53NS VTF=0
++ CJC=4PF CJE=5PF RB=3 BR=5 MJE=.42 MJC=.23 TR=200NS XTB=2.1
++ ISE=4NA NE=4 ISC=4NA NC=4 ITF=.4 VTF=4 XTF=2)
+.MODEL QFB NJF (VTO=-2.8V BETA=4E-3 CGD=7PF CGS=8PF LAMBDA=4E-3)
+.MODEL ZENER D (BV=2.49V IBV=1MA)
+* RESISTORS AND CAPACITORS
+R1 12 4 700
+R2 12 3 700
+R3 12 105 160
+R4 103 100 10
+R5 108 100 10
+R6 12 101 22K
+R7 113 11 10
+R8 11 112 10
+R9 102 10 407
+CS2 10 116 100PF
+* TRANSISTORS & DIODES
+J1A 4 5 103 QFA
+J1B 3 6 108 QFA
+J2 111 10 116 QFB
+Q1 104 4 105 QP
+Q2 2 3 105 QP
+Q3 114 11 104 QP
+Q4 12 2 113 QN
+Q5 10 111 112 QP
+Q6 2 2 110 QN
+Q7 111 111 110 QP
+Q8 100 101 102 QN
+D1 10 117 ZENER
+Q9 101 101 117 QN
+Q10 114 114 10 QN
+Q11 116 114 10 QN
+.ENDS
+**********
+*SRC=EL2012;EL2012;Buffers;Elantec;Closed Loop, 80MHz
+*SYM=EL2012
+*EL2012 MACROMODEL 
+* CONNECTIONS:        +INPUT
+*                       | +VSUPPLY
+*                       |  | -VSUPPLY
+*                       |  |  | OUTPUT
+*                       |  |  |  |  
+.SUBCKT EL2012          4  5  1  2   
+*
+*INPUT STAGE 
+*
+Q1 5 4 10 QN
+Q2 13 2 11 QN
+R1 10 12 200
+R2 11 12 200
+I1 12 1 2.6MA
+I2 5 13 1.3MA
+C1 5 13 6PF
+*
+* OUTPUT STAGE  
+* 
+I3 5 14 3MA
+I4 15 1 3MA
+Q3 1 13 14 QP 
+Q4 5 13 15 QN
+Q5 5 14 16 QN
+Q6 1 15 17 QP 
+R3 16 2 0.1 
+R4 2 17 0.1
+*
+* POWER SUPPLY CURRENT
+*
+IPS 5 1 5MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800E-18 BF=500 TF=0.2NS PTF=45 RB=250)
+.MODEL QP PNP(IS=800E-18 BF=500 TF=0.2NS PTF=45 RB=250)
+.ENDS
+**********
+*SRC=EP2015;EP2015;BJT Arrays;Elantec;Quad PNP, 350MHz ft
+*SYM=EP2015
+*EP2015 MACROMODEL
+*
+* CONNECTIONS Q1C 
+*              |  Q1B 
+*              |   |  Q1E 
+*              |   |   |  Q2C 
+*              |   |   |   |  Q2B 
+*              |   |   |   |   |  Q2E 
+*              |   |   |   |   |  |   Q3C 
+*              |   |   |   |   |  |    |  Q3B 
+*              |   |   |   |   |  |    |   |  Q3E 
+*              |   |   |   |   |  |    |   |   |  Q4C 
+*              |   |   |   |   |  |    |   |   |   |  Q4B 
+*              |   |   |   |   |  |    |   |   |   |   |   Q4E
+*              |   |   |   |   |  |    |   |   |   |   |    |
+.SUBCKT EP2015 1   2   3   7   6  5    8   9   10  14  13   12 
+*
+* MODELS 
+*
+.MODEL EP2015 PNP (IS=8E-15 BF=300 VAF=47 IKF=30MA XTB=1.3 BR=4.5 TF=0.3NS 
++ TR=280NS RB=230 RC=170 ISE=1E-15 NE=1.24 CJS=2PF CJC=3.7PF VJC=0.5 
++ MJC=0.45 CJE=5.4PF VJE=0.6 MJE=0.33 PTF=15)
+* 
+* TRANSISTORS 
+*
+Q1  1   2   3 EP2015
+Q2  7   6   5 EP2015
+Q3  8   9  10 EP2015
+Q4 14  13  12 EP2015
+* 
+.ENDS
+**********
+*SRC=EN2016;EN2016;BJT Arrays;Elantec;Quad NPN, 350MHz ft
+*SYM=EN2016
+*EN2016 MACROMODEL
+*
+* CONNECTIONS Q1C 
+*              |  Q1B 
+*              |   |  Q1E 
+*              |   |   |  Q2C 
+*              |   |   |   |  Q2B 
+*              |   |   |   |   |  Q2E 
+*              |   |   |   |   |  |   Q3C 
+*              |   |   |   |   |  |    |  Q3B 
+*              |   |   |   |   |  |    |   |  Q3E 
+*              |   |   |   |   |  |    |   |   |  Q4C 
+*              |   |   |   |   |  |    |   |   |   |  Q4B 
+*              |   |   |   |   |  |    |   |   |   |   |   Q4E
+*              |   |   |   |   |  |    |   |   |   |   |    |
+.SUBCKT EN2016 1   2   3   7   6  5    8   9   10  14  13   12 
+*
+* MODELS 
+*
+.MODEL EN2016 NPN (IS=4E-15 BF=250 VAF=80 IKF=120MA XTB=1.1 BR=10 TF=0.35NS 
++ TR=80NS RB=200 RC=150 ISE=3E-14 NE=2 CJS=0.7PF CJC=2.4PF XCJC=0.3 VJC=0.32
++ MJC=0.19 CJE=6PF VJE=0.63 MJE=0.30 PTF=15)
+* 
+* TRANSISTORS 
+*
+Q1  1   2   3 EN2016
+Q2  7   6   5 EN2016
+Q3  8   9  10 EN2016
+Q4 14  13  12 EN2016
+* 
+.ENDS
+**********
+*Old EL2020e model
+*EL2020 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2020E         3  2  7  4  6
+*
+* INPUT STAGE 
+*
+E1 10 0 3 0 1
+R1 2 11 15  
+L1 11 12 29NH
+VIS 10 9 0V 
+H4 9 12 V1 1.0
+H1 13 0 VIS 1.0
+R2 13 0 1K
+V1 23 0 0V
+R4 23 0 1K
+IVOS 0 23 5MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 15 0 13 0 1.0  
+R5 15 0 1
+R6 15 16 1K
+L2 16 17 0.5UH
+C1 17 0 1PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 18 17 0 1.0
+ROL 18 0 1MEG
+C2 18 0 5PF
+*
+* OUTPUT STAGE 
+*
+Q1 4 18 19 QP 
+Q2 7 18 20 QN 
+Q3 7 19 21 QN 
+Q4 4 20 22 QP 
+R7 21 6 4  
+R8 22 6 4  
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS  7 4 3MA
+IINN 0 2 5UA
+IINP 0 3 10UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.3NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.3NS)
+.ENDS
+**********
+*SRC=EL2022E;EL2022E;Opamps;Elantec;Transimped. 1900V/us
+*SYM=EL2022
+*EL2022 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VCC    
+*                       |  |  |  VCC COLL-
+*                       |  |  |  | -VCC
+*                       |  |  |  |  | -VCC COLL
+*                       |  |  |  |  |  | OUTPUT
+*                       |  |  |  |  |  |  |
+.SUBCKT EL2022E         6  5  1  12 9  10 11
+*
+* INPUT STAGE 
+*
+E1 30 0 6 0 1.0
+R1 5 43 25  
+L1 43 42 29NH
+VIS 30 41 0V 
+H4 41 42 V1 1.0
+H1 31 0 VIS 1.0
+R2 31 0 1K
+V1 40 0 0V
+R4 40 0 1K
+IVOS 0 40 5MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 32 0 31 0 1.0  
+R5 32 0 1K
+R6 32 33 1K
+L2 33 34 0.1UH
+C1 34 0 0.2PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 35 34 0 1.0
+ROL 35 0 130K
+C2 35 0 4PF
+*
+* OUTPUT STAGE 
+*
+Q1 9 35 36 QP 
+Q2 1 35 39 QN 
+Q3 12 36 37 QN 
+Q4 10 39 38 QP 
+R7 37 11 2 
+R8 38 11 2
+IOS1 1 36 2.5MA
+IOS2 39 9 2.5MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS 1 9 14MA
+IINN 6 0 5UA
+IINP 0 5 10UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.1NS)
+*
+.ENDS
+**********
+*SRC=EL2028E;EL2028E;Opamps;Elantec;Transimped. 500V/us
+*SYM=ELOPAMP
+*EL2028 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2028E         5  4  11 6  10
+*
+*INPUT STAGE 
+*
+I1 37 6 2MA
+R1 36 37 2K
+R2 38 37 2K
+R3 11 30 2K
+R4 11 39 2K
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+E1 33 0 39 30 1
+R5 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 1M
+RH 34 0 80MEG
+CH 34 0 5PF
+RC 34 40 100
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+R6 41 42 150
+C1 42 0 10PF
+R7 42 43 150
+C2 43 0 10PF
+*
+* OUTPUT STAGE  
+* 
+I2 11 50 1.25MA
+I3 51 6  1.25MA
+Q3  6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+R8 52 10 5
+R9 10 53 5
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 9MA
+*
+* MODELS 
+*
+.MODEL QN  NPN(IS=800E-18 BF=2000 TF=0.1NS)
+.MODEL QNA NPN(IS=824E-18 BF=2700 TF=0.1NS)
+.MODEL QP  PNP(IS=800E-18 BF=260  TF=0.1NS)
+.ENDS 
+**********
+*SRC=EL2029E;EL2029E;Opamps;Elantec;Transimped., 600V/us
+*SYM=ELOPAMP
+*EL2029 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2029E         5  4  11 6  10
+*
+*INPUT STAGE 
+*
+I1 37 6 2MA
+R1 36 37 800
+R2 38 37 800
+R3 11 30 800
+R4 11 39 800
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+E1 33 0 39 30 1
+R5 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 2M
+RH 34 0 80MEG
+CH 34 0 2PF
+RC 34 40 100
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+R6 41 42 150
+C1 42 0 10PF
+R7 42 43 150
+C2 43 0 10PF
+*
+* OUTPUT STAGE  
+* 
+I2 11 50 1.25MA
+I3 51 6  1.25MA
+Q3  6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+R8 52 10 5
+R9 10 53 5
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 9MA
+*
+* MODELS 
+*
+.MODEL QN  NPN(IS=800E-18 BF=2000 TF=0.1NS)
+.MODEL QNA NPN(IS=824E-18 BF=2700 TF=0.1NS)
+.MODEL QP  PNP(IS=800E-18 BF=260  TF=0.1NS)
+.ENDS
+**********
+*SRC=EL2030E;EL2030E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2030 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2030E         3  2  7  4  6
+*
+* INPUT STAGE 
+*
+E1 10 0 3 0 1
+R1 2 11 25  
+L1 11 12 29NH
+VIS 10 9 0V 
+H4 9 12 V1 1.0
+H1 13 0 VIS 1.0
+R2 13 0 1K
+V1 23 0 0V
+R4 23 0 1K
+IVOS 0 23 5MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 15 0 13 0 1.0  
+R5 15 0 1K
+R6 15 16 1K
+L2 16 17 0.5UH
+C1 17 0 1PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 18 17 0 1.0
+ROL 18 0 130K
+C2 18 0 2.6PF
+*
+* OUTPUT STAGE 
+*
+Q1 4 18 19 QP 
+Q2 7 18 20 QN 
+Q3 7 19 21 QN 
+Q4 4 20 22 QP 
+R7 21 6 4
+R8 22 6 4
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS 7 4 9MA
+IINN 0 2 10UA
+IINP 0 3 5UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=100 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=100 TF=0.1NS)
+*
+.ENDS
+**********
+*SRC=EL2038E;EL2038E;Opamps;Elantec;Transimped., 1000V/us
+*SYM=ELOPAMP
+*EL2038 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2038E         1  14 10 3  8
+*
+*INPUT STAGE 
+*
+IE 37 8 2MA
+R6 36 37 65
+R7 38 37 65
+RC1 10 30 75
+RC2 10 39 75
+Q1 30 1 36 QN
+Q2 39 14 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 5.2M
+RH 34 0 .525MEG
+CH 34 0 0.5PF
+RC 34 40 600
+CC 40 0 4PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 17PF
+RPB 42 43 50
+CPB 43 0 10PF
+*
+* OUTPUT STAGE  
+* 
+IOS1 10 50 1.25MA
+IOS2 51 3 1.25MA
+Q3  3 43 50 QP 
+Q4 10 43 51 QN
+Q5 10 50 52 QN
+Q6 3 51 53 QP 
+ROS1 52 8 25
+ROS2 8 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 10 3 9.2MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF=200 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=250 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2039E;EL2039E;Opamps;Elantec;Transimped., 600V/us
+*SYM=ELOPAMP
+*EL2039 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2039E         1  14 10 3  8
+*
+*INPUT STAGE 
+*
+IE 37 8 1.7MA
+R6 36 37 60
+R7 38 37 60
+RC1 10 30 75
+RC2 10 39 75
+Q1 30 1 36 QN
+Q2 39 14 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 5.2M
+RH 34 0 .525MEG
+CH 34 0 1.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 7PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE  
+* 
+IOS1 10 50 1.25MA
+IOS2 51 3 1.25MA
+Q3  3 43 50 QP 
+Q4 10 43 51 QN
+Q5 10 50 52 QN
+Q6 3 51 53 QP 
+ROS1 52 8 25
+ROS2 8 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 10 3 9.5MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF=170 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=200 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2040E;EL2040E;Opamps;Elantec;Transimped., 400V/us
+*SYM=ELOPAMP
+*EL2040 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2040E         5  4 11  6  10
+*
+*INPUT STAGE 
+*
+IE 37 6 1.3MA
+R6 36 37 60
+R7 38 37 60
+RC1 11 30 75
+RC2 11 39 75
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 5.2M
+RH 34 0 .525MEG
+CH 34 0 1.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 7PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 11 50 1.25MA
+IOS2 51  6 1.25MA
+Q3  6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+ROS1 52 10 25
+ROS2 10 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 9.5MA
+*
+* MODELS  
+*
+.MODEL QN NPN(IS=800.0E-18 BF=130 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=150 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2041E;EL2041E;Opamps;Elantec;Transimped., 200V/us
+*SYM=ELOPAMP
+*EL2041 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2041E         5  4  11 6  10
+*
+* INPUT STAGE 
+*
+IE 37 6 3.7MA
+R6 36 37 75
+R7 38 37 75
+RC1 11 30 75
+RC2 11 39 75
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+EDIFF 33 0 39 30 3
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 5.2M
+RH 34 0 1MEG
+CH 34 0 16PF
+RC 34 40 300
+CC 40 0 1.5PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 2PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 11 50 1.25MA
+IOS2 51 6 1.25MA
+Q3  6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+ROS1 52 10 25
+ROS2 10 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 6.5MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF=340 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=400 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2070E;EL2070E;Opamps;Elantec;Transimped., 700V/us
+*SYM=ELOPAMP
+*EL2070 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2070E         3  2  7  4  6
+*
+* INPUT STAGE 
+*
+E1 10 0 3 0 1.0
+R1 2 11 25  
+L1 11 12 9NH
+VIS 10 9 0V 
+H4 9 12 V1  1.0
+H1 13 0 VIS 1.0
+R2 13 0 1K
+V1 23 0 0V
+R4 23 0 1K
+IVOS 0 23 5MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 15 0 13 0 1.0  
+R5 15 0 1K
+R6 15 16 1K
+L2 16 17 0.1UH
+C1 17 0 0.1PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 18 17 0 1.0
+ROL 18 0 125K
+C2 18 0 2.8PF
+*
+* OUTPUT STAGE 
+*
+Q1 4 18 19 QP 
+Q2 7 18 20 QN 
+Q3 7 19 21 QN 
+Q4 4 20 22 QP 
+R7 21 6 2
+R8 22 6 2
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS 7 4 9MA
+IINN 0 2 8UA
+IINP 0 3 8UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=200 TF=0.05NS)
+.MODEL QP PNP(IS=5E-15 BF=200 TF=0.05NS)
+*
+.ENDS
+**********
+*SRC=EL2120E;EL2120E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2120 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2120E         3  2  7  4  6
+*
+* INPUT STAGE 
+*
+E1 10 0 3 0 1
+R1 2 11 25  
+L1 11 12 20NH
+VIS 10 9 0V 
+H4 9 12 V1 1.0
+H1 13 0 VIS 1.0
+R2 13 0 1K
+V1 23 0 0V
+R4 23 0 1K
+IVOS 0 23 5MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 15 0 13 0 1.0  
+R5 15 0 1K
+R6 15 16 1K
+L2 16 17 1UH
+C1 17 0 1.8PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 18 17 0 1.0
+ROL 18 0 140K
+C2 18 0 9.8PF
+*
+* OUTPUT STAGE 
+*
+Q1 4 18 19 QP 
+Q2 7 18 20 QN 
+Q3 7 19 21 QN 
+Q4 4 20 22 QP 
+R7 21 6 4
+R8 22 6 4
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS 7 4  10MA
+IINN 0 2 10UA
+IINP 0 3 5UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=500 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=500 TF=0.1NS)
+*
+.ENDS
+**********
+*SRC=EL2190E;EL2190E;Opamps;Elantec;Transimped., 200V/us
+*SYM=ELOPAMP
+*EL2190 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2190E         5  4  11 6  10
+*
+*INPUT STAGE 
+*
+IE 37 6 2MA
+R6 36 37 60
+R7 38 37 60
+RC1 11 30 75
+RC2 11 39 75
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 2.6M
+RH 34 0 1.5MEG
+CH 34 0 3.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 5PF
+RPB 42 43 50
+CPB 43 0 5PF
+*
+* OUTPUT STAGE
+* 
+IOS1  11 50 1.25MA
+IOS2 51 6 1.25MA
+Q3 6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+ROS1 52 10 25
+ROS2 10 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 8.5MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF= 200 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=250 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2223E;EL2223E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2223 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2223E         3  2  7  4  6
+*
+*INPUT STAGE 
+*
+IE 37 4 2MA
+R6 36 37 60
+R7 38 37 60
+RC1 7 30 75
+RC2 7 39 75
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 2.6M
+RH 34 0 3MEG
+CH 34 0 1.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 25PF
+RPB 42 43 50
+CPB 43 0 15PF
+*
+* OUTPUT STAGE 
+* 
+IOS1  7 50 1.25MA
+IOS2 51 4 1.25MA
+Q3 4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF= 250 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=300 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2224E;EL2224E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2224 MACROMODEL
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2224E         3  2  7  4  6  
+*
+*INPUT STAGE 
+*
+IE 37 4 4.5MA
+R6 36 37 75
+R7 38 37 75
+RC1 7 30 75
+RC2 7  39 75
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 2.6
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 3M
+RH 34 0 1MEG
+CH 34 0 15PF
+RC 34 40 300
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 3PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 0.5MA
+IOS2 51 4 0.5MA
+Q3  4 43 50 QP 
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* MODELS 
+.MODEL QN NPN(IS=800.0E-18 BF=350 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=400 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2232E;EL2232E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2232 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2232E         3  2  8  4  1
+*
+* INPUT STAGE 
+*
+E1 10 0 3 0 1
+R1 2 11 15  
+L1 11 12 29NH
+VIS 10 9 0V 
+H4 9 12 V1 1.0
+H1 13 0 VIS 1.0
+R2 13 0 1K
+V1 23 0 0V
+R4 23 0 1K
+IVOS 0 23 2MA
+*
+* HIGH FREQUENCY POLE  
+*
+E2 15 0 13 0 1.0  
+R5 15 0 1K
+R6 15 16 1K
+L2 16 17 1UH
+C1 17 0 2PF
+*
+* TRANSIMPEDANCE STAGE
+* 
+GM 0 18 17 0 1.0
+ROL 18 0 2MEG
+C2 18 0 4.5PF
+*
+* OUTPUT STAGE 
+*
+Q1 4 18 19 QP 
+Q2 8 18 20 QN 
+Q3 8 19 21 QN 
+Q4 4 20 22 QP 
+R7 21 1 15
+R8 22 1 15
+IOS1 8 19 1MA
+IOS2 20 4 1MA
+*
+* SUPPLY & BIAS CURRENT
+*
+IPS 8 4 2MA
+IINN 0 2 5UA
+IINP 0 3 1UA 
+*
+* MODELS
+*
+.MODEL QN NPN(IS=5E-15 BF=250 TF=0.1NS)
+.MODEL QP PNP(IS=5E-15 BF=250 TF=0.1NS)
+*
+.ENDS
+**********
+*SRC=EL2242E;EL2242E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2242 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2242E         3  2  7  4  6 
+*
+* INPUT STAGE 
+*
+IE 7 37 84UA
+R6 36 37 2.1K
+R7 38 37 2.1K
+RC1 4 30 6K
+RC2 4 39 6K
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF 33 0 39 30 1.0
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 1M
+RH 34 0 175MEG
+CH 34 0 5PF
+RC 34 40 1K
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 4PF
+RPB 42 43 1K
+CPB 43 0 2PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3  4 43 50 QP 
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 1.8MA
+*
+* MODELS 
+*
+.MODEL QN  NPN(IS=800E-18 BF=100 TF=0.2NS)
+.MODEL QPA PNP(IS=864E-18 BF=120 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=50 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2243E;EL2243E;Opamps;Elantec;Transimped.
+*SYM=ELOPAMP
+*EL2243 MACROMODEL
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2243E         3  2  7  4  6 
+*
+* INPUT STAGE 
+*
+IE 7 37 200UA
+R6 36 37 1K
+R7 38 37 1K
+RC1 4 30 3K
+RC2 4 39 3K
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF 33 0 39 30 1.0
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 1M
+RH 34 0 175MEG
+CH 34 0 4PF
+RC 34 40 1K
+CC 40 0 4PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 1K
+CPA 42 0 4PF
+RPB 42 43 1K
+CPB 43 0 2PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3 4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 1.5MA
+*
+* MODELS 
+*
+.MODEL QN  NPN(IS=800E-18 BF=100 TF=0.2NS)
+.MODEL QPA PNP(IS=864E-18 BF=150 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=125 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2423E;EL2423E;Opamps;Elantec;Transimped., 350V/us
+*SYM=ELOPAMP
+*EL2423 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2423E         3  2  7  4  6
+*
+*INPUT STAGE 
+*
+IE 37 4 2MA
+R6 36 37 60
+R7 38 37 60
+RC1 7 30 75
+RC2 7 39 75
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 2.6M
+RH 34 0 3MEG
+CH 34 0 1.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 25PF
+RPB 42 43 50
+CPB 43 0 15PF
+*
+* OUTPUT STAGE  
+* 
+IOS1  7 50 1.25MA
+IOS2 51 4 1.25MA
+Q3 4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* MODELS 
+*
+.MODEL QN  NPN(IS=800E-18 BF=250 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=300 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=60  TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2424E;EL2424E;Opamps;Elantec;Transimped. 200V/us
+*SYM=ELOPAMP
+*EL2424 MACROMODEL
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2424E         3  2  7  4  6  
+*
+*INPUT STAGE 
+*
+IE 37 4 4.5MA
+R6 36 37 75
+R7 38 37 75
+RC1 7 30 75
+RC2 7  39 75
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 2.6
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 3M
+RH 34 0 1MEG
+CH 34 0 15PF
+RC 34 40 300
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 3PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 0.5MA
+IOS2 51 4 0.5MA
+Q3  4 43 50 QP 
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* MODELS 
+.MODEL QN NPN(IS=800.0E-18 BF=350 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=400 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA2500E;EHA2500E;Opamps;Elantec;w/Compensation, 100V/us
+*SYM=ELCOMP
+*EHA2500 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |  COMP
+*                       |  |  |  |  |  |
+.SUBCKT EHA2500E        3  2  7  4  6  8
+*
+*INPUT STAGE 
+*
+IE 37 4 425UA
+R6 36 37 1.6K
+R7 38 37 1.6K
+RC1 7 30 1.7K
+RC2 7 39 1.7K
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1.00
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 8 33 0 0.5M
+RH 8 0 79.6MEG
+CH 8 0 9PF
+RC 8 40 1K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 1K
+CPA 42 0 2PF
+RPB 42 43 1K
+CPB 43 0 4PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 1.0MA
+IOS2 51  4 1.0MA
+Q3  4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 1MA
+*
+* MODELS  
+*
+.MODEL QN NPN(IS=800.0E-18 BF=2E3 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=2.5E3 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=2E3 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA2520E;EHA2520E;Opamps;Elantec;w/Compensation, 100V/us
+*SYM=ELCOMP
+*EHA2520 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |  COMP
+*                       |  |  |  |  |  |
+.SUBCKT EHA2520E        3  2  7  4  6  8
+*
+*INPUT STAGE 
+*
+IE 37 4 425UA
+R6 36 37 1.6K
+R7 38 37 1.6K
+RC1 7 30 1.7K
+RC2 7 39 1.7K
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1.00
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 8 33 0 0.5M
+RH 8 0 79.6MEG
+CH 8 0 1.5PF
+RC 8 40 1K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 1K
+CPA 42 0 2PF
+RPB 42 43 1K
+CPB 43 0 4PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 1.0MA
+IOS2 51  4 1.0MA
+Q3  4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 1MA
+*
+* MODELS  
+*
+.MODEL QN NPN(IS=800.0E-18 BF=2E3 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=2.5E3 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=2E3 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA2539E;EHA2539E;Opamps;Elantec;Transimped., 600V/us
+*SYM=ELOPAMP
+*EHA2539 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EHA2539E        1  14 10 3  8
+*
+*INPUT STAGE 
+*
+IE 37 8 1.7MA
+R6 36 37 60
+R7 38 37 60
+RC1 10 30 75
+RC2 10 39 75
+Q1 30 1 36 QN
+Q2 39 14 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 5.2M
+RH 34 0 .525MEG
+CH 34 0 1.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 7PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE  
+* 
+IOS1 10 50 1.25MA
+IOS2 51 3 1.25MA
+Q3  3 43 50 QP 
+Q4 10 43 51 QN
+Q5 10 50 52 QN
+Q6 3 51 53 QP 
+ROS1 52 8 25
+ROS2 8 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 10 3 9.5MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF=170 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=200 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA2540E;EHA2540E;Opamps;Elantec;Transimped., 400V/us
+*SYM=ELOPAMP
+*EHA2540 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EHA2540E        5  4 11  6  10
+*
+*INPUT STAGE 
+*
+IE 37 6 1.3MA
+R6 36 37 60
+R7 38 37 60
+RC1 11 30 75
+RC2 11 39 75
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 5.2M
+RH 34 0 .525MEG
+CH 34 0 1.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 7PF
+RPB 42 43 50
+CPB 43 0 3PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 11 50 1.25MA
+IOS2 51  6 1.25MA
+Q3  6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+ROS1 52 10 25
+ROS2 10 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 9.5MA
+*
+* MODELS  
+*
+.MODEL QN NPN(IS=800.0E-18 BF=130 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=150 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA2600E;EHA2600E;Opamps;Elantec;w/Compensation, 4V/us
+*SYM=ELCOMP
+*EHA2600 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |  COMP
+*                       |  |  |  |  |  |
+.SUBCKT EHA2600E        3  2  7  4  6  8
+*
+*INPUT STAGE 
+*
+IE 37 4 26UA
+R6 36 37 1K
+R7 38 37 1K
+RC1 7 30 3K
+RC2 7 39 3K
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1.00
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 8 33 0 1M
+RH 8 0 150MEG
+CH 8 0 6PF
+RC 8 40 1K
+CC 40 0 4PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 8PF
+RPB 42 43 1K
+CPB 43 0 8PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3  4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 0.5MA
+*
+* MODELS  
+*
+.MODEL QN  NPN(IS=800.0E-18 BF=5E3 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=6E3 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=5E3 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA2620E;EHA2620E;Opamps;Elantec;w/Compensation, 25V/us
+*SYM=ELCOMP
+*EHA2620 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |  COMP
+*                       |  |  |  |  |  |
+.SUBCKT EHA2620E        3  2  7  4  6  8
+*
+*INPUT STAGE 
+*
+IE 37 4 26UA
+R6 36 37 1K
+R7 38 37 1K
+RC1 7 30 3K
+RC2 7 39 3K
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1.00
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 8 33 0 1M
+RH 8 0 150MEG
+CH 8 0 1.5PF
+RC 8 40 5K
+CC 40 0 1PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 8PF
+RPB 42 43 1K
+CPB 43 0 8PF
+*
+* OUTPUT STAGE 
+* 
+IOS1 7 50 1.0MA
+IOS2 51  4 1.0MA
+Q3  4 43 50 QP 
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP 
+ROS1 52 6 25
+ROS2 6 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 0.5MA
+*
+* MODELS  
+*
+.MODEL QN NPN(IS=800.0E-18 BF=5E3 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=6E3 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=5E3 TF=0.2NS)
+.ENDS
+**********
+*SRC=EHA5190E;EHA5190E;Opamps;Elantec;Transimped., 200V/us
+*SYM=ELOPAMP
+*EHA5190 MACROMODEL 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EHA5190E        5  4  11 6  10
+*
+*INPUT STAGE 
+*
+IE 37 6 2MA
+R6 36 37 60
+R7 38 37 60
+RC1 11 30 75
+RC2 11 39 75
+Q1 30 5 36 QN
+Q2 39 4 38 QNA
+EDIFF 33 0 39 30 7.25
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 2.6M
+RH 34 0 1.5MEG
+CH 34 0 3.5PF
+RC 34 40 600
+CC 40 0 7PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 5PF
+RPB 42 43 50
+CPB 43 0 5PF
+*
+* OUTPUT STAGE 
+* 
+IOS1  11 50 1.25MA
+IOS2 51 6 1.25MA
+Q3 6 43 50 QP 
+Q4 11 43 51 QN
+Q5 11 50 52 QN
+Q6 6 51 53 QP 
+ROS1 52 10 25
+ROS2 10 53 25
+*
+* POWER SUPPLY CURRENT
+*
+IPS 11 6 8.5MA
+*
+* MODELS 
+*
+.MODEL QN NPN(IS=800.0E-18 BF= 200 TF=0.2NS)
+.MODEL QNA NPN(IS=864E-18 BF=250 TF=0.2NS)
+.MODEL QP PNP(IS=800E-18 BF=60 TF=0.2NS)
+.ENDS
+**********
+*SYM=ELOPAMP
+*EL2073 MACROMODEL 
+* 
+* CONNECTIONS:          +INPUT
+*                       | -INPUT
+*                       |  |  +VSUPPLY
+*                       |  |  |  -VSUPPLY
+*                       |  |  |  |  OUTPUT
+*                       |  |  |  |  |
+.SUBCKT EL2073E         3  2  7  4  6
+*
+*INPUT STAGE 
+*
+IE 37 4 1MA
+R6 36 37 125
+R7 38 37 125
+RC1 7 30 200
+RC2 7 39 200
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1
+RDIFF 33 0 1MEG
+*
+* COMPENSATION SECTION 
+*
+GA 0 34 33 0 2M
+RH 34 0 500K
+CH 34 0 1.2PF
+RC 34 40 400
+CC 40 0 0.3PF
+*
+* POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 75
+CPA 42 0 0.5PF
+RPB 42 43 50
+CPB 43 0 0.5PF
+*
+* OUTPUT STAGE  
+* 
+IOS1 7 50 3.0MA
+IOS2 51 4 3.0MA
+Q3  4 43 50 QP 
+Q4  7 43 51 QN
+Q5  7 50 52 QN
+Q6  4 51 53 QP 
+ROS1 52 6 2
+ROS2 6 53 2
+*
+* POWER SUPPLY CURRENT
+*
+IPS 7 4 11.4MA
+*
+* MODELS 
+*
+.MODEL QNA NPN(IS=800E-18 BF=170 TF=0.2NS)
+.MODEL QN  NPN(IS=810E-18 BF=200 TF=0.2NS)
+.MODEL QP  PNP(IS=800E-18 BF=200 TF=0.2NS)
+.ENDS
+**********
+*SRC=EL2082C;EL2082C;Multipliers;Elantec;Current mode
+*SYM=EL2082C
+*EL2082C MARCROMODEL
+* CONNECTIONS :    VGAIN
+*                    |      IIN       
+*                    |       |     VIN
+*                    |       |      |
+*                    |       |      |     IOUT
+*                    |       |      |       |
+.SUBCKT EL2082C      1       2      3       6
+*
+* CAPACITORS & INDUCTORS 
+*
+CINI 2 0 2PF
+C500 502 0 0.9845PF
+C501 505 0 1000PF
+COUT 6 0 5PF
+L501 503 504 0.1UH
+*
+* RESISTORS
+*
+RSILLY1 1 0 1E9
+RSILLY2 505 0 1E9
+RINI 2 500 95
+RINV 3 0 2MEG
+ROUT 6 0 1MEG
+R500 501 502 1K
+R501 504 505 5
+R502 506 507 50
+R503 508 0 50
+*
+* ACTIVE ELEMENTS
+*
+E500 500 0 3 0 1.0
+E501 501 0 POLY(1)  2 500  0 2 0 -0.8 
+E502 503 0 POLY(1)  1 0  0 1.05 -0.05
+E503 506 0 POLY(2)  505 0   502 0  0 0 0 0 1
+G500 6 0 508 0 -0.0105
+T500 508 0 507 0 ZO=50 TD=1.95NS
+*
+.ENDS
+**********
+*SYM=ELOPAMP
+*EL2044C MACROMODEL
+* CONNECTIONS:   +INPUT
+*                | -INPUT
+*                | | +VSUPPLY
+*                | | | -VSUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT EL2044CE 3 2 7 4 6
+*
+*INPUT STAGE
+*
+IE 7 37 1MA
+R6 36 37 800
+R7 38 37 800
+RC1 4 30 850
+RC2 4 39 850
+Q1 30 3 36 QP
+Q2 39 2 38 QPA
+EDIFF  33 0 39 30 1.0
+RDIFF  33 0 1MEG
+*
+*COMPENSATION SECTION
+*
+GA 0 34 33 0 1M
+RH 34 0 2MEG
+CH 34 0 1.3PF
+RC 34 40 1K
+CC 40 0 1PF
+*
+*POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 200
+CPA 42 0 1PF
+RPB 42 43 200
+CPB 43 0 1PF
+*
+*OUTPUT STAGE
+*
+IOS1 7 50 1.0MA
+IOS2 51 4 1.0MA
+Q3 4 43 50 QP
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP
+ROS1 52 6 25
+ROS2 6 53 25
+*
+*POWER SUPPLY CURRENT
+*
+IPS 7 4 2.7MA
+*
+*MODELS
+*
+.MODEL QN NPN (IS=800E-18 BF=200 TF=0.2NS)
+.MODEL QPA PNP (IS=864E-18 BF=100 TF=0.2NS)
+.MODEL QP PNP (IS=800E-18 BF=125 TF=0.2NS)
+.ENDS
+**********
+*SYM=ELOPAMP
+*EL2074 MACROMODEL
+* CONNECTIONS: +INPUT
+*               | -INPUT
+*               | | +VSUPPLY
+*               | | | -VSUPPLY
+*               | | | | OUTPUT
+*               | | | | |
+.SUBCKT EL2074E 3 2 7 4 6
+*
+*INPUT STAGE
+*
+IE 37 4 1MA
+R6 36 37 125
+R7 38 37 125
+RC1 7 30 200
+RC2 7 39 200
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1
+RDIFF 33 0 1MEG
+*
+*COMPENSATION SECTION
+*
+GA 0 34 33 0 2M
+RH 34 0 500K
+CH 34 0 0.8PF
+RC 34 40 50
+CC 40 0 0.5PF
+*
+*POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 150
+CPA 42 0 0.5PF
+RPB 42 43 50
+CPB 43 0 0.5PF
+*
+*OUTPUT STAGE
+*
+IOS1 7 50 3.0MA
+IOS2 51 4 3.0MA
+Q3 4 43 50 QP
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP
+ROS1 52 6 2
+ROS2 6 53 2
+*
+*POWER SUPPLY CURRENT
+*
+IPS 7 4 11.4MA
+*
+*MODELS
+*
+.MODEL QNA  NPN (IS=800E-18 BF=170 TF=0.2NS)
+.MODEL QN   NPN (IS=810E-18 BF=200 TF=0.2NS)
+.MODEL QP   PNP (IS=800E-18 BF=200 TF=0.2NS)
+.ENDS
+**********
+*SYM=ELOPAMP
+*EL2075 MACROMODEL
+* CONNECTIONS: +INPUT
+*               | -INPUT
+*               | | +VSUPPLY
+*               | | | -VSUPPLY
+*               | | | | OUTPUT
+*               | | | | |
+.SUBCKT EL2075E 3 2 7 4 6
+*
+*INPUT STAGE
+*
+IE 37 4 1MA
+R6 36 37 15
+R7 38 37 15
+RC1 7 30 200
+RC2 7 39 200
+Q1 30 3 36 QN
+Q2 39 2 38 QNA
+EDIFF 33 0 39 30 1
+RDIFF 33 0 1MEG
+*
+*COMPENSATION SECTION
+*
+GA 0 34 33 0 2M
+RH 34 0 500K
+CH 34 0 0.4PF
+RC 34 40 50
+CC 40 0 0.5PF
+*
+*POLES
+*
+EP 41 0 40 0 1
+RPA 41 42 250
+CPA 42 0 0.8PF
+RPB 42 43 50
+CPB 43 0 0.5PF
+*
+*OUTPUT STAGE
+*
+IOS1 7 50 3.0MA
+IOS2 51 4 3.0MA
+Q3 4 43 50 QP
+Q4 7 43 51 QN
+Q5 7 50 52 QN
+Q6 4 51 53 QP
+ROS1 52 6 2
+ROS2 6 53 2
+*
+*POWER SUPPLY CURRENT
+*
+IPS 7 4 11.4MA
+*
+*MODELS
+*
+.MODEL QNA  NPN (IS=800E-18 BF=170 TF=0.2NS)
+.MODEL QN   NPN (IS=810E-18 BF=200 TF=0.2NS)
+.MODEL QP   PNP (IS=800E-18 BF=200 TF=0.2NS)
+.ENDS
+**********
+*SYM=ELOPAMP
+*EL2071 MACROMODEL
+*REVISION A. MARCH 1992
+*ENHANCEMENTS INCLUDE PSSR, CMRR, AND SLEW RATE LIMITING
+*CONNECTION:     +INPUT
+*                |  -INPUT
+*                |  |  +VSUPPLY
+*                |  |  |  -VSUPPLY
+*                |  |  |  |  OUTPUT
+*                |  |  |  |  |  
+.SUBCKT EL2071CE 3  2  7  4  6  
+*
+*INPUT STAGE   
+*
+E1 10 0 3 0 1.0 
+VIS 10 9 0V   
+H2 9 12 VXX 1.0 
+R1 2 11 2   
+L1 11 12 1NH   
+IINP 3 0 10UA   
+IINM 2 0 10UA 
+*
+*SLEW RATE LIMITING 
+*
+*H1 13 0 VIS 1K 
+H1 13 0 VIS 600 
+R2 13 14 100   
+D1 14 0 DCLAMP 
+D2 0 14 DCLAMP 
+*
+*HIGH FREQUENCY POLE 
+*
+E2 30 0 14 0 0.001667
+L3 30 17 1.0UH
+C5 17 0 0.1PF
+R5 17 0 500
+*
+*TRANSIMPEDANCE STAGE
+*
+G1 0 18 17 0 1.0
+ROL 18 0 1MEG
+CDP 18 0 0.88PF
+*
+*OUTPUT STAGE
+*
+Q1 4 18 19 QP
+Q2 7 18 20 QN
+Q3 7 19 21 QN
+Q4 4 20 22 QP
+R7 21 6 2
+R8 22 6 2
+IOS1 7 19 2.5MA
+IOS2 20 4 2.5MA
+*
+*SUPPLY CURRENT
+*
+IPS 7 4 9MA
+*
+*ERROR TERMS
+*
+IVOS 0 23 3MA
+VXX 23 0 0V
+E4 24 0 6 0 1.0
+E5 25 0 7 0 1.0
+E6 26 0 4 0 1.0
+R9 24 23 316
+R10 25 23 562
+R11 26 23 562
+*
+*MODELS
+*
+.MODEL QN NPN (IS=5E-15 BF=500 TF=0.05NS)
+.MODEL QP PNP (IS=5E-15 BF=500 TF=0.05NS)
+.MODEL DCLAMP D (IS=1E-30 IBV=1PA BV=3.5 N=4)
+.ENDS
+**********
+*SRC=EL2099;EL2099C;Opamps;Elantec;Video
+*SYM=ELOPAMP
+*EL2099 MACROMODEL
+*CONNECTION:    +INPUT
+*               |  -INPUT
+*               |  |  +VSUPPLY
+*               |  |  |  -VSUPPLY
+*               |  |  |  |  OUTPUT
+*               |  |  |  |  |  
+.SUBCKT EL2099C 4  5  1  3  2
+*
+*INPUT STAGE
+*
+E1 10 0 4 0 1.0
+VIS 10 9 0V
+H2 9 12 VXX 1.0
+R1 5 11 50
+L1 11 12 48NH
+IINP 4 0 5UA
+IINM 5 0 -8UA
+*
+*SLEW RATE LIMITING
+*
+H1 13 0 VIS 600
+R2 13 14 1K
+D1 14 0 DCLAMP
+D2 0 14 DCLAMP
+*
+*HIGH FREQUENCY POLE
+*
+E2 30 0 14 0 0.001667
+L3 30 17 1.5UH
+C5 17 0 1PF
+R5 17 0 500
+*
+*TRANSIMPEDANCE STAGE
+*
+G1 0 18 17 0 1.0
+RO1 18 0 150K
+CDP 18 0 8PF
+*
+*OUTPUT STAGE
+*
+Q1 3 18 19 QP
+Q2 1 18 20 QN
+Q3 1 19 21 QN
+Q4 3 20 22 QP
+R7 21 2 1
+R8 22 2 1
+IOS1 1 19 5MA
+IOS2 20 3 5MA
+*
+*SUPPLY
+*
+IPS 1 3 19MA
+*
+*ERROR TERMS
+*
+IVOS 0 23 5MA
+VXX 23 0 0V
+E4 24 0 2 0 1.0
+E5 25 0 1 0 1.0
+E6 26 0 3 0 1.0
+R9 24 23 3K
+R10 25 23 1K
+R11 26 23 1K
+*
+*MODELS
+*
+.MODEL QN NPN (IS=5E-15 BF=200 TF=0.1NS)
+.MODEL QP PNP (IS=5E-15 BF=200 TF=0.1NS)
+.MODEL DCLAMP D (IS=1E-30 IBV=0.266 BV=5 N=4)
+.ENDS
+**********

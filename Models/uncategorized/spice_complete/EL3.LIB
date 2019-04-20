@@ -1,0 +1,931 @@
+*****
+*SRC=EL1501E;EL1501E;Line Drivers;Elantec;Differential 2MHz
+*SYM=EL1501E
+*  
+* Applications Hint. Pins 4, 5, 6, 7, 14, 15, 16, & 17 must be connected to
+* ground (node 0) for proper operation. Use resistors whose value is 1e-6 ohms. 
+*  
+* Connections: 
+* Vin-, Dr+
+*     |   Vout, Dr+
+*     |      |     V-      
+*     |      |     |      Gnd
+*     |      |     |      |     Gnd
+*     |      |     |      |     |      Gnd
+*.    |      |     |      |     |       |        Gnd
+*     |      |     |      |     |       |        |   Vin+, Dr+
+*     |      |     |      |     |       |        |       |     Vout, Rcvr+
+*     |      |     |      |     |       |        |       |         |       Vin-, Rcvr+
+*     |      |     |      |     |       |        |       |         |       |    
+*     1      2     3      4     5       6        7       8         9       10
+*
+*    Vin-, Rcvr-    
+*        |   Vout, Rcvr-   
+*        |         |   Vin+, Dr-
+*        |         |      |      Gnd
+*        |         |      |      |        Gnd
+*        |         |      |      |        |       Gnd
+*        |         |      |      |        |       |     Gnd
+*        |         |      |      |        |       |     |      V+
+*        |         |      |      |        |       |     |      |    Vout, Dr-
+*        |         |      |      |        |       |     |      |        |      Vin-,Dr-
+*        |         |      |      |        |       |     |      |        |          |
+*        11        12     13     14       15      16    17     18       19         20
+.subckt EL1501E  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20    
+*
+* Driver+ (Amplifier A) 
+*
+e1a  30 0 8 0 1.0
+visa  30 43 0V
+h2a   43 44 v1a 1.0
+r1a     1 45  25  
+l1a    45 44 2.5nH
+i1a      8   0 1uA   
+i2a      1   0 5uA
+h1a   46  0 visa 600
+r2a   46 31 1K
+d1a   31  0   dclamp
+d2a    0  31  dclamp 
+e2a   32 0 31 0 0.0016666
+l3a   32 33 0.5uH
+c1a   33  0 1pF
+r5a   33 0 200
+g1a    0 34 33 0 1.0
+rola  34  0 2Meg 
+c2a   34 0 3pF  
+q1a  3 34 35 qp 
+q2a 18 34 36 qn 
+q3a 18 35 37 qn 
+q4a  3 36 38 qp 
+r7a   37 2  2
+r8a   38 2  2
+i3a   18 35 3.3mA
+i4a   36  3 3.3mA
+ivosa 0 42 2mA
+v1a   42  0 0V
+*
+* Driver- (Amplifier B) 
+*
+e1b  50 0 13 0 1.0
+visb  50 63 0V
+h2b  63 64 v1b 1.0
+r1b    20 65  25  
+l1b    65 64 2.5nH
+i1b      13   0 1uA   
+i2b      20   0 5uA
+h1b   66  0 visb 600
+r2b   66 51 1K
+d1b   51  0   dclamp
+d2b    0  51  dclamp 
+e2b   52 0 51 0 0.0016666
+l3b   52 53 0.5uH
+c1b   53  0 1pF
+r5b   53 0 200
+g1b    0 54 53 0 1.0
+rolb  54  0 2Meg 
+c2b   54 0 3pF  
+q1b  3 54 55 qp 
+q2b 18 54 56 qn 
+q3b 18 55 57 qn 
+q4b  3 56 58 qp 
+r7b   57 19  2
+r8b   58 19  2
+i3b   18 55  3.3mA
+i4b   56   3  3.3mA
+ivosb  0 62 2mA
+v1b  62  0 0V
+*
+* Receiver+ (Amplifier C) 
+*
+rpin1 4   5 1e-6
+rpin2 5   6 1e-6
+rpin3 6   7 1e-6
+rpin4 7  14 1e-6
+e1c   70 0 7 0 1.0
+visc  70 83 0V
+h2c   83 84 v1b 1.0
+r1c   10 85  25  
+l1c   85 84 2.5nH
+i1c    7  0 1uA   
+i2c   10  0 5uA
+h1c   86  0 visc 600
+r2c   86 71 1K
+d1c   71  0 dclamp
+d2c    0  71  dclamp 
+e2c   72 0 71 0 0.0016666
+l3c   72 73 0.5uH
+c1c   73  0 1pF
+r5c   73 0 200
+g1c    0 74 73 0 1.0
+rolc  74  0 2Meg 
+c2c   74 0 4.1pF  
+q1c   3 74 75 qp 
+q2c  18 74 76 qn 
+q3c  18 75 77 qn 
+q4c   3 76 78 qp 
+r7c   77 9  2
+r8c   78 9  2
+i3c   18 75  3.3mA
+i4c   76  3  3.3mA
+ivosc  0 82 2mA
+v1c   82  0 0V
+*
+* Receiver- (Amplifier D) 
+*
+rpin5 17 16 1e-6
+rpin6 16 15 1e-6
+rpin7 15 14 1e-6
+e1d   90 0 14 0 1.0
+visd  90 103 0V
+h2d   103 104 v1d 1.0
+r1d   11 105  25  
+l1d   105 104 2.5nH
+i1d    7  0 1uA   
+i2d   11  0 5uA
+h1d   106  0 visd 600
+r2d   106 91 1K
+d1d   91  0 dclamp
+d2d    0 91 dclamp 
+e2d   92 0 91 0 0.0016666
+l3d   92 93 0.5uH
+c1d   93  0 1pF
+r5d   93 0 200
+g1d    0 94 93 0 1.0
+rold  94  0 2Meg 
+c2d   94 0 4.1pF  
+q1d   3 94 95 qp 
+q2d  18 94 96 qn 
+q3d  18 95 97 qn 
+q4d   3 96 98 qp 
+r7d   97 12  2
+r8d   98 12  2
+i3d   18 95  3.3mA
+i4d   96  3  3.3mA
+ivosd  0 102 2mA
+v1d   102  0 0V
+*
+* Models
+*
+.model qn npn(is=5e-15 bf=350 tf=0.1nS)
+.model qp pnp(is=5e-15 bf=350 tf=0.1nS)
+.model dclamp d(is=1e-30 ibv=0.266 bv=1.9 n=4)
+.ends
+*****
+*SRC=EL2019E;EL2019E;Comparators;Elantec;Latched
+*SYM=EL2019E
+*EL2019 Marcromodel
+*
+* Connections:        +input
+*                       |  -input
+*                       |    |    +V
+*                       |    |    |    -V    
+*                       |    |    |    |   Cpin __    
+*                       |    |    |    |    |   CS 
+*                       |    |    |    |    |    |  output
+*                       |    |    |    |    |    |    |  
+*                       |    |    |    |    |    |    |
+.subckt EL2019E         2    3    8    4    6    5    7
+*
+*Input Stage 
+*
+i1 8 10 700uA
+r1 13 4 1K
+r2 14 4 1K
+q1  8 3 11  qn
+q2  8 2 12  qn
+q3 13 11 10 qp 
+q4 14 12 10 qp 
+i2 11 4 200uA
+i3 12 4 200uA          
+*
+* 2nd Stage & Flip Flop
+*
+*i4 8 24 700uA  
+i4 8 24 1mA
+q9  22  6 24 qp
+q10 18 17 24 qp
+v1 17 0 2.5V
+q5 15 14 22 qp 
+q6 16 13 22 qp
+r3 15 4 1K
+r4 16 4 1K
+q7 16 15 18 qp
+q8 15 16 18 qp
+i5 8 40 500uA
+q11 41 17 40 qp
+q12 42  6 40 qp
+q13 43 16 41 qp
+q14 44 15 41 qp  
+q15 44 43 42 qp
+q16 43 44 42 qp
+r5 43 4 1K
+r6 44 4 1K
+*
+* Output Stage  
+* 
+i7 8 35 2mA
+As1 35 20 5 0 sw
+d2 35 8 ds
+i6 26 34 5mA
+As2 34 4 5 0 sw
+d3 34 26 ds
+q19 8 20 21 qn 2
+q20 4 19  7 qp 2
+r8 21 7 60
+r7 20 19 4K
+q17 19 44 26 qn 5
+q18  0 43 26 qn 5
+q22 20 20 30 qn 5
+q23 19 19 30 qp 8
+d1 0 19 ds
+q21 0 17 19 qp
+*
+* Power Supply Current
+*
+ips 8 4 4mA
+*
+* Models 
+*
+.model qn npn(is=2e-15 bf=400 tf=0.05nS cje=0.3pF cjc=0.2pF ccs=0.2pF)
+.model qp pnp(is=0.6e-15 bf=60 tf=0.3nS cje=0.5pF cjc=0.5pF ccs=0.4pF)
+.model ds d(is=2e-12 tt=0.05nS eg=0.62V vj=0.58)
+.model sw vswitch(von=0.4v voff=2.5v)
+.ends
+*****
+*SRC=EL2157E;EL2157E;Opamps;Elantec;125MHz, Single Supply
+*SYM=EL2157E
+* EL2157/EL2257 Macromodel 
+* Revision A, July 1995
+* Applications Hints:
+* When not being used, the clamp pin, pin 1, should be connected to Vcc.
+*
+* connections:        +input
+*                       |  -input
+*                       |    | +Vsupply
+*                       |    |    | -Vsupply
+*                       |    |    |    |  output  
+*                       |    |    |    |    |   clamp
+*                       |    |    |    |    |     |
+.subckt EL2157E         3    2    7    4    6     1 
+*
+* Input stage 
+*
+i1  7 10 250uA
+i2  7 11 250uA
+r1 10 11 4K
+q1 12  2 10 qp
+q2 13  3 11 qpa
+r2 12  4 100
+r3 13  4 100
+*
+* Second Stage & Compensation
+*
+gm 15 4 13 12 4.6m   
+r4 15 4 15Meg
+c1 15 4 0.36pF
+*
+* Poles
+*
+e1 17  4 15 4 1.0
+r6 17 25 0.4K
+c3 25  4 1pF
+r7 25 18 0.5K  
+c4 18  4 1pF  
+*
+* Output Stage & Clamp
+* 
+i3 20 4 1.0mA
+v1 23 4 1.0v   
+q3  7 23 20 qn
+q4  7 18 19 qn
+q5  7 18 21 qn 
+q6  4 20 22 qp
+q7  7 23 18 qn
+d1 19 20 da
+d2 18  1 da
+r8 21 6 2
+r9 22 6 2
+r10 18 21 10k
+*
+* Power Supply Current
+*
+ips 7 4 3.2mA
+*
+* Models 
+*
+.model qn  npn(is=800e-18 bf=150 tf=0.02nS)
+.model qpa pnp(is=810e-18 bf=50 tf=0.02nS)
+.model qp  pnp(is=800e-18 bf=54 tf=0.02nS)
+.model da d(tt=0nS)
+.ends
+*****
+*SRC=EL2175E;EL2175E;Opamps;Elantec;120MHz, Current mode
+*SYM=BBOPAMP
+* EL2175 Macromodel
+* Revision A, August 1995
+* AC Characteristics used Rf=1k, Rg=1K, RL = 150
+* Connections:        +input
+*                       |  -input
+*                       |    | +Vsupply
+*                       |    |    | -Vsupply
+*                       |    |    |    |  output
+*                       |    |    |    |    |
+.subckt EL2175E         3    2    7    4    6
+* Input Stage 
+*
+e1  10 0 3 0 1.0
+vis 10 9 0V
+h2   9 12 vxx 1.0
+r1   2 11 130  
+l1  11  12 25nH
+iinp 3  0 2.5uA   
+iinm 2  0 2uA
+r12  3  0 25Meg
+*
+* Slew Rate Limiting
+*
+h1 13  0 vis 600
+r2 13 14 1k
+d1 14  0  dclamp
+d2  0 14  dclamp 
+*
+* High Frequency Pole  
+*
+e2 30 0 14 0 0.00166666666
+l3 30 17 0.8uH
+c5 17 0 1.25pF
+r5 17 0 500
+*
+* Transimpedance Stage
+* 
+g1 0 18 17 0 1.0
+rol 18 0 30Meg
+cdp 18 0 2.9pF  
+*
+* Output Stage 
+*
+q1 4 18 19 qp 
+q2 7 18 20 qn 
+q3 7 19 21 qn 
+q4 4 20 22 qp 
+r7 21 6  4
+r8 22 6  4
+ios1 7 19 2mA
+ios2 20 4 2mA
+*
+* Supply Current
+*
+ips 7 4 8.5ma
+*
+* Error Terms
+* 
+ivos 0 23 2mA
+vxx 23  0 0V
+e4  24 0 3 0 1.0
+e5  25 0 7 0 1.0
+e6  26 0 4 0 -1.0
+r9  24 23 1.35K
+r10 25 23 1.0K
+r11 26 23 1.0K 
+*
+* Models
+*
+.model qn npn(is=5e-15 bf=200 tf=0.1nS)
+.model qp pnp(is=5e-15 bf=200 tf=0.1nS)
+.model dclamp d(is=1e-30 ibv=0.266 bv=2.8 n=4)
+.ends
+*****
+*SRC=EL2176E;EL2176E;Opamps;Elantec;70MHz, Current mode
+*SYM=BBOPAMP
+* EL2176/EL2276 Macromodel
+* Revision A, March 1995
+* AC characteristics used Rf = 1K, Rg = 1K, RL = 150
+* Connections:        +input
+*                       |  -input
+*                       |    | +Vsupply
+*                       |    |    | -Vsupply
+*                       |    |    |    |  output
+*                       |    |    |    |    |
+.subckt EL2176E         3    2    7    4    6
+*
+* Input Stage 
+*
+e1  10 0 3 0 1.0
+vis 10 9 0V
+h2   9 12 vxx 1.0
+r1   2 11 165  
+l1  11  12 25nH
+iinp 3  0 0.5uA   
+iinm 2  0 4uA
+r12  3  0 4Meg
+*
+* Slew Rate Limiting
+*
+h1 13  0 vis 600
+r2 13 14 1K
+d1 14  0  dclamp
+d2  0 14  dclamp 
+*
+* High Frequency Pole  
+*
+e2 30 0 14 0 0.00166666666
+l3 30 17 0.5uH
+c5 17 0 0.69pF
+r5 17 0 300
+*
+* Transimpedance Stage
+* 
+g1 0 18 17 0 1.0
+rol 18 0 400K 
+cdp 18 0 1.9pF  
+*
+* Output Stage 
+*
+q1 4 18 19 qp 
+q2 7 18 20 qn 
+q3 7 19 21 qn 
+q4 4 20 22 qp 
+r7 21 6  4
+r8 22 6  4
+ios1 7 19 0.4mA
+ios2 20 4 0.4mA
+*
+* Supply Current
+*
+ips 7 4 1nA
+* Error Terms
+* 
+ivos 0 23 2mA
+vxx 23  0 0V
+e4  24 0 3 0 1.0
+e5  25 0 7 0 1.0
+e6  26 0 4 0 -1.0
+r9  24 23 0.316K
+r10 25 23 3.2K
+r11 26 23 3.2K 
+*
+* Models
+*
+.model qn npn(is=5e-15 bf=200 tf=0.01nS)
+.model qp pnp(is=5e-15 bf=200 tf=0.01nS)
+.model dclamp d(is=1e-30 ibv=0.266 bv=1.3v n=4)
+.ends
+*****
+*SRC=EL2186E;EL2186E;Opamps;Elantec;250MHz, Current mode
+*SYM=BBOPAMP
+* EL2186 Macromodel 
+* Revision A, March 1995
+* AC characteristics used Cin- (pin 2) = 0 pF; Rf = Rg = 750 ohms
+* 
+* Connections:        +input
+*                       |  -input
+*                       |    | +Vsupply
+*                       |    |    | -Vsupply
+*                       |    |    |    |  output
+*                       |    |    |    |    |
+.subckt EL2186E         3    2    7    4    6
+*
+* Input Stage 
+*
+e1  10 0 3 0 1.0
+vis 10 9 0V
+h2   9 12 vxx 1.0
+r1   2 11 400  
+l1  11  12 25nH
+iinp 3  0 1.5uA   
+iinm 2  0 3uA
+r12  3  0 2Meg
+*
+* Slew Rate Limiting
+*
+h1 13  0 vis 600
+r2 13 14 1K
+d1 14  0  dclamp
+d2  0 14  dclamp 
+*
+* High Frequency Pole  
+*
+e2 30 0 14 0 0.00166666666
+l3 30 17 150nH
+c5 17 0 0.8pF
+r5 17 0 165
+*
+* Transimpedance Stage
+* 
+g1 0 18 17 0 1.0
+rol 18 0 450K 
+cdp 18 0 0.675pF  
+*
+* Output Stage 
+*
+q1 4 18 19 qp 
+q2 7 18 20 qn 
+q3 7 19 21 qn 
+q4 4 20 22 qp 
+r7 21 6  4
+r8 22 6  4
+ios1 7 19 1mA
+ios2 20 4 1mA
+*
+* Supply Current
+*
+ips 7 4 0.2mA
+*
+* Error Terms
+* 
+ivos 0 23 0.2mA
+vxx 23  0 0V
+e4  24 0 3 0 1.0
+e5  25 0 7 0 1.0
+e6  26 0 4 0 -1.0
+r9  24 23 316
+r10 25 23 3.2K
+r11 26 23 3.2K 
+*
+* Models
+*
+.model qn npn(is=5e-15 bf=200 tf=0.01nS)
+.model qp pnp(is=5e-15 bf=200 tf=0.01nS)
+.model dclamp d(is=1e-30 ibv=0.266 bv=0.71v n=4)
+.ends
+*****
+*SRC=EL2244E;EL2244E;Opamps;Elantec;60MHz, Low Power
+*SYM=BBOPAMP
+* EL2244 Macromodel 
+* connections:        +input
+*                       |  -input
+*                       |    | +Vsupply
+*                       |    |    | -Vsupply
+*                       |    |    |    |  output
+*                       |    |    |    |    |
+.subckt EL2244E         3    2    7    4    6 
+*
+* Input stage 
+*
+ie 7 37 1mA
+r6 36 37 800
+r7 38 37 800
+rc1 4 30 850
+rc2 4 39 850
+q1 30 3 36 qp
+q2 39 2 38 qpa
+ediff 33 0 39 30 1.0
+rdiff 33 0 1Meg
+*
+* Compensation Section 
+*
+ga 0 34 33 0 1m
+rh 34 0 2Meg
+ch 34 0 1.3pF
+rc 34 40 1K
+cc 40 0 1pF
+*
+* Poles
+*
+ep 41 0 40 0 1
+rpa 41 42 200
+cpa 42 0 1pF
+rpb 42 43 200
+cpb 43 0 1pF
+*
+* Output Stage 
+* 
+ios1 7 50 1.0mA
+ios2 51 4 1.0mA
+q3  4 43 50 qp 
+q4  7 43 51 qn
+q5  7 50 52 qn
+q6  4 51 53 qp 
+ros1 52 6 25
+ros2 6 53 25
+*
+* Power Supply Current
+*
+ips 7 4 2.7mA
+*
+* Models 
+*
+.model qn  npn(is=800e-18 bf=200 tf=0.2nS)
+.model qpa pnp(is=864e-18 bf=100 tf=0.2nS)
+.model qp  pnp(is=800e-18 bf=125 tf=0.2nS)
+.ends   
+*****
+*SRC=EL4430E;EL4430E;Opamps;Elantec;Video
+*SYM=EL4430E
+* EL4430 Macromodel
+*  Revision A, May 1995
+*  The pins are numbered sequentially as the subcircuit interface nodes.  
+*  T1 is a transmission line which provides
+*  a good emulation of the more complicated real device.  This model correctly 
+*  displays the characteristics of input clipping, frequency response, CMRR
+*  both AC and DC, output clipping, output sensitivity to capacitive loads,
+*  gain accuracy, slewrate limiting, input bias current and impedance.  The
+*  macromodel does not exibit proper results with respect to supply current,
+*  supply sensitivities, offsets, output current limit, differential gain or
+*  phase, nor temperature.
+*  Connections:         IN+
+*                         |     VIN-
+*                         |       |     V-
+*                         |       |       |     V+
+*                         |       |       |       |     VFB
+*                         |       |       |       |       |     VREF
+*                         |       |       |       |       |       |     VOUT
+*                         |       |       |       |       |       |       |     GND
+*                         |       |       |       |       |       |       |       |
+.SUBCKT EL4430E           3       4       2       7       6       5       8       1
+*
+* EL4430 macromodel *
+*
+*
+i1 7 10 .00103
+i2 7 11 .00103
+i3 7 12 .00105
+i4 7 13 .00105
+v1 7 14 3
+v2 7 15 3
+v3 19 2 3
+*
+c1 11 1 .03p
+c2 12 1 .03p
+c3 18 1 2.1p
+c4 16 17 0.6p
+*
+r1 10 11 2000
+r2 12 13 2000
+r3 10 1 30e6
+r4 16 2 1000
+r5 17 2 1000
+r6 18 1 1.27e6
+r7 23 21 20
+r8 21 8 100
+*
+l1 21 8 50n
+*
+d1 11 14 diode
+d2 12 14 diode
+d3 18 15 diode
+d4 19 18 diode
+.model diode d(tt=120n)
+*
+q1 16 3 10 1 pnp
+q2 17 4 11 1 pnp
+q3 16 5 12 1 pnp
+q4 17 6 13 1 pnp
+.model pnp pnp (bf=90 va=44 tr=50n)
+*
+g1 18 1 17 16 .0005
+e1 20 1 1 18 1.0
+t1 22 1 20 1 z0=50 td=1.5n
+rlt1 22 1 50
+e2 23 1 22 1 1.0
+*
+.ENDS
+*****
+*SRC=EL7144E;EL7144E;Drivers;Power Mosfet;
+*SYM=EL7144E
+* EL7144 Spice Model   
+*Revision A, February 1996
+*Connection 
+*                   In+
+*                   |      In-
+*                   |      |      Gnd
+*                   |      |      |      Outn
+*                   |      |      |      |     outp
+*                   |      |      |      |     |     Vcc
+.subckt EL7144E     2      3      5      6     7      8 
+V1 12 5 1.6
+R1 13 15 1k 
+R2 14 15 5k  
+R5 11 12 100 
+C1 15 5 43.3pF
+D1 14 13 dmod
+X1 13 11 2 5 comp1
+X2 16 12 15 5 comp1
+V2 22 5 1.6
+R6 23 25 1K
+R7 24 25 5K
+R8 21 22 100
+C2 25 5 43.3pF
+D2 24 23 dmod
+X3 23 21 3 5 comp1
+X4 26 25 22 5 comp1
+X5 16 26 17 5 And-gate
+Asp 8 7 17 5 spmod
+Asn 6 5 17 5 snmod 
+g1 11 5 13 5 938u
+g2 21 5 23 5 938u
+.model dmod d
+.model spmod vswitch ron=3 roff=2meg von=1 voff=1.5
+.model snmod vswitch ron=4 roff=2meg von=3 voff=2
+.ends 
+*
+.subckt And-gate inp1 inp2 out-A Vss-A
+Be1 out-A Vss-A v= v(inp1)*v(inp2) < ? 0 ? 3.2 : v(inp1)*v(inp2) > 3.2 ? 0 : -1*(v(inp1)*v(inp2)) + 3.2
+Rout-a out-a vss-a 10meg
+rinpa inp1 vss-a 10meg
+rinpb inp2 vss-a 10meg
+.ends 
+*
+.subckt comp1 out inp inm vss
+Be1 out vss V=(v(inp)-v(inm))*5000 < 0 ? 0 : (v(inp)-v(inm))*5000 > 3.2 ? 3.2 : (v(inp)-v(inm))*5000
+Rout out vss 10meg
+Rinp inp vss 10meg
+Rinm inm vss 10meg
+.ends 
+*****
+*SRC=EL7212E;EL7212E;Drivers;Power Mosfet;
+*SYM=EL7212E
+*EL7212 Macromodel
+*Revision A, January 1996
+*Connection  
+*                 In
+*                 |  Gnd
+*                 |  |  Vcc
+*                 |  |  |  Out
+.subckt EL7212E   2  3  6  7 
+V1 12 3 1.6
+R1 13 15 1k 
+R2 14 15 5k  
+R5 11 12 100 
+C1 15 3 43.3pF
+D1 14 13 dmod
+X1 13 11 2 3 comp1
+X2 16 12 15 3 comp1
+Asp 6 7 16 3 spmod
+Asn 7 3 16 3 snmod 
+g1 11 0 13 0 938u
+.model dmod d
+.model spmod vswitch ron=3 roff=2meg von=1 voff=1.5
+.model snmod vswitch ron=4 roff=2meg von=3 voff=2
+.ends 
+*
+.subckt comp1 out inp inm vss
+Be1 out vss V=(v(inp)-v(inm))*5000 < 0 ? 0 : (v(inp)-v(inm))*5000 > 3.2 ? 3.2 : (v(inp)-v(inm))*5000
+*e1 out vss table {(v(inp)-v(inm))*5000} = (0,0) (3.2,3.2)
+Rout out vss 10meg
+Rinp inp vss 10meg
+Rinm inm vss 10meg
+.ends 
+*****
+*SRC=EL7242E;EL7242E;Drivers;Power Mosfet;
+*SYM=EL7242E
+* EL7242 Spice Model   
+*Revision A, January 1996
+*Connection        In+
+*                  |  In-
+*                  |  |  Gnd
+*                  |  |  |  Out
+*                  |  |  |  |  Vcc
+.subckt EL7242E    1  2  5  7  8 
+V1 12 5 1.6
+R1 13 15 1k 
+R2 14 15 5k  
+R5 11 12 100 
+C1 15 5 43.3pF
+D1 14 13 dmod
+X1 13 11 1 5 comp1
+X2 16 12 15 5 comp1
+V2 22 5 1.6
+R6 23 25 1K
+R7 24 25 5K
+R8 21 22 100
+C2 25 5 43.3pF
+D2 24 23 dmod
+X3 23 21 2 5 comp1
+X4 26 25 22 5 comp1
+X5 16 26 17 5 And-gate
+Asp 8 7 17 5 spmod
+Asn 7 5 17 5 snmod 
+g1 11 5 13 5 938u
+g2 21 5 23 5 938u
+.model dmod d
+.model spmod vswitch ron=3 roff=2meg von=1 voff=1.5
+.model snmod vswitch ron=4 roff=2meg von=3 voff=2
+.ends 
+*
+.subckt And-gate inp1 inp2 out-A Vss-A
+Be1 out-A Vss-A v= v(inp1)*v(inp2) < ? 0 ? 3.2 : v(inp1)*v(inp2) > 3.2 ? 0 : -1*(v(inp1)*v(inp2)) + 3.2
+Rout-a out-a vss-a 10meg
+rinpa inp1 vss-a 10meg
+rinpb inp2 vss-a 10meg
+.ends 
+*
+.subckt comp1 out inp inm vss
+Be1 out vss V=(v(inp)-v(inm))*5000 < 0 ? 0 : (v(inp)-v(inm))*5000 > 3.2 ? 3.2 : (v(inp)-v(inm))*5000
+Rout out vss 10meg
+Rinp inp vss 10meg
+Rinm inm vss 10meg
+.ends 
+***********
+*SRC=EL7243E;EL7243E;Drivers;CCD;High Speed
+*SYM=EL7243E
+*EL7243 Macromodel
+* Revision A, January 1996
+*Connection 
+*                 Gnd
+*                 |  Inp+
+*                 |  |  Inp-
+*                 |  |  |  out
+*                 |  |  |  |  Vcc
+.subckt EL7243E   1  2  3  8  10 
+V1 12 1 1.6
+R1 13 15 1k 
+R2 14 15 5k  
+R5 11 12 100 
+C1 15 1 43.3pF
+D1 14 13 dmod
+X1 13 11 2 1 comp1
+X2 16 12 15 1 comp1
+V2 22 1 1.6
+R6 23 25 1K
+R7 24 25 5K
+R8 21 22 100
+C2 25 1 43.3pF
+D2 24 23 dmod
+X3 23 21 3 1 comp1
+X4 26 25 22 1 comp1
+X5 16 26 17 1 And-gate
+Asp 10 8 17 1 spmod
+Asn 8 1 17 1 snmod 
+g1 11 1 13 1 938u
+g2 21 1 23 1 938u
+.model dmod d
+.model spmod vswitch ron=3 roff=2meg von=1 voff=1.5
+.model snmod vswitch ron=4 roff=2meg von=3 voff=2
+.ends 
+* AND Gate Subcircuit*
+.subckt And-gate inp1 inp2 out-A Vss-A
+Be1 out-A Vss-A v= v(inp1)*v(inp2) < 0 ? 3.2 : v(inp1)*v(inp2) > 3.2 ? 0 : -1*(v(inp1)*v(inp2)) + 3.2
+Rout-a out-a vss-a 10meg
+rinpa inp1 vss-a 10meg
+rinpb inp2 vss-a 10meg
+.ends 
+*
+* Comparator Subcircuit *
+.subckt comp1 out inp inm vss
+Be2 out vss V=(v(inp)-v(inm))*5000 < 0 ? 0 : (v(inp)-v(inm))*5000 > 3.2 ? 3.2 : (v(inp)-v(inm))*5000
+Rout out vss 10meg
+Rinp inp vss 10meg
+Rinm inm vss 10meg
+.ends 
+*****
+*SRC=EL7661E;EL7661E;Drivers;Bridge;Full
+*SYM=EL7661E
+* EL7661 spice macro model *
+*               a-input
+*               |   b-input
+*               |   |   a lo-side output
+*               |   |   |   b lo-side output
+*               |   |   |   |   a hi-side output
+*               |   |   |   |   |   b hi-side output
+*               |   |   |   |   |   |   a hi-side neg supply
+*               |   |   |   |   |   |   |   b hi-side neg supply
+*               |   |   |   |   |   |   |   |   lo-side neg supply 
+*               |   |   |   |   |   |   |   |   |   a hi-side pos supply
+*               |   |   |   |   |   |   |   |   |   |    b hi-side pos supply
+*               |   |   |   |   |   |   |   |   |   |    |    lo-side pos supply
+*               |   |   |   |   |   |   |   |   |   |    |    |
+.subckt EL7661E ina inb alo blo ahi bhi lxa lxb vss vhia vhib vdd
+*  top level subcircuit calls *
+xdela ina outa vss delay {rset=50e3}
+xdelb inb outb vss delay {rset=50e3}
+xalo alo outa vdd vss vss outstg
+xblo blo outb vdd vss vss outstg
+xahi ahi outa vhia lxa vss outstg
+xbhi bhi outb vhib lxb vss outstg
+.ends 
+*  put in value of rset resistor here *
+*  comparator subcircuit * 
+*
+.subckt comp10 out inp inm vss
+Be1 out vss V=(v(inp)-v(inm))*5000 < 0 ? 0 : (v(inp)-v(inm))*5000 > 15 ? 15 : (v(inp)-v(inm))*5000
+*e1 out vss table {(v(inp)-v(inm))*5000} (0,0,15,15)
+rout out vss 10meg
+rinp inp vss 10meg
+rinm inm vss 10meg
+.ends 
+*  input, delay, and level shift subcircuit *
+*
+.subckt delay vin compout vss  {rset=50e3}
+vinref vinref vss 1.8    
+x1 n1 vin vinref vss comp10
+rslow n1 n5 {rset}
+rnom n5 n2 25k
+cdelay n2 vss 7.5p
+ddelay n4 n1 modd
+rfast n4 n2 110k
+rdiv1 vddint n3 1k
+rdiv2 n3 vss 1k
+x2 compout n3 n2 vss comp10
+vddint vddint vss 15
+.model modd d is=1e-7
+.ends 
+*  5 ohm output stage subcircuit *
+.subckt outstg out gate vhi lx vss
+Asp vhi out gate vss spmod
+Asn out lx gate vss snmod
+.model spmod vswitch ron=5 roff=2meg von=2.5 voff=4.5
+.model snmod vswitch ron=5 roff=2meg von=7.5 voff=5.5
+.ends 
+*****
+

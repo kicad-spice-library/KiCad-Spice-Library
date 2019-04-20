@@ -1,0 +1,420 @@
+* MAX4214 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 230MHz Gain Bandwidth Product
+* 5.5mA Typical Supply Current
+* Rail-to-Rail I/O
+
+* Available in  5-Pin SOT23          (MAX4214)
+*               8-Pin uMAX/SO        (MAX4217)
+*              14-Pin SO/16-Pin QSOP (MAX4222)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________________
+* MAX4214        Single Amp, Without Enable
+* MAX4217        Dual Amp, Without Enable
+* MAX4222        Quad Amp, Without Enable
+*
+*	The ENABLE function is not modeled (MAX4215 and MAX4219)
+*
+*   ////////////// MAX4214 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4214 DATA SHEET       <====
+*
+* connections:      non-inverting input(IN+)
+*                   |   minus input(IN-)
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT  MAX4214    1   201 198  51 40
+rf 40 2 200
+rf2 2 201 200
+ISUPP 99 0 5MA
+ISUPPN 50 0 -5MA
+VNEGREF 51 50 100MV
+VPOSREF 198 99 0
+*** INPUT STAGE
+I1 99  5 287U
+I2  4 50 287U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .85P
+***.95
+R2  4  7 633
+C2   7 50 .85P
+*** .95
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 Dp
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 Dp
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 5.4UA
+IB2 99  2 5.4UA
+VOS 3 1 0V
+CIN1 1  0 1P
+CIN2 2  0 1P
+*
+**************SECOND STAGE**************
+*
+********************Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 0
+*pos swig
+D3  15 16 DP
+D4  17 15 DP
+V4  17 50 0
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+*** ***********************  1st pole here with r5, and c3
+*C3 98 15 .25
+C3 98 15 .153P
+*** was .153
+***************POLE STAGE*************** 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*C4 98 20 1P
+*
+***************POLE STAGE*************** 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+**************OUTPUT STAGE**************
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+* NEG ISC
+R35 38 405 20
+R36 38 406 20 
+D35 405 40 DP
+D36 40 407 DP
+VNEGOFFSET 406 407 0MV
+*** was 12ohms
+V5  33 40 3
+D5  23 33 DP
+V6  40 34 3V
+D6  34 23 DP
+CF1 40  2 1.8P
+*** was 2.1pf
+*
+***************MODELS USED**************
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+.MODEL DP D(N=0.001)
+*** FOR CONVERGENCE PROBLEMS CHANGE N, IN DP TO N=0.1
+*** MAKING N=0.001 A PERFECT DIODE, CONVERGENCE MAY BE PROBLEM OVER TEMP.
+*
+.ENDS
+*
+*
+*
+*
+*   ////////////// MAX4217 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4214 DATA SHEET       <====
+*
+* connections:      non-inverting input(IN+)
+*                   |   minus input(IN-)
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT  MAX4217    1   201 198  51 40
+rf 40 2 200
+rf2 2 201 200
+ISUPP 99 0 5MA
+ISUPPN 50 0 -5MA
+VNEGREF 51 50 100MV
+VPOSREF 198 99 0
+*** INPUT STAGE
+I1 99  5 287U
+I2  4 50 287U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .85P
+***.95
+R2  4  7 633
+C2   7 50 .85P
+*** .95
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 Dp
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 Dp
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 5.4UA
+IB2 99  2 5.4UA
+VOS 3 1 0V
+CIN1 1  0 1P
+CIN2 2  0 1P
+*
+**************SECOND STAGE**************
+*
+********************Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 0
+*pos swig
+D3  15 16 DP
+D4  17 15 DP
+V4  17 50 0
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+*** ***********************  1st pole here with r5, and c3
+*C3 98 15 .25
+C3 98 15 .153P
+*** was .153
+***************POLE STAGE*************** 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*C4 98 20 1P
+*
+***************POLE STAGE*************** 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+**************OUTPUT STAGE**************
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+* NEG ISC
+R35 38 405 20
+R36 38 406 20 
+D35 405 40 DP
+D36 40 407 DP
+VNEGOFFSET 406 407 0MV
+*** was 12ohms
+V5  33 40 3
+D5  23 33 DP
+V6  40 34 3V
+D6  34 23 DP
+CF1 40  2 1.8P
+*** was 2.1pf
+*
+***************MODELS USED**************
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+.MODEL DP D(N=0.001)
+*** FOR CONVERGENCE PROBLEMS CHANGE N, IN DP TO N=0.1
+*** MAKING N=0.001 A PERFECT DIODE, CONVERGENCE MAY BE PROBLEM OVER TEMP.
+*
+.ENDS
+*
+*
+*
+*
+*   ////////////// MAX4222 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4214 DATA SHEET       <====
+*
+* connections:      non-inverting input(IN+)
+*                   |   minus input(IN-)
+*                   |   |   positive power supply
+*                   |   |   |   negative power supply
+*                   |   |   |   |   output
+*                   |   |   |   |   |
+*                   |   |   |   |   |
+.SUBCKT  MAX4222    1   201 198  51 40
+rf 40 2 200
+rf2 2 201 200
+ISUPP 99 0 5MA
+ISUPPN 50 0 -5MA
+VNEGREF 51 50 100MV
+VPOSREF 198 99 0
+*** INPUT STAGE
+I1 99  5 287U
+I2  4 50 287U
+Q1  50  3 5 QPN
+Q2  99  3 4 QNN 
+R1   5 6 633
+C1   6 99 .85P
+***.95
+R2  4  7 633
+C2   7 50 .85P
+*** .95
+R3 99  8 633
+V1  99 10 .3
+RE1 10 30 130
+D1  30  8 Dp
+R4 50  9 633
+V2  11 50 .3
+RE2 11 31 130
+D2   9 31 Dp
+Q3   8  6 2 QNI
+Q4   9  7 2 QPI
+R6  1 99 20meg
+R7  1 50 20meg
+IB1 1 99 5.4UA
+IB2 99  2 5.4UA
+VOS 3 1 0V
+CIN1 1  0 1P
+CIN2 2  0 1P
+*
+**************SECOND STAGE**************
+*
+********************Isup  99 50 4.47M
+R8  99 49 1meg
+R9  49 50 1meg
+V3  99 16 0
+*pos swig
+D3  15 16 DP
+D4  17 15 DP
+V4  17 50 0
+*neg swing
+EH  99 98 99 49 1
+G1  98 15 POLY(2) 99 8 50 9 0 1.58E-3 1.58E-3
+R5  98 15 2.372MEG
+*** ***********************  1st pole here with r5, and c3
+*C3 98 15 .25
+C3 98 15 .153P
+*** was .153
+***************POLE STAGE*************** 
+*
+*Fp=250MHz
+G2  98 20 15 49 1E-3
+R14 98 20 1K
+*C4  98 20 .692P
+*C4 98 20 1P
+*
+***************POLE STAGE*************** 
+*
+*Fp=500 MHz
+G3  98 21 20 49 1E-3
+R15 98 21 1K
+*C5  98 21 .03P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G4  98 22 21 49 1E-3
+R16 98 22 1K
+*C6  98 22 .346P
+*
+***************POLE STAGE*************** 
+*
+*Fp=250 MHz
+G5  98 23 22 49 1E-3
+R17 98 23 1K
+*C7  98 23 .246P
+*
+**************OUTPUT STAGE**************
+*
+F6  99 50 VA7 1
+F5  99 35 VA8 1
+D7  36 35 DX
+VA7 99 36 0
+D8  35 99 DX
+E1  99 37 99 23 1
+VA8 37 38 0
+* NEG ISC
+R35 38 405 20
+R36 38 406 20 
+D35 405 40 DP
+D36 40 407 DP
+VNEGOFFSET 406 407 0MV
+*** was 12ohms
+V5  33 40 3
+D5  23 33 DP
+V6  40 34 3V
+D6  34 23 DP
+CF1 40  2 1.8P
+*** was 2.1pf
+*
+***************MODELS USED**************
+*
+.MODEL QNI NPN(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QPI PNP(IS=1E-14 BF=10E4 VAF=15 KF=6.7E-14)
+.MODEL QNN NPN(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL QPN PNP(IS=1E-14 BF=10E4 VAF=15 KF=4.13E-13)
+.MODEL DX  D(IS=1E-15)
+.MODEL DY  D(IS=1E-17)
+.MODEL DN  D(KF=1.667E-9 AF=1 XTI=0 EG=.3)
+.MODEL DP D(N=0.001)
+*** FOR CONVERGENCE PROBLEMS CHANGE N, IN DP TO N=0.1
+*** MAKING N=0.001 A PERFECT DIODE, CONVERGENCE MAY BE PROBLEM OVER TEMP.
+*
+.ENDS

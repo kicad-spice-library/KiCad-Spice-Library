@@ -1,0 +1,95 @@
+* MAX4100 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* 500MHz Unity-Gain Bandwidth
+* 5mA Typical Supply Current
+* 80mA Output Drive
+* 250V/uS Slew Rate
+* Available in 8-Pin SO/uMAX 
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ________________________
+* MAX4100        500MHz, Low-Power Op Amp  
+*
+*
+*   ////////////// MAX4100 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX4100 DATA SHEET       <====
+*
+* connections:          non-inverting input
+*                       |       inverting input
+*                       |       |       positive power-supply
+*                       |       |       |       negative power-supply
+*                       |       |       |       |       output
+*                       |       |       |       |       |
+* OUTPUT CONNECTS:      1       2       99      50      97
+*
+* FEATURES:
+.SUBCKT MAX4100 1 2 99 50 97
+****************INPUT STAGE**********************
+Isy 99 50 -9MA
+*fixes supply current
+IOS 2 1 50N
+I1 4 50 14MA
+GIN 2 1 2 1 50E-9
+*CIN 1 2 .5PF
+R1 5 99 7.4
+*3.7
+R2 6  99 7.4
+VOS 1 9 0V
+*EOS 1 9 POLY(1) 98 30 0 1
+*               ^       OFFSET VOLTAGE
+Q1 5 2 400 QX
+Q2 6 9 401 QX
+RD1 400 4 7.4
+RD2 401 4 7.4
+Dsub 50 99 DX
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 2.03
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 1.93
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+*G3 98 12 5 6 0.0352
+G3 98 12 5 6 0.0176
+R4 12 98 40K
+*40K
+*C3 98 12 1.4E-11
+C3 98 12 .5E-11
+*
+**************FREQUENCY SHAPING STAGES********
+*
+****POLE STAGE****
+G5 98 15 12 98 1E-3 
+*D13 50 15 DX
+R5 98 15 1E3
+*                  ^ POLE AT 130MEGHZ
+*c5 98 15 .15E-13
+c5 98 15 .15E-12
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 15 98 1E-3
+*************  ******************************
+R15 98 32 1E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 0v
+V4 36 35 0V
+R16 34 35 8
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 97 200P
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX NPN(BF=6.25E4)
+.ends
+

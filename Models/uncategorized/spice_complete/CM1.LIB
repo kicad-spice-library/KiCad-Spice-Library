@@ -1,0 +1,179 @@
+**********
+* Copyright Intusoft 1994-1998
+* All Rights Reserved
+**********
+********
+*SRC=LIMITC;Lim_Def;Behavioral;Amplifiers;Gain block w/Limiting
+*SYM=Limitc
+*HELP issyntax.hlp Limiter
+*NAME=Limit;A;A;#2
+*PARAM=in_offset;input offset;real;0;-;no;-;yes
+*PARAM=gain;gain;real;1;-;no;-;yes
+*PARAM=out_lower_limit;output lower limit;real;0;-;no;-;yes
+*PARAM=out_upper_limit;output upper limit;real;1;-;no;-;yes
+*PARAM=limit_range;smoothing limit range;real;1U;-;no;-;yes
+*PARAM=fraction;smoothing switch;boolean;false;-;no;-;yes
+.Model Lim_Def limit( in_offset=0.1 gain=2.5 out_lower_limit=-5.0 
++ out_upper_limit=5.0 limit_range=0.10 fraction=FALSE)
+**********
+*SRC=TABLE;PWL_Def;Behavioral;Function Block;Arbitrary waveform
+*SYM=pwl
+*HELP issyntax.hlp "Table Model"
+*NAME=Pwl;A;A;#2
+*PARAM=xy_array;xy array;real;-;-;yes;2 -;no
+*PARAM=input_domain;input smoothing domain;real;.01;1P .5;no;-;yes
+*PARAM=fraction;smoothing switch;boolean;true;-;no;-;yes
+.Model PWL_Def Pwl(input_domain=0.05  fraction=TRUE
++ xy_array=[-2.0,-0.2 -1.0,-0.2 2.0,0.1 4.0,2.0 5.0,10.0])
+* This element retains the output slope defined by the first/last two X,Y axis values for inputs
+* less than/greater than the first (smallest)/last (largest) x axis data point values, respectively.
+**********
+*SRC=TABLELIM;PWL_Def2;Behavioral;Function Block;Arbitrary waveform,w/Limiting
+*SYM=pwl
+*NAME=Pwl2;A;A;#2
+*PARAM=xy_array;xy array;real;-;-;yes;2 -;no
+*PARAM=input_domain;input smoothing domain;real;.01;1P .5;no;-;yes
+*PARAM=fraction;smoothing switch;boolean;true;-;no;-;yes
+.Model PWL_Def2 Pwl2(input_domain=0.05  fraction=TRUE
++ xy_array=[-2.0,-0.2 -1.0,-0.2 2.0,0.1 4.0,2.0 5.0,10.0])
+* This element limits the Y axis value to the first Y axis data point value for inputs
+* less than the first (smallest) x axis data point value.
+* The Y axis value is limited to the last Y axis data point value for inputs
+* greater than the last (largest) x axis data point value.
+**********
+*SRC=DIFFERENTIATE;Diff_Def;Behavioral;MathCalc;K * s
+*SYM=diff
+*HELP issyntax.hlp Differentiator
+*NAME=d_dt;A;A;#2
+*PARAM=out_offset;output offset;real;0;-;no;-;yes
+*PARAM=gain;gain;real;1;-;no;-;yes
+*PARAM=out_lower_limit;output lower limit;real;-;-;no;-;yes
+*PARAM=out_upper_limit;output upper limit;real;-;-;no;-;yes
+*PARAM=limit_range;smoothing limit range;real;1U;-;no;-;yes
+.Model Diff_Def d_dt(out_offset=0.0  gain=1.0
++ out_lower_limit=-1e12  out_upper_limit=1e12 
++ limit_range=1e-9)
+**********
+*SRC=LAPLACE;S_Def;Behavioral;MathCalc;s-domain transfer function
+*SYM=s_xfer
+*HELP issyntax.hlp "Laplace (s-Domain) Transfer Function"
+*NAME=s_xfer;A;A;#2
+*PARAM=in_offset;input offset;real;0;-;no;-;yes
+*PARAM=gain;gain;real;1;-;no;-;yes
+*PARAM=num_coeff;numerator coefficients;real;-;-;yes;1 -;no
+*PARAM=den_coeff;denominator coefficients;real;-;-;yes;1 -;no
+*PARAM=out_ic;output stage IC;real;-;-;no;-;yes
+*PARAM=denorm_freq;corner freq.(radians);real;1;-;no;-;yes
+.Model S_Def s_xfer(num_coeff=[1] den_coeff=[1 1.09773 1.10251]
++ denorm_freq=1)
+**********
+*SRC=SLEW;Slew_Def;Behavioral;Function Block;Slew rate follower
+*SYM=slew
+*HELP issyntax.hlp "Slew Rate Block"
+*NAME=slew;A;A;#2
+*PARAM=rise_slope;max. rising slope;real;1G;-;no;-;yes
+*PARAM=fall_slope;max. falling slope;real;1G;-;no;-;yes
+*PARAM=range;smoothing range;real;.1;-;no;-;yes
+.Model Slew_Def slew(rise_slope=0.5e6 fall_slope=0.5e6)
+**********
+*SRC=SVCO;Sine_Def;VCOs;Sine wave VCO;
+*SYM=CVCO
+*HELP issyntax.hlp "Controlled Sine Wave Oscillator"
+*NAME=sine;A;A;#2
+*PARAM=cntl_freq_array;control/freq array;real;-;-;yes;2 -;no
+*PARAM=out_low;peak low voltage;real;-1;-;no;-;yes
+*PARAM=out_high;peak high voltage;real;1;-;no;-;yes
+.MODEL Sine_Def Sine(Cntl_Freq_Array= Out_Low=-1
++ Out_High=1)
+**********
+*SRC=TVCO;Tri_Def;VCOs;Triangle wave VCO;
+*SYM=CVCO
+*HELP issyntax.hlp "Controlled Triangle Wave Oscillator"
+*NAME=triangle;A;A;#2
+*PARAM=cntl_freq_array;control/freq array;real;-;-;yes;2 -;no
+*PARAM=out_low;peak low V;real;-1;-;no;-;yes
+*PARAM=out_high;peak high V;real;1;-;no;-;yes
+*PARAM=duty_cycle;rise time duty cycle;real;.5;1e-6 .999999;no;-;yes
+.MODEL Tri_Def Triangle(Cntl_Freq_Array= Out_Low=-1
++ Out_High=1 Duty_Cycle=.5)
+**********
+*SRC=SQVCO;Sq_Def;VCOs;Square wave VCO;
+*SYM=CVCO
+*HELP issyntax.hlp "Controlled Square Wave Oscillator"
+*NAME=square;A;A;#2
+*PARAM=cntl_freq_array;control/freq array;real;-;-;yes;2 -;no
+*PARAM=out_low;peak low V;real;-1;-;no;-;yes
+*PARAM=out_high;peak high V;real;1;-;no;-;yes
+*PARAM=duty_cycle;duty cycle;real;.5;1u .999999;no;-;yes
+*PARAM=rise_time;rise time;real;1n;-;no;-;yes
+*PARAM=fall_time;fall time;real;1n;-;no;-;yes
+.MODEL Sq_Def Square(Cntl_Freq_Array= Out_Low=-1
++ Out_High=1 Duty_Cycle=.5 Rise_Time=1N Fall_Time=1N)
+**********
+*SRC=ONESHOT;One_Def;Behavioral;Function Block;Controlled one-shot
+*SYM=oneshot
+*HELP issyntax.hlp "Controlled One-Shot"
+*NAME=oneshot;A;A;#4
+*PARAM=clk_trig;clock trigger;real;.5;-;no;-;no
+*PARAM=pos_edge_trig;pos/neg edge switch;bool;TRUE;-;no;-;no
+*PARAM=cntl_pw_array;control/pw array;real;-;-;yes;2 -;no
+*PARAM=out_low;output low;real;0;-;no;-;yes
+*PARAM=out_high;output high;real;1;-;no;-;yes
+*PARAM=rise_delay;delay from trigger;real;1n;-;no;-;yes
+*PARAM=fall_delay;delay from pw;real;1n;-;no;-;yes
+*PARAM=rise_time;output rise time;real;1n;-;no;-;yes
+*PARAM=fall_time;output fall time;real;1n;-;no;-;yes
+*PARAM=retrig;retrigger switch;bool;FALSE;-;no;-;yes
+.MODEL One_Def Oneshot(Clk_Trig=.5 Pos_Edge_Trig=True  
++ Out_Low=0 Out_High=1 rise_Delay=1N fall_Delay=1N Rise_Time=1N Fall_Time=1N)
+**********
+*SRC=CCORE1;Cor1_Def;Generic Models;PWL mode;Code Model
+*SYM=Corec
+*HELP issyntax.hlp "Magnetic Core"
+*NAME=core;A;A;(2)
+*PARAM=HB_array;field-flux density array;real;-;-;yes;2 -;no
+*PARAM=area;cross-sectional area;real;-;-;no;-;no
+*PARAM=length;core length;real;-;-;no;-;no
+*PARAM=input_domain;input sm. domain;real;0.01;1P 0.5;no;-;yes
+*PARAM=fraction;smoothing switch;boolean;true;-;no;-;yes
+*PARAM=mode;set to 1(pwl mode);int;1;1 2;no;-;yes
+.Model Cor1_Def core(mode=1 area=0.01 length=0.01
++ HB_array=[-1000 -3.13M -250 -1.93M 0 0 250 1.93M 1000 3.13M]
+**********
+*SRC=CCORE2;Cor2_Def;Generic Models;Hysteresis mode;Code Model
+*SYM=Corec
+*HELP issyntax.hlp "Hysteresis Block"
+*NAME=core;A;A;(2)
+*PARAM=in_low;input low value;real;0;-;no;-;yes
+*PARAM=in_high;input high value;real;1;-;no;-;yes
+*PARAM=hyst;hysteresis;real;0.1;0 -;no;-;yes
+*PARAM=out_lower_limit;output lower limit;real;0;-;no;-;yes
+*PARAM=out_upper_limit;output upper limit;real;1;-;no;-;yes
+*PARAM=input_domain;input sm. domain;real;0.01;1P 0.5;no;-;yes
+*PARAM=fraction;smoothing/abs. switch;boolean;true;-;no;-;yes
+*PARAM=mode;set to 2(hyst mode);int;2;1 2;no;-;yes
+.Model Cor2_Def core(mode=2 in_low=-7.0 in_high=7.0
++ out_lower_limit=-.25M out_upper_limit=.25M hyst=2.3  
+**********
+*SRC=LCOUPLE;Lcpl_Def;Generic Models;Coupling;Inductive Coupling
+*SYM=lcouple
+*HELP issyntax.hlp "Inductive Coupling"
+*NAME=lcouple;A;A;(2)(2)
+*PARAM=num_turns;# of turns;real;1;-;no;-;yes
+.Model Lcpl_Def lcouple(num_turns=10.0)
+**********
+*SRC=HYST;Hys_Def;Behavioral;Function Block;Hysteresis
+*SYM=hyst
+*NAME=hyst;A;A;#2
+*PARAM=in_low;input low value;real;0;-;no;-;yes
+*PARAM=in_high;input high value;real;1;-;no;-;yes
+*PARAM=hyst;hysteresis;real;0.1;0 -;no;-;yes
+*PARAM=out_lower_limit;output lower limit;real;0;-;no;-;yes
+*PARAM=out_upper_limit;output upper limit;real;1;-;no;-;yes
+*PARAM=input_domain;input sm. domain;real;0.01;1P 0.5;no;-;yes
+*PARAM=fraction;smoothing switch;boolean;true;-;no;-;yes
+.Model Hys_Def hyst(in_low=0.7 in_high=2.4 hyst=0.5
++ out_lower_limit=0.5 out_upper_limit=3.0  input_domain=0.10  
++ fraction=true)
+**********
+

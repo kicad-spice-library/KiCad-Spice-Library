@@ -1,0 +1,524 @@
+* MAX478 FAMILY MACROMODELS
+* -------------------------
+** FEATURES:
+* 17uA Max Supply Current 
+* 70uV Max Offset Voltage
+* 250pA Max Input Offset Current
+* Input Voltage Range Includes Ground
+* Available in 8-Pin DIP/SO (Dual MAX478)
+*             14-Pin DIP/SO (Quad MAX479)
+*
+* SUBCIRCUIT    PART NUMBER    DESCRIPTION
+* __________    ___________    ___________________________________
+* MAX47815      MAX478         Dual, Micropower Op Amps, 15V Supply        
+* MAX4785       MAX478         Dual, Micropower Op Amps, 5V Supply
+* MAX4783       MAX478         Dual, Micropower Op Amps, 3V Supply
+* MAX47915      MAX479         Quad, Micropower Op Amps, 15V Supply
+* MAX4795       MAX479         Quad, Micropower Op Amps, 5V Supply
+* MAX4793       MAX479         Quad, Micropower Op Amps, 3V Supply
+*
+*
+*   ////////////// MAX47815 MACROMODEL //////////////////
+*
+*   ====>        "15" DENOTES +/-15V SUPPLY VOLTAGE   <====
+*   ====>            REFER TO MAX478 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX47815 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 .05N
+I1 99 4 17E-6
+RIN1 104 2 .5E9
+RIN2 104 1 .5E9
+R1 5 50  3041
+R2 6 50 3041
+EOS 1 9 POLY(1) 98 30  30U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+* Second Pole 
+C4 5 6 2.7E-11
+***************SECOND STAGE******************
+IS 99 50 -1E-6
+*  SETS IS ^   supply current -16uA, 15Vsupply.
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 300 
+RD2 17 18 300
+RD3 18 19 300
+RD4 19 20 300
+CD1 17 98 300PF
+CD2 18 98 300PF
+CD3 19 98 300PF
+CD4 20 98 300PF
+*
+***OUTPUT VOLTAGE LIMITING****
+V2 99 11 1.4
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 1.4
+* OUTPUT LEVEL +-14.2V.
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 3.34E-4
+R4 12 98 7.49E9
+C3 98 12 4.25E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 7.1E-9
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 75
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 1U
+RL2 96 97 5
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 10MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=3167)
+.ENDS
+*
+*
+*   ////////////// MAX4785 MACROMODEL //////////////////
+*
+*   ====>        "5" DENOTES +/-5V SUPPLY VOLTAGE   <====
+*   ====>            REFER TO MAX478 DATA SHEET     <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4785 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 .05N
+I1 99 4 17E-6
+RIN1 2 104 .5E9
+RIN2 1 104 .5E9
+R1 5 50  3041
+R2 6 50 3041
+EOS 1 9 POLY(1) 98 30  30U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+* Second Pole 
+C4 5 6 6.54E-11
+***************SECOND STAGE******************
+IS 99 50 -5E-6
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 500
+RD2 17 18 500
+RD3 18 19 500
+RD4 19 20 500
+CD1 17 98 500PF
+CD2 18 98 500PF
+CD3 19 98 500PF
+CD4 20 98 500PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 1.20
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 0.57
+*V3 10 50 -.3
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 2.14E-4
+R4 12 98 3.27E9
+C3 98 12 6.8E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 7.1E-9
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 75
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.5U
+RL2 96 97 5
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 10MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=3167)
+.ENDS
+*
+*   ////////////// MAX4783 MACROMODEL //////////////////
+*
+*   ====>        "3" DENOTES +/-3V SUPPLY VOLTAGE   <====
+*   ====>            REFER TO MAX478 DATA SHEET     <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4783 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 .05N
+I1 99 4 17E-6
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  3041
+R2 6 50 3041
+EOS 1 9 POLY(1) 98 30  30U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+* Second Pole 
+C4 5 6 2.38E-11
+***************SECOND STAGE******************
+IS 99 50 -5E-6
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 500
+RD2 17 18 500
+RD3 18 19 500
+RD4 19 20 500
+CD1 17 98 500PF
+CD2 18 98 500PF
+CD3 19 98 500PF
+CD4 20 98 500PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 1.20
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 0.558
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 2.14E-4
+R4 12 98 2.81E9
+C3 98 12 6.8E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 7.1E-9
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 75
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.5U
+RL2 96 97 5
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 10MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=3167)
+.ENDS
+*
+*   ////////////// MAX47915 MACROMODEL //////////////////
+*
+*   ====>        "15" DENOTES +/-15V SUPPLY VOLTAGE   <====
+*   ====>            REFER TO MAX479 DATA SHEET       <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX47915 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 .05N
+I1 99 4 17E-6
+RIN1 104 2 .5E9
+RIN2 104 1 .5E9
+R1 5 50  3041
+R2 6 50 3041
+EOS 1 9 POLY(1) 98 30  30U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+* Second Pole 
+C4 5 6 2.7E-11
+***************SECOND STAGE******************
+IS 99 50 -1E-6
+*  SETS IS ^   supply current -16uA, 15Vsupply.
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 300
+RD2 17 18 300
+RD3 18 19 300
+RD4 19 20 300
+CD1 17 98 300PF
+CD2 18 98 300PF
+CD3 19 98 300PF
+CD4 20 98 300PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 1.4
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 1.4
+* OUTPUT LEVEL +-14.2V.
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 3.34E-4
+R4 12 98 7.49E9
+C3 98 12 4.25E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 7.1E-9
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 75
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 1U
+RL2 96 97 5
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 10MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=3167)
+.ENDS
+*
+*
+*   ////////////// MAX4795 MACROMODEL //////////////////
+*
+*   ====>        "5" DENOTES +/-5V SUPPLY VOLTAGE   <====
+*   ====>            REFER TO MAX479 DATA SHEET     <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4795 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 .05N
+I1 99 4 17E-6
+RIN1 2 104 .5E9
+RIN2 1 104 .5E9
+R1 5 50  3041
+R2 6 50 3041
+EOS 1 9 POLY(1) 98 30  30U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+* Second Pole 
+C4 5 6 6.54E-11
+***************SECOND STAGE******************
+IS 99 50 -5E-6
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 500
+RD2 17 18 500
+RD3 18 19 500
+RD4 19 20 500
+CD1 17 98 500PF
+CD2 18 98 500PF
+CD3 19 98 500PF
+CD4 20 98 500PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 1.20
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 0.57
+*V3 10 50 -.3
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 2.14E-4
+R4 12 98 3.27E9
+C3 98 12 6.8E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 7.1E-9
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 75
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.5U
+RL2 96 97 5
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 10MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=3167)
+.ENDS
+*
+*   ////////////// MAX4793 MACROMODEL //////////////////
+*
+*   ====>        "3" DENOTES +/-3V SUPPLY VOLTAGE   <====
+*   ====>            REFER TO MAX479 DATA SHEET     <====
+*
+*
+* connections:        non-inverting input
+*                     |   inverting input
+*                     |   |   positive power-supply
+*                     |   |   |   negative power-supply
+*                     |   |   |   |   output
+*                     |   |   |   |   |
+* NODE CONNECTIONS:   1   2   99  50  97
+*
+.SUBCKT MAX4793 1 2 99 50 97
+****************INPUT STAGE**********************
+IOS 2 1 .05N
+I1 99 4 17E-6
+RIN1 2 104 .5E9
+RIN2 104 1 .5E9
+R1 5 50  3041
+R2 6 50 3041
+EOS 1 9 POLY(1) 98 30  30U 1
+*               ^       OFFSET VOLTAGE, NODE 30 FROM COM. MODE STAGE.
+Q1 5 2 4 QX
+Q2 6 9 4 QX
+* Second Pole 
+C4 5 6 2.38E-11
+***************SECOND STAGE******************
+IS 99 50 -5E-6
+*  SETS IS ^
+****DELAY STAGE****
+ED 16 98 12 98 1
+RD1 16 17 500
+RD2 17 18 500
+RD3 18 19 500
+RD4 19 20 500
+CD1 17 98 500PF
+CD2 18 98 500PF
+CD3 19 98 500PF
+CD4 20 98 500PF
+****OUTPUT VOLTAGE LIMITING****
+V2 99 11 1.20
+D1 12 11 DX
+D2 10 12 DX
+V3 10 50 0.558
+****LEVEL TRANSLATION ****
+EH 99 98 99 50 0.5
+****GAIN, 1ST POLE****
+G3 98 12 5 6 2.14E-4
+R4 12 98 2.81E9
+C3 98 12 6.8E-10
+****COMMON-MODE STAGE****
+G11 98 30 104 98 7.1E-9
+R13 30 98 1E3
+*
+*******************OUTPUT STAGE****************
+F6 99 50 VA7 1
+F5 99 38 VA8 1
+D9 40 38 DX
+D10 38 99 DX
+VA7 99 40 0
+****************
+G12 98 32 20 98 .1E-3
+*         ^ NODE WHERE OUTPUT STAGE TAKES CONTROL VOLT.
+R15 98 32 10E3
+D3 32 36 DX
+D4 37 32 DX
+V5 35 37 .3V
+V4 36 35 .3V
+R16 34 35 75
+E1 99 33 99 32 1
+VA8 33 34 0V
+L 35 96 0.5U
+RL2 96 97 5
+* RL2 IMPROVES CONVERGENCE
+RL 35 97 10MEG
+*
+***** MODELS USED ******
+.MODEL DX D(IS=1E-15)
+.MODEL QX PNP(BF=3167)
+.ENDS

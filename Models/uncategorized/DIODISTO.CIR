@@ -1,0 +1,22 @@
+Diode-Resistor circuit
+
+* Spectral analysis of distortion
+
+r1 2 0 1k
+d1 1 2 diode
+vcc 1 3 5v ac 0.001 sin(5 0.01 1000) distof1 0.01 distof2 0.01
+vcc2 3 0 0v
+*.model diode D
+.model diode D is=1.0e-14 tt=0.1n cjo=2p
+*.disto dec 1 1000.0 1000.0 
+*.disto dec 20 1.0e3 1.0e8 
+.disto dec 20 1.0e3 1.0e8 0.9
+*the output is v(2)
+
+* Commands for Spice3
+*#destroy all
+*#run
+*#plot disto1.v(2)
+*#plot disto2.v(2)
+*#plot disto3.v(2)
+.end

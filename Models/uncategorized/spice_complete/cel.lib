@@ -1,0 +1,2940 @@
+* Library of CEL/NEC RF Devices
+
+* $Revision:   1.0  $
+* $Author:   rperez  $
+* $Date:   05 Oct 1998 09:32:06  $
+
+***********************************************************************
+*     
+* Models provided by California Eastern Laboratories (CEL), directly or 
+* indirectly, are not warranted by CEL as fully representing all of the
+* specifications and operating characteristics of the product to which 
+* the model relates.  CEL does not assume any liability arising out of
+* the application or use of the models including infringement of 
+* patents and copyrights.  Neither does CEL convey any license under its
+* patents and copyrights nor the rights of others.  CEL reserves the right
+* to make changes without notice to any model.  Although models can be a  
+* useful tool in evaluating device performance in various applications,  
+* they cannot model exact device performance under all conditions, nor are 
+* they intended to replace breadboarding for final verification. 
+* 
+***********************************************************************
+*---------------------------------------------------------------
+*$
+* FILENAME:        NE325S01.CIR
+* NEC PART NUMBER: NE325S01
+* LAST MODIFIED:   12/97
+* BIAS CONDITIONS: Vds=1V to 3V,  Id=5mA to 30mA
+* FREQ RANGE:      0.1GHz to 18GHZ
+*
+* Idss=59.9mA at Vds=2V, Vgs=0V
+* Vp =-0.928V at Vds=2V, Id=0.1mA
+*
+* TOM GaAsFET Model
+*
+*             CGDpkg
+*       ,-------||----------------------------. 
+*       |                                     |
+*       |                                     | 
+*       |                  ---o--Rd-Ldx--Rdx--o--o
+*       |                 |   |               |  DRAIN 
+*GATE   |             I --    RDB             | 
+*    o--o--Rgx--Lgx---I Q1    |               |
+*       |             I---    CBS             |
+*       |                 |___|               |
+*       |                 |                   |
+*       |                 Rs                  |
+*       |                 |                   |
+*       |                Lsx                  |
+*       |                 |                   |
+*       |                Rsx                  |
+*       |   CGSpkg        |          CDSpkg   |
+*       `----||-----------o-----------||------'
+*                         |
+*                         o SOURCE
+*
+*       Lgx=0.69nH 		Rgx=6 ohms		CGSpkg=0.07pF
+*       Lsx=0.07nH		Rsx=0.06 ohms	CDSpkg=0.05pF
+*       Ldx=0.6nH	      	Rdx=6 ohms		CGDpkg=0.001pF
+*       RDB=700 ohms		Rd=2 ohms
+*       CBS=100pF             Rs=2 ohms
+*
+*                    d g s
+.SUBCKT NE325S01/CEL 2 1 3
+B1  10  7 11 NE32500
+RDB 10 12 700
+CBS 12 11 100E-12
+Rs  11  9 2
+Rd  10  8 2
+Lgx  4  7 0.69E-9
+Ldx  8  5 0.6E-9
+Lsx  9  6 0.07E-9
+Rgx  1  4 6
+Rdx  2  5 6
+Rsx  6  3 0.06
+CGDpkg 1 2 0.001E-12
+CDSpkg 2 3 0.05E-12
+CGSpkg 1 3 0.07E-12
+.MODEL NE32500 GASFET
++(VTO=-0.8      ALPHA=8          BETA=0.103        GAMMA=0.08
++ Q=2           DELTA=1          VBI=0.715         IS=3e-13
++ N=1.22        TAU=4e-12        CDS=0.13e-12      CGS=0.3e-12
++ CGD=0.02e-12  VDELTA=0.1       FC=0.5            RG=3
++ RD=0          RS=0             KF=0              AF=1   
++ XTI=3         EG=1.43          VTOTC=0           BETATCE=0) 
+.ENDS
+*$
+
+* FILENAME:         NE34018.CIR
+* NEC PART NUMBER:  NE34018
+* LAST MODIFIED:    12/97
+* BIAS CONDITIONS:  Vds=1V to 3V, Id=5mA to 40mA
+* FREQ RANGE:       0.5GHz to 6ghz
+
+* TOM GaAsFET Model
+*
+*                             CGDpkg
+*                    ,-------||--------------. 
+*                    |                       |
+*                    |                       |          DRAIN 
+*   GATE             |       |----o-Rdx-LD---o---LDpkg---o
+*   o-------LGpkg----o-LG----|Q1  |          |         
+*                    |       |--  RDB        |         
+*                    |         |  |          |         
+*                    |         |  CBS        |         
+*                    |         |__|          |         
+*                    |         |             |         
+*                    |         Rsx           --         
+*             CGSpkg--         |             -- CDSpkg  
+*                   --         LS            |     
+*                    |         |             |   
+*                    '---------o-------------'     
+*                              |
+*                              |
+*                             LSpkg
+*                              | 
+*                              o SOURCE 
+*           
+*       LG=0.93nH           LGpkg=0.18nH
+*       LS=0.25nH           LSpkg=0.09nH
+*       LD=1.25nH           LDpkg=0.18nH
+*       RDB=650 ohms        CGDpkg=0.02pF
+*       CBS=10pF            CGSpkg=0.1pF
+*       Rdx=1.5 ohms        CDSpkg=0.1pF
+*       Rsx=2 ohms
+*                   d g s
+.SUBCKT NE34018/CEL 2 1 3
+B1  10  7 11 NE34000
+RDB 10 12 650
+CBS 12 11 10E-12
+Rsx 11  9 2
+Rdx 10  8 1.5
+Lg   4  7 0.93E-9
+Ld   8  5 1.25E-9
+Ls   9  6 0.25E-9
+LGpkg  1  4 0.18
+LDpkg  2  5 0.18
+LSpkg  6  3 0.09
+CGDpkg 4 5 0.02E-12
+CDSpkg 5 6 0.1E-12
+CGSpkg 4 6 0.1E-12
+.MODEL NE34000 GASFET
++(VTO=-0.6885   ALPHA=5          BETA=0.1838       GAMMA=0.038
++ Q=1.8         DELTA=0.25       VBI=0.7           IS=3e-13
++ N=1           TAU=4e-12        CDS=0.1e-12       CGS=0.95e-12
++ CGD=0.04e-12  VDELTA=0.05      FC=0.5            RG=4
++ RD=0          RS=0             KF=0              AF=1    
++ XTI=3         EG=1.43          VTOTC=0           BETATCE=0) 
+.ENDS
+*$
+
+* FILENAME:        NE46100.CIR
+* NEC PART NUMBER: NE46100
+* LAST MODIFIED:   9/95
+* BIAS CONDITIONS: Vce=5V to 12.5V, Ic=50mA to 100mA
+* FREQ RANGE:      0.1GHz TO 4.0GHz
+*
+*                    CCB
+*                .---||---.                 CCB=0.03pF
+*                |        |C                CCE=0.5pF
+*                |   /----o---LC----o       
+*      o----LB---o--|     |                 LB=0.66nH (QTY 1-25.9mil)
+*                B   \   --                 LC=0.38nH (QTY 1-18.2mil)
+*                    |   -- CCE             LE=0.18nH (QTY 2-22.4mil)
+*                  E o----'                 Bond wire: 0.7mil 
+*                    |                                 diameter gold
+*                   LE
+*                    |
+*                    o
+*
+*                   c b e
+.SUBCKT NE46100/CEL 2 1 3
+Q1  5 4 6 NE46100
+CCB 4 5 0.03E-12
+CCE 5 6 0.5E-12
+LE  6 3 0.18E-9
+LB  1 4 0.66E-9
+LC  5 2 0.38E-9
+.MODEL NE46100 NPN
++( IS=8.7e-16    BF=185.0         NF=0.959       VAF=30.0         IKF=0.20
++ ISE=5.70e-13   NE=1.80          BR=5.0         NR=1.0           VAR=12.4  
++ IKR=0.018      ISC=1.0e-14      NC=1.95        RE=0.630         RB=6.0
++ RBM=4.0        IRB=0.004        RC=3.0         CJE=4.9e-12      VJE=0.60
++ MJE=0.450      CJC=2.50e-12     VJC=0.830      MJC=0.330        XCJC=0.20
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=12.9e-12 
++ XTF=1.60       VTF=19.9         ITF=0.40       PTF=0.0          TR=1.70e-8 
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+.ENDS
+*$
+
+* FILENAME:        NE46134.CIR
+* NEC PART NUMBER: NE46134
+* LAST MODIFIED:   11/97
+* BIAS CONDITIONS: Vce=5V, to 12.5V,  Ic=50mA to 100mA
+* FREQ RANGE:      0.1GHz TO 2.5GHz
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |          COLLECTOR
+* BASE               |      |        | |             
+*             __Tb_  |      |   /----o-o-------o----o
+*  o---------|_____|-o-LB---o--|Q1   |         |  
+*                    |      B   \   --         |  
+*                   --          |   -- CCE     --  
+*                   -- CBEpkg E o----'         --CCEpkg
+*                    |          |              | 
+*                    |         LE              |  
+*                    `----------o--------------'  
+*                               |                  
+*                               -                  
+*                              | |  Te             
+*                              | |                 
+*                               -                  
+*                               |
+*                               o EMITTER
+*                    
+*
+*       CCB   = 0.03 pF       LB  = 1.2nH          Tb/Te:   
+*       CCE   = 0.5 pF        LE  = 1.2nH          z=60 ohms
+*       CCBpkg= 0.18pF                             l=50 mils
+*       CCEpkg= 0.18pF                             a=0.0001
+*       CBEpkg= 0.01pF                             f=0.9GHz
+*
+*                   c b e
+.SUBCKT NE46134/CEL 2 1 3 
+Q1 2 6 7 NE46100
+CCB 6 2  0.03E-12
+CCE 2 7  0.5E-12
+LB  4 6  1.2E-9
+LE  7 5  1.2E-9
+TB 1 0 4 0 Z0=60 TD=9.63E-12
+TE 5 0 3 0 Z0=60 TD=9.63E-12
+CCBPKG 4 2 0.18E-12
+CCEPKG 2 5 0.18E-12
+CBEPKG 4 5 0.01E-12
+.MODEL NE46100 NPN
++( IS=8.7e-16    BF=185.0         NF=0.959       VAF=30.0         IKF=0.20
++ ISE=5.70e-13   NE=1.80          BR=5.0         NR=1.0           VAR=12.4  
++ IKR=0.018      ISC=1.0e-14      NC=1.95        RE=0.630         RB=6.0
++ RBM=4.0        IRB=0.004        RC=3.0         CJE=4.9e-12      VJE=0.60
++ MJE=0.450      CJC=2.50e-12     VJC=0.830      MJC=0.330        XCJC=0.20
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=12.9e-12 
++ XTF=1.60       VTF=19.9         ITF=0.40       PTF=0.0          TR=1.70e-8 
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+.ENDS
+*$
+
+* FILENAME:         NE662M04.CIR
+* NEC PART NUMBER:  NE662M04
+* LAST MODIFIED:    6/11/98, Rev A
+* BIAS CONDITIONS:  Vce=.5V to 3V, Ic=.5mA to 30mA
+* FREQ RANGE:       0.1GHz to 6ghz
+* COMMENTS:         Correlated to measured noise figure at 2V, 5mA and 2V, 10mA * and 2ghz to 12GHz
+*
+*                            CCBpkg
+*                   ,--------||-----------.
+*                   |                     |
+*                   |        CCB          |
+*                   |    .---||---.       |
+*  BASE             |    |        |       | COLLECTOR
+*                   |    |   /----o--LC---o---Lcx---o
+*  o-------Lbx------o-LB-o--|Q1   |       |    
+*                   |    B   \   --       |    
+*                   |        |   -- CCE  --    
+*            CBEpkg--      E o----'      -- CCEpkg
+*                  --        |            |     
+*                   |       LE            |     
+*                   '--------o------------'     
+*                            |
+*                           Lex
+*                            |
+*                            o EMITTER
+*
+*       CCB    = 0.1pF            LB  = 1.00nH
+*       CCE    = 0.1pF            LE  = 0.30nH
+*                                 LC  = 0.45nH
+*       CCBpkg = 0.003pF          Lbx = 0.100nH
+*       CCEpkg = 0.2pF            Lcx = 0.230nH
+*       CBEpkg = 0.2pF            Lex = 0.001nH
+*
+* SPICE node order:  Q1 collector (8)  base (7)  emitter (9)
+.SUBCKT NE662M04/CEL 2 1 3
+Q1  8 7 9 NE662
+CCB 7 8 0.1E-12
+CCE 8 9 0.1E-12
+LE  9 6 0.3E-9
+LB  4 7 1E-9
+LC  8 5 0.45E-9
+CBEPKG 4 6 0.2E-12
+CCBPKG 4 5 0.003E-12
+CCEPKG 5 6 0.2E-12
+LBX 1 4 1.0E-9
+LCX 5 2 0.23E-9
+LEX 6 3 0.001E-9
+.MODEL NE662 NPN 
++(IS=1e-16       BF=92            NF=0.993       VAF=14           IKF=0.15
++ ISE=4e-11      NE=2.5           BR=6.7         NR=1.20          VAR=13
++ IKR=0.008      ISC=1e-14        NC=1.21        RE=0.8           RB=3.05  
++ RBM=20         IRB=5e-5         RC=8.75        CJE=7e-13        VJE=0.5 
++ MJE=0.3        CJC=1.1e-13      VJC=0.85       MJC=0.33         XCJC=0.1
++ CJS=0          VJS=0.75         MJS=0          FC=0.4           TF=2e-12
++ XTF=.102       VTF=5            ITF=0.1        PTF=23.5         TR=1.0e-11
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+* FILENAME:        NE68000.CIR
+* NEC PART NUMBER: NE68000
+* LAST MODIFIED:   5/96
+* BIAS CONDITIONS: Vce=1V to 6V, Ic=0.25mA to 20mA
+* FREQ RANGE:      0.1GHZ to 20.1GHZ
+*
+*                CCB
+*            .---||---.            CCB=0.08pF
+*            |        |C           CCE=0.08pF
+*            |   /----o---LC----o  
+*  o----LB---o--|     |            LB=0.302nH (QTY 1-11.7mil)
+*            B   \   --            LC=0.113nH (QTY 1- 7.8mil)
+*                |   -- CCE        LE=0.183nH (QTY 2-17.7mil)
+*              E o----'            Bond wire: 0.7mil 
+*                |                            diameter gold
+*               LE
+*                |
+*                o
+*
+*                   c b e
+.SUBCKT NE68000/CEL 2 1 3
+Q1  5 4 6 NE68000
+CCB 4 5 0.08E-12
+CCE 5 6 0.08E-12
+LE  6 3 0.183E-9
+LB  1 4 0.302E-9
+LC  5 2 0.113E-9
+.MODEL NE68000 NPN 
++(IS=3.84e-16    BF=124.9         NF=1.04        VAF=11.9         IKF=0.027
++ ISE=1.0e-14    NE=2.17          BR=1.0         NR=1.05          VAR=0.0
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.6           RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.46       CJE=0.358e-12    VJE=0.711
++ MJE=0.5        CJC=0.162e-12    VJC=0.791      MJC=0.638        XCJC=0.0
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=8.7e-12    
++ XTF=18.0       VTF=19.1         ITF=.0818      PTF=0.0          TR=0.635e-9
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for VAR and
+*        IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68018.CIR
+* NEC PART NUMBER:  NE68018
+* LAST MODIFIED:    5/96
+* BIAS CONDITIONS:  Vce=1V to 6V, Ic=1mA to 15mA
+* FREQ RANGE:       0.1GHz to 5GHz
+*
+*                            CCBpkg
+*                   ,--------||-----------.
+*                   |                     |
+*                   |        CCB          |
+*                   |    .---||---.       |
+*  BASE             |    |        |       |         COLLECTOR
+*                   |    |   /----o--LC---o--------Lcx------o
+*  o-------Lbx------o-LB-o--|Q1   |       |
+*                   |    B   \   --       |
+*                   |        |   -- CCE  --
+*            CBEpkg--      E o----'      -- CCEpkg  
+*                  --        |            |
+*                   |       LE            |
+*                   '--------o------------'
+*                            |
+*                           Lex               
+*                            | 
+*                            o EMITTER
+*          
+*       CCB    = 0.08pF           LB  = 1.38nH
+*       CCE    = 0.08pF           LE  = 0.85nH
+*                                 LC  = 2.55nH
+*       CCBpkg = 0.14pF           Lbx = 0.18nH
+*       CCEpkg = 0.58pF           Lcx = 0.47nH
+*       CBEpkg = 0.29pF           Lex = 0.09nH
+*
+* Q1 model parameters are as follows:
+*                   c b e
+.SUBCKT NE68018/CEL 2 1 3
+Q1  8 7 9 NE68000
+CCB 7 8 0.08E-12
+CCE 8 9 0.08E-12
+LE  9 6 0.85E-9
+LB  4 7 1.38E-9
+LC  8 5 2.55E-9
+CBEPKG 4 6 0.29E-12
+CCBPKG 4 5 0.14E-12
+CCEPKG 5 6 0.58E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.47E-9
+LEX 6 3 0.09E-9
+.MODEL NE68000 NPN 
++(IS=3.84e-16    BF=124.9         NF=1.04        VAF=11.9         IKF=0.027
++ ISE=1.0e-14    NE=2.17          BR=1.0         NR=1.05          VAR=0.0
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.6           RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.46       CJE=0.358e-12    VJE=0.711
++ MJE=0.5        CJC=0.162e-12    VJC=0.791      MJC=0.638        XCJC=0.0
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=8.7e-12    
++ XTF=18.0       VTF=19.1         ITF=.0818      PTF=0.0          TR=0.635e-9
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator,
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:        NE68019.CIR
+* NEC PART NUMBER: NE68019
+* LAST MODIFIED:   5/96
+* BIAS CONDITIONS: Vce=1V to 6V, Ic=1mA to 15mA
+* FREQ RANGE:      0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                   ,--------||-----------.
+*                   |                     |
+*                   |        CCB          |
+*                   |    .---||---.       |
+*  BASE             |    |        |       |   COLLECTOR
+*                   |    |   /----o-------o--Lcx------o
+*  o-------Lbx------o-LB-o--|Q1   |       |
+*                        B   \   --       |
+*                            |   -- CCE  --
+*                          E o----'      -- CCEpkg
+*                            |            |
+*                           LE            |
+*                            o------------'
+*                            |
+*                           Lex
+*                            | 
+*                            o EMITTER
+*
+*       CCB    = 0.08pF           LB  = 0.72nH
+*       CCE    = 0.08pF           LE  = 0.76nH
+*       CCBpkg = 0.17pF           Lbx = 0.19nH
+*       CCEpkg = 0.21pF           Lcx = 0.19nH
+*                                 Lex = 0.19nH
+*
+*                   c b e
+.SUBCKT NE68019/CEL 2 1 3
+Q1  5 7 8 NE68000
+CCB 7 5 0.08E-12
+CCE 5 8 0.08E-12
+LE  8 6 0.76E-9
+LB  4 7 0.72E-9
+CCBPKG 4 5 0.17E-12
+CCEPKG 5 6 0.21E-12
+LBX 1 4 0.19E-9
+LCX 5 2 0.19E-9
+LEX 6 3 0.19E-9
+.MODEL NE68000 NPN 
++( IS=3.84e-16   BF=124.9         NF=1.05        VAF=11.87        IKF=0.027 
++ ISE=1.0e-14    NE=2.17          BR=1.0         NR=1.05          VAR=0.0 
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.60          RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.5        CJE=0.358e-12    VJE=0.711 
++ MJE=0.50       CJC=0.162e-12    VJC=0.791      MJC=0.638        XCJC=0.0 
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=8.70e-12         
++ XTF=18.0       VTF=19.1         ITF=0.082      PTF=0.0          TR=0.635e-9                
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for VAR and
+*        IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68030.CIR
+* NEC PART NUMBER:  NE68030
+* LAST MODIFIED:    10/96
+* BIAS CONDITIONS:  Vce=2.5V to 6V, Ic=1mA to 15mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                    
+*       CCB    = 0.08pF          LB  = 0.7nH             
+*       CCE    = 0.08pF          LE  = 1nH           
+*       CCBpkg = 0.12pF          Lbx = 0.2nH          
+*       CCEpkg = 0.16pF          Lcx = 0.2nH             
+*       CBEpkg = 0.04pF          Lex = 0.2nH          
+*
+*                   c b e
+.SUBCKT NE68030/CEL 2 1 3
+Q1  5 7 8 NE68000
+CCB 7 5 0.08E-12
+CCE 5 8 0.08E-12
+LE  8 6 1E-9
+LB  4 7 0.7E-9
+CCBPKG 4 5 0.12E-12
+CCEPKG 5 6 0.16E-12
+CBEPKG 4 6 0.04E-12
+LBX 1 4 0.2E-9
+LCX 5 2 0.2E-9
+LEX 6 3 0.2E-9
+* Q1 model parameters are as follows:
+.MODEL NE68000 NPN 
++(IS=3.84e-16    BF=124.9         NF=1.04        VAF=11.9         IKF=0.027
++ ISE=1e-14      NE=2.17          BR=1           NR=1.05          VAR=0  
++ IKR=0          ISC=0            NC=2           RE=0.6           RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.46       CJE=0.358e-12    VJE=0.711
++ MJE=0.5        CJC=0.162e-12    VJC=0.791      MJC=0.638        XCJC=0  
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=8.7e-12    
++ XTF=18         VTF=19.1         ITF=.0818      PTF=0            TR=0.635e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for IKR is 
+*        interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68033.CIR
+* NEC PART NUMBER:  NE68033
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=2.5V to 6V, Ic=0.3mA to 20mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                    
+*       CCB    = 0.08pF          LB  = 0.65nH             
+*       CCE    = 0.08pF          LE  = 0.95nH           
+*       CCBpkg = 0.1pF           Lbx = 0.3nH          
+*       CCEpkg = 0.1pF           Lcx = 0.5nH             
+*       CBEpkg = 0.01pF          Lex = 0.3nH          
+*
+*                   c b e
+.SUBCKT NE68033/CEL 2 1 3
+Q1  5 7 8 NE68000
+CCB 7 5 0.08E-12
+CCE 5 8 0.08E-12
+LE  8 6 0.95E-9
+LB  4 7 0.65E-9
+CCBPKG 4 5 0.1E-12
+CCEPKG 5 6 0.1E-12
+CBEPKG 4 6 0.01E-12
+LBX 1 4 0.3E-9
+LCX 5 2 0.5E-9
+LEX 6 3 0.3E-9
+* Q1 model parameters are as follows:
+.MODEL NE68000 NPN 
++(IS=3.84e-16    BF=124.9         NF=1.05        VAF=11.9         IKF=0.027
++ ISE=1e-14      NE=2.17          BR=1           NR=1.05          VAR=0  
++ IKR=0          ISC=0            NC=2           RE=0.6           RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.5        CJE=0.358e-12    VJE=0.71 
++ MJE=0.5        CJC=0.162e-12    VJC=0.79       MJC=0.64         XCJC=0  
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=8.7e-12    
++ XTF=18         VTF=19.1         ITF=0.082      PTF=0            TR=0.635e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for VAR and IKR is 
+*        interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68035.CIR
+* NEC PART NUMBER:  NE68035
+* LAST MODIFIED:    11/96
+* BIAS CONDITIONS:  Vce=6V, Ic=5mA to 20mA
+* FREQ RANGE:       0.05GHz to 5GHz
+*
+*                            CCBpkg
+*       .--------------------||-------------.  
+*       |                       CCB         |   
+*       |                   .--||---.       |        
+*       |                   |        |      |             COLLECTOR
+* BASE  |                   |   /----o--LC--o--o--Lcx--Rcx--o--o
+*  o--o-o--Rbx--Lbx--o-LB---o--|Q1   |         |            |
+*     |              |      B   \   --         --           |
+*     |              |          |   -- CCE     -- CCEpkg    |
+*     |              --CBEpkg  Eo----'         |            --
+*     |              --         |              |            -- CCEx_pkg
+*     |              |          Lex            |            | 
+*    --              |          |              |            |
+*    -- CBEx_pkg     |          Rex            |            |
+*     |              |          |              |            |
+*     '--------------o----------o--------------o------------'
+*                               |
+*                               o EMITTER
+*       CCB    = 0.08pF 	LB  = 0.57nH   	Rbx = 0.1 ohms          
+*       CCE    = 0.08pF	LC  = 0.5nH		Rex = 0.1 ohms
+*       CCBpkg = 0.05pF	Lbx = 0.15nH		Rcx = 0.1 ohms
+*       CCEpkg = 0.15pF    Lcx = 0.15nH        CBEx_pkg = 0.1pF 
+*       CBEpkg = 0.05pF    Lex = 0.28nH        CCEx_pkg = 0.15pF 
+*
+*                   c b e 
+.SUBCKT NE68035/CEL 2 1 3
+Q1  11 10 9 NE68000
+CCB 10 11 0.08E-12
+CCE 11  9 0.08E-12
+LB   7 10 0.57E-9
+LC   8 11 0.5E-9
+CBEPKG 7 3 0.05E-12
+CCEPKG 8 3 0.15E-12
+CCBPKG 1 8 0.05E-12
+LBX 4 7 0.15E-9
+LEX 9 6 0.28E-9
+LCX 5 8 0.15E-9
+RBX 1 4 0.1
+REX 6 3 0.1
+RCX 2 5 0.1
+CBEX_PKG 1 3 0.1E-12
+CCEX_PKG 2 3 0.15E-12
+.MODEL NE68000 NPN 
++(IS=3.84e-16    BF=124.9         NF=1.04        VAF=11.9         IKF=0.027
++ ISE=1e-14      NE=2.17          BR=1           NR=1.05          VAR=0  
++ IKR=0          ISC=0            NC=2           RE=0.6           RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.46       CJE=0.358e-12    VJE=0.711
++ MJE=0.5        CJC=0.162e-12    VJC=0.791      MJC=0.638        XCJC=0  
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=8.7e-12    
++ XTF=18         VTF=19.1         ITF=.0818      PTF=0            TR=0.635e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:        NE68100.CIR
+* NEC PART NUMBER: NE68100
+* LAST MODIFIED:   5/96
+* BIAS CONDITIONS: VCE=8V, IC=7mA,20mA; VCE=2.5V, IC=0.3/1/3mA
+* FREQ RANGE:      1.5GHz TO 10GHz
+*
+*                CCB
+*            .---||---.            CCB=0.07pF
+*            |        |C           CCE=0.01pF
+*            |   /----o---LC----o  
+*  o----LB---o--|     |            LB=0.18nH (QTY 1-13.4mil)
+*            B   \   --            LC=0.01nH (QTY 1- 8.3mil)
+*                |   -- CCE        LE=0.15nH (QTY 2-17.6mil)
+*              E o----'            Bond wire: 0.7mil 
+*                |                            diameter gold
+*               LE
+*                |
+*                o
+*
+*                   c b e
+.SUBCKT NE68100/CEL 2 1 3
+Q1  5 4 6 NE68100
+CCB 4 5 0.07E-12
+CCE 5 6 0.01E-12
+LE  6 3 0.15E-9
+LB  1 4 0.18E-9
+LC  5 2 0.01E-9
+.MODEL NE68100 NPN 
++( IS=2.70e-16   BF=185.0         NF=1.02        VAF=15.0         IKF=0.055
++ ISE=1.77e-11   NE=2.10          BR=1.0         NR=1.0           VAR=0.0
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.6           RB=12.0
++ RBM=3.70       IRB=1.20e-5      RC=8.0         CJE=1.20e-12     VJE=0.770
++ MJE=0.50       CJC=0.80e-12     VJC=0.270      MJC=0.560        XCJC=0.0
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=14.0e-12
++ XTF=3.0        VTF=25.0         ITF=0.10       PTF=0.0          TR=0.30e-9
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for VAR and
+*        IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68118.CIR
+* NEC PART NUMBER:  NE68118
+* LAST MODIFIED:    5/96
+* BIAS CONDITIONS:  Vce=2.5V to 8V, Ic=3mA to 10mA
+* FREQ RANGE:       0.05GHz TO 3.0GHz
+*
+*                            CCBpkg
+*                   ,--------||-----------.
+*                   |                     |
+*                   |        CCB          |
+*                   |    .---||---.       |              
+*  BASE             |    |        |       |         COLLECTOR
+*                   |    |   /----o--LC---o--------Lcx------o
+*  o-------Lbx------o-LB-o--|Q1   |       |         
+*                   |    B   \   --       |         
+*                   |        |   -- CCE  --         
+*            CBEpkg--      E o----'      -- CCEpkg  
+*                  --        |            |     
+*                   |       LE            |     
+*                   '--------o------------'     
+*                            |
+*                           Lex
+*                            | 
+*                            o EMITTER
+*          
+*       CCB    = 0.07pF           LB  = 1.16nH
+*       CCE    = 0.01pF           LE  = 0.83nH
+*                                 LC  = 1.54nH
+*       CCBpkg = 0.09pF           Lbx = 0.18nH
+*       CCEpkg = 0.51pF           Lcx = 0.8nH
+*       CBEpkg = 0.25pF           Lex = 0.09nH
+*
+*                   c b e
+.SUBCKT NE68118/CEL 2 1 3
+Q1  8 7 9 NE68100
+CCB 7 8 0.07E-12
+CCE 8 9 0.01E-12
+LE  9 6 0.83E-9
+LB  4 7 1.16E-9
+LC  8 5 1.54E-9
+CBEPKG 4 6 0.25E-12
+CCBPKG 4 5 0.09E-12
+CCEPKG 5 6 0.51E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.8E-9
+LEX 6 3 0.09E-9
+.MODEL NE68100 NPN 
++( IS=2.70e-16   BF=185.0         NF=1.02        VAF=15.0         IKF=0.055
++ ISE=1.77e-11   NE=2.10          BR=1.0         NR=1.0           VAR=0.0
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.6           RB=12.0
++ RBM=3.70       IRB=1.20e-5      RC=8.0         CJE=1.20e-12     VJE=0.770
++ MJE=0.50       CJC=0.80e-12     VJC=0.270      MJC=0.560        XCJC=0.0
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=14.0e-12
++ XTF=3.0        VTF=25.0         ITF=0.10       PTF=0.0          TR=0.30e-9
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:        NE68119.CIR
+* NEC PART NUMBER: NE68119
+* LAST MODIFIED:   5/96
+* BIAS CONDITIONS: Vce=2.5V to 8.0V,  Ic=0.3mA to 10mA
+* FREQ RANGE:      0.05GHz to 3GHz
+*
+*                   CCBpkg
+*           .-------||--------.
+*           |          CCB    |
+*           |      .--||---.  |     COLLECTOR
+* BASE      |      |        | |
+*           |      |   /----o-o-----o--Lcx--o
+*   o--Lbx--o-LB---o--|Q1   |       |
+*                  B   \   --       --      
+*                      |   -- CCE   -- CCEpkg
+*                    E o----'       |
+*                      |            |      
+*                     LE            |       
+*                      o------------'       
+*                      |                  
+*                      Lex            
+*                      |  
+*                      o EMITTER
+*
+*       CCB   = 0.07pF           LB  = 1.13nH             
+*       CCE   = 0.01pF           LE  = 0.85nH           
+*       CCBpkg= 0.18pF           Lbx = 0.19nH          
+*       CCEpkg= 0.21pF           Lcx = 0.19nH             
+*                                Lex = 0.19nH          
+*
+*                   c b e
+.SUBCKT NE68119/CEL 2 1 3
+Q1  5 7 8 NE68100
+CCB 7 5 0.07E-12
+CCE 5 8 0.01E-12
+LE  8 6 0.85E-9
+LB  4 7 1.13E-9
+CCBPKG 4 5 0.18E-12
+CCEPKG 5 6 0.21E-12
+LBX 1 4 0.19E-9
+LCX 5 2 0.19E-9
+LEX 6 3 0.19E-9
+.MODEL NE68100 NPN 
++( IS=2.7e-16    BF=185           NF=1.02        VAF=15           IKF=0.055
++ ISE=1.77e-11   NE=2.1           BR=1           NR=1             VAR=0  
++ IKR=0          ISC=0            NC=2           RE=0.6           RB=12  
++ RBM=3.7        IRB=1.2e-5       RC=8           CJE=1.20e-12     VJE=0.77 
++ MJE=0.5        CJC=0.8e-12      VJC=0.27       MJC=0.560        XCJC=0  
++ CJS=0          VJS=0.75         MJS=0          FC=0.50          TF=14e-12
++ XTF=3          VTF=25           ITF=0.1        PTF=0            TR=0.3e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1   )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68130.CIR
+* NEC PART NUMBER:  NE68130
+* LAST MODIFIED:    10/96
+* BIAS CONDITIONS:  Vce=2.5V to 8V, Ic=0.3mA to 10mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                                
+*       CCB    = 0.07pF          LB  = 0.52nH             
+*       CCE    = 0.01pF          LE  = 1.18nH           
+*       CCBpkg = 0.12pF          Lbx = 0.2nH          
+*       CCEpkg = 0.16pF          Lcx = 0.8nH             
+*       CBEpkg = 0.04pF          Lex = 0.2nH          
+*
+*                   c b e
+.SUBCKT NE68130/CEL 2 1 3
+Q1  5 7 8 NE68100
+CCB 7 5 0.07E-12
+CCE 5 8 0.01E-12
+LE  8 6 1.18E-9
+LB  4 7 0.52E-9
+CCBPKG 4 5 0.12E-12
+CCEPKG 5 6 0.16E-12
+CBEPKG 4 6 0.04E-12
+LBX 1 4 0.2E-9
+LCX 5 2 0.8E-9
+LEX 6 3 0.2E-9
+.MODEL NE68100 NPN 
++( IS=2.70e-16   BF=185.0         NF=1.02        VAF=15.0         IKF=0.055
++ ISE=1.77e-11   NE=2.10          BR=1.0         NR=1.0           VAR=0.0
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.6           RB=12.0
++ RBM=3.70       IRB=1.20e-5      RC=8.0         CJE=1.20e-12     VJE=0.770
++ MJE=0.50       CJC=0.80e-12     VJC=0.270      MJC=0.560        XCJC=0.0
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=14.0e-12
++ XTF=3.0        VTF=25.0         ITF=0.10       PTF=0.0          TR=0.30e-9
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68133.CIR
+* NEC PART NUMBER:  NE68133
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=1V to 8V, Ic=1mA to 30mA
+* FREQ RANGE:       0.1GHz to 8GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                                
+*       CCB    = 0.07pF          LB  = 0.9nH             
+*       CCE    = 0.01pF          LE  = 1.2nH           
+*       CCBpkg = 0.2pF           Lbx = 0.3nH          
+*       CCEpkg = 0.2pF           Lcx = 0.6nH             
+*       CBEpkg = 0.01pF          Lex = 0.3nH          
+*
+*                   c b e
+.SUBCKT NE68133/CEL 2 1 3
+Q1  5 7 8 NE68100
+CCB 7 5 0.07E-12
+CCE 5 8 0.01E-12
+LE  8 6 1.2E-9
+LB  4 7 0.9E-9
+CCBPKG 4 5 0.2E-12
+CCEPKG 5 6 0.2E-12
+CBEPKG 4 6 0.01E-12
+LBX 1 4 0.3E-9
+LCX 5 2 0.6E-9
+LEX 6 3 0.3E-9
+.MODEL NE68100 NPN 
++( IS=2.7e-16    BF=185           NF=1.02        VAF=15           IKF=0.055
++ ISE=1.77e-11   NE=2.1           BR=1           NR=1             VAR=0  
++ IKR=0          ISC=0            NC=2           RE=0.6           RB=12  
++ RBM=3.7        IRB=1.2e-5       RC=8           CJE=1.2e-12      VJE=0.77 
++ MJE=0.5        CJC=0.8e-12      VJC=0.27       MJC=0.56         XCJC=0  
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=14e-12
++ XTF=3          VTF=25           ITF=0.1        PTF=0            TR=0.3e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68135.CIR
+* NEC PART NUMBER:  NE68135
+* LAST MODIFIED:    11/96
+* BIAS CONDITIONS:  Vce=8V, Ic=7mA to 30mA
+* FREQ RANGE:       0.05GHz to 5GHz
+*
+*                            CCBpkg
+*       .--------------------||-------------.  
+*       |                       CCB         |   
+*       |                   .--||---.       |        
+*       |                   |        |      |             COLLECTOR
+* BASE  |                   |   /----o--LC--o--o--Lcx--Rcx--o--o
+*  o--o-o--Rbx--Lbx--o-LB---o--|Q1   |         |            |
+*     |              |      B   \   --         --           |
+*     |              |          |   -- CCE     -- CCEpkg    |
+*     |              --CBEpkg  Eo----'         |            --
+*     |              --         |              |            -- CCEx_pkg
+*     |              |          Lex            |            | 
+*    --              |          |              |            |
+*    -- CBEx_pkg     |          Rex            |            |
+*     |              |          |              |            |
+*     '--------------o----------o--------------o------------'
+*                               |
+*                               o EMITTER
+*       CCB    = 0.07pF 	LB  = 0.45nH   	Rbx = 0.1 ohms          
+*       CCE    = 0.01pF	      LC  = 0.96nH	Rex = 0.1 ohms
+*       CCBpkg = 0.11pF  	Lbx = 0.15nH	Rcx = 0.1 ohms
+*       CCEpkg = 0.2pF        Lcx = 0.15nH      CBEx_pkg = 0.1pF
+*       CBEpkg = 0.05pF       Lex = 0.38nH      CCEx_pkg = 0.2pF
+*                   c b e 
+.SUBCKT NE68135/CEL 2 1 3
+Q1  11 10 9 NE68100
+CCB 10 11 0.07E-12
+CCE 11  9 0.01E-12
+LB   7 10 0.45E-9
+LC   8 11 0.96E-9
+CBEPKG 7 3 0.05E-12
+CCEPKG 8 3 0.2E-12
+CCBPKG 1 8 0.11E-12
+LBX 4 7 0.15E-9
+LEX 9 6 0.38E-9
+LCX 5 8 0.15E-9
+RBX 1 4 0.1
+REX 6 3 0.1
+RCX 2 5 0.1
+CBEX_PKG 1 3 0.1E-12
+CCEX_PKG 2 3 0.2E-12
+.MODEL NE68100 NPN 
++( IS=2.7e-16    BF=185           NF=1.02        VAF=15           IKF=0.055
++ ISE=1.77e-11   NE=2.1           BR=1           NR=1             VAR=0  
++ IKR=0          ISC=0            NC=2           RE=0.6           RB=12  
++ RBM=3.7        IRB=1.2e-5       RC=8           CJE=1.2e-12      VJE=0.77 
++ MJE=0.5        CJC=0.8e-12      VJC=0.27       MJC=0.56         XCJC=0  
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=14e-12
++ XTF=3          VTF=25           ITF=0.1        PTF=0            TR=0.3e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68139.CIR
+* NEC PART NUMBER:  NE68139
+* LAST MODIFIED:    6/96
+* BIAS CONDITIONS:  Vce=2.5V to 8.0V, Ic=0.3mA to 7mA
+* FREQ RANGE:       0.1GHz to 3.0GHz
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       | COLLECTOR
+*               |    |   /----o--LC---o---Lcx---o
+*  o---Lbx------o-LB-o--|Q1   |       |
+*               |    B   \   --       |
+*               |        |   -- CCE  --
+*        CBEpkg--      E o----'      -- CCEpkg
+*              --        |            |
+*               |       LE            |
+*               '--------o------------'
+*                        |
+*                       Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB    = 0.07pF           LB  = 0.88nH
+*       CCE    = 0.01pF           LE  = 0.7nH
+*                                 LC  = 0.79nH
+*       CCBpkg = 0.165pF          Lbx = 0.39nH
+*       CCEpkg = 0.165pF          Lcx = 0.39nH
+*       CBEpkg = 0.01pF           Lex = 0.2nH
+*
+*                   c b e
+.SUBCKT NE68139/CEL 2 1 3
+Q1  8 7 9 NE68100
+CCB 7 8 0.07E-12
+CCE 8 9 0.01E-12
+LE  9 6 0.7E-9
+LB  4 7 0.88E-9
+LC  8 5 0.79E-9
+CBEPKG 4 6 0.01E-12
+CCBPKG 4 5 0.165E-12
+CCEPKG 5 6 0.165E-12
+LBX 1 4 0.39E-9
+LCX 5 2 0.39E-9
+LEX 6 3 0.2E-9
+.MODEL NE68100 NPN 
++( IS=2.7e-16     BF=185           NF=1.02        VAF=15           IKF=0.055
++ ISE=1.77e-11    NE=2.1           BR=1           NR=1             VAR=0
++ IKR=0           ISC=0            NC=2           RE=0.6           RB=12
++ RBM=3.7         IRB=1.2e-5       RC=8           CJE=1.2e-12      VJE=0.77
++ MJE=0.5         CJC=0.8e-12      VJC=0.27       MJC=0.56         XCJC=0
++ CJS=0           VJS=0.75         MJS=0          FC=0.5           TF=14.0e-12
++ XTF=3           VTF=25           ITF=0.1        PTF=0            TR=0.3e-9
++ EG=1.11         XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68518.CIR
+* NEC PART NUMBER:  NE68518
+* LAST MODIFIED:    5/96
+* BIAS CONDITIONS:  Vce=0.5V to 3.0V, Ic=0.5mA to 20mA
+* FREQ RANGE:       0.05GHz to 3.0GHz
+*
+*                            CCBpkg
+*                   ,--------||-----------.
+*                   |                     |
+*                   |        CCB          |
+*                   |    .---||---.       |
+*  BASE             |    |        |       |         COLLECTOR
+*                   |    |   /----o--LC---o--------Lcx------o
+*  o-------Lbx------o-LB-o--|Q1   |       |         
+*                   |    B   \   --       |         
+*                   |        |   -- CCE  --         
+*            CBEpkg--      E o----'      -- CCEpkg  
+*                  --        |            |     
+*                   |       LE            |     
+*                   '--------o------------'     
+*                            |
+*                           Lex               
+*                            | 
+*                            o EMITTER
+*          
+*       CCB    = 0.13pF           LB  = 1.55nH
+*       CCE    = 0.14pF           LE  = 0.94nH
+*                                 LC  = 1.25nH
+*       CCBpkg = 0.066pF          Lbx = 0.18nH
+*       CCEpkg = 0.44pF           Lcx = 0.18nH
+*       CBEpkg = 0.36pF           Lex = 0.09nH
+*
+*                   c b e
+.SUBCKT NE68518/CEL 2 1 3
+Q1  8 7 9 NE68500
+CCB 7 8 0.13E-12
+CCE 8 9 0.14E-12
+LE  9 6 0.94E-9
+LB  4 7 1.55E-9
+LC  8 5 1.25E-9
+CBEPKG 4 6 0.36E-12
+CCBPKG 4 5 0.066E-12
+CCEPKG 5 6 0.44E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.18E-9
+LEX 6 3 0.09E-9
+.MODEL NE68500 NPN 
++( IS=7.0e-16     BF=109           NF=1           VAF=15           IKF=0.19  
++ ISE=7.90e-13    NE=2.19          BR=1           NR=1.08          VAR=12.4   
++ IKR=0           ISC=0            NC=2           RE=1.3           RB=10
++ RBM=8.34        IRB=0.009        RC=10          CJE=0.40e-12     VJE=0.812
++ MJE=0.5         CJC=0.180e-12    VJC=0.75       MJC=0.34         XCJC=0
++ CJS=0           VJS=0.75         MJS=0          FC=0.5           TF=2.0e-12
++ XTF=5.2         VTF=4.58         ITF=0.011      PTF=0            TR=1.0e-9
++ EG=1.11         XTB=0            XTI=3          KF=0             AF=1   )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68519.CIR
+* NEC PART NUMBER:  NE68519
+* LAST MODIFIED:    5/96
+* BIAS CONDITIONS:  Vce=0.5V to 3.0V, Ic=0.5mA to 20mA
+* FREQ RANGE:       0.05GHz to 3.0GHz
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       |       COLLECTOR
+*               |    |   /----o-------o---Lcx----o
+*  o---Lbx------o-LB-o--|Q1   |       |         
+*                    B   \   --       |         
+*                        |   -- CCE  --         
+*                      E o----'      -- CCEpkg  
+*                        |            |     
+*                       LE            |     
+*                        o------------'     
+*                        |
+*                       Lex
+*                        | 
+*                        o EMITTER
+*      
+*       CCB    = 0.13pF           LB  = 0.9nH
+*       CCE    = 0.14pF           LE  = 0.9nH
+*       CCBpkg = 0.17pF           Lbx = 0.19nH
+*       CCEpkg = 0.21pF           Lcx = 0.19nH
+*                                 Lex = 0.19nH
+*
+*                   c b e
+.SUBCKT NE68519/CEL 2 1 3
+Q1  5 7 8 NE68500
+CCB 7 5 0.13E-12
+CCE 5 8 0.14E-12
+LE  8 6 0.9E-9
+LB  4 7 0.9E-9
+CCBPKG 4 5 0.17E-12
+CCEPKG 5 6 0.21E-12
+LBX 1 4 0.19E-9
+LCX 5 2 0.19E-9
+LEX 6 3 0.19E-9
+.MODEL NE68500 NPN 
++( IS=7.0e-16     BF=109           NF=1           VAF=15           IKF=0.19  
++ ISE=7.90e-13    NE=2.19          BR=1           NR=1.08          VAR=12.4   
++ IKR=0           ISC=0            NC=2           RE=1.3           RB=10
++ RBM=8.34        IRB=0.009        RC=10          CJE=0.40e-12     VJE=0.812
++ MJE=0.5         CJC=0.180e-12    VJC=0.75       MJC=0.34         XCJC=0
++ CJS=0           VJS=0.75         MJS=0          FC=0.5           TF=2.0e-12
++ XTF=5.2         VTF=4.58         ITF=0.011      PTF=0            TR=1.0e-9
++ EG=1.11         XTB=0            XTI=3          KF=0             AF=1   )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68530.CIR
+* NEC PART NUMBER:  NE68530
+* LAST MODIFIED:    10/96
+* BIAS CONDITIONS:  Vce=0.5V to 3V, Ic=0.5mA to 10mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                    
+*       CCB    = 0.13pF          LB  = 0.41nH             
+*       CCE    = 0.14pF          LE  = 1.43nH           
+*       CCBpkg = 0.12pF          Lbx = 0.2nH          
+*       CCEpkg = 0.04pF          Lcx = 0.2nH             
+*       CBEpkg = 0.04pF          Lex = 0.2nH          
+*
+*                   c b e
+.SUBCKT NE68530/CEL 2 1 3
+Q1  5 7 8 NE68500
+CCB 7 5 0.13E-12
+CCE 5 8 0.14E-12
+LE  8 6 1.43E-9
+LB  4 7 0.41E-9
+CCBPKG 4 5 0.12E-12
+CCEPKG 5 6 0.04E-12
+CBEPKG 4 6 0.04E-12
+LBX 1 4 0.2E-9
+LCX 5 2 0.2E-9
+LEX 6 3 0.2E-9
+.MODEL NE68500 NPN 
++ ( IS=7.0e-16     BF=109           NF=1           VAF=15          IKF=0.19    
++  ISE=7.9e-13     NE=2.19          BR=1           NR=1.08         VAR=12.4      
++  IKR=0           ISC=0            NC=2           RE=1.3          RB=10  
++  RBM=8.34        IRB=0.009        RC=10          CJE=0.4e-12     VJE=0.812
++  MJE=0.5         CJC=0.18e-12     VJC=0.75       MJC=0.34        XCJC=0  
++  CJS=0           VJS=0.75         MJS=0          FC=0.5          TF=2.0e-12
++  XTF=5.2         VTF=4.58         ITF=0.011      PTF=0.0         TR=1.0e-9
++  EG=1.11         XTB=0            XTI=3          KF=0            AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68533.CIR
+* NEC PART NUMBER:  NE68533
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=0.5V to 6V, Ic=0.5mA to 20mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                    
+*       CCB    = 0.13pF          LB  = 0.85nH             
+*       CCE    = 0.14pF          LE  = 1.15nH           
+*       CCBpkg = 0.15pF          Lbx = 0.3nH          
+*       CCEpkg = 0.1pF           Lcx = 0.3nH             
+*       CBEpkg = 0.05pF          Lex = 0.3nH          
+*
+*                   c b e
+.SUBCKT NE68533/CEL 2 1 3
+Q1  5 7 8 NE68500
+CCB 7 5 0.13E-12
+CCE 5 8 0.14E-12
+LE  8 6 1.15E-9
+LB  4 7 0.85E-9
+CCBPKG 4 5 0.15E-12
+CCEPKG 5 6 0.1E-12
+CBEPKG 4 6 0.05E-12
+LBX 1 4 0.3E-9
+LCX 5 2 0.3E-9
+LEX 6 3 0.3E-9
+.MODEL NE68500 NPN 
++ ( IS=7.0e-16     BF=109           NF=1           VAF=15          IKF=0.19    
++  ISE=7.9e-13     NE=2.19          BR=1           NR=1.08         VAR=12.4      
++  IKR=0           ISC=0            NC=2           RE=1.3          RB=10  
++  RBM=8.34        IRB=0.009        RC=10          CJE=0.4e-12     VJE=0.812
++  MJE=0.5         CJC=0.18e-12     VJC=0.75       MJC=0.34        XCJC=0  
++  CJS=0           VJS=0.75         MJS=0          FC=0.5          TF=2.0e-12
++  XTF=5.2         VTF=4.58         ITF=0.011      PTF=0.0         TR=1.0e-9
++  EG=1.11         XTB=0            XTI=3          KF=0            AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68539.CIR
+* NEC PART NUMBER:  NE68539
+* LAST MODIFIED:    6/96
+* BIAS CONDITIONS:  Vce=0.5V to 3V, Ic=0.5mA to 20mA
+* FREQ RANGE:       0.05GHz to 3.0GHz
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       | COLLECTOR
+*               |    |   /----o--LC---o---Lcx---o
+*  o---Lbx------o-LB-o--|Q1   |       |
+*               |    B   \   --       |
+*               |        |   -- CCE  --
+*        CBEpkg--      E o----'      -- CCEpkg
+*              --        |            |
+*               |       LE            |
+*               '--------o------------'
+*                        |
+*                       Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB    = 0.13pF           LB  = 1.34nH
+*       CCE    = 0.14pF           LE  = 0.99nH
+*                                 LC  = 0.7nH
+*       CCBpkg = 0.08pF           Lbx = 0.39nH
+*       CCEpkg = 0.08pF           Lcx = 0.39nH
+*       CBEpkg = 0.01pF           Lex = 0.2nH
+*
+*                   c b e
+.SUBCKT NE68539/CEL 2 1 3
+Q1  8 7 9 NE68500
+CCB 7 8 0.13E-12
+CCE 8 9 0.14E-12
+LE  9 6 0.99E-9
+LB  4 7 1.34E-9
+LC  8 5 0.7E-9
+CBEPKG 4 6 0.01E-12
+CCBPKG 4 5 0.08E-12
+CCEPKG 5 6 0.08E-12
+LBX 1 4 0.39E-9
+LCX 5 2 0.39E-9
+LEX 6 3 0.2E-9
+.MODEL NE68500 NPN 
++( IS=7.0e-16     BF=109           NF=1           VAF=15           IKF=0.19
++ ISE=7.90e-13    NE=2.19          BR=1           NR=1.08          VAR=12.4
++ IKR=0           ISC=0            NC=2           RE=1.3           RB=10
++ RBM=8.34        IRB=0.009        RC=10          CJE=0.4e-12      VJE=0.812
++ MJE=0.5         CJC=0.18e-12     VJC=0.75       MJC=0.34         XCJC=0
++ CJS=0           VJS=0.75         MJS=0          FC=0.5           TF=2.0e-12
++ XTF=5.2         VTF=4.58         ITF=0.011      PTF=0            TR=1.0e-9
++ EG=1.11         XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.  For this simulator, 
+*        a value of 0 for VAR and IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:         NE68618.CIR
+* NEC PART NUMBER:  NE68618
+* LAST MODIFIED:    6/96
+* BIAS CONDITIONS:  Vce=2.5V to 3V, Ic=0.3mA to 5mA
+* FREQ RANGE:       0.1GHz to 3.0GHz
+*
+*                     CCBpkg
+*             .-------||--------.
+*             |          CCB    |
+*             |      .--||---.  |     COLLECTOR
+* BASE        |      |        | |
+*             |      |   /----o-o-----o--Lcx--o
+*     o--Lbx--o-LB---o--|Q1   |       |
+*             |      B   \   --       --
+*             |          |   -- CCE   -- CCEpkg
+*             --CBEpkg E o----'       |
+*             --         |            |
+*             |         LE            |
+*             `----------o------------'
+*                        |
+*                        Lex            
+*                        |  
+*                        o EMITTER
+*                         
+*       CCB   = 0.180pF          LB  = 0.004nH
+*       CCE   = 0.180pF          LE  = 0.004nH
+*       CCBpkg= 0.008pF          Lbx = 1.35nH
+*       CCEpkg= 0.150pF          Lcx = 0.950nH
+*       CBEpkg= 0.057pF          Lex = 0.900nH
+*
+*                   c b e
+.SUBCKT NE68618/CEL 2 1 3
+Q1  5 7 8 NE68600
+CCB 7 5 0.18E-12
+CCE 5 8 0.18E-12
+LE  8 6 0.004E-9
+LB  4 7 0.004E-9
+CCBPKG 4 5 0.008E-12
+CCEPKG 5 6 0.15E-12
+CBEPKG 4 6 0.057E-12
+LBX 1 4 1.35E-9
+LCX 5 2 0.95E-9
+LEX 6 3 0.9E-9
+.MODEL NE68600 NPN 
++( IS=32.7e-18   BF=154.7         NF=0.994       VAF=45           IKF=0.102
++ ISE=2.52e-13   NE=2.49          BR=1.20        NR=0.998         VAR=2.44
++ IKR=40         ISC=56.9e-18     NC=1.04        RE=1.6           RB=15  
++ RBM=3          IRB=7.59e-4      RC=8           CJE=0.175e-12    VJE=1.04
++ MJE=0.322      CJC=0.087e-12    VJC=0.766      MJC=0.59         XCJC=0.1 
++ CJS=0          VJS=0.750        MJS=0          FC=0.5           TF=8.50e-12
++ XTF=0.39       VTF=0.668        ITF=0.06       PTF=60           TR=0  
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+
+* FILENAME:         NE68619.CIR
+* NEC PART NUMBER:  NE68619
+* LAST MODIFIED:    6/96
+* BIAS CONDITIONS:  Vce=2.5V to 3V, Ic=0.3mA to 5mA 
+* FREQ RANGE:       0.1GHz to 3.0GHz
+*
+*                     CCBpkg
+*             .-------||--------.
+*             |          CCB    |
+*             |      .--||---.  |     COLLECTOR
+* BASE        |      |        | |
+*             |      |   /----o-o-----o--Lcx--o
+*     o--Lbx--o-LB---o--|Q1   |       |
+*             |      B   \   --       --
+*             |          |   -- CCE   -- CCEpkg
+*             --CBEpkg E o----'       |
+*             --         |            |
+*             |         LE            |
+*             `----------o------------'
+*                        |
+*                        |
+*                        Lex
+*                        |
+*                        |
+*                        o EMITTER
+*
+*       CCB   = 0.18pF           LB  = 0.004nH             
+*       CCE   = 0.18pF           LE  = 0.004nH           
+*       CCBpkg= 0.010pF          Lbx = 1.25nH          
+*       CCEpkg= 0.150pF          Lcx = 0.90nH             
+*       CBEpkg= 0.005pF          Lex = 1.05nH          
+*
+*                   c b e
+.SUBCKT NE68619/CEL 2 1 3
+Q1  5 7 8 NE68600
+CCB 7 5 0.18E-12
+CCE 5 8 0.18E-12
+LE  8 6 0.004E-9
+LB  4 7 0.004E-9
+CCBPKG 4 5 0.01E-12
+CCEPKG 5 6 0.15E-12
+CBEPKG 4 6 0.005E-12
+LBX 1 4 1.25E-9
+LCX 5 2 0.9E-9
+LEX 6 3 1.05E-9
+.MODEL NE68600 NPN
++( IS=23.0e-18   BF=147.6         NF=0.984       VAF=45           IKF=0.1 
++ ISE=3.60e-14   NE=2.72          BR=4.41        NR=0.987         VAR=2.54
++ IKR=1.50e-3    ISC=92.8e-15     NC=8.21        RE=1.7           RB=17  
++ RBM=3          IRB=7.59e-4      RC=10          CJE=0.117e-12    VJE=1.26
++ MJE=0.62       CJC=0.206e-12    VJC=0.941      MJC=0.267        XCJC=0.1 
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=8.0e-12
++ XTF=0.39       VTF=0.668        ITF=0.06       PTF=60           TR=0  
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+
+* FILENAME:         NE68630.CIR
+* NEC PART NUMBER:  NE68630
+* LAST MODIFIED:    6/96 
+* BIAS CONDITIONS:  Vce=2.5V to 3V, Ic=0.3mA to 5mA
+* FREQ RANGE:       0.1GHz to 3.0GHz
+*
+*                     CCBpkg
+*             .-------||--------.
+*             |          CCB    |
+*             |      .--||---.  |     COLLECTOR
+* BASE        |      |        | |
+*             |      |   /----o-o-----o--Lcx--o
+*     o--Lbx--o-LB---o--|Q1   |       |
+*             |      B   \   --       --
+*             |          |   -- CCE   -- CCEpkg
+*             --CBEpkg E o----'       |
+*             --         |            |
+*             |         LE            |
+*             `----------o------------'
+*                        |
+*                        Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB   = 0.18pF           LB  = 0.004nH
+*       CCE   = 0.18pF           LE  = 0.004nH
+*       CCBpkg= 0.080pF          Lbx = 0.8nH
+*       CCEpkg= 0.080pF          Lcx = 0.35nH
+*       CBEpkg= 0.018pF          Lex = 1.4nH
+*
+*                   c b e
+.SUBCKT NE68630/CEL 2 1 3
+Q1  5 7 8 NE68600
+CCB 7 5 0.18E-12
+CCE 5 8 0.18E-12
+LE  8 6 0.004E-9
+LB  4 7 0.004E-9
+CCBPKG 4 5 0.08E-12
+CCEPKG 5 6 0.08E-12
+CBEPKG 4 6 0.018E-12
+LBX 1 4 0.8E-9
+LCX 5 2 0.35E-9
+LEX 6 3 1.4E-9
+.MODEL NE68600 NPN 
++(IS=30.2e-18    BF=143.5         NF=0.990       VAF=40.0         IKF=0.10
++ ISE=5.42e-14   NE=2.58          BR=6.95        NR=0.990         VAR=2.66
++ IKR=1.51       ISC=7.82e-14     NC=4.86        RE=1.75          RB=17.0
++ RBM=3.0        IRB=7.59e-4      RC=10.0        CJE=0.168e-12    VJE=1.18
++ MJE=0.368      CJC=0.095e-12    VJC=0.715      MJC=0.512        XCJC=0.10
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=8.0e-12
++ XTF=0.390      VTF=0.668        ITF=0.060      PTF=60.0         TR=0.0
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+.ENDS
+*$
+
+* FILENAME:         NE68718.CIR
+* NEC PART NUMBER:  NE68718
+* LAST MODIFIED:    5/96 
+* BIAS CONDITIONS:  Vce=1V to 2V, Ic=1mA to 10mA
+* FREQ RANGE:       0.05GHz to 5GHz
+*
+*                            CCBpkg
+*                   ,--------||-----------.
+*                   |                     |
+*                   |        CCB          |
+*                   |    .---||---.       |
+*  BASE             |    |        |       | COLLECTOR
+*                   |    |   /----o--LC---o---Lcx---o
+*  o-------Lbx------o-LB-o--|Q1   |       |    
+*                   |    B   \   --       |    
+*                   |        |   -- CCE  --    
+*            CBEpkg--      E o----'      -- CCEpkg
+*                  --        |            |     
+*                   |       LE            |     
+*                   '--------o------------'     
+*                            |
+*                           Lex
+*                            |
+*                            o EMITTER
+*
+*       CCB    = 0.26pF           LB  = 1.51nH
+*       CCE    = 0.19pF           LE  = 0.71nH
+*                                 LC  = 1.18nH
+*       CCBpkg = 0.063pF          Lbx = 0.18nH
+*       CCEpkg = 0.409pF          Lcx = 0.18nH
+*       CBEpkg = 0.361pF          Lex = 0.09nH
+*
+*                   c b e
+.SUBCKT NE68718/CEL 2 1 3
+Q1  8 7 9 NE68700
+CCB 7 8 0.26E-12
+CCE 8 9 0.19E-12
+LE  9 6 0.71E-9
+LB  4 7 1.51E-9
+LC  8 5 1.18E-9
+CBEPKG 4 6 0.361E-12
+CCBPKG 4 5 0.063E-12
+CCEPKG 5 6 0.409E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.18E-9
+LEX 6 3 0.09E-9
+.MODEL NE68700 NPN 
++(IS=8.0e-17     BF=128           NF=1           VAF=17           IKF=0.18
++ ISE=3.3e-15    NE=1.48          BR=9.05        NR=1.05          VAR=4.3
++ IKR=0.009      ISC=4.0e-15      NC=1.5         RE=0.8           RB=11.1  
++ RBM=2.46       IRB=0.017        RC=7.5         CJE=0.415e-12    VJE=0.68 
++ MJE=0.53       CJC=0.102e-12    VJC=0.29       MJC=0.53         XCJC=0.27
++ CJS=0          VJS=0.75         MJS=0          FC=0.37          TF=6.0e-12
++ XTF=11.9       VTF=9.55         ITF=1.78       PTF=69.1         TR=1.0e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+
+* FILENAME:        NE68719.CIR
+* NEC PART NUMBER: NE68719
+* LAST MODIFIED:   5/96
+* BIAS CONDITIONS: Vce=1V to 2V, Ic=1mA to 10mA
+* FREQ RANGE:      0.05GHZ to 3GHZ
+*
+*                     CCBpkg
+*             .-------||--------.
+*             |          CCB    |
+*             |      .--||---.  |     COLLECTOR
+* BASE        |      |        | |
+*             |      |   /----o-o-----o--Lcx--o
+*     o--Lbx--o-LB---o--|Q1   |       |
+*                    B   \   --       --
+*                        |   -- CCE   -- CCEpkg
+*                      E o----'       |
+*                        |            |
+*                       LE            |
+*                        o------------'
+*                        |
+*                        Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB   = 0.26pF           LB  = 0.81nH
+*       CCE   = 0.19pF           LE  = 0.854nH
+*       CCBpkg= 0.17pF           Lbx = 0.19nH
+*       CCEpkg= 0.21pF           Lcx = 0.19nH
+*                                Lex = 0.19nH
+*
+*                   c b e
+.SUBCKT NE68719/CEL 2 1 3
+Q1  5 7 8 NE68700
+CCB 7 5 0.26E-12
+CCE 5 8 0.19E-12
+LE  8 6 0.854E-9
+LB  4 7 0.81E-9
+CCBPKG 4 5 0.17E-12
+CCEPKG 5 6 0.21E-12
+LBX 1 4 0.19E-9
+LCX 5 2 0.19E-9
+LEX 6 3 0.19E-9
+.MODEL NE68700 NPN 
++(IS=8.0e-17     BF=128           NF=1           VAF=17           IKF=0.18
++ ISE=3.3e-15    NE=1.48          BR=9.05        NR=1.05          VAR=4.3
++ IKR=0.009      ISC=4.0e-15      NC=1.5         RE=0.8           RB=11.1
++ RBM=2.46       IRB=0.017        RC=7.5         CJE=0.415e-12    VJE=0.68 
++ MJE=0.53       CJC=0.102e-12    VJC=0.29       MJC=0.53         XCJC=0.27
++ CJS=0          VJS=0.75         MJS=0          FC=0.37          TF=6.0e-12
++ XTF=11.9       VTF=9.55         ITF=1.78       PTF=69.1         TR=1.0e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+
+* FILENAME:         NE68730.CIR
+* NEC PART NUMBER:  NE68730
+* LAST MODIFIED:    10/96
+* BIAS CONDITIONS:  Vce=1V to 2V, Ic=1mA to 10mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |                
+*                               o EMITTER
+*                    
+*       CCB    = 0.26pF          LB  = 0.5nH             
+*       CCE    = 0.19pF          LE  = 1.07nH           
+*       CCBpkg = 0.08pF          Lbx = 0.2nH          
+*       CCEpkg = 0.04pF          Lcx = 0.1nH             
+*       CBEpkg = 0.04pF          Lex = 0.2nH          
+*
+*                   c b e
+.SUBCKT NE68730/CEL 2 1 3
+Q1  5 7 8 NE68700
+CCB 7 5 0.26E-12
+CCE 5 8 0.19E-12
+LE  8 6 1.07E-9
+LB  4 7 0.5E-9
+CCBPKG 4 5 0.08E-12
+CCEPKG 5 6 0.04E-12
+CBEPKG 4 6 0.04E-12
+LBX 1 4 0.2E-9
+LCX 5 2 0.1E-9
+LEX 6 3 0.2E-9
+.MODEL NE68700 NPN 
++(IS=8.0e-17     BF=128           NF=1           VAF=17           IKF=0.18
++ ISE=3.3e-15    NE=1.48          BR=9.05        NR=1.05          VAR=4.3
++ IKR=0.009      ISC=4e-15        NC=1.5         RE=0.8           RB=11.1  
++ RBM=2.46       IRB=0.017        RC=7.5         CJE=0.415e-12    VJE=0.68 
++ MJE=0.53       CJC=0.102e-12    VJC=0.29       MJC=0.53         XCJC=0.27
++ CJS=0          VJS=0.75         MJS=0          FC=0.37          TF=6e-12    
++ XTF=11.9       VTF=9.55         ITF=1.78       PTF=69.1         TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+
+* FILENAME:         NE68733.CIR
+* NEC PART NUMBER:  NE68733
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=1V to 2V, Ic=1mA to 10mA
+* FREQ RANGE:       0.05GHz to 5GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |                
+*                               o EMITTER
+*                    
+*       CCB    = 0.26pF          LB  = 0.96nH             
+*       CCE    = 0.19pF          LE  = 1.05nH           
+*       CCBpkg = 0.15pF          Lbx = 0.3nH          
+*       CCEpkg = 0.09pF          Lcx = 0.3nH             
+*       CBEpkg = 0.09pF          Lex = 0.3nH          
+*
+*                   c b e
+.SUBCKT NE68733/CEL 2 1 3
+Q1  5 7 8 NE68700
+CCB 7 5 0.26E-12
+CCE 5 8 0.19E-12
+LE  8 6 1.05E-9
+LB  4 7 0.96E-9
+CCBPKG 4 5 0.15E-12
+CCEPKG 5 6 0.09E-12
+CBEPKG 4 6 0.09E-12
+LBX 1 4 0.3E-9
+LCX 5 2 0.3E-9
+LEX 6 3 0.3E-9
+.MODEL NE68700 NPN 
++(IS=8.0e-17     BF=128           NF=1           VAF=17           IKF=0.18
++ ISE=3.3e-15    NE=1.48          BR=9.05        NR=1.05          VAR=4.3
++ IKR=0.009      ISC=4e-15        NC=1.5         RE=0.8           RB=11.1  
++ RBM=2.46       IRB=0.017        RC=7.5         CJE=0.415e-12    VJE=0.68 
++ MJE=0.53       CJC=0.102e-12    VJC=0.29       MJC=0.53         XCJC=0.27
++ CJS=0          VJS=0.75         MJS=0          FC=0.37          TF=6e-12    
++ XTF=11.9       VTF=9.55         ITF=1.78       PTF=69.1         TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=0             AF=1 )
+.ENDS
+*$
+
+* FILENAME:        NE68800.CIR
+* NEC PART NUMBER: NE68800
+* LAST MODIFIED:   6/96
+* BIAS CONDITIONS: Vce=1V to 3V, Ic=1mA to 10mA
+* FREQ RANGE:      0.1GHZ to 10GHZ
+*
+*                CCB
+*            .---||---.            CCB=0.24pF
+*            |        |C           CCE=0.27pF
+*            |   /----o---LC----o
+*  o----LB---o--|     |            LB=0.72nH
+*            B   \   --            LC=0.51nH
+*                |   -- CCE        LE=0.19nH
+*              E o----' 
+*                | 
+*               LE
+*                |
+*                o
+*
+*                   c b e
+.SUBCKT NE68800/CEL 2 1 3
+Q1  5 4 6 NE68800
+CCB 4 5 0.24E-12
+CCE 5 6 0.27E-12
+LE  6 3 0.19E-9
+LB  1 4 0.72E-9
+LC  5 2 0.51E-9
+.MODEL NE68800 NPN 
++(IS=3.80e-16  BF=135.7         NF=1         VAF=28         IKF=0.6
++ ISE=3.8e-15  NE=1.49          BR=12.3      NR=1.1         VAR=3.5
++ IKR=0.06     ISC=3.5e-16      NC=1.62      RE=0.4         RB=6.14
++ RBM=3.5      IRB=0.001        RC=4.2       CJE=0.796e-12  VJE=0.71
++ MJE=0.38     CJC=0.549e-12    VJC=0.65     MJC=0.48       XCJC=0.56
++ CJS=0        VJS=0.75         MJS=0        FC=0.75        TF=11.0e-12
++ XTF=0.36     VTF=0.65         ITF=0.61     PTF=50         TR=0.032e-9
++ EG=1.11      XTB=0            XTI=3        KF=1.5e-14     AF=1.22 )
+.ENDS
+*$
+
+* FILENAME:        NE68818.CIR
+* NEC PART NUMBER: NE68818
+* LAST MODIFIED:   5/97
+* BIAS CONDITIONS: Vce=1V to 5V, Ic=1mA to 10mA
+* FREQ RANGE:      0.5GHZ to 6GHZ
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       | COLLECTOR
+*               |    |   /----o--LC---o---Lcx---o
+*  o---Lbx------o-LB-o--|Q1   |       |
+*               |    B   \   --       |
+*               |        |   -- CCE  --
+*        CBEpkg--      E o----'      -- CCEpkg
+*              --        |            |
+*               |       LE            |
+*               '--------o------------'
+*                        |
+*                       Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB    = 0.24pF           LB  = 0.9nH
+*       CCE    = 0.27pF           LE  = 0.7nH
+*                                 LC  = 0.52nH
+*       CCBpkg = 0.001pF          Lbx = 0.18nH
+*       CCEpkg = 0.07pF           Lcx = 0.18nH
+*       CBEpkg = 0.11pF           Lex = 0.09nH
+*
+*                   c b e
+.SUBCKT NE68818/CEL 2 1 3
+Q1  8 7 9 NE68800
+CCB 7 8 0.24E-12
+CCE 8 9 0.27E-12
+LE  9 6 0.7E-9
+LB  4 7 0.9E-9
+LC  8 5 0.52E-9
+CBEPKG 4 6 0.11E-12
+CCBPKG 4 5 0.001E-12
+CCEPKG 5 6 0.07E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.18E-9
+LEX 6 3 0.09E-9
+.MODEL NE68800 NPN 
++(IS=3.80e-16    BF=135.7         NF=1           VAF=28           IKF=0.6 
++ ISE=3.8e-15    NE=1.49          BR=12.3        NR=1.1           VAR=3.5
++ IKR=0.06       ISC=3.5e-16      NC=1.62        RE=0.4           RB=6.14  
++ RBM=3.5        IRB=0.001        RC=4.2         CJE=0.796e-12    VJE=0.71 
++ MJE=0.38       CJC=0.549e-12    VJC=0.65       MJC=0.48         XCJC=0.56
++ CJS=0          VJS=0.75         MJS=0          FC=0.75          TF=11.0e-12    
++ XTF=0.36       VTF=0.65         ITF=0.61       PTF=50           TR=0.032e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.5e-14       AF=1.22 )
+.ENDS
+*$
+
+* FILENAME:        NE68819.CIR
+* NEC PART NUMBER: NE68819
+* LAST MODIFIED:   3/97
+* BIAS CONDITIONS: Vce=1V to 3V, Ic=1mA to 10mA
+* FREQ RANGE:      0.1GHZ to 3GHZ
+*
+*                     CCBpkg
+*             .-------||--------.
+*             |          CCB    |
+*             |      .--||---.  |     COLLECTOR
+* BASE        |      |        | |
+*             |      |   /----o-o-----o--Lcx--o
+*     o--Lbx--o-LB---o--|Q1   |       |
+*             |      B   \   --       --
+*             |          |   -- CCE   -- CCEpkg
+*             --CBEpkg E o----'       |
+*             --         |            |
+*             |         LE            |
+*             `----------o------------'
+*                        |
+*                        Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB   = 0.24pF           LB  = 1.12nH             
+*       CCE   = 0.27pF           LE  = 0.6nH           
+*       CCBpkg= 0.08pF           Lbx = 0.19nH          
+*       CCEpkg= 0.3pF            Lcx = 0.5nH             
+*       CBEpkg= 0.3pF            Lex = 0.19nH          
+*
+*
+*                   c b e
+.SUBCKT NE68819/CEL 2 1 3
+Q1  5 7 8 NE68800
+CCB 7 5 0.24E-12
+CCE 5 8 0.27E-12
+LE  8 6 0.6E-9
+LB  4 7 1.12E-9
+CBEPKG 4 6 0.3E-12
+CCBPKG 4 5 0.08E-12
+CCEPKG 5 6 0.3E-12
+LBX 1 4 0.19E-9
+LCX 5 2 0.5E-9
+LEX 6 3 0.19E-9
+.MODEL NE68800 NPN 
++(IS=3.8e-16     BF=135.7         NF=1           VAF=28           IKF=0.6 
++ ISE=3.8e-15    NE=1.49          BR=12.3        NR=1.1           VAR=3.5
++ IKR=0.06       ISC=3.5e-16      NC=1.62        RE=0.4           RB=6.14  
++ RBM=3.5        IRB=0.001        RC=4.2         CJE=0.796e-12    VJE=0.71 
++ MJE=0.38       CJC=0.549e-12    VJC=0.65       MJC=0.48         XCJC=0.56
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.75          TF=11e-12    
++ XTF=0.36       VTF=0.65         ITF=0.61       PTF=50.0         TR=0.032e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.5e-14       AF=1.22 )
+.ENDS
+*$
+
+* FILENAME:         NE68830.CIR
+* NEC PART NUMBER:  NE68830
+* LAST MODIFIED:    10/96
+* BIAS CONDITIONS:  Vce=1V to 5V, Ic=1mA to 10mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                                
+*       CCB    = 0.24pF          LB  = 0.5nH             
+*       CCE    = 0.27pF          LE  = 0.86nH           
+*       CCBpkg = 0.08pF          Lbx = 0.2nH          
+*       CCEpkg = 0.04pF          Lcx = 0.1nH             
+*       CBEpkg = 0.04pF          Lex = 0.2nH
+*
+*                   c b e     
+.SUBCKT NE68830/CEL 2 1 3
+Q1  5 7 8 NE68800
+CCB 7 5 0.24E-12
+CCE 5 8 0.27E-12
+LE  8 6 0.86E-9
+LB  4 7 0.5E-9
+CCBPKG 4 5 0.08E-12
+CCEPKG 5 6 0.04E-12
+CBEPKG 4 6 0.04E-12
+LBX 1 4 0.2E-9
+LCX 5 2 0.1E-9
+LEX 6 3 0.2E-9
+.MODEL NE68800 NPN 
++(IS=3.80e-16    BF=135.7         NF=1           VAF=28           IKF=0.6 
++ ISE=3.8e-15    NE=1.49          BR=12.3        NR=1.1           VAR=3.5
++ IKR=0.06       ISC=3.5e-16      NC=1.62        RE=0.4           RB=6.14  
++ RBM=3.5        IRB=0.001        RC=4.2         CJE=0.796e-12    VJE=0.71 
++ MJE=0.38       CJC=0.549e-12    VJC=0.65       MJC=0.48         XCJC=0.56
++ CJS=0          VJS=0.75         MJS=0          FC=0.75          TF=11.0e-12    
++ XTF=0.36       VTF=0.65         ITF=0.61       PTF=50           TR=0.032e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.5e-14       AF=1.22 )
+.ENDS
+*$
+
+* FILENAME:         NE68833.CIR
+* NEC PART NUMBER:  NE68833
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=1V to 5V, Ic=1mA to 10mA
+* FREQ RANGE:       0.05GHz to 5GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                                
+*       CCB    = 0.24pF          LB  = 0.77nH             
+*       CCE    = 0.27pF          LE  = 0.95nH           
+*       CCBpkg = 0.15pF          Lbx = 0.3nH          
+*       CCEpkg = 0.1pF           Lcx = 0.4nH             
+*       CBEpkg = 0.1pF           Lex = 0.3nH
+*
+*                   c b e        
+.SUBCKT NE68833/CEL 2 1 3
+Q1  5 7 8 NE68800
+CCB 7 5 0.24E-12
+CCE 5 8 0.27E-12
+LE  8 6 0.95E-9
+LB  4 7 0.77E-9
+CCBPKG 4 5 0.15E-12
+CCEPKG 5 6 0.1E-12
+CBEPKG 4 6 0.1E-12
+LBX 1 4 0.3E-9
+LCX 5 2 0.4E-9
+LEX 6 3 0.3E-9
+.MODEL NE68800 NPN 
++(IS=3.80e-16    BF=135.7         NF=1           VAF=28           IKF=0.6 
++ ISE=3.8e-15    NE=1.49          BR=12.3        NR=1.1           VAR=3.5
++ IKR=0.06       ISC=3.5e-16      NC=1.62        RE=0.4           RB=6.14  
++ RBM=3.5        IRB=0.001        RC=4.2         CJE=0.796e-12    VJE=0.71 
++ MJE=0.38       CJC=0.549e-12    VJC=0.65       MJC=0.48         XCJC=0.56
++ CJS=0          VJS=0.75         MJS=0          FC=0.75          TF=11.0e-12    
++ XTF=0.36       VTF=0.65         ITF=0.61       PTF=50           TR=0.032e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.5e-14       AF=1.22 )
+.ENDS
+*$
+
+* FILENAME:        NE68839.CIR
+* NEC PART NUMBER: NE68839
+* LAST MODIFIED:   10/96
+* BIAS CONDITIONS: Vce=0.5V to 5V, Ic=0.5mA to 10mA
+* FREQ RANGE:      0.05GHZ to 5GHZ
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       | COLLECTOR
+*               |    |   /----o--LC---o---Lcx---o
+*  o---Lbx------o-LB-o--|Q1   |       |
+*               |    B   \   --       |
+*               |        |   -- CCE  --
+*        CBEpkg--      E o----'      -- CCEpkg
+*              --        |            |
+*               |       LE            |
+*               '--------o------------'
+*                        |
+*                       Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB    = 0.24pF           LB  = 0.9nH
+*       CCE    = 0.27pF           LE  = 0.6nH
+*                                 LC  = 0.47nH
+*       CCBpkg = 0.07pF           Lbx = 0.39nH
+*       CCEpkg = 0.085pF          Lcx = 0.39nH
+*       CBEpkg = 0.01pF           Lex = 0.2nH
+*
+*                   c b e
+.SUBCKT NE68839/CEL 2 1 3
+Q1  8 7 9 NE68800
+CCB 7 8 0.24E-12
+CCE 8 9 0.27E-12
+LE  9 6 0.6E-9
+LB  4 7 0.9E-9
+LC  8 5 0.47E-9
+CBEPKG 4 6 0.01E-12
+CCBPKG 4 5 0.07E-12
+CCEPKG 5 6 0.085E-12
+LBX 1 4 0.39E-9
+LCX 5 2 0.39E-9
+LEX 6 3 0.2E-9
+.MODEL NE68800 NPN 
++(IS=3.80e-16    BF=135.7         NF=1           VAF=28           IKF=0.6 
++ ISE=3.8e-15    NE=1.49          BR=12.3        NR=1.1           VAR=3.5
++ IKR=0.06       ISC=3.5e-16      NC=1.62        RE=0.4           RB=6.14  
++ RBM=3.5        IRB=0.001        RC=4.2         CJE=0.796e-12    VJE=0.71 
++ MJE=0.38       CJC=0.549e-12    VJC=0.65       MJC=0.48         XCJC=0.56
++ CJS=0          VJS=0.75         MJS=0          FC=0.75          TF=11.0e-12    
++ XTF=0.36       VTF=0.65         ITF=0.61       PTF=50           TR=0.032e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.5e-14       AF=1.22 )
+.ENDS
+*$
+
+* FILENAME:         NE696M01.CIR
+* NEC PART NUMBER:  NE696M01
+* LAST MODIFIED:    2/97
+* BIAS CONDITIONS:  Vce=0.5V to 5.0V, Ic=0.5mA to 10mA
+* FREQ RANGE:       0.4GHz to 7.5GHz
+*
+*                         CCB           
+*                     .---||---.                      
+*   BASE              |        |              COLLECTOR
+*                     |   /----o-------o---Lcx---o
+*   o---Lbx------o-LB-o--|Q1   |       |         
+*                |    B   \   --       |         
+*                |        |   -- CCE  --         
+*         CBEpkg--      E o----'      -- CCEpkg  
+*               --        |            |     
+*                |       LE            |     
+*                '--------o------------'     
+*                         |
+*                        Lex               
+*                         | 
+*                         o EMITTER
+*       
+*       CCB    = 0.05pF           LB  = 1.3nH
+*       CCE    = 0.15pF           LE  = 0.22nH
+*       CBEpkg = 0.13pF           Lbx = 0.15nH
+*       CCEpkg = 0.5pF            Lcx = 0.58nH
+*                                 Lex = 0.15nH
+*
+*                    c b e
+.SUBCKT NE696M01/CEL 2 1 3
+Q1  8 7 9 NE69600
+CCB 7 8 0.05E-12
+CCE 8 9 0.15E-12
+LB  4 7 1.3E-9
+LE  9 6 0.22E-9
+CBEPKG 4 6 0.13E-12
+CCEPKG 5 6 0.5E-12
+LBX 1 4 0.15E-9
+LEX 6 3 0.15E-9
+LCX 2 5 0.58E-9
+.MODEL NE69600 NPN 
++( IS=7.0e-16     BF=119           NF=1.06        VAF=20.5         IKF=0.18  
++ ISE=1e-13       NE=2             BR=6.5         NR=1.08          VAR=18     
++ IKR=0.015       ISC=0            NC=2           RE=1.23          RB=11
++ RBM=2.5         IRB=0.009        RC=5           CJE=0.4e-12      VJE=0.68 
++ MJE=0.5         CJC=0.18e-12     VJC=0.5        MJC=0.34         XCJC=0.6
++ CJS=0           VJS=0.75         MJS=0          FC=0.5           TF=4e-12
++ XTF=5.2         VTF=4.58         ITF=0.01       PTF=0            TR=1e-9
++ EG=1.11         XTB=0            XTI=3          KF=0             AF=1   )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for IKR is 
+*        interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:        NE71300N.CIR
+* NEC PART NUMBER: NE71300(N)
+* LAST MODIFIED:   12/97
+* BIAS CONDITIONS: Vds=2V to 4V,  Id=10mA to 30mA
+* FREQ RANGE:      0.5GHz to 20GHZ
+*
+* Idss=45.6mA at Vgs=0V, Vds=3V
+* Vp =-1.2V   at Vds=3V, Id=0.01mA
+*
+* TOM GaAsFET Model
+*
+*               ---o--Rdx--Ld---o
+*               |  |             DRAIN
+*GATE       I --   RDB         
+*  o---Lg---I Q1   |     
+*           I---   CBS    
+*               |__|
+*               |
+*               Rsx
+*               |          
+*               Ls
+*               |
+*               o SOURCE
+*
+*       Lg=0.36nH 	RDB=400 ohms
+*       Ls=0.02nH       CBS=100pF
+*       Ld=0.36nH		Rdx=2 ohms
+*                       Rsx=2 ohms
+*
+*                    d g s
+.SUBCKT NE71300N/CEL 2 1 3
+B1   7  4  8 NE71300N
+RDB  7  9  400
+CBS  9  8  100E-12
+Rsx  8  6  2
+Rdx  7  5  2
+Lg   4  1  0.36E-9
+Ld   2  5  0.36E-9
+Ls   6  3  0.02E-9
+.MODEL NE71300N GASFET
++(VTO=-1.04     ALPHA=4.5        BETA=0.0409       GAMMA=0.082
++ Q=1.9         DELTA=0.42       VBI=1             IS=7.3e-12
++ N=1.2         TAU=6e-12        CDS=0.15e-12      CGS=0.5e-12
++ CGD=0.04e-12  VDELTA=0.2       FC=0.5            RG=6
++ RD=0          RS=0             KF=0              AF=1    
++ XTI=3         EG=1.43          VTOTC=0           BETATCE=0) 
+.ENDS
+*$
+
+* FILENAME:        NE721S01.CIR
+* NEC PART NUMBER: NE721S01
+* LAST MODIFIED:   12/97
+* BIAS CONDITIONS: Vds=2V to 4V,  Id=20mA to 40mA
+* FREQ RANGE:      0.1GHz to 18GHZ
+*
+* Idss=58.9mA at Vds=3V, Vgs=0V
+* Vp =-1.91V  at Vds=3V, Id=0.1mA
+*
+* TOM GaAsFET Model
+*
+*             CGDpkg
+*       ,-------||----------------------------. 
+*       |                                     |
+*       |                                     | 
+*       |                  ---o--Rd-Ldx--Rdx--o--o
+*       |                 |   |               |  DRAIN 
+*GATE   |             I --    RDB             | 
+*    o--o--Rgx--Lgx---I Q1    |               |
+*       |             I---    CBS             |
+*       |                 |___|               |
+*       |                 |                   |
+*       |                 Rs                  |
+*       |                 |                   |
+*       |                Lsx                  |
+*       |                 |                   |
+*       |                Rsx                  |
+*       |   CGSpkg        |          CDSpkg   |
+*       `----||-----------o-----------||------'
+*                         |
+*                         o SOURCE
+*
+*       Lgx=0.71nH 		Rgx=0.06 ohms		CGSpkg=0.055pF
+*       Lsx=0.1nH		      Rsx=0.06 ohms		CDSpkg=0.06pF
+*       Ldx=0.58nH		Rdx=0.06 ohms		CGDpkg=0.001pF
+*       RDB=3000 ohms		Rd=6 ohms
+*       CBS=10pF              Rs=4 ohms
+*
+*                    d g s
+.SUBCKT NE721S01/CEL 2 1 3
+B1  10  7 11 NE72100
+RDB 10 12 3000
+CBS 12 11 10E-12
+Rs  11  9 4
+Rd  10  8 6
+Lgx  4  7 0.715E-9
+Ldx  8  5 0.58E-9
+Lsx  9  6 0.1E-9
+Rgx  1  4 0.06
+Rdx  2  5 0.06
+Rsx  6  3 0.06
+CGDpkg 1 2 0.001E-12
+CDSpkg 2 3 0.06E-12
+CGSpkg 1 3 0.055E-12
+.MODEL NE72100 GASFET
++(VTO=-1.699    ALPHA=2.5        BETA=0.0254       GAMMA=0.09
++ Q=1.95        DELTA=1.1        VBI=0.8           IS=1e-14
++ N=1.2         TAU=6e-12        CDS=0.18e-12      CGS=0.7e-12
++ CGD=0.055e-12 VDELTA=1         FC=0.5            RG=7
++ RD=0          RS=0             KF=1.36e-10       AF=1.74
++ XTI=3         EG=1.43          VTOTC=0           BETATCE=0) 
+.ENDS
+*$
+
+* FILENAME:        NE76184A.CIR
+* NEC PART NUMBER: NE76184A
+* LAST MODIFIED:   12/97
+* BIAS CONDITIONS: Vds=1V to 3V,  Id=5mA to 30mA
+* FREQ RANGE:      0.1GHz to 18GHZ
+*
+*  TOM GaAsFET Model
+*
+*      -----------------------C1----------------------------.
+*      |                                                    | DRAIN
+*      |                      -----o--Rdx---Ld--o--L2---R2--o---o
+*      |                      |    |            |           |
+* GATE |                  I --     RDB          |           |
+* o----o--R1---L1--o-Lg---I Q1     |            |           |
+*      |           |      I---     CBS          |           |
+*      |           |          |____|            C4          C5 
+*     C2          C3          |                 |           |
+*      |           |         Rsx                |           |
+*      |           |          |                 |           |
+*      |           |         L3                 |           |
+*      |           |          |                 |           |
+*      |           |         R3                 |           |
+*      |           |          |                 |           |
+*      o-----------o----------o-----------------o-----------'
+*                             | 
+*                             o SOURCE
+*
+*    Lg=0.55nH     L1=0.28nH     R1=0.5 ohms     C1=0.001pF 
+*    Ld=0.27nH     L2=0.3nH      R2=0.2 ohms     C2=0.01pF  
+*    Rdx=6 ohms    L3=0.16nH     R3=0.2 ohms     C3=0.125pF   
+*    Rsx=4 ohms                                  C4=0.1pF
+*    RDB=350 ohms                                C5=0.01pF
+*    CBS=100pF
+*                    d g s
+.SUBCKT NE76184A/CEL 2 1 3
+B1  13 10 12 NE76100
+RDB 13 14 350
+CBS 14 12 100E-12
+Rsx 12  9 4
+Rdx 13 11 6
+Lg  10  7 0.55E-9
+Ld  11  8 0.27E-9
+C3   7  3 0.125E-12
+L3   9  6 0.16E-9
+R3   6  3 0.2
+C4   8  3 0.1E-12
+L2   8  5 0.3E-12
+R2   5  2 0.2
+C5   2  3 0.01E-12
+L1   4  7 0.28E-9
+R1   1  4 0.5
+C2   1  3 0.01E-12
+C1   1  2 0.001E-12
+.MODEL NE76100 GASFET
++(VTO=-1.2      ALPHA=7          BETA=0.0803       GAMMA=0.04
++ Q=2.6         DELTA=0.5        VBI=1             IS=1e-14
++ N=1           TAU=5e-12        CDS=0.22e-12      CGS=0.85e-12
++ CGD=0.06e-12  VDELTA=0.2       FC=0.5            RG=6
++ RD=0          RS=0             KF=0              AF=1
++ XTI=3         EG=1.43          VTOTC=0           BETATCE=0) 
+.ENDS
+*$
+
+* FILENAME:         NE85600.CIR
+* NEC PART NUMBER:  NE85600
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=1V to 10V, Ic=0.25mA to 40mA
+* FREQ RANGE:       0.1GHz to 7.0GHz
+*
+*                CCB
+*            .---||---.            CCB=0.087pF
+*            |        |C           CCE=0.16pF
+*            |   /----o---LC----o  
+*  o----LB---o--|     |            LB=0.295nH (QTY 1- 9.3mil)
+*            B   \   --            LC=0.01 nH (QTY 1- 8.3mil)
+*                |   -- CCE        LE=0.103nH (QTY 2-15.2mil)
+*              E o----'            Bond wire: 0.7mil 
+*                |                            diameter gold
+*               LE
+*                |
+*                o
+*
+*                   c b e
+.SUBCKT NE85600/CEL 2 1 3
+Q1  5 4 6 NE85600
+CCB 4 5 0.087E-12
+CCE 5 6 0.16E-12
+LE  6 3 0.103E-9
+LB  1 4 0.295E-9
+LC  5 2 0.01E-9
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08 
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9 
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3  
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3   
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:         NE85618.CIR
+* NEC PART NUMBER:  NE85618
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=2.5V to 10V, Ic=3mA to 10mA
+* FREQ RANGE:       0.05GHz to 5.0GHz
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       | COLLECTOR
+*               |    |   /----o--LC---o---Lcx---o
+*  o---Lbx------o-LB-o--|Q1   |       |
+*               |    B   \   --       |
+*               |        |   -- CCE  --
+*        CBEpkg--      E o----'      -- CCEpkg
+*              --        |            |
+*               |       LE            |
+*               '--------o------------'
+*                        |
+*                       Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB    = 0.087pF          LB  = 1.29nH
+*       CCE    = 0.16pF           LE  = 0.62nH
+*                                 LC  = 1.04nH
+*       CCBpkg = 0.054pF          Lbx = 0.18nH
+*       CCEpkg = 0.44pF           Lcx = 0.41nH
+*       CBEpkg = 0.33pF           Lex = 0.09nH
+*
+*                   c b e
+.SUBCKT NE85618/CEL 2 1 3
+Q1  8 7 9 NE85600
+CCB 7 8 0.087E-12
+CCE 8 9 0.16E-12
+LE  9 6 0.62E-9
+LB  4 7 1.29E-9
+LC  8 5 1.04E-9
+CBEPKG 4 6 0.33E-12
+CCBPKG 4 5 0.054E-12
+CCEPKG 5 6 0.44E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.41E-9
+LEX 6 3 0.09E-9
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:         NE85619.CIR
+* NEC PART NUMBER:  NE85619
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=2.5V to 10V, Ic=0.3mA to 10mA
+* FREQ RANGE:       0.05GHz to 3.0GHz
+*
+*                     CCBpkg
+*             .-------||--------.
+*             |          CCB    |
+*             |      .--||---.  |     COLLECTOR
+* BASE        |      |        | |
+*             |      |   /----o-o-----o--Lcx--o
+*     o--Lbx--o-LB---o--|Q1   |       |
+*                    B   \   --       --
+*                        |   -- CCE   -- CCEpkg
+*                      E o----'       |
+*                        |            |
+*                       LE            |
+*                        o------------'
+*                        |
+*                        Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB   = 0.087pF          LB  = 1.84nH
+*       CCE   = 0.16pF           LE  = 0.564nH
+*       CCBpkg= 0.08pF           Lbx = 0.19nH
+*       CCEpkg= 0.39pF           Lcx = 0.19nH
+*                                Lex = 0.19nH
+*
+*                   c b e
+.SUBCKT NE85619/CEL 2 1 3
+Q1  5 7 8 NE85600
+CCB 7 5 0.087E-12
+CCE 5 8 0.16E-12
+LE  8 6 0.564E-9
+LB  4 7 1.84E-9
+CCBPKG 4 5 0.08E-12
+CCEPKG 5 6 0.39E-12
+LBX 1 4 0.19E-9
+LCX 5 2 0.19E-9
+LEX 6 3 0.19E-9
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.98        VAF=10           IKF=0.08
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:         NE85630.CIR
+* NEC PART NUMBER:  NE85630
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=2.5V to 10V, Ic=0.3mA to 10mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                    
+*       CCB    = 0.09pF          LB  = 1.4nH             
+*       CCE    = 0.16pF          LE  = 0.93nH           
+*       CCBpkg = 0.12pF          Lbx = 0.2nH          
+*       CCEpkg = 0.16pF          Lcx = 0.2nH             
+*       CBEpkg = 0.04pF          Lex = 0.2nH          
+*
+*                   c b e
+.SUBCKT NE85630/CEL 2 1 3
+Q1  5 7 8 NE85600
+CCB 7 5 0.09E-12
+CCE 5 8 0.16E-12
+LE  8 6 0.93E-9
+LB  4 7 1.4E-9
+CCBPKG 4 5 0.12E-12
+CCEPKG 5 6 0.16E-12
+CBEPKG 4 6 0.04E-12
+LBX 1 4 0.2E-9
+LCX 5 2 0.2E-9
+LEX 6 3 0.2E-9
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08 
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9 
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3  
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3   
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:         NE85633.CIR
+* NEC PART NUMBER:  NE85633
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=1V to 10V, Ic=1mA to 20mA
+* FREQ RANGE:       0.1GHz to 8GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*                    |      |   /----o-o-----o--Lcx--o  
+*            o--Lbx--o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                   
+*                               Lex            
+*                               |  
+*                               o EMITTER
+*                    
+*       CCB    = 0.09pF          LB  = 0.85nH             
+*       CCE    = 0.16pF          LE  = 1nH           
+*       CCBpkg = 0.15pF          Lbx = 0.3nH          
+*       CCEpkg = 0.15pF          Lcx = 0.4nH             
+*       CBEpkg = 0.07pF          Lex = 0.3nH          
+*
+*                   c b e
+.SUBCKT NE85633/CEL 2 1 3
+Q1  5 7 8 NE85600
+CCB 7 5 0.09E-12
+CCE 5 8 0.16E-12
+LE  8 6 1E-9
+LB  4 7 0.85E-9
+CCBPKG 4 5 0.15E-12
+CCEPKG 5 6 0.15E-12
+CBEPKG 4 6 0.07E-12
+LBX 1 4 0.3E-9
+LCX 5 2 0.4E-9
+LEX 6 3 0.3E-9
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08 
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9 
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3  
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3   
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=15e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:        NE85634.CIR
+* NEC PART NUMBER: NE85634
+* LAST MODIFIED:   11/97
+* BIAS CONDITIONS: Vce=5V to 10V,  Ic=20mA to 20mA
+* FREQ RANGE:      0.1GHz to 3.0GHz
+*
+*                            CCBpkg
+*                    .-------||--------.  
+*                    |          CCB    |   
+*                    |      .--||---.  |       COLLECTOR
+* BASE               |      |        | |             
+*             __Tb_  |      |   /----o-o-----o----o  
+*  o---------|_____|-o-LB---o--|Q1   |       |       
+*                    |      B   \   --       --      
+*                    |          |   -- CCE   -- CCEpkg
+*                    --CBEpkg E o----'       |           
+*                    --         |            |      
+*                    |         LE            |       
+*                    `----------o------------'       
+*                               |                  
+*                               -                  
+*                              | |  Te             
+*                              | |   
+*                               -                  
+*                               | 
+*                               o EMITTER
+*                    
+*       CCB   = 0.087pF         LB  = 1.2nH           Tb/Te:  
+*       CCE   = 0.16pF          LE  = 1.2nH           z=60 ohms
+*       CCBpkg= 0.18pF                                l=50 mils
+*       CCEpkg= 0.18pF                                a=0.0001
+*       CBEpkg= 0.01pF                                f=0.9GHz
+*                                                     k=5.0
+*                   c b e
+.SUBCKT NE85634/CEL 2 1 3 
+Q1 2 6 7 NE85600
+CCB 6 2  0.087E-12
+CCE 2 7  0.16E-12
+LB  4 6  1.2E-9
+LE  7 5  1.2E-9
+TB 1 0 4 0 Z0=60 TD=9.63E-12
+TE 5 0 3 0 Z0=60 TD=9.63E-12
+CCBPKG 4 2 0.18E-12
+CCEPKG 2 5 0.18E-12
+CBEPKG 4 5 0.01E-12
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08 
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9 
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3  
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3   
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+* FILENAME:         NE85635.MDL
+* NEC PART NUMBER:  NE85635
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=10V, Ic=7mA to 30mA
+* FREQ RANGE:       0.05GHz to 5GHz
+*
+*                            CCBpkg
+*       .--------------------||-------------.  
+*       |                       CCB         |   
+*       |                   .--||---.       |        
+*       |                   |        |      |             COLLECTOR
+* BASE  |                   |   /----o--LC--o--o--Lcx--Rcx--o--o
+*  o--o-o--Rbx--Lbx--o-LB---o--|Q1   |         |            |
+*     |              |      B   \   --         --           |
+*     |              |          |   -- CCE     -- CCEpkg    |
+*     |              --CBEpkg  Eo----'         |            --
+*     |              --         |              |            -- CCEx_pkg
+*     |              |          Lex            |            | 
+*    --              |          |              |            |
+*    -- CBEx_pkg     |          Rex            |            |
+*     |              |          |              |            |
+*     '--------------o----------o--------------o------------'
+*                               |
+*                               o EMITTER
+*                    
+*       CCB    = 0.09pF 	LB  = 0.77nH   	Rbx = 0.1 ohms          
+*       CCE    = 0.16pF	LC  = 0.45nH		Rex = 0.1 ohms
+*       CCBpkg = 0.05pF	Lbx = 0.15nH		Rcx = 0.1 ohms
+*       CCEpkg = 0.2pF     Lcx = 0.15nH        CBEx_pkg = 0.1pF 
+*       CBEpkg = 0.05pF    Lex = 0.23nH        CCEx_pkg = 0.2pF
+*                   c b e
+.SUBCKT NE85635/CEL 2 1 3
+Q1  11 10 9 NE85600
+CCB 10 11 0.09E-12
+CCE 11  9 0.16E-12
+LB   7 10 0.77E-9
+LC   8 11 0.45E-9
+CBEPKG 7 3 0.05E-12
+CCEPKG 8 3 0.2E-12
+CCBPKG 1 8 0.05E-12
+LBX 4 7 0.15E-9
+LEX 9 6 0.23E-9
+LCX 5 8 0.15E-9
+RBX 1 4 0.1
+REX 6 3 0.1
+RCX 2 5 0.1
+CBEX_PKG 1 3 0.1E-12
+CCEX_PKG 2 3 0.2E-12
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9 
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3  
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3   
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:         NE85639.CIR
+* NEC PART NUMBER:  NE85639
+* LAST MODIFIED:    7/97
+* BIAS CONDITIONS:  Vce=2.5V to 10V, Ic=0.3mA to 7mA
+* FREQ RANGE:       0.1GHz to 3.0GHz
+*
+*                        CCBpkg
+*               ,--------||-----------.
+*               |                     |
+*               |        CCB          |
+*               |    .---||---.       |
+*  BASE         |    |        |       | COLLECTOR
+*               |    |   /----o--LC---o---Lcx---o
+*  o---Lbx------o-LB-o--|Q1   |       |
+*               |    B   \   --       |
+*               |        |   -- CCE  --
+*        CBEpkg--      E o----'      -- CCEpkg
+*              --        |            |
+*               |       LE            |
+*               '--------o------------'
+*                        |
+*                       Lex
+*                        |
+*                        o EMITTER
+*
+*       CCB    = 0.087pF          LB  = 1.1nH
+*       CCE    = 0.16pF           LE  = 0.58nH
+*                                 LC  = 0.81nH
+*       CCBpkg = 0.02pF           Lbx = 0.39nH
+*       CCEpkg = 0.08pF           Lcx = 0.39nH
+*       CBEpkg = 0.01pF           Lex = 0.2nH
+*
+*                   c b e
+.SUBCKT NE85639/CEL 2 1 3
+Q1  8 7 9 NE85600
+CCB 7 8 0.087E-12
+CCE 8 9 0.16E-12
+LE  9 6 0.58E-9
+LB  4 7 1.1E-9
+LC  8 5 0.81E-9
+CBEPKG 4 6 0.01E-12
+CCBPKG 4 5 0.02E-12
+CCEPKG 5 6 0.08E-12
+LBX 1 4 0.39E-9
+LCX 5 2 0.39E-9
+LEX 6 3 0.2E-9
+.MODEL NE85600 NPN 
++( IS=6e-16      BF=120           NF=0.978       VAF=10           IKF=0.08
++ ISE=32e-16     NE=1.93          BR=12          NR=0.991         VAR=3.9
++ IKR=0.17       ISC=0            NC=2           RE=0.38          RB=4.16
++ RBM=3.6        IRB=1.96e-4      RC=2           CJE=2.8e-12      VJE=1.3
++ MJE=0.5        CJC=1.1e-12      VJC=0.7        MJC=0.55         XCJC=0.3
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=10e-12
++ XTF=6          VTF=10           ITF=0.2        PTF=0            TR=1e-9
++ EG=1.11        XTB=0            XTI=3          KF=1.56e-18      AF=1.49 )
+.ENDS
+*$
+
+* FILENAME:         NE94430.CIR
+* NEC PART NUMBER:  NE94430
+* LAST MODIFIED:    6/96
+* BIAS CONDITIONS:  Vce=3V, Ic=3mA and 50mA
+* FREQ RANGE:       0.05GHz to 3GHz
+*
+*                          CCBpkg
+*                 ,--------||-----------.
+*                 |                     |
+*                 |        CCB          |
+*                 |    .---||---.       |
+*  BASE           |    |        |       | COLLECTOR
+*                 |    |   /----o-------o---Lcx---o
+*  o---Lbx-------o-LB-o--|Q1    |       |
+*                 |    B   \   --       |
+*                 |        |   -- CCE  --
+*                 |      E o----'      -- CCEpkg
+*                 --CBEpkg |            |
+*                 --      LE            |
+*                 |        |            |
+*                 ---------o------------'
+*                          |
+*                          Lex
+*                          |
+*                          o EMITTER
+*
+*       CCB    = 0.08pF            LB  = 0.1nH
+*       CCE    = 0.08pF            LE  = 0.5nH
+*       CCBpkg = 0.12pF            Lbx = 0.2nH
+*       CCEpkg = 0.12pF            Lex = 1nH
+*       CBEpkg = 0.003pF           Lcx = 1.6nH
+*
+*                   c b e
+.SUBCKT NE94430/CEL 2 1 3
+Q1  5 7 8 NE94400
+CCB 7 5 0.08E-12
+CCE 5 8 0.08E-12
+LE  8 6 0.5E-9
+LB  4 7 0.1E-9
+CCBPKG 4 5 0.12E-12
+CCEPKG 5 6 0.12E-12
+CBEPKG 4 6 0.003E-12
+LBX 1 4 0.2E-9
+LCX 5 2 1.6E-9
+LEX 6 3 1E-9
+.MODEL NE94400 NPN
++( IS=8.0e-16    BF=128           NF=0.99        VAF=36           IKF=0.06
++ ISE=1.0e-14    NE=1.48          BR=5           NR=0.99          VAR=10 
++ IKR=0.01       ISC=3.0e-16      NC=1.07        RE=0.33          RB=12  
++ RBM=3          IRB=0.14         RC=5           CJE=1.1e-12      VJE=0.7
++ MJE=0.5        CJC=5.0e-13      VJC=0.75       MJC=0.3          XCJC=0.8
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=5.5e-11 
++ XTF=30         VTF=3.7          ITF=0.05       PTF=0            TR=8.5e-10
++ EG=1.11        XTB=0            XTI=3          KF=3.73e-12      AF=1.7 )
+.ENDS
+*$
+
+* FILENAME:         NE94433.CIR
+* NEC PART NUMBER:  NE94433
+* LAST MODIFIED:    6/96
+* BIAS CONDITIONS:  Vce=3V, Ic=3mA and 50mA
+* FREQ RANGE:       0.05GHz to 2.6GHz
+*
+*                          CCBpkg
+*                 ,--------||-----------.
+*                 |                     |
+*                 |        CCB          |
+*                 |    .---||---.       |
+*  BASE           |    |        |       | COLLECTOR
+*                 |    |   /----o-------o---Lcx---o
+*  o---Lbx-------o-LB-o--|Q1    |       |
+*                 |    B   \   --       |
+*                 |        |   -- CCE  --
+*                 |      E o----'      -- CCEpkg
+*                 --CBEpkg |            |
+*                 --      LE            |
+*                 |        |            |
+*                 ---------o------------'
+*                          |
+*                          Lex
+*                          |
+*                          o EMITTER
+*
+*       CCB    = 0.08pF            LB  = 0.98nH
+*       CCE    = 0.08pF            LE  = 0.38nH
+*       CCBpkg = 0.02pF            Lbx = 0.18nH
+*       CCEpkg = 0.19pF            Lex = 0.61nH
+*       CBEpkg = 0.1pF             Lcx = 0.68nH
+*
+*                   c b e
+.SUBCKT NE94433/CEL 2 1 3
+Q1  5 7 8 NE94400
+CCB 7 5 0.08E-12
+CCE 5 8 0.08E-12
+LE  8 6 0.38E-9
+LB  4 7 0.98E-9
+CCBPKG 4 5 0.02E-12
+CCEPKG 5 6 0.19E-12
+CBEPKG 4 6 0.1E-12
+LBX 1 4 0.18E-9
+LCX 5 2 0.61E-9
+LEX 6 3 0.68E-9
+.MODEL NE94400 NPN
++( IS=8.0e-16    BF=128           NF=0.99        VAF=36           IKF=0.06
++ ISE=1.0e-14    NE=1.48          BR=5           NR=0.99          VAR=10 
++ IKR=0.01       ISC=3.0e-16      NC=1.07        RE=0.33          RB=12  
++ RBM=3          IRB=0.14         RC=5           CJE=1.1e-12      VJE=0.7
++ MJE=0.5        CJC=5.0e-13      VJC=0.75       MJC=0.3          XCJC=0.8
++ CJS=0          VJS=0.75         MJS=0          FC=0.5           TF=5.5e-11 
++ XTF=30         VTF=3.7          ITF=0.05       PTF=0            TR=8.5e-10
++ EG=1.11        XTB=0            XTI=3          KF=3.73e-12      AF=1.7 )
+.ENDS
+*$
+
+* FILENAME:        UPA800T.CIR
+* NEC PART NUMBER: UPA800T
+* LAST MODIFIED:   6/97
+* BIAS CONDITIONS: Vce=0.5V to 3V, Ic=0.5mA to 10mA
+* FREQ RANGE:      0.25GHZ to 5GHZ
+*
+*  This model schematic is too complex to be put in this format.
+*  Please contact CEL at (408)988-3500 for the schematic and documentation.
+*
+*                   c1 b1 e1 c2 b2 e2
+.SUBCKT UPA800T/CEL P6 P5 P4 P1 P2 P3 
+Q1      2 1  3 NE68000
+Q2      5 4  6 NE68000
+CCB1      2  1  0.08pF  
+C_E1B2    5  3  0.05pF  
+CCB2      4  5  0.08pF  
+CCE2      4  6  0.08pF  
+C_C2E2    4  7  0.15pF  
+C_C2B2    4  8  0.05pF  
+C_B1B2    8  9  0.03pF  
+C_C1B1    2  9  0.07pF  
+C_C1B2    2  8  0.05pF  
+CCE1      3  2  0.08pF  
+C_C1E1   10  2  0.12pF  
+LC_X1    P1  2  0.5nH  
+LE_X1    P2 10  0.5nH  
+LC_X2    P3  4  0.5nH  
+LE_X2     7 P4  0.5nH  
+LB_X2     8 P5  0.5nH  
+LB_X1     9 P6  0.5nH  
+LB1       1  9  0.8nH  
+LB2       5  8  0.8nH  
+LE2       6  7  0.5nH  
+LE1      10  3  0.5nH  
+C_E1C2    4 10  0.05pF  
+C_B2E2    7  8  0.05pF  
+.MODEL NE68000 NPN 
++(IS=3.84e-16    BF=124.9         NF=1.04        VAF=11.9         IKF=0.027
++ ISE=1.0e-14    NE=2.17          BR=1.0         NR=1.05          VAR=0.0
++ IKR=0.0        ISC=0.0          NC=2.0         RE=0.6           RB=17.9  
++ RBM=1.02       IRB=4.01e-4      RC=10.46       CJE=0.358e-12    VJE=0.711
++ MJE=0.5        CJC=0.162e-12    VJC=0.791      MJC=0.638        XCJC=0.0
++ CJS=0.0        VJS=0.750        MJS=0.0        FC=0.50          TF=8.7e-12    
++ XTF=18.0       VTF=19.1         ITF=.0818      PTF=0.0          TR=0.635e-9
++ EG=1.11        XTB=0.0          XTI=3.0        KF=0.0           AF=1.0 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for VAR and
+*        IKR is interpreted as infinity.
+.ENDS
+*$
+
+* FILENAME:        UPA806T.CIR
+* NEC PART NUMBER: UPA806T
+* LAST MODIFIED:   6/97
+* BIAS CONDITIONS: Vce=0.5V to 3V, Ic=0.5mA to 10mA
+* FREQ RANGE:      0.25GHZ to 5GHZ
+*
+*  This model schematic is too complex to be put in this format.
+*  Please contact CEL at (408)988-3500 for the schematic and documentation.
+*
+*                   c1 b1 e1 c2 b2 e2
+.SUBCKT UPA806T/CEL P6 P5 P4 P1 P2 P3 
+Q1      2 1  3 NE68500
+Q2      5 4  6 NE68500
+CCB1      2  1  0.08pF  
+C_E1B2    5  3  0.05pF  
+CCB2      4  5  0.08pF  
+CCE2      4  6  0.08pF  
+C_C2E2    4  7  0.15pF  
+C_C2B2    4  8  0.05pF  
+C_B1B2    8  9  0.03pF  
+C_C1B1    2  9  0.07pF  
+C_C1B2    2  8  0.05pF  
+CCE1      3  2  0.08pF  
+C_C1E1   10  2  0.12pF  
+LC_X1    P1  2  0.5nH  
+LE_X1    P2 10  0.5nH  
+LC_X2    P3  4  0.5nH  
+LE_X2     7 P4  0.5nH  
+LB_X2     8 P5  0.5nH  
+LB_X1     9 P6  0.5nH  
+LB1       1  9  0.8nH  
+LB2       5  8  0.8nH  
+LE2       6  7  0.5nH  
+LE1      10  3  0.5nH  
+C_E1C2    4 10  0.05pF  
+C_B2E2    7  8  0.05pF  
+.MODEL NE68500 NPN 
++( IS=7e-16       BF=109           NF=1           VAF=15           IKF=0.19  
++ ISE=7.9e-13     NE=2.19          BR=1           NR=1.08          VAR=12.4   
++ IKR=0           ISC=0            NC=2           RE=1.3           RB=10
++ RBM=8.34        IRB=0.009        RC=10          CJE=0.4e-12      VJE=0.812
++ MJE=0.5         CJC=0.18e-12     VJC=0.75       MJC=0.34         XCJC=0
++ CJS=0           VJS=0.75         MJS=0          FC=0.5           TF=2e-12
++ XTF=5.2         VTF=4.58         ITF=0.011      PTF=0            TR=1e-9
++ EG=1.11         XTB=0            XTI=3          KF=0             AF=1 )
+*
+* NOTE:  CEL develops models using the Libra simulator.
+*        For this simulator, a value of 0 for
+*        IKR is interpreted as infinity.
+.ENDS
+*$

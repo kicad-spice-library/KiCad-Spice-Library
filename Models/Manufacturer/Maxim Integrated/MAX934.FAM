@@ -1,0 +1,129 @@
+* MAX934 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* Ultra-Low Quiescent Current
+* 12uS Propagation Delay (10mV Overdrive)
+* Input Voltage Range Includes Negative Supply
+* Internal 1.182V Reference
+* Available in 16-Pin DIP/SO (Quad MAX934)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX934         Quad, 12uS delay, int 1.182V REF
+*
+*
+*   ////////////// MAX934 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX934 DATA SHEET       <====
+*
+* connections:   +IN
+*                | -IN
+*                | | V+ 
+*                | | | V-
+*                | | | |  OUT.
+*                | | | |  |
+.subckt max934   1 2 3 4  97
+*
+  f101    3  9 v1 1
+  iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  q2    8  21  7 qin
+  q3    9  8  399 qmo
+  q4    8  8  399 qmi
+  VMB 400 4 0V
+  VPB 399 3 0V
+***================
+RIN1 2 23 2K
+RIN2 1 25 2K
+***
+DCM2 70 3 DP
+DCM1 4 24 DP
+VCM1 70 24 1.3V
+DCM3 4 26 DP
+VCM2 71 26 1.3V
+DCM4 71 3 DP
+***
+IPSUP 0 3 2.5523948MA
+INSUP 0 4 -2.5523948MA
+***
+VNOHYST 23 20 0V
+*EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+*.model qin NPN(Is=800.0E-18 Bf=2.000E3)
+.model qin NPN(Is=800.0E-18 Bf=5.000E6)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=6.662E-6)
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  4  3  9  2
+  v1   10 11 dc 0
+  q5    5 11  44 qoc
+  vshift 44 4 0v
+  R55 3 5 10K
+  DP5 5 3 DP
+  DP6 4 5 DP
+*================
+*EH 3 98 3 4 0.5
+VVIRTUAL 98 0 0V
+F5 3 38 VA8 1
+D9 40 38 DX
+D10 38 3 DX
+VA7 3 40 0
+F6 3  4 VA7 1
+G12 98 32 5 0 7.04E-3
+R15 98 32 142
+D3 36 41 DX
+D4 42 37 DX
+V5 34 36 -.63
+V4 37 34 -.65
+****V4,V5 SET ISC
+R16 41 35 7
+R17 42 35 145
+E11 3 33 3 32 1
+VA8 33 34 0V
+L 35 97 10NH
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=2.069E3 Cjc=1E-15 Tf=25.53E-9 Tr=6.983E-6)
+  dp    4  3 DX
+  rp    3  4 2.041E3
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*.MODEL DX D(IS=1E-15) 
+.ends     
+*
+*   ////////////// REF MACROMODEL //////////////////
+*
+* connections:   
+*                V+ 
+*                | V-
+*                | |  OUT
+*                | |   | 
+.subckt REF      3 4   235 
+*
+VREF 301 4 1.1832V
+VSHORT 235 302 0V
+RIN200 301 302 1MEG
+F226 3 4 VA227 1
+F225 3 238 VA228 1
+D229 240 238 DX
+D230 238 3 DX
+VA227 3 240 0
+G232 0 232 301 302 1E-3
+R235 0 232 1E6
+C235 0 232 6800PF
+D223 232 236 DX2
+D224 237 232 DX2
+V225 235 237 1.8mV
+V224 236 235 .9mV
+R236 234 235 60
+E221 3 233 3 232 1
+VA228 233 234 0V
+*
+**=== MODELS USED **====
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+.MODEL DX D(IS=1E-15) 
+.ends     
+

@@ -1,0 +1,1125 @@
+**********
+* Copyright Intusoft 1997
+* All Rights Reserved
+**********
+*********************************************************
+*     SCHOTTKY (S) DIGITAL LIBRARY BASED ON THE TEXAS   *
+*           INSTRUMENTS DATABOOK (Volume 1)   		    *
+*									                    *
+*DEVELOPPED FOR INTUSOFT BY JEAN-CLAUDE MBOLI		    *
+*Phone:(33) 4 76 44 43 30	    Fax:(33) 4 76 44 43 52  * 
+*e-mail:101736.631@compuserve.com				        *
+*														*
+*				September 1996			  				*
+*				  						                *
+*********************************************************
+**********************
+*SRC=74S00;74S00;TTL;74Sxx;2 input NAND gate
+*SYM=NAND2
+*74S00 QUADRUPLE 2-INPUT POSITIVE-NAND GATES
+***
+.subckt 74S00 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+anand [in1 in2] out ls_nand 
+.model ls_nand d_nand(rise_delay=3n fall_delay=3n)
+.ends
+*
+*
+**********************
+*SRC=74S02;74S02;TTL;74Sxx;2 input NOR gate
+*SYM=NOR2
+*74S02 QUADRUPLE 2-INPUT POSITIVE-NOR GATES
+***
+.subckt 74S02 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 2 3 1;5 6 4;8 9 10;11 12 13:VCC=14 GND=7
+*pinout J 2 3 1;5 6 4;8 9 10;11 12 13:VCC=14 GND=7
+*pinout D 2 3 1;5 6 4;8 9 10;11 12 13:VCC=14 GND=7
+*pinout FN 3 4 2;8 9 6;12 13 14; 16 18 19:VCC=20 GND=10
+anor [in1 in2] out ls_nor 
+.model ls_nor d_nor(rise_delay=5n fall_delay=5n)
+.ends
+*
+*
+**********************
+*SRC=74S03;74S03;TTL;74Sxx;2 input NAND gate
+*SYM=NAND2
+*74S03 QUADRUPLE 2-INPUT POSITIVE-NAND GATES
+*WITH OPEN COLLECTOR OUTPUTS
+***
+.subckt 74S03 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+anand [in1 in2] outi ls_nand 
+aopenc outi out ls_openc
+.model ls_nand d_nand(rise_delay=5n fall_delay=4.5n)
+.model ls_openc d_open_c(open_delay=1p fall_delay=1p)
+.ends
+*
+*
+**********************
+*SRC=74S04;74S04;TTL;74Sxx;inverter
+*SYM=INV
+*74S04 HEX INVERTERS
+***
+.subckt 74S04 in out
+*FAMILY TTLin TTLout
+*pinout N 1 2;3 4;5 6;9 8;11 10;13 12:VCC=14 GND=7
+*pinout J 1 2;3 4;5 6;9 8;11 10;13 12:VCC=14 GND=7
+*pinout D 1 2;3 4;5 6;9 8;11 10;13 12:VCC=14 GND=7
+*pinout FN 2 3;4 6;8 9;13 12;16 14;19 18:VCC=20 GND=10
+ainv in out ls_inv 
+.model ls_inv d_inverter(rise_delay=3n fall_delay=3n)
+.ends
+*
+*
+**********************
+*SRC=74S05;74S05;TTL;74Sxx;inverter
+*SYM=INV
+*74S05 HEX INVERTERS
+*WITH OPEN COLLECTOR OUTPUTS
+***
+.subckt 74S05 in out
+*FAMILY TTLin TTLout
+*pinout N 1 2;3 4;5 6;9 8;11 10;13 12:VCC=14 GND=7
+*pinout J 1 2;3 4;5 6;9 8;11 10;13 12:VCC=14 GND=7
+*pinout D 1 2;3 4;5 6;9 8;11 10;13 12:VCC=14 GND=7
+*pinout FN 2 3;4 6;8 9;13 12;16 14;19 18:VCC=20 GND=10
+ainv in outi ls_inv
+aopenc outi out ls_openc
+.model ls_openc d_open_c(open_delay=1p fall_delay=1p) 
+.model ls_inv d_inverter(rise_delay=5n fall_delay=4.5n)
+.ends
+*
+*
+**********************
+*SRC=74S08;74S08;TTL;74Sxx;2 input AND gate
+*SYM=AND2
+*74S08 QUADRUPLE 2-INPUT POSITIVE-AND GATES
+***
+.subckt 74S08 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+aand [in1 in2] out ls_and 
+.model ls_and d_and(rise_delay=4.5n fall_delay=5n)
+.ends
+*
+*
+**********************
+*SRC=74S09;74S09;TTL;74Sxx;2 input AND gate
+*SYM=AND2
+*74S09 QUADRUPLE 2-INPUT POSITIVE-AND GATES
+*WITH OPEN COLLECTOR OUTPUTS
+***
+.subckt 74S09 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+aand [in1 in2] outi ls_and 
+aopenc outi out ls_openc
+.model ls_openc d_open_c(open_delay=1p fall_delay=1p)  
+.model ls_and d_and(rise_delay=6.5n fall_delay=6.5n)
+.ends
+*
+*
+**********************
+*SRC=74S10;74S10;TTL;74Sxx;3 input NAND gate
+*SYM=NAND3
+*74S10 TRIPLE 3-INPUT POSITIVE-NAND GATES
+***
+.subckt 74S10 in1 in2 in3 out
+*FAMILY TTLin TTLin TTLin TTLout
+*pinout N 1 2 13 12;3 4 5 6;9 10 11 8:VCC=14 GND=7
+*pinout J 1 2 13 12;3 4 5 6;9 10 11 8:VCC=14 GND=7
+*pinout D 1 2 13 12;3 4 5 6;9 10 11 8:VCC=14 GND=7
+*pinout FN 2 3 19 18;4 6 8 9;13 14 16 12:VCC=20 GND=10
+anand [in1 in2 in3] out ls_nand 
+.model ls_nand d_nand(rise_delay=3n fall_delay=3n)
+.ends
+*
+*
+**********************
+*SRC=74S11;74S11;TTL;74Sxx;3 input AND gate
+*SYM=AND3
+*74LS11 TRIPLE 3-INPUT POSITIVE-AND GATES
+***
+.subckt 74S11 in1 in2 in3 out
+*FAMILY TTLin TTLin TTLin TTLout
+*pinout N 1 2 13 12;3 4 5 6;9 10 11 8:VCC=14 GND=7
+*pinout J 1 2 13 12;3 4 5 6;9 10 11 8:VCC=14 GND=7
+*pinout D 1 2 13 12;3 4 5 6;9 10 11 8:VCC=14 GND=7
+*pinout FN 2 3 19 18;4 6 8 9;13 14 16 12:VCC=20 GND=10
+aand [in1 in2 in3] out ls_and 
+.model ls_and d_and(rise_delay=4.5n fall_delay=5n)
+.ends
+*
+**********************
+*SRC=74S20;74S20;TTL;74Sxx;4 input NAND gate
+*SYM=NAND4
+*74S20 DUAL 4-INPUT POSITIVE-NAND GATES
+***
+.subckt 74S20 in1 in2 in3 in4 out
+*FAMILY TTLin TTLin TTLin TTLin TTLout
+*pinout N 1 2 4 5 6;9 10 12 13 8:VCC=14 GND=7
+*pinout J 1 2 4 5 6;9 10 12 13 8:VCC=14 GND=7
+*pinout D 1 2 4 5 6;9 10 12 13 8:VCC=14 GND=7
+*pinout FN 2 3 6 8 9;13 14 18 19 12:VCC=20 GND=10
+anand [in1 in2 in3 in4] out ls_nand
+.model ls_nand d_nand(rise_delay=3n fall_delay=3n)
+.ends
+*
+*
+**********************
+*SRC=74S30;74S30;TTL;74Sxx;8 input NAND gate
+*SYM=T7430
+*74S30 8-INPUT POSITIVE-NAND GATES
+***
+.subckt 74S30 in1 in2 in3 in4
++		in5 in6 in7 in8 out
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLout
+*pinout N 1 2 3 4 5 6 11 12 8:VCC=14 GND=7
+*pinout J 1 2 3 4 5 6 11 12 8:VCC=14 GND=7
+*pinout D 1 2 3 4 5 6 11 12 8:VCC=14 GND=7
+*pinout FN 2 3 4 6 8 9 16 18 12:VCC=20 GND=10
+
+anand [in1 in2 in3 in4
++	in5 in6 in7 in8] out ls_nand 
+.model ls_nand d_nand(rise_delay=4n fall_delay=4.5n)
+.ends
+*
+*
+**********************
+*SRC=74S32;74S32;TTL;74Sxx;2 input OR gate
+*SYM=OR2
+*74S32 QUADRUPLE 2-INPUT POSITIVE-OR GATES
+***
+.subckt 74S32 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+
+aor [in1 in2] out ls_or 
+.model ls_or d_or(rise_delay=4n fall_delay=4n)
+.ends
+*
+*
+**********************
+*SRC=74S37;74S37;TTL;74Sxx;2 input NAND gate
+*SYM=NAND2
+*74LS37 QUADRUPLE 2-INPUT POSITIVE-NAND BUFFERS
+***
+.subckt 74S37 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+
+anor [in1 in2] outi ls_nand 
+abuf outi out ls_buf
+.model ls_nand d_nand
+.model ls_buf d_buffer(rise_delay=4n fall_delay=4n)
+.ends
+*
+*
+**********************
+*SRC=74S38;74S38;TTL;74Sxx;2 input NAND gate
+*SYM=NAND2
+*74S38 QUADRUPLE 2-INPUT POSITIVE-NAND BUFFERS
+*WITH OPEN-COLLECTOR OUTPUTS
+***
+.subckt 74S38 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+
+anand [in1 in2] outi ls_nand 
+abuf outi outj ls_buf
+aopenc outj out ls_openc
+
+.model ls_openc d_open_c
+.model ls_nand d_nand
+.model ls_buf d_buffer(rise_delay=6.5n fall_delay=6.5n)
+.ends
+*
+*
+**********************
+*SRC=74S51;74S51;TTL;74Sxx;AND-OR-INVERT
+*SYM=T7451
+*74S51 AND-OR-INVERT GATES 
+***
+.subckt 74S51 1a 1b 1c 1d
++ 2a 2b 2c 2d 1y 2y
+*FAMILY TTLin TTLin TTLin TTLin TTLout TTLin 
++ TTLin TTLin TTLin TTLout
+*pinout N 1 13 10 9 8;2 3 4 5 6:VCC=14 GND=7
+*pinout J 1 13 10 9 8;2 3 4 5 6:VCC=14 GND=7
+*pinout D 1 13 10 9 8;2 3 4 5 6:VCC=14 GND=7
+
+aand1 [1a 1b] x1 ls_and
+aand2 [1c 1d] x2 ls_and
+anor1 [x1 x2] 1y ls_nor
+
+aand3 [2a 2b] x3 ls_and
+aand4 [2c 2d] x4 ls_and
+anor2 [x3 x4] 2y ls_nor
+.model ls_and d_and
+.model ls_nor d_nor(rise_delay=3.5n fall_delay=3.5n)
+.ends
+*
+*
+**********************
+*SRC=74S64;74S64;TTL;74Sxx;AND-OR-INVERT
+*SYM=T7454
+*74S64 AND-OR-INVERT GATES 
+***
+.subckt 74S64 a b c d e f g h i j k y
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLout
+*pinout N 1 11 12 13 2 3 4 5 6 9 10 8:VCC=14 GND=7
+*pinout J 1 11 12 13 2 3 4 5 6 9 10 8:VCC=14 GND=7
+*pinout D 1 11 12 13 2 3 4 5 6 9 10 8:VCC=14 GND=7
+*pinout FN 2 16 18 19 3 4 6 8 9 13 14 12:VCC=20 GND=10
+
+aand1 [a b c d] x1 ls_and
+aand2 [e f] x2 ls_and
+aand3 [g h i] x3 ls_and
+aand4 [j k] x4 ls_and
+
+anor1 [x1 x2 x3 x4] y ls_nor
+
+.model ls_and d_and
+.model ls_nor d_nor(rise_delay=3.5n fall_delay=3.5n)
+.ends
+*
+*
+**********************
+*SRC=74S74;74S74;TTL;74Sxx;D Flip-Flop
+*SYM=T7474
+*74S74 DUAL D-TYPE POSITIVE-EDGE-TRIGGERED 
+*FLIP-FLOPS WITH PRESET & CLEAR 
+***
+.subckt 74S74 clrbar d clk prebar q qbar
+*FAMILY  TTLin TTLin TTLin TTLin TTLout TTLout
+*pinout N 1 2 3 4 5 6;13 12 11 10 9 8:VCC=14 GND=7
+*pinout J 1 2 3 4 5 6;13 12 11 10 9 8:VCC=14 GND=7
+*pinout D 1 2 3 4 5 6;13 12 11 10 9 8:VCC=14 GND=7
+*pinout FN 2 3 4 6 8 9;19 18 16 14 13 12:VCC=20 GND=10
+
+adff d clk prebar clrbar q qbar ls_dff
+
+.model ls_dff d_dff(clk_delay=1p rise_delay=6n 
++ fall_delay=6n ic=1)
+.ends
+*
+*
+**********************
+*SRC=74S85;74S85;TTL;74Sxx;4-bit comparator 
+*SYM=T7485
+*74LS85 4-BIT MAGNITUDE COMPARATOR 
+***
+.subckt 74S85 A3 A2 A1 A0 B3 B2 B1 B0
++ AGBIN AEBIN ALBIN AGBOUT AEBOUT ALBOUT
+*FAMILY  TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin  
++ TTLin TTLout TTLout TTLout
+*pinout N 15 13 12 10 1 14 11 9 4 3 2 5 6 7:VCC=16 GND=8
+*pinout J 15 13 12 10 1 14 11 9 4 3 2 5 6 7:VCC=16 GND=8
+*pinout D 15 13 12 10 1 14 11 9 4 3 2 5 6 7:VCC=16 GND=8
+*pinout FN 19 17 15 13 2 18 14 12 5 4 3 7 8 9:VCC=20 GND=10
+
+x1 a0 b0 albin aebin agbin l1 e1 g1 compar1
+x2 a1 b1 l1 e1 g1 l2 e2 g2 compar1
+x3 a2 b2 l2 e2 g2 l3 e3 g3 compar1
+x4 a3 b3 l3 e3 g3 l4 e4 g4 compar1
+
+abuf1 l4 albout ls_buf
+abuf2 e4 aebout ls_buf
+abuf3 g4 agbout ls_buf
+
+.subckt compar1 a b lin ein gin lout eout gout
+ainv1 a ab inv
+ainv2 b bb inv
+aand1 [ab b] l and
+aand2 [a bb] g and
+axnor [a b] e xnor
+
+aand3 [e lin] xl and
+aor1 [l xl] lout or
+aand4 [ein e] eout and
+aand5 [e gin] xg and
+aor2 [g xg] gout or
+.model and d_and
+.model inv d_inverter
+.model or d_or
+.model xnor d_xnor
+.ends compar1
+
+.model ls_buf d_buffer(rise_delay=7n fall_delay=7n)
+
+.ends
+*
+*
+**********************
+*SRC=74S86;74S86;TTL;74Sxx;2 input XOR
+*SYM=XOR
+*74S86 QUADRUPLE 2-INPUT EXCLUSIVE-OR GATES
+***
+.subckt 74S86 in1 in2 out
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+
+axor [in1 in2] out ls_xor 
+.model ls_xor d_xor(rise_delay=7n fall_delay=6.5n)
+.ends
+*
+*
+**********************
+*SRC=74S132;74S132;TTL;74Sxx;Nand Schmitt
+*SYM=NAND2
+*74S132 QUADRUPLE 2-INPUT POSITIVE-NAND SCHMITT TRIGGER 
+***
+.subckt 74S132 in1 in2 y
+*FAMILY TTLin TTLin TTLout
+*pinout N 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout J 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout D 1 2 3;4 5 6;9 10 8;12 13 11:VCC=14 GND=7
+*pinout FN 2 3 4;6 8 9;13 14 12;18 19 16:VCC=20 GND=10
+
+anand [a b] y ls_nand
+aadc  [in1 in2] [a b] ls_adc
+
+.model ls_adc adc_bridge(in_low=1.77 in_high=1.22)
+.model ls_nand d_nand(rise_delay=7n fall_delay=8.5n)
+.ends
+*
+*
+**********************
+*SRC=74S133;74S133;TTL;74Sxx;13-Input Nand
+*SYM=T74133
+*74S64 13-INPUT POSITIVE-NAND GATES 
+***
+.subckt 74S133 a b c d e f g h i j k l m y
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin 
++ TTLin TTLin TTLin TTLout
+*pinout N 1 2 3 4 5 6 7 10 11 12 13 14 15 9:VCC=16 GND=8
+*pinout J 1 2 3 4 5 6 7 10 11 12 13 14 15 9:VCC=16 GND=8
+*pinout D 1 2 3 4 5 6 7 10 11 12 13 14 15 9:VCC=16 GND=8
+*pinout FN 2 3 4 5 7 8 9 13 14 15 17 18 19 12:VCC=20 GND=10
+
+anand [a b c d e f g h i j k l m] y ls_nand
+
+.model ls_nand d_nand(rise_delay=5n fall_delay=5n)
+.ends
+*
+*
+**********************
+*SRC=74S135;74S135;TTL;74Sxx;Quad xor/xnor
+*SYM=T74135
+*74S135 QUADRUPLE EXCLUSIVE-OR/NOR GATES 
+***
+.subckt 74S135 1a 1b 2a 2b c 1y 2y
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLout TTLout 
+*pinout N 1 2 5 6 4 3 7;10 11 14 15 12 9 13:VCC=16 GND=8
+*pinout J 1 2 5 6 4 3 7;10 11 14 15 12 9 13:VCC=16 GND=8
+*pinout D 1 2 5 6 4 3 7;10 11 14 15 12 9 13:VCC=16 GND=8
+*pinout FN 2 3 7 8 5 4 9;13 14 18 19 15 12 17:VCC=20 GND=10
+
+axor1 [1a 1b] x1 xor
+axor2 [2a 2b] x2 xor
+axor3 [c x1] 1y s_xor
+axor4 [c x2] 2y s_xor
+
+.model xor d_xor
+.model s_xor d_xor(rise_delay=8.5n fall_delay=8.5n)
+.ends
+*
+*
+**********************
+*SRC=74S140;74S140;TTL;74Sxx;4-Input Nand
+*SYM=NAND4
+*74S64 DUAL 4-INPUT POSITIVE-NAND 50-OHM LINE DRIVERS 
+***
+.subckt 74S140 a b c d y
+*FAMILY TTLin TTLin TTLin TTLin TTLout
+*pinout N 1 2 4 5 6;9 10 12 13 8:VCC=14 GND=7
+*pinout J 1 2 4 5 6;9 10 12 13 8:VCC=14 GND=7
+*pinout D 1 2 4 5 6;9 10 12 13 8:VCC=14 GND=7
+*pinout FN 2 3 6 8 9;13 14 18 19 12:VCC=20 GND=10
+anand [a b c d] y ls_nand
+
+.model ls_nand d_nand(rise_delay=5n fall_delay=5n)
+.ends
+*
+*
+**********************
+*SRC=74S151;74S151;TTL;74Sxx;Multiplexer
+*SYM=T74151A
+*74S151 MULTIPLEXER/DATA SELECTOR 8-1 LINE 
+***
+.subckt 74S151 ebar s0 s1 s2 i0 i1 i2 i3 i4
++ i5 i6 i7 z zbar
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLout TTLout
+*pinout N 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+*pinout J 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+*pinout D 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+*pinout FN 9 14 13 12 5 4 3 2 19 18 17 15 7 8:VCC=20 GND=10
+
+x1 i0 i1 s0 a1 mux2-1
+x2 i2 i3 s0 a2 mux2-1
+x3 i4 i5 s0 a3 mux2-1
+x4 i6 i7 s0 a4 mux2-1
+x5 a1 a2 s1 b1 mux2-1
+x6 a3 a4 s1 b2 mux2-1
+x7 b1 b2 s2 y mux2-1
+
+ainv1 ebar e ls_inva
+ainv2 y yb ls_inv
+atri1 y e z ls_tri
+atri2 yb e zbar ls_tri
+
+.subckt mux2-1 a b c y
+ainv c cb inv
+aand1 [a cb] p1 and
+aand2 [b c] p2 and
+aor [p1 p2] y or
+.model and d_and
+.model or d_or
+.model inv d_inverter
+.ends mux2-1
+
+.model ls_inva d_inverter(rise_delay=1n fall_delay=1n)
+.model ls_inv d_inverter
+.model ls_tri d_tristate(delay=10n)
+
+.ends
+*
+*
+**********************
+*SRC=74S153;74S153;TTL;74Sxx;Multiplexer
+*SYM=T74153
+*74S153 DUAL 4-LINE TO 1-LINE DATA SELECTORS/MULTIPLEXERS 
+***
+.subckt 74S153 eabar ebbar s0 s1 i0a i1a i2a i3a
++ i0b i1b i2b i3b za zb
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin 
++ TTLin TTLin TTLin TTLin TTLout TTLout
+*pinout N 1 15 14 2 6 5 4 3 10 11 12 13 7 9:VCC=16 GND=8
+*pinout J 1 15 14 2 6 5 4 3 10 11 12 13 7 9:VCC=16 GND=8
+*pinout D 1 15 14 2 6 5 4 3 10 11 12 13 7 9:VCC=16 GND=8
+*pinout FN 2 19 18 3 8 7 5 4 13 14 15 17 9 12:VCC=20 GND=10
+
+x1 i0a i1a s0 a1 mux2-1
+x2 i2a i3a s0 a2 mux2-1
+x3 a1 a2 s1 ya mux2-1
+
+x4 i0b i1b s0 b1 mux2-1
+x5 i2b i3b s0 b2 mux2-1
+x6 b1 b2 s1 yb mux2-1
+
+ainv1 eabar ea ls_inva
+ainv2 ebbar eb ls_inva
+atri1 ya ea z ls_tri
+atri2 yb eb zb ls_tri
+
+.subckt mux2-1 a b c y
+ainv c cb inv
+aand1 [a cb] p1 and
+aand2 [b c] p2 and
+aor [p1 p2] y or
+.model and d_and
+.model or d_or
+.model inv d_inverter
+.ends mux2-1
+
+.model ls_inva d_inverter(rise_delay=1n fall_delay=1n)
+
+.model ls_tri d_tristate(delay=8n)
+
+.ends
+*
+*
+**********************
+*SRC=74S157;74S157;TTL;74Sxx;Multiplexer
+*SYM=T74157
+*74S157 QUADRUPLE 2-LINE TO 1-LINE DATA
+*SELECTORS/MULTIPLEXERS 
+***
+.subckt 74S157 strb selectab 1a 1b 1y
++ 2a 2b 2y 3a 3b 3y 4a 4b 4y
+*FAMILY TTLin TTLin TTLin TTLin TTLout
++ TTLin TTLin TTLout TTLin TTLin TTLout TTLin TTLin TTLout
+*pinout N 15 1 2 3 4 5 6 7 11 10 9 14 13 12:VCC=16 GND=8
+*pinout J 15 1 2 3 4 5 6 7 11 10 9 14 13 12:VCC=16 GND=8
+*pinout D 15 1 2 3 4 5 6 7 11 10 9 14 13 12:VCC=16 GND=8
+*pinout FN 19 2 3 4 5 7 8 9 14 13 12 18 17 15:VCC=20 GND=10
+
+abuf1 strb gb buf1
+abuf2 selectab abb buf2
+ainv1 gb g inv
+ainv2 abb s inv
+
+aand1 [1a s g] a1 and
+aand2 [1b abb g] a2 and
+aora [a1 a2] 1y ls_or
+
+aand3 [2a s g] b1 and
+aand4 [2b abb g] b2 and
+aorb [b1 b2] 2y ls_or
+
+aand5 [3a s g] c1 and
+aand6 [3b abb g] c2 and
+aorc [c1 c2] 3y ls_or
+
+aand7 [4a s g] d1 and
+aand8 [4b abb g] d2 and
+aord [d1 d2] 4y ls_or
+
+.model inv d_inverter
+.model buf1 d_buffer(rise_delay=3.5n fall_delay=3n)
+.model buf2 d_buffer(rise_delay=4.5n fall_delay=4.5n)
+.model and d_and
+.model ls_or d_or(rise_delay=5n fall_delay=4.5n)
+.ends
+*
+*
+**********************
+*SRC=74S163;74S163;TTL;74Sxx;4-bit counter
+*SYM=T74163
+*74S163 SYNCHRONOUS 4-BIT BINARY COUNTER
+***
+.subckt 74S163 clk enp ent clrb loadb a b c d
++ qa qb qc qd rco
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin 
++ TTLout TTLout TTLout TTLout TTLout
+*pinout N 2 7 10 1 9 3 4 5 6 14 13 12 11 15:VCC=16 GND=8
+*pinout J 2 7 10 1 9 3 4 5 6 14 13 12 11 15:VCC=16 GND=8
+*pinout D 2 7 10 1 9 3 4 5 6 14 13 12 11 15:VCC=16 GND=8
+*pinout FN 3 9 13 2 12 4 5 7 8 18 17 15 14 19:VCC=20 GND=10
+
+ainv1 clrb clr inva
+anor1 [loadb clr] lc nor
+anor2 [clr lc] u1 nor
+aand1 [enp ent] en and
+
+xa clk lc u1 a en en qa qab d_bloc
+xb clk lc u1 b en qa qb qbb d_bloc
+xc clk lc u1 c en rc qc qcb d_bloc
+xd clk lc u1 d en rd qd qdb d_bloc
+
+anorc [qab qbb] rc nor
+anord [qab abb qcb] rd nor
+
+aandrco [qa qb qc qd ent] rco andmod
+
+.subckt d_bloc clk ld u1 a en r1 q qb
+aand1 [a ld] a1 and
+aand2 [ox u1] a2 and
+axnor [ix qb] ox xnor
+aand3 [en r1] ix and
+aor [a1 a2] d or
+ad d clk h h q qb ls_dff
+al h high
+.model high d_pullup
+.model xnor d_xnor
+.model or d_or
+.model ls_dff d_dff(rise_delay=8n fall_delay=10n) 
+.ends d_bloc
+
+.model and d_and
+.model nand d_nand
+.model nor d_nor
+.model inv d_inverter
+.model or d_or
+.model andmod d_and(rise_delay=10n fall_delay=10n)
+.model inva d_inverter
+
+.ends
+*
+*
+**********************
+*SRC=74S174;74S174;TTL;74Sxx;D-type Flip-Flop
+*SYM=T74174
+*74S174 HEX D-TYPE FLIP-FLOPS WITH CLEAR
+***
+.subckt 74S174 clrb clk d1 d2 d3 d4 d5
++ d6 q1 q2 q3 q4 q5 q6
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLout TTLout TTLout TTLout TTLout TTLout
+*pinout N 1 9 3 4 6 11 13 14 2 5 7 10 12 15:VCC=16 GND=8
+*pinout J 1 9 3 4 6 11 13 14 2 5 7 10 12 15:VCC=16 GND=8
+*pinout D 1 9 3 4 6 11 13 14 2 5 7 10 12 15:VCC=16 GND=8
+*pinout FN 2 12 4 5 8 14 17 18 3 7 9 13 15 19:VCC=20 GND=10
+
+adff1 d1 clk pre clrb q1 q1b ls_dff 
+adff2 d2 clk pre clrb q2 q2b ls_dff
+adff3 d3 clk pre clrb q3 q3b ls_dff
+adff4 d4 clk pre clrb q4 q4b ls_dff
+adff5 d5 clk pre clrb q5 q5b ls_dff
+adff6 d6 clk pre clrb q6 q6b ls_dff
+
+
+aone pre plup
+
+.model ls_dff d_dff(clk_delay=1p nreset_delay=3n
++ rise_delay=8n fall_delay=11n)
+.model plup d_pullup
+
+.ends
+*
+*
+**********************
+*SRC=74S175;74S175;TTL;74Sxx;D-type Flip-Flop
+*SYM=T74175
+*74S175 QUADRUPLE D-TYPE FLIP-FLOPS WITH CLEAR
+***
+.subckt 74S175 clrb clk d1 d2 d3 d4
++ q1 q2 q3 q4 q1b q2b q3b q4b
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLout TTLout TTLout TTLout TTLout TTLout TTLout TTLout
+*pinout N 1 9 4 5 12 13 2 7 10 15 3 6 11 14:VCC=16 GND=8
+*pinout J 1 9 4 5 12 13 2 7 10 15 3 6 11 14:VCC=16 GND=8
+*pinout D 1 9 4 5 12 13 2 7 10 15 3 6 11 14:VCC=16 GND=8
+*pinout FN 2 12 5 7 15 17 3 9 13 19 4 8 14 18:VCC=20 GND=10
+
+adff1 d1 clk pre clrb q1 q1b ls_dff 
+adff2 d2 clk pre clrb q2 q2b ls_dff
+adff3 d3 clk pre clrb q3 q3b ls_dff
+adff4 d4 clk pre clrb q4 q4b ls_dff
+
+aone pre plup
+
+.model ls_dff d_dff(clk_delay=1p nreset_delay=3n
++ rise_delay=8n fall_delay=11n)
+.model plup d_pullup
+
+.ends
+*
+*
+**********************
+*SRC=74S181;74S181;TTL;74Sxx;Function generator
+*SYM=T74181
+*74S181 ARITHMETIC LOGIC UNITS/FUNCTION GENERATORS
+***
+.subckt 74S181 a0 a1 a2 a3 b0 b1 b2 b3 s0 s1
++ s2 s3 cnb m f0 f1 f2 f3 aeqb cn4b x y
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin
++  TTLin TTLin TTLin TTLin TTLout TTLout TTLout TTLout TTLout TTLout TTLout TTLout
+*pinout N 2 23 21 19 1 22 20 18 6 5 4 3 7 8 9 10 11 13 14 16 15 17:VCC=24 GND=12
+*pinout J 2 23 21 19 1 22 20 18 6 5 4 3 7 8 9 10 11 13 14 16 15 17:VCC=24 GND=12
+*pinout DW 2 23 21 19 1 22 20 18 6 5 4 3 7 8 9 10 11 13 14 16 15 17:VCC=24 GND=12
+*pinout FN 3 27 25 23 2 26 24 21 7 6 5 4 9 10 11 12 13 16 17 19 18 20:VCC=28 GND=14
+
+ainv1 a0 a0b inv
+ainv2 a1 a1b inv
+ainv3 a2 a2b inv
+ainv4 a3 a3b inv
+ainv5 b0 b0b inv
+ainv6 b1 b1b inv
+ainv7 b2 b2b inv
+ainv8 b3 b3b inv
+ainv9 m mb inv
+
+aand1d [b3 s3 a3] p3 and
+aand2d [b3b s2 a3] q3 and
+aand3d [b3b s1] r3 and
+aand4d [b3 s0] t3 and
+anor1d [p3 q3] 1d nor
+anor2d [r3 t3 a3] 2d nor
+
+aand1c [b2 s3 a2] p2 and
+aand2c [b2b s2 a2] q2 and
+aand3c [b2b s1] r2 and
+aand4c [b2 s0] t2 and
+anor1c [p2 q2] 1c nor
+anor2c [r2 t2 a2] 2c nor
+
+aand1b [b1 s3 a1] p1 and
+aand2b [b1b s2 a1] q1 and
+aand3b [b1b s1] r1 and
+aand4b [b1 s0] t1 and
+anor1b [p1 q1] 1b nor
+anor2b [r1 t1 a1] 2b nor
+
+aand1a [b0 s3 a0] p0 and
+aand2a [b0b s2 a0] q0 and
+aand3a [b0b s1] r0 and
+aand4a [b0 s0] t0 and
+anor1a [p0 q0] 1a nor
+anor2a [r0 t0 a0] 2a nor
+
+aandf1 [1d 2c] y1 and
+aandf2 [1d 1c 2b] y2 and
+aandf3 [1d 1c 1b 2a] y3 and
+anorf1 [2d y1 y2 y3] y ls_nor
+
+anandf1 [1d 1c 1b 1a cnb] x1 ls_nand
+anandf2 [1d 1c 1b 1a] x ls_nand
+
+anandout [y x1] cn4b nand
+
+axor1 [1d 2d] u1 xor
+aandf4 [cnb 1a 1b 1c mb] u2 and
+aandf5 [1b 1c 2a mb] u3 and
+aandf6 [1c 2b mb] u4 and
+aandf7 [2c mb] u5 and
+anorf2 [u2 u3 u4 u5] u6 nor
+axor2 [u1 u6] f3 ls_xor
+
+axor3 [1c 2c] v1 xor
+aandf8 [cnb 1a 1b mb] v2 and
+aandf9 [1b 2a mb] v3 and
+aandfa [2b mb] v4 and
+anorf3 [v2 v3 v4] v5 nor
+axor4 [v1 v5] f2 ls_xor
+
+axor5 [1b 2b] w1 xor
+aandfb [cnb 1a mb] w2 and
+aandfc [2a mb] w3 and
+anorf4 [w2 w3] w4 nor
+axor6 [w1 w4] f1 ls_xor
+
+axor7 [1a 2a] z1 xor
+anandfx [cnb mb] z2 nand
+axor8 [z1 z2] f0 ls_xor
+
+aandab [f0 f1 f2 f3] aeqb ls_and
+
+.model xor d_xor
+.model and d_and
+.model nand d_nand
+.model nor d_nor
+.model ls_nor d_nor(rise_delay=10n fall_delay=10n)
+.model ls_xor d_xor(rise_delay=10n fall_delay=10n)
+.model ls_nand d_nand(rise_delay=10n fall_delay=10n)
+.model ls_and d_and(rise_delay=10n fall_delay=10n)
+.model inv d_inverter
+
+.ends
+*
+*
+**********************
+*SRC=74S182;74S182;TTL;74Sxx;Carry generator
+*SYM=T74182
+*74S182 LOOK-AHEAD CARRY GENERATORS
+***
+.subckt 74S182 x0 x1 x2 x3 y0 y1 y2 y3
++ cnb cnxb cnyb cnzb x y
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLout TTLout TTLout TTLout TTLout
+*pinout N 4 2 15 6 3 1 14 5 13 12 11 9 7 10:VCC=16 GND=8
+*pinout J 4 2 15 6 3 1 14 5 13 12 11 9 7 10:VCC=16 GND=8
+*pinout D 4 2 15 6 3 1 14 5 13 12 11 9 7 10:VCC=16 GND=8
+*pinout FN 5 3 19 8 4 2 18 7 17 15 14 12 9 13:VCC=20 GND=10
+
+ainv1 cnb cn inv
+aor1 [x0 x1 x2 x3] x ls_or
+
+aand1a [y0 y1 y2 y3] 1a and
+aand2a [x1 y1 y2 y3] 2a and
+aand3a [x2 y2 y3] 3a and
+aand4a [x3 y3] 4a and
+aor2 [1a 2a 3a 4a] y ls_or
+
+aand1b [y0 y1 y2 cn] 1b and
+aand2b [y0 y1 y2 x0] 2b and
+aand3b [x1 y1 y2] 3b and
+aand4b [x2 y2] 4b and
+anor1 [1b 2b 3b 4b] cnzb ls_nor
+
+aand1c [y0 y1 cn] 1c and
+aand2c [y0 y1 x0] 2c and
+aand3c [x1 y1] 3c and
+anor2 [1c 2c 3c] cnyb ls_nor
+
+aand1d [y0 cn] 1d and
+aand2d [x0 y0] 2d and
+anor3 [1d 2d] cnxb ls_nor
+
+.model and d_and
+.model ls_nor d_nor(rise_delay=20n fall_delay=20n)
+.model ls_or d_or(rise_delay=20n fall_delay=20n)
+.model inv d_inverter
+
+.ends
+*
+*
+**********************
+*SRC=74S194;74S194;TTL;74Sxx;4-bit shift register
+*SYM=T74194
+*74S194 4-BIT BIDIRECTIONAL UNIVERSAL
+*SHIFT REGISTERS
+***
+.subckt 74S194 clk clrb s1 s0 sl sr 
++ a b c d qa qb qc qd
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLin TTLout TTLout TTLout TTLout
+*pinout N 11 1 10 9 7 2 3 4 5 6 15 14 13 12:VCC=16 GND=8
+*pinout J 11 1 10 9 7 2 3 4 5 6 15 14 13 12:VCC=16 GND=8
+*pinout D 11 1 10 9 7 2 3 4 5 6 15 14 13 12:VCC=16 GND=8
+*pinout FN 14 2 13 12 9 3 4 5 7 8 19 18 17 15:VCC=20 GND=10
+
+ainv1 s0 s0b inv
+ainv2 s1 s1b inv
+ainva clrb clr inv
+x1 qd s1b s0b sl s1 s0b
++ d s1 s0 s0 s1b qc kd andnor
+ainv3 kd jd inv
+ajkd jd kd clk l clr qd qdb ls_jk
+
+x2 qc s1b s0b qd s1 s0b
++ c s1 s0 s0 s1b qb kc andnor
+ainv4 kc jc inv
+ajkc jc kc clk l clr qc qcb ls_jk
+
+x3 qb s1b s0b qc s1 s0b
++ b s1 s0 s0 s1b qa kb andnor
+ainv5 kb jb inv
+ajkb jb kb clk l clr qb qbb ls_jk
+
+x4 qa s1b s0b qb s1 s0b
++ a s1 s0 s0 s1b sr ka andnor 
+ainv6 ka ja inv
+ajka ja ka clk l clr qa qab ls_jk
+
+az l low
+
+.subckt andnor 1a 2a 3a 1b 2b 3b 1c 2c 3c
++ 1d 2d 3d out
+aand1a [1a 2a 3a] 1 and
+aand2a [1b 2b 3b] 2 and
+aand3a [1c 2c 3c] 3 and
+aand4a [1d 2d 3d] 4 and
+anor [1 2 3 4] out nor
+.model and d_and
+.model nor d_nor
+.ends andnor
+
+.model low d_pulldown
+.model inv d_inverter
+.model ls_jk d_jkff(reset_delay=4.5n
++ rise_delay=11n fall_delay=8n)
+
+.ends
+*
+*
+**********************
+*SRC=74S195;74S195;TTL;74Sxx;4-bit shift register
+*SYM=T74195
+*74S195 4-BIT PARALLEL-ACCESS SHIFT REGISTERS
+***
+.subckt 74S195 clki sh/ldb clrb j kbar 
++ a b c d qa qb qc qd qdb
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLout TTLout TTLout TTLout TTLout
+*pinout N 10 9 1 2 3 4 5 6 7 15 14 13 12 11:VCC=16 GND=8
+*pinout J 10 9 1 2 3 4 5 6 7 15 14 13 12 11:VCC=16 GND=8
+*pinout D 10 9 1 2 3 4 5 6 7 15 14 13 12 11:VCC=16 GND=8
+*pinout FN 13 12 2 3 4 5 7 8 9 19 18 17 15 14:VCC=20 GND=10
+
+ainv1 sh/ldb sh/ld inv
+ainv2 clrb clr inv
+
+aand1 [clki clrb] clk and
+
+aand1a [sh/ldb j qab] 1a and
+aand2a [sh/ldb kbar qa] 2a and
+aand3a [sh/ld a] 3a and
+anora [1a 2a 3a] ka nor
+ainva ka ja inv
+ajka ja ka clk l clr qa qab ls_jk
+
+aand1b [sh/ldb qa] 1b and
+aand2b [sh/ld b] 2b and
+anorb [1b 2b] kb nor
+ainvb kb jb inv
+ajkb jb kb clk l clr qb qbb ls_jk
+
+aand1c [sh/ldb qb] 1c and
+aand2c [sh/ld c] 2c and
+anorc [1c 2c] kc nor
+ainvc kc jc inv
+ajkc jc kc clk l clr qc qcb ls_jk
+
+aand1d [sh/ldb qc] 1d and
+aand2d [sh/ld d] 2d and
+anord [1d 2d] kd nor
+ainvd kd jd inv
+ajkd jd kd clk l clr qd qdb ls_jk
+
+al l low
+.model low d_pulldown
+.model and d_and
+.model nor d_nor
+.model inv d_inverter
+.model ls_jk d_jkff(reset_delay=4.5n
++ rise_delay=11n fall_delay=8n)
+
+.ends
+*
+*
+**********************
+*SRC=74S196;74S196;TTL;74Sxx;Decade Counter/latch
+*SYM=T74196
+*74S196 4-BIT PRESETTABLE DECADE COUNTER/LATCHES
+***
+.subckt 74S196 cnt/ldb clrb clk1 clk2 
++ a b c d qa qb qc qd
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLout TTLout TTLout TTLout
+*pinout N 1 13 8 6 4 10 3 11 5 9 2 12:VCC=14 GND=7
+*pinout J 1 13 8 6 4 10 3 11 5 9 2 12:VCC=14 GND=7
+*pinout D 1 13 8 6 4 10 3 11 5 9 2 12:VCC=14 GND=7
+*pinout FN 2 19 12 9 6 14 4 16 8 13 3 18:VCC=20 GND=10
+
+ainv1 clk1 clk1b inv
+ainv2 clk2 clk2b inv
+ainv3 clrb clr inv
+
+anand1 [cnt/ldb clrb] 1 nanda
+anand1a [a clrb 1] 2a nand
+ainva 2a pre1 inv
+aand1a [2a 1] clr1 and
+ajka h h clk1b pre1 clr1 qa qab ls_jka
+
+anand1b [b clrb 1] 2b nand
+ainvb 2b pre2 inv
+aand1b [2b 1] clr2 and
+ajkb qdb qdb clk2b pre2 clr2 qb qbb ls_jkb
+
+anand1c [c clrb 1] 2c nand
+ainvc 2c pre3 inv
+aand1c [2c 1] clr3 and
+ajkc h h qbb pre3 clr3 qc qcb ls_jkc
+
+anand1d [d clrb 1] 2d nand
+ainvd 2d pre4 inv
+aand1d [2d 1] clr4 and
+aand2d [qc qb] jd and
+ajkd jd qd clk2b pre4 clr4 qd qdb ls_jkd
+
+ah h high
+
+.model high d_pullup
+.model and d_and
+.model nand d_nand(rise_delay=7n fall_delay=12n)
+.model nanda d_nand(rise_delay=3n fall_delay=1p)
+.model nor d_nor
+.model inv d_inverter
+.model ls_jka d_jkff(reset_delay=8n 
++ rise_delay=5n fall_delay=6n)
+.model ls_jkb d_jkff(reset_delay=6n 
++ rise_delay=5n fall_delay=8n)
+.model ls_jkc d_jkff(rise_delay=12n fall_delay=16n)
+.model ls_jkd d_jkff(reset_delay=18n 
++ rise_delay=5n fall_delay=8n)
+
+
+.ends
+*
+*
+**********************
+*SRC=74S251;74S251;TTL;74Sxx;Multiplexer
+*SYM=T74251
+*74S251 MULTIPLEXER/DATA SELECTOR 8-1 LINE 
+*WITH 3-STATE OUTPUTS
+***
+.subckt 74S251 gb a b c d0 d1 d2 d3 d4
++ d5 d6 d7 y w
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLin TTLout TTLout
+*pinout N 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+*pinout J 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+*pinout D 7 11 10 9 4 3 2 1 15 14 13 12 5 6:VCC=16 GND=8
+*pinout FN 9 14 13 12 5 4 3 2 19 18 17 15 7 8:VCC=20 GND=10
+
+xmux gb a b c d0 d1 d2 d3 d4 d5 d6 d7 y w 74S151
+
+.ends
+*
+*
+**********************
+*SRC=74S260;74S260;TTL;74Sxx;5-Input Nor
+*SYM=T74260
+*74S64 DUAL 5-INPUT POSITIVE-NOR GATES 
+***
+.subckt 74S260 a b c d e y
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLout
+*pinout N 1 2 3 12 13 5;4 8 9 10 11 6:VCC=14 GND=7
+*pinout J 1 2 3 12 13 5;4 8 9 10 11 6:VCC=14 GND=7
+*pinout D 1 2 3 12 13 5;4 8 9 10 11 6:VCC=14 GND=7
+*pinout FN 2 3 4 18 19 8;6 12 13 14 16 9:VCC=20 GND=10
+
+anor [a b c d e] y ls_nor
+
+.model ls_nor d_nor(rise_delay=4n fall_delay=4n)
+.ends
+*
+*
+**********************
+*SRC=74S283;74S283;TTL;74Sxx;4-bit full adder
+*SYM=T74283
+*74S83 4-BIT BINARY FULL ADDERS WITH FAST CARRY 
+***
+.subckt 74S283 c0 a1 a2 a3 a4 b1 b2 b3 b4 c4
++ 	sum1 sum2 sum3 sum4
+*FAMILY TTLin TTLin TTLin TTLin TTLin TTLin
++ TTLin TTLin TTLin TTLout TTLout TTLout TTLout TTLout
+*pinout N 7 5 3 14 12 6 2 15 11 9 4 1 13 10:VCC=16 GND=8
+*pinout J 7 5 3 14 12 6 2 15 11 9 4 1 13 10:VCC=16 GND=8
+*pinout D 7 5 3 14 12 6 2 15 11 9 4 1 13 10:VCC=16 GND=8
+*pinout FN 9 7 4 18 15 8 3 19 14 12 5 2 17 13:VCC=20 GND=10
+
+abuf1 a1 ia1 ls_buf1
+abuf2 a2 ia2 ls_buf1
+abuf3 a3 ia3 ls_buf1
+abuf4 a4 ia4 ls_buf1
+abuf5 b1 ib1 ls_buf1
+abuf6 b2 ib2 ls_buf1
+abuf7 b3 ib3 ls_buf1
+abuf8 b4 ib4 ls_buf1
+abuf9 c0 ic0 ls_buf2
+
+x1 ia1 ib1 ic0 sum1 c1 add1
+x2 ia2 ib2 c1 sum2 c2 add1
+x3 ia3 ib3 c2 sum2 c3 add1
+x4 ia4 ib4 c3 sum2 c4 add1
+
+
+.subckt add1 a b ci s co
+axor1 [a b] x1 xor
+axor2 [x1 ci] s xor
+aand1 [a b] x2 and
+aand2 [ci x1] x3 and
+aor [x2 x3] co or
+.model xor d_xor
+.model and d_and
+.model or d_or
+.ends add1
+
+.model ls_buf1 d_buffer(rise_delay=12n fall_delay=12n)
+.model ls_buf2 d_buffer(rise_delay=7.5n fall_delay=7.5n)
+
+.ends
+*
+*
+************
+

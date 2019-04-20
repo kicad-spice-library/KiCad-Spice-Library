@@ -1,0 +1,4561 @@
+**********
+*SRC=OP421A;OP421A;Opamps;AD-"OPxxx";PNP Input, Low Power
+*SYM=ADOPAMP
+* OP421 SPICE Macro-model                  5/91, Rev. A
+*                                           JCB / PMI
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP421A   1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 2.8 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16K
+R4    6 50     5.16K
+CIN   1  2     2E-12
+C2    5  6     5.51E-12
+I1    99 4     10UA
+IOS   1  2     0.6E-9
+EOS   9  1     POLY(1)  24 27  500E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  23.1E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -1.4 1
+E2   12 50     POLY(1) 27 50 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 2.3 HZ
+*
+R6   13 98     3.46E9
+C3   13 98     20E-12
+G2   98 13     10  27   5E-6
+V1   99 14     1.3
+V2   15 50     0.9
+D3   13 14     DX
+D4   15 13     DX
+*
+* POLE AT 3.0 MEGHZ
+*
+R9   16 98     1E6
+C5   16 98     53.1E-15
+G3   98 16     13 27  1E-6
+*
+* POLE AT 3.0 MEGHZ
+*
+R15  17 98     1E6
+C7   17 98     53.1E-15
+G10  98 17     16 27  1E-6
+**
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3 KHZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     53.1E-12
+E4   98 23     3  27  10
+*
+* POLE AT 3.0 MEGHZ
+*
+R14  25 98     1E6
+C6   25 98     53.1E-15
+G9   98 25     17 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     140E-6
+R10  27 99     33.3E3
+R11  27 50     33.3E3
+R12  30 99     450
+R13  30 50     450
+L1   30 31     1E-8
+G4   28 50     25 30  2.22E-3
+G5   29 50     30 25  2.22E-3
+G6   30 99     99 25  2.22E-3
+G7   50 30     25 50  2.22E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 33     DX
+V3   33 30     1.7
+D10  32 25     DX
+V4   30 32     1.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=250)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP421BA;OP421BA;Opamps;AD-"OPxxx";PNP Input, Low Power
+*SYM=ADOPAMP
+* OP421B SPICE Macro-model                 5/91, Rev. A
+*                                           JCB / PMI
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP421BA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 2.8 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16K
+R4    6 50     5.16K
+CIN   1  2     2E-12
+C2    5  6     5.51E-12
+I1    99 4     10UA
+IOS   1  2     5.0E-9
+EOS   9  1     POLY(1)  24 27  2500E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  23.1E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -0.4 1
+E2   12 50     POLY(1) 27 50 -0.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 2.3 HZ
+*
+R6   13 98     1.73E9
+C3   13 98     20E-12
+G2   98 13     10  27   5E-6
+V1   99 14     1.6
+V2   15 50     1.3
+D3   13 14     DX
+D4   15 13     DX
+*
+* POLE AT 3.0 MEGHZ
+*
+R9   16 98     1E6
+C5   16 98     53.1E-15
+G3   98 16     13 27  1E-6
+*
+* POLE AT 3.0 MEGHZ
+*
+R15  17 98     1E6
+C7   17 98     53.1E-15
+G10  98 17     16 27  1E-6
+**
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 21.2 KHZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     7.5E-12
+E4   98 23     3  27  70.8
+*
+* POLE AT 3.0 MEGHZ
+*
+R14  25 98     1E6
+C6   25 98     53.1E-15
+G9   98 25     17 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     540E-6
+R10  27 99     33.3E3
+R11  27 50     33.3E3
+R12  30 99     450
+R13  30 50     450
+L1   30 31     1E-8
+G4   28 50     25 30  2.22E-3
+G5   29 50     30 25  2.22E-3
+G6   30 99     99 25  2.22E-3
+G7   50 30     25 50  2.22E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 33     DX
+V3   33 30     1.7
+D10  32 25     DX
+V4   30 32     1.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=100)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP421CA;OP421CA;Opamps;AD-"OPxxx";PNP Input, Low Power
+*SYM=ADOPAMP
+* OP421C SPICE Macro-model                 5/91, Rev. A
+*                                           JCB / PMI
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP421CA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 2.8 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16K
+R4    6 50     5.16K
+CIN   1  2     2E-12
+C2    5  6     5.51E-12
+I1    99 4     10UA
+IOS   1  2     10E-9
+EOS   9  1     POLY(1)  24 27  4000E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  23.1E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -0.4 1
+E2   12 50     POLY(1) 27 50 -0.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 9.2 HZ
+*
+R6   13 98     0.865E9
+C3   13 98     20E-12
+G2   98 13     10  27   5E-6
+V1   99 14     1.7
+V2   15 50     1.4
+D3   13 14     DX
+D4   15 13     DX
+*
+* POLE AT 3.0 MEGHZ
+*
+R9   16 98     1E6
+C5   16 98     53.1E-15
+G3   98 16     13 27  1E-6
+*
+* POLE AT 3.0 MEGHZ
+*
+R15  17 98     1E6
+C7   17 98     53.1E-15
+G10  98 17     16 27  1E-6
+**
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 30 KHZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     5.3E-12
+E4   98 23     3  27  100
+*
+* POLE AT 3.0 MEGHZ
+*
+R14  25 98     1E6
+C6   25 98     53.1E-15
+G9   98 25     17 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     1040E-6
+R10  27 99     33.3E3
+R11  27 50     33.3E3
+R12  30 99     450
+R13  30 50     450
+L1   30 31     1E-8
+G4   28 50     25 30  2.22E-3
+G5   29 50     30 25  2.22E-3
+G6   30 99     99 25  2.22E-3
+G7   50 30     25 50  2.22E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 33     DX
+V3   33 30     1.7
+D10  32 25     DX
+V4   30 32     1.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=62.5)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP421FA;OP421FA;Opamps;AD-"OPxxx";PNP Input, Low Power
+*SYM=ADOPAMP
+* OP421F SPICE Macro-model                 5/91, Rev. A
+*                                           JCB / PMI
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP421FA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 2.8 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16K
+R4    6 50     5.16K
+CIN   1  2     2E-12
+C2    5  6     5.51E-12
+I1    99 4     10UA
+IOS   1  2     5.0E-9
+EOS   9  1     POLY(1)  24 27  2500E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  23.1E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -0.4 1
+E2   12 50     POLY(1) 27 50 -0.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 2.3 HZ
+*
+R6   13 98     1.73E9
+C3   13 98     20E-12
+G2   98 13     10  27   5E-6
+V1   99 14     1.6
+V2   15 50     1.3
+D3   13 14     DX
+D4   15 13     DX
+*
+* POLE AT 3.0 MEGHZ
+*
+R9   16 98     1E6
+C5   16 98     53.1E-15
+G3   98 16     13 27  1E-6
+*
+* POLE AT 3.0 MEGHZ
+*
+R15  17 98     1E6
+C7   17 98     53.1E-15
+G10  98 17     16 27  1E-6
+**
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 21.2 KHZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     7.5E-12
+E4   98 23     3  27  70.8
+*
+* POLE AT 3.0 MEGHZ
+*
+R14  25 98     1E6
+C6   25 98     53.1E-15
+G9   98 25     17 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     540E-6
+R10  27 99     33.3E3
+R11  27 50     33.3E3
+R12  30 99     450
+R13  30 50     450
+L1   30 31     1E-8
+G4   28 50     25 30  2.22E-3
+G5   29 50     30 25  2.22E-3
+G6   30 99     99 25  2.22E-3
+G7   50 30     25 50  2.22E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 33     DX
+V3   33 30     1.7
+D10  32 25     DX
+V4   30 32     1.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=100)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP421GA;OP421GA;Opamps;AD-"OPxxx";PNP Input, Low Power
+*SYM=ADOPAMP
+* OP421G SPICE Macro-model                 5/91, Rev. A
+*                                           JCB / PMI
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP421GA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 2.8 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16K
+R4    6 50     5.16K
+CIN   1  2     2E-12
+C2    5  6     5.51E-12
+I1    99 4     10UA
+IOS   1  2     10E-9
+EOS   9  1     POLY(1)  24 27  4000E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  23.1E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -0.4 1
+E2   12 50     POLY(1) 27 50 -0.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 9.2 HZ
+*
+R6   13 98     0.865E9
+C3   13 98     20E-12
+G2   98 13     10  27   5E-6
+V1   99 14     1.7
+V2   15 50     1.4
+D3   13 14     DX
+D4   15 13     DX
+*
+* POLE AT 3.0 MEGHZ
+*
+R9   16 98     1E6
+C5   16 98     53.1E-15
+G3   98 16     13 27  1E-6
+*
+* POLE AT 3.0 MEGHZ
+*
+R15  17 98     1E6
+C7   17 98     53.1E-15
+G10  98 17     16 27  1E-6
+**
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 30 KHZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     5.3E-12
+E4   98 23     3  27  100
+*
+* POLE AT 3.0 MEGHZ
+*
+R14  25 98     1E6
+C6   25 98     53.1E-15
+G9   98 25     17 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     1040E-6
+R10  27 99     33.3E3
+R11  27 50     33.3E3
+R12  30 99     450
+R13  30 50     450
+L1   30 31     1E-8
+G4   28 50     25 30  2.22E-3
+G5   29 50     30 25  2.22E-3
+G6   30 99     99 25  2.22E-3
+G7   50 30     25 50  2.22E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 33     DX
+V3   33 30     1.7
+D10  32 25     DX
+V4   30 32     1.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=62.5)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP421HA;OP421HA;Opamps;AD-"OPxxx";PNP Input, Low Power
+*SYM=ADOPAMP
+* OP421H SPICE Macro-model                 5/91, Rev. A
+*                                           JCB / PMI
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP421HA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 2.8 MEGHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 50     5.16K
+R4    6 50     5.16K
+CIN   1  2     2E-12
+C2    5  6     5.51E-12
+I1    99 4     10UA
+IOS   1  2     20E-9
+EOS   9  1     POLY(1)  24 27  6000E-6  1
+Q1    5  2  4  QX
+Q2    6  9  4  QX
+*
+EREF  98 0    27  0  1
+*
+* FIRST GAIN STAGE
+*
+R5   10 98     1E6
+G1   98 10     5  6  23.1E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   99 11     POLY(1) 99 27 -0.4 1
+E2   12 50     POLY(1) 27 50 -0.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 9.2 HZ
+*
+R6   13 98     0.865E9
+C3   13 98     20E-12
+G2   98 13     10  27   5E-6
+V1   99 14     1.8
+V2   15 50     1.5
+D3   13 14     DX
+D4   15 13     DX
+*
+* POLE AT 3.0 MEGHZ
+*
+R9   16 98     1E6
+C5   16 98     53.1E-15
+G3   98 16     13 27  1E-6
+*
+* POLE AT 3.0 MEGHZ
+*
+R15  17 98     1E6
+C7   17 98     53.1E-15
+G10  98 17     16 27  1E-6
+**
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 47.5 KHZ
+*
+R7   24 98     1
+R8   23 24     1E6
+C4   23 24     3.35E-12
+E4   98 23     3  27  158
+*
+* POLE AT 3.0 MEGHZ
+*
+R14  25 98     1E6
+C6   25 98     53.1E-15
+G9   98 25     17 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     1540E-6
+R10  27 99     33.3E3
+R11  27 50     33.3E3
+R12  30 99     450
+R13  30 50     450
+L1   30 31     1E-8
+G4   28 50     25 30  2.22E-3
+G5   29 50     30 25  2.22E-3
+G6   30 99     99 25  2.22E-3
+G7   50 30     25 50  2.22E-3
+D5   99 28     DX
+D6   99 29     DX
+D7   50 28     DY
+D8   50 29     DY
+D9   25 33     DX
+V3   33 30     1.7
+D10  32 25     DX
+V4   30 32     1.7
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=33.3)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP42AA;OP42AA;Opamps;AD-"OPxxx";JFET Input, Fast, 58V/us
+*SYM=ADOPAMP
+* OP42A SPICE Macro-model                  12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 4E-11 to 2E-11
+*
+*
+* This version of the OP42 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP42AA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 15.9 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     636.63
+R4   6 50     636.63
+CIN  1  2     5E-12
+C2   5  6     7.9E-12
+I1  99  4     1E-3
+IOS  1  2     2E-11
+EOS  7  1     POLY(1)  20 26  1E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 45 HZ
+*
+R5   9 99     63.663E6
+R6   9 50     63.663E6
+C3   9 99     22.222E-12
+C4   9 50     22.222E-12
+G1  99  9     POLY(1)  5  6  4.76E-3  1.571E-3
+G2   9 50     POLY(1)  6  5  4.76E-3  1.571E-3
+V2  99  8     3.582
+V3  10 50     3.582
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R7  11 99     1E6
+R8  11 50     1E6
+R9  11 12     4.5E6
+R10 11 13     4.5E6
+C5  12 99     16.1E-15
+C6  13 50     16.1E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R11 14 99     1E6
+R12 14 50     1E6
+R13 14 15     4.5E6
+R14 14 16     4.5E6
+C7  15 99     16.1E-15
+C8  16 50     16.1E-15
+G5  99 14     11 26  1E-6
+G6  14 50     26 11  1E-6
+*
+* POLE AT 53 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     3E-15
+C10 17 50     3E-15
+G7  99 17     14 26  1E-6
+G8  17 50     26 14  1E-6
+*
+* POLE AT 53 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C11 18 99     3E-15
+C12 18 50     3E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 53 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C13 19 99     3E-15
+C14 19 50     3E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 317 KHZ
+*
+R21 20 21     1E6 
+R22 20 23     1E6
+L1  21 99     0.5017
+L2  23 50     0.5017
+G13 99 20     3  26  5.012E-11
+G14 20 50     26  3  5.012E-11
+*
+* POLE AT 79.6 MHZ
+*
+R24 25 99     1E6
+R25 25 50     1E6
+C15 25 99     2E-15
+C16 25 50     2E-15
+G15 99 25     19 26  1E-6
+G16 25 50     26 19  1E-6
+*
+* OUTPUT STAGE
+*
+R26 26 99     111.1E3
+R27 26 50     111.1E3
+R28 27 99     90
+R29 27 50     90
+L3  27 32     2.5E-7
+G17 30 50     25 27  11.1111E-3
+G18 31 50     27 25  11.1111E-3
+G19 27 99     99 25  11.1111E-3
+G20 50 27     25 50  11.1111E-3
+V6  28 27     0.2
+V7  27 29     0.2
+D5  25 28     DX
+D6  29 25     DX
+D7  99 30     DX
+D8  99 31     DX
+D9  50 30     DY
+D10 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.245E-3  VTO=-2.000  IS=2E-10)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP42EA;OP42EA;Opamps;AD-"OPxxx";JFET Input, Fast, 50V/us
+*SYM=ADOPAMP
+* OP42E SPICE Macro-model                  12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 4E-11 to 2E-11
+*
+*
+* This version of the OP42 model simulates the worst case 
+* parameters of the 'E' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP42EA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 15.9 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     707.21
+R4   6 50     707.21
+CIN  1  2     5E-12
+C2   5  6     7.077E-12
+I1  99  4     1E-3
+IOS  1  2     2E-11
+EOS  7  1     POLY(1)  20 26  750E-6  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 45 HZ
+*
+R5   9 99     70.736E6
+R6   9 50     70.736E6
+C3   9 99     20E-12
+C4   9 50     20E-12
+G1  99  9     POLY(1)  5  6  4.76E-3  1.414E-3
+G2   9 50     POLY(1)  6  5  4.76E-3  1.414E-3
+V2  99  8     3.582
+V3  10 50     3.582
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R7  11 99     1E6
+R8  11 50     1E6
+R9  11 12     4.5E6
+R10 11 13     4.5E6
+C5  12 99     16.1E-15
+C6  13 50     16.1E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R11 14 99     1E6
+R12 14 50     1E6
+R13 14 15     4.5E6
+R14 14 16     4.5E6
+C7  15 99     16.1E-15
+C8  16 50     16.1E-15
+G5  99 14     11 26  1E-6
+G6  14 50     26 11  1E-6
+*
+* POLE AT 53 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     3E-15
+C10 17 50     3E-15
+G7  99 17     14 26  1E-6
+G8  17 50     26 14  1E-6
+*
+* POLE AT 53 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C11 18 99     3E-15
+C12 18 50     3E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 53 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C13 19 99     3E-15
+C14 19 50     3E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 252 KHZ
+*
+R21 20 21     1E6 
+R22 20 23     1E6
+L1  21 99     0.6316
+L2  23 50     0.6316
+G13 99 20     3  26  3.981E-11
+G14 20 50     26  3  3.981E-11
+*
+* POLE AT 79.6 MHZ
+*
+R24 25 99     1E6
+R25 25 50     1E6
+C15 25 99     2E-15
+C16 25 50     2E-15
+G15 99 25     19 26  1E-6
+G16 25 50     26 19  1E-6
+*
+* OUTPUT STAGE
+*
+R26 26 99     111.1E3
+R27 26 50     111.1E3
+R28 27 99     90
+R29 27 50     90
+L3  27 32     2.5E-7
+G17 30 50     25 27  11.1111E-3
+G18 31 50     27 25  11.1111E-3
+G19 27 99     99 25  11.1111E-3
+G20 50 27     25 50  11.1111E-3
+V6  28 27     0.2
+V7  27 29     0.2
+D5  25 28     DX
+D6  29 25     DX
+D7  99 30     DX
+D8  99 31     DX
+D9  50 30     DY
+D10 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=999.7E-6  VTO=-2.000  IS=2E-10)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP42FA;OP42FA;Opamps;AD-"OPxxx";JFET Input, Fast, 50V/us
+*SYM=ADOPAMP
+* OP42F SPICE Macro-model                  12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 5E-11 to 2.5E-11
+*
+*
+* This version of the OP42 model simulates the worst case 
+* parameters of the 'F' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP42FA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 15.9 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     565.93
+R4   6 50     565.93
+CIN  1  2     5E-12
+C2   5  6     8.444E-12
+I1  99  4     1E-3
+IOS  1  2     2.5E-11
+EOS  7  1     POLY(1)  20 26  1.5E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 45 HZ
+*
+R5   9 99     56.588E6
+R6   9 50     56.588E6
+C3   9 99     25E-12
+C4   9 50     25E-12
+G1  99  9     POLY(1)  5  6  5.26E-3  1.767E-3
+G2   9 50     POLY(1)  6  5  5.26E-3  1.767E-3
+V2  99  8     3.582
+V3  10 50     3.582
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R7  11 99     1E6
+R8  11 50     1E6
+R9  11 12     4.5E6
+R10 11 13     4.5E6
+C5  12 99     16.1E-15
+C6  13 50     16.1E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R11 14 99     1E6
+R12 14 50     1E6
+R13 14 15     4.5E6
+R14 14 16     4.5E6
+C7  15 99     16.1E-15
+C8  16 50     16.1E-15
+G5  99 14     11 26  1E-6
+G6  14 50     26 11  1E-6
+*
+* POLE AT 53 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     3E-15
+C10 17 50     3E-15
+G7  99 17     14 26  1E-6
+G8  17 50     26 14  1E-6
+*
+* POLE AT 53 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C11 18 99     3E-15
+C12 18 50     3E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 53 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C13 19 99     3E-15
+C14 19 50     3E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 633 KHZ
+*
+R21 20 21     1E6 
+R22 20 23     1E6
+L1  21 99     0.2515
+L2  23 50     0.2515
+G13 99 20     3  26  1.000E-10
+G14 20 50     26  3  1.000E-10
+*
+* POLE AT 79.6 MHZ
+*
+R24 25 99     1E6
+R25 25 50     1E6
+C15 25 99     2E-15
+C16 25 50     2E-15
+G15 99 25     19 26  1E-6
+G16 25 50     26 19  1E-6
+*
+* OUTPUT STAGE
+*
+R26 26 99     111.1E3
+R27 26 50     111.1E3
+R28 27 99     90
+R29 27 50     90
+L3  27 32     2.5E-7
+G17 30 50     25 27  11.1111E-3
+G18 31 50     27 25  11.1111E-3
+G19 27 99     99 25  11.1111E-3
+G20 50 27     25 50  11.1111E-3
+V6  28 27     0.2
+V7  27 29     0.2
+D5  25 28     DX
+D6  29 25     DX
+D7  99 30     DX
+D8  99 31     DX
+D9  50 30     DY
+D10 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.561E-3  VTO=-2.000  IS=2.5E-10)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP42GA;OP42GA;Opamps;AD-"OPxxx";JFET Input, Fast, 50V/us
+*SYM=ADOPAMP
+* OP42G SPICE Macro-model                  12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 5E-11 to 2.5E-11
+*
+*
+* This version of the OP42 model simulates the worst case 
+* parameters of the 'G' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP42GA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 15.9 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     565.93
+R4   6 50     565.93
+CIN  1  2     5E-12
+C2   5  6     8.444E-12
+I1  99  4     1E-3
+IOS  1  2     2.5E-11
+EOS  7  1     POLY(1)  20 26  5E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 45 HZ
+*
+R5   9 99     56.588E6
+R6   9 50     56.588E6
+C3   9 99     25E-12
+C4   9 50     25E-12
+G1  99  9     POLY(1)  5  6  5.26E-3  1.767E-3
+G2   9 50     POLY(1)  6  5  5.26E-3  1.767E-3
+V2  99  8     3.582
+V3  10 50     3.582
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R7  11 99     1E6
+R8  11 50     1E6
+R9  11 12     4.5E6
+R10 11 13     4.5E6
+C5  12 99     16.1E-15
+C6  13 50     16.1E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R11 14 99     1E6
+R12 14 50     1E6
+R13 14 15     4.5E6
+R14 14 16     4.5E6
+C7  15 99     16.1E-15
+C8  16 50     16.1E-15
+G5  99 14     11 26  1E-6
+G6  14 50     26 11  1E-6
+*
+* POLE AT 53 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     3E-15
+C10 17 50     3E-15
+G7  99 17     14 26  1E-6
+G8  17 50     26 14  1E-6
+*
+* POLE AT 53 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C11 18 99     3E-15
+C12 18 50     3E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 53 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C13 19 99     3E-15
+C14 19 50     3E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 633 KHZ
+*
+R21 20 21     1E6 
+R22 20 23     1E6
+L1  21 99     0.2515
+L2  23 50     0.2515
+G13 99 20     3  26  1.000E-10
+G14 20 50     26  3  1.000E-10
+*
+* POLE AT 79.6 MHZ
+*
+R24 25 99     1E6
+R25 25 50     1E6
+C15 25 99     2E-15
+C16 25 50     2E-15
+G15 99 25     19 26  1E-6
+G16 25 50     26 19  1E-6
+*
+* OUTPUT STAGE
+*
+R26 26 99     111.1E3
+R27 26 50     111.1E3
+R28 27 99     90
+R29 27 50     90
+L3  27 32     2.5E-7
+G17 30 50     25 27  11.1111E-3
+G18 31 50     27 25  11.1111E-3
+G19 27 99     99 25  11.1111E-3
+G20 50 27     25 50  11.1111E-3
+V6  28 27     0.2
+V7  27 29     0.2
+D5  25 28     DX
+D6  29 25     DX
+D7  99 30     DX
+D8  99 31     DX
+D9  50 30     DY
+D10 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.561E-3  VTO=-2.000  IS=2.5E-10)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP43A;OP43A;Opamps;AD-"OPxxx";JFET Input, Low IBias 3pA
+*SYM=ADOPAMP
+* OP43 SPICE Macro-model                  12/90, Rev. A
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP43A    1 2 99 50 20
+*
+* INPUT STAGE AND POLE AT 5 MHZ
+*
+R1   1  3     5E12
+R2   2  3     5E12
+R3   5 50     3.28K
+R4   6 50     3.28K
+CIN  1  2     5E-12
+C2   5  6     4.85E-12
+I1  99  4     1E-4
+IOS  1  2     0.02E-12
+EOS  7  1     POLY(1)  12 14  0.2E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+EREF 98  0    14  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.58 HZ
+*
+R5  8  98     16.4E9
+C3  8  98     16.7E-12
+G1  98  8     5  6  305E-6
+V2  99  9     2.4
+V3  10 50     2.4
+D1  8   9     DX
+D2  10  8     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 200 HZ
+*
+R6  11 12     1E6
+C4  11 12     798E-12
+R7  12 98     1
+E2  11 98     3  14  1.78
+*
+* POLE AT 6 MHZ
+*
+R8   13 98    1E6
+C5   13 98    26.5E-15
+G2   98 13    8  14  1E-6
+*
+* OUTPUT STAGE
+*
+R9  14 99     400E3
+R10 14 50     400E3
+ISY 99 50     612.5E-6
+R11 15 99     200
+R12 15 50     200
+L1  15 20     2.5E-7
+G3  18 50     13 15  5E-3
+G4  19 50     15 13  5E-3
+G5  15 99     99 13  5E-3
+G6  50 15     13 50  5E-3
+V4  16 15     1.3
+V5  15 17     1.1
+D3  13 16     DX
+D4  17 13     DX
+D5  99 18     DX
+D6  99 19     DX
+D7  50 18     DY
+D8  50 19     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=465E-6  VTO=-2.000  IS=3E-12)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP43AA;OP43AA;Opamps;AD-"OPxxx";JFET Input, Low IBias 3pA
+*SYM=ADOPAMP
+* OP43A SPICE Macro-model                  12/90, Rev. A
+*
+*
+* This version of the OP43 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP43AA   1 2 99 50 20
+*
+* INPUT STAGE AND POLE AT 5 MHZ
+*
+R1   1  3     5E12
+R2   2  3     5E12
+R3   5 50     2.74K
+R4   6 50     2.74K
+CIN  1  2     5E-12
+C2   5  6     5.81E-12
+I1  99  4     1E-4
+IOS  1  2     0.5E-12
+EOS  7  1     POLY(1)  12 14  0.5E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+EREF 98  0    14  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.58 HZ
+*
+R5  8  98     2.74E9
+C3  8  98     20.0E-12
+G1  98  8     5  6  365E-6
+V2  99  9     2.7
+V3  10 50     2.7
+D1  8   9     DX
+D2  10  8     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 1120 HZ
+*
+R6  11 12     1E6
+C4  11 12     142E-12
+R7  12 98     1
+E2  11 98     3  14  10.0
+*
+* POLE AT 6 MHZ
+*
+R8   13 98    1E6
+C5   13 98    26.5E-15
+G2   98 13    8  14  1E-6
+*
+* OUTPUT STAGE
+*
+R9  14 99     400E3
+R10 14 50     400E3
+ISY 99 50     862.5E-6
+R11 15 99     200
+R12 15 50     200
+L1  15 20     2.5E-7
+G3  18 50     13 15  5E-3
+G4  19 50     15 13  5E-3
+G5  15 99     99 13  5E-3
+G6  50 15     13 50  5E-3
+V4  16 15     0.5
+V5  15 17     0.5
+D3  13 16     DX
+D4  17 13     DX
+D5  99 18     DX
+D6  99 19     DX
+D7  50 18     DY
+D8  50 19     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=667E-6  VTO=-2.000  IS=5.0E-12)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP43BA;OP43BA;Opamps;AD-"OPxxx";JFET Input, Low IBias 3.5pA
+*SYM=ADOPAMP
+* OP43B SPICE Macro-model                  12/90, Rev. A
+*
+* This version of the OP43 model simulates the worst case 
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP43BA   1 2 99 50 20
+*
+* INPUT STAGE AND POLE AT 5 MHZ
+*
+R1   1  3     5E12
+R2   2  3     5E12
+R3   5 50     2.74K
+R4   6 50     2.74K
+CIN  1  2     5E-12
+C2   5  6     5.81E-12
+I1  99  4     1E-4
+IOS  1  2     1.0E-12
+EOS  7  1     POLY(1)  12 14  1.0E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+EREF 98  0    14  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.58 HZ
+*
+R5  8  98     1.37E9
+C3  8  98     20.0E-12
+G1  98  8     5  6  365E-6
+V2  99  9     3.0
+V3  10 50     3.0
+D1  8   9     DX
+D2  10  8     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3500 HZ
+*
+R6  11 12     1E6
+C4  11 12     45.0E-12
+R7  12 98     1
+E2  11 98     3  14  31.6
+*
+* POLE AT 6 MHZ
+*
+R8   13 98    1E6
+C5   13 98    26.5E-15
+G2   98 13    8  14  1E-6
+*
+* OUTPUT STAGE
+*
+R9  14 99     400E3
+R10 14 50     400E3
+ISY 99 50     1062.5E-6
+R11 15 99     200
+R12 15 50     200
+L1  15 20     2.5E-7
+G3  18 50     13 15  5E-3
+G4  19 50     15 13  5E-3
+G5  15 99     99 13  5E-3
+G6  50 15     13 50  5E-3
+V4  16 15     0.5
+V5  15 17     0.5
+D3  13 16     DX
+D4  17 13     DX
+D5  99 18     DX
+D6  99 19     DX
+D7  50 18     DY
+D8  50 19     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=667E-6  VTO=-2.000  IS=10.0E-12)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP43EA;OP43EA;Opamps;AD-"OPxxx";JFET Input, Low IBias 3pA
+*SYM=ADOPAMP
+* OP43E SPICE Macro-model                  12/90, Rev. A
+*
+*
+* This version of the OP43 model simulates the worst case 
+* parameters of the 'E' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP43EA   1 2 99 50 20
+*
+* INPUT STAGE AND POLE AT 5 MHZ
+*
+R1   1  3     5E12
+R2   2  3     5E12
+R3   5 50     2.74K
+R4   6 50     2.74K
+CIN  1  2     5E-12
+C2   5  6     5.81E-12
+I1  99  4     1E-4
+IOS  1  2     0.5E-12
+EOS  7  1     POLY(1)  12 14  0.25E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+EREF 98  0    14  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.58 HZ
+*
+R5  8  98     2.74E9
+C3  8  98     20.0E-12
+G1  98  8     5  6  365E-6
+V2  99  9     2.7
+V3  10 50     2.7
+D1  8   9     DX
+D2  10  8     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 200 HZ
+*
+R6  11 12     1E6
+C4  11 12     142E-12
+R7  12 98     1
+E2  11 98     3  14  10.0
+*
+* POLE AT 6 MHZ
+*
+R8   13 98    1E6
+C5   13 98    26.5E-15
+G2   98 13    8  14  1E-6
+*
+* OUTPUT STAGE
+*
+R9  14 99     400E3
+R10 14 50     400E3
+ISY 99 50     862.5E-6
+R11 15 99     200
+R12 15 50     200
+L1  15 20     2.5E-7
+G3  18 50     13 15  5E-3
+G4  19 50     15 13  5E-3
+G5  15 99     99 13  5E-3
+G6  50 15     13 50  5E-3
+V4  16 15     0.5
+V5  15 17     0.5
+D3  13 16     DX
+D4  17 13     DX
+D5  99 18     DX
+D6  99 19     DX
+D7  50 18     DY
+D8  50 19     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=667E-6  VTO=-2.000  IS=5.0E-12)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP43FA;OP43FA;Opamps;AD-"OPxxx";JFET Input, Low IBias 3.5pA
+*SYM=ADOPAMP
+* OP43F SPICE Macro-model                  12/90, Rev. A
+*
+*
+* This version of the OP43 model simulates the worst case 
+* parameters of the 'F' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP43FA   1 2 99 50 20
+*
+* INPUT STAGE AND POLE AT 5 MHZ
+*
+R1   1  3     5E12
+R2   2  3     5E12
+R3   5 50     2.74K
+R4   6 50     2.74K
+CIN  1  2     5E-12
+C2   5  6     5.81E-12
+I1  99  4     1E-4
+IOS  1  2     1.0E-12
+EOS  7  1     POLY(1)  12 14  0.75E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+EREF 98  0    14  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.58 HZ
+*
+R5  8  98     1.37E9
+C3  8  98     20.0E-12
+G1  98  8     5  6  365E-6
+V2  99  9     3.0
+V3  10 50     3.0
+D1  8   9     DX
+D2  10  8     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3500 HZ
+*
+R6  11 12     1E6
+C4  11 12     45.0E-12
+R7  12 98     1
+E2  11 98     3  14  31.6
+*
+* POLE AT 6 MHZ
+*
+R8   13 98    1E6
+C5   13 98    26.5E-15
+G2   98 13    8  14  1E-6
+*
+* OUTPUT STAGE
+*
+R9  14 99     400E3
+R10 14 50     400E3
+ISY 99 50     1062.5E-6
+R11 15 99     200
+R12 15 50     200
+L1  15 20     2.5E-7
+G3  18 50     13 15  5E-3
+G4  19 50     15 13  5E-3
+G5  15 99     99 13  5E-3
+G6  50 15     13 50  5E-3
+V4  16 15     0.5
+V5  15 17     0.5
+D3  13 16     DX
+D4  17 13     DX
+D5  99 18     DX
+D6  99 19     DX
+D7  50 18     DY
+D8  50 19     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=667E-6  VTO=-2.000  IS=10.0E-12)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP43GA;OP43GA;Opamps;AD-"OPxxx";JFET Input, Low IBias 3.5pA
+*SYM=ADOPAMP
+* OP43G SPICE Macro-model                  12/90, Rev. A
+*
+*
+* This version of the OP43 model simulates the worst case 
+* parameters of the 'G' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP43GA   1 2 99 50 20
+*
+* INPUT STAGE AND POLE AT 5 MHZ
+*
+R1   1  3     5E12
+R2   2  3     5E12
+R3   5 50     2.74K
+R4   6 50     2.74K
+CIN  1  2     5E-12
+C2   5  6     5.81E-12
+I1  99  4     1E-4
+IOS  1  2     2.5E-12
+EOS  7  1     POLY(1)  12 14  1.5E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+EREF 98  0    14  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 9.7 HZ
+*
+R5  8  98     822E6
+C3  8  98     20.0E-12
+G1  98  8     5  6  365E-6
+V2  99  9     4.05
+V3  10 50     4.05
+D1  8   9     DX
+D2  10  8     DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 3500 HZ
+*
+R6  11 12     1E6
+C4  11 12     45.0E-12
+R7  12 98     1
+E2  11 98     3  14  31.6
+*
+* POLE AT 6 MHZ
+*
+R8   13 98    1E6
+C5   13 98    26.5E-15
+G2   98 13    8  14  1E-6
+*
+* OUTPUT STAGE
+*
+R9  14 99     400E3
+R10 14 50     400E3
+ISY 99 50     1062.5E-6
+R11 15 99     200
+R12 15 50     200
+L1  15 20     2.5E-7
+G3  18 50     13 15  5E-3
+G4  19 50     15 13  5E-3
+G5  15 99     99 13  5E-3
+G6  50 15     13 50  5E-3
+V4  16 15     -0.1
+V5  15 17     -0.1
+D3  13 16     DX
+D4  17 13     DX
+D5  99 18     DX
+D6  99 19     DX
+D7  50 18     DY
+D8  50 19     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=667E-6  VTO=-2.000  IS=25.0E-12)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP44A;OP44A;Opamps;AD-"OPxxx";JFET Input, Fast 120V/us
+*SYM=ADOPAMP
+* OP44 SPICE Macro-model      12/90, Rev. B
+*                                          ARG / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 4E-12 to 2E-12
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP44A  1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 60 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     541
+R4   6 50     541
+CIN  1  2     5E-12
+C2   5  6     2.452E-12
+I1  99  4     1.5E-3
+IOS  1  2     2E-12
+EOS  7  1     POLY(1)  22 26  300E-6  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 79 HZ
+*
+R7   9 99     241.8E6
+R8   9 50     241.8E6
+C3   9 99     8.333E-12
+C4   9 50     8.333E-12
+G1  99  9     POLY(1)   5  6  4.825E-3  1.848E-3
+G2   9 50     POLY(1)   6  5  4.825E-3  1.848E-3
+V1  99  8     -10
+V2  10 50     -10
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.3 MHZ / 3.25 MHZ
+*
+R9  11 99     1E6
+R10 11 50     1E6
+R11 12 99     667E3
+R12 13 50     667E3
+C5  11 12     73.46E-15
+C6  11 13     73.46E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+V3  99 14     2.5
+V4  15 50     3.1
+D3  11 14     DX
+D4  15 11     DX
+*
+* POLE AT 100 MHZ
+*
+R13 16 99     1E6
+R14 16 50     1E6
+C7  16 99     1.592E-15
+C8  16 50     1.592E-15
+G5  99 16     11 26  1E-6
+G6  16 50     26 11  1E-6
+*
+* POLE AT 100 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     1.592E-15
+C10 17 50     1.592E-15
+G7  99 17     16 26  1E-6
+G8  17 50     26 16  1E-6
+*
+* POLE AT 100 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C13 18 99     1.592E-15
+C14 18 50     1.592E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 100 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C15 19 99     1.592E-15
+C16 19 50     1.592E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* POLE AT 200 MHZ
+*
+R21 20 99     1E6
+R22 20 50     1E6
+C17 20 99     .796E-15
+C18 20 50     .796E-15
+G13 99 20     19 26  1E-6
+G14 20 50     26 19  1E-6
+*
+* POLE AT 200 MHZ
+*
+R23 21 99     1E6
+R24 21 50     1E6
+C19 21 99     .796E-15
+C20 21 50     .796E-15
+G15 99 21     20 26  1E-6
+G16 21 50     26 20  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 100 KHZ
+*
+R25 22 23     1E6
+R26 22 24     1E6
+L1  23 99     1.5915
+L2  24 50     1.5915
+D5  22 99     DX
+D6  50 22     DX
+G17 99 22     3  26  1.58E-11
+G18 22 50     26  3  1.58E-11
+*
+* POLE AT 200 MHZ
+*
+R27 25 99     1E6
+R28 25 50     1E6
+C21 25 99     .796E-15
+C22 25 50     .796E-15
+G19 99 25     21 26  1E-6
+G20 25 50     26 21  1E-6
+*
+* OUTPUT STAGE
+*
+R30 26 99     375.3E3
+R31 26 50     375.3E3
+R32 27 99     80
+R33 27 50     80
+L3  27 32     2.5E-7
+G21 30 50     25 27  12.5E-3
+G22 31 50     27 25  12.5E-3
+G23 27 99     99 25  12.5E-3
+G24 50 27     25 50  12.5E-3
+V6  28 27     0.5
+V7  27 29     0.3
+D7  25 28     DX
+D8  29 25     DX
+D9  99 30     DX
+D10 99 31     DX
+D11 50 30     DY
+D12 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=1.139E-3  VTO=-1.5  IS=8E-11)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP470A;OP470A;Opamps;AD-"OPxxx";Low Noise, 5nV/RTHz
+*SYM=ADOPAMP
+* OP470 SPICE Macro-model                 12/90, Rev. B
+*                                          JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 3E-9 to 1.5E-9
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP470A   1 2 99 50 35
+*
+* INPUT STAGE & POLE AT 60 MHZ
+*
+R1  2   3     2E5
+R2  1   3     2E5
+R3  7  99     57.875
+R4  8  99     57.875
+CIN 1   2     2E-12
+C2  7   8     22.92E-12
+I1  11 50     1E-3
+IOS 1   2     1.5E-9
+EOS 6   1     POLY(1)  25 29  1E-4  1
+Q1  7   2  9  QX
+Q2  8   6 10  QX
+R5  9  11     6.275
+R6  10 11     6.275
+D1  2   4     DX
+V1  4   6     0.7
+V2  6   5     0.7
+D2  5   2     DX
+*
+* FIRST GAIN STAGE & DOMINANT POLE AT 5.5 HZ
+*
+R7  12 99     57.875E6
+R8  12 50     57.875E6
+C3  12 99     500E-12
+C4  12 50     500E-12
+G1  99 12     POLY(1)  7  8  380E-6  17.279E-3
+G2  12 50     POLY(1)  8  7  380E-6  17.279E-3
+V3  99 13     1.9
+V4  14 50     1.9
+D3  12 13     DX
+D4  14 12     DX
+*
+* POLE-ZERO AT 2MHZ / 6 MHZ
+*
+R9  15 99     1E6
+R10 15 50     1E6
+R11 15 16     5E5
+R12 15 17     5E5
+C5  16 99     53.05E-15
+C6  17 50     53.05E-15
+G3  99 15     12 29  1E-6
+G4  15 50     29 12  1E-6
+*
+* ZERO-POLE AT 5MHZ / 60 MHZ
+*
+R13 99 19     11E6
+R14 18 19     1E6
+R15 18 20     1E6
+R16 20 50     11E6
+L1  99 19     29.18E-3
+L2  50 20     29.18E-3
+G5  99 18     15 29  1E-6
+G6  18 50     29 15  1E-6
+*
+* POLE AT 30 MHZ
+*
+R17 21 99     1E6
+R18 21 50     1E6
+C7  21 99     5.305E-15
+C8  21 50     5.305E-15
+G7  99 21     18 29  1E-6
+G8  21 50     29 18  1E-6
+*
+* POLE AT 50 MHZ
+*
+R19 22 99     1E6
+R20 22 50     1E6
+C9  22 99     3.18E-15
+C10 22 50     3.18E-15
+G9  99 22     21 29  1E-6
+G10 22 50     29 21  1E-6
+*
+* POLE AT 50 MHZ
+*
+R21 23 99     1E6
+R22 23 50     1E6
+C11 23 99     3.18E-15
+C12 23 50     3.18E-15
+G11 99 23     22 29  1E-6
+G12 23 50     29 22  1E-6
+*
+* POLE AT 50 MHZ
+*
+R23 24 99     1E6
+R24 24 50     1E6
+C13 24 99     3.18E-15
+C14 24 50     3.18E-15
+G13 99 24     23 29  1E-6
+G14 24 50     29 23  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 100 HZ
+*
+R25 25 26     1E6
+R26 25 27     1E6
+L3  26 99     1.592E3
+L4  27 50     1.592E3
+G15 99 25     3  29  1E-12
+G16 25 50     29  3  1E-12
+D5  25 99     DX
+D6  50 25     DX
+*
+* POLE AT 50 MHZ
+*
+R27 28 99     1E6
+R28 28 50     1E6
+C15 28 99     3.18E-15
+C16 28 50     3.18E-15
+G17 99 28     24 29  1E-6
+G18 28 50     29 24  1E-6
+*
+* OUTPUT STAGE
+*
+R29 29 99     20E3
+R30 29 50     20E3
+R31 34 99     250
+R32 34 50     250
+L5  34 35     7E-7
+G19 32 50     28 34  4E-3
+G20 33 50     34 28  4E-3
+G21 34 99     99 28  4E-3
+G22 50 34     28 50  4E-3
+V5  30 34     1.3
+V6  34 31     1.3
+D7  28 30     DX
+D8  31 28     DX
+D9  99 32     DX
+D10 99 33     DX
+D11 50 32     DY
+D12 50 33     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=166667)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP490A;OP490A;Opamps;AD-"OPxxx";Micropower, 80uA Isup. max.
+*SYM=ADOPAMP
+* OP490 SPICE Macro-model       12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 0.4E-9 to 0.2E-9
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP490A   1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1UA
+IOS   1  2     0.2E-9
+EOS   9  1     POLY(1)  23 27  2E-4  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  42.23E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.035 HZ
+*
+R8   13 98     54.57E9
+C3   13 98     83.333E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -2.9
+V2   15 51     -2.9
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 HZ
+*
+R13  23 24     1E6
+L2   24 98     39.79E3
+G4   98 23     3  27  3.16E-13
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     9.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=119)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP490AA;OP490AA;Opamps;AD-"OPxxx";Micropower, 80uA Isup. max.
+*SYM=ADOPAMP
+* OP490A SPICE Macro-model       12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 3E-9 to 1.5E-9
+*
+*
+* This version of the OP490 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP490AA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     1.5E-9
+EOS   9  1     POLY(1)  23 27  5E-4  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.47E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.323 HZ
+*
+R8   13 98     2.464E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -1.95
+V2   15 51     -1.95
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 126 HZ
+*
+R13  23 24     1E6
+L2   24 98     1.257E3
+G4   98 23     3  27  1E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     14.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=33.333)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP490EA;OP490EA;Opamps;AD-"OPxxx";Micropower, 80uA Isup. max.
+*SYM=ADOPAMP
+* OP490E SPICE Macro-model       12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 3E-9 to 1.5E-9
+*
+*
+* This version of the OP490 model simulates the worst case 
+* parameters of the 'E' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP490EA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     1.5E-9
+EOS   9  1     POLY(1)  23 27  5E-4  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.47E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.323 HZ
+*
+R8   13 98     2.464E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -1.95
+V2   15 51     -1.95
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 126 HZ
+*
+R13  23 24     1E6
+L2   24 98     1.257E3
+G4   98 23     3  27  1E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     14.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=33.333)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP490FA;OP490FA;Opamps;AD-"OPxxx";Micropower, 80uA Isup. max.
+*SYM=ADOPAMP
+* OP490F SPICE Macro-model           12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 5E-9 to 2.5E-9
+*
+*
+* This version of the OP490 model simulates the worst case 
+* parameters of the 'F' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP490FA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     2.5E-9
+EOS   9  1     POLY(1)  23 27  .75E-3  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.36E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.403 HZ
+*
+R8   13 98     1.973E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -1.95
+V2   15 51     -1.95
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 400 HZ
+*
+R13  23 24     1E6
+L2   24 98     397.9
+G4   98 23     3  27  3.162E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     14.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=25)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP490GA;OP490GA;Opamps;AD-"OPxxx";Micropower, 80uA Isup. max.
+*SYM=ADOPAMP
+* OP490G SPICE Macro-model           12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 5E-9 to 2.5E-9
+*
+*
+* This version of the OP490 model simulates the worst case 
+* parameters of the 'G' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT OP490GA  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     2.5E-9
+EOS   9  1     POLY(1)  23 27  1E-3  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.36E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.403 HZ
+*
+R8   13 98     1.973E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -1.95
+V2   15 51     -1.95
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 400 HZ
+*
+R13  23 24     1E6
+L2   24 98     397.9
+G4   98 23     3  27  3.162E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     14.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=20)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP497A;OP497A;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP497 SPICE Macro-model  4/91, Rev. B
+*  AAG / PMI
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP497A  1 2 99 50 27
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1  1  7  2500
+RIN2  2  8  2500
+R1  8  3  6.782E8
+R2  7  3  6.782E8
+R3  5  99  542.57
+R4  6  99  542.57
+CIN  7  8  3E-12
+C2  5  6  24.445E-12
+I1  4  50  0.1E-3
+IOS  7  8  15E-12
+EOS  9  7  POLY(1)  16  21  40E-6  1
+Q1  5  8  10  QX
+Q2  6  9  11  QX
+R5  10  4  25.374
+R6  11  4  25.374
+D1  8  9  DX
+D2  9  8  DX
+*
+EREF  98  0  21  0  1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.11 HZ
+*
+R7  12  98  2.1703E9
+C3  12  98  666.67E-12
+G1  98  12  5  6  1.8431E-3
+V1  99  13  1.275
+V2  14  50  1.275
+D3  12  13  DX
+D4  14  12  DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 50 HZ
+*
+RCM1  15  16  1E6
+CCM  15  16  3.183E-9
+RCM2  16  98  1
+ECM  15  98  3  21  177.83E-3
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+E1  17  98  12  21  1E6
+R8  17  18  -1E6
+C4  17  18  88.419E-15
+R9  18  98  -1
+*
+* POLE AT 6 MHZ
+*
+G2  98  19  18  21  1E-6
+R10  19  98  1E6
+C5  19  98  26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G3  98  20  19  21  1E-6
+R15  20  98  1E6
+C8  20  98  88.419E-15
+*
+* OUTPUT STAGE
+*
+R16  99  21  160K
+R17  21  50  160K
+ISY  99  50  331E-6
+V3  23  22  1.9
+D5  20  23  DX
+V4  22  24  1.9
+D6  24  20  DX
+D7  99  25  DX
+G4  25  50  20  22  5E-3
+D9  50  25  DY
+D8  99  26  DX
+G5  26  50  22  20  5E-3
+D10  50  26  DY
+G6  22  99  99  20  5E-3
+R18  99  22  200
+G7  50  22  20  50  5E-3
+R19  22  50  200
+L1  22  27  0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1.25E6)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP497AA;OP497AA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP497A SPICE Macro-model 4/91, Rev. B
+* AAG / PMI
+*
+* This version of the OP497 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP497AA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1 1 7 2500
+RIN2 2 8 2500
+R1 8 3 2.586E8
+R2 7 3 2.586E8
+R3 5 99 517.2
+R4 6 99 517.2
+CIN 7 8 3E-12
+C2 5 6 25.644E-12
+I1 4 50 0.1E-3
+IOS 7 8 50E-12
+EOS 9 7 POLY(1) 19 24 50E-6 1
+Q1 5 8 4 QX
+Q2 6 9 4 QX
+D1 8 9 DX
+D2 9 8 DX
+*
+EREF 98 0 24 0 1
+*
+* 1st GAIN STAGE
+*
+G1 98 12 5 6 165.88E-6
+R7 12 98 1E6
+E1 99 13 POLY(1) 99 24 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 24 50 -2.4 1
+D4 14 12 DX
+*
+* 2nd GAIN STAGE & DOMINANT POLE AT 0.22 HZ
+*
+G2 98 15 12 24 33.333E-6
+R8 15 98 361.72E6
+C3 15 98 2E-9
+V1 99 16 DC 1.275
+D5 15 16 DX
+V2 17 50 DC 1.275
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 281.17 HZ
+*
+ECM 18 98 3 24 1
+RCM1 18 19 1E6
+CCM 18 19 566.05E-12
+RCM2 19 98 1
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+ENZ 20 98 15 24 1E6
+RNZ1 20 21 -1E6
+CNZ 20 21 88.419E-15
+RNZ2 21 98 -1
+*
+* POLE AT 6 MHZ
+*
+G3 98 22 21 24 1E-6
+R9 22 98 1E6
+C4 22 98 26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G4 98 23 22 24 1E-6
+R15 23 98 1E6
+C8 23 98 88.419E-15
+*
+* OUTPUT STAGE
+*
+R16 24 99 160k
+R17 24 50 160k
+ISY 99 50 431E-6
+D7 23 28 DX
+V3 28 27 DC 1.9
+D8 29 23 DX
+V4 27 29 DC 1.9
+D9 99 30 DX
+G5 30 50 23 27 5E-3
+D11 50 30 DY
+D10 99 31 DX
+G6 31 50 27 23 5E-3
+D12 50 31 DY
+G7 27 99 99 23 5E-3
+R18 27 99 200
+G8 50 27 23 50 5E-3
+R19 27 50 200
+L1 27 32 0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=500E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP497BA;OP497BA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP497B SPICE Macro-model 4/91, Rev. B
+* AAG / PMI
+*
+* This version of the OP497 model simulates the worst case 
+* parameters of the 'B' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP497BA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1 1 7 2500
+RIN2 2 8 2500
+R1 8 3 1.724E8
+R2 7 3 1.724E8
+R3 5 99 517.2
+R4 6 99 517.2
+CIN 7 8 3E-12
+C2 5 6 25.644E-12
+I1 4 50 0.1E-3
+IOS 7 8 75E-12
+EOS 9 7 POLY(1) 19 24 75E-6 1
+Q1 5 8 4 QX
+Q2 6 9 4 QX
+D1 8 9 DX
+D2 9 8 DX
+*
+EREF 98 0 24 0 1
+*
+* 1st GAIN STAGE
+*
+G1 98 12 5 6 163.99E-6
+R7 12 98 1E6
+E1 99 13 POLY(1) 99 24 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 24 50 -2.4 1
+D4 14 12 DX
+*
+* 2nd GAIN STAGE & DOMINANT POLE AT 0.29 HZ
+*
+G2 98 15 12 24 33.333E-6
+R8 15 98 274.41E6
+C3 15 98 2E-9
+V1 99 16 DC 1.275
+D5 15 16 DX
+V2 17 50 DC 1.275
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 561.01 HZ
+*
+ECM 18 98 3 24 1.9953
+RCM1 18 19 1E6
+CCM 18 19 283.69E-12
+RCM2 19 98 1
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+ENZ 20 98 15 24 1E6
+RNZ1 20 21 -1E6
+CNZ 20 21 88.419E-15
+RNZ2 21 98 -1
+*
+* POLE AT 6 MHZ
+*
+G3 98 22 21 24 1E-6
+R9 22 98 1E6
+C4 22 98 26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G4 98 23 22 24 1E-6
+R15 23 98 1E6
+C8 23 98 88.419E-15
+*
+* OUTPUT STAGE
+*
+R16 24 99 160K
+R17 24 50 160K
+ISY 99 50 431E-6
+D7 23 28 DX
+V3 28 27 DC 1.9
+D8 29 23 DX
+V4 27 29 DC 1.9
+D9 99 30 DX
+G5 30 50 23 27 5E-3
+D11 50 30 DY
+D10 99 31 DX
+G6 31 50 27 23 5E-3
+D12 50 31 DY
+G7 27 99 99 23 5E-3
+R18 27 99 200
+G8 50 27 23 50 5E-3
+R19 27 50 200
+L1 27 32 0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=333.333E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP497CA;OP497CA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP497C SPICE Macro-model 4/91, Rev. B
+* AAG / PMI
+*
+* This version of the OP497 model simulates the worst case 
+* parameters of the 'C' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP497CA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1 1 7 2500
+RIN2 2 8 2500
+R1 8 3 1.293E8
+R2 7 3 1.293E8
+R3 5 99 517.2
+R4 6 99 517.2
+CIN 7 8 3E-12
+C2 5 6 25.644E-12
+I1 4 50 0.1E-3
+IOS 7 8 100E-12
+EOS 9 7 POLY(1) 19 24 150E-6 1
+Q1 5 8 4 QX
+Q2 6 9 4 QX
+D1 8 9 DX
+D2 9 8 DX
+*
+EREF 98 0 24 0 1
+*
+* 1st GAIN STAGE
+*
+G1 98 12 5 6 167.39E-6
+R7 12 98 1E6
+E1 99 13 POLY(1) 99 24 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 24 50 -2.4 1
+D4 14 12 DX
+*
+* 2nd GAIN STAGE & DOMINANT POLE AT 0.37 HZ
+*
+G2 98 15 12 24 33.333E-6
+R8 15 98 215.07E6
+C3 15 98 2E-9
+V1 99 16 DC 1.275
+D5 15 16 DX
+V2 17 50 DC 1.275
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 561.01 HZ
+*
+ECM 18 98 3 24 1.9953
+RCM1 18 19 1E6
+CCM 18 19 283.69E-12
+RCM2 19 98 1
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+ENZ 20 98 15 24 1E6
+RNZ1 20 21 -1E6
+CNZ 20 21 88.419E-15
+RNZ2 21 98 -1
+*
+* POLE AT 6 MHZ
+*
+G3 98 22 21 24 1E-6
+R9 22 98 1E6
+C4 22 98 26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G4 98 23 22 24 1E-6
+R15 23 98 1E6
+C8 23 98 88.419E-15
+*
+* OUTPUT STAGE
+*
+R16 24 99 160K
+R17 24 50 160K
+ISY 99 50 431E-6
+D7 23 28 DX
+V3 28 27 DC 1.9
+D8 29 23 DX
+V4 27 29 DC 1.9
+D9 99 30 DX
+G5 30 50 23 27 5E-3
+D11 50 30 DY
+D10 99 31 DX
+G6 31 50 27 23 5E-3
+D12 50 31 DY
+G7 27 99 99 23 5E-3
+R18 27 99 200
+G8 50 27 23 50 5E-3
+R19 27 50 200
+L1 27 32 0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=250E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP497FA;OP497FA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP497F SPICE Macro-model 4/91, Rev. B
+* AAG / PMI
+*
+* This version of the OP497 model simulates the worst case 
+* parameters of the 'F' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP497FA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1 1 7 2500
+RIN2 2 8 2500
+R1 8 3 1.724E8
+R2 7 3 1.724E8
+R3 5 99 517.2
+R4 6 99 517.2
+CIN 7 8 3E-12
+C2 5 6 25.644E-12
+I1 4 50 0.1E-3
+IOS 7 8 75E-12
+EOS 9 7 POLY(1) 19 24 75E-6 1
+Q1 5 8 4 QX
+Q2 6 9 4 QX
+D1 8 9 DX
+D2 9 8 DX
+*
+EREF 98 0 24 0 1
+*
+* 1st GAIN STAGE
+*
+G1 98 12 5 6 163.99E-6
+R7 12 98 1E6
+E1 99 13 POLY(1) 99 24 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 24 50 -2.4 1
+D4 14 12 DX
+*
+* 2nd GAIN STAGE & DOMINANT POLE AT 0.29 HZ
+*
+G2 98 15 12 24 33.333E-6
+R8 15 98 274.41E6
+C3 15 98 2E-9
+V1 99 16 DC 1.275
+D5 15 16 DX
+V2 17 50 DC 1.275
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 561.01 HZ
+*
+ECM 18 98 3 24 1.9953
+RCM1 18 19 1E6
+CCM 18 19 283.69E-12
+RCM2 19 98 1
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+ENZ 20 98 15 24 1E6
+RNZ1 20 21 -1E6
+CNZ 20 21 88.419E-15
+RNZ2 21 98 -1
+*
+* POLE AT 6 MHZ
+*
+G3 98 22 21 24 1E-6
+R9 22 98 1E6
+C4 22 98 26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G4 98 23 22 24 1E-6
+R15 23 98 1E6
+C8 23 98 88.419E-15
+*
+* OUTPUT STAGE
+*
+R16 24 99 160K
+R17 24 50 160K
+ISY 99 50 431E-6
+D7 23 28 DX
+V3 28 27 DC 1.9
+D8 29 23 DX
+V4 27 29 DC 1.9
+D9 99 30 DX
+G5 30 50 23 27 5E-3
+D11 50 30 DY
+D10 99 31 DX
+G6 31 50 27 23 5E-3
+D12 50 31 DY
+G7 27 99 99 23 5E-3
+R18 27 99 200
+G8 50 27 23 50 5E-3
+R19 27 50 200
+L1 27 32 0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=333.333E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP497GA;OP497GA;Opamps;AD-"OPxxx";
+*SYM=ADOPAMP
+* OP497G SPICE Macro-model 4/91, Rev. B
+* AAG / PMI
+*
+* This version of the OP497 model simulates the worst case 
+* parameters of the 'G' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Node assignments
+*               non-inverting input
+*               | inverting input
+*               | |  positive supply
+*               | |  |  negative supply
+*               | |  |  |  output
+*               | |  |  |  |
+.SUBCKT OP497GA 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 6 MHZ
+*
+RIN1 1 7 2500
+RIN2 2 8 2500
+R1 8 3 1.293E8
+R2 7 3 1.293E8
+R3 5 99 517.2
+R4 6 99 517.2
+CIN 7 8 3E-12
+C2 5 6 25.644E-12
+I1 4 50 0.1E-3
+IOS 7 8 100E-12
+EOS 9 7 POLY(1) 19 24 150E-6 1
+Q1 5 8 4 QX
+Q2 6 9 4 QX
+D1 8 9 DX
+D2 9 8 DX
+*
+EREF 98 0 24 0 1
+*
+* 1st GAIN STAGE
+*
+G1 98 12 5 6 167.39E-6
+R7 12 98 1E6
+E1 99 13 POLY(1) 99 24 -2.4 1
+D3 12 13 DX
+E2 14 50 POLY(1) 24 50 -2.4 1
+D4 14 12 DX
+*
+* 2nd GAIN STAGE & DOMINANT POLE AT 0.37 HZ
+*
+G2 98 15 12 24 33.333E-6
+R8 15 98 215.07E6
+C3 15 98 2E-9
+V1 99 16 DC 1.275
+D5 15 16 DX
+V2 17 50 DC 1.275
+D6 17 15 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 561.01 HZ
+*
+ECM 18 98 3 24 1.9953
+RCM1 18 19 1E6
+CCM 18 19 283.69E-12
+RCM2 19 98 1
+*
+* NEGATIVE ZERO AT 1.8 MHz
+*
+ENZ 20 98 15 24 1E6
+RNZ1 20 21 -1E6
+CNZ 20 21 88.419E-15
+RNZ2 21 98 -1
+*
+* POLE AT 6 MHZ
+*
+G3 98 22 21 24 1E-6
+R9 22 98 1E6
+C4 22 98 26.526E-15
+*
+* POLE AT 1.8 MHZ
+*
+G4 98 23 22 24 1E-6
+R15 23 98 1E6
+C8 23 98 88.419E-15
+*
+* OUTPUT STAGE
+*
+R16 24 99 160K
+R17 24 50 160K
+ISY 99 50 431E-6
+D7 23 28 DX
+V3 28 27 DC 1.9
+D8 29 23 DX
+V4 27 29 DC 1.9
+D9 99 30 DX
+G5 30 50 23 27 5E-3
+D11 50 30 DY
+D10 99 31 DX
+G6 31 50 27 23 5E-3
+D12 50 31 DY
+G7 27 99 99 23 5E-3
+R18 27 99 200
+G8 50 27 23 50 5E-3
+R19 27 50 200
+L1 27 32 0.1E-6
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=250E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DY D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP61A;OP61A;Opamps;AD-"OPxxx";Wideband 200MHz GBWP
+*SYM=ADOPAMP
+* OP61 SPICE Macro-model                  12/90, Rev. B
+*                                          ARG / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 2E-7 to 1E-7
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP61A  1 2 99 50 38
+*
+* INPUT STAGE & POLE AT 300 MHZ
+*
+R1   2  3     5E11
+R2   1  3     5E11
+R3   5 99     51.6
+R4   6 99     51.6 
+CIN  1  2     5E-12
+C2   5  6     5.141E-12
+I1   4  50    1E-3
+IOS  1  2     1E-7
+EOS  9  1     POLY(1)  26 32  400E-6  1
+Q1   5  2  4  QX
+Q2   6  9  4  QX
+*
+* FIRST GAIN STAGE
+*
+R7  11 99     1E6
+R8  11 50     1E6
+D11 11 10     DX
+D12 12 11     DX
+G1  99 11     5 6 2E-4
+G2  11 50     6 5 2E-4
+E1  99 10     POLY(1)  99  32  -4.4  1
+E2  12 50     POLY(1)  32  50  -4.4  1
+*
+* SECOND GAIN STAGE & POLE AT 2.5 KHZ
+*
+R9  13 99     5.1598E6
+R10 13 50     5.1598E6
+C3  13 99     12.338E-12
+C4  13 50     12.338E-12
+G3  99 13     POLY(1)  11 32  4.24E-3  9.69E-5
+G4  13 50     POLY(1)  32 11  4.24E-3  9.69E-5
+V2  99 14     2.3
+V3  15 50     2.3
+D1  13 14     DX
+D2  15 13     DX
+*
+* POLE-ZERO PAIR AT 4 MHZ / 8 MHZ
+*
+R11 16 99     1E6
+R12 16 50     1E6
+R13 16 17     1E6
+R14 16 18     1E6
+C5  17 99     19.89E-15
+C6  18 50     19.89E-15
+G5  99 16     13 32  1E-6
+G6  16 50     32 13  1E-6
+*
+* ZERO-POLE PAIR AT 85 MHZ / 300 MHZ
+*
+R17 19 20     1E6
+R18 19 21     1E6
+R19 20 99     2.529E6
+R20 21 50     2.529E6
+L3  20 99     1.342E-3
+L4  21 50     1.342E-3
+G7  99 19     16 32  1E-6
+G8  19 50     32 16  1E-6
+*
+* POLE AT 40 MHZ
+*
+R21 22 99     1E6
+R22 22 50     1E6
+C7  22 99     3.979E-15
+C8  22 50     3.979E-15
+G9  99 22     19 32  1E-6
+G10 22 50     32 19  1E-6
+*
+* POLE AT 200 MHZ
+*
+R23 23 99     1E6
+R24 23 50     1E6
+C9  23 99     .796E-15
+C10 23 50     .796E-15
+G11 99 23     22 32  1E-6
+G12 23 50     32 22  1E-6
+*
+* POLE AT 200 MHZ
+*
+R25 24 99     1E6
+R26 24 50     1E6
+C11 24 99     .796E-15
+C12 24 50     .796E-15
+G13 99 24     23 32  1E-6
+G14 24 50     32 23  1E-6
+*
+* POLE AT 200 MHZ
+*
+R27 25 99     1E6
+R28 25 50     1E6
+C13 25 99     .796E-15
+C14 25 50     .796E-15
+G15 99 25     24 32  1E-6
+G16 25 99     32 24  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 40 KHZ
+*
+R29 26 27     1E6
+R30 26 28     1E6
+L5  27 99     3.979
+L6  28 50     3.979
+G17 99 26     3 32  1E-11
+G18 26 50     32 3  1E-11
+*
+* POLE AT 300 MHZ
+*
+R32 31 99     1E6
+R33 31 50     1E6
+C15 31 99     .531E-15
+C16 31 50     .531E-15 
+G19 99 31     25 32  1E-6
+G20 31 50     32 25  1E-6
+*
+* OUTPUT STAGE
+*
+R34 32 99     20.0E3
+R35 32 50     20.0E3
+R36 33 99     30
+R37 33 50     30
+L7  33 38     1.65E-7
+G21 36 50     31 33  33.3333333E-3
+G22 37 50     33 31  33.3333333E-3
+G23 33 99     99 31  33.3333333E-3
+G24 50 33     31 50  33.3333333E-3
+V6  34 33     .2
+V7  33 35     .2
+D5  31 34     DX
+D6  35 31     DX
+D7  99 36     DX
+D8  99 37     DX
+D9  50 36     DY
+D10 50 37     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=1250)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP64A;OP64A;Opamps;AD-"OPxxx";High Speed 170V/us
+*SYM=ADOPAMP
+* OP64 SPICE Macro-model                  12/90, Rev. C  
+*                                          JCB / PMI
+*
+* Revision History:
+*   REV. C
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 1E-7 to 0.5E-7
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP64A  1 2 99 50 38
+*
+* INPUT STAGE & POLE AT 39.8 MHZ
+*
+R1   2  3     5E11
+R2   1  3     5E11
+R3   5 99     474.86
+R4   6 99     474.86
+R5   4  7     423.26
+R6   4  8     423.26
+CIN  1  2     1E-15
+C2   5  6     4.2106E-12
+I1   4  50    1E-3
+IOS  1  2     0.5E-7
+EOS  9  1     POLY(1)  26 32  4E-4  1
+Q1   5  2  7  QX
+Q2   6  9  8  QX
+*
+* SECOND STAGE & POLE AT 3.8 KHZ
+*
+R7  11 99     7.1229E6
+R8  11 50     7.1229E6
+C3  11 99     5.88E-12
+C4  11 50     5.88E-12
+G1  99 11     POLY(1)  5  6  4.31E-3  2.1059E-3
+G2  11 50     POLY(1)  6  5  4.31E-3  2.1059E-3
+V2  99 10     2.25
+V3  12 50     2.25
+D1  11 10     DX
+D2  12 11     DX
+*
+* POLE AT 39.8 MHZ
+*
+R9  13 99     1E6
+R10 13 50     1E6
+C5  13 99     4E-15
+C6  13 50     4E-15
+G3  99 13     11 32  1E-6
+G4  13 50     32 11  1E-6
+*
+* ZERO-POLE PAIR AT 26.5 MHZ / 159 MHZ
+*
+R13 16 17     1E6
+R14 16 18     1E6
+R15 17 99     5E6
+R16 18 50     5E6
+L1  17 99     5.005E-3
+L2  18 50     5.005E-3
+G5  99 16     13 32  1E-6
+G6  16 50     32 13  1E-6
+*
+* ZERO-POLE PAIR AT 31.8 MHZ / 39.8 MHZ
+*
+R17 19 20     1E6
+R18 19 21     1E6
+R19 20 99     2.5157E5
+R20 21 50     2.5157E5
+L3  20 99     1.006E-3
+L4  21 50     1.006E-3
+G7  99 19     16 32  1E-6
+G8  19 50     32 16  1E-6
+*
+* POLE AT 100 MHZ
+*
+R21 22 99     1E6
+R22 22 50     1E6
+C7  22 99     1.59E-15
+C8  22 50     1.59E-15
+G9  99 22     19 32  1E-6
+G10 22 50     32 19  1E-6
+*
+* POLE AT 159 MHZ
+*
+R23 23 99     1E6
+R24 23 50     1E6
+C9  23 99     1E-15
+C10 23 50     1E-15
+G11 99 23     22 32  1E-6
+G12 23 50     32 22  1E-6
+*
+* POLE AT 159 MHZ
+*
+R25 24 99     1E6
+R26 24 50     1E6
+C11 24 99     1E-15
+C12 24 50     1E-15
+G13 99 24     23 32  1E-6
+G14 24 50     32 23  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 20 KHZ
+*
+R29 26 27     1E6
+R30 26 28     1E6
+L5  27 99     7.9575
+L6  28 50     7.9575
+G17 99 26     3 32  1E-11
+G18 26 50     32 3  1E-11
+*
+* POLE AT 159 MHZ
+*
+R32 31 99     1E6
+R33 31 50     1E6
+C15 31 99     1E-15
+C16 31 50     1E-15
+G19 99 31     24 32  1E-6
+G20 31 50     32 24  1E-6
+*
+* OUTPUT STAGE
+*
+R34 32 99     20.0E3
+R35 32 50     20.0E3
+R36 33 99     60
+R37 33 50     60
+L7  33 38     2.9E-7
+G21 36 50     31 33  16.6666667E-3
+G22 37 50     33 31  16.6666667E-3
+G23 33 99     99 31  16.6666667E-3
+G24 50 33     31 50  16.6666667E-3
+V6  34 33     1.7
+V7  33 35     1.7
+D5  31 34     DX
+D6  35 31     DX
+D7  99 36     DX
+D8  99 37     DX
+D9  50 36     DY
+D10 50 37     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=5000)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP90A;OP90A;Opamps;AD-"OPxxx";Micropower, 20uA Isup. max.
+*SYM=ADOPAMP
+* OP-90 SPICE Macro-model                   10/92, Rev. C
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. C
+*     Altered gain stage for proper open-loop gain.
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 0.4E-9 to 0.2E-9
+*
+* Copyright 1990 by Analog Devices, Inc.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP90A  1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1UA
+IOS   1  2     0.2E-9
+EOS   9  1     POLY(1)  23 27  50E-6  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  42.23E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.035 HZ
+*
+R8   13 98     5.457E6
+C3   13 98     83.333E-8
+G2   98 13     10 27  5E-3
+H2   97 14     POLY(1) VS2 1.6 -3E3
+E5   15 51     POLY(2)  17 51   97 27  1.4 1.5 -0.4
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+F1   51  17    VS2  -1000
+RS1  17  51    1E9
+D5   17  51    DX
+D6   51  17    DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     1E6
+C4   19 20     -1.59E-12
+R10  20 98     1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 4 HZ
+*
+R13  23 24     1E6
+L2   24 98     39.79E3
+G4   98 23     3  27  3.16E-13
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     8.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=125)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP90AA;OP90AA;Opamps;AD-"OPxxx";Micropower, 20uA Isup. max.
+*SYM=ADOPAMP
+* OP90A SPICE Macro-model        12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 3E-9 to 1.5E-9
+*
+*
+* This version of the OP90 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP90AA 1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     1.5E-9
+EOS   9  1     POLY(1)  23 27  150E-6  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.47E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.323 HZ
+*
+R8   13 98     2.464E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -2.6
+V2   15 51     -2.6
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 126 HZ
+*
+R13  23 24     1E6
+L2   24 98     1.257E3
+G4   98 23     3  27  1E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     8.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=33.333)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP90EA;OP90EA;Opamps;AD-"OPxxx";Micropower, 20uA Isup. max.
+*SYM=ADOPAMP
+* OP90E SPICE Macro-model        12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 3E-9 to 1.5E-9
+*
+*
+* This version of the OP90 model simulates the worst case 
+* parameters of the 'E' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP90EA 1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     1.5E-9
+EOS   9  1     POLY(1)  23 27  150E-6  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.47E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.323 HZ
+*
+R8   13 98     2.464E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -2.6
+V2   15 51     -2.6
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 126 HZ
+*
+R13  23 24     1E6
+L2   24 98     1.257E3
+G4   98 23     3  27  1E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     8.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=33.333)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP90FA;OP90FA;Opamps;AD-"OPxxx";Micropower, 20uA Isup. max.
+*SYM=ADOPAMP
+* OP90F SPICE Macro-model           12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 5E-9 to 2.5E-9
+*
+*
+* This version of the OP90 model simulates the worst case 
+* parameters of the 'F' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP90FA 1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     2.5E-9
+EOS   9  1     POLY(1)  23 27  250E-6  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.36E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.403 HZ
+*
+R8   13 98     1.973E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -2.6
+V2   15 51     -2.6
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 400 HZ
+*
+R13  23 24     1E6
+L2   24 98     397.9
+G4   98 23     3  27  3.162E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     8.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=25)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=OP90GA;OP90GA;Opamps;AD-"OPxxx";Micropower, 20uA Isup. max.
+*SYM=ADOPAMP
+* OP90G SPICE Macro-model           12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 5E-9 to 2.5E-9
+*
+*
+* This version of the OP90 model simulates the worst case 
+* parameters of the 'G' grade.  The worst case parameters
+* used correspond to those in the data book.
+*
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |
+.SUBCKT OP90GA 1 2 99 50 31
+*
+* INPUT STAGE & POLE AT 10 KHZ
+*
+R1    2  3     5E11
+R2    1  3     5E11
+R3    5 51     61.6E3
+R4    6 51     61.6E3
+CIN   1  2     4E-12
+C2    5  6     129.2E-12
+I1    97 4     1E-6
+IOS   1  2     2.5E-9
+EOS   9  1     POLY(1)  23 27  450E-6  1
+Q1    5  2  7  QX
+Q2    6  9  8  QX
+R5    7  4     10E3
+R6    8  4     10E3
+*
+EREF  98 0    27  0  1
+EPLUS 97 0    99  0  1
+ENEG  51 0    50  0  1 
+*
+* FIRST GAIN STAGE
+*
+R7   10 98     1E6
+G1   98 10     5  6  101.36E-6
+D1   10 11     DX
+D2   12 10     DX
+E1   97 11     POLY(1) 97 27 -1.4 1
+E2   12 51     POLY(1) 27 51 -1.4 1
+*
+* GAIN STAGE & DOMINANT POLE AT 0.403 HZ
+*
+R8   13 98     1.973E9
+C3   13 98     200E-12
+G2   98 13     10 27  0.5E-6
+V1   97 14     -2.6
+V2   15 51     -2.6
+D3   13 14     DX
+D4   15 13     DX
+*
+* ZERO-IN ZERO-OUT CLAMP
+*
+D5   16 13     DX
+H1   16 51     POLY(1) VS1 1.05 -119E6
+F1   51 17     VS2 1
+D6   17 18     DX
+VS1  18 51     DC 0
+D7   51 17     DX
+*
+* NEGATIVE ZERO AT -100 KHZ
+*
+R9   19 20     -1E6
+C4   19 20     1.59E-12
+R10  20 98     -1
+E3   19 98     13 27  1E6
+*
+* ZERO - POLE PAIR AT 28 KHZ / 100 KHZ
+*
+R11  21 22     1E6
+L1   22 98     4.09
+R12  22 98     2.57E6
+G3   98 21     20 27  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 400 HZ
+*
+R13  23 24     1E6
+L2   24 98     397.9
+G4   98 23     3  27  3.162E-11
+D8   23 97     DX
+D9   51 23     DX
+*
+* ZERO - POLE PAIR AT 40 KHZ / 160 KHZ
+*
+R14  25 26     1E6
+L3   26 98     2.98
+R15  26 98     3E6
+G5   98 25     21 27  1E-6
+*
+* OUTPUT STAGE
+*
+ISY  99 50     8.444E-6
+R16  27 99     2.7E6
+R17  27 50     2.7E6
+R18  30 99     6000
+R19  30 50     6000
+VS2  30 31     DC 0
+G6   28 50     25 30  166.7E-6
+G7   29 50     30 25  166.7E-6
+G8   30 99     99 25  166.7E-6
+G9   50 30     25 50  166.7E-6
+D10  99 28     DX
+D11  99 29     DX
+D12  50 28     DY
+D13  50 29     DY
+*
+* MODELS USED
+*
+.MODEL QX PNP(BF=20)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=PM1012A;PM1012A;Opamps;AD-"PMxxx";Low Power, 600uA Isup. max.
+*SYM=ADOPAMP
+* PM1012 SPICE Macro-model                 12/90, Rev. B
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. B
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 15E-12 to 7.5E-12
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT PM1012A  1 2 99 50 38
+*
+* INPUT STAGE & POLE AT 15 MHZ
+*
+R1   2  3     5E11
+R2   1  3     5E11
+R3   5 99     612
+R4   6 99     612 
+CIN  1  2     4E-12
+C2   5  6     8.67E-12
+I1   4  50    0.1E-3
+IOS  1  2     7.5E-12
+EOS  9  1     POLY(1)  26 32  8E-6  1
+Q1   5  2 10  QX
+Q2   6  9 11  QX
+R5   10 4     96
+R6   11 4     96
+D12  2  9     DX
+D13  9  2     DX
+*
+* GAIN STAGE & DOMINANT POLE AT 0.26 HZ
+*
+R9  13 99     1.22E9
+R10 13 50     1.22E9
+C3  13 99     500E-12
+C4  13 50     500E-12
+G3  99 13     5  6  1.634E-3
+G4  13 50     6  5  1.634E-3
+V2  99 14     1.3
+V3  15 50     1.3
+D1  13 14     DX
+D2  15 13     DX
+GS  99 50     POLY(1)  99 50  0.28E-3  -3.7E-6
+*
+* ZERO-POLE PAIR AT 150 KHZ / 285 KHZ
+*
+R17 19 20     1E6
+R18 19 21     1E6
+R19 20 99     0.9E6
+R20 21 50     0.9E6
+L3  20 99     0.503
+L4  21 50     0.503
+G7  99 19     13 32  1E-6
+G8  19 50     32 13  1E-6
+*
+* POLE AT 4.8 MHZ
+*
+R21 22 99     1E6
+R22 22 50     1E6
+C7  22 99     33.2E-15
+C8  22 50     33.2E-15
+G9  99 22     19 32  1E-6
+G10 22 50     32 19  1E-6
+*
+* POLE AT 8 MHZ
+*
+R23 23 99     1E6
+R24 23 50     1E6
+C9  23 99     19.9E-15
+C10 23 50     19.9E-15
+G11 99 23     22 32  1E-6
+G12 23 50     32 22  1E-6
+*
+* POLE AT 10 MHZ
+*
+R25 24 99     1E6
+R26 24 50     1E6
+C11 24 99     15.9E-15
+C12 24 50     15.9E-15
+G13 99 24     23 32  1E-6
+G14 24 50     32 23  1E-6
+*
+* POLE AT 15 MHZ
+*
+R27 25 99     1E6
+R28 25 50     1E6
+C13 25 99     10.6E-15
+C14 25 50     10.6E-15
+G15 99 25     24 32  1E-6
+G16 25 99     32 24  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 50 KHZ
+*
+R29 26 27     1E6
+R30 26 28     1E6
+L5  27 99     3.183E3
+L6  28 50     3.183E3
+RS1 27 99     16E9
+RS2 28 50     16E9
+G17 99 26     3 32  2.51E-13
+G18 26 50     32 3  2.51E-13
+D3  26 99     DX
+D4  50 26     DX
+*
+* POLE AT 12 MHZ
+*
+R32 31 99     1E6
+R33 31 50     1E6
+C15 31 99     13.2E-15
+C16 31 50     13.2E-15 
+G19 99 31     25 32  1E-6
+G20 31 50     32 25  1E-6
+*
+* OUTPUT STAGE
+*
+R34 32 99     1E6
+R35 32 50     1E6
+R36 33 99     600
+R37 33 50     600
+L7  33 38     2.65E-7
+G21 36 50     31 33  1.6667E-3
+G22 37 50     33 31  1.6667E-3
+G23 33 99     99 31  1.6667E-3
+G24 50 33     31 50  1.6667E-3
+V6  34 33     3.6
+V7  33 35     3.0
+D5  31 34     DX
+D6  35 31     DX
+D7  99 36     DX
+D8  99 37     DX
+D9  50 36     DY
+D10 50 37     DY
+*
+* MODELS USED
+*
+.MODEL QX NPN(BF=2E6)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********
+*SRC=SSM2131A;SSM2131A;Opamps;AD-"SSMxxx";JFET Input, Low Distortion
+*SYM=ADOPAMP
+* SSM2131 SPICE Macro-model                12/90, Rev. C
+*                                           JCB / PMI
+*
+* Revision History:
+*   REV. C
+*     Re-ordered subcircuit call out nodes to put the 
+*     output node last.
+*     Changed Ios from 6E-12 to 3E-12
+*
+*
+* Node assignments
+*                non-inverting input
+*                | inverting input
+*                | | positive supply
+*                | | |  negative supply
+*                | | |  |  output
+*                | | |  |  |
+.SUBCKT SSM2131A 1 2 99 50 32
+*
+* INPUT STAGE & POLE AT 15.9 MHZ
+*
+R1   1  3     5E11
+R2   2  3     5E11
+R3   5 50     707.36
+R4   6 50     707.36
+CIN  1  2     5E-12
+C2   5  6     7.08E-12
+I1  99  4     1E-3
+IOS  1  2     3E-12
+EOS  7  1     POLY(1)  20 26  1.5E-3  1
+J1   5  2  4  JX
+J2   6  7  4  JX
+*
+* SECOND STAGE & POLE AT 45 HZ
+*
+R5   9 99     176.84E6
+R6   9 50     176.84E6
+C3   9 99     20E-12
+C4   9 50     20E-12
+G1  99  9     POLY(1)  5  6  3.96E-3  1.4137E-3
+G2   9 50     POLY(1)  6  5  3.96E-3  1.4137E-3
+V2  99  8     2.5
+V3  10 50     3.1
+D1   9  8     DX
+D2  10  9     DX
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R7  11 99     1E6
+R8  11 50     1E6
+R9  11 12     4.5E6
+R10 11 13     4.5E6
+C5  12 99     16.1E-15
+C6  13 50     16.1E-15
+G3  99 11     9  26  1E-6
+G4  11 50     26  9  1E-6
+*
+* POLE-ZERO PAIR AT 1.80 MHZ / 2.20 MHZ
+*
+R11 14 99     1E6
+R12 14 50     1E6
+R13 14 15     4.5E6
+R14 14 16     4.5E6
+C7  15 99     16.1E-15
+C8  16 50     16.1E-15
+G5  99 14     11 26  1E-6
+G6  14 50     26 11  1E-6
+*
+* POLE AT 53 MHZ
+*
+R15 17 99     1E6
+R16 17 50     1E6
+C9  17 99     3E-15
+C10 17 50     3E-15
+G7  99 17     14 26  1E-6
+G8  17 50     26 14  1E-6
+*
+* POLE AT 53 MHZ
+*
+R17 18 99     1E6
+R18 18 50     1E6
+C11 18 99     3E-15
+C12 18 50     3E-15
+G9  99 18     17 26  1E-6
+G10 18 50     26 17  1E-6
+*
+* POLE AT 53 MHZ
+*
+R19 19 99     1E6
+R20 19 50     1E6
+C13 19 99     3E-15
+C14 19 50     3E-15
+G11 99 19     18 26  1E-6
+G12 19 50     26 18  1E-6
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 100 KHZ
+*
+R21 20 21     1E6
+R22 20 23     1E6
+L1  21 99     1.5915
+L2  23 50     1.5915
+G13 99 20     3  26  25.1E-12
+G14 20 50     26  3  25.1E-12
+*
+* POLE AT 79.6 MHZ
+*
+R24 25 99     1E6
+R25 25 50     1E6
+C15 25 99     2E-15
+C16 25 50     2E-15
+G15 99 25     19 26  1E-6
+G16 25 50     26 19  1E-6
+*
+* OUTPUT STAGE
+*
+R26 26 99     111.1E3
+R27 26 50     111.1E3
+R28 27 99     90
+R29 27 50     90
+L3  27 32     2.5E-7
+G17 30 50     25 27  11.1111E-3
+G18 31 50     27 25  11.1111E-3
+G19 27 99     99 25  11.1111E-3
+G20 50 27     25 50  11.1111E-3
+V6  28 27     0.7
+V7  27 29     0.7
+D5  25 28     DX
+D6  29 25     DX
+D7  99 30     DX
+D8  99 31     DX
+D9  50 30     DY
+D10 50 31     DY
+*
+* MODELS USED
+*
+.MODEL JX PJF(BETA=999.3E-6  VTO=-2.000  IS=13E-11)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+**********

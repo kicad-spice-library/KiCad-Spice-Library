@@ -1,0 +1,47 @@
+Example 9.3 N-Channel JFET Amplifier
+
+* Input voltage has 0.5V peak at 1kHz with zero offset value for
+* transient response and 0.5V peak for frequency response
+
+VIN 1 0 AC 0.5V SIN(0 0.5V 1KHZ)
+VDD 7 0 DC 20V
+
+* Dummy voltage source of 0V
+VI 8 2 DC 0V
+VX 6 9 DC 0V
+RRS 1 8 50
+RG 3 0 0.5MEG
+RD 7 4 3.5K
+RS 5 0 1.5K
+RL 9 0 20K
+C1 2 3 1UF
+C2 4 6 1UF
+CS 5 0 10UF
+
+* N-channel JFET with model JMOD
+J1 4 3 5 JMOD
+.MODEL JMOD NJF (IS=100E-14 RD=10 RS=10 BETA=1E-3 CGD=5PF CGS=1PF VTO=-5)
+
+* AC analysis at 1KHz with linear increment and only 1 point
+.AC LIN 1 1kHz 1kHz
+
+* Transient analysis with details of of transient analysis operating point
+.TRAN 10US 1MS
+
+* Print the details of AC analysis operating point
+.OP
+
+* Print the results of AC analysis for the magnitudes of voltages at
+* node 6 and 1 and for the magnitude of current through RRS and VX
+* .PRINT AC VM(6) VP(6) IM(RRS) IP(RRS)
+.PRINT AC VM(6) VP(6)
+.PRINT AC IM(VI) IP(VI) IM(VX) IP(VX)
+
+* Plot the transient response
+.PLOT TRAN V(6) V(1)
+
+* Commands for Spice3
+*#run
+*#plot v(6) v(1)
+
+.END
