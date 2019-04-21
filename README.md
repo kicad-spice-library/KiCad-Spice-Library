@@ -1,5 +1,5 @@
 # KiCad Spice Library
-This organization and repo is born from the need of having an easy way to find Spice models
+This organization and repo is born from the need of having an easy way to find Spice models. It is not made by KiCad or Spice itself but it is user powered
 
 ## Modules
 In this folder there are all the modules and libraries, I tried to organize them with a minimum of logic but better approaches then mine are really welcome
@@ -25,7 +25,12 @@ This script downloaded all the 1803 files from http://espice.ugr.es/espice/src/m
 ## Supported.pickle
 This file is a [python serialized dictionary](https://docs.python.org/3/library/pickle.html) where every key is a model and the items are path to libraries where that model is defined. It is not made to be read by humans, use [Supported.txt](Supported.txt) instead
 
+# License
+
+I do not own any license for the files inside the `Modules` folder, if you find any of them that breaks a license open an issue or send a message and it would be removed as soon as possible. All library, modules and other are released with their own license. The GPL3 is related only to the files in the `Scripts` folder
+
 # Contribuite
+
 Do a pull request, add a library, module, whatever in the category that suit better in [Modules](/Modules) or improve the python scripts or surprise me!
 
 I would like to accept in the organization other KiCad or Spice fans to keep this page going on, if you would like to partecipate open an issue
