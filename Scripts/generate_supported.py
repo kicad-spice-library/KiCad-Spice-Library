@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This script generate a file called Supported.txt
+This script generate Supported.txt and Supported.pickle
 basing on the models found in the lib and mod files
 """
 
@@ -9,8 +9,9 @@ import os, re, pickle
 folder = os.path.dirname(os.getcwd()) + '/Models/'
 supported_txt_path = os.path.dirname(os.getcwd()) + '/Supported.txt'
 supported_pickle_path = os.path.dirname(os.getcwd()) + '/Supported.pickle'
+folder_name = os.path.basename(os.path.dirname(os.getcwd()))
 
-supported =	dict()
+supported = dict()
 
 files_txt = list()
 files_lib = list()
@@ -20,33 +21,35 @@ files_fam = list()
 files_cir = list()
 files_other = list()
 
-# Function to extract models from spice file
-def extrac_models(file, extract):
+def read_file(file):
     with open(file, 'r', encoding="utf8", errors='ignore') as f:
-        content = f.read().lower()
+        return f.read().lower()
 
+# Function to extract models from spice file
+def extrac_models(path, content, extract, debug = False):
+    if (isinstance(extract, list)):
+        extract = tuple(extract)
     for line in content.splitlines():
         if (line.startswith(extract)):
-            model = re.split('\s', line)[1]
+            try:
+                model = re.split('\s+', line)[1] # Split the line and get the model
+            except IndexError:
+                continue
             if model: # Get rid of empty string
-                add_model(model, file)
-
-# Function to add model and the file from where it cames
-def add_model(mod, path):
-    if not mod in supported: # It is the first time we see this model
-        supported[mod] = list()
-        supported[mod].append(path) # Add to supported with the path to find it
-    else: # It is a duplicate...
-        if not path in supported[mod]: # ...but from a different file
-            supported[mod].append(path) # So we add it
-    
+                if debug: print(model)
+                if not model in supported: # It is the first time we see this model
+                    supported[model] = list()
+                    supported[model].append(path) # Add to supported with the path to find it
+                else: # It is a duplicate...
+                    if not path in supported[model]: # ...but from a different file
+                        supported[model].append(path) # So we add it
 
 # Separate file by extension
 for root, dirs, files in os.walk(folder):
     for name in files:
         f = os.path.join(root, name)
         extension = os.path.splitext(f)[1][1:].lower()
-        
+
         if (extension == 'txt'):
             files_txt.append(f)
         elif (extension == 'lib'):
@@ -74,18 +77,24 @@ for f in files_other:
     print('Not recognized: {}'.format(f))
 print()
 
-# Extract model from lib files
 for file in files_lib:
-    extrac_models(file, '.model')
+    content = read_file(file)
+    if content.startswith("eeschema-library version 2.3"):
+        # Extract EESchema-LIBRARY Version 2.3
+        extrac_models(file, content, '# ')
+    else:
+        # Extract subckt and model
+        extrac_models(file, content, ['.subckt', '.model']) 
 
-# Extract model from mod files
 for file in files_mod:
-    extrac_models(file, '.model')      
+    content = read_file(file)
+    # Extract subckt and model
+    extrac_models(file, content, ['.subckt', '.model'])
 
-# Extract subckt from fam files
-for file in files_mod:
-    extrac_models(file, '.subckt')
-
+for file in files_fam:
+    content = read_file(file)
+    # Extract subckt
+    extrac_models(file, content, '.subckt')
 
 print('There are {} models'.format(len(supported)))
 
@@ -93,16 +102,17 @@ print('There are {} models'.format(len(supported)))
 # Pickle file useful to load it later https://docs.python.org/3/library/pickle.html
 with open(supported_pickle_path, 'wb') as file:
     pickle.dump(supported, file, protocol=pickle.HIGHEST_PROTOCOL)
-    print('{} created'.format(supported_pickle_path))    
+    print('{} created'.format(supported_pickle_path))
 
 # Normal text file, good to be read by humans
 with open(supported_txt_path, 'w') as file:
-    ''' # Write part name and path
+    '''
+    # Write part name with path
     for part, path in sorted(supported.items()):
-        path = ' - '.join(p[p.index('KiCad-Spice-Library') + 19:] for p in path)
+        path = ' - '.join(p[p.index(folder_name)+len(folder_name):] for p in path)
         file.write('{}\t{}\n'.format(part, path))
     '''
-    # Write only part name
+    # Write part name without path
     for part in sorted(supported.keys()):
         file.write(part + '\n')
     print('{} created'.format(supported_txt_path))

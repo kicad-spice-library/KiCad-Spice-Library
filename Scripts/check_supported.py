@@ -8,13 +8,14 @@ import os, pickle, sys
 
 supported_pickle_path = os.path.dirname(os.getcwd()) + '/Supported.pickle'
 supported_txt_path = os.path.dirname(os.getcwd()) + '/Supported.txt'
+folder_name = os.path.basename(os.path.dirname(os.getcwd()))
 supported = dict()
 
 # Print the models and the file in which it is located
 def print_match(part):
-    path = ', '.join(p[p.index('KiCad-Spice-Library')+19:] for p in supported[part])
+    path = ', '.join(p[p.index(folder_name)+len(folder_name):] for p in supported[part])
     print('{} found in {}'.format(part, path))
-    
+
 # Get similar models
 def get_similar(string):
     similar = list()
@@ -26,16 +27,14 @@ def get_similar(string):
 
 # Search
 def search(module):
-    print('Searching {} between {} models:'.format(module, len(supported)))
     if not module in supported_str:
-        print('Not found!')
+        print('{} not found!'.format(module))
         
     elif module in supported_str and not module in supported: # Typo?
         similar_part = ', '.join(get_similar(module))
-        print('Not found, maybe you meant one of these: {}'.format(similar_part))
+        print('{} not found, maybe you meant one of these: {}'.format(module, similar_part))
         
     else:
-        print('Found!\n')
         print_match(module)
         
         # Search also similar parts
@@ -49,7 +48,6 @@ def search(module):
             for part in similar_part:
                 print_match(part)
 
-
 # Load the supported dictionary using pickle
 with open(supported_pickle_path, 'rb') as file:
     supported = pickle.load(file)
@@ -57,7 +55,6 @@ with open(supported_pickle_path, 'rb') as file:
 # Load the string of supported models
 with open(supported_txt_path, 'r') as file:
     supported_str = file.read()
-
 
 # Part to search
 print('Write \'exit\' when you want to stop')
