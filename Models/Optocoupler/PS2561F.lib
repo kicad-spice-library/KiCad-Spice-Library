@@ -1,0 +1,57 @@
+Model: PS2561F-1
+* A = PIN 1: diode anode
+* K = PIN 2: diode cathode
+* E = PIN 3: BJT emitter
+* C = PIN 4: BJT collector
+.SUBCKT PS2561F A K E C
+D1 A D LED
+*OptoLED
+Vsense D K 0
+*Forward If current sense
+*using Vsense
+Hd R 0 Vsense 1
+*I-V (current dependent voltage source)
+Parameter Symbol Conditions MIN. TYP. MAX. Unit
+Diode
+Forward Voltage VF IF = 10 mA 1.2 1.4 V
+Reverse Current IR VR = 5 V 5 μA
+Terminal Capacitance Ct V = 0 V, f = 1.0 MHz 10 pF
+Transistor Collector to Emitter Dark Current ICEO IF = 0 mA, VCE = 80 V 100 nA
+Coupled
+Current Transfer Ratio (IC/IF)*1 CTR IF = 5 mA, VCE = 5 V 300 450 600 % IF = 1 mA, VCE = 5 V 60
+Collector Saturation Voltage VCE (sat) IF = 10 mA, IC = 2 mA 0.3 V
+Isolation Resistance RI-O VI-O = 1.0 kVDC 1011 Ω
+Isolation Capacitance CI-O V = 0 V, f = 1.0 MHz 0.5 pF
+Rise Time*2 tr VCC = 10 V, IC = 2 mA 5
+μs Fall Time*2 tf RL = 100 W 7
+Electrical Characteristics (TA = 25˚C)
+Rd R T 100K
+Cd T 0 20p
+Gctr C B TABLE
+* Photodetector {(IC vs IF) / * Q1 BF}
+* where the data of the collector current
+* versus forward current
+* are derived from the CTR
+* graph using polynomial fit
++ {If(V(T)<=3m,
++ ((-80000000000*PWR(V(T),5)+800000000*
++ PWR(V(T),4)-3000000*PWR(V(T),3)
+++5177.2*PWR(V(T),2)+0.2453*V
++ (T)-0.00005)*1.04/700),
++ ((9000000*PWR(V(T),5)-
++998113*PWR(V(T),4)+42174*PWR
++ (V(T),3)-
++ 861.32*PWR(V(T),2)+
++ 9.0836*V(T)-0.0078)*0.945/700))}
++ (0,0) (0.1m, 0.1m)
+Q1 C B E detector
+.model LED D IS=1p N=1.999644
++ RS=0 BV=6 IBV=10u
++ CJO=10p EG=1.424 TT=500n
+.model detector NPN IS=2.857P BF=700
++ NF=1.1786653 BR=20 TF=80.64p
++ TR=4.56886n
++ CJE=16.315P CJC=21.1189P VAF=250 ISS=0
++ CJS=44.5657p ISC=120p
+.ends
+*$

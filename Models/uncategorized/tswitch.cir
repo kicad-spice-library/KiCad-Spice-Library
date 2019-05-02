@@ -1,0 +1,52 @@
+time-controlled off-on-off or on-off-on push-button switch
+**************************************************
+* parameters:
+* t1 start time for actuation
+* t2 stop time for actuation
+* on=0 switch is off before and after actuation
+*    on during  actuation
+* on=1 switch is on before and after actuation
+*    off during  actuation
+***************************************************
+
+.subckt tswitch in1 in2 t1=1n t2=2n on=0
+  * switch on- and off resistances
+  .param ron=1m roff=10Meg
+  * rise and fall times during switch actuation
+  .param tr=1u tf=1u
+  * voltage controlled switch with threshold 1V
+  S1 in1 in2 1 0 tsw
+  .model tsw sw vt=1 vh=0.02 ron='ron' roff='roff'
+  .if(on==0)
+  * single pulse as controlling voltage:
+  * beyond threshold during t1 < t < t2
+  Vsw 1 0 DC 0.0 PULSE(0 2 't1' 'tr' 'tf' 't2 - t1' 10000)
+  .else
+  * below threshold during t1 < t < t2
+  Vsw 1 0 DC 0.0 PULSE(2 0 't1' 'tr' 'tf' 't2 - t1' 10000)
+  .endif
+.ends
+
+
+*** circuit as an example for tswitch usage ********
+
+V1 1 0 1
+R1 1 2 1
+R2 2 0 1
+R3 2 22 1
+
+* invoke switch with on=0
+* with times 0 (off, control voltage below threshold), t1 (on) and t2 (off again)
+* invoke switch with on=1
+* with times 0 (on, control voltage beyond threshold), t1 (off) and t2 (on again)
+Xswitch 22 0 tswitch t1=1m t2=2m on=0
+
+.tran 100u 3m
+
+.control
+run
+plot v(2)
+.endc
+
+.end
+

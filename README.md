@@ -1,7 +1,7 @@
 # KiCad Spice Library
 This organization and repo is born from the need of having an easy way to find Spice models. It is not made by KiCad or Spice themself but it is user powered
 
-There are a total of 31463 models
+There are a total of 32.192 models
 
 ## Modules
 In this folder there are all the modules and libraries, I tried to organize them with a minimum of logic but better approaches then mine are really welcome
@@ -19,7 +19,7 @@ In the future it could be easily turned into a command line interface script or 
 ### generate_supported.py
 This script generate the list of supported modules, it should be run only when new files are added to the repo
 
-NOTE: Right now I am extracting the `.model` and `.subckt` from `*.lib` and `*.mod` files, the `.subckt` from `*.fam` files and the models from `EESchema-LIBRARY Version 2.3` so maybe there are some hidden modules around
+NOTE: Right now I am extracting the `.model` and `.subckt` from `*.lib` and `*.mod` files, the `.subckt` from `*.fam` files and the models from `EESchema-LIBRARY Version 2.x` so maybe there are some hidden modules around
 
 ### downloader.py
 This script downloaded all the 1803 files from http://espice.ugr.es/espice/src/modelos_subckt/ and saved them. It is not needed anymore and is here only for reference
