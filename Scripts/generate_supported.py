@@ -79,8 +79,8 @@ print()
 
 for file in files_lib:
     content = read_file(file)
-    if content.startswith("eeschema-library version 2.3"):
-        # Extract EESchema-LIBRARY Version 2.3
+    if content.startswith("eeschema-library version 2."):
+        # Extract EESchema-LIBRARY Version 2.x
         extrac_models(file, content, '# ')
     else:
         # Extract subckt and model
