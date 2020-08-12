@@ -1,7 +1,7 @@
 # KiCad Spice Library
 This organization and repo is born from the need of having an easy way to find Spice models. It is not made by KiCad or Spice themself but it is user powered
 
-There are a total of 32.192 models
+There are a total of 50.093 models
 
 ## Modules
 In this folder there are all the modules and libraries, I tried to organize them with a minimum of logic but better approaches then mine are really welcome
@@ -40,7 +40,7 @@ I would like to accept in the organization other KiCad or Spice fans to keep thi
 - https://github.com/ryansturmer/kicad-spice-library
 - https://groups.yahoo.com/neo/groups/LTspice/info
 - https://forum.kicad.info/t/adding-spice-components-that-do-not-exist-in-pspice-library/12036/2
-
+- http://ltwiki.org/index.php?title=Main_Page
 
 # Examples
 

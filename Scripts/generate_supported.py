@@ -19,6 +19,12 @@ files_mod = list()
 files_spi = list()
 files_fam = list()
 files_cir = list()
+files_sub = list()
+files_lb5 = list()
+files_jft = list()
+files_dio = list()
+files_bjt = list()
+files_mos = list()
 files_other = list()
 
 def read_file(file):
@@ -62,6 +68,18 @@ for root, dirs, files in os.walk(folder):
             files_fam.append(f)
         elif (extension == 'cir'):
             files_cir.append(f)
+        elif (extension == 'sub'):
+            files_sub.append(f)
+        elif (extension == 'lb5'):
+            files_lb5.append(f)
+        elif (extension == 'dio'):
+            files_dio.append(f)
+        elif (extension == 'bjt'):
+            files_bjt.append(f)
+        elif (extension == 'jft'):
+            files_jft.append(f)
+        elif (extension == 'mos'):
+            files_mos.append(f)
         else:
             files_other.append(f)
 
@@ -72,6 +90,12 @@ print('{} mod found'.format(len(files_mod)))
 print('{} spi found'.format(len(files_spi)))
 print('{} fam found'.format(len(files_fam)))
 print('{} cir found'.format(len(files_cir)))
+print('{} sub found'.format(len(files_sub)))
+print('{} lb5 found'.format(len(files_lb5)))
+print('{} dio found'.format(len(files_dio)))
+print('{} bjt found'.format(len(files_bjt)))
+print('{} jft found'.format(len(files_jft)))
+print('{} mos found'.format(len(files_mos)))
 print('{} other kind found'.format(len(files_other)))
 for f in files_other:
     print('Not recognized: {}'.format(f))
@@ -95,6 +119,36 @@ for file in files_fam:
     content = read_file(file)
     # Extract subckt
     extrac_models(file, content, '.subckt')
+
+for file in files_sub:
+    content = read_file(file)
+    # Extract subckt
+    extrac_models(file, content, '.subckt')
+
+for file in files_lb5:
+    content = read_file(file)
+    # Extract subckt and model
+    extrac_models(file, content, ['.subckt', '.model'])
+
+for file in files_dio:
+    content = read_file(file)
+    # Extract model
+    extrac_models(file, content, '.model')
+
+for file in files_bjt:
+    content = read_file(file)
+    # Extract model
+    extrac_models(file, content, '.model')
+
+for file in files_jft:
+    content = read_file(file)
+    # Extract model
+    extrac_models(file, content, '.model')
+
+for file in files_mos:
+    content = read_file(file)
+    # Extract model
+    extrac_models(file, content, '.model')
 
 print('There are {} models'.format(len(supported)))
 
