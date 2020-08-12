@@ -1,0 +1,42 @@
+* G:\SwCADIII\lib\sym\EXTRA\IRF\GATEDRV\IR21064.asc
+.SUBCKT IR21064A
+D1 Hin Vcc Dd
+D2 Vss Hin Dd
+D3 Hout Hcc Dd
+D4 Hss Hout Dd
+D5 Hss Hcc 25V
+C3 Hcc Hout 22p
+C4 Hout Hss 22p Rpar=100k
+S1 Hout Hcc Hdrv Hok SH
+S2 Hout Hss 2 Hok SL
+A1 Hin Vss 0 0 0 1 Hdrv 0 SCHMITT Trise=20n Tfall=20n Td=125n Vt=1.9 Vh=1 Tripdt=50n
+C2 Hok 2 10p
+R1 2 1 1.5k
+A2 Hcc Hss 0 0 0 Hok 0 0 SCHMITT Trise=20n Tfall=20n Td=20n Vt=8.9 Vh=.35 Tripdt=50n
+C1 Hin Vss 10p Rpar=1e6
+D7 Com Hcc 625V
+D6 Vss Vcc 25V
+D8 Lin Vcc Dd
+D9 Vss Lin Dd
+A3 Lin Vss 0 0 0 3 Ldrv 0 SCHMITT Trise=20n Tfall=20n Td=125n Vt=1.9 Vh=1 Tripdt=50n
+R2 4 3 1.5k
+A4 Vcc Com 0 0 0 Lok 0 0 SCHMITT Trise=20n Tfall=20n Td=20n Vt=8.9 Vh=.35 Tripdt=50n
+C5 Lin Vss 10p Rpar=1e6
+S3 Lout Vcc Ldrv Lok SH
+S4 Lout Com 4 Lok SL
+C6 Lok 4 10p
+D10 Lout Vcc Dd
+D11 Com Lout Dd
+D12 Com Vcc 25V
+C7 Vcc Lout 22p
+C8 Lout Com 22p Rpar=100k
+*.model D D
+*.lib G:\SwCADIII\lib\cmp\standard.dio
+* >> IR21064 <<\nBehavioral Model\nby analog@ieee.org
+.model Dd D(Ron=.5 Vfwd=.5)
+.model 25V D(Ron=.5 Vfwd=.5 Vrev=25.2 Roff=25e4)
+.model 625V D(Ron=.5 Vfwd=.5 Vrev=625 Roff=12e6)
+.model SH SW(Vt=.7 Vh=-.3 Ron=40 Ilimit=.1)
+.model SL SW(Vt=.7 Vh=-.3 Ron=15 Ilimit=.3)
+.backanno
+.ends

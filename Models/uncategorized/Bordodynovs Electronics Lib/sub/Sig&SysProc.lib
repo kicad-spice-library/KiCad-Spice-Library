@@ -1,0 +1,298 @@
+* Sig&SysProc.lib Kubov V.I. 29.08.2010
+
+* ------------------ Base ------------------
+
+.subckt amp in out
+E1 out 0 in 0 {K}
+.param K=1
+.ends amp
+
+.subckt ampInv in out
+E1 out 0 in 0 {-K}
+.param K=1
+.ends ampInv
+
+.subckt sum in1 in2 out
+E1 N001 0 in1 0 1
+E2 out N001 in2 0 1
+.ends sum
+
+.subckt subtr inP inN out
+E1 N001 0 inN 0 -1
+E2 out N001 inP 0 1
+.ends subtr
+
+.subckt mul in1 in2 out
+B1 out 0 V=V(in1)*V(in2)
+R1 in1 0 1G
+R2 in2 0 1G
+.ends mul
+
+.subckt const p 
+V1 p 0 {C}
+.ends const
+
+.subckt div in1 in2 out
+B1 out 0 V=V(in1)/V(in2)
+R1 in1 0 1G
+R2 in2 0 1G
+.ends div
+
+* ----------------- Integral & Derivative -------------
+
+.subckt integ in out
+G1 0 out in 0 1
+C1 out 0 {1/K} ic=0
+.param K=1.0
+.ends integ
+
+.subckt integT in out
+G1 0 out in 0 1
+C1 out 0 {T} ic=0
+.param T=1e-3
+.ends integT
+
+.subckt deriv in out
+C1 d in 1e-21
+R1 d 0 1
+B1 out 0 V=V(d)*1e21*{K}
+.param K=1.0
+.ends deriv
+
+.subckt derivT in out
+C1 d in 1e-21
+R1 d 0 1
+B1 out 0 V=V(d)*1e21*{T}
+.param T=1e-3
+.ends derivT
+
+* ------------------- Functions ---------------
+.subckt func_ in out
+B1 out 0 V=Y(V(in))
+R1 in 0 1G
+;.func Y(x){x*x}
+.ends func_
+
+.subckt func0 in out
+B1 out 0 V=Y0(V(in))
+R1 in 0 1G
+;.func Y(x){x*x}
+.ends func0
+
+.subckt func1 in out
+B1 out 0 V=Y1(V(in))
+R1 in 0 1G
+.ends func1
+
+.subckt func2 in out
+B1 out 0 V=Y2(V(in))
+R1 in 0 1G
+.ends func2
+
+.subckt func3 in out
+B1 out 0 V=Y3(V(in))
+R1 in 0 1G
+.ends func3
+
+.subckt func4 in out
+B1 out 0 V=Y4(V(in))
+R1 in 0 1G
+.ends func4
+
+.subckt sinX in out
+B1 out 0 V=sin(V(in))
+R1 in 0 1G
+.ends sinX
+
+.subckt cosX in out
+B1 out 0 V=cos(V(in))
+R1 in 0 1G
+.ends cosX
+
+.subckt expX in out
+B1 out 0 V=exp(V(in))
+R1 in 0 1G
+.ends expX
+
+.subckt LnX in out
+B1 out 0 V=Ln(V(in))
+R1 in 0 1G
+.ends LnX
+
+.subckt LogX in out
+B1 out 0 V=Log10(V(in))
+R1 in 0 1G
+.ends LogX
+
+.subckt powN in out
+B1 out 0 V=pow(V(in),{N})
+R1 in 0 1G
+.param N=2
+.ends powN
+
+.subckt sincX in out
+B1 out 0 V=if(abs(V(in))+0.499999,sin(V(in))/V(in),1)
+R1 in 0 1G
+.ends sinX
+
+* ------------------- Laplace -----------------
+
+.subckt intDelayK in out
+E1 out 0 in 0 Laplace({k}/(1+s*{T}))
+.param k=1 T=1e-3
+.ends intDelayK
+
+.subckt difK in out
+E1 out 0 in 0 Laplace(s*{k*T})
+.param k=1 T=1e-3
+.ends dif
+
+.subckt intK in out
+G1 0 out in 0 1 
+C1 out 0 {T/k} ic=0
+.param k=1 T=1e-3
+.ends intK
+
+.subckt difDelayK in out
+E1 out 0 in 0 Laplace(s*{k}/(1+s*{T}))
+.param k=1e-3 T=1e-3
+.ends difDelay
+
+.subckt oscK in out
+E1 out 0 in 0 Laplace({K}/(1+2*s*{T*E}+(s*{T})**2))
+.param K=1 E=0.3 T=1e-3
+.ends oscK
+
+.subckt Laplace_ in out
+R1 in 0 1G
+B1 out 0 V=V(in) Laplace(W(s))
+;.func W(p) {1/(1+p*1e-3)}
+.ends Laplace_
+
+.subckt Laplace0 in out
+R1 in 0 1G
+B1 out 0 V=V(in) Laplace(W0(s))
+.ends Laplace0
+
+.subckt Laplace1 in out
+R1 in 0 1G
+B1 out 0 V=V(in) Laplace(W1(s))
+.ends Laplace1
+
+.subckt Laplace2 in out
+R1 in 0 1G
+B1 out 0 V=V(in) Laplace(W2(s))
+.ends Laplace2
+
+.subckt Laplace3 in out
+R1 in 0 1G
+B1 out 0 V=V(in) Laplace(W3(s))
+.ends Laplace3
+
+.subckt Laplace4 in out
+R1 in 0 1G
+B1 out 0 V=V(in) Laplace(W4(s))
+.ends Laplace4
+
+* ----------- Signal Generators ---------------
+
+.subckt genTime p
+B1 p 0 V=time
+.ends genTime
+
+.subckt genSinA p
+V1 p 0 SINE(0 {A} {Fr}) AC 1 0
+.param A=1 Fr=1K
+.ends genSin
+
+.subckt genSinAW p
+V1 p 0 SINE(0 {A} {Wf/(2*Pi)}) AC 1 0
+.param A=1 Wf=1.0
+.ends genSinW
+
+.subckt genPulseB p
+V1 p 0 PULSE({Lo} {Hi} {dT} 1p 1p {Ton} {Period}) AC 1
+.params dT=1m Ton=1m Period=100m Lo=0 Hi=1
+.ends genPulseB
+
+.subckt genCLK_T p
+V1 p 0 PULSE(0 1 {T*(1-Q)} 1p 1p {T*Q} {T}) AC 1
+.params T=1m Q=0.1
+.ends genCLK_T 
+
+.subckt genCLK_F p
+V1 p 0 PULSE(0 1 {(1-Q)/Fr} 1p 1p {Q/Fr} {1/Fr}) AC 1
+.params Fr=1K Q=0.1
+.ends genCLK_F 
+
+.subckt genTrapB p
+V1 p 0 PULSE({Lo} {Hi} {dT} {Tr} {Tf} {Ton} {Period}) AC 1
+.params dT=1m Tr=1m Ton=1m Tf=1m Period=100m Lo=0 Hi=1
+.ends genTrapB
+
+.subckt genLineB p
+V1 p 0 PULSE({Lo} {Hi} {dT} {Tr} {Tf} 0 {Period}) AC 1
+.params dT=0m Tr=50m Tf=30m Period=100m Lo=0 Hi=1
+.ends genLineB
+
+.subckt genStep1 p
+V1 p 0 PULSE(0 1 1p 1p 1p) AC 1
+.ends genStep1
+
+.subckt Limit in out
+B1 out 0 V=limit(V(in),{Lo},{Hi})
+R1 in 0 1G
+.params Lo=0 Hi=1
+.ends Limit
+
+* ------------------- NoLine -------------------------
+
+.subckt LimitB in out
+B1 out 0 V=max({lo},min(V(in),{Hi}))
+R1 in 0 1G
+.params Lo=-0.5 Hi=0.5
+.ends Dead
+
+.subckt Dead in out
+B1 out 0 V=max(V(in)-{u},min(V(in)-{d},0))
+R1 in 0 1G
+.params u=0.5 d=-0.5
+.ends Dead
+
+.subckt DeadB in out
+B1 out 0 V=max(V(in)-{u}+{L},min(V(in)-{d}+{L},{L}))
+R1 in 0 1G
+.params L=0 u=0.5 d=-0.5
+.ends DeadB
+
+* --------------- Hystiresis-------------------
+
+.subckt hyster in out
+Sw 0 out in 0 SwModel
+R1 out 0 1G
+.model SwModel  Sw(Vt={t} Vh={h} Ron=1m Vser=1)
+.params t=0 h=0.5
+.ends hyster
+
+.subckt hysterB in out
+Sw 0 S in 0 SwModel
+R1 S 0 1G
+B1 out 0 V=if(V(S),{Hi},{Lo})
+.model SwModel  Sw ( Vt={(u+d)/2} Vh={(u-d)/2} Ron=1m Vser=1 )
+.params d=-0.5 u=0.5 Lo=-1 Hi=1
+.ends hysterB
+
+* ------------------ Time Domain --------------------
+
+.subckt delayT in out
+B1 out 0 V=delay(V(in),{T})
+R1 in 0 1G
+.param T=1m
+.ends delayT
+
+* Sample and Hold with two outputs. Kubov V.I., 2010
+.subckt s&h2 in clk s s&h
+A1 in 0 clk 0 0 0 s&h 0 SampleHold
+B1 s 0 V=if(V(clk)-{Thr}+0.5,V(s&h),0)
+.param Thr=0.5
+.ends s&h2

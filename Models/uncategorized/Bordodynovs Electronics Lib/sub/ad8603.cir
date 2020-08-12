@@ -1,0 +1,94 @@
+* AD8603 SPICE Macro-model
+* Typical Values
+* Soufiane Bendaoud, ADI Silicon Valley
+* Rev. 0
+* Copyright 2003 by Analog Devices
+*
+* Refer to "README.DOC" file for License Statement.  Use of this
+* model indicates your acceptance of the terms and provisions in
+* the License Statement.
+*
+* Node Assignments
+*			noninverting input
+*			|	inverting input
+*			|	|	 positive supply
+*			|	|	 |	 negative supply
+*			|	|	 |	 |	 output
+*			|	|	 |	 |	 |
+*			|	|	 |	 |	 |
+.SUBCKT AD8603		1	2	99	50	45
+* 
+* INPUT STAGE
+*
+M1  14  7  8  8 PIX L=1E-6 W=42E-6
+M2  16  2  8  8 PIX L=1E-6 W=42E-6
+M3  17  7 10 10 NIX L=1E-6 W=42E-6
+M4  18  2 10 10 NIX L=1E-6 W=42E-6
+RC5 14 50 1E+5
+RC6 16 50 1E+5
+RC7 99 17 1E+5
+RC8 99 18 1E+5
+C1  14 16 0.8E-12
+C2  17 18 0.8E-12
+I1  99  8 4E-6
+I2  10 50 4E-6
+V1  99  9 0.3
+V2  13 50 0.3
+D1   8  9 DX
+D2  13 10 DX
+EOS  7  1 POLY(3) (22,98) (73,98) (81,98) 40E-6 1 1 1
+IOS  1  2 0.05E-12
+*
+* CMRR 90dB, ZERO AT 15kHz, POLE AT 2MHz
+*
+ECM1 21 98 POLY(2) (1,98) (2,98) 0 0.5 0.5
+CCM1 21 22 3.54E-10
+RCM1 21 22 30000
+RCM2 22 98 1
+*
+* PSRR=100dB, ZERO AT 300Hz
+*
+EPSY 98 72 POLY(1) (99,50) 0 1
+CPS3 72 73 5.30E-9
+RPS3 72 73 100E+3
+RPS4 73 98 1
+*
+*
+* VOLTAGE NOISE REFERENCE OF 20nV/rt(Hz)
+*
+VN1 80 98 0
+RN1 80 98 16.45E-3
+HN  81 98 VN1 20
+RN2 81 98 1
+*
+* INTERNAL VOLTAGE REFERENCE
+*
+EREF 98  0 POLY(2) (99,0) (50,0) 0 .5 .5
+GSY  99 50 (99,50) 1.9E-6 
+EVP  97 98 POLY(1) (99,50) -0.6 0.5
+EVN  51 98 POLY(1) (50,99) 0.6 0.5
+*
+* GAIN STAGE
+*
+G1 98 30 POLY(2) (14,16) (17,18) 0 1.25E-5 1.25E-5
+R1 30 98 4.69e7
+CF 45 30 50E-12
+D3 30 97 DX
+D4 51 30 DX
+*
+* OUTPUT STAGE
+*
+M5  45 46 99 99 POX L=1E-6 W=1.61E-3
+M6  45 47 50 50 NOX L=1E-6 W=2.15E-3
+EG1 99 46 POLY(1) (98,30) 0.3778 1
+EG2 47 50 POLY(1) (30,98) 0.3771 1
+*
+* MODELS
+*
+.MODEL POX PMOS (LEVEL=2,KP=10E-6,VTO=-0.328,LAMBDA=0.01,RD=0)
+.MODEL NOX NMOS (LEVEL=2,KP=10E-6,VTO=+0.328,LAMBDA=0.01,RD=0)
+.MODEL PIX PMOS (LEVEL=2,KP=10E-6,VTO=-0.328,LAMBDA=0.01,Kf=10E-35,AF=1,TOX=100E-9)
+.MODEL NIX NMOS (LEVEL=2,KP=10E-6,VTO=+0.328,LAMBDA=0.01,KF=10E-35,AF=1,TOX=100E-9)
+.MODEL DX D(IS=1E-14,RS=5)
+.ENDS
+

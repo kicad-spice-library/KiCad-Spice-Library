@@ -1,0 +1,314 @@
+
+*INA199A2
+*****************************************************************************
+* (C) Copyright 2011 Texas Instruments Incorporated. All rights reserved.       
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: Analog eLab Design Center, Texas Instruments Inc.
+* Part: INA199A2
+* Date: 30JAN2015
+* Model Type: ALL IN ONE
+* Simulator: TINA
+* Simulator Version: 9.3.100.244 SF-TI
+* EVM Order Number: N/A
+* EVM Users Guide: N/A
+* Datasheet: SBOS469D –MAY 2009–REVISED NOVEMBER 2012
+*
+* Model Version: 1.0
+*
+*****************************************************************************
+* 
+* Updates:
+*
+* Version 1.0 : 
+* Release to Web
+*
+*****************************************************************************
+* Simulation model notes:
+*  1) CMRR and PSRR responses closely track the product to approximately 5kHz,
+*     but then begin to flatten out as the frequency is increased. The actual 
+*     product continues to roll-off as frequency is increased.
+*  2) The simulated common-mode voltage transient response exhibits peaks 
+*     associated with the input pulse edges that are inverted relative to 
+*     the datasheet plot. Otherwise the time characteristics and peak amplitude 
+*     are correct.
+*
+* Begin INA199A2
+*
+.SUBCKT INA199A2 IN+ IN- V+ GND OUT REF
+XDP6         GND IN-   D_Z26V
+XDP5         GND IN+   D_Z26V
+R4          INp IN+ 9.999975K 
+R3          INm IN- 10.000025K TC=1.5U
+XU1          IN- IN+ GND INp OUT V+ INm   INA199A2opa
+XDP4         GND REF   D_DIS1PN0_52
+XDP3         REF V+   D_DIS1PN0_52
+XDP2         GND OUT   D_DIS1PN0_52
+XDP1         OUT V+   D_DIS1PN0_52
+R2          REF INp 1.0000025MEG 
+R1          OUT INm 999.9975K TC=1.5U
+
+
+.SUBCKT INA199A2opa VBus1 VBus2 GND IN+ OUT AVDD IN-
+VS3         IGND 34 600M
+VS1         35 IGND 600M
+VLo         VM VLo 33.2616122199
+VHi         VHi VM 26.6092897759
+Vps         36 GND 5
+IS2         38 39 1U
+VS1_2       29 IGND 26
+VS2         1V GND 1
+ISb1        49 GND 1U
+VSr         50 21 120.3M
+ISr         47 21 16U
+V2          51 VLo 392.9666571583M
+V1          VHi 52 392.9666571583M
+EVSe        VAmm VAm POLY(2) Vecm VM Veps VM 0 1 -1 
+SWMD1       AVDD VGP Shdown GND  S_VSWITCH_1
+SWMD1_2     VG GND Shdown GND  S_VSWITCH_2
+XD11         33 34   D_D
+
+EVCVS1      VB VV 33 IGND  30
+XDP2         35 33   D_D
+
+C33         VB OUT 5P 
+XMD1         OUT VG GND   DRVMOS_1
+
+R201        37 VM 19.99999MEG 
+L191        37 VM 15.9154863514M 
+R191        Veps 37 10 
+G8ps        VM Veps 36 AVDD  7.9394101858N
+Rpsrr1      38 39 1G 
+XD5          VGP 40   D_ZR_2V
+
+EVMP1       40 AVDD 38 AVDD  1
+Rdn2        VGP 40 33.2333063684K 
+Gdn2        40 VGP VV VM  124.84365U
+XD4          41 VG   D_ZR_2V
+
+EVMD1       41 GND 39 GND  1
+Rdn1        VG 41 33.2333063684K 
+Gdn1        41 VG VV VM  124.84365U
+XDPO1        39 38   D_D_1
+
+C5          42 VG 2.5P 
+C4          VGP 42 2.5P 
+Rf1         42 OUT 2K 
+XT4          38 38 AVDD AVDD   DRVPMOS
+
+XMP1         OUT VGP AVDD AVDD   DRVPMOS_1
+
+XT3          39 39 GND   DRVMOS
+
+R210        43 VM 3.0612144898MEG 
+L4          43 VM 243.6037089578M 
+R20         Vecm 43 10 
+G8          VM Vecm 17 VM  1.5822914842N
+XD3          GND RT   D_D10
+GIEEc       RT GND 1V Shdown  37U
+EVCVS5      19 IGND 1V Shdown  2.1
+*EAVDD       IAVDD 0 VALUE = {IF(V(SHDOWN,GND)<0.5,2.1,0)}
+EAVDD       IAVDD 0 VALUE= { 1.05*SGN(0.5-V(Shdown,GND)) + 1.05 }
+EGND        IGND 0 GND 0  1
+EVM         VM IGND AVDD IGND  500M
+XU3          IN+ 45 44   VOST
+
+XD10         IGND 46   D_D10_1
+
+GIEE        46 IGND 1V Shdown  2U
+Rp2         RT GND 200MEG 
+XU2          GND Vref_VBus 20 GND   HYSTCOMP
++ PARAMS: VTHRES=-0.5 VHYST=40M VOUTH=1 VOUTL=0 ROUT=100 TDEL=10N 
+XSDComp      GND AVDD Shdown GND   HYSTCOMP
++ PARAMS: VTHRES=-2.6 VHYST=40M VOUTH=1 VOUTL=0 ROUT=100 TDEL=100n 
+XD9          AVDD 47   D_D9
+
+Cf6         48 GND 1P 
+Cf5         RT GND 2.5P 
+Cf4         21 GND 10P 
+XDZb1        49 48   D_ZB1
+
+XDb1         GND 49   D_DB1
+
+Rpr         21 GND 2.1MEG 
+XDr          50 47   D_DR
+
+XDZr         GND 21   D_ZR_2_1V
+
+Rbus2       VBus2 48 1.2987K 
+Rbus1       VBus1 48 1.3K 
+XVrVbComp    19 48 Vref_VBus GND   HYSTCOMP
++ PARAMS: VTHRES=0 VHYST=42M VOUTH=1 VOUTL=0 ROUT=100 TDEL=10N 
+SWVbus      RT 48 20 Shdown  S_VSWITCH_3
+SWVref      RT 21 Vref_VBus Shdown  S_VSWITCH_4
+XT2          VAmm 45 46   Q_NMOS
+
+XT1          VAp IN- 46   Q_NMOS
+
+R10         24 IGND 100K 
+R9          IAVDD 24 100K 
+R8          VB VM 32.9146618566MEG 
+G2          VM VB VAm VAp  120.9513171632U
+XD2          51 VB   D_DIS1PN0_1
+
+XD1          VB 52   D_DIS1PN0_1
+
+C1          VAp VAmm 24.0625P 
+R4g         29 VAmm 8.2677892515K 
+R3g         29 VAp 8.2677892515K 
+R2c         17 IN+ 500G 
+R1c         IN- 17 500G 
+.MODEL S_VSWITCH_1 VSWITCH (RON=1K ROFF=100MEG VON=700M VOFF=300M)
+.MODEL S_VSWITCH_2 VSWITCH (RON=1K ROFF=100MEG VON=700M VOFF=300M)
+.MODEL S_VSWITCH_3 VSWITCH (RON=100M ROFF=100MEG VON=700M VOFF=300M)
+.MODEL S_VSWITCH_4 VSWITCH (RON=100M ROFF=100MEG VON=700M VOFF=300M)
+.ENDS
+
+.SUBCKT D_D       1    2
+D1 1 2  DD
+.MODEL DD D( IS=0.9E-18 N=1.0 )
+.ENDS D_D 
+
+.SUBCKT DRVMOS_1  D G S
+*                D G S
+M6 D G S S DRVMOS
+.MODEL DRVMOS NMOS LEVEL=1 L=1.0U W=55U KP=100U VTO=1.0 RS=10.0 LAMBDA=20E-3 PHI=3.3 
+.ENDS DRVMOS_1 
+
+.SUBCKT D_ZR_2V       1    2
+D1 1 2  D_2V
+*C1 1 2 1P
+.MODEL D_2V D( IS=1P N=0.1 BV=2.0 IBV=1.0M RS=1 )
+.ENDS 
+
+.SUBCKT D_D_1       1    2
+D1 1 2  DD
+.MODEL DD D( IS=10F N=0.1 RS=1 )
+.ENDS D_D_1 
+
+.SUBCKT DRVPMOS  D G S B
+*                D G S B
+M1 D G S B DRVPMOS
+.MODEL DRVPMOS PMOS LEVEL=1 L=1.0U W=1.9U KP=100U VTO=-1.0 RS=1.0 LAMBDA=20E-3 PHI=3.3 
+.ENDS DRVPMOS 
+
+.SUBCKT DRVPMOS_1  D G S B
+*                D G S B
+M1 D G S B DRVPMOS
+.MODEL DRVPMOS PMOS LEVEL=1 L=1.0U W=95U KP=100U VTO=-1.0 RS=10.0 LAMBDA=20E-3 PHI=3.3 
+.ENDS DRVPMOS_1 
+
+.SUBCKT DRVMOS  D G S
+*                D G S
+M6 D G S S DRVMOS
+.MODEL DRVMOS NMOS LEVEL=1 L=1.0U W=1.1U KP=100U VTO=1.0 RS=1.0 LAMBDA=20E-3 PHI=3.3 
+.ENDS DRVMOS 
+
+.SUBCKT D_D10       1    2
+D1 1 2  DD
+CD 1 2 1P
+.MODEL DD D( IS=10F N=2.0 RS=1 )
+.ENDS 
+
+.SUBCKT VOST  1 2 3
+RT 30 0 RMOD 1 
+IT 0 30 1
+E2 3 0 VALUE = { V(30,0) + 26 } 
+E1 2 1 TABLE {V(3,0)} ((-50,1U) (+10,2U) (+21,1.5U) (+25,500N) (+28,100N) (+100,1N) (+110,1U) (+125,5U) (+150,18U))
+.MODEL RMOD RES (TC1=1 TC2=0 TCE=0 )
+.ENDS
+
+.SUBCKT D_D10_1       1    2
+D1 1 2  DD
+CD 1 2 10F
+.MODEL DD D( IS=1F N=2.0 RS=1 )
+.ENDS 
+
+
+.SUBCKT HYSTCOMP  IN+ IN- OUT GND 
++ PARAMS: VTHRES=0 VHYST=1 VOUTH=5 VOUTL=0 ROUT=1 TDEL=1N
+*
+*.PARAM RDEL = {IF ( (TDEL > 1E-15) & (ROUT < 1), 1, ROUT ) } 
+.PARAM RDEL = {ROUT}
+.PARAM VOUTM={(VOUTH+VOUTL)/2}
+.PARAM VTHH={VTHRES+VHYST}
+.PARAM VTHL={VTHRES-VHYST}
+.PARAM COUT={TDEL/(0.693*(RDEL+1U))}
+.PARAM VTHM={(VTHH+VTHL)/2}
+.PARAM VTHD2={(VTHH-VTHL)/2}
+.PARAM VOUTD2={(VOUTH-VOUTL)/2}
+*
+*ETHR THR GND VALUE= { IF ( V(OUT,GND) < {VOUTM}, {VTHH}, {VTHL}) }
+ETHR THR GND VALUE= { VTHD2*SGN(VOUTM-V(OUT,GND)) + VTHM }
+*EOUT OUT GND VALUE= { IF ( V(IN+,IN-) > V(THR,GND), VOUTH + RDEL*I(EOUT) , VOUTL + RDEL*I(EOUT)  ) }
+EOUT OUT GND VALUE= { (VOUTD2*SGN(V(IN+,IN-) - V(THR,GND)) + VOUTM) + RDEL*I(EOUT) }
+COUT OUT GND {COUT}
+.ENDS
+
+.SUBCKT D_D9       1    2
+D1 1 2  DD
+CD 1 2 1P
+.MODEL DD D( IS=5.4F  N=1.0 RS=1)
+.ENDS
+
+.SUBCKT D_ZB1        1    2
+D1 1 2  D_2_1V
+CD 1 2 1P
+.MODEL D_2_1V D( IS=1P N=1.0 BV=2.1 IBV=1.0U RS=1 )
+.ENDS 
+
+.SUBCKT D_DB1       1    2
+D1 1 2  DD
+CD 1 2 1P
+.MODEL DD D( IS=1P N=0.5 RS=1 )
+.ENDS D_DB1 
+
+.SUBCKT D_DR       1    2
+D1 1 2  DD
+CD 1 2 1P
+.MODEL DD D( IS=10F N=0.5 RS=1 )
+.ENDS 
+
+.SUBCKT D_ZR_2_1V       1    2
+D1 1 2  D_2_1V
+CD 1 2 1P
+.MODEL D_2_1V D( IS=1P N=0.2 BV=2.1 IBV=16.0U RS=1 )
+.ENDS 
+
+.SUBCKT Q_NMOS  D G S
+*            D G S
+MNI2 D G S S Q_NMOS
+.MODEL Q_NMOS NMOS LEVEL=1 L=1.0U W=73.1461U KP=100.0U VTO=0.7
+.ENDS Q_NMOS 
+
+.SUBCKT D_DIS1PN0_1       1    2
+D1 1 2  DD
+CD 1 2 1P
+.MODEL DD D( IS=1P N=1.0 RS=10)
+.ENDS 
+
+.SUBCKT D_Z26V       1    2
+D1 1 2  D_26V
+CD 1 2 100F
+.MODEL D_26V D( IS=1P N=0.52 BV=26.3 IBV=5.0M RS=10 )
+.ENDS D_Z26V 
+
+.SUBCKT D_DIS1PN0_52       1    2
+D1 1 2  DDIS1PN0_52
+CD 1 2 100F
+.MODEL DDIS1PN0_52 D( IS=1P N=0.52 RS=10 )
+.ENDS
+*End of INA214
+.ENDS INA199A2

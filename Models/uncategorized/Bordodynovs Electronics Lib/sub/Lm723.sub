@@ -1,0 +1,77 @@
+* From National Linear.lib
+*---------------------------------------------------------------LM723
+* connections:
+*              NC
+*              | current limit
+*              | | current sense
+*              | | | inverting input
+*              | | | | non-inverting input
+*              | | | | | Vref
+*              | | | | | | Vcc-
+*              | | | | | | | NC 
+*              | | | | | | | | Vz 
+*              | | | | | | | | | Vout  
+*              | | | | | | | | | |  Vc    
+*              | | | | | | | | | |  |   Vcc+         
+*              | | | | | | | | | |  |  |  freq. compensation
+*              | | | | | | | | | |  |  |  |  NC
+.SUBCKT LM723    2 3 4 5 6 7   9 10 11 12 13 
+*
+* Note: This model is based on the National LM723 voltage
+*       regulator.  All characterization is from data sheet
+*       information.  The pin configuration corresponds to
+*       the dual-in-line package.  Therefore, it includes
+*       an internal 6.2 volt zener diode between Vout and Vz
+*       In the model, GIee & GIcc adjust the short circuit
+*       current limit and the standby current.  Rsb and the
+*       temperature coefficient on RIee also affect the
+*       standby current.  Bf and the transresistance term
+*       on HVref adjust the low frequency output impedence
+*       and the load regulation.  Rlnreg controls the line
+*       regulation and ripple rejection.  Rref and its
+*       temperature coefficient determine the average
+*       temperature coefficient with respect to the output
+*       voltage.
+*
+* Standby Current Correction
+*
+Rsb 12 7 300k
+*
+* Error Amplifier
+*
+Rlnreg 12 13 4meg
+*Icc 12 13 DC 583ua
+*Iee 20  7 DC 1166ua
+Iee   0 24 1166ua
+RIee 24 0 1 TC=4E-3
+GIee (20,7) (24,0) 1.0
+GIcc (12,13) (24,0) 0.5
+Q5 12 5 20 Npn1
+Q4 13 4 20 Npn1
+*
+* Voltage Reference
+*
+HVref 22 7 POLY(1) Vmon 7.15 0.0
+Rref 22 6 15ohm TC=0.01
+*
+* Output Stage
+*
+Q1 12 13 21 Npn1
+Q2 11 21 23 Npn1
+Vmon 23 10 DC 0.0
+Re 21 10 15k
+.MODEL Npn1 NPN (Bf=55 Is=1E-14)
+*
+* Frequency Compensation, Current Limit, Current Sense
+*
+Q3 13 2 3 Npn1
+R2 2  7 1.0e12
+R3 3  7 1.0e12
+*
+* Zener Diode (6.2V) to pin 9
+*
+Dz 9 10 Dz
+Rz 9  7 1.0e12
+.MODEL Dz D (Is=0.05p Rs=4 Bv=5.79 Ibv=0.05u)
+*
+.ENDS

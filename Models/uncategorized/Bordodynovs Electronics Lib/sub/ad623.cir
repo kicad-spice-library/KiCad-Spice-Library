@@ -1,0 +1,221 @@
+* AD623 SPICE Macromodel
+* Description: Amplifier
+* Generic Desc: 12V Bipolar  Inamp single supply G1-1000
+* Developed by: JCH / ADI, TRW / ADI
+* Revision History: 08/10/2012 - Updated to new header style
+* 2.0 (09/2000)
+* Copyright 1999, 2012 by Analog Devices
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html for License Statement. Use of this model 
+* indicates your acceptance of the terms and provisions in the License Statement.
+*
+* BEGIN Notes:
+*
+* Not Modeled:
+*    
+* Parameters modeled include:
+*
+* END Notes
+*
+* Node assignments
+* 
+*                non-inverting input
+*                |   inverting input
+*                |   |  +Rg
+*                |   |   |  -Rg
+*                |   |   |   |   positive supply
+*                |   |   |   |   |  negative supply
+*                |   |   |   |   |  |  output
+*                |   |   |   |   |  |  |   reference
+*                |   |   |   |   |  |  |   |
+.SUBCKT AD623    IN+ IN- Rg+ Rg- 99 50 OUT REF
+QIN1    50 IN+ A3 QPI1
+QIN2    50 IN- A4 QPI2
+IBIAS1  99   A3  2u
+IBIAS2  99   A4  2u
+R1     Rg+ 103 50k
+R2     Rg- 104 50k
+CMR    Rg+  99 0.5p
+R3     104 202 50k
+R4     103 201 50k
+*Output stage common-mode error
+R5     201 REF 50.004k
+R6     202 OUT 49.996k
+*X1     201 202 99 50 OUT Inamp_output
+*X2       A3 Rg+ 99 50 103 Inamp_input
+*X3       A4 Rg- 99 50 104 Inamp_input
+*Quiescent current correction
+Icor 99 50 1.25e-4
+* INPUT STAGE
+*
+Q1B   B4  B3  B5  QPI
+Q2B   B6  202  b7  QPI
+RC1B    50  B4  8.5k
+RC2B    50  B6  8.5k
+RE1B     B5  B8  3.3k
+RE2B     B7  B8  3.3k 
+ENOISB   201  B3  B53 98 1 
+D1B      B3 99  DX
+D2B     50  B3  DX
+IBIASB  99  B8  10u
+*
+* INTERNAL VOLTAGE REFERENCE
+*
+EREF1 98 97  99 0 0.5
+EREF2 97  0  50 0 0.5
+*
+* VOLTAGE NOISE STAGE
+*
+DN1B   B51 B52 DNOI1
+VN1B   B51 98 0.64
+VMEASB B52 98 0
+RNOI1B B52 98 1
+
+F1B    B53 98 VMEASB 1
+RNOI2B B53 98 1
+*
+* INTERMEDIATE GAIN STAGE WITH POLE = 578kHz
+*
+G1B   98 B20 B4 B6 1E-3 
+RP1B  98 B20 550
+CP1B  98 B20 500p
+*
+* INTERMEDIATE GAIN STAGE WITH POLE = 900kHz
+*
+G2B   98 B21 B4 B6 1E-3 
+RP2B  98 B21 500
+CP2B  98 B21 354p
+*
+* GAIN STAGE WITH DOMINANT POLE
+*
+G4B    98 B30 B21 98 3.65E-3
+RG1B   B30 98 25k
+CF1B   B30 OUT 0.275n
+D5B B31 99 DX
+D6B 50 B32 DX
+V1B B31 B30 0.6
+V2B B30 B32 0.6
+*
+* OUTPUT STAGE
+*
+Q3B     OUT B42 B43 QPOX
+Q4B     OUT B44 B46 QNOX
+RO3B    99 B43 30
+RO4B    B46 50 30
+VBI01B  99 B41 0.5965
+VBIO2B  B47 50 0.5965
+EO3B    B41 B42 98 B30 10
+EO4B    B44 B47 B30 98 10
+*
+
+* INPUT STAGE
+*
+Q1C   C4  C5  C8 QPI
+Q2C   C6  RG+  C8 QPI
+RC1C    50  C4 8.5k
+RC2C    50  C6 8.5k
+ENOIC    A3  C5 C53 98 1 
+
+D1C      C3 99 DX
+D2C     50  C3 DX
+IBIASC  99  C8 10u
+*
+*
+* VOLTAGE NOISE STAGE
+*
+DN1C    C51 C52 DNOI1
+VN1C    C51 98 0.64
+VMEASC  C52 98 0
+RNOI1C  C52 98 1e-4
+
+F1C     C53 98 VMEASC 1
+RNOI2C  C53 98 1
+*
+* INTERMEDIATE GAIN STAGE 
+*
+G1C   98 C20 C4 C6 1E-3 
+RP1C  98 C20 4.67k
+*
+* GAIN STAGE WITH DOMINANT POLE
+*
+G4C   98 C30 C20 98 2E-3
+RG1C  C30 98 125k
+CF1C  C30 103 2.5n
+D5C   C31 99 DX
+D6C   50 C32 DX
+V1C   C31 C30 0.6
+V2C   C30 C32 0.6
+*
+* OUTPUT STAGE
+*
+Q3C     103 C42 C43 QPOX
+Q4C     103 C44 C46 QNOX
+RO3C    99 C43 30
+RO4C    C46 50 30
+VBI01C  99 C41 0.5965
+VBIO2C  C47 50 0.5965
+EO3C    C41 C42 98 C30 5
+EO4C    C44 C47 C30 98 5
+*
+* INPUT STAGE
+*
+Q1D   D4  D5  D8 QPI
+Q2D   D6  RG-  D8 QPI
+RC1D    50  D4 8.5k
+RC2D    50  D6 8.5k
+ENOID    A4  D5 D53 98 1 
+
+D1D      D3 99 DX
+D2D     50  D3 DX
+IBIASD  99  D8 10u
+*
+*
+* VOLTAGE NOISE STAGE
+*
+DN1D    D51 D52 DNOI1
+VN1D    D51 98 0.64
+VMEASD  D52 98 0
+RNOI1D  D52 98 1e-4
+
+F1D     D53 98 VMEASD 1
+RNOI2D  D53 98 1
+*
+* INTERMEDIATE GAIN STAGE 
+*
+G1D   98 D20 D4 D6 1E-3 
+RP1D  98 D20 4.67k
+*
+* GAIN STAGE WITH DOMINANT POLE
+*
+G4D   98 D30 D20 98 2E-3
+RG1D  D30 98 125k
+CF1D  D30 104 2.5n
+D5D   D31 99 DX
+D6D   50 D32 DX
+V1D   D31 D30 0.6
+V2D   D30 D32 0.6
+*
+* OUTPUT STAGE
+Q3D     104 D42 D43 QPOX
+Q4D     104 D44 D46 QNOX
+RO3D    99 D43 30
+RO4D    D46 50 30
+VBI01D  99 D41 0.5965
+VBIO2D  D47 50 0.5965
+EO3D    D41 D42 98 D30 5
+EO4D    D44 D47 D30 98 5
+*
+.MODEL QPI PNP(VAF=100)
+.MODEL QNOX NPN(IS=6E-15,VAF=120,RC=50)
+.MODEL QPOX PNP(IS=6E-15,BF=112,VAF=120,RC=50)
+.MODEL DX D(IS=1E-16)
+.MODEL DNOI1 D(AF=1.5, KF=6E-10)
+.MODEL DNOI2 D(KF=1E-8)
+.MODEL QPI1 PNP(VAF=100)
+.MODEL QPI2 PNP(VAF=99.3)
+.ENDS AD623
+
+
+
+
+

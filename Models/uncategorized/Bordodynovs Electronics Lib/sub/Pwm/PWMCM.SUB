@@ -1,0 +1,19 @@
+.SUBCKT PWMCM a c p vc dc 
+*
+* auto toggling between DCM and CCM, current-mode
+*
+Edc dcx 0 value = { v(d2)*v(cx,p)/(v(a,p)-v(cx,p)+1u) }
+Xdc dcx dc limit params: clampH=0.99 clampL=7m
+Ed2 d2X 0 value = { (2*{L}*{Fs}*I(VM)/(V(dc)*V(a,cx)+1u)) - V(dc) }
+Xd2 d2X dc d2 limit2
+GIap a p value = { (V(dc)/(V(dc)+V(d2)+1u))*I(VM) }
+GIpc p cx value = { V(vc)/{Ri} }
+GImju cx p value = { {Se}*V(dc)/({Ri}*{Fs}) + (v(cx,p)/{L})*V(d2)*{1/Fs}*(1-(V(dc)+V(d2))/2) }
+Rdum1 dc 0 1Meg
+Rdum2 vc 0 1Meg
+VM cx c 
+XC1 cx p mode varicap
+Emode mode 0 Value = { IF (  (2*{L}*{Fs}*I(VM)/(V(dc)*V(a,cx)+1u))
++ < 1, 1p , {4/((L)*(6.28*Fs)**2)}	) } ; connect or disconnects the resonating capacitor
+*
+.ENDS

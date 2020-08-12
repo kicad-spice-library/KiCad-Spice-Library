@@ -1,0 +1,336 @@
+
+
+
+* INA2128
+*****************************************************************************
+* (C) Copyright 2011 Texas Instruments Incorporated. All rights reserved.                                            
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: Analog eLab Design Center, Texas Instruments Inc.
+* Part: INA2128
+* Date: 15JUL2011
+* Model Type: ALL IN ONE
+* Simulator: TINA
+* Simulator Version: 9.1.30.94 SF-TI
+* EVM Order Number: N/A
+* EVM Users Guide: N/A
+* Datasheet: SBOS035A – DECEMBER 1995 – REVISED APRIL 2007
+*
+* Model Version: 1.0
+*
+*****************************************************************************
+* 
+* Updates:
+*
+* Version 1.0 : 
+* Release to Web
+*
+*****************************************************************************
+****** INA2128 SUB-CIRCUIT
+* CONNECTIONS:          +
+*                       |   -
+*                       |   |   V+
+*                       |   |   |   V-
+*                       |   |   |   |   Out
+*                       |   |   |   |   |     REF
+*                       |   |   |   |   |      |   RG1
+*                       |   |   |   |   |      |   |   RG2
+*                       |   |   |   |   | DUM  |   |   |
+.SUBCKT INA2128         1   2   3   4   5 6 7  8   9  10
+*
+* INA2128 = A1_128E + A2_128E + A3_128E OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 12/11/96 AT 15:01
+*
+***** A1_128E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X1                     15  17   3   4  11   A1_128E
+*
+***** A2_128E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X2                     15  16   3   4  12   A2_128E
+*
+***** A3_128E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X3                     14  13   3   4   5   A3_128E
+*
+R1    11  13   40.0000K
+R2    13   5   39.996K
+R3    12  14   40.0000K
+R4    14   8   40.0000K
+CIN   13  14   4.0000PF
+*
+R1FB   9  11   25.000K
+CC1   17  11   5.0000PF
+R2FB  10  12   25.000K
+CC2   16  12   5.0000PF
+CG1    9   0   10.0000PF
+CG2   10   0   8.0000PF
+*
+RCE   17   9   20G
+*
+I1     3  16  DC  20.00E-6
+I2     3  17  DC  20.00E-6
+IB1CAN 3  42  DC  40.00E-9
+IB2CAN 3  46  DC  40.00E-9
+IBAL   0   4  DC  6.5E-6
+*
+D1    15  17      DX
+D2    15  16      DX
+*
+Q1    16  42  10  QX
+Q2    17  46   9  QX
+*
+V1     3  15  DC  1.700
+*
+******************************
+*			           *
+* Additions for the INA2128E  *
+* (Enhanced) macromodel	     *
+*			           *
+******************************
+* INPUT PROTECTION
+  RIN1 1   41 1K
+  I11  41  42 .7MA
+  S11  41  42 1 41 SP
+  DI1  43  41 DX
+  I12  4   43 DC .8MA
+  S12  4   43 1 41 SM
+
+  RIN2 2   45 1K
+  I21  45  46 .7MA
+  S21  45  46 2 45 SP
+  DI2  47  45 DX
+  I22  4   47 DC .8MA 
+  S22  4   47 2 45 SM
+
+*************************
+*			      *
+* Anti-inversion clamps *
+*		       	*
+*************************
+  VSET1 3 40 DC 2.0
+  QSET1 4 40 42 QY
+  VSET2 3 44 DC 2.0
+  QSET2 4 44 46 QY
+
+.model sp vswitch(ron=10 roff=100E3 von=.7 voff=1) 
+.model sm vswitch(ron=10 roff=100E3 von=-.7 voff=-1)
+.MODEL DX D(IS=1.0E-24)
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+.MODEL QY PNP(IS=800.0E-18 BF=500)
+.ENDS
+*
+* A1_128E operational amplifier "macromodel" subcircuit
+* created using Parts release 6.3a on 11/18/96 at 14:19
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A1_128E  1 2 3 4 5
+*
+  c1   11 12 2.887E-12
+  c2    6  7 10.00E-12
+  css  10 99 1.000E-30
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 79.58E6 -80E6 80E6 80E6 -80E6
+  ga    6  0 11 12 1.257E-3
+  gcm   0  6 10 99 125.7E-12
+  iss   3 10 dc 50.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 795.8
+  rd2   4 12 795.8
+  ro1   8  5 10
+  ro2   7 99 10
+  rss  10 99 4.000E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.5
+  ve   54  4 dc .9
+  vlim  7  8 dc 0
+  vlp  91  0 dc 14
+  vln   0 92 dc 14
+******************************
+*			           *
+* Additions for the INA2128E  *
+* (Enhanced) macromodel	     *
+* A1_128e sub-circuit	     *
+*			           *
+******************************
+* OUTPUT SUPPLY MIRROR
+  FQ3   0 20 POLY(1) VLIM 0 1
+  DQ1  20 21 DX
+  DQ2  22 20 DX
+  VQ1  21  0 0
+  VQ2  22  0 0 
+  FQ1   3  0 POLY(1) VQ1 120u 1
+  FQ2   0  4 POLY(1) VQ2 120u -1
+  RP    3  4 3.00E6
+
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=15.00E-12 Beta=31.58E-3 Vto=-1)
+.ends
+
+* A2_128E operational amplifier "macromodel" subcircuit
+* created using Parts release 6.3a on 11/18/96 at 14:19
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A2_128E  1 2 3 4 5
+*
+  c1   11 12 2.887E-12
+  c2    6  7 10.00E-12
+  css  10 99 1.000E-30
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 79.58E6 -80E6 80E6 80E6 -80E6
+  ga    6  0 11 12 1.257E-3
+  gcm   0  6 10 99 125.7E-12
+  iss   3 10 dc 50.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 795.8
+  rd2   4 12 795.8
+  ro1   8  5 10
+  ro2   7 99 10
+  rss  10 99 4.000E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.5
+  ve   54  4 dc .9
+  vlim  7  8 dc 0
+  vlp  91  0 dc 14
+  vln   0 92 dc 14
+
+******************************
+*			           *
+* Additions for the INA2128E  *
+* (Enhanced) macromodel	     *
+* A2_128e sub-circuit	     *
+*			           *
+******************************
+* OUTPUT SUPPLY MIRROR
+  FQ3   0 20 POLY(1) VLIM 0 1
+  DQ1  20 21 DX
+  DQ2  22 20 DX
+  VQ1  21  0 0
+  VQ2  22  0 0 
+  FQ1   3  0 POLY(1) VQ1 120u 1
+  FQ2   0  4 POLY(1) VQ2 120u -1
+  RP    3  4 3.00E6
+
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=15.00E-12 Beta=31.58E-3 Vto=-1)
+.ends
+
+* A3_128E operational amplifier "macromodel" subcircuit
+* created using Parts release 6.3a on 11/18/96 at 14:33
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A3_128E  1 2 3 4 5
+*
+  c1   11 12 2.730E-12
+  c2    6  7 15.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 163.2E6 -160E6 160E6 160E6 -160E6
+  ga    6  0 11 12 122.5E-6
+  gcm   0  6 10 99 12.25E-12
+  iee  10  4 dc 63.95E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   3 11 8.162E3
+  rc2   3 12 8.162E3
+  re1  13 10 7.327E3
+  re2  14 10 7.327E3
+  ree  10 99 3.127E6
+  ro1   8  5 300
+  ro2   7 99 300
+  vb    9  0 dc 0
+  vc    3 53 dc 1.500
+  ve   54  4 dc 1.400
+  vlim  7  8 dc 0
+  vlp  91  0 dc 5
+  vln   0 92 dc 14
+
+******************************
+*			           *
+* Additions for the INA2128E  *
+* (Enhanced) macromodel	     *
+* A3_128e sub-circuit	     *
+*			           *
+******************************
+*OUTPUT SUPPLY MIRROR
+  FQ3   0 20 POLY(1) VLIM 0 1
+  DQ1  20 21 DX
+  DQ2  22 20 DX 
+  VQ1  21  0 0
+  VQ2  22  0 0 
+  FQ1   3  0 POLY(1) VQ1 206.7E-6 1
+  FQ2   0  4 POLY(1) VQ2 206.7E-6 -1
+  RQ    3  4 1.87e6
+.model dx D(Is=800.0E-18)
+.model qx NPN(Is=800.0E-18 Bf=318.8)
+.ends
+*.END INA2128
+*
+*

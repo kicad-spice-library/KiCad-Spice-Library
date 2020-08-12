@@ -1,0 +1,106 @@
+.subckt Triac_params MT2 gate MT1 params:
++ Vdrm=400v     Idrm=10u
++ Ih=6ma        dVdt=50e6
++ Igt=20ma      Vgt=0.9v
++ Vtm=1.3v      Itm=17
++ Ton=1.5u
+
+* Where:
+* Vdrm =>  Forward breakover voltage
+* Idrm =>  Peak blocking current
+* Ih   =>  Holding current [MT2(+)]
+* dVdt =>  Critical value for dV/dt triggering
+* Igt  =>  Gate trigger current [MT2(+),G(-)]
+* Vgt  =>  Gate trigger voltage [MT2(+),G(-)]
+* Vtm  =>  On-state voltage
+* Itm  =>  On-state current
+* Ton  =>  Turn-on time
+
+* Main conduction path
+Striac   MT2     MT20    cntrol   0       Vswitch ; controlled switch
+Dak1     MT20    MT22    Dak      OFF             ; triac is initially off
+VIak     MT22    MT1                              ; current sensor
+Striacr  MT2     MT23    cntrolr  0       Vswitch ; controlled switch
+Dka1     MT21    MT23    Dak      OFF             ; triac is initially off
+VIka     MT1     MT21                             ; reverse current sense
+
+* dVdt Turn-on
+Emon     dvdt0   0       TABLE {ABS(V(MT2,MT1))} (0 0) (2000 2000)
+CdVdt    dvdt0   dvdt1   100pfd                  ; displacement current
+Rdlay    dvdt1   dvdt2   1k
+VdVdt    dvdt2   MT1     DC 0.0
+EdVdt    condvdt 0       TABLE {i(vdVdt)-100p*dVdt}  (0 0 ) (.1m 10)
+RdVdt    condvdt 0       1meg
+
+* Gate
+Rseries  gate    gate1   {(Vgt-0.65)/Igt}
+Rshunt   gate1   gate2   {0.65/Igt}
+Dgkf     gate1   gate2   Dgk
+Dgkr     gate2   gate1   Dgk
+VIgf     gate2   MT1     DC 0.0                  ; current sensor
+
+* Gate Turn-on
+Egate    congate 0       TABLE {(ABS(i(VIgf))-0.95*Igt)} (0 0) (1m 10)
+Rgate    congate 0       1meg
+
+* Holding current, holding voltage (Quadrant I)
+Emain1   main1   0       TABLE {i(VIak)-Ih+5e-3*i(VIgf)/Igt} (0 0) (.1m 1)
+Rmain1   main1   0       1meg
+Emain2   main2   0       TABLE {v(MT2,MT1)-(Ih*Vtm/Itm)} (0 0) (.1m 1)
+Rmain2   main2   0       1meg
+Emain3   cnhold  0       TABLE {v(main1,0)*v(main2,0)} (0 0 (1 10)
+Rmain3   cnhold  0       1meg
+
+* Holding current, holding voltage (Quadrant III)
+Emain1r  main1r   0       TABLE {i(VIka)-Ih-5e-3*i(VIgf)/Igt} (0 0) (.1m 1)
+Rmain1r  main1r   0       1meg
+Emain2r  main2r   0       TABLE {v(MT1,MT2)-(Ih*Vtm/Itm)} (0 0) (.1m 1)
+Rmain2r  main2r   0       1meg
+Emain3r  cnholdr  0       TABLE {v(main1r,0)*v(main2r,0)} (0 0 (1 10)
+Rmain3r  cnholdr  0       1meg
+
+* Main
+Emain4   main4    0       table {(1.0-ABS(i(VIgf))/Igt)} (0 0) (1 1)
+Rmain4   main4    0       1meg
+Emain5   cnmain   0       table {v(mt2,mt1)-1.05*Vdrm*v(main4)} (0 0) (1 10)
+Rmain5   cnmain   0       1meg
+
+Emain5r  cnmainr  0       table {v(mt1,mt2)-1.05*Vdrm*v(main4)} (0 0) (1 10)
+Rmain5r  cnmainr  0       1meg
+
+* Turn-on/Turn-off control (Quadrant I )
+Eonoff   contot  0       TABLE
++        {v(cnmain)+v(congate)+v(cnhold)+v(condvdt)} (0 0) (10 10)
+
+* Turn-on/Turn-off delays (Quadrant I)
+Rton     contot  dlay1   825
+Dton     dlay1   cntrol  Delay
+Rtoff    contot  dlay2   {2.9E-3/Ton}
+Dtoff    cntrol  dlay2   Delay
+Cton     cntrol  0       {Ton/454}
+
+* Turn-on/Turn-off control (Quadrant III)
+Eonoffr  contotr 0       TABLE
++        {v(cnmainr)+v(congate)+v(cnholdr)+v(condvdt)} (0 0) (10 10)
+
+* Turn-on/Turn-off delays (Quadrant III)
+Rtonr    contotr dlayr1   825
+Dtonr    dlayr1  cntrolr  Delay
+Rtoffr   contotr dlayr2   {2.9E-3/Ton}
+Dtoffr   cntrolr dlayr2   Delay
+Ctonr    cntrolr 0        {Ton/454}
+
+* Controlled switch model
+.MODEL Vswitch vswitch
++ (Ron = {(Vtm-0.7)/Itm}, Roff = {1.75E-3*Vdrm/Idrm},
++  Von = 5.0,             Voff = 1.5)
+
+* Diodes
+.MODEL  Dgk     D         (Is=1E-16 Cjo=50pf Rs=5)
+.MODEL  Delay   D         (Is=1E-12 Cjo=5pf  Rs=0.01)
+.MODEL  Dak     D         (Is=4E-11 Cjo=5pf)
+
+* Allow the gate to float if required
+Rfloat  gate    MT1 1e10
+
+.ends

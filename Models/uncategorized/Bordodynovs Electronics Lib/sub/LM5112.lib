@@ -1,0 +1,102 @@
+* PSpice Model Editor - Version 16.2.0
+*$
+* LM5112
+*****************************************************************************
+*  (C) Copyright 2013 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer
+*****************************************************************************
+*
+** Released by: WEBENCH Design Center, Texas Instruments Inc.
+* Part: LM5112
+* Date: 16FEB2013
+* Model Type: TRANSIENT
+* Simulator: PSPICE 
+* Simulator Version: 16.2.0.p001
+* EVM Order Number:
+* EVM Users Guide: 
+* Datasheet: SNVS234B-SEPTEMBER 2004-REVISED APRIL 2006
+*
+* Model Version: Final 1.00
+*
+*****************************************************************************
+* Updates:
+*
+* Final 1.00
+* Release to Web.
+*****************************************************************************
+.SUBCKT LM5112  IN IN_B IN_REF VCC OUT VEE
+X_U21         N14861778 N14861648 N14859687 IN_REF INVERTER_BASIC_GEN PARAMS: 
++  VTHRESH=6
+X_U22         N14869787 N14869697 N14869610 N14875621 N14859687 IN_REF
++  NAND3_BASIC_GEN PARAMS:  VTHRESH=6
+C_C1         VEE OUT  1.4n  TC=0,0 
+X_U3         N14859687 N14869787 VCC IN_REF UVLO_BASIC_GEN PARAMS:  VTHRESH=3
++  VHYST=0.23
+X_U18         N14875621 IN_REF N14860433 VEE LS_BASIC_GEN
+V_V1         N14859687 IN_REF 12V
+X_U8         VCC OUT N14860433 VEE VSW_BASIC_GEN PARAMS:  RON=2 ROFF=1MEG
++  VON=100m VOFF=6
+X_U9         OUT VEE N14860433 VEE VSW_BASIC_GEN PARAMS:  RON=0.857 ROFF=1MEG
++  VON=6 VOFF=100m
+X_U13         N14861648 N14869610 N14859687 IN_REF BUF_DELAY_BASIC_GEN PARAMS: 
++  VTHRESH=6 DELAY=25n
+X_U12         N14862041 N14869697 N14859687 IN_REF BUF_DELAY_BASIC_GEN PARAMS: 
++  VTHRESH=6 DELAY=25n
+X_U17         N14859687 N14861778 IN_B IN_REF INPUTHYST_BASIC_GEN PARAMS: 
++  VTHRESH=1.55 VHYST=0.4
+X_U16         N14859687 N14862041 IN IN_REF INPUTHYST_BASIC_GEN PARAMS: 
++  VTHRESH=1.55 VHYST=0.4
+.ENDS LM5112
+*$
+*** INPUT SCHMITT TRIGGER
+.SUBCKT INPUTHYST_BASIC_GEN SUPPLY OUT CN+ CN- PARAMS: VTHRESH=2.5 VHYST=0.5
+***      NODE1 NODE2 CON+ CON- PARAMS:
+E1 OUT 0 VALUE={IF((V(OUT)<6&V(CN+,CN-)>(VTHRESH+VHYST/2))|(V(OUT)>6&V(CN+,CN-)>(VTHRESH-VHYST/2)),V(SUPPLY),0)}
+.ENDS INPUTHYST_BASIC_GEN
+*$
+*** LEVEL_SHIFTER
+.SUBCKT LS_BASIC_GEN ND+ ND- LS+ LS-
+***          IN+ IN- LS+ LS-
+E1 LS+ LS- VALUE={ V(ND+, ND-) }
+.ENDS LS_BASIC_GEN
+*$
+*** UVLO FOR SUPPLY VOLTAGE
+.SUBCKT UVLO_BASIC_GEN SUPPLY OUT CN+ CN- PARAMS: VTHRESH=2.5 VHYST=0.5
+***      NODE1 NODE2 CON+ CON- PARAMS:
+E1 OUT 0 VALUE={IF((V(OUT)<6&V(CN+,CN-)>(VTHRESH+VHYST/2))|(V(OUT)>6&V(CN+,CN-)>(VTHRESH-VHYST/2)),V(SUPPLY),0)}
+.ENDS UVLO_BASIC_GEN
+*$
+*** VSWITCH
+.SUBCKT VSW_BASIC_GEN ND1 ND2 CN+ CN- PARAMS: RON=1 ROFF=1MEG VON=3 VOFF=2
+***     NODE1 NODE2 CON+ CON- PARAMS:
+S1 ND1 ND2 CN+ CN- _VSWITCH
+.MODEL _VSWITCH VSWITCH RON={RON} ROFF={ROFF} VON={VON} VOFF={VOFF}
+.ENDS VSW_BASIC_GEN
+*$
+*** INVERTER
+.SUBCKT INVERTER_BASIC_GEN IN OUT VCC VSS PARAMS: VTHRESH=2.5
+***                IN OUT VCC VSS PARAMS:
+E1 OUT VSS VALUE={ IF(V(IN) > VTHRESH, V(VSS), V(VCC)) }
+.ENDS INVERTER_BASIC_GEN
+*$
+*** NAND3
+.SUBCKT NAND3_BASIC_GEN IN1 IN2 IN3 OUT VCC VSS PARAMS: VTHRESH=2.5
+***                INPUTS OUT VCC VSS PARAMS:
+E1 OUT VSS VALUE={ IF((V(IN1)>VTHRESH)&(V(IN2)>VTHRESH)&(V(IN3)>VTHRESH),V(VSS),V(VCC)) }
+.ENDS NAND3_BASIC_GEN
+*$
+*** BUF_DELAY
+.SUBCKT BUF_DELAY_BASIC_GEN IN OUT VCC VSS PARAMS: VTHRESH=2.5 DELAY=10n
+***                      IN OUT PARAMS:
+E1 3 VSS VALUE={ IF(V(IN) > VTHRESH, V(VCC), V(VSS)) }
+R1 3 4 1
+C1 4 VSS {DELAY*1.4}
+E2 OUT VSS VALUE={ IF(V(4) > VTHRESH, V(VCC), V(VSS)) }
+.ENDS BUF_DELAY_BASIC_GEN
+*$

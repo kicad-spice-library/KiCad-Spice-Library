@@ -1,0 +1,54 @@
+* Source File: HC4040Blk.asc
+* Developed: ETech (eetech00@yahoo.com)
+* Created: Jan 13 2017
+* Revision: NA
+*
+* This 74HC4040 spice behavioral model was tested
+* with LTSpice. Temperature is not modeled.
+*
+* Texas Instruments
+* SN74HC4040 12-Bit Asynchronous Binary Counter
+*
+* block symbol definitions
+* Requires 74HC.lib from LTspice Group
+.subckt 74hc4040 CLK CLR QA QB QC QD QE QF QG QH QI QJ QK QL VCC VGND vcc1={vcc} speed1={speed} tripdt1={tripdt}
+XX1 CLKx CLRx QAx QBx QCx QDx QEx QFx QGx QHx QIx QJx QKx QLx hc4040 speed2={speed1} vcc2={vcc1}
+XU1 CLK CLKx VCC VGND 74HC_IN_1 vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU2 CLR CLRx VCC VGND 74HC_IN_1 vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU3 QAx QA VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU4 QBx QB VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU5 QCx QC VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU6 QDx QD VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU7 QEx QE VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU8 QFx QF VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU9 QGx QG VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU10 QHx QH VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU11 QIx QI VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU12 QJx QJ VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU13 QKx QK VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+XU14 QLx QL VCC VGND 74HC_OUT_1X vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+.param vcc=5 speed=1 tripdt=1e-9
+.ends 74hc4040
+
+.subckt hc4040 CLK CLR QA QB QC QD QE QF QG QH QI QJ QK QL vcc3={vcc2} speed3={speed2}
+.param td1=1e-9*(11-3-3)*4.0/({vcc3}-0.5)*{speed3}
+A1 QA 0 CLKx 0 CLRx QA 0 0 DFLOP td={td1}
+A2 0 CLR5 0 CLR4 0 0 CLRx 0 OR td={td1}
+A3 CLK 0 0 0 0 CLKx 0 0 BUF td={td1}
+A4 QB 0 QA 0 CLRx QB 0 0 DFLOP td={td1}
+A5 QC 0 QB 0 CLRx QC 0 0 DFLOP td={td1}
+A6 QD 0 QC 0 CLRx QD 0 0 DFLOP td={td1}
+A7 QE 0 QD 0 CLRx QE 0 0 DFLOP td={td1}
+A8 QF 0 QE 0 CLRx QF 0 0 DFLOP td={td1}
+A9 QG 0 QF 0 CLRx QG 0 0 DFLOP td={td1}
+A10 QH 0 QG 0 CLRx QH 0 0 DFLOP td={td1}
+A11 QI 0 QH 0 CLRx QI 0 0 DFLOP td={td1}
+A12 QJ 0 QI 0 CLRx QJ 0 0 DFLOP td={td1}
+A13 QK 0 QJ 0 CLRx QK 0 0 DFLOP td={td1}
+A14 QL 0 QK 0 CLRx QL 0 0 DFLOP td={td1}
+A15 CLR3 0 0 0 0 CLR4 0 0 BUF td={td1}
+A16 CLR1 0 0 0 0 CLR5 0 0 BUF td={td1}
+A17 CLR2 0 0 0 0 CLR3 0 0 BUF td={td1}
+A18 CLR1 0 0 0 0 CLR2 0 0 BUF td={td1}
+A19 CLR 0 0 0 0 CLR1 0 0 BUF td={td1}
+.ends hc4040

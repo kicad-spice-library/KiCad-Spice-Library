@@ -1,0 +1,169 @@
+* AD603A SPICE Macro-model              Rev. A, 12/94
+*                                       ARG / PMI
+*
+* This version of the AD603 model simulates the worst-case
+* parameters of the 'A' grade.  The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1993 by Analog Devices
+*
+* Refer to "README.DOC" file for License Statement.  Use of
+* this model indicates your acceptance of the terms and pro-
+* visions in the License Statement.
+*
+* Node assignments
+*                vinp
+*                |  common
+*                |  |  vpos
+*                |  |  |  vneg
+*                |  |  |  |  vout
+*                |  |  |  |  |  gpos
+*                |  |  |  |  |  |  gneg
+*                |  |  |  |  |  |  |  fdbk
+*                |  |  |  |  |  |  |  |
+.SUBCKT AD603A   3  2  99 50 48 40 41 49
+*
+* INPUT STAGE
+*
+Q1A  1    3    21   QN
+Q1B  4    5    21   QN
+Q2A  1    14   22   QN
+Q2B  4    5    22   QN
+Q3A  1    15   23   QN
+Q3B  4    5    23   QN
+Q4A  1    16   24   QN
+Q4B  4    5    24   QN
+Q5A  1    17   25   QN
+Q5B  4    5    25   QN
+Q6A  1    18   26   QN
+Q6B  4    5    26   QN
+Q7A  1    19   27   QN
+Q7B  4    5    27   QN
+Q8A  1    20   28   QN
+Q8B  4    5    28   QN
+RT   3    2    500
+CIN  3    2    2E-12
+RL1  3    14   62.5
+RL2  14   2    125
+RL3  14   15   62.5
+RL4  15   2    125
+RL5  15   16   62.5
+RL6  16   2    125
+RL7  16   17   62.5
+RL8  17   2    125
+RL9  17   18   62.5
+RL10 18   2    125
+RL11 18   19   62.5
+RL12 19   2    125
+RL13 19   20   62.5
+RL14 20   2    62.5
+VOS  11   5    0.45E-3
+IB1  99   7    400E-6
+IB2  99   29   200E-6
+IB3  99   30   200E-6
+IB4  99   31   200E-6
+IB5  99   32   200E-6
+IB6  99   33   200E-6
+IB7  99   34   200E-6
+IB8  99   13   400E-6
+Q100 50   51   7    QP
+Q101 50   52   13   QP
+R100 51   50   950
+R101 52   50   950
+G10  50   51   POLY(1) (40,41) 2E-3 3.5E-3
+G11  50   52   POLY(1) (41,40) 2E-3 3.5E-3
+RB1  7    29   700
+RB2  29   30   700
+RB3  30   31   700
+RB4  31   32   700
+RB5  32   33   700
+RB6  33   34   700
+RB7  34   13   700
+Q9   21   7    6    QN
+Q10  22   29   6    QN
+Q11  23   30   6    QN
+Q12  24   31   6    QN
+Q13  25   32   6    QN
+Q14  26   33   6    QN
+Q15  27   34   6    QN
+Q16  28   13   6    QN
+Q17  61   62   1    QN
+Q18  64   62   4    QN
+R102 61   62   12E3
+R103 64   62   12E3
+RC   40   41   50E6
+CCTL 40   41   3.183E-15
+IGP  40   0    205E-9
+IGN  41   0    195E-9
+I1   6    50   2.5E-3
+R1   99   61   2E3
+R2   99   64   2E3
+*
+* 1ST GAIN STAGE
+*
+EREF 98   0    POLY(2) (99,0) (50,0) 0 0.5 0.5
+G1   98   8    (64,61) 0.84
+R5   8    98   1
+E1   99   9    POLY(1) (99,98) -0.535 1
+E2   10   50   POLY(1) (98,50) -0.535 1
+D1   8    9    DX
+D2   10   8    DX
+*
+* 2ND GAIN STAGE AND DOMINANT POLE AT 317KHZ
+*
+G2   98   58   (8,98) 1.667E-3
+R6   58   98   55.2273E3
+C1   58   98   9.091E-12
+V1   99   59   3.2
+V2   60   50   3.2
+D3   58   59   DX
+D4   60   58   DX
+*
+* POLE AT 250MHZ
+*
+G5   98   35   (58,98) 1
+R11  35   98   1
+C2   35   98   0.637E-9
+*
+* POLE AT 300MHZ
+*
+G6   98   36   (35,98) 1
+R12  36   98   1
+C4   36   98   0.531E-9
+*
+* POLE AT 300MHZ
+*
+G7   98   37   (36,98) 1
+R13  37   98   1
+C5   37   98   0.531E-9
+*
+* POLE AT 300MHZ
+*
+G3   98   45   (37,98) 1E-3
+R10  45   98   1E3
+C3   45   98   0.531E-12
+*
+* OUTPUT STAGE
+*
+GSY  99   50   POLY(1) (99,50) -16E-3 1.6E-3
+FSY  99   50   POLY(2) V7 V8 12.51E-3 1 1
+RO1  99   48   4
+RO2  48   50   4
+GO1  48   99   (99,45) 250E-3
+GO2  50   48   (45,50) 250E-3
+V4   48   46   -0.7
+V5   47   48   -0.7
+D5   46   45   DX
+D6   45   47   DX
+G4   98   44   (48,45) 250E-3
+D7   44   42   DX
+D8   43   44   DX
+V7   42   98   0
+V8   98   43   0
+RF1  48   49   6.44E3
+RF2  11   49   694
+RIN  11   2    20
+.MODEL DX D(IS=1E-16)
+.MODEL QN NPN(BF=200 IS=1E-14 RB=20 KF=1E-16 AF=1)
+.MODEL QP PNP(BF=1000 IS=1E-14)
+.ENDS

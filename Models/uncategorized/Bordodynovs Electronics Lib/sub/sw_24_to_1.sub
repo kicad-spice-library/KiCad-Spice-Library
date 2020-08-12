@@ -1,0 +1,50 @@
+* Source File: none
+* Developer: ETech (eetech00@yahoo.com)
+* Created: Oct 09 2018
+* Revision: NA
+*
+* This 24 Position Selector Switch spice model has
+* been tested with LTSpice. Temperature is not modeled.
+*
+* 24 to 1 switch with selection
+* sel=0  selects none
+* sel=1  selects input 1
+* ...
+* sel=24  selects input 24
+*
+.subckt SW_24_to_1 1 2 3 4 5 6 7 8 9 10 
++ 11 12 13 14 15 16 17 18 19 20 21 22 23 24
++ out
++ params: sel=0 Ron=1m
+*
+XS1 1 out stepper sel=If({sel}==1,{sel},0)
+XS2 2 out stepper sel=If({sel}==2,{sel},0)
+XS3 3 out stepper sel=If({sel}==3,{sel},0)
+XS4 4 out stepper sel=If({sel}==4,{sel},0)
+XS5 5 out stepper sel=If({sel}==5,{sel},0)
+XS6 6 out stepper sel=If({sel}==6,{sel},0)
+XS7 7 out stepper sel=If({sel}==7,{sel},0)
+XS8 8 out stepper sel=If({sel}==8,{sel},0)
+XS9 9 out stepper sel=If({sel}==9,{sel},0)
+XS10 10 out stepper sel=If({sel}==10,{sel},0)
+XS11 11 out stepper sel=If({sel}==11,{sel},0)
+XS12 12 out stepper sel=If({sel}==12,{sel},0)
+XS13 13 out stepper sel=If({sel}==13,{sel},0)
+XS14 14 out stepper sel=If({sel}==14,{sel},0)
+XS15 15 out stepper sel=If({sel}==15,{sel},0)
+XS16 16 out stepper sel=If({sel}==16,{sel},0)
+XS17 17 out stepper sel=If({sel}==17,{sel},0)
+XS18 18 out stepper sel=If({sel}==18,{sel},0)
+XS19 19 out stepper sel=If({sel}==19,{sel},0)
+XS20 20 out stepper sel=If({sel}==20,{sel},0)
+XS21 21 out stepper sel=If({sel}==21,{sel},0)
+XS22 22 out stepper sel=If({sel}==22,{sel},0)
+XS23 23 out stepper sel=If({sel}==23,{sel},0)
+XS24 24 out stepper sel=If({sel}==24,{sel},0)
+.ends SW_24_to_1
+
+.subckt stepper 1 2 params: sel=0 n=0.5
+S1 1 2 nc+ 0 SW
+B1 0 nc+ I=IF(!{sel}==0 & {sel}>{sel-n} & {sel}<{sel+n}, 1, 0) Rpar=1 Cpar=1n
+.model SW SW(Ron={Ron} Roff=1T Vt=0.475 Vh=-0.25)
+.ends stepper

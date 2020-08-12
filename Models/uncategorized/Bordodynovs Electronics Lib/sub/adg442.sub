@@ -1,0 +1,224 @@
+* ADG442 SPICE Macro-model    
+* Description: Converter                                        
+* Generic Desc: LC2MOS Quad SPST Switch
+* Developed by: JOM / ADSC
+* Revision History: 08/10/2012 - Updated to new header style
+* 1.0 (08/1995) - This model was setup with typical leakage currents at +25C for ADG442      
+* Copyright 1995, 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html for License Statement. Use of this model
+* indicates your acceptance with the terms and provisions in the License Statement.
+*
+* BEGIN Notes:
+*
+* Not Modeled:
+*
+* Parameters modeled include:
+*
+* END Notes
+*                                   
+
+* Node assignments
+* 1 - IN1, 2 - D1, 3 - S1, 4 - Vss, 5 - GND, 6 - S4
+* 7 - D4, 8 - IN4, 9 - IN3, 10 - D3, 11 - S3
+* 13 - Vdd, 14 - S2, 15 - D2, 16 - IN2
+*                    
+.SUBCKT ADG442 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16
+*
+* DEMUX SWITCHES (S1-8 ---> D)
+*
+*     First Section is for control lines IN1-4
+*
+E_IN1_2	  200   5   1   5   1
+E_IN1_1   301  40 201  40   1   ; CHANGE TO -1 FOR 0 = ON 
+R_IN1     200 201           1000
+C_IN1_1   201   5           50E-12
+
+E_IN2_2	  202   5  16   5   1
+E_IN2_1   302  40 203  40   1   ; CHANGE TO -1 FOR 0 = ON
+R_IN2     202 203           1000
+C_IN2_1   203   5           50E-12
+
+E_IN3_2	  204   5   9   5   1
+E_IN3_1   303  40 205  40   1   ; CHANGE TO -1 FOR 0 = ON
+R_IN3     204 205           1000
+C_IN3_1   205   5           50E-12
+
+E_IN4_2	  206   5   8   5   1
+E_IN4_1   304  40 207  40   1   ; CHANGE TO -1 FOR 0 = ON
+R_IN4     206 207           1000
+C_IN4_1   207   5           50E-12
+
+V_INX      40   0         2.5
+
+S_IN1      3 31 301 5	  Sdemux
+S_IN2     14 32 302 5	  Sdemux		
+S_IN3     11 33 303 5     Sdemux
+S_IN4      6 34 304 5     Sdemux
+
+
+C_IN1_X1     1  5          0.5E-12
+C_IN1_D      1 31          0.5E-12
+C_IN2_X1    16  5          0.5E-12
+C_IN2_D     16 32          0.5E-12
+C_IN3_X1     9  5          0.5E-12
+C_IN3_D      9 33          0.5E-12
+C_IN4_X1     8  5          0.5E-12
+C_IN4_D      8 34          0.5E-12
+
+*          Input capacitances
+
+C_S1      3  5          4E-12
+C_S2     14  5          4E-12
+C_S3     11  5 	 	4E-12
+C_S4      6  5          4E-12
+
+C_D1      2  5          4E-12
+C_D2     15  5          4E-12
+C_D3     10  5          4E-12
+C_D4      7  5          4E-12
+*
+*	Leakage Current (SX and D ON only) 
+*
+*	Note for typical 25C leakage current change 2E-9
+*	to 1.333E-12 in the following nine lines
+
+G_ON_S1     3  5  3  5    6.6E-12
+G_ON_S2	   14  5 14  5    6.6E-12
+G_ON_S3    11  5 11  5    6.6E-12
+G_ON_S4     6  5  6  5    6.6E-12
+G_ON_D1     2  5  2  5    6.6E-12
+G_ON_D2    15  5 15  5    6.6E-12
+G_ON_D3    10  5 10  5    6.6E-12
+G_ON_D4     7  5  7  5    6.6E-12
+
+*
+*	Leakage Current (SX OFF only
+*
+
+S_OFF_S1       3 581   1  5  Sdemux
+R_OFF_S1     581   5         1E12 
+G_OFF_S1       3   5 581  5  -5E-12
+
+S_OFF_S2      14 583  16  5  Sdemux
+R_OFF_S2     583   5         1E12 
+G_OFF_S2      14   5 583  5  -5E-12
+
+S_OFF_S3      11 585   9  5  Sdemux
+R_OFF_S3     585   5         1E12 
+G_OFF_S3      11   5 585  5  -5E-12
+
+S_OFF_S4       6 587   8  5  Sdemux
+R_OFF_S4     587   5         1E12 
+G_OFF_S4       6   5 587  5  -5E-12
+
+*
+*	Leakage Current (D OFF only)
+*
+
+S_OFF_D1       2 580   1  5  Sdemux
+R_OFF_D1     580   5         1E12 
+G_OFF_D1       2   5 580  5  -5E-12
+
+S_OFF_D2      15 582  16  5  Sdemux
+R_OFF_D2     582   5         1E12 
+G_OFF_D2      15   5 582  5  -5E-12
+
+S_OFF_D3      10 584   9  5  Sdemux
+R_OFF_D3     584   5         1E12 
+G_OFF_D3      10   5 584  5  -5E-12
+
+S_OFF_D4       7 586  8   5  Sdemux
+R_OFF_D4     586   5         1E12 
+G_OFF_D4       7   5 586  5  -5E-12
+
+
+*
+*     Main Series Switch combination
+*
+
+S_1_A     412 411  4 2 SNCM
+R_1_A     412 411  200
+S_1_B       2 412  13   2 SPCM
+*R_1_B       2 412   50
+S_1_C       2 412 611 0 SMAINP
+S_1_D     412 411 0 612 SMAINN
+E_1_E     611 0  VALUE = {(10*V(2,500))/(PWR(V(13,500),1.13)+0.005)}
+E_1_F     612 0  VALUE = {(10*V(2,500))/(V(500,4)+0.005)}
+S_1_G     411  31  13  4  SBASE
+
+S_2_A     414 413   4  15 SNCM
+R_2_A     414 413         200
+S_2_B      15 414  13  15 SPCM
+*R_2_B     15 414         50
+S_2_C      15 414 613   0 SMAINP
+S_2_D     414 413   0 614 SMAINN
+E_2_E     613 0  VALUE = {(10*V(2,500))/(PWR(V(13,500),1.13)+0.005)}
+E_2_F     614 0  VALUE = {(10*V(2,500))/(V(500,4)+0.005)}
+S_2_G     413  32  13  4  SBASE
+
+S_3_A     416 415   4  10  SNCM
+R_3_A     416 415          200
+S_3_B      10 416  13  10  SPCM
+*R_3_B     10 416          50
+S_3_C      10 416 615   0  SMAINP
+S_3_D     416 415   0 616  SMAINN
+E_3_E     615   0          VALUE = {(10*V(2,500))/(PWR(V(13,500),1.13)+0.005)}
+E_3_F     616   0          VALUE = {(10*V(2,500))/(V(500,4)+0.005)}
+S_3_G     415  33  13   4  SBASE
+
+S_4_A     418 417   4   7  SNCM
+R_4_A     418 417          200
+S_4_B       7 418  13   7  SPCM
+*R_4_B      7 418          50
+S_4_C       7 418 617   0  SMAINP
+S_4_D     418 417   0 618  SMAINN
+E_4_E     617   0          VALUE = {(10*V(2,500))/(PWR(V(13,500),1.13)+0.005)}
+E_4_F     618   0          VALUE = {(10*V(2,500))/(V(500,4)+0.005)}
+S_4_G     417  34  13   4  SBASE
+*
+*     Power Supply Current Correction
+*
+I_PS_1     13  5           80E-6
+I_PS_2      5  4           0.0001E-6
+E_PS_1     99  5 13  5     1
+E_PS_2    500  4 13  4     .5
+
+*
+*	Crosstalk 
+*
+RXT_12     31 32           1E12
+RXT_13     31 33           1E12
+RXT_14     31 34           1E12
+RXT_23     32 33           1E12
+RXT_24     32 34           1E12
+RXT_34     33 34           1E12
+CXT_12     31 32           1.6E-13
+CXT_13     31 33           1.6E-13
+CXT_14     31 34           1.6E-13
+CXT_23     32 33           1.6E-13
+CXT_24     32 34           1.6E-13
+CXT_34     33 34           1.6E-13
+
+*
+*	OFF Isolation
+*
+
+COI_1	    2  3           7E-13
+COI_2       6  7           7E-13
+COI_3      10 11           7E-13 
+COI_4      14 15           7E-13
+
+*
+* MODELS USED
+*
+.MODEL SNCM  VSWITCH (RON=8 ROFF=250 VON=1 VOFF=-8)
+.MODEL SPCM  VSWITCH (RON=200 ROFF=25 VON=2 VOFF=-1)
+.MODEL SBASE VSWITCH (RON=34 ROFF=120 VON=32.5 VOFF=-10)
+.MODEL SMAINP VSWITCH (RON=190 ROFF=0.05 VON=9.22 VOFF=-1)
+.MODEL SMAINN VSWITCH (RON=200 ROFF=0.1 VON=12 VOFF=0)
+.MODEL Sdemux VSWITCH (RON=1 ROFF=1E12 VON=2.0 VOFF=1.4)
+
+.ENDS ADG442
+
+

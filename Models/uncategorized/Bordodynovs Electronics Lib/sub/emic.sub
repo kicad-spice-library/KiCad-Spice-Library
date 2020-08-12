@@ -1,0 +1,126 @@
+*MODELO DE MICRÓFONO ELECTRET
+*______________________________
+*Versión para SPICE standard
+*
+* El parámetro Rload debe coincidir con la impedancia en alterna que "ve" el jfet.
+*Los parámetros que se suelen variar para las simulaciones son:
+*   frec;  dBSPL y Rload
+*Se puede variar Q y fo para ajustar la respuesta en frecuencia de la cápsula electret.
+.subckt emic mic+ mic- tierra params: frec=3k, Sens=-36, dBSPL=94,
++normal=2.537e-2/2, small=2.537e-2/4, Rload=2.2k, diametro=small
++Q=1.2 fo=15k wo=2*pi*fo Cpara=4p
++grosor=5e-6 densidad=2e3
++S=pi*diametro*diametro/4
++M=S*grosor*densidad
++k=wo*wo*M
++R=wo*M/Q
++epsilon0=8.85e-12
++epsilonR=1.2
++Xo=10e-6
++d=1e-6
++sigma=epsilon0*wo*wo*M*exp(Sens*ln(10)/20)*Q/S
++Cap=epsilon0*S/(Xo+(d/epsilonR))
++Beta=1.27e-3
++Vto=-0.6
++Av=-Rload*2*Beta*Vto
+*+P=2e-5*exp(dBSPL*ln(10)/20)
++P=2e-5*exp(dBSPL*ln(10)/20)/Av
+
+*
+*		Creado por Sergio Rodríguez Buenafuente en junio de 2003
+*
+*		Parámetros del modelo:
+*		- frec: Es la frecuencia del estímulo sonoro.
+*		- Sens: Es la sensitividad de la cápsula en dB respecto a V/Pa.
+*		- dBSPL: Es la presión acústica que llega al micrófono.
+*		- D1 y D2 son los diámetros de las cápsulas de media pulgada y un cuarto de pulgada resp.
+*       - Q es el factor de calidad mecánica.
+*       - fo es la frecuencia de resonancia.
+*
+*		NOTA: dBSPL = 20*log(P/Po); donde P es la presión en Pa
+*			  y Po = 2e-5 es la presión de referencia en Pa
+
+* Estímulo acústico
+  Vfuerza 1 0 sine(0 {{P}*{S}} {frec}) AC {{P}*{S}}
+
+* Comportamiento Mecánico
+  Lmasa 1 2 {M}
+  Celasticidad 2 3 {1/{k}} Lser=1n
+  Rrozamiento 3 0 {R}
+  F1 x 0 Vfuerza 1
+  Cintegracion x 0 1
+  Rconvergencia x 0 1e12
+
+* Impedancia del capacitor
+  E1 4 tierra x 0 {sigma/epsilon0}
+  Csensor 5 4 {Cap} Lser=1n
+  Ccapsula 5 tierra {Cpara} Lser=1n
+  Rpara 5 tierra 100meg
+* Acondicionador de impedancia de salida: JFET
+  Jfet mic+ 5 mic- electret
+
+.model electret NJF(Beta={Beta} Betatce=-.5 Rd=5 Rs=5 Lambda=10m
+ +Vto={Vto} Vtotc=-2.5m Is=114.5f Isr=0.9p N=1 Nr=2 Xti=3
+ +Alpha=506.8u Vk=251.7 Cgd=3.5p M=.2271 Pb=0.5 Fc=.5 Cgs=0.65p
+ +Kf=2.918E-18 Af=1 mfg=Sergio)
+
+.ends
+.subckt emic1 mic+ mic- tierra params: frec=3k, Sens=-36, dBSPL=94,
++normal=2.537e-2/2, small=2.537e-2/4, Rload=2.2k, diametro=small
++Q=1.2 fo=15k wo=2*pi*fo Cpara=4p
++grosor=5e-6 densidad=2e3
++S=pi*diametro*diametro/4
++M=S*grosor*densidad
++k=wo*wo*M
++R=wo*M/Q
++epsilon0=8.85e-12
++epsilonR=1.2
++Xo=10e-6
++d=1e-6
++sigma=epsilon0*wo*wo*M*exp(Sens*ln(10)/20)*Q/S
++Cap=epsilon0*S/(Xo+(d/epsilonR))
++Beta=1.27e-3
++Vto=-0.6
++Av=-Rload*2*Beta*Vto
+*+P=2e-5*exp(dBSPL*ln(10)/20)
++P=2e-5*exp(dBSPL*ln(10)/20)/Av
+
+*
+*		Creado por Sergio Rodríguez Buenafuente en junio de 2003
+*
+*		Parámetros del modelo:
+*		- frec: Es la frecuencia del estímulo sonoro.
+*		- Sens: Es la sensitividad de la cápsula en dB respecto a V/Pa.
+*		- dBSPL: Es la presión acústica que llega al micrófono.
+*		- D1 y D2 son los diámetros de las cápsulas de media pulgada y un cuarto de pulgada resp.
+*       - Q es el factor de calidad mecánica.
+*       - fo es la frecuencia de resonancia.
+*
+*		NOTA: dBSPL = 20*log(P/Po); donde P es la presión en Pa
+*			  y Po = 2e-5 es la presión de referencia en Pa
+
+* Estímulo acústico
+  Vfuerza 1 0 sine(0 {{P}*{S}} {frec}) AC {{P}*{S}}
+
+* Comportamiento Mecánico
+  Lmasa 1 2 {M}
+  Celasticidad 2 3 {1/{k}}  
+  Rrozamiento 3 0 {R}
+  F1 x 0 Vfuerza 1
+  Cintegracion x 0 1
+  Rconvergencia x 0 1e12
+
+* Impedancia del capacitor
+  E1 4 tierra x 0 {sigma/epsilon0}
+  Csensor 5 4 {Cap}  
+  Ccapsula 5 tierra {Cpara}  
+  Rpara 5 tierra 100meg
+* Acondicionador de impedancia de salida: JFET
+  Jfet mic+ 5 mic- electret
+
+.model electret NJF(Beta={Beta} Betatce=-.5 Rd=5 Rs=5 Lambda=10m
+ +Vto={Vto} Vtotc=-2.5m Is=114.5f Isr=0.9p N=1 Nr=2 Xti=3
+ +Alpha=506.8u Vk=251.7 Cgd=3.5p M=.2271 Pb=0.5 Fc=.5 Cgs=0.65p
+ +Kf=2.918E-18 Af=1 mfg=Sergio)
+
+.ends

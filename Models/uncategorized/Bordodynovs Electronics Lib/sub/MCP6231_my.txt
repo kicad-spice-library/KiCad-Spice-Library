@@ -1,0 +1,146 @@
+*The Modification from Bordodynov
+.SUBCKT MCP6231_my 1 2 3 4 5
+*               | | | | |
+*               | | | | Output
+*               | | | Negative Supply
+*               | | Positive Supply
+*               | Inverting Input
+*               Non-inverting Input
+
+*      For high impedance circuits, set GMIN=100F in the .OPTIONS statement
+*
+* Supported:
+*      Typical performance for temperature range (-40 to 125) degrees Celsius
+*      DC, AC, Transient, and Noise analyses.
+*      Most specs, including: offsets, DC PSRR, DC CMRR, input impedance,
+*            open loop gain, voltage ranges, supply current, ... , etc.
+*      Temperature effects for Ibias, Iquiescent, Iout short circuit 
+*            current, Vsat on both rails, Slew Rate vs. Temp and P.S.
+* Input Stage
+V10  3 10 -500M
+R10 10 11 6.90K
+R11 10 12 6.90K
+C11 11 12 12.8P
+C12  1  0 6.00P
+E12 71 14 POLY(4) 20 0 21 0 26 0 27 0   5.00M 48.2 48.2 1 1
+G12 1 0 62 0 1m
+M12 11 14 15 15 NMI 
+M14 12 2 15 15 NMI 
+G14 2 0 62 0 1m
+C14  2  0 6.00P
+I15 15 4 50.0U
+V16 16 4 -300M
+GD16 16 1 TABLE {V(16,1)} ((-100,-1p)(0,0)(1m,1u)(2m,1m)) 
+V13 3 13 -300M
+GD13 2 13 TABLE {V(2,13)} ((-100,-1p)(0,0)(1m,1u)(2m,1m)) 
+R71  1  0 20.0E12
+R72  2  0 20.0E12
+R73  1  2 20.0E12
+I80  1  2 500E-15
+*
+* Noise, PSRR, and CMRR
+I20 21 20 423U
+D20 20  0 DN1
+D21  0 21 DN1
+G26  0 26 POLY(2) 3 0 4 0   0.00 -112U -12U
+R26 26  0 1
+G27  0 27 POLY(2) 1 0 2 0  -776U 38U 38U
+R27 27  0 1
+*
+* Open Loop Gain, Slew Rate
+G30  0 30 12 11 1
+R30 30  0 1.00K
+CR30 30  0 10p  ;my
+G31 0 31 3 4 1.58
+I31 0 31 DC 67
+R31 31  0 1 TC=3.75M,3.19U
+GD31 30 0 TABLE {V(30,31)} ((-100,-1n)(0,0)(1m,.1)(2m,2))
+G32 32 0 3 4 -1.7
+I32 32 0 DC 108
+R32 32  0 1 TC=3.11M,3.25U
+GD32 0 30 TABLE {V(30,32)} ((-2m,2)(-1m,.1)(0,0)(100,-1n))	
+G33  0 33 30 0 1m
+R33  33 0 1K
+G34  0 34 33 0 1.12
+R34  34 0 1K
+C34  34 0 575U
+G37  0 37 34 0 1m
+R37  37 0 1K
+C37  37 0 4.08N
+G38  0 38 37 0 1m
+R38  39 0 1K
+L38  38 39 4.54M
+E38  35 0 38 0 1
+G35 33 0 TABLE {V(35,3)} ((-1,-1n)(0,0)(65,1n))(65.5,1))
+G36 33 0 TABLE {V(35,4)} ((-65.5,-1)((-65,-1n)(0,0)(1,1n))
+*
+* Output Stage
+R80 50 0 100MEG
+Cr80 50 0 10f
+G50 0 50 57 96 2
+R58 57  96 0.50
+Cr58 57 96 2n    ;my
+R57 57  0 2620
+Cr57 57 0 200f     ;my
+C58  5  0 2.00P
+G57  0 57 POLY(3) 3 0 4 0 35 0   0 168U 34U 440U
+*GD55 55 57 TABLE {V(55,57)} ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D55 57 55 dm ;my
+D55s 57 55 dms ;my
+*GD56 57 56 TABLE {V(57,56)} ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D56 56 57  dm ;my
+D56s 56 57  dms ;my
+E55 55  0 POLY(2) 3 0 51 0 -0.65M 1 -61.5M
+E56 56  0 POLY(2) 4 0 52 0 1.5M 1 -49.5M
+R51 51 0 1k
+R52 52 0 1k
+*GD51 50 51 TABLE {V(50,51)} ((-10,-1n)(0,0)(1m,1m)(2m,1))
+D51 50 51 dm
+D51s 50 51 dms
+*GD52 50 52 TABLE {V(50,52)}  ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D52 52 50 dm
+D52s 52 50 dms
+.model dm d ron=1m Epsilon=20u Roff=20G Vfwd=1m
+.model dms d ron=1  Roff=20G Vfwd=0 Epsilon=10u
+G53  3  0 POLY(1) 51 0  -50.0U 1M
+G54  0  4 POLY(1) 52 0  -50.0U -1M
+*
+* Current Limit
+G99 96 5 99 0 1
+R98 0 98 1 TC=-3.13M,11.1U
+G97 0 98 TABLE { V(96,5) } ((-11.0,-10.0M)(-1.00M,-9.9M)(0,0)(1.00M,9.9M)(11.0,10.0M))
+*E97 99 0 VALUE { V(98)*((V(3,4))*400M + 111E-18)}
+bE97 0 99  i=V(98)*((V(3,4))*400M + 111E-18) Rpar=1 Cpar=1n
+D98 4 5 DESD
+D99 5 3 DESD
+*
+* Temperature / Voltage Sensitive IQuiscent
+R61 0 61 1 TC=2.70M,5.24U
+CR61 0 61 1n
+G61 3 4 61 0 1
+G60 0 61 TABLE {V(3, 4)} 
++ ((0,0)(750M,190N)(800M,1.00U)(900M,4.00U)
++ (1.1,17.0U)(1.2,18.7U)(5.5,20.0U))
+
+*
+* Temperature Sensistive offset voltage
+*I73 0 70 DC 1uA
+*R74 0 70 1 TC=2
+*E75 1 71 70 0 1
+Ve75 1 71 {2u*(TEMP-27)} ;my
+*
+* Temp Sensistive IBias
+I62 0 62 DC 1uA
+R62 0 62 REXP  59.91066U
+CR62 0 62 1n ;my
+*
+* Models
+.MODEL NMI NMOS(L=2.00U W=42.0U KP=20.0U LEVEL=1 )
+.MODEL DESD  D   N=1 IS=1.00E-15 cjo=50f ;my
+.MODEL DN1 D   IS=1P KF=22E-18 AF=1 cjo=50f ;my
+.MODEL REXP RES TCE= 10.06834
+.ENDS MCP6231
+
+
+
+

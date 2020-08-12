@@ -1,0 +1,3024 @@
+* Library of ON Semiconductor op-amps
+
+* $Revision:   1.5  $
+* $Author:   HIRASUNA  $
+* $Date:   20 Jul 2001 16:44:02  $
+*
+
+*---------------------------------------------------------------
+
+* ON Semiconductor Operational Amplifier Macromodel Library
+* Rev 1.0
+*
+* Macromodels, simulation models, or other models provided by
+* ON, directly or indirectly, are not warranted by
+* ON as fully representing all of the specifications and
+* operating characteristics of the semiconductor product to
+* which the model relates. Moreover, these models are
+* furnished on an "as is" basis without support or warranty of
+* any kind, either expressed or implied, regarding the use
+* thereof and ON specifically disclaims all implied
+* warranties of merchantability and fitness of the models for
+* any purpose. ON does not assume any liability arising
+* out of the application or use of the models including
+* infringement of patents and copyrights nor does ON
+* convey any license under its patents and copyrights or the
+* rights of others. ON reserves the right to make
+* changes without notice to any model.
+*
+* These macromodels were generated using the MicroSim Parts
+* program.  The PSpice program derives representative circuit
+* elements for the op amp macromodel from given device
+* characterization information. They are appropriate for
+* modeling the following parameters at 25øC:
+*
+* ù Positive and Negative Slew Rate
+* ù Quiescent Power Dissipation
+* ù Maximum Positive and Negative
+*    Output Voltage Swing
+* ù Input Bias Current
+* ù Open Loop Voltage Gain
+* ù Unity Gain Frequency
+* ù Common Mode Rejection Ratio
+*    (CMRR)
+* ù Output Impedence (ac and dc)
+* ù Output Short Circuit Current Limit
+*
+*  These models may not fully represent the external circuit
+* effects on stability and/or phase margin. Since they are
+* macromodels and not actual circuit netlists, they are
+* intended to model specific device parameters at 25øC only.
+*
+* Although macromodels can be a useful tool in evaluating
+* device performance in various applications, they cannot
+* model exact device performance under all conditions, nor are
+* they intended to replace breadboarding for final
+* verification.
+*
+* These macromodels each represent one operational amplifer
+* only. For a dual, use two macromodels.  For a quad, use
+* four.
+*
+* Contents:
+*
+* LF411        MC33071           MC33181           TL061
+* LF412        MC33072           MC33182           TL062
+* LF441        MC33074           MC33184           TL064
+* LF442        MC33078           MC33272
+* LF444        MC33079           MC33274
+* LM324        MC33171           MC33282
+* LM358        MC33172           MC33284
+* LM833        MC33174           MC34081
+* LM2902       MC33178
+* LM2904       MC33179
+*
+**************************************************************
+*$
+* LF411 operational amplifier
+* "macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF411/ON  1 2 3 4 5
+*
+  c1   11 12 2.801E-12
+  c2    6  7 8.000E-12
+  css  10 99 3.200E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 3.316E6
++ -3E6 3E6 3E6 -3E6
+  ga    6  0 11 12 402.1E-6
+  gcm   0  6 10 99 12.72E-9
+  iss   3 10 dc 280.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 2.487E3
+  rd2   4 12 2.487E3
+  ro1   8  5 40
+  ro2   7 99 60
+  rp    3  4 24.00E3
+  rss  10 99 714.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.100
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=30.00E-12 Beta=577.5E-6
++ Vto=-1)
+.ends
+*$
+* LF412 operational amplifier
+* "macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF412/ON  1 2 3 4 5
+*
+  c1   11 12 3.356E-12
+  c2    6  7 8.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 12.43E6 -10E6
++10E6 10E6 -10E6
+  ga    6  0 11 12 201.1E-6
+  gcm   0  6 10 99 2.011E-9
+  iss   3 10 dc 104.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 4.974E3
+  rd2   4 12 4.974E3
+  ro1   8  5 40
+  ro2   7 99 60
+  rp    3  4 21.43E3
+  rss  10 99 1.923E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=250.0E-15 Beta=388.7E-6 Vto=-1)
+.ends
+*$
+* LF441 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF441/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+
+* LF442 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF442/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* LF444 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF444/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* LM324 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM324/ON  1 2 3 4 5
+*
+  c1   11 12 3.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 315.8E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 53.05E6
++-50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 37.70E-6
+  gcm   0  6 10 99 11.92E-9
+  iee   3 10 dc 2.476E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 26.53E3
+  rc2   4 12 26.53E3
+  re1  13 10 4.820E3
+  re2  14 10 4.820E3
+  ree  10 99 80.78E6
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 34.71E3
+  vb    9  0 dc 0
+  vc    3 53 dc 2
+  ve   54  4 dc 5.000E-3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=31.58)
+.ends
+*$
+* LM358 operational amplifier
+* "macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM358/ON  1 2 3 4 5
+*
+  c1   11 12 3.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 388.6E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 48.23E6
++ -50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 41.47E-6
+  gcm   0  6 10 99 414.7E-12
+  iee   3 10 dc 2.543E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 24.11E3
+  rc2   4 12 24.11E3
+  re1  13 10 3.043E3
+  re2  14 10 3.043E3
+  ree  10 99 78.65E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 37.62E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.800
+  ve   54  4 dc .88
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=32.03)
+.ends
+*$
+* LM833 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM833/ON  1 2 3 4 5
+*
+  c1   11 12 3.501E-12
+  c2    6  7 10.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 27.96E6
++ -30E6 30E6 30E6 -30E6
+  ga    6  0 11 12 565.5E-6
+  gcm   0  6 10 99 5.655E-9
+  iss  10  4 dc 70.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   3 11 1.768E3
+  rd2   3 12 1.768E3
+  ro1   8  5 10
+  ro2   7 99 20
+  rp    3  4 29.03E3
+  rss  10 99 2.857E6
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .4
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx NJF(Is=150.0E-9 Beta=4.568E-3
++ Vto=-1)
+.ends
+*$
+* LM2902 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM2902/ON  1 2 3 4 5
+*
+  c1   11 12 2.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 388.6E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 48.23E6
++ -50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 41.47E-6
+  gcm   0  6 10 99 414.7E-12
+  iee   3 10 dc 2.543E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 24.11E3
+  rc2   4 12 24.11E3
+  re1  13 10 3.043E3
+  re2  14 10 3.043E3
+  ree  10 99 78.65E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 37.62E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.800
+  ve   54  4 dc .88
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=32.03)
+.ends
+*$
+* LM2904 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM2904/ON  1 2 3 4 5
+*
+  c1   11 12 3.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 388.6E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 48.23E6
++ -50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 41.47E-6
+  gcm   0  6 10 99 414.7E-12
+  iee   3 10 dc 2.543E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 24.11E3
+  rc2   4 12 24.11E3
+  re1  13 10 3.043E3
+  re2  14 10 3.043E3
+  ree  10 99 78.65E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 37.62E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.800
+  ve   54  4 dc .88
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=32.03)
+.ends
+*$
+* MC33071 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33071/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 8.000E-12
+  cee  10 99 1.231E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 8.842E6
++ -9E6 9E6 9E6 -9E6
+  ga    6  0 11 12 251.3E-6
+  gcm   0  6 10 99 3.550E-9
+  iee   3 10 dc 120.2E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.979E3
+  rc2   4 12 3.979E3
+  re1  13 10 3.542E3
+  re2  14 10 3.542E3
+  ree  10 99 1.664E6
+  ro1   8  5 30
+  ro2   7 99 45
+  rp    3  4 34.09E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=600)
+.ends
+*$
+* MC33072 operational amplifier *"macromodel" subcircuit
+* created using Parts release 4.05
+*
+* connections:
+*
+.subckt MC33072/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 8.000E-12
+  cee  10 99 1.231E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 8.842E6
++ -9E6 9E6 9E6 -9E6
+  ga    6  0 11 12 251.3E-6
+  gcm   0  6 10 99 3.550E-9
+  iee   3 10 dc 120.2E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.979E3
+  rc2   4 12 3.979E3
+  re1  13 10 3.542E3
+  re2  14 10 3.542E3
+  ree  10 99 1.664E6
+  ro1   8  5 30
+  ro2   7 99 45
+  rp    3  4 34.09E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+  desd1 1  3 dx
+  desd2 2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=600)
+.ends
+*$
+* MC33074 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33074/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 8.000E-12
+  cee  10 99 1.231E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 8.842E6
++ -9E6 9E6 9E6 -9E6
+  ga    6  0 11 12 251.3E-6
+  gcm   0  6 10 99 3.550E-9
+  iee   3 10 dc 120.2E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.979E3
+  rc2   4 12 3.979E3
+  re1  13 10 3.542E3
+  re2  14 10 3.542E3
+  ree  10 99 1.664E6
+  ro1   8  5 30
+  ro2   7 99 45
+  rp    3  4 34.09E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+  desd1 1  3 dx
+  desd2 2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=600)
+.ends
+*$
+* MC33078 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33078/ON  1 2 3 4 5
+*
+  c1   11 12 3.501E-12
+  c2    6  7 10.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 27.96E6
++ -30E6 30E6 30E6 -30E6
+  ga    6  0 11 12 565.5E-6
+  gcm   0  6 10 99 5.655E-9
+  iss  10  4 dc 70.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   3 11 1.768E3
+  rd2   3 12 1.768E3
+  ro1   8  5 10
+  ro2   7 99 20
+  rp    3  4 29.03E3
+  rss  10 99 2.857E6
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .4
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx NJF(Is=150.0E-9 Beta=4.568E-3
++ Vto=-1)
+.ends
+*$
+* MC33079 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*
+.subckt MC33079/ON  1 2 3 4 5
+*
+  c1   11 12 3.501E-12
+  c2    6  7 10.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 27.96E6
++ -30E6 30E6 30E6 -30E6
+  ga    6  0 11 12 565.5E-6
+  gcm   0  6 10 99 5.655E-9
+  iss  10  4 dc 70.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   3 11 1.768E3
+  rd2   3 12 1.768E3
+  ro1   8  5 10
+  ro2   7 99 20
+  rp    3  4 29.03E3
+  rss  10 99 2.857E6
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .4
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx NJF(Is=150.0E-9 Beta=4.568E-3
++ Vto=-1)
+.ends
+*$
+* MC33171 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33171/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 5.500E-12
+  cee  10 99 4.976E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 89.31E6
++ -90E6 90E6 90E6 -90E6
+  ga    6  0 11 12 62.20E-6
+  gcm   0  6 10 99 1.967E-9
+  iee   3 10 dc 22.04E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 16.08E3
+  rc2   4 12 16.08E3
+  re1  13 10 13.70E3
+  re2  14 10 13.70E3
+  ree  10 99 9.074E6
+  ro1   8  5 110
+  ro2   7 99 90
+  rp    3  4 291.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc .8
+  ve   54  4 dc .8
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=550)
+.ends
+*$
+* MC33172 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33172/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 5.500E-12
+  cee  10 99 4.976E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 89.31E6
++ -90E6 90E6 90E6 -90E6
+  ga    6  0 11 12 62.20E-6
+  gcm   0  6 10 99 1.967E-9
+  iee   3 10 dc 22.04E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 16.08E3
+  rc2   4 12 16.08E3
+  re1  13 10 13.70E3
+  re2  14 10 13.70E3
+  ree  10 99 9.074E6
+  ro1   8  5 110
+  ro2   7 99 90
+  rp    3  4 291.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc .8
+  ve   54  4 dc .8
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=550)
+.ends
+*$
+* MC33174 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33174/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 5.500E-12
+  cee  10 99 4.976E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 89.31E6
++ -90E6 90E6 90E6 -90E6
+  ga    6  0 11 12 62.20E-6
+  gcm   0  6 10 99 1.967E-9
+  iee   3 10 dc 22.04E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 16.08E3
+  rc2   4 12 16.08E3
+  re1  13 10 13.70E3
+  re2  14 10 13.70E3
+  ree  10 99 9.074E6
+  ro1   8  5 110
+  ro2   7 99 90
+  rp    3  4 291.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc .8
+  ve   54  4 dc .8
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=550)
+.ends
+*$
+* MC33178 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33178/ON  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 15.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.68E6
++ -20E6 20E6 20E6 -20E6
+  ga    6  0 11 12 282.7E-6
+  gcm   0  6 10 99 894.1E-12
+  iee   3 10 dc 30.20E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.537E3
+  rc2   4 12 3.537E3
+  re1  13 10 1.800E3
+  re2  14 10 1.800E3
+  ree  10 99 6.623E6
+  ro1   8  5 60
+  ro2   7 99 40
+  rp    3  4 164.5E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1.200
+  vlim  7  8 dc 0
+  vlp  91  0 dc 100
+  vln   0 92 dc 100
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=150)
+.ends
+*$
+* MC33179 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33179/ON  1 2 3 4 5
+*
+  c1   11 12 2.887E-12
+  c2    6  7 2.500E-12
+  cee  10 99 31.03E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 84.88E6
++ -80E6 80E6 80E6 -80E6
+  ga    6  0 11 12 47.12E-6
+  gcm   0  6 10 99 149.0E-12
+  iee  10  4 dc 5.293E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   3 11 21.22E3
+  rc2   3 12 21.22E3
+  re1  13 10 10.66E3
+  re2  14 10 10.66E3
+  ree  10 99 37.78E6
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 33.53E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1.200
+  vlim  7  8 dc 0
+  vlp  91  0 dc 80
+  vln   0 92 dc 80
+.model dx D(Is=800.0E-18)
+.model qx NPN(Is=800.0E-18 Bf=26.01)
+.ends
+*$
+* MC33181 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33181/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6 Vto=-1)
+.ends
+*$
+* MC33182 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33182/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* MC33184 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33184/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* MC33272 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33272/ON  1 2 3 4 5
+*
+  c1   11 12 1.926E-12
+  c2    6  7 5.500E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 21.05E6
++ -20E6 20E6 20E6 -20E6
+  ga    6  0 11 12 190.1E-6
+  gcm   0  6 10 99 1.901E-9
+  iee   3 10 dc 55.60E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 5.261E3
+  rc2   4 12 5.261E3
+  re1  13 10 4.274E3
+  re2  14 10 4.274E3
+  ree  10 99 3.597E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 30.67E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.170
+  ve   54  4 dc 1.025
+  vlim  7  8 dc 0
+  vlp  91  0 dc 37
+  vln   0 92 dc 37
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=91.67)
+.ends
+*$
+* MC33274 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33274/ON  1 2 3 4 5
+*
+  c1   11 12 1.926E-12
+  c2    6  7 5.500E-12
+  cee  10 99 1.650E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.54E6
++ -20E6 20E6 20E6 -20E6
+  ga    6  0 11 12 190.1E-6
+  gcm   0  6 10 99 1.901E-9
+  iee   3 10 dc 72.10E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 5.261E3
+  rc2   4 12 5.261E3
+  re1  13 10 4.500E3
+  re2  14 10 4.500E3
+  ree  10 99 2.774E6
+  ro1   8  5 35
+  ro2   7 99 30
+  rp    3  4 29.90E3
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 37
+  vln   0 92 dc 37
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=119.2)
+.ends
+*$
+* MC33282 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33282/ON  1 2 3 4 5
+*
+  c1   11 12 4.767E-12
+  c2    6  7 8.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 14.47E6
++-10E6 10E6 10E6 -10E6
+  ga    6  0 11 12 276.5E-6
+  gcm   0  6 10 99 8.742E-9
+  iss   3 10 dc 120.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 3.617E3
+  rd2   4 12 3.617E3
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 13.95E3
+  rss  10 99 1.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.300
+  ve   54  4 dc 1.100
+  vlim  7  8 dc 0
+  vlp  91  0 dc 21
+  vln   0 92 dc 21
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=15.00E-12 Beta=636.9E-6 Vto=-1)
+.ends
+*$
+* MC33284 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33284/ON  1 2 3 4 5
+*
+  c1   11 12 4.767E-12
+  c2    6  7 8.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 14.47E6
++-10E6 10E6 10E6 -10E6
+  ga    6  0 11 12 276.5E-6
+  gcm   0  6 10 99 8.742E-9
+  iss   3 10 dc 120.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 3.617E3
+  rd2   4 12 3.617E3
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 13.95E3
+  rss  10 99 1.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.300
+  ve   54  4 dc 1.100
+  vlim  7  8 dc 0
+  vlp  91  0 dc 21
+  vln   0 92 dc 21
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=15.00E-12 Beta=636.9E-6 Vto=-1)
+.ends
+*$
+* MC34084 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC34084/ON  1 2 3 4 5
+*
+  c1   11 12 2.801E-12
+  c2    6  7 8.000E-12
+  css  10 99 3.200E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 3.316E6
++ -3E6 3E6 3E6 -3E6
+  ga    6  0 11 12 402.1E-6
+  gcm   0  6 10 99 12.72E-9
+  iss   3 10 dc 280.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 2.487E3
+  rd2   4 12 2.487E3
+  ro1   8  5 40
+  ro2   7 99 60
+  rp    3  4 24.00E3
+  rss  10 99 714.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.100
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=30.00E-12 Beta=577.5E-6
++ Vto=-1)
+.ends
+*$
+* TL061 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt TL061/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* TL062 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt TL062/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* TL064 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt TL064/ON  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+
+****************************************************************
+* Attention: The following models with the /MC suffix are from the  
+* obsolete MOTORAMP library. They should be replaced with models
+* with the /ON sufix. Cadence will not provide these obsolete 
+* models in subsequent releases of PSpice.
+****************************************************************
+
+* LF411 operational amplifier
+* "macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF411/MC  1 2 3 4 5
+*
+  c1   11 12 2.801E-12
+  c2    6  7 8.000E-12
+  css  10 99 3.200E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 3.316E6
++ -3E6 3E6 3E6 -3E6
+  ga    6  0 11 12 402.1E-6
+  gcm   0  6 10 99 12.72E-9
+  iss   3 10 dc 280.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 2.487E3
+  rd2   4 12 2.487E3
+  ro1   8  5 40
+  ro2   7 99 60
+  rp    3  4 24.00E3
+  rss  10 99 714.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.100
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=30.00E-12 Beta=577.5E-6
++ Vto=-1)
+.ends
+*$
+* LF412 operational amplifier
+* "macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF412/MC  1 2 3 4 5
+*
+  c1   11 12 3.356E-12
+  c2    6  7 8.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 12.43E6 -10E6
++10E6 10E6 -10E6
+  ga    6  0 11 12 201.1E-6
+  gcm   0  6 10 99 2.011E-9
+  iss   3 10 dc 104.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 4.974E3
+  rd2   4 12 4.974E3
+  ro1   8  5 40
+  ro2   7 99 60
+  rp    3  4 21.43E3
+  rss  10 99 1.923E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=250.0E-15 Beta=388.7E-6 Vto=-1)
+.ends
+*$
+* LF441 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF441/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+
+* LF442 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF442/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* LF444 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LF444/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* LM324 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM324/MC  1 2 3 4 5
+*
+  c1   11 12 3.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 315.8E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 53.05E6
++-50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 37.70E-6
+  gcm   0  6 10 99 11.92E-9
+  iee   3 10 dc 2.476E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 26.53E3
+  rc2   4 12 26.53E3
+  re1  13 10 4.820E3
+  re2  14 10 4.820E3
+  ree  10 99 80.78E6
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 34.71E3
+  vb    9  0 dc 0
+  vc    3 53 dc 2
+  ve   54  4 dc 5.000E-3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=31.58)
+.ends
+*$
+* LM358 operational amplifier
+* "macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM358/MC  1 2 3 4 5
+*
+  c1   11 12 3.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 388.6E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 48.23E6
++ -50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 41.47E-6
+  gcm   0  6 10 99 414.7E-12
+  iee   3 10 dc 2.543E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 24.11E3
+  rc2   4 12 24.11E3
+  re1  13 10 3.043E3
+  re2  14 10 3.043E3
+  ree  10 99 78.65E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 37.62E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.800
+  ve   54  4 dc .88
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=32.03)
+.ends
+*$
+* LM833 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM833/MC  1 2 3 4 5
+*
+  c1   11 12 3.501E-12
+  c2    6  7 10.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 27.96E6
++ -30E6 30E6 30E6 -30E6
+  ga    6  0 11 12 565.5E-6
+  gcm   0  6 10 99 5.655E-9
+  iss  10  4 dc 70.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   3 11 1.768E3
+  rd2   3 12 1.768E3
+  ro1   8  5 10
+  ro2   7 99 20
+  rp    3  4 29.03E3
+  rss  10 99 2.857E6
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .4
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx NJF(Is=150.0E-9 Beta=4.568E-3
++ Vto=-1)
+.ends
+*$
+* LM2902 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM2902/MC  1 2 3 4 5
+*
+  c1   11 12 2.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 388.6E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 48.23E6
++ -50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 41.47E-6
+  gcm   0  6 10 99 414.7E-12
+  iee   3 10 dc 2.543E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 24.11E3
+  rc2   4 12 24.11E3
+  re1  13 10 3.043E3
+  re2  14 10 3.043E3
+  ree  10 99 78.65E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 37.62E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.800
+  ve   54  4 dc .88
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=32.03)
+.ends
+*$
+* LM2904 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt LM2904/MC  1 2 3 4 5
+*
+  c1   11 12 3.000E-12
+  c2    6  7 6.000E-12
+  cee  10 99 388.6E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 48.23E6
++ -50E6 50E6 50E6 -50E6
+  ga    6  0 11 12 41.47E-6
+  gcm   0  6 10 99 414.7E-12
+  iee   3 10 dc 2.543E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 24.11E3
+  rc2   4 12 24.11E3
+  re1  13 10 3.043E3
+  re2  14 10 3.043E3
+  ree  10 99 78.65E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 37.62E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.800
+  ve   54  4 dc .88
+  vlim  7  8 dc 0
+  vlp  91  0 dc 40
+  vln   0 92 dc 40
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=32.03)
+.ends
+*$
+* MC33071 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33071/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 8.000E-12
+  cee  10 99 1.231E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 8.842E6
++ -9E6 9E6 9E6 -9E6
+  ga    6  0 11 12 251.3E-6
+  gcm   0  6 10 99 3.550E-9
+  iee   3 10 dc 120.2E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.979E3
+  rc2   4 12 3.979E3
+  re1  13 10 3.542E3
+  re2  14 10 3.542E3
+  ree  10 99 1.664E6
+  ro1   8  5 30
+  ro2   7 99 45
+  rp    3  4 34.09E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=600)
+.ends
+*$
+* MC33072 operational amplifier *"macromodel" subcircuit
+* created using Parts release 4.05
+*
+* connections:
+*
+.subckt MC33072/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 8.000E-12
+  cee  10 99 1.231E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 8.842E6
++ -9E6 9E6 9E6 -9E6
+  ga    6  0 11 12 251.3E-6
+  gcm   0  6 10 99 3.550E-9
+  iee   3 10 dc 120.2E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.979E3
+  rc2   4 12 3.979E3
+  re1  13 10 3.542E3
+  re2  14 10 3.542E3
+  ree  10 99 1.664E6
+  ro1   8  5 30
+  ro2   7 99 45
+  rp    3  4 34.09E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+  desd1 1  3 dx
+  desd2 2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=600)
+.ends
+*$
+* MC33074 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33074/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 8.000E-12
+  cee  10 99 1.231E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 8.842E6
++ -9E6 9E6 9E6 -9E6
+  ga    6  0 11 12 251.3E-6
+  gcm   0  6 10 99 3.550E-9
+  iee   3 10 dc 120.2E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.979E3
+  rc2   4 12 3.979E3
+  re1  13 10 3.542E3
+  re2  14 10 3.542E3
+  ree  10 99 1.664E6
+  ro1   8  5 30
+  ro2   7 99 45
+  rp    3  4 34.09E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+  desd1 1  3 dx
+  desd2 2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=600)
+.ends
+*$
+* MC33078 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33078/MC  1 2 3 4 5
+*
+  c1   11 12 3.501E-12
+  c2    6  7 10.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 27.96E6
++ -30E6 30E6 30E6 -30E6
+  ga    6  0 11 12 565.5E-6
+  gcm   0  6 10 99 5.655E-9
+  iss  10  4 dc 70.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   3 11 1.768E3
+  rd2   3 12 1.768E3
+  ro1   8  5 10
+  ro2   7 99 20
+  rp    3  4 29.03E3
+  rss  10 99 2.857E6
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .4
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx NJF(Is=150.0E-9 Beta=4.568E-3
++ Vto=-1)
+.ends
+*$
+* MC33079 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*
+.subckt MC33079/MC  1 2 3 4 5
+*
+  c1   11 12 3.501E-12
+  c2    6  7 10.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 27.96E6
++ -30E6 30E6 30E6 -30E6
+  ga    6  0 11 12 565.5E-6
+  gcm   0  6 10 99 5.655E-9
+  iss  10  4 dc 70.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   3 11 1.768E3
+  rd2   3 12 1.768E3
+  ro1   8  5 10
+  ro2   7 99 20
+  rp    3  4 29.03E3
+  rss  10 99 2.857E6
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .4
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx NJF(Is=150.0E-9 Beta=4.568E-3
++ Vto=-1)
+.ends
+*$
+* MC33171 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33171/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 5.500E-12
+  cee  10 99 4.976E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 89.31E6
++ -90E6 90E6 90E6 -90E6
+  ga    6  0 11 12 62.20E-6
+  gcm   0  6 10 99 1.967E-9
+  iee   3 10 dc 22.04E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 16.08E3
+  rc2   4 12 16.08E3
+  re1  13 10 13.70E3
+  re2  14 10 13.70E3
+  ree  10 99 9.074E6
+  ro1   8  5 110
+  ro2   7 99 90
+  rp    3  4 291.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc .8
+  ve   54  4 dc .8
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=550)
+.ends
+*$
+* MC33172 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33172/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 5.500E-12
+  cee  10 99 4.976E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 89.31E6
++ -90E6 90E6 90E6 -90E6
+  ga    6  0 11 12 62.20E-6
+  gcm   0  6 10 99 1.967E-9
+  iee   3 10 dc 22.04E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 16.08E3
+  rc2   4 12 16.08E3
+  re1  13 10 13.70E3
+  re2  14 10 13.70E3
+  ree  10 99 9.074E6
+  ro1   8  5 110
+  ro2   7 99 90
+  rp    3  4 291.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc .8
+  ve   54  4 dc .8
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=550)
+.ends
+*$
+* MC33174 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33174/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 5.500E-12
+  cee  10 99 4.976E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 89.31E6
++ -90E6 90E6 90E6 -90E6
+  ga    6  0 11 12 62.20E-6
+  gcm   0  6 10 99 1.967E-9
+  iee   3 10 dc 22.04E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 16.08E3
+  rc2   4 12 16.08E3
+  re1  13 10 13.70E3
+  re2  14 10 13.70E3
+  ree  10 99 9.074E6
+  ro1   8  5 110
+  ro2   7 99 90
+  rp    3  4 291.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc .8
+  ve   54  4 dc .8
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=550)
+.ends
+*$
+* MC33178 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33178/MC  1 2 3 4 5
+*
+  c1   11 12 8.660E-12
+  c2    6  7 15.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.68E6
++ -20E6 20E6 20E6 -20E6
+  ga    6  0 11 12 282.7E-6
+  gcm   0  6 10 99 894.1E-12
+  iee   3 10 dc 30.20E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 3.537E3
+  rc2   4 12 3.537E3
+  re1  13 10 1.800E3
+  re2  14 10 1.800E3
+  ree  10 99 6.623E6
+  ro1   8  5 60
+  ro2   7 99 40
+  rp    3  4 164.5E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1.200
+  vlim  7  8 dc 0
+  vlp  91  0 dc 100
+  vln   0 92 dc 100
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=150)
+.ends
+*$
+* MC33179 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33179/MC  1 2 3 4 5
+*
+  c1   11 12 2.887E-12
+  c2    6  7 2.500E-12
+  cee  10 99 31.03E-15
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 84.88E6
++ -80E6 80E6 80E6 -80E6
+  ga    6  0 11 12 47.12E-6
+  gcm   0  6 10 99 149.0E-12
+  iee  10  4 dc 5.293E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   3 11 21.22E3
+  rc2   3 12 21.22E3
+  re1  13 10 10.66E3
+  re2  14 10 10.66E3
+  ree  10 99 37.78E6
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 33.53E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1.200
+  vlim  7  8 dc 0
+  vlp  91  0 dc 80
+  vln   0 92 dc 80
+.model dx D(Is=800.0E-18)
+.model qx NPN(Is=800.0E-18 Bf=26.01)
+.ends
+*$
+* MC33181 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33181/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6 Vto=-1)
+.ends
+*$
+* MC33182 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33182/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* MC33184 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33184/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* MC33272 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33272/MC  1 2 3 4 5
+*
+  c1   11 12 1.926E-12
+  c2    6  7 5.500E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 21.05E6
++ -20E6 20E6 20E6 -20E6
+  ga    6  0 11 12 190.1E-6
+  gcm   0  6 10 99 1.901E-9
+  iee   3 10 dc 55.60E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 5.261E3
+  rc2   4 12 5.261E3
+  re1  13 10 4.274E3
+  re2  14 10 4.274E3
+  ree  10 99 3.597E6
+  ro1   8  5 50
+  ro2   7 99 25
+  rp    3  4 30.67E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.170
+  ve   54  4 dc 1.025
+  vlim  7  8 dc 0
+  vlp  91  0 dc 37
+  vln   0 92 dc 37
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=91.67)
+.ends
+*$
+* MC33274 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33274/MC  1 2 3 4 5
+*
+  c1   11 12 1.926E-12
+  c2    6  7 5.500E-12
+  cee  10 99 1.650E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.54E6
++ -20E6 20E6 20E6 -20E6
+  ga    6  0 11 12 190.1E-6
+  gcm   0  6 10 99 1.901E-9
+  iee   3 10 dc 72.10E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   4 11 5.261E3
+  rc2   4 12 5.261E3
+  re1  13 10 4.500E3
+  re2  14 10 4.500E3
+  ree  10 99 2.774E6
+  ro1   8  5 35
+  ro2   7 99 30
+  rp    3  4 29.90E3
+  vb    9  0 dc 0
+  vc    3 53 dc .9
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 37
+  vln   0 92 dc 37
+  desd1  1  3 dx
+  desd2  2  3 dx
+.model dx D(Is=800.0E-18)
+.model qx PNP(Is=800.0E-18 Bf=119.2)
+.ends
+*$
+* MC33282 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33282/MC  1 2 3 4 5
+*
+  c1   11 12 4.767E-12
+  c2    6  7 8.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 14.47E6
++-10E6 10E6 10E6 -10E6
+  ga    6  0 11 12 276.5E-6
+  gcm   0  6 10 99 8.742E-9
+  iss   3 10 dc 120.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 3.617E3
+  rd2   4 12 3.617E3
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 13.95E3
+  rss  10 99 1.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.300
+  ve   54  4 dc 1.100
+  vlim  7  8 dc 0
+  vlp  91  0 dc 21
+  vln   0 92 dc 21
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=15.00E-12 Beta=636.9E-6 Vto=-1)
+.ends
+*$
+* MC33284 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC33284/MC  1 2 3 4 5
+*
+  c1   11 12 4.767E-12
+  c2    6  7 8.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 14.47E6
++-10E6 10E6 10E6 -10E6
+  ga    6  0 11 12 276.5E-6
+  gcm   0  6 10 99 8.742E-9
+  iss   3 10 dc 120.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 3.617E3
+  rd2   4 12 3.617E3
+  ro1   8  5 50
+  ro2   7 99 50
+  rp    3  4 13.95E3
+  rss  10 99 1.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.300
+  ve   54  4 dc 1.100
+  vlim  7  8 dc 0
+  vlp  91  0 dc 21
+  vln   0 92 dc 21
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=15.00E-12 Beta=636.9E-6 Vto=-1)
+.ends
+*$
+* MC34084 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt MC34084/MC  1 2 3 4 5
+*
+  c1   11 12 2.801E-12
+  c2    6  7 8.000E-12
+  css  10 99 3.200E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 3.316E6
++ -3E6 3E6 3E6 -3E6
+  ga    6  0 11 12 402.1E-6
+  gcm   0  6 10 99 12.72E-9
+  iss   3 10 dc 280.0E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 2.487E3
+  rd2   4 12 2.487E3
+  ro1   8  5 40
+  ro2   7 99 60
+  rp    3  4 24.00E3
+  rss  10 99 714.3E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.100
+  ve   54  4 dc .3
+  vlim  7  8 dc 0
+  vlp  91  0 dc 30
+  vln   0 92 dc 30
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=30.00E-12 Beta=577.5E-6
++ Vto=-1)
+.ends
+*$
+* TL061 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt TL061/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* TL062 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt TL062/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$
+* TL064 operational amplifier
+*"macromodel" subcircuit
+*
+* connections:
+*    1 -  non-inverting input
+*    2 -  inverting input
+*    3 -  positive power supply
+*    4 -  negative power supply
+*    5 -  output
+*
+.subckt TL064/MC  1 2 3 4 5
+*
+  c1   11 12 1.061E-12
+  c2    6  7 5.000E-12
+  css  10 99 4.000E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 4.775E6
++ -5E6 5E6 5E6 -5E6
+  ga    6  0 11 12 125.7E-6
+  gcm   0  6 10 99 6.298E-9
+  iss   3 10 dc 90.00E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx
+  j2   12  1 10 jx
+  r2    6  9 100.0E3
+  rd1   4 11 7.958E3
+  rd2   4 12 7.958E3
+  ro1   8  5 200
+  ro2   7 99 100
+  rp    3  4 285.7E3
+  rss  10 99 2.222E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1
+  ve   54  4 dc 1
+  vlim  7  8 dc 0
+  vlp  91  0 dc 10
+  vln   0 92 dc 10
+.model dx D(Is=800.0E-18)
+.model jx PJF(Is=1.500E-12 Beta=175.5E-6
++ Vto=-1)
+.ends
+*$

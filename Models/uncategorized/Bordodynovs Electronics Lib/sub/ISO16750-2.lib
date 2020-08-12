@@ -1,0 +1,255 @@
+* Copyright (c) 2017 Linear Technology Corporation.  All rights reserved.
+* Author: Dan Eddleman
+*
+* Automotive Transient Models (ISO-16750-2)
+***************************************************************
+
+*.subckt 4-2_12V_DirectCurrentSupplyVoltageMinimum + -
+*.param Usmin = 6
+*V1 + - {Usmin}
+*.ends 4-2_12V_DirectCurrentSupplyVoltageMinimum
+
+*.subckt 4-2_24V_DirectCurrentSupplyVoltageMinimum + -
+*.param Usmin = 10
+*V1 + - {Usmin}
+*.ends 4-2_24V_DirectCurrentSupplyVoltageMinimum
+
+*.subckt 4-2_12V_DirectCurrentSupplyVoltageMaximum + -
+*.param Usmin = 16
+*V1 + - {Usmin}
+*.ends 4-2_12V_DirectCurrentSupplyVoltageMaximum
+
+*.subckt 4-2_24V_DirectCurrentSupplyVoltageMaximum + -
+*.param Usmin = 32
+*V1 + - {Usmin}
+*.ends 4-2_24V_DirectCurrentSupplyVoltageMaximum
+
+*.subckt 4-3_12V_Overvoltage + -
+*.param Usmax = 24
+*V1 + - {Usmax}
+*.ends 4-3_12V_Overvoltage
+
+*.subckt 4-3_24V_Overvoltage + -
+*.param Usmax = 36
+*V1 + - {Usmax}
+*.ends 4-3_24V_Overvoltage
+
+.subckt 4-4_12V_SuperimposedAlternatingVoltage + -
+.param Umax = 16
+.param Upp=4
+.param Ri=50m
+A1 N001 N004 0 0 0 0 N002 0 MODULATOR mark=25k space=0
+V1 N005 - PWL(0 0 10u {Umax-(Upp/2)}) Rser=1m
+B1 N001 0 V=2e-3*exp(v(t1)/9.654)
+V2 N004 0 PWL(0 0 1u 0 +1u {Upp/2}) Rser=1m
+R1 + N003 {Ri}
+E1 N003 N005 N002 0 1
+V3 t1 0 PWL(0 0 60 60 120 0 180 60 240 0 300 60 360 0 420 60 480 0 540 60 600 0) Rser=1m
+.ends 4-4_12V_SuperimposedAlternatingVoltage
+
+.subckt 4-4_24V_SuperimposedAlternatingVoltage + -
+.param Umax = 32
+.param Upp=10
+.param Ri=50m
+A1 N001 N004 0 0 0 0 N002 0 MODULATOR mark=25k space=0
+V1 N005 - PWL(0 0 10u {Umax-(Upp/2)}) Rser=1m
+B1 N001 0 V=2e-3*exp(v(t1)/9.654)
+V2 N004 0 PWL(0 0 1u 0 +1u {Upp/2}) Rser=1m
+R1 + N003 {Ri}
+E1 N003 N005 N002 0 1
+V3 t1 0 PWL(0 0 60 60 120 0 180 60 240 0 300 60 360 0 420 60 480 0 540 60 600 0) Rser=1m
+.ends 4-4_24V_SuperimposedAlternatingVoltage
+
+.subckt 4-5_12V_SlowDecreaseAndIncreaseOfSupplyVoltage + -
+.param Usmin = 6
+.param t0=1m
+V1 + - PWL(0 0 {t0} 0 +1u {Usmin} {Usmin*60/0.5} 0 {2*Usmin*60/0.5} {Usmin})
+.ends 4-5_12V_SlowDecreaseAndIncreaseOfSupplyVoltage
+
+.subckt 4-5_24V_SlowDecreaseAndIncreaseOfSupplyVoltage + -
+.param Usmin = 10
+.param t0=1m
+V1 + - PWL(0 0 {t0} 0 +1u {Usmin} {Usmin*60/0.5} 0 {2*Usmin*60/0.5} {Usmin})
+.ends 4-5_24V_SlowDecreaseAndIncreaseOfSupplyVoltage
+
+.subckt 4-6-1_12V_MomentaryDropInSupplyVoltage + -
+.param Usmin = 6
+V2 + - PWL(0 0 +1u {Usmin} 10 {Usmin} +1m 4.5 10.1 4.5 +1m {Usmin})
+.ends 4-6-1_12V_MomentaryDropInSupplyVoltage
+
+.subckt 4-6-1_24V_MomentaryDropInSupplyVoltage + -
+.param Usmin = 10
+V2 + - PWL(0 0 +1u {Usmin} 10 {Usmin} +1m 9 10.1 9 +1m {Usmin})
+.ends 4-6-1_24V_MomentaryDropInSupplyVoltage
+
+.subckt 4-6-2_12V_ResetBehaviourAtVoltageDrop + -
+.param Usmin = 6
+V1 + - PWL(0 0 +1u {Usmin} 20 {Usmin} +1m {Usmin*0.95} +5 {Usmin*0.95} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.90} +5 {Usmin*0.90} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.85} +5 {Usmin*0.85} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.8} +5 {Usmin*0.8} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.75} +5 {Usmin*0.75} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.7} +5 {Usmin*0.7} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.65} +5 {Usmin*0.65} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.6} +5 {Usmin*0.6} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.55} +5 {Usmin*0.55} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.5} +5 {Usmin*0.5} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.45} +5 {Usmin*0.45} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.4} +5 {Usmin*0.4} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.35} +5 {Usmin*0.35} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.3} +5 {Usmin*0.3} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.25} +5 {Usmin*0.25} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.2} +5 {Usmin*0.2} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.15} +5 {Usmin*0.15} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.1} +5 {Usmin*0.1} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.05} +5 {Usmin*0.05} +1m {Usmin} +10 {Usmin} +1m {Usmin*0} +5 {Usmin*0} +1m {Usmin} +40 {Usmin})
+.ends 4-6-2_12V_ResetBehaviourAtVoltageDrop
+
+.subckt 4-6-2_24V_ResetBehaviourAtVoltageDrop + -
+.param Usmin = 10
+V1 + - PWL(0 0 +1u {Usmin} 20 {Usmin} +1m {Usmin*0.95} +5 {Usmin*0.95} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.90} +5 {Usmin*0.90} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.85} +5 {Usmin*0.85} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.8} +5 {Usmin*0.8} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.75} +5 {Usmin*0.75} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.7} +5 {Usmin*0.7} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.65} +5 {Usmin*0.65} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.6} +5 {Usmin*0.6} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.55} +5 {Usmin*0.55} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.5} +5 {Usmin*0.5} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.45} +5 {Usmin*0.45} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.4} +5 {Usmin*0.4} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.35} +5 {Usmin*0.35} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.3} +5 {Usmin*0.3} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.25} +5 {Usmin*0.25} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.2} +5 {Usmin*0.2} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.15} +5 {Usmin*0.15} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.1} +5 {Usmin*0.1} +1m {Usmin} +10 {Usmin} +1m {Usmin*0.05} +5 {Usmin*0.05} +1m {Usmin} +10 {Usmin} +1m {Usmin*0} +5 {Usmin*0} +1m {Usmin} +40 {Usmin})
+.ends 4-6-2_24V_ResetBehaviourAtVoltageDrop
+
+.subckt 4-6-3_12V_StartingProfile + -
+.param Ub = 13.5
+.param Us6 = 6
+.param Us = 6.5
+.param tf = 5m
+.param t6 = 15m
+.param t7 = 50m
+.param t8 = 10000m
+.param tr = 100m
+.param Ri = 10m
+.param t0 = 1
+R1 + - {Ri}
+I3 - + PWL(0 0 +1u {Ub/Ri} {t0} {Ub/Ri} {t0+tf} {Us6/Ri} {t0+tf+t6} {Us6/Ri} {t0+tf+t6+t7} {(Us+1)/Ri} {t0+tf+t6+t7+t8} {(Us+1)/Ri} {t0+tf+t6+t7+t8+tr} {Ub/Ri})
+I1 - + SINE(0 {1/Ri} 2 {t0+tf+t6+t7} 0 180 {t8*2})
+.ends 4-6-3_12V_StartingProfile
+
+.subckt 4-6-3_24V_StartingProfile + -
+.param Ub = 27
+.param Us6 = 6
+.param Us = 10
+.param tf = 10m
+.param t6 = 50m
+.param t7 = 50m
+.param t8 = 1000m
+.param tr = 40m
+.param Ri = 10m
+.param t0 = 1
+R1 + - {Ri}
+I3 - + PWL(0 0 +1u {Ub/Ri} {t0} {Ub/Ri} {t0+tf} {Us6/Ri} {t0+tf+t6} {Us6/Ri} {t0+tf+t6+t7} {(Us+1)/Ri} {t0+tf+t6+t7+t8} {(Us+1)/Ri} {t0+tf+t6+t7+t8+tr} {Ub/Ri})
+I1 - + SINE(0 {1/Ri} 2 {t0+tf+t6+t7} 0 180 {t8*2})
+.ends 4-6-3_24V_StartingProfile
+
+.subckt 4-6-4_12V_LoadDumpWithoutSuppressionTestA + -
+.param Ua=14
+.param Us=101
+.param UsClamp={Us}
+.param Ri=0.5
+.param t0=1
+.param Creservoir=0.15 Rshunt=1.55
+L1 N004 N005 2m
+D1 N007 + Dideal
+V2 N007 - PWL(0 0 1m {Ua})
+R1 N005 - {Rshunt}
+D2 N006 + Dideal
+C1 N003 - {Creservoir}
+R2 N003 N002 100
+V3 N002 - PWL(0 0 1m {Us})
+S1 N004 N003 N001 0 Sideal
+V4 N001 0 PULSE(0 1 {t0} +1n +1n 1 60 10)
+R3 N006 N005 {Ri}
+D3 + N008 Dideal
+V5 N008 - PWL(0 0 1m {Usclamp})
+.model Sideal SW(Ron=1m Roff=100MEG Vt=0.5 Vh=-0.1)
+.model Dideal D(Ron=1m Roff=1MEG Vfwd=1m epsilon=10m)
+.ic V(n003)={Us}
+.ends 4-6-4_12V_LoadDumpWithoutSuppressionTestA
+
+
+.subckt 4-6-4_24V_LoadDumpWithoutSuppressionTestA + -
+.param Ua=28
+.param Us=202
+.param UsClamp={Us}
+.param Ri=1
+.param t0=1
+.param Creservoir=0.15 Rshunt=1.55
+L1 N004 N005 2m
+D1 N007 + Dideal
+V2 N007 - PWL(0 0 1m {Ua})
+R1 N005 - {Rshunt}
+D2 N006 + Dideal
+C1 N003 - {Creservoir}
+R2 N003 N002 100
+V3 N002 - PWL(0 0 1m {Us})
+S1 N004 N003 N001 0 Sideal
+V4 N001 0 PULSE(0 1 {t0} +1n +1n 1 60 10)
+R3 N006 N005 {Ri}
+D3 + N008 Dideal
+V5 N008 - PWL(0 0 1m {Usclamp})
+.model Sideal SW(Ron=1m Roff=100MEG Vt=0.5 Vh=-0.1)
+.model Dideal D(Ron=1m Roff=1MEG Vfwd=1m epsilon=10m)
+.ic V(n003)={Us}
+.ends 4-6-4_24V_LoadDumpWithoutSuppressionTestA
+
+.subckt 4-6-4_12V_LoadDumpWithSuppressionTestB + -
+.param Ua=14
+.param Us=101
+.param UsClamp=35
+.param Ri=0.5
+.param t0=1
+.param Creservoir=0.15 Rshunt=1.55
+L1 N004 N005 2m
+D1 N007 + Dideal
+V2 N007 - PWL(0 0 1m {Ua})
+R1 N005 - {Rshunt}
+D2 N006 + Dideal
+C1 N003 - {Creservoir}
+R2 N003 N002 100
+V3 N002 - PWL(0 0 1m {Us})
+S1 N004 N003 N001 0 Sideal
+V4 N001 0 PULSE(0 1 {t0} +1n +1n 1 60 10)
+R3 N006 N005 {Ri}
+D3 + N008 Dideal
+V5 N008 - PWL(0 0 1m {Usclamp})
+.model Sideal SW(Ron=1m Roff=100MEG Vt=0.5 Vh=-0.1)
+.model Dideal D(Ron=1m Roff=1MEG Vfwd=1m epsilon=10m)
+.ic V(n003)={Us}
+.ends 4-6-4_12V_LoadDumpWithSuppressionTestB
+
+.subckt 4-6-4_24V_LoadDumpWithSuppressionTestB + -
+.param Ua=28
+.param Us=202
+.param UsClamp=58
+.param Ri=1
+.param t0=1
+.param Creservoir=0.15 Rshunt=1.55
+L1 N004 N005 2m
+D1 N007 + Dideal
+V2 N007 - PWL(0 0 1m {Ua})
+R1 N005 - {Rshunt}
+D2 N006 + Dideal
+C1 N003 - {Creservoir}
+R2 N003 N002 100
+V3 N002 - PWL(0 0 1m {Us})
+S1 N004 N003 N001 0 Sideal
+V4 N001 0 PULSE(0 1 {t0} +1n +1n 1 60 10)
+R3 N006 N005 {Ri}
+D3 + N008 Dideal
+V5 N008 - PWL(0 0 1m {Usclamp})
+.model Sideal SW(Ron=1m Roff=100MEG Vt=0.5 Vh=-0.1)
+.model Dideal D(Ron=1m Roff=1MEG Vfwd=1m epsilon=10m)
+.ic V(n003)={Us}
+.ends 4-6-4_24V_LoadDumpWithSuppressionTestB
+
+.subckt 4-7_12V_ReversedVoltageCase2 + -
+V1 + - PWL(0 0 1m {Ua} 100m {Ua} +1u {-1*Ua})
+.param Ua=14
+.ends 4-7_12V_ReversedVoltageCase2
+
+.subckt 4-9-1_12V_SingleLineInterruption + -
+V3 N002 0 PWL(0 -1 {t0} -1 +1u 1 +10 1 +1u -1)
+.param Ua=14
+.param t0=1
+V2 N001 - PWL(0 0 1u {Ua})
+S1 N001 + N002 0 SHORT
+.model SHORT SW(Ron=1m Roff=10MEG Vt=0 Vh=-.5)
+.ends 4-9-1_12V_SingleLineInterruption
+
+
+.subckt 4-7_24V_ReversedVoltageCase2 + -
+V1 + - PWL(0 0 1m {Ua} 100m {Ua} +1u {-1*Ua})
+.param Ua=28
+.ends 4-7_24V_ReversedVoltageCase2
+
+.subckt 4-9-1_24V_SingleLineInterruption + -
+.param Ua=28
+.param t0=1
+V2 N001 - PWL(0 0 1u {Ua})
+S1 N001 + N002 0 SHORT
+V3 N002 0 PWL(0 -1 {t0} -1 +1u 1 +10 1 +1u -1)
+.model SHORT SW(Ron=1m Roff=10MEG Vt=0 Vh=-.5)
+.ends 4-9-1_24V_SingleLineInterruption

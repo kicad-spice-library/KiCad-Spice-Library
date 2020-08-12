@@ -1,0 +1,104 @@
+* Copyright © Linear Technology Corp. 2007.  All rights reserved.
+*
+.subckt level_1 1 2 3 4 5
+A1 2 1 0 0 0 0 5 0 OTA G={Avol/Rout} ref={Vos} linear Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308 Rout={Rout}
+R5 2 3 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+R1 3 1 {2*Rin} noiseless
+R2 2 4 {2*Rin} noiseless
+.param Rout=.1
+.param Cout={Avol/GBW/2/pi/Rout}
+.param Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G
+.ends level_1
+*
+.subckt level_2 1 2 3 4 5
+S1 5 3 X 5 Q
+S2 4 5 5 X Q
+A1 2 1 0 0 0 0 X 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R2 X 4 {2*Rout} noiseless
+R1 3 X {2*Rout} noiseless
+R3 3 1 {2*Rin} noiseless
+R4 3 2 {2*Rin} noiseless
+R5 2 4 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+B1 X 0 I=if(V(x,3)<0,0,({2*slew*Cout}*V(x,3))**2)
+B2 0 X I=if(V(x,4)>0,0,({2*slew*Cout}*V(4,x))**2)
+D1 5 3 X
+D2 4 5 X
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless level=2 epsilon={Rail/10})
+.param Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G
+.model X D(Ron=1 epsilon=10 noiseless)
+.ends level_2
+*
+.subckt level_3a 1 2 3 4 5
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 X 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R3 3 2 {2*Rin} noiseless
+G1 0 N002 X 0 {1/Rout}
+R2 N002 0 {Rout} noiseless
+C1 N002 0 {X*Cout/Avol}
+R4 3 1 {2*Rin} noiseless
+R5 1 4 {2*Rin} noiseless
+R6 2 4 {2*Rin} noiseless
+R1 X 4 {2*Rout} noiseless
+R7 3 X {2*Rout} noiseless
+B1 X 0 I=if(V(x,3)<0,0,({2*slew*Cout}*V(x,3))**2)
+B2 0 X I=if(V(x,4)>0,0,({2*slew*Cout}*V(4,x))**2)
+D1 5 3 X
+D2 4 5 X
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless level=2 epsilon={Rail/10})
+.param Avol=1Meg GBW=10Meg Slew=10Meg rail=0 Vos=0 ilimit=25m
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G phimargin=45
+.param X table(phimargin,29.4,3.5,32.1,2.9,33.8,2.6,35.8,2.3,38.1,2,40.9,1.7,43.2,1.5,45.9,1.3,49.2,1.1,53.2,0.9,58.2,0.7,64.7,0.5,73,0.3,86.1,0.05)
+.model X D(Ron=1 epsilon=10 noiseless)
+.ends level_3a
+*
+.subckt level_3b 1 2 3 4 5
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 X 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R3 3 2 {2*Rin} noiseless
+R4 3 1 {2*Rin} noiseless
+R5 1 4 {2*Rin} noiseless
+R6 2 4 {2*Rin} noiseless
+G2 0 N002 N006 0 10µ
+R9 0 N002 100K noiseless
+G1 0 N003 X 0 {2/Rz}
+C1 N003 0 {.768*Cd}
+L1 N003 N004 41.2µ
+R1 N003 0 {Rz} noiseless
+R2 N006 0 {Rz} noiseless
+L2 N004 N005 23.8µ
+L3 N005 N006 11.04µ
+C2 N004 0 {.294*Cd}
+C5 N005 0 {.178*Cd}
+C6 N006 0 {.0375*Cd}
+R7 3 X {2*Rout} noiseless
+R8 X 4 {2*Rout} noiseless
+B1 X 0 I=if(V(x,3)<0,0,({2*slew*Cout}*V(x,3))**2)
+B2 0 X I=if(V(x,4)>0,0,({2*slew*Cout}*V(4,x))**2)
+D1 5 3 X
+D2 4 5 X
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless level=2 epsilon={Rail/10})
+.param Avol=1Meg GBW=10Meg Slew=10Meg rail=0 Vos=0 ilimit=25m
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G phimargin=45
+.param delay=(90-MIN(phimargin,89))/360/GBW
+.param Rz=sqrt(100u/Cd)
+.param Cd=delay*delay/100u
+.model X D(Ron=1 epsilon=10 noiseless)
+.ends level_3b

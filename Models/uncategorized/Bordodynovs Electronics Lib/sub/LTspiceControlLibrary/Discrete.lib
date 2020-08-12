@@ -1,0 +1,51 @@
+** Discrete
+
+.subckt Previous Y U
+.machine
+.output (pre_U) V(U)
+.endmachine
+R1 pre_U 0 1k
+B1 Y 0 V=if(time>0,V(pre_U),V(U)) tripdt=1e300
+.ends
+
+.subckt Edge Y U
+.machine
+.output (pre_U) V(U)
+.endmachine
+R1 pre_U 0 1k
+B1 Y 0 V=(time>0)&((rise&!(V(pre_U))&V(U))|(fall&V(pre_U)&!(V(U)))) tripdt={tripdt}
+.param rise=1 fall=0 tripdt=1e300
+.ends
+
+.subckt ZeroOrderHold Y U
+.machine
+.output (pre_CLK) V(CLK)
+.output (pre_Y) V(Y)
+.endmachine
+R1 pre_CLK 0 1k
+R2 pre_Y 0 1k
+V1 CLK 0 PULSE(0 1 0 1e-323 1e-323 {T} {2*T})
+B1 edge_CLK 0 V=V(pre_CLK)^V(CLK) tripdt={tripdt}
+B2 Y 0 V=if(V(edge_CLK),V(U),V(pre_Y)) tripdt=1e300
+.param T=1
+.param tripdt={T*1m}
+.ic V(pre_CLK)=1
+.ends ZeroOrderHold
+
+.subckt UnitDelay Y U
+.machine
+.output (pre_CLK) V(CLK)
+.output (pre_D) if(V(edge_CLK),V(U),V(pre_D))
+.output (pre_Y) V(Y)
+.endmachine
+R1 pre_CLK 0 1k
+R2 pre_D 0 1k
+R3 pre_Y 0 1k
+V1 CLK 0 PULSE(0 1 0 1e-323 1e-323 {T} {2*T})
+B1 edge_CLK 0 V=V(pre_CLK)^V(CLK) tripdt={tripdt}
+B2 Y 0 V=if(V(edge_CLK),V(pre_D),V(pre_Y)) tripdt=1e300
+.param T=1
+.param Y0=0
+.param tripdt={T*1m}
+.ic V(pre_D)={Y0} V(pre_Y)={Y0}
+.ends UnitDelay

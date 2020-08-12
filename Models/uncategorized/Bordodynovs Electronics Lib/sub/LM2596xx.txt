@@ -1,0 +1,382 @@
+* Source File: lm2596adjblk.asc,lm2596fixblk.asc
+* Developer: ETech (eetech00@yahoo.com) 
+* Created: Mar 16 2015
+* Revision: Jul 29 2019
+*
+* This LM2596 spice behavioural model was tested
+* with LTSpice. Temperature is not modelled.
+* 
+* Texas Instruments
+* LM2596 SIMPLE SWITCHER Power Converter 150 KHz 3A Step-Down Voltage Regulator
+*
+* LM2596-3.3 3.3V Fixed Regulator
+.subckt LM2596_03 _ON/OFF FB IN OUT VGND
+A2 ramp erramp 0 0 0 0 pwm 0 SCHMITT Vt=0 Vh=5m Td={TD} TRISE={TRISE} Vhigh={HIGH} VLow={LOW}
+VIOUTN VGND outn 0
+XX3 IN startup reg outn sense regblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX4 clk dutymax ramp startup oscdclimiterblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX5 pwm dutymax 0 ilimit 0 clk 0 0 0 0 NC_03 q latchblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX7 q sw OUT switcherblk
+XX8 fbin outn erramp errampblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+V1 leb 0 PULSE(-2.5 2.5 {VTSU} {VTRISE} 1n 1k) Rser=0.001
+XX1 _ON/OFF outn IN NC_04 startup startupblk4 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX2 sense sw ilimit leb currentlimiterblk2 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} ILIMIT={ILIMIT} HIGH={HIGH} LOW={LOW} Td={TD}
+R1 fbin VGND 2.5k
+R2 FB fbin 4.2k
+.param TD=8n
+.param TRISE=1n
+.param SDLOW=0.60
+.param SDHIGH=1.30
+.param HIGH=2.5
+.param LOW=100m
+.param VTINI=0
+.param VTON=1
+.param VTSU=0u
+.param VTRISE=1u
+.param SR=0.01
+.param ILIMIT=4.5
+.ends LM2596_03
+
+* LM2596-5.0 5.0V Fixed Regulator
+.subckt LM2596_05 _ON/OFF FB IN OUT VGND
+A2 ramp erramp 0 0 0 0 pwm 0 SCHMITT Vt=0 Vh=5m Td={TD} TRISE={TRISE} Vhigh={HIGH} VLow={LOW}
+VIOUTN VGND outn 0
+XX3 IN startup reg outn sense regblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX4 clk dutymax ramp startup oscdclimiterblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX5 pwm dutymax 0 ilimit 0 clk 0 0 0 0 NC_03 q latchblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX7 q sw OUT switcherblk
+XX8 fbin outn erramp errampblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+V1 leb 0 PULSE(-2.5 2.5 {VTSU} {VTRISE} 1n 1k) Rser=0.001
+XX1 _ON/OFF outn IN NC_04 startup startupblk4 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX2 sense sw ilimit leb currentlimiterblk2 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} ILIMIT={ILIMIT} HIGH={HIGH} LOW={LOW} Td={TD}
+R1 fbin VGND 2.5k
+R2 FB fbin 7.5k
+.param TD=8n
+.param TRISE=1n
+.param SDLOW=0.60
+.param SDHIGH=1.30
+.param HIGH=2.5
+.param LOW=100m
+.param VTINI=0
+.param VTON=1
+.param VTSU=0u
+.param VTRISE=1u
+.param SR=0.01
+.param ILIMIT=4.5
+.ends LM2596_05
+
+* LM2596-12 12V Fixed Regulator
+.subckt LM2596_12 _ON/OFF FB IN OUT VGND
+A2 ramp erramp 0 0 0 0 pwm 0 SCHMITT Vt=0 Vh=5m Td={TD} TRISE={TRISE} Vhigh={HIGH} VLow={LOW}
+VIOUTN VGND outn 0
+XX3 IN startup reg outn sense regblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX4 clk dutymax ramp startup oscdclimiterblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX5 pwm dutymax 0 ilimit 0 clk 0 0 0 0 NC_03 q latchblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX7 q sw OUT switcherblk
+XX8 fbin outn erramp errampblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+V1 leb 0 PULSE(-2.5 2.5 {VTSU} {VTRISE} 1n 1k) Rser=0.001
+XX1 _ON/OFF outn IN NC_04 startup startupblk4 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX2 sense sw ilimit leb currentlimiterblk2 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} ILIMIT={ILIMIT} HIGH={HIGH} LOW={LOW} Td={TD}
+R1 fbin VGND 2.5k
+R2 FB fbin 21.8k
+.param TD=8n
+.param TRISE=1n
+.param SDLOW=0.60
+.param SDHIGH=1.30
+.param HIGH=2.5
+.param LOW=100m
+.param VTINI=0
+.param VTON=1
+.param VTSU=0u
+.param VTRISE=1u
+.param SR=0.01
+.param ILIMIT=4.5
+.ends LM2596_12
+
+* LM2596-ADJ Adjustable Regulator
+.subckt LM2596_ADJ _ON/OFF FB IN OUT VGND
+A2 ramp erramp 0 0 0 0 pwm 0 SCHMITT Vt=0 Vh=5m Td={TD} TRISE={TRISE} Vhigh={HIGH} VLow={LOW}
+VIOUTN VGND outn 0
+XX3 IN startup reg outn sense regblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX4 clk dutymax ramp startup oscdclimiterblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX5 pwm dutymax 0 ilimit 0 clk 0 0 0 0 NC_03 q latchblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX7 q sw OUT switcherblk
+XX8 FB outn erramp errampblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+V1 leb 0 PULSE(-2.5 2.5 {VTSU} {VTRISE} 1n 1k) Rser=0.001
+XX1 _ON/OFF outn IN NC_04 startup startupblk4 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX2 sense sw ilimit leb currentlimiterblk2 params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} ILIMIT={ILIMIT} HIGH={HIGH} LOW={LOW} Td={TD}
+.param TD=8n
+.param TRISE=1n
+.param SDLOW=0.60
+.param SDHIGH=1.30
+.param HIGH=2.5
+.param LOW=100m
+.param VTINI=0
+.param VTON=1
+.param VTSU=0u
+.param VTRISE=1u
+.param SR=0.01
+.param ILIMIT=4.5
+.ends LM2596_ADJ
+
+.subckt regblk in ena reg vgnd sw
+S1 reg_out reg start 0 SW
+V1 in input 0
+B1 N001 0 V=V(1)*IF(V(i_in)<360uA,{LOW},{HIGH}) ic=0
+C2 10 0 100p
+R1 N001 10 100
+A1 0 N001 0 ena 0 0 start 0 AND Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+R2 ena 0 1e8
+V2 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE} 1n 1k)
+G1 0 i_in input vgnd 1
+R3 i_in 0 10k
+V3 reg_out 0 PULSE(-2.5 2.5 {VTSU} {VTRISE} 1n 1k)
+B2 input vgnd I=V(1)*85uA
+R4 reg 0 1e8
+S2 input sw start 0 SW
+.model SW SW(Roff=1G Ron=.001 Vt=1.25 Vh=-10m)
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=1n
+.param SR=0.01
+.ends regblk
+
+.subckt oscdclimiterblk clk dcmax ramp ena
+VCLK clock 0 PULSE({LOW} {HIGH} 0 1N 1N 10N {PERIOD})
+VRAMP sawtooth 0 PULSE({VV} {VP} 0 {PERIOD-2N} 1N 1N {PERIOD})
+VDUTY maxdc 0 PULSE({LOW} {HIGH} {PERIOD*DUTYMAX} 1N 1N {(PERIOD-PERIOD*DUTYMAX)-2N} {PERIOD})
+B1 clk 0 V=V(1)*if(V(ENA)>{HIGH}*0.5, V(clock),{LOW})
+B2 ramp 0 V=V(1)*if(V(ENA)>{HIGH}*0.5, V(sawtooth),{LOW})
+B3 dcmax 0 V=V(1)*if(V(ENA)>{HIGH}*0.5, V(maxdc),{LOW})
+R1 clk 0 1e8
+R2 ramp 0 1e8
+R3 dcmax 0 1e8
+V1 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE} 1n 1k)
+R4 ena 0 1e8
+.param PERIOD=6.667u
+.param RAMP=2.5
+.param DUTYMAX=0.999
+.param DUTYMIN=0.001
+.param VP = {(LOW*DUTYMAX-HIGH*DUTYMIN+HIGH-LOW)/(DUTYMAX-DUTYMIN)}
+.param VV = {(LOW-DUTYMIN*VP)/(1-DUTYMIN)}
+ 
+.param TD=2n
+.param TRISE=1n
+ 
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=1n
+.param SR=0.01
+.ends oscdclimiterblk
+
+.subckt latchblk r1 r2 r3 r4 r5 s1 s2 s3 s4 s5 _q q
+A2 r1 r2 r3 r4 r5 0 rst 0 OR Td={TD+1n} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+A3 s1 s2 s3 s4 s5 0 set 0 OR Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+B1 q 0 V=V(1)*IF(V(q_out)>{HIGH}*0.5,{HIGH},-1V)
+C1 10 0 10p
+R1 q 10 100
+B2 _q 0 V=V(1)*IF(V(_q_out)>{HIGH}*0.5,{HIGH},-1V)
+C2 20 0 10p
+R2 _q 20 100
+R3 _q_out 0 1e8
+R4 q_out 0 1e8
+R5 r2 0 1e8
+R6 r3 0 1e8
+R7 r4 0 1e8
+R8 r5 0 1e8
+R9 r1 0 1e8
+R10 s2 0 1e8
+R11 s3 0 1e8
+R12 s4 0 1e8
+R13 s5 0 1e8
+R14 s1 0 1e8
+V2 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE} 1n 1k)
+A1 set rst 0 0 0 _q_out q_out 0 SRFLOP Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW} IC=0
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=1n
+.param SR=0.01
+.ends latchblk
+
+.subckt switcherblk pwm_in pwr_in output
+Q1 pwr_in vb output 0 NP
+E1 vce output pwm_in 0 1
+R2 vce vb {Rb}
+R3 vb output {Rbe}
+R5 pwm_in 0 1e8
+C1 vb vce 100p
+.param Rb=55
+.param Rbe=Rb*10
+.param TD=2n
+.param TRISE=1n
+ 
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param SUT=20u
+.param SR=0.01
+.MODEL NP npn
++IS=6.79633e-13 BF=253.337 NF=0.96553 VAF=10.1301
++IKF=10 ISE=1e-16 NE=1.00002 BR=100
++NR=0.966363 VAR=696.751 IKR=9.97557 ISC=5.11802e-15
++NC=1 RB=0.1 IRB=0.1 RBM=0.1
++RE=0.0286179 RC=0.32276665 XTB=1.37787 XTI=1.00005
++EG=1.206 CJE=6.91588e-10 VJE=0.602415 MJE=0.342146
++TF=3.63488e-10 XTF=1000 VTF=2211.72 ITF=69.0691
++CJC=1.43005e-10 VJC=0.697127 MJC=0.482949 XCJC=1
++FC=0.794695 CJS=0 VJS=0.75 MJS=0.5
++TR=3.18732e-08 PTF=0 KF=0 AF=1
+.ends switcherblk
+
+.subckt errampblk in+ in- errout
+C1 errout 10 654.3p
+R1 10 fb_abs 24570
+C2 errout fb_abs 157.3p
+B1 fb_abs 0 V=V(1)*abs(V(fb_eout))
+V1 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE} 1n 1k)
+E1 fb_eout 0 in+ in- 1
+R4 fb_eout 0 1E8
+C3 in- in+ 1p Rser=10m
+XX1 ref fb_abs errout 0 oa params: VH={HIGH} VL={LOW} GAIN=30000 POLE=1000 VTSU={VTSU} VTRISE={VTRISE} TRISE={TRISE}
+B2 ref 0 V=V(1)*1.235V
+B3 in+ in- I=V(1)*5nA
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=1n
+.param SR=0.01
+.ends errampblk
+
+.subckt startupblk4 _ON/OFF vgnd in _startup startup
+A3 onoff_ref Ref_2r5 0 0 0 0 C 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+VONOFF _ON/OFF onoff 0
+V1 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE} 1n 1k)
+B2 onoff_ref 0 V=V(1)*abs(V(onoff_eout))
+C2 20 0 100p
+R4 onoff_ref 20 100
+E1 onoff_eout 0 onoff vgnd 1
+R5 onoff_eout 0 1E8
+R6 in 0 1e5
+B3 _startup 0 V=V(1)*V(_stup)
+C3 30 0 10p
+R7 _startup 30 100
+B4 startup 0 V=V(1)*V(stup)
+C4 40 0 10p
+R8 startup 40 100
+R9 stup 0 1e8
+R10 _stup 0 1e8
+B5 Ref_2r5 0 V=V(1)*3.4V
+A2 onoff_ref Ref_1r3 0 0 0 0 B 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B1 Ref_1r3 0 V=V(1)*1.3V
+B7 _ON/OFF vgnd I=V(1)*iF(v(startup)<{HIGH}*0.5,15uA,5uA)
+A1 onoff_ref Ref_0r6 0 0 0 0 A 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B6 Ref_0r6 0 V=V(1)*0.6V
+A7 HIGH 0 _B S R _stup stup 0 DFLOP IC=0 Td={TD} Vhigh={HIGH} VLow={LOW} Trise={TRISE}
+A6 C 0 0 0 0 0 R 0 BUF Td={TD} Vhigh={HIGH} VLow={LOW} Trise={TRISE}
+A5 B 0 0 0 0 _B 0 0 BUF Td={TD} Vhigh={HIGH} VLow={LOW} Trise={TRISE}
+V2 HIGH 0 PULSE({LOW} {HIGH} {VTSU} {VTRISE} 1n 1k)
+A4 A 0 0 0 0 S 0 0 BUF Td={TD} Vhigh={HIGH} VLow={LOW} Trise={TRISE}
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=1n
+.param SR=0.01
+.ends startupblk4
+
+.subckt currentlimiterblk2 in+ in- ilimit leb
+A1 imax isense 0 0 0 icmp 0 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B1 isense 0 V=V(1)*IF(V(dly)>{HIGH}*0.5, abs(V(sense))/{Rsense},{LOW}) ic=0
+B3 ilimit 0 V=V(1)*V(icmp) ic=0
+C2 88 0 10p
+R4 ilimit 88 100
+V1 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE} 1n 1k)
+B2 imax 0 V=V(1)*{ILIMIT} ic=0
+A2 LEB 0 0 0 0 0 N002 0 BUF Td={TDELAY} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+R1 dly 0 1e6
+R2 N002 N001 {R}
+C1 N001 0 {C}
+A3 0 N001 0 LEB 0 0 dly 0 AND Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+E1 sense 0 in+ in- 1
+R3 sense 0 1e6
+R5 in- in+ {Rsense}
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=1n
+.param SR=0.01
+.param Rsense=0.02
+.param ILIMIT=4.5
+.param TDELAY=1m
+.param t=20n
+.param C=1nF
+.param R={t/(0.693*C)}
+.ends currentlimiterblk2
+
+.subckt oa 1 2 3 4
+RP1 11 4 {GAIN/100u}
+RIN 2 1 8MEG
+D15 4 11 DCLAMP
+CP1 11 4 {1/(6.28*(GAIN/100u)*POLE)}
+D14 5A 13 DMOD
+Q1 4 13 16 0 QPMOD
+ISINK 13 4 PULSE(0 {ISINK} {VTSU} {VTRISE} 1n 1k)
+ISRC 7 3 PULSE(0 {ISOURCE} {VTSU} {VTRISE} 1n 1k)
+V4 3 16 PULSE(0 {VL} {VTSU} {VTRISE} 1n 1k) Rser={SR}
+V1 7 4 PULSE(0 {VH} {VTSU} {VTRISE} 1n 1k) Rser={SR}
+D12 3 7 DMOD
+G1 4 11 1 2 100.e-6
+E1 5 4 11 4 1
+R9 5A 5 5
+.MODEL QPMOD PNP()
+.MODEL DCLAMP D (RS=10 BV={VH+0.06} IBV=10m)
+.MODEL DMOD D (TT=1N CJO=10P)
+.param ISINK=15m
+.param ISOURCE=500u
+.param VH=2.5
+.param VL=100m
+.param POLE=30
+.param GAIN=31622
+.param TD=2n
+.param TRISE=1n
+ 
+.param VTSU=20u
+.param VTRISE=1u
+.param SR=0.1
+.ends oa
+

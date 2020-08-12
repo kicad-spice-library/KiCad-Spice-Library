@@ -1,0 +1,25 @@
+***********************************************************************************
+**** SPICE MODELING by JIM THOMPSON, http://www.analog-innovations.com/ © 2016 ****
+***********************************************************************************
+**** NOTE:  Observe Pin Order *****************************************************
+***********************************************************************************
+.SUBCKT MCP6001_JT IN+ IN- OUT VP VN 
+E_E1    N_2 VN N_1 VN 1
+R_ROUT  N_2 OUT  41 
+X_U1    IN+ IN- N_1 VP VN OpAmpCore PARAMS: 
++ A=44m B=1.3546 Q=16.778 Z=79.578 
++ H=25m L=25m RG=893.367K CC=132.629n 
++ SH=5 SL=5
+.ENDS   MCP6001_JT
+***********************************************************************************
+.SUBCKT OpAmpCore IN+ IN- OUT VP VN PARAMS: A=57.739m B=4.01 Q=4.319 Z=1.5915
++ H=1 L=1 RG=200K CC=1.5915nF SH=22 SL=22
+G_GM    VN OUT VALUE {A*SINH(B*TANH(Q*V(IN+,IN-)))}
+R_RGL   OUT VN  {RG} 
+R_RGH   N_1 OUT  {RG} 
+C_CC    OUT VN  {CC} 
+G_GH    OUT VN VALUE {Z*exp(10.3465*TANH(SH*(H-V(VP,OUT)))-9.6535)}
+G_GL    N_1 OUT VALUE {Z*exp(10.3465*TANH(SL*(L-V(OUT,VN)))-9.6535)}
+E_ISOL  N_1 VN VP VN 1
+.ENDS   OpAmpCore
+***********************************************************************************

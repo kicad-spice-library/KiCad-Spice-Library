@@ -1,0 +1,403 @@
+
+* PART NUMBER: SL0323V
+*  MANUFACTURER: SONY
+*PO=1.1mW,VRLD=2V.VRPD=15V
+*All Rights Reserved Copyright (C) Bee Technologies Inc. 2005
+* LD - Laser diode cathode
+*  C - Common pin
+*  PD - Photodiode anode 
+.SUBCKT SLD323V LD Ñ PD op
+Did     Ñ        I  dlaser 
+Vid     I        LD   0
+Eop   op      0 VALUE{ limit((1.0345*l(Vid)-0.38276),0, 1)}
+Rdummv       op     0          1k
+G_Gopd        Ñ       PD VALUE {0+0.00155*V(op)} 
+Dpd     PD     Ñ  pdetec
+.model dlaser D IS=5e-37 N=1 RS=2 BV=2 IBV=10u 
+.model pdetec D CJO=5p BV=15 IB=10u 
+.ends
+
+*
+* LD = Laser diode cathode
+* C  = Common pin
+* PD = Photodiode anode
+.SUBCKT SLD1121VS LD C PD op
+* SLD1121VS from Sony   * RAP  7/97
+Dld C I dlaser
+Vid I LD
+Eop op 0 TABLE {I(Vid)} (0,0) (37m,0.3m) (40m,0.5m) (47m,5m) (100m,40m)
+Rdummy op 0 1k
+Gopd C PD TABLE {V(op)} (0,0) (30m,1.5m)
+Dpd PD C pdetec
+.model dlaser D IS=5E-37 N=1 RS=2 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=15 IBV=10u
+.ends
+*
+*
+* LD = Laser diode cathode
+* C  = Common pin
+* PD = Photodiode anode
+.SUBCKT SLD1132VS LD C PD op
+* SLD1132VS from Sony   * I-Team@Nikkel  01/12/01
+Dld C I dlaser
+Vid I LD
+Eop op 0 TABLE {4.00E-01*I(Vid)-0.021998825}  (0,0) (100,100)
+Rdummy op 0 1k
+Gopd C PD TABLE {2.50E-02*V(op)-2.35094E-09} (0,0) (100,100)
+Dpd PD C pdetec
+.model dlaser D IS=5E-37 N=1 RS=2 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=15 IBV=10u
+.ends
+
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STH51001 PDC PDA LDC OP
+*  STH51001 from Siemens   * I-Team@Nikkel  12/26/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(5.15E-03*I(Vid)-7.79046E-07),
++ (1.00E-01*I(Vid)-0.000999815))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (2m,825u) 
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* LDA = Laser diode anode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STH51004 PDC PDA LDC LDA OP
+*  STH51004 from Siemens   * I-Team@Nikkel  12/27/00
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(9.99E-03*I(Vid)+5.57774E-08),
++ (2.00E-01*I(Vid)-0.002000479))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u) 
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STH51005 PDC PDA LDC OP
+*  STH51005 from Siemens   * I-Team@Nikkel  12/27/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(9.99E-03*I(Vid)+5.57774E-08),
++ (2.00E-01*I(Vid)-0.002000479))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u) 
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STH51007 PDC PDA LDC OP
+*  STH51007 from Siemens   * I-Team@Nikkel  12/26/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(1.26E-02*I(Vid)-2.58847E-07),
++ (2.00E-01*I(Vid)-0.001999509))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (1m,550u) 
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STH81001 PDC PDA LDC OP
+*  STH81001 from Siemens   * I-Team@Nikkel  01/02/01
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(1.19E-02*I(Vid)-9.39505E-06),
++ (3.00E-01*I(Vid)-0.003001154))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (2m,825u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* LDA = Laser diode anode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stl51004 PDC PDA LDC LDA OP
+*  stl51004 from Siemens   * I-Team@Nikkel  01/03/01
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(2.18E-03*I(Vid)-1.84531E-06),
++ (4.01E-02*I(Vid)-0.000400909))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.2m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stl51005 PDC PDA LDC OP
+*  stl51005 from Siemens   * I-Team@Nikkel  01/03/01
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(2.18E-03*I(Vid)-1.84531E-06),
++ (4.01E-02*I(Vid)-0.000400909))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.2m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stl51007 PDC PDA LDC OP
+*  stl51007 from Siemens   * I-Team@Nikkel  12/26/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(2.18E-03*I(Vid)-1.84531E-06),
++ (4.01E-02*I(Vid)-0.000400909))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.2m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* LDA = Laser diode anode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STL51704 PDC PDA LDC LDA OP
+*  STL51704 from Siemens   * I-Team@Nikkel  12/29/00
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(2.18E-03*I(Vid)-1.84531E-06),
++ (4.01E-02*I(Vid)-0.000400909))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.2m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* LDA = Laser diode anode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STL51705 PDC PDA LDC OP
+*  STL51705 from Siemens   * I-Team@Nikkel  12/29/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(2.18E-03*I(Vid)-1.84531E-06),
++ (4.01E-02*I(Vid)-0.000400909))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.2m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stl81007 PDC PDA LDC OP
+*  stl81007 from Siemens   * I-Team@Nikkel  12/26/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<20m,(1.00E-03*I(Vid)+0),
++ (2.00E-02*I(Vid)-0.000401398))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.2m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* LDA = Laser diode anode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stm51004 PDC PDA LDC LDA OP
+*  stm51004 from Siemens   * I-Team@Nikkel  12/26/00
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(4.00E-03*I(Vid)-1.40469E-08),
++ (6.00E-02*I(Vid)-0.000599941))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stm51005 PDC PDA LDC OP
+*  stm51005 from Siemens   * I-Team@Nikkel  12/26/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<10m,(4.00E-03*I(Vid)-1.40469E-08),
++ (6.00E-02*I(Vid)-0.000599941))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDA = Laser diode anode
+* LDC = Laser diode cathode
+* PDA = Photodiode anode
+* PDC = Photodiode cathode
+* OP = Power output
+.SUBCKT stm81004 PDC PDA LDC LDA OP
+*  stm81004 from Siemens   * I-Team@Nikkel  12/23/00
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<20m,(2.00E-03*I(Vid)+0),
++ (3.00E-02*I(Vid)-0.00059974))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT stm81005 PDC PDA LDC OP
+*  stm81005 from Siemens   * I-Team@Nikkel  12/23/00
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<20m,(2.00E-03*I(Vid)+0),
++ (3.00E-02*I(Vid)-0.00059974))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDC = Laser diode cathode
+* PDA = Photo diode anode
+* PDC = photo diode cathode
+* OP  = Output Power pin
+.SUBCKT STM81007 PDC PDA LDC OP
+*  STM81007 from Siemens   * I-Team@Nikkel  01/03/01
+Dld 0 I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<20m,(2.00E-03*I(Vid)+0),
++ (3.00E-02*I(Vid)-0.00059974))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (0.5m,550u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=300.25E-9 N=3.5824 RS=3.10024 IKF=7.8269 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDA = Laser diode anode
+* LDC = Laser diode cathode
+* PDA = Photodiode anode
+* PDC = Photodiode cathode
+* OP = Power output
+.SUBCKT stm91004 PDC PDA LDC LDA OP
+*  stm91004 from Infineon   * I-Team@Nikkel  12/22/00
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<15m,(0.00998417169741874*I(Vid)-9.98E-05),
++ (8.00E-02*I(Vid)-1.20E-03))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (1m,900u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=53.869E-10 N=8.9831 RS=4.0 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends
+*
+*
+* LDA = Laser diode anode
+* LDC = Laser diode cathode
+* PDA = Photodiode anode
+* PDC = Photodiode cathode
+* OP = Power output
+.SUBCKT stm91005 PDC PDA LDC LDA OP
+*  stm91005 from Infineon   * I-Team@Nikkel  12/22/00
+Dld LDA I dlaser
+Vid I LDC
+Eop op 0 TABLE {if(I(Vid)<15m,(0.00998417169741874*I(Vid)-9.98E-05),
++ (8.00E-02*I(Vid)-1.20E-03))}(0,0)(100,100)
+Rdummy op 0 1k
+Gopd PDC PDA TABLE {V(op)} (0,0) (1m,900u)
+Dpd PDA PDC pdetec
+.model dlaser D  IS=53.869E-10 N=8.9831 RS=4.0 ISR=100.00E-12 BV=2 IBV=10u 
+*EG=2.8 XTI=3 
+.model pdetec D CJO=5p BV=10 IBV=10u ISR=4.0E-10
+.ends

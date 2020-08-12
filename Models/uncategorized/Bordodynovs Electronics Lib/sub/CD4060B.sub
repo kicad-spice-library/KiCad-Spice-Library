@@ -1,0 +1,129 @@
+* Source File: CD4060B_widh_diodes_vlsiBlkTest.asc
+* Developed: ETech (eetech00@yahoo.com)
+* Created: Oct 31 2015
+* Revision: NA
+*
+* This CD4060B spice model was tested
+* with LTSpice. Temperature is not modeled.
+*
+* Texas Instruments
+* CD4060B 14-Stage Ripple-Carry Binary Counter/Divider with Oscillator
+*
+* block symbol definitions
+.subckt CD4060B RS RST CX Q10Out Q12Out Q13Out Q14Out Q4Out Q5Out Q6Out Q7Out Q8Out Q9Out RX VDD VSS
+XX4 RXA CXA VDDA VSS cd40_inv
+XX1 RSA RSTC RXA VDDA VSS cd40_nor
+XX3 _CXA RSTB O1 VDDA VSS cd40_nor
+XX5 RSTA _RSTA VDDA VSS cd40_inv
+XX6 _RSTA RSTB VDDA VSS cd40_inv
+XX7 _RSTA RSTC VDDA VSS cd40_inv
+XX2 CXA _CXA VDDA VSS cd40_schminv
+XX8 _O1 O1 _RSTA _Q1 Q1 VDDA VSS cd40_ff
+XX9 O1 _O1 VDDA VSS cd40_inv
+XX10 _Q1 Q1 _RSTA _Q2 Q2 VDDA VSS cd40_ff
+XX11 _Q2 Q2 _RSTA _Q3 Q3 VDDA VSS cd40_ff
+XX12 _Q3 Q3 _RSTA _Q4 Q4 VDDA VSS cd40_ff
+XX13 _Q4 Q4 _RSTA _Q5 Q5 VDDA VSS cd40_ff
+XX14 _Q5 Q5 _RSTA _Q6 Q6 VDDA VSS cd40_ff
+XX15 _Q6 Q6 _RSTA _Q7 Q7 VDDA VSS cd40_ff
+XX16 _Q7 Q7 _RSTA _Q8 Q8 VDDA VSS cd40_ff
+XX17 _Q8 Q8 _RSTA _Q9 Q9 VDDA VSS cd40_ff
+XX18 _Q9 Q9 _RSTA _Q10 Q10 VDDA VSS cd40_ff
+XX19 _Q10 Q10 _RSTA _Q11 Q11 VDDA VSS cd40_ff
+XX20 _Q11 Q11 _RSTA _Q12 Q12 VDDA VSS cd40_ff
+XX21 _Q12 Q12 _RSTA _Q13 Q13 VDDA VSS cd40_ff
+XX22 _Q13 Q13 _RSTA _Q14 Q14 VDDA VSS cd40_ff
+XX23 _Q4 Q4Out VDDA VSS cd40_inv
+XX24 _Q5 Q5Out VDDA VSS cd40_inv
+XX25 _Q6 Q6Out VDDA VSS cd40_inv
+XX26 _Q7 Q7Out VDDA VSS cd40_inv
+XX27 _Q8 Q8Out VDDA VSS cd40_inv
+XX28 _Q9 Q9Out VDDA VSS cd40_inv
+XX29 _Q10 Q10Out VDDA VSS cd40_inv
+XX30 _Q12 Q12Out VDDA VSS cd40_inv
+XX31 _Q13 Q13Out VDDA VSS cd40_inv
+XX32 _Q14 Q14Out VDDA VSS cd40_inv
+XX33 RS RSA VDDA VSS cd40_inprot
+XX34 RX RXA VDDA VSS cd40_inprot
+XX35 RST RSTA VDDA VSS cd40_inprot
+XX36 CX CXA VDDA VSS cd40_inprot
+R1 VDD VDDA 4
+.ic V(CX)=0
+
+
+.subckt cd40_inv A _A VDD VSS
+M2 _A A VSS VSS NA l=9u w=40u
+M3 _A A VDD VDD PA l=9u w=40u
+C1 A VSS 1.4p
+.MODEL NA NMOS (Level=3 VTO=1.7V KP=23U VMAX=1E5 IS=1E-11)
+.MODEL PA PMOS (Level=3 VTO=-1.2V KP=15U VMAX=1E5 IS=1E-11)
+.ends cd40_inv
+
+.subckt cd40_nor A B _A+B VDD VSS
+M1 _A+B A VSS VSS NA l=9u w=40u
+M2 20 A VDD VDD PA l=9u w=80u
+M3 _A+B B VSS VSS NA l=9u w=40u
+M5 _A+B B 20 VDD PA l=9u w=80u
+C1 B VSS 2.4p
+C2 A VSS 2.4p
+C3 _A+B VSS 0.06p
+.MODEL NA NMOS (Level=3 VTO=1.7V KP=23U VMAX=1E5 IS=1E-11)
+.MODEL PA PMOS (Level=3 VTO=-1.2V KP=15U VMAX=1E5 IS=1E-11)
+.ends cd40_nor
+
+.subckt cd40_schminv A _A VDD VSS
+M2 30 A VSS VSS NA l=9u w=40u
+M3 _A A 20 VDD PA l=9u w=40u
+M1 _A A 30 VSS NA l=9u w=40u
+M4 20 A VDD VDD PA l=9u w=40u
+M5 VSS _A 20 VDD PA l=9u w=40u
+M6 VDD _A 30 VSS NA l=9u w=40u
+C1 A VSS 2.4p
+.MODEL NA NMOS (Level=3 VTO=1.7V KP=23U VMAX=1E5 IS=1E-11)
+.MODEL PA PMOS (Level=3 VTO=-1.2V KP=15U VMAX=1E5 IS=1E-11)
+.ends cd40_schminv
+
+.subckt cd40_ff _O O R _Q Q VDD VSS
+XX1 Q O _O 10 VDD VSS cd40_tg
+XX2 10 20 VDD VSS cd40_inv
+XX3 R 20 40 VDD VSS cd40_nand
+XX4 10 _O O 40 VDD VSS cd40_tg
+XX5 20 _O O 30 VDD VSS cd40_tg
+XX6 30 O _O Q VDD VSS cd40_tg
+XX7 30 R _Q VDD VSS cd40_nand
+XX8 _Q Q VDD VSS cd40_inv
+.IC V(Q)=0
+.ends cd40_ff
+
+.subckt cd40_inprot IN OUT VDD VSS
+D1 IN VDD Di
+D2 VSS IN Di
+R1 OUT IN 200
+D3 OUT VDD Di
+D4 VSS OUT Di
+.MODEL Di D (IS=10p RS=10 N=1.75 M=0.4 Cjo=6p TT=20n)
+.ends cd40_inprot
+
+.subckt cd40_tg IN N P OUT VDD VSS
+M1 IN N OUT VSS NA l=9u w=80u
+M2 OUT P IN VDD PA l=9u w=80u
+C1 OUT N 0.12p
+C2 IN N 0.12p
+C3 P IN 0.12p
+C4 P OUT 0.12p
+.MODEL NA NMOS (Level=3 VTO=1.7V KP=23U VMAX=1E5 IS=1E-11)
+.MODEL PA PMOS (Level=3 VTO=-1.2V KP=15U VMAX=1E5 IS=1E-11)
+.ends cd40_tg
+
+.subckt cd40_nand A B _AB VDD VSS
+M1 N001 B VSS VSS NA l=9u w=40u
+M2 _AB B VDD VDD PA l=9u w=80u
+M3 _AB A N001 VSS NA l=9u w=40u
+M4 _AB A VDD VDD PA l=9u w=80u
+C2 B VSS 2.6p
+C1 A VSS 2.6p
+.MODEL NA NMOS (Level=3 VTO=1.7V KP=23U VMAX=1E5 IS=1E-11)
+.MODEL PA PMOS (Level=3 VTO=-1.2V KP=15U VMAX=1E5 IS=1E-11)
+.ends cd40_nand
+
+.ends CD4060B

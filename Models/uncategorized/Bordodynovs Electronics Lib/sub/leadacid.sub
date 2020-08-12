@@ -1,0 +1,73 @@
+*********************************************************************************
+*      LEADACID.CIR - PSpice Lead Acid battery discharge simulator
+* Optimized for 6 and 12 volt Lead-Acid Batteries with capacities from
+*         1.3 to 10 Amp-Hours. Discharge rates to 1 hour rate
+*
+*              By: S.C.Hageman  1/9/93   Version: 3/18/93
+*
+*********************************************************************************
+
+.SUBCKT LEADACID
+
+; ----- Nodes -----
++ +OUTPUT -OUTPUT SOC RATE
+;    ^       ^     ^   ^
+;    |       |     |   |
+;    |       |     |   +---------- Instantaneous discharge rate, 1V=C, 10V=10C
+;    |       |     |               refered to 20 hour rate
+;    |       |     +-------------- State of charge output node, 1V=100%, 0V=0%
+;    +-------+-------------------- +/- Cell connections (Floating)
+;
+; ----- Parameters -----
++  PARAMS: CAPACITY=1.3 RESISTANCE=0.06 CELLS=3 INITSOC=1
+;              ^           ^           ^
+;              |           |           |
+;              |           |           +--- Number of cells in battery
+;              |           |                3 for 6V, 6 for 12V
+;              |           +--- Total battery resistance in ohms
+;              +--- Battery capacity in Amp-Hours, 1=1A-Hr, 0.5=0.5A-Hr
+;                   measured at 20 Hour rate
+
+*--------------------------------------------------------------------------------
+
+* * DISCHARGE RATE CALCULATION * *
+E_Rate          RATE    0       VALUE = {I(V_Sense)/CAPACITY}
+R1              RATE    60      60                      ;R2, C1 = 60 SECOND DELAY
+C1              60      0       1 IC=0
+
+* * DISCHARGE AND STATE OF CHARGE * *
+G_Discharge     SOC     0       VALUE = {I(V_Sense)}    ;Discharge Current
+
+* * LOST CAPACITY DURING FAST DISCHARGE DELAYED BY R2-C1 * *
+E_Lost_Rate     50      SOC     TABLE {V(60)} =
++ (0.05,0.0) (0.089,0.11) (0.16,0.20) (0.62,0.39) (0.8,0.47) (1.6,0.44)
+
+* * AMP-HOUR CAPACITY OF BATTERY * *
+C_CellCapacity  50      0       {3600 * CAPACITY * 1.15} IC={INITSOC}
+R2              50      0       1G
+
+* * CELL RESISTANCE * *
+R_Cell          10      20      {RESISTANCE}
+
+* * BATTERY OUTPUT VOLTAGE * *
+E_Battery       +OUTPUT 10      VALUE = {V(Cell_V) * CELLS} IC=2.171
+
+* * CELL OUTPUT CURRENT SENSE * *
+V_Sense         -OUTPUT 20      0
+
+* * SINGLE LEAD ACID CELL OUTPUT VOLTAGE VS STATE OF CHARGE * *
+E_Invert        Invert  0       TABLE {V(SOC)} = (0,1) (1,0)
+R3              Invert  0       1G
+
+R4              Cell_V  0       1G
+E_Cell          Cell_V  0       TABLE {V(Invert)} =
++ (0.000E+00  2.171E+00) (5.222E-04  2.149E+00) (1.828E-03  2.128E+00)
++ (1.263E-01  2.101E+00) (4.908E-01  2.001E+00) (6.385E-01  1.949E+00)
++ (7.459E-01  1.900E+00) (7.834E-01  1.875E+00) (8.117E-01  1.850E+00)
++ (8.313E-01  1.826E+00) (8.436E-01  1.801E+00) (8.517E-01  1.773E+00)
++ (8.556E-01  1.750E+00) (8.591E-01  1.724E+00) (8.616E-01  1.702E+00)
++ (8.646E-01  1.676E+00) (8.677E-01  1.648E+00) (8.707E-01  1.623E+00)
++ (8.732E-01  1.600E+00) (8.850E-01  1.499E+00) (8.965E-01  1.401E+00)
++ (9.000E-01  1.333E+00) (1.000E+00  0.000E+00)
+
+.ENDS

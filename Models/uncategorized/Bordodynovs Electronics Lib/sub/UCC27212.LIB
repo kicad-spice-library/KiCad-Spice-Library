@@ -1,0 +1,124 @@
+* Model Usage Notes:
+*
+* 1. The following features have been modeled
+*      a. Sink and Source currents
+*      b. Output rise time and fall time
+*      c. Propagation delay
+*      d. Delay matching
+*      e. Under-voltage Lock out (UVLO)
+*      g. Input signal level
+* 2. Operation Quiescent current, noise characteristics and temperature effects are not modeled
+* 3. This model targets for 12V supply applications.
+*****************************************************************************
+*$
+.SUBCKT UCC27212_TRANS HB HI HO HS LI LO VDD VSS NC_0 NC_1 PAD
+X_U4 L_ENB VDD VSS UVLO_VDD  
+X_U6         INT_LI L_ENB L_DRV AND2
+X_INN_CMOS HI INT_HI VDD VSS INN_CMOS  
+D_D1         VDD HB DIODE01 100000u
+X_U5         H_ENB INT_HI L_ENB H_DRV AND3
+X_INN_CMOS1 LI INT_LI VDD VSS INN_CMOS  
+X_DRIVER_3 VSS L_DRV LO VDD DRIVER_3  
+X_U3 H_ENB HB HS UVLO_HB  
+X_U7 HS H_DRV HO HB DRIVER_2
+.model DIODE01 D
+  
+.ENDS UCC27212_TRANS
+*$
+.SUBCKT DRIVER_2 GND IN OUT VDD  
+E_E1         N221724 OUT VALUE { IF(V(N221930, 0) > 0.5,7.56, 0) }
+BE_ABM1      N221930 0 V=IF(V(IN)>0.5,V(N231744),V(N231808))
+C_C3         OUT N208510  30p  
+E_E2         OUT N221132 VALUE { IF(V(N221930, 0) > 0.5,0,6.34) }
+X_U2         IN N231808 DELAY PARAMS:  RINP=1K DELAY=10.5n
+M_M1         VDD N208510 OUT OUT NMOS01  
++ L=2u  
++ W=14000u         
+R_R4         N221019 N221132  70  
+M_M2         GND N221019 OUT OUT PMOS01  
++ L=2u  
++ W=20000u         
+R_R3         N208510 N221724  120  
+C_C1         N208510 VDD  10p  
+C_C2         GND N221019  3p  
+C_C4         OUT N221019  30p  
+X_U1         IN N231744 DELAY PARAMS:  RINP=1K DELAY=14.5n
+.model PMOS01 PMOS
+ 
+.model NMOS01 NMOS
+
+.ENDS
+*$ 
+.SUBCKT UVLO_HB EN VDD VSS  
+X_U1         EN VDD N00585 N00613 COMP_BOB
+V_V2         N00613 0 0.3Vdc
+G_G1         VDD VSS TABLE { V(EN, 0) } 
++ ( (6.8,40u) (12,65u) )
+V_V1         N00585 VSS 5.3Vdc
+.ENDS
+*$ 
+.SUBCKT DRIVER_3 GND IN OUT VDD  
+M_M1         VDD N228350 OUT OUT NMOS01  
++ L=2u  
++ W=14000u         
+M_M2         GND N228396 OUT OUT PMOS01  
++ L=2u  
++ W=20000u         
+R_R3         N228350 N228672  120  
+E_E2         OUT N228400 VALUE { IF(V(N228686, 0) > 0.5,0,6.34) }
+C_C1         N228350 VDD  10p  
+C_C2         GND N228396  3p  
+X_U1         IN N232063 DELAY PARAMS:  RINP=1K DELAY=14.5n
+C_C4         OUT N228396  30p  
+R_R4         N228396 N228400  70  
+X_U2         IN N232071 DELAY PARAMS:  RINP=1K DELAY=10.5n
+C_C3         OUT N228350  30p  
+E_E1         N228672 OUT VALUE { IF(V(N228686, 0) > 0.5,7.56, 0) }
+BE_ABM1      N228686 0 V=IF(V(IN)>0.5,V(N232063),V(N232071))
+.model PMOS01 PMOS
+ 
+.model NMOS01 NMOS
+
+.ENDS
+*$ 
+.SUBCKT INN_CMOS IN OUT VDD VSS  
+X_U1         OUT IN V_RISE V_HYS COMP_BOB
+E_E1         V_RISE 0 TABLE { V(VDD, VSS) } 
++ ( (6.8,2) (12,2.3) )
+E_E2         V_HYS 0 TABLE { V(VDD, VSS) } 
++ ( (6.8,0.5) (12,0.7) )
+C_C1         VSS IN  2p  
+R_R1         VSS IN  68k  
+.ENDS
+*$ 
+.SUBCKT UVLO_VDD EN VDD VSS  
+V_V1         N00415 VSS 5.7Vdc
+X_U1         EN VDD N00415 N00435 COMP_BOB
+V_V2         N00435 0 0.4Vdc
+G_G1         VDD VSS TABLE { V(EN, 0) } 
++ ( (6.8,65u) (12,85u) )
+.ENDS
+*$
+.SUBCKT COMP_BOB Y VINP VINN VHYS
+
+bEINT  0 Y i=MAX(0, MIN(1, 1000*(5e-4 + V(Y)*V(VHYS) + V(VINP) - V(VINN)))) Rpar=1 Cpar=1n
+.ENDS COMP_BOB
+
+.SUBCKT DELAY INP OUT PARAMS: RINP = 1k DELAY = 10n
+R1 INP 101 {RINP}
+C1 101 102 { 1.4427 * DELAY / RINP }
+E1 102 0 OUT 0 0.5
+BE2 OUT 0 V=IF(V(101)>0.5,1,0)
+.ENDS DELAY
+
+.SUBCKT AND2 A B Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+ 
+A A B 0 0 0 0 Y 0 AND Ref={VTHRESH} Vhigh={VDD} Vlow={VSS} Rout=1 Cout=1n tripdt=5n Td=1n
+
+.ENDS AND2
+
+.SUBCKT AND3 A B D Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5 
+
+A A B D 0 0 0 Y 0 AND Ref={VTHRESH} Vhigh={VDD} Vlow={VSS} Rout=1 Cout=1n tripdt=5n Td=1n
+
+.ENDS AND3

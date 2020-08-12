@@ -1,0 +1,151 @@
+* C:\Program Files\LTC\LTspiceIV\My Drawings\Fuse_test.asc
+
+******************************************************
+* Model generated on 12 Feb 2010
+* Model format: LTspice
+* Fuses macro model
+* External node designations
+* Node in -> in
+* Node out -> out
+*
+* By Helmut Sennewald, 2004
+* Requires td >=0.1m
+* FUSE MODEL
+* Specify fuse current I_FUSE in Amps and time
+* constant TAU_FUSE in seconds. This model takes a
+* twofold rise of the fuse resistance into account.
+******************************************************
+.SUBCKT Fuse in out ; original as base generic, for demonstration / test purposes
++PARAMS: I_FUSE=2 TAU_FUSE=5
+
+E1 Ee1 0 Value={I_FUSE*I_FUSE*2}
+RX Ee1 0 1G
+
+R1 in 1 1m
+V2 1 2 0
+B1 0 pt I=I(V2)*I(V2)*(1+V(pt)/V(Ee1))
+R2 pt 0 1
+C1 pt 0 {TAU_FUSE} IC=0
+S1 2 out 5 0 SW1
+V3 4 0 PULSE(0 1 1u 1u 1u 10u 1e6)
+A1 3 4 0 0 0 5 0 0 SRFLOP td=1m
+B2 3 0 V=IF(V(pt)>V(Ee1), 1, 0)
+.MODEL SW1 SW(Ron=1u Roff=1G Vt=0.5 Vh=0)
+.ENDS
+
+
+******************************************
+* 20x5mm glass fuses type F
+******************************************
+
+.subckt F50mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=50m TAU_FUSE=.5
+.ends
+
+.subckt F63mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=63m TAU_FUSE=.5
+.ends
+
+.subckt F100mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=100m TAU_FUSE=.5
+.ends
+
+.subckt F125mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=125m TAU_FUSE=.5
+.ends
+
+.subckt F160mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=160m TAU_FUSE=.5
+.ends
+
+.subckt F200mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=200m TAU_FUSE=.5
+.ends
+
+.subckt F250mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=250m TAU_FUSE=.5
+.ends
+
+.subckt F315mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=315m TAU_FUSE=.5
+.ends
+
+.subckt F500mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=500m TAU_FUSE=.5
+.ends
+
+.subckt F630mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=630m TAU_FUSE=.5
+.ends
+
+.subckt F800mA in out
+XF1 in out Fuse
++PARAMS: I_FUSE=800m TAU_FUSE=.5
+.ends
+
+.subckt F1A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=1 TAU_FUSE=.5
+.ends
+
+.subckt F1.25A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=1.25 TAU_FUSE=.5
+.ends
+
+.subckt F1.6A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=1.6 TAU_FUSE=.5
+.ends
+
+.subckt F2A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=2 TAU_FUSE=.5
+.ends
+
+.subckt F2.5A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=2.5 TAU_FUSE=.5
+.ends
+
+.subckt F3.15A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=3.15 TAU_FUSE=.5
+.ends
+
+.subckt F4A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=4 TAU_FUSE=.5
+.ends
+
+.subckt F5A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=5 TAU_FUSE=.5
+.ends
+
+.subckt F6.3A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=6.3 TAU_FUSE=.5
+.ends
+
+.subckt F8A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=8 TAU_FUSE=.5
+.ends
+
+.subckt F10A in out
+XF1 in out Fuse
++PARAMS: I_FUSE=10 TAU_FUSE=.5
+.ends
+
+

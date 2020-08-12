@@ -1,0 +1,115 @@
+.SUBCKT BSP135 drain gate source Tj Tcase PARAMS: dVth=0 dRdson=0 dgfs=0 dC=0 Zthtype=0
+
+.PARAM Rs=0.027     Rg=10        Ls=3n        Ld=1n        Lg=3n
+.PARAM Inn=0.01     Unn=0        Rmax=60
+.PARAM act=0.47
+
+X1  d1 g s Tj K_600_d_var PARAMS: a={act} dVth={dVth} dR={dRdson} Inn={Inn} Unn={Unn} 
+                                        +Rmax={Rmax} dgfs={dgfs} Rs={Rs} dC={dC} heat=1
+
+Rg    g1     g    {Rg}   
+Lg    gate   g1   {Lg*if(dgfs==99,0,1)}
+Gs    s1     s    VALUE={V(s1,s)/(Rs*(1+(limit(V(Tj),-200,999)-25)*4m))}
+Rsa   s1     s    1Meg
+Ls    source s1   {Ls*if(dgfs==99,0,1)}
+Ld    drain  d1   {Ld*if(dgfs==99,0,1)}
+
+Rth1  Tj      t1              {685.56m+limit(Zthtype,0,1)*253.73m}
+Rth2  t1      t2              {2.03+limit(Zthtype,0,1)*756.67m}
+Rth3  t2      t3              {5.71+limit(Zthtype,0,1)*221.88m}
+Rth4  t3      t4              {5.53+limit(Zthtype,0,1)*810.97m}
+Rth5  t4      Tcase           {7.85+limit(Zthtype,0,1)*1.15}
+Cth1  Tj      0               44.039u
+Cth2  t1      0               43.949u
+Cth3  t2      0               360.599u
+Cth4  t3      0               6.76m
+Cth5  t4      0               103.014m
+
+.ENDS
+
+
+
+
+.SUBCKT K_600_d_var dd g s Tj PARAMS: a=1 dVth=0 dR=0 dgfs=0 Inn=1 Unn=1 Rmax=1
++gmin=1 Rs=1 Rp=1 dC=0 heat=1
+
+.PARAM  Vth0=-1.15     beta4c=0.157   ph0=20         ph1=0.026      Ubr=650
+.PARAM  Rd=11          nmu=2.7        Rf=0.1         rpa=0.58357    lnIsj=-24.7
+.PARAM  Rdi=0.2
+
+.PARAM  Tref=298     T0=273      auth=3m      c=0.82       mu_bet=0.4
+.PARAM  f_bet=-2     ndi=1.2     UTnbr=207m   lnBr=-23     kbq=85.8u
+.PARAM  Wcml={beta4c*4*c}        
+.PARAM  aubr={0.93m*UBr}
+.PARAM  dvgs={0.1-0.06*Vth0}
+
+.PARAM  f1=100p        f2=60p         f3=204p        f4=435p        f5=355p
+.PARAM  U0=0.5         nd=0.43        nc=0.5         g1=9           bb=-9.8
+.PARAM  sl=37p         remp=0p        ta=100n        td=30n
+
+.PARAM  Vmin=-2.1      Vmax=-1        dCmax=0.35
+.PARAM  Vth={Vth0+(Vmax-Vth0)*limit(dVth,0,1)-(Vmin-Vth0)*limit(dVth,-1,0)}
+.PARAM  p0={Wcml*a*((1-f_bet)*(T0/Tref)**mu_bet+f_bet)    }
+.PARAM  Rlim={(Rmax-Rs-(Unn-Vth0-Inn*Rs-SQRT((Unn-Vth0-Inn*Rs)**2-4*c*Inn/p0))/(2*c*Inn))/(1+rpa*(Inn/a)**2)} 
+.PARAM  dRd={Rd/a+if(dVth==0,limit(dR,0,1)*max(Rlim-Rd/a,0),0)} 
+.PARAM  bet={Wcml}
+
+.PARAM  dC1={1+dCmax*limit(dC,0,1)} 
+.PARAM  Cox={f1*a*dC1}
+.PARAM  Cds0={f2*a*dC1}
+.PARAM  Cgs0={f3*a*dC1}
+.PARAM  Cox1={f5*a*dC1}
+.PARAM  Crand={remp*SQRT(a)}
+.PARAM  dRdi={Rdi/a}
+
+.FUNC U1(Uds,T)       {(SQRT(1+4*(0.4+(T-T0-25)*2m)*abs(Uds))-1)/2/(0.4+(T-T0-25)*2m)}
+.FUNC I2(p,Uee,z1,pp) {if(Uee>pp,(Uee-c*z1)*z1,p*(pp-p)/c*exp((Uee-pp-(min(0,Uee))**2)/p))}
+.FUNC Ig(Uds,T,p,Uee) {bet*((1-f_bet)*(T0/T)**mu_bet+f_bet)*I2(p,Uee,min(Uds,Uee/(2*c)),min(2*p,p+c*Uds))}
+.FUNC Iges(Uds,Ugs,T) 
+ +{a*(sgn(Uds)*Ig(U1(Uds,T),T,1/(ph0-ph1*T),Ugs-Vth+auth*(T-Tref))+exp(min(lnBr+(abs(Uds)-UBr-aubr*(T-Tref))/UTnbr,25)))}
+
+.FUNC Isjt(Tj)           {exp(min(lnIsj+(Tj/Tref-1)*1.12/(ndi*kbq*Tj),9))*(Tj/Tref)**1.5}
+.FUNC Idiode(Usd,Tj,Iss) {exp(min(log(Iss)+Usd/(ndi*kbq*Tj),9))-Iss}
+.FUNC Idiod(Usd,Tj)      {a*Idiode(Usd,Tj,Isjt(Tj))}
+
+.FUNC QCdg(x,z)  {if(f4>f5,(f5**2-(f4-z*sl)**2)/(2*sl)+f5*min(x,(f4-f5)/sl),f4*z-sl*z**2/2-f5*max((f4-f5)/sl-x,0))}
+
+E_Edg     d   ox  VALUE {V(d,g)-(min(V(d,g),-bb)+1/(g1*(1-nc))*((1/(1+g1*max(V(d,g)+bb,0)))**(nc-1)-1))}
+C_Cdg     ox  g   {Cox}
+E_Edg1    d   ox1 VALUE {V(d,g)-QCdg(V(d,g),limit(V(d,g),(f4-f5)/sl,f4/sl))/f5}
+C_Cdg1    ox1 g   {Cox1}
+C_Cdg2    d   g   {Crand}
+
+E_Eds     d edep  VALUE {(V(d2,s)-I(V_sense3)/Cds0)}
+C_Cds  edep    s  {Cds0}
+C_Cds2   d2    s  {Cds0/500}
+
+C_Cgs     g    s  {Cgs0}
+
+G_chan    d    s  VALUE={Iges(V(d,s),V(g,s),T0+limit(V(Tj),-200,350))}
+E_RMos   d1    d  VALUE={I(V_sense)*(Rf*dRd+(1-Rf)*dRd*((limit(V(Tj),-200,999)+T0)/Tref)**nmu)*(1+rpa*(I(V_sense)/a)**2)}
+V_sense  dd   d1  0
+G_diode   s   d2  VALUE={Idiod(V(s,d2),T0+limit(V(Tj),-200,499))}
+R_Rdio   d2   d3  {dRdi}
+V_sense2 d1   d3  0
+
+L_L001    a    c  {td/(ta+td)}
+R_R001    a    b  {1/ta}
+V_sense3  c    f  0
+R_sense3  f    0  1
+E_E001    b    0  VALUE {I(V_sense2)}
+E_E002    e    0  VALUE {1Meg*Cds0*(1/(1-nd)*U0**nd*(limit(U0+V(d2,s),U0/2,2*UBr))**(1-nd)+2**nd*min(V(d2,s)+U0/2,0))}
+R_R002    e    c  1Meg
+
+R1        g    s  1G
+Rd01      d    s  500Meg
+Rd02     d2    s  500Meg
+Rd03     d1    d  20k
+
+G_TH      0    Tj  VALUE = {heat*LIMIT(I(V_sense)*V(dd,s),0,100k)}
+
+.ENDS
+
+
+
+

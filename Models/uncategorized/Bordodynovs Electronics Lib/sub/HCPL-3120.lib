@@ -1,0 +1,119 @@
+* HCPL-3120 SPICE Macromodel
+* (also applies to HCPL-J312)
+* Rev. A
+* 09/07
+* ZFC
+*
+* This is the behavioural model for the above-mentioned part number.
+* It is valid for functional simulation over the range specified below.
+* (over recommended operating conditions as specified in the datasheet)
+*
+* Macromodels provided by Avago Technologies are not warranted
+* as fully representing all of the specifications and operating
+* characteristics of the product.
+*
+* Macromodels are useful for evaluating product performance but they
+* cannot model exact device performance under all conditions, nor are
+* they intended to replace breadboarding for final verification.
+*
+* Copyright 2007 Avago Technologies Limited. All Rights Reserved
+********************************************************************************
+*
+*               pin1     to    pin8
+*                 |             |
+.subckt HCPL_3120 1 2 3 4 5 6 7 8
+R1 1 0 1T
+R4 4 0 1T
+q2icc 163 84 8  pnpmod
+q1icc 84 84 8  pnpmod
+xled 5 10 3 2 led
+xlimitl 5 10 50 limitl
+ehdrive 42 7  40 5 1
+eldrive 51 5  50 5 -1
+xhlimit 5 10 40 limit
+vuvlo 20 5 DC 12
+vccinside 22 5 DC 30
+dmosl 5 7 dmod
+ddrive3 47 46 dmod
+ddrive2 49 47 dmod
+ddrive1 7 49 dmod
+q4icc 122 124 5  npnmod
+q3icc 84 122 124  npnmod
+qdrive3 8 46 47  NPNMOD
+qdrive2 8 47 49  NPNMOD
+qdrive1 8 49 48  NPNMOD
+xuvlo 5 22 8 21 23 comparator
+muvlo 10 24 5 5 nmosswitch L=1m W=100m
+mdrive 7 52 5 5 nmosmod L=1m W=10
+cuvlo 24 5 20e-12
+chigh 8 7 1e-12
+clgate 52 5 1e-12
+clow 7 5 1e-12
+chgate 46 7 300e-12
+rshort67  6 7  0.0001
+ruvlo2 23 21 40e3
+r2icc 124 5 600
+ruvlo3 23 24 1e3
+r1icc 163 122 1e3
+rhgate 42 46 1e3
+rlgate 51 52 1e3
+ruvlo 21 20 1e3
+rehdrive 48 7 1.4
+
+.MODEL nmosswitch nmos (vto=+0.7)
+.MODEL nmosmod nmos (vto=+0.5   RS=0.9  )
+.MODEL npnmod  npn bf=16
+.MODEL pnpmod  pnp bf=100
+.MODEL dmod D IS=2.22P CJO=1P VJ=.376 M=.139 N=1.07
+.ends HCPL_3120
+
+.subckt led 1 3 4 5
+gband 1 3  9 1 1
+fphoto 1 9  vsense  1
+egain 7 4  6 4 1
+cband 3 1 140e-12
+ithre 3 1 DC 500e-6
+vsense 8 4 DC 0
+dled 6 4 lednor
+doptic 7 8 lednorc
+rband 3 1 1e3 TC1=2e-3
+rthermo 9 1 1 TC1=-1.5e-3
+rled 5 6 1
+.MODEL LEDNOR D IS=5E-16 N=2 XTI=3 EG=2.1 BV=5 IBV=10u
++  CJO=60p VJ=.75 M=.3333 FC=.5 TT=20n
+.MODEL LEDNORC D IS=5E-16 N=2 XTI=3 EG=2.1 BV=5 IBV=10u
++  VJ=.75 M=.3333 FC=.5
+.ends led
+
+.subckt limitl 1 2 3
+elimit 4 1  2 7 10
+vnegativ 6 1 DC -12
+vthreshold 7 1 DC 2
+vpositive 5 1 DC  12
+dnega 6 3 dmod
+dposi 3 5 dmod
+r2 4 3 1e3
+r1 2 7 10e6
+.MODEL dmod D IS=2.22P CJO=1P VJ=.376 M=.139 N=1.07
+.ends limitl
+
+.subckt limit 1 2 3
+elimit 4 1  2 7 10
+vnegativ 6 1 DC -10
+vthreshold 7 1 DC 2
+vpositive 5 1 DC 10
+dnega 6 3 dmod
+dposi 3 5 dmod
+r2 4 3 1e3
+r1 2 7 1e6
+.MODEL dmod D IS=2.22P CJO=1P VJ=.376 M=.139 N=1.07
+.ends limit
+
+.subckt comparator 1 2 3 4 5
+mcopa 5 6 1 1 nmosswitch L=1m W=100m
+egain 6 1  3 4 1e3
+ro 5 2 10e3
+rgate 6 1 10e3
+r1n 3 4 1e6
+.MODEL nmosswitch nmos (vto=+0.7)
+.ends comparator

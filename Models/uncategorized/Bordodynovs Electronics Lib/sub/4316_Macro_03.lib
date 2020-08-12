@@ -1,0 +1,235 @@
+*4316 Macro Model Rev. 02 by GKH 9-25-2016
+*4316 Macro Model Rev. 03 by RB  6-21-2017
+*
+* This information is protected under the United States copyright 
+* laws. THAT Corporation ("THAT") hereby grants users of this 
+* macromodel (the "User"), a nonexclusive, nontransferable 
+* license to use this macromodel as long as the licensee abides
+* by the terms of this agreement.  Before using the macromodel,
+* the User should read this license.  If the User does not accept
+* these terms, the macromodel contained herein should be erased, 
+* destroyed or returned to THAT within 30 days.
+*
+* The User may copy and distribute, at no charge, verbatim copies
+* of the Macromodel as contained herein, in any medium, provided 
+* that the User conspicuously publishes on each copy this copyright 
+* notice and disclaimer of warranty.  The User may modify this
+* macromodel to suit his or her specific applications, and the User
+* may make copies of the modified macromodel for use within his or  
+* her company only, and provided the modified files carry prominent 
+* notices stating that the files have been changed, and the date of 
+* any changes.
+* 
+* This macromodel is provided "AS IS, WHERE IS, AND WITH NO WARRANTY
+* OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED
+* TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+* PARTICULAR PURPOSE."  In no event will THAT be liable for special,
+* collateral, incidental, or consequential damages in connection
+* with or arising out of the use of this macromodel.  THAT reserves
+* the right to make changes to the products and macromodel without
+* prior notice.
+*
+*
+* THAT4316 macromodel
+* Rev 03 RB 6-21-17
+* All in one subcircuit and changed pin names to match datasheet
+*
+.SUBCKT THAT4316 VCA_IN VCA_OUT EC- EC+ RMS_IN CT RMS_OUT V+ FILT GND VREF
+X1      VCA_IN VCA_OUT EC- EC+ V+ GND VREF 4316VCA_THAT
+X2      RMS_IN CT RMS_OUT VREF GND V+ 4316RMS_THAT
+X3      FILT V+ GND VREF 4316REFGEN_THAT
+.ENDS
+*
+*
+*
+*************** Subcircuits ****************
+*
+*4316 VCA MACROMODEL
+*Rev 02 10-20-2015
+*CONNECTIONS:
+*	             input current
+*		     |      output current
+*		     |      |       negative control voltage
+*		     |      |       |   positive control voltage    
+*		     |      |       |   |   positive power supply
+*		     |      |       |   |   |   ground
+*		     |      |       |   |   |   |   reference voltage   
+*		     | 	    |       |   |   |   |   |
+.subckt 4316VCA_THAT VCA_IN VCA_OUT EC- EC+ VCC GND VREF  
+*
+E_E1         8 14 15 0 1
+R_R9         9 13  30  
+V_V1         5 6 DC 1.1V  
+D_D1         5 VCC DNOM 
+D_D2         VREF 7 DNOM 
+C_C1         VREF 6  16pF  
+C_C2         8 0  4.7pF  
+G_G2         VCC 8 6 VREF 1.9e-3
+Q_Q3         19 9 8 QPNPNOM 
+Q_Q4         11 10 8 QPNPNOM 
+Q_Q5         19 12 14 QNPNNOM 
+Q_Q6         11 13 14 QNPNNOM 
+Q_Q7         15 15 31 QNPNNOM 
+Q_Q8         0 0 31 QPNPNOM 
+R_R3         VREF 6  25Meg  
+R_R8         10 12  30  
+I_I2         14 GND DC 666uA 
+C14 14 gnd 1f Rpar=1T 
+C2 2 gnd 1f Rpar=1T
+I_I3         8 14 DC 130uA  
+I_I5         13 0 DC 1uA  
+I_I4         0 15 DC 65uA 
+C15 15 0 1f Rpar=1T 
+G_G3         14 GND 16 GND 110e-6
+F_F1         VCA_OUT 20 VF_F1 1
+VF_F1        11 20 0V
+R_R10         GND 14  100Meg  
+D_D3         18 GND DNOM 
+I_I6         VCC 17 DC 1u  
+I_I7         VCC 18 DC 1u  
+D_D4         17 GND DNOM 
+R_R5         Ec- 10  250  
+R_R4         Ec+ 9  250  
+G_G1         VCC 6 2 3 33.65e-6
+R_R1         2 VCC  15k  
+R_R2         3 VCC  15k  
+V_V2         6 7 DC .075V  
+Q_Q2         3 1 4 QNHIB 
+I_I1         4 GND DC 7uA  
+V_Vos         1 VREF DC 3mV  
+V_V3         VREF 16 DC 1.35V  
+R_R6         VREF 9  250  
+R_R7         VREF 10  250  
+Q_Q1         2 19 4 QNHIB 
+E_E7         VCA_IN 19 17 18 4.8
+E_E8         20 0 VREF 0 1
+D_D5         1 19 DNOM
+D_D6         19 1 DNOM
+*
+.model DNOM D Is=1e-14 Cjo=.1pF Rs=.1
+.model QNHIB NPN BF=2000
+.model QNPNNOM NPN IS=5e-16 BF=400 VAF=150 RB=10 CJC=1.0pF NF=1.014
+.model QPNPNOM PNP IS=5e-16 BF=400 VAF=150 RB=40 CJC=1.1pF NF=1.014
+.ends
+*
+*4316 RMS Model
+*REV 01 9-25-2015
+*
+*CONNECTIONS:
+*	             input current
+*		     |      timing capacitor
+*		     |      |  output voltage
+*		     |      |  |       reference voltage
+*		     |      |  |       |    ground
+*		     |      |  |       |    |   positive power supply
+*		     |      |  |       |    |   |
+.subckt 4316RMS_THAT RMS_IN CT RMS_OUT VREF GND VCC
+*
+Q_Q6         2 1 RMS_IN QPNPNOM 
+I_I1         8 GND DC 3.2uA  
+G_G1         11 0 12 13 6.154e-6
+R_R1         0 11  22Meg  
+Q_Q8         VCC 20 CT QNPNNOM 4
+I_I5         VCC GND DC 370uA  
+R_R4         12 VCC  162.5k  
+R_R3         13 VCC  162.5k  
+Q_Q9         21 21 4 QNPNNOM 
+Q_Q10         0 0 4 QPNPNOM 
+Q_Q5         14 14 VCC QPNPNOM 4
+I_I2         14 5 DC 7.2uA 
+C14_5 14 5 1f Rpar=1T 
+Q_Q2         12 VREF 8 QNHIB 
+Q_Q1         13 RMS_IN 8 QNHIB 
+I_I4         0 21 DC 3nA 
+C21 21 0 1f Rpar=1T 
+Q_Q3         9 10 RMS_IN QNPNNOM 
+Q_Q7         16 16 18 QPNPNOM 4
+Q_Q4         7 7 18 QNPNNOM 4
+C_C1         0 11  4.5pF  
+F_F3         6 GND VF_F3 1
+VF_F3        2 GND 0V
+F_F2         VCC 2 VF_F2 1
+VF_F2        VCC 9 0V
+E_E1         VCC 10 VCC 11 1
+F_F1         CT GND VF_F1 1
+VF_F1        5 GND 0V
+F_F4         VCC 7 VF_F4 1
+VF_F4        VCC 6 0V
+E_E4         20 15 7 15 1
+E_E5         RMS_OUT 15 CT 15 1
+E_E6         15 0 VREF 0 1
+E_E2         10 1 21 0 1
+E_E3         15 16 VCC 14 1
+*
+.model QNPNNOM NPN IS=5e-16 BF=133 VAF=150 RB=50 CJC=1.0pF NF=1.014
+.model QPNPNOM PNP IS=5e-16 BF=400 VAF=150 RB=10 CJC=1.1pF NF=1.014
+.model QNHIB NPN BF=2000
+*
+.ends
+*
+*4316 REFERENCE GENERATOR MACROMODEL
+*REV 01 9-24-2015
+*
+*CONNECTIONS:
+*    	                Vcc/2 filter
+*		        |    positive supply voltage
+*		        |    |   ground
+*	                |    |   |
+*                       |    |   |   Vref output
+.subckt 4316REFGEN_THAT FILT VCC GND VREF
+R1 VCC FILT 48k
+R2 FILT GND 48k
+X1 FILT VREF VCC GND VREF 4316_REFBUF
+.ends
+*
+*DEVICE=4316_REFBUF,OPAMP,NPN,INT
+* 4316_REFBUF operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 04/09/114 at 15:59
+* Parts is a MicroSim product.
+*
+* connections:      non-inverting input
+*                   | inverting input
+*                   | | positive power supply
+*                   | | | negative power supply
+*                   | | | | output
+*                   | | | | |
+.subckt 4316_REFBUF 1 2 3 4 5
+*
+  c1   11 12 2.6449E-12
+  c2    6  7 30.000E-12
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 88.419E6 -1E3 1E3 88E6 -88E6
+  ga    6  0 11 12 282.74E-6
+  gcm   0  6 10 99 2.8274E-9
+  iee  10  4 dc 15.200E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx1
+  q2   12  1 14 qx2
+  r2    6  9 100.00E3
+  rc1   3 11 3.5368E3
+  rc2   3 12 3.5368E3
+  re1  13 10 87.058
+  re2  14 10 87.058
+  ree  10 99 13.158E6
+  ro1   8  5 36
+  ro2   7 99 36
+  rp    3  4 38.197E3
+  vb    9  0 dc 0
+  vc    3 53 dc 1.8131
+  ve   54  4 dc 1.8131
+  vlim  7  8 dc 0
+  vlp  91  0 dc 36
+  vln   0 92 dc 36
+*
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model qx1 NPN(Is=800.00E-18 Bf=75)
+.model qx2 NPN(Is=831.5365E-18 Bf=75)
+*
+.ends
+

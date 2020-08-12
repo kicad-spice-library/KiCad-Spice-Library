@@ -1,0 +1,202 @@
+* Model from Jim Thompson,
+* http://www.analog-innovations.com/SED/MyLMC555.zip
+* Schematics Subcircuit *
+* Pin 1, 2, 3, 4, 5, 6, 7, 8
+.SUBCKT MyLMC555 VN TRIGGERbar OUTPUT RESETbar CONTROL THRESHOLD DISCHARGE VP 
+R_R2   CONTROL N_1  100K 
+R_R3   N_1 VN  100K 
+R_R1   VP CONTROL  100K 
+X_MN7  N_3 N_2 N_4 VN NHV PARAMS: W=20u M=5
+X_MP6  N_3 N_2 N_5 VP PHV PARAMS: W=100u M=4
+X_MP7  N_3 N_6 VP VP PHV PARAMS: W=100u M=2
+X_MN1  OUTPUT N_7 VN VN NHV PARAMS: W=122u M=10
+X_MN3  N_7 N_8 VN VN NHV PARAMS: W=30.5u M=10
+X_MN4  N_8 N_3 VN VN NHV PARAMS: W=25.4u M=3
+X_MN5  N_3 N_8 VN VN NHV PARAMS: W=5u M=1
+X_MP1  OUTPUT N_7 VP VP PHV PARAMS: W=100u M=17
+X_MP2  N_7 N_8 VP VP PHV PARAMS: W=25u M=17
+X_MP4  N_3 N_8 VP VP PHV PARAMS: W=5u M=3
+X_MP3  N_8 N_3 VP VP PHV PARAMS: W=26.6u M=4
+X_MN2  DISCHARGE N_7 VN VN NHV PARAMS: W=101u M=30
+X_MP5  N_5 N_9 VP VP PHV PARAMS: W=100u M=4
+E_E1   VP N_9 VALUE {((TANH(220*V(THRESHOLD,CONTROL))+1)/2)*(V(VP)-V(VN))}
+E_E2   N_2 VN VALUE {((TANH(220*V(N_1,TRIGGERbar))+1)/2)*(V(VP)-V(VN))}
+R_R4   N_10 VN  1K 
+V_V3   N_10 VN 0.9V
+X_MN6  N_4 N_6 VN VN NHV PARAMS: W=20u M=5
+E_E3   VP N_6 VALUE { ((TANH(22*V(N_10, RESETbar))+1)/2)*(V(VP)-V(VN)) }
+.ENDS  MyLMC555
+
+*
+.model     nt             nmos                   (level = 7 ;intcap=1
++;version = 3.1            
++tnom    = 20             ;templev    = 2                  
++mobmod  = 1              capmod=2              xpart   = 0                  
++;acm     = 2              hdif    = 8e-7           ldif    = 1e-6 
++rs      = 0              rd      = 9000           tox     = 1.35e-8            
++xj      = 1.5e-7         nch     = 1.5e17         k1      = 0.96              
++k2      = -0.15          vth0    = 0.65           u0      = 516.4              
++rsh     = 90             rdsw    = 0              lint    = 0.05e-6
++wint    = 0.12e-6        js = 32.0e-3
++cgdo    = 2.5e-10
++cgso    = 2.5e-10        cgbo    = 3e-10          cj      = 4e-4            
++cjsw    = 7e-10       
++ua      = 1.182e-13      ub      = 1.98e-18           
++uc      = 5.033e-11      k3      = 72.66          k3b     = -34.46             
++w0      = 4.532e-6       dwg     = -7.677e-9      dwb     = 2.646e-8           
++nlx     = 5.747e-8       dvt0    = 2.439          dvt1    = 0.4879             
++dvt2    = -0.2141        wr      = 1              voff    = -0.1276            
++nfactor = 0.6019         cdsc    = -0.01053       cdscd   = -6.499e-4          
++cdscb   = 2.659e-4       cit     = 0              vsat    = 9.664e4            
++a0      = 0.5932         ags     = 0.1981         a1      = 0                  
++a2      = 1              b0      = 6.448e-7       b1      = 1.154e-6           
++eta0    = 0.02354        etab    = -0.01088       dsub    = 0.2295             
++pvag    = 0.2255         pclm    = 1.307          pdiblc1 = -0.2023            
++pdiblc2 = 2.079e-3       pdiblcb = 0              drout   = 1                  
++pscbe1  = 1e9            pscbe2  = 2e-7           keta    = -0.06              
++delta   = 0.01          
++prt     = 0              ute     = -2.023         kt1     = -0.4279            
++kt1l    = 6.188e-8       kt2     = -0.09041       ua1     = 9.475e-12          
++ub1     = -3.811e-19     uc1     = -5.629e-12     at      = 0                  
++nj       = 2.5           xti     = 3              
++pb      = 0.6            mjsw    = 0.33           pbsw     = 0.7                
++mj      = 0.33           cle     = 0.6               
++ckappa  = 0.6            cf      = 0              clc     = 1e-7       )
+*
+*
+.model     pt             pmos                   (level = 7 ;intcap=1
++;version = 3.1            
++tnom    = 20             ;templev    = 2                  
++mobmod  = 1              capmod=2              xpart   = 0                  
++;acm     = 2              hdif    = 8e-7           ldif    = 1e-6
++rs      = 5920           rd      = 3.77e4         tox     = 1.35e-8            
++xj      = 1.5e-7         nch     = 5e16           k1      = 0.50             
++k2      = 1.4e-4         vth0    = -0.90          u0      = 255.5              
++rsh     = 110            rdsw    = 2.042e4        lint    = 0.40e-6       
++wint    = 0.14e-6        js = 6.4e-3          
++cgdo    = 2.5e-10
++cgso    = 2.5e-10        cgbo    = 3e-10          cj      = 7.0e-4            
++cjsw    = 2.7e-10      
++ua      = 3.001e-9       ub      = 6.211e-19          
++uc      = -6.942e-11     k3      = 118            k3b     = -14.66             
++w0      = 5.165e-6       dwg     = -1.283e-8      dwb     = 1.559e-8           
++nlx     = -8.897e-8      dvt0    = 0.1879         dvt1    = 0.6893             
++dvt2    = -2.772         prwg    = -0.3822        prwb    = 0                  
++wr      = 1              voff    = -0.1446        nfactor = 0.9027             
++cdsc    = 3.591e-3       cdscd   = 3.109e-4       cdscb   = 0.01282            
++cit     = 0              vsat    = 9.887e4        a0      = 0.336              
++ags     = 0.2114         a1      = 5.591e-4       a2      = 1.444              
++b0      = 4.286e-6       b1      = 7.021e-6       eta0    = 4.973e-3           
++etab    = -4.008e-3      dsub    = 0.1147         pvag    = 1.516              
++pclm    = 2.608          pdiblc1 = 0.5085         pdiblc2 = 7.607e-4           
++pdiblcb = 0.3184         drout   = 0.788          pscbe1  = 1.151e10           
++pscbe2  = 3.049e-8       keta    = -0.01241       delta   = 0.01 
++trd     = 3.279e-3        
++trs     = 0              prt     = 0              ute     = -1.854             
++kt1     = -0.5225        kt1l    = -2.369e-8      kt2     = -0.07349           
++ua1     = 1.655e-10      ub1     = -4.449e-18     uc1     = 6.875e-11          
++at      = 0              nj       = 2.5           xti     = 3 
++mj      = 0.474          pb      = 0.8            mjsw    = 0.27               
++pbsw     = 0.8            ckappa  = 0.6            cf      = 0                  
++clc     = 1e-7           cle     = 0.6          ) 
+*
+*
+*
+.model     jnx            njf                    ( ;level   = 1
++beta    = 1.740e-5       lambda  = 0              vto     = -21  
++rd      = 10             rs      = 10             ;bex     = -1.3998   
++cgs     = 1e-14          cgd     = 1e-14          pb      = 0.7   )
+*
+.model nnx nmos (         ;version = 3.1           
++level = 7 ;intcap=1
++tnom    = 21             ;templev = 2
++mobmod  = 1                  
++nqsmod  = 0              capmod=2              xpart   = 0                  
++;acm     = 2              
++noimod  = 1              ;hdif    = 8e-7
++tox     = 2.65e-8            
++xj      = 1.5e-7         nch     = 1.5e17         k1      = 0.963          
++k2      = -0.073         vth0    = 0.694          u0      = 627.225          
++rsh     = 90             rdsw    = 138.519        lint    = 4.801e-7        
++wint    = 1.711e-7       js      = 0.03           cgdo    = 3e-10              
++cgso    = 2.5e-10        cgbo    = 3e-10          cj      = 4.02e-4            
++cjsw    = 2.65e-10       
++ua      = 9.083e-10      ub      = 5.344e-18       
++uc      = 3.635e-11      k3      = 20.954         k3b     = -11.617        
++w0      = 2.658e-7       dwg     = -8.5e-9        dwb     = 6.449e-9          
++nlx     = 2.639e-10      dvt0    = 0.366          dvt1    = 0.075          
++dvt2    = -0.049         prwg    = -0.015         prwb    = -0.076         
++wr      = 1              voff    = -0.046         nfactor = 0.73          
++cdsc    = -3.608e-4      cdscd   = -5.632e-5      cdscb   = -1.099e-4       
++cit     = 0              vsat    = 8.863e4        a0      = 0.054          
++ags     = 0.031          a1      = 0              a2      = 1                  
++b0      = 6.103e-7       b1      = 1.489e-7       eta0    = -0.072          
++etab    = -0.187         dsub    = 0.456          pvag    = 1.094          
++pclm    = 0.905          pdiblc1 = 0.015          pdiblc2 = 4.145e-3        
++pdiblcb = 0.08           drout   = 0.083          pscbe1  = 1e9                
++pscbe2  = 2e-7           keta    = -0.019         delta   = 0.01               
++wwl     = -6.117e-20     lwl     = -4.892e-20   
++prt     = 1.852e3         
++ute     = -1.765         kt1     = -0.44          kt1l    = 8.637e-8        
++kt2     = -0.079         ua1     = 1.699e-9       ub1     = -7.213e-18       
++uc1     = -4.672e-11     at      = 5.173e3        n       = 1.83               
++xti     = 3              mj      = 0.41           pb      = 0.8                
++mjsw    = 0.199          pbsw     = 0.8            elm     = 5                  
++cgsl    = 0              cgdl    = 0              ckappa  = 0.6                
++cf      = 0              clc     = 1e-7           cle     = 0.6             )  
+*  
+*                        
+.model     jpx            pjf                    ( ;level   = 1
++beta    = 3.449e-6       lambda  = 0              vto     = -18.6937 
++rd      = 10             rs      = 10             ;bex     = -1.2759   
++cgs     = 1e-14          cgd     = 1e-14          pb      = 0.7   )
+*
+.model ppx pmos (         ;version = 3.1           
++level = 7 ;intcap=1
++tnom    = 21             ;templev = 2                 
++mobmod  = 1                  
++nqsmod  = 0              capmod=2              xpart   = 0                  
++;acm     = 2              
++noimod  = 1              ;hdif    = 8e-7
++tox     = 2.65e-8            
++xj      = 1.5e-7         nch     = 5e16           k1      = 0.944          
++k2      = -5.095e-5      vth0    = -1.562         u0      = 202.436           
++rsh     = 90             rdsw    = 1e3            lint    = 4.209e-7        
++wint    = 1.844e-7       js      = 5e-3           cgdo    = 3e-10              
++cgso    = 2.5e-10        cgbo    = 3e-10          cj      = 4.02e-4            
++cjsw    = 2.65e-10       
++ua      = 3.699e-9       ub      = 1e-21       
++uc      = -5.688e-11     k3      = 27.517         k3b     = -6.989         
++w0      = 4.735e-6       dwg     = -8.738e-9      dwb     = 2.389e-8        
++nlx     = 0              dvt0    = 0.105          dvt1    = 0.027          
++dvt2    = -0.106         prwg    = -2.068e-4      prwb    = -0.433         
++wr      = 1              voff    = -0.049         nfactor = 0.75          
++cdsc    = -1.802e-4      cdscd   = 6.693e-6       cdscb   = -2.478e-5       
++cit     = 0              vsat    = 1.892e5        a0      = 0.558          
++ags     = 0.076          a1      = 0              a2      = 1                  
++b0      = 4.855e-6       b1      = 1.205e-5       eta0    = -0.137         
++etab    = -0.105         dsub    = 1.999          pvag    = 2.177e-3        
++pclm    = 2.379          pdiblc1 = 0.06           pdiblc2 = 1.968e-3        
++pdiblcb = -0.276         drout   = 0.32           pscbe1  = 1e9                
++pscbe2  = 3e-8           keta    = 4.992e-3       delta   = 0.01               
++wwl     = -6.117e-20     lwl     = -4.892e-20   
++prt     = 355.913        
++ute     = -1.472         kt1     = -0.538         kt1l    = -5.849e-8       
++kt2     = -0.067         ua1     = -3.078e-11     ub1     = -4.705e-18       
++uc1     = -9.696e-11     at      = 1.473e5        n       = 1.83               
++mj      = 0.41           pb      = 0.8            mjsw    = 0.199              
++pbsw     = 0.8            elm     = 5              cgsl    = 0                  
++cgdl    = 0              ckappa  = 0.6            cf      = 0                  
++clc     = 1e-7           cle     = 0.6             )                           
+*                                                                                   
+*----------------------------------------------------------------------------*
+.SUBCKT PHV d g s b PARAMS: W=20u M=1
+M1 1 g s b ppx W={W} L=5u M={M}
+J1 d b 1 jpx  {W/20u*M}
+.ENDS PHV
+*
+.SUBCKT NHV d g s b PARAMS: W=20u M=1
+m1 1 g s b nnx W={W} L=5u M={M}
+j1 d b 1 jnx  {W/20u*M}
+.ENDS NHV
+*

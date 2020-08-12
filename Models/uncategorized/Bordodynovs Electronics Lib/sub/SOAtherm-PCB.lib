@@ -1,0 +1,196 @@
+* Copyright (c) 2016 Linear Technology Corporation.  All rights reserved.
+* Author: Dan Eddleman
+*
+*SOAtherm PCB Thermal Model
+***************************************************************
+
+.subckt TopsideCopper Tcenter
+
+*****PARAMETERS THAT SHOULD BE OVERRIDDEN BY PASSED VALUES*******
+.param Area_Contact_mm2=100
+.param Area_PCB_mm2=10000
+.param Copper_Thickness_oz=1
+.param PCB_FR4_Thickness_mm=1.5
+.param lfm=0
+*****************************************************************
+
+.param Enable_Radiation=1
+
+.param TambientRadiation={Tambient}
+.param TambientConvection={Tambient}
+ 
+.param Tambient=85
+.param emissivity=0.8
+.param hconv0=1.1625E-5
+
+R0 N001 Tcenter {r0}
+R1 N002 N001 {r1}
+R2 N003 N002 {r2}
+R3 N004 N003 {r3}
+R4 N005 N004 {r4}
+R5 N006 N005 {r5}
+R6 N007 N006 {r6}
+R7 N008 N007 {r7}
+R8 N009 N008 {r8}
+R9 Tedge N009 {r9}
+C1 N001 0 {c1}
+C2 N002 0 {c2}
+C3 N003 0 {c3}
+C4 N004 0 {c4}
+C5 N005 0 {c5}
+C6 N006 0 {c6}
+C7 N007 0 {c7}
+C8 N008 0 {c8}
+C9 N009 0 {c9}
+C10 Tedge 0 {c10}
+C0 Tcenter 0 {c0}
+V1 TambientConvection 0 {TambientConvection}
+XXtopRad0 TambientRadiation N001 radiation params: Area_mm2=a10 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad1 TambientRadiation N002 radiation params: Area_mm2=a21 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad2 TambientRadiation N003 radiation params: Area_mm2=a32 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad3 TambientRadiation N004 radiation params: Area_mm2=a43 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad4 TambientRadiation N005 radiation params: Area_mm2=a54 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad5 TambientRadiation N006 radiation params: Area_mm2=a65 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad6 TambientRadiation N007 radiation params: Area_mm2=a76 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad7 TambientRadiation N008 radiation params: Area_mm2=a87 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad8 TambientRadiation N009 radiation params: Area_mm2=a98 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopRad9 TambientRadiation Tedge radiation params: Area_mm2=a109 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXtopConv0 TambientConvection N001 convection params: Area_mm2=a10 lfm={lfm} hconv0={hconv0}
+XXtopConv1 TambientConvection N002 convection params: Area_mm2=a21 lfm={lfm} hconv0={hconv0}
+XXtopConv2 TambientConvection N003 convection params: Area_mm2=a32 lfm={lfm} hconv0={hconv0}
+XXtopConv3 TambientConvection N004 convection params: Area_mm2=a43 lfm={lfm} hconv0={hconv0}
+XXtopConv4 TambientConvection N005 convection params: Area_mm2=a54 lfm={lfm} hconv0={hconv0}
+XXtopConv5 TambientConvection N006 convection params: Area_mm2=a65 lfm={lfm} hconv0={hconv0}
+XXtopConv6 TambientConvection N007 convection params: Area_mm2=a76 lfm={lfm} hconv0={hconv0}
+XXtopConv7 TambientConvection N008 convection params: Area_mm2=a87 lfm={lfm} hconv0={hconv0}
+XXtopConv8 TambientConvection N009 convection params: Area_mm2=a98 lfm={lfm} hconv0={hconv0}
+XXtopConv9 TambientConvection Tedge convection params: Area_mm2=a109 lfm={lfm} hconv0={hconv0}
+rFR4_0 N001 N010 {4k*PCB_FR4_Thickness_mm/a10}
+rFR4_1 N002 N011 {4k*PCB_FR4_Thickness_mm/a21}
+rFR4_2 N003 N012 {4k*PCB_FR4_Thickness_mm/a32}
+rFR4_3 N004 N013 {4k*PCB_FR4_Thickness_mm/a43}
+rFR4_4 N005 N014 {4k*PCB_FR4_Thickness_mm/a54}
+rFR4_5 N006 N015 {4k*PCB_FR4_Thickness_mm/a65}
+rFR4_6 N007 N016 {4k*PCB_FR4_Thickness_mm/a76}
+rFR4_7 N008 N017 {4k*PCB_FR4_Thickness_mm/a10}
+rFR4_8 N009 N018 {4k*PCB_FR4_Thickness_mm/a87}
+rFR4_9 Tedge N019 {4k*PCB_FR4_Thickness_mm/a98}
+XXbottomRad0 TambientRadiation N010 radiation params: Area_mm2=a10 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad1 TambientRadiation N011 radiation params: Area_mm2=a21 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad2 TambientRadiation N012 radiation params: Area_mm2=a32 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad3 TambientRadiation N013 radiation params: Area_mm2=a43 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad4 TambientRadiation N014 radiation params: Area_mm2=a54 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad5 TambientRadiation N015 radiation params: Area_mm2=a65 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad6 TambientRadiation N016 radiation params: Area_mm2=a76 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad7 TambientRadiation N017 radiation params: Area_mm2=a87 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad8 TambientRadiation N018 radiation params: Area_mm2=a98 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomRad9 TambientRadiation N019 radiation params: Area_mm2=a109 Enable_Radiation={Enable_Radiation} emissivity={emissivity}
+XXbottomConv0 TambientConvection N010 convection params: Area_mm2=a10 lfm={lfm} hconv0={hconv0}
+XXbottomConv1 TambientConvection N011 convection params: Area_mm2=a21 lfm={lfm} hconv0={hconv0}
+XXbottomConv2 TambientConvection N012 convection params: Area_mm2=a32 lfm={lfm} hconv0={hconv0}
+XXbottomConv3 TambientConvection N013 convection params: Area_mm2=a43 lfm={lfm} hconv0={hconv0}
+XXbottomConv4 TambientConvection N014 convection params: Area_mm2=a54 lfm={lfm} hconv0={hconv0}
+XXbottomConv5 TambientConvection N015 convection params: Area_mm2=a65 lfm={lfm} hconv0={hconv0}
+XXbottomConv6 TambientConvection N016 convection params: Area_mm2=a76 lfm={lfm} hconv0={hconv0}
+XXbottomConv7 TambientConvection N017 convection params: Area_mm2=a87 lfm={lfm} hconv0={hconv0}
+XXbottomConv8 TambientConvection N018 convection params: Area_mm2=a98 lfm={lfm} hconv0={hconv0}
+XXbottomConv9 TambientConvection N019 convection params: Area_mm2=a109 lfm={lfm} hconv0={hconv0}
+V2 TambientRadiation 0 {TambientRadiation}
+C11 N010 0 {c1_FR4}
+C12 N011 0 {c2_FR4}
+C13 N012 0 {c3_FR4}
+C14 N013 0 {c4_FR4}
+C15 N014 0 {c5_FR4}
+C16 N015 0 {c6_FR4}
+C17 N016 0 {c7_FR4}
+C18 N017 0 {c8_FR4}
+C19 N018 0 {c9_FR4}
+C20 N019 0 {c10_FR4}
+
+.param Rcopper_PCB_per_square=1/(0.391*0.035*Copper_Thickness_oz)
+.param Ccopper_PCB_per_mm2=400*8.96E-6*0.035*Copper_Thickness_oz
+.param Cfr4_PCB_per_mm2=600*2E-6*PCB_FR4_Thickness_mm
+ 
+.param radius0=SQRT(Area_Contact_mm2/pi)
+.param radius10=SQRT(Area_PCB_mm2/pi)
+.param radius9=radius0+(radius10-radius0)/2
+.param radius8=radius0+(radius9-radius0)/2
+.param radius7=radius0+(radius8-radius0)/2
+.param radius6=radius0+(radius7-radius0)/2
+.param radius5=radius0+(radius6-radius0)/2
+.param radius4=radius0+(radius5-radius0)/2
+.param radius3=radius0+(radius4-radius0)/2
+.param radius2=radius0+(radius3-radius0)/2
+.param radius1=radius0+(radius2-radius0)/2
+ 
+.func Area(radius_outer,radius_inner) {pi*pow(radius_outer,2)-pi*pow(radius_inner,2)}
+.param a0=Area(radius0,0)
+.param a10=Area(radius1,radius0)
+.param a21=Area(radius2,radius1)
+.param a32=Area(radius3,radius2)
+.param a43=Area(radius4,radius3)
+.param a54=Area(radius5,radius4)
+.param a65=Area(radius6,radius5)
+.param a76=Area(radius7,radius6)
+.param a87=Area(radius8,radius7)
+.param a98=Area(radius9,radius8)
+.param a109=Area(radius10,radius9)
+ 
+.param c0=Ccopper_PCB_per_mm2*a0
+.param c1=Ccopper_PCB_per_mm2*a10
+.param c2=Ccopper_PCB_per_mm2*a21
+.param c3=Ccopper_PCB_per_mm2*a32
+.param c4=Ccopper_PCB_per_mm2*a43
+.param c5=Ccopper_PCB_per_mm2*a54
+.param c6=Ccopper_PCB_per_mm2*a65
+.param c7=Ccopper_PCB_per_mm2*a76
+.param c8=Ccopper_PCB_per_mm2*a87
+.param c9=Ccopper_PCB_per_mm2*a98
+.param c10=Ccopper_PCB_per_mm2*a109
+ 
+.param c1_FR4=Cfr4_PCB_per_mm2*a10
+.param c2_FR4=Cfr4_PCB_per_mm2*a21
+.param c3_FR4=Cfr4_PCB_per_mm2*a32
+.param c4_FR4=Cfr4_PCB_per_mm2*a43
+.param c5_FR4=Cfr4_PCB_per_mm2*a54
+.param c6_FR4=Cfr4_PCB_per_mm2*a65
+.param c7_FR4=Cfr4_PCB_per_mm2*a76
+.param c8_FR4=Cfr4_PCB_per_mm2*a87
+.param c9_FR4=Cfr4_PCB_per_mm2*a98
+.param c10_FR4=Cfr4_PCB_per_mm2*a109
+ 
+.func Squares(radius_outer,radius_inner) {(radius_outer-radius_inner)/(2*pi*(radius_outer+radius_inner)/2)}
+.param r0=Squares(radius1,radius0)*Rcopper_PCB_per_square
+.param r1=Squares(radius2,radius1)*Rcopper_PCB_per_square
+.param r2=Squares(radius3,radius2)*Rcopper_PCB_per_square
+.param r3=Squares(radius4,radius3)*Rcopper_PCB_per_square
+.param r4=Squares(radius5,radius4)*Rcopper_PCB_per_square
+.param r5=Squares(radius6,radius5)*Rcopper_PCB_per_square
+.param r6=Squares(radius7,radius6)*Rcopper_PCB_per_square
+.param r7=Squares(radius8,radius7)*Rcopper_PCB_per_square
+.param r8=Squares(radius9,radius8)*Rcopper_PCB_per_square
+.param r9=Squares(radius10,radius9)*Rcopper_PCB_per_square
+
+.ends TopsideCopper
+
+* block symbol definitions
+
+.subckt radiation Tamb_C Tsurf_C
+B1 Tsurf_C Tamb_C I=IF(Enable_Radiation>0,emissivity*sigma_mm2*{Area_mm2}*(Pow(V(Tsurf_C)+273,4)-Pow(V(Tamb_C)+273,4)),0)
+.param emissivity=0.8
+.param sigma_mm2=5.6703E-14
+.param Enable_Radiation=1
+.ends radiation
+
+
+.subckt convection Tamb_C Tsurf_C
+Rair Tsurf_C Tamb_C {1/(hconv*Area_mm2)}
+.param LFM=0
+.param PCB_FR4_Thickness_mm=1.5
+.param hconv0=1.1625e-5
+.param hconv={hconv0*(1+0.013*POW(LFM,0.8))}
+.ends convection
+
+
+
+

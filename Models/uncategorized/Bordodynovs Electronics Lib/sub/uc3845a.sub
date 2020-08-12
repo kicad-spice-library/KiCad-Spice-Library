@@ -1,0 +1,37 @@
+.subckt uc3845a Com Err Vfb Ref Osc Ifb Out Vcc
+Be1 N004 COM I = V(good)*(limit(5*(V(fb,Com)-V(5,Com)/2),-1m,6m) +limit(V(Err,Com)-6,0,1m)-limit(0.7-V(Err,Com),0,6m)-0.1m) Rpar=25k tripdt=30n
+Bosc Osc hys I = 8.3m*u(V(hys)+V(Osc,Com)-2.6) tripdv=1m tripdt=.2n
+Cosc hys COM 50p Rpar={1.7/8.3m}
+Bdrv 0 drv I = !V(ff1) & V(good) & V(latch) & !V(hys) Rpar=1 tripdt=30n
+Blch 0 latch I = (u(V(Ierr)) & V(latch)) | V(hys) Rpar=1 tripdt=30n
+Clch latch 0 10n
+Bok 0 ok I = u(V(Vcc,Com)-8.5+.6*V(ok)) Rpar=1
+Cok ok 0 100n
+Cdrv drv 0 10n
+BIer 0 Ierr I = limit(V(Err,Com)-1.3,3,0)-3*V(Ifb,Com) Rpar=1
+CIer Ierr 0 300n
+Bi Vcc COM I = V(drv)*I(Vo)+tbl(V(Vcc,Com),0,0,1,.2m)
+Bref Vcc 5 I = limit(50*(5*V(ok)-V(5,Com)),100m,0)
+Rref 5 Ref 280m
+Cref 5 COM 3n Rpar=480
+Re1 fb Vfb 165k
+Di COM Vcc 34V
+Co o COM 30n
+Ce2 N004 COM 5p
+Bo COM o I = V(drv)*V(Vcc,Com)+table(-I(Vo),-1m,-1.3,0,0,.09,.5,.11,1.3,.3,1.4,1,5) Rpar=1 tripdt=30n
+Vo o N003 0
+Ce1 Err fb 1p Rpar=10G
+Ro N003 Out 0.1
+Cp Vcc 5 1p Rser=10k Rpar=1e7
+Bb 0 good I = u(V(Ref,Com)-4.9+.2*V(good)) Rpar=1
+Cb good 0 100n
+Ci Vcc COM 50p
+Dr 5 Vcc V65
+Bff3 0 ff1 I = (!V(hys)& V(ff1)) | (buf(V(hys))&V(ff2)) tripdv=.1 tripdt=5n
+Bff4 0 ff2 I = (!V(hys)&!V(ff1)) | (buf(V(hys))&V(ff2)) tripdv=.1 tripdt=5n
+Cff3 ff1 0 10n IC=1 Rpar=1
+Cff4 ff2 0 10n Rpar=1
+Re2 N004 Err 10k
+.model 34V d(Ron=.5 Vfwd=.5 Vrev=34 Rrev=22)
+.model V65 d(vfwd=0.65)
+.ends uc3845a

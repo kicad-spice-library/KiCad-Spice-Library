@@ -1,0 +1,87 @@
+.SUBCKT TPL7407L IN1 IN2 IN3 IN4 IN5 IN6 IN7 GND COM OUT7 OUT6 OUT5 OUT4 OUT3 OUT2 OUT1 
+*  
+M_M1         OUT1 NOBUF1 GND GND MDEV           
+R_R14         IN7 NOS7  50k
+D_D4         GND NOS2 DZ_30V 
+R_R11         GND IN6  300k 
+C_C6         GND IN3  4p 
+R_R4         IN2 NOS2  50k
+R_R1         GND IN1  300k
+C_C10         GND IN5  4p 
+C_C13         GND NOS7  1p
+D_D12         GND NOS6 DZ_30V 
+R_R12         IN6 NOS6  50k
+X_U2         NOS1 NOBUF1 OUT_LDO GND BUF_INT 
+C_C3         GND NOS2  1p
+R_R2         IN1 NOS1  50k
+M_M3         OUT3 NOBUF3 GND GND MDEV           
+D_D7         OUT4 COM D_LKB 
+M_M5         OUT5 NOBUF5 GND GND MDEV           
+C_C11         GND NOS6  1p
+C_C1         GND NOS1  1p
+R_R5         GND IN3  300k
+R_R9         GND IN5  300k
+D_D13         OUT7 COM D_LKB 
+D_D6         GND NOS3 DZ_30V 
+D_D1         GND NOS1 DZ_30V 
+X_U5         NOS4 NOBUF4 OUT_LDO GND BUF_INT 
+R_R6         IN3 NOS3  50k
+D_D10         GND NOS5 DZ_30V 
+R_R10         IN5 NOS5  50k
+D_D3         OUT2 COM D_LKB 
+X_U1         COM OUT_LDO GND LDO_INT 
+C_C2         GND IN1  4p
+C_C5         GND NOS3  1p
+C_C8         GND IN4  4p
+D_D11         OUT6 COM D_LKB 
+C_C9         GND NOS5  1p
+X_U8         NOS7 NOBUF7 OUT_LDO GND BUF_INT 
+D_D2         OUT1 COM D_LKB 
+X_U3         NOS2 NOBUF2 OUT_LDO GND BUF_INT 
+M_M4         OUT4 NOBUF4 GND GND MDEV           
+C_C14         GND IN7  4p
+X_U7         NOS6 NOBUF6 OUT_LDO GND BUF_INT 
+C_C4         GND IN2  4p
+R_R7         GND IN4  300k
+D_D5         OUT3 COM D_LKB 
+M_M7         OUT7 NOBUF7 GND GND MDEV           
+D_D9         OUT5 COM D_LKB 
+C_C12         GND IN6  4p
+D_D8         GND NOS4 DZ_30V 
+R_R8         IN4 NOS4  50k
+M_M2         OUT2 NOBUF2 GND GND MDEV           
+R_R13         GND IN7  300k
+X_U4         NOS3 NOBUF3 OUT_LDO GND BUF_INT 
+M_M6         OUT6 NOBUF6 GND GND MDEV           
+C_C7         GND NOS4  1p
+X_U6         NOS5 NOBUF5 OUT_LDO GND BUF_INT 
+D_D14         GND NOS7 DZ_30V 
+R_R3         GND IN2  300k 
+.model MDEV vdmos kp=0.1 rd=0.01 rs=0.45 VTO=0.5 Cgso=10p  Cjo=10p Rg=100
+.model DZ_30V d is=1e-014 cjo=10p rs=0.1 bv=30
+.model D_LKB d is=0.1e-017 cjo=10p rs=1.1 bv=42
+.ENDS TPL7407L
+
+.SUBCKT LDO_INT NCOM NOUT NGND
+.PARAM VMAX = 42
+.PARAM VMIN = 8.5
+.PARAM VOUT = 8.5
+.PARAM GAIN = 1e3
+bE1 0 N1  i=MAX(MIN(GAIN*(V(NCOM,NGND)-VMIN),1),0) Rpar=1 Cpar=1n
+bE2 0 N2  i=MAX(MIN(GAIN*(V(NCOM,NGND)-VMAX),1),0) Rpar=1 Cpar=1n
+bE3 NGND  NOUT i =VOUT*V(N1,N2) Rpar=1 Cpar=1n
+.ENDS
+
+.SUBCKT BUF_INT NIN NOUT NCOM NGND
+.PARAM VTHR = 0.9
+.PARAM VOUT_MIN = 0
+.PARAM GAIN = 1000
+.PARAM RD2 = 1.2k
+.PARAM CD2 = 400p
+bE1 NGND  Nd2 i = MAX(MIN(GAIN*(V(NIN,NGND)-VTHR),2*VTHR),V(NGND))/RD2 Rpar={Rd2} Cpar={Cd2}
+*R1 N1 ND2 {RD2}
+*C1 ND2 NGND {CD2}
+bE2  NGND  NOUT i=MAX(MIN(GAIN*(V(ND2,NGND)-VTHR),V(NCOM,NGND)),VOUT_MIN) Rpar=1 Cpar=1n
+.ENDS
+
+

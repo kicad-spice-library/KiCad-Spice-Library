@@ -1,0 +1,460 @@
+.subckt mmbt2369avalanche C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.param  bVce=18 bVcb=65  bVeb=4. bVec=3.5  nMe=1.2 BF=93.95  BR=0.8479 RE=1 RC=1.6 RB=11
+.param IS=1.0302f  ISE=5.58397E-13 ISC=5.87046E-10 NE=1.75  NC=1.74 VAF=94  var=2.33
+.param tf=200p tr=69.4n mje=0.2839  mjc=0.53 cje=3.94p cjc=3p kFt=3
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=2n Le=2n Lb=2n  a1=0.5 ; a1<=1.
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.ends mmbt2369avalanche
+
+.subckt kt342a_avalanche C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=10n Le=10n Lb=10n  a1=0.5 ; a1<=1.
+.param i0=.1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.param   bVcb=113  bVce=30 bVeb=8   bVec=5.5  nMe=3. BF=390  BR=30 RE=1m  RC=1 RB=200
+.param IS=60f  ISE=380f ISC=1n  NE=1.42  NC=2 VAF=107  var=20
+.param tf=307p tr=78n mje=0.33  mjc=0.4 cje=14p cjc=5p kFt=2
+.ends kt342a_avalanche
+
+.subckt kt342a_avalanche_L C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=10n Le=10n Lb=10n  a1=0.5 ; a1<=1.
+.param i0=.1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.param   bVcb=113  bVce=30 bVeb=7   bVec= 5  nMe=1.2 BF=390  BR=2 RE=1m  RC=1 RB=200
+.param IS=6f  ISE=38f ISC=24f  NE=1.42  NC=1.34 VAF=107  var=10
+.param tf=307p tr=78n mje=0.33  mjc=0.4 cje=14p cjc=5p kFt=2
+.ends kt342a_avalanche_L
+
+
+.subckt kt315g_avalanche  C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=10n Le=10n Lb=10n  a1=1 ; a1<=1.
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.param  bVce=40  bVcb=100 bVeb=7 bVec=6   nMe=2.  BF=100 BR=10 RE=1 RC=5 RB=100
+.param is=100f ise=20p  isc=600p ne=1.8 nc=2   vaf=60 var=10
+.param tf=400p tr=2.50n mje=0.4  mjc=0.3 cje=20p cjc=15p kFt=5
+.ends kt315g_avalanche
+
+.subckt kt315i_avalanche  C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb}  Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={1m*tf} tripdv=10m
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb} ibv=10u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=10n Le=10n Lb=10n  a1=0.99 ; a1<=1.
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.param  bVce=70  bVcb=150 bVeb=7 bVec=6  BF=150 BR=10 RE=1 RC=5 RB=100  nMe=2. 
+.param is=100f ise=20p  isc=600p ne=1.8 nc=2   vaf=100 var=10
+.param tf=400p tr=2.50n mje=0.4  mjc=0.3 cje=20p cjc=15p kFt=5
+.ends kt315i_avalanche
+
+.subckt kt315g_avalanche_L  C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=10n Le=10n Lb=10n  a1=1 ; a1<=1.
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.param  bVce=40  bVcb=100 bVeb=7 bVec=6   nMe=1.2  BF=100 BR=2 RE=1 RC=5 RB=100
+.param is=100f ise=20p  isc=600p ne=1.8 nc=2   vaf=60 var=20
+.param tf=400p tr=2.50n mje=0.4  mjc=0.3 cje=20p cjc=15p kFt=5
+.ends kt315g_avalanche_L
+
+
+.subckt 2n2369a_avalanche C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+.param  bVce=18 bVcb=65  bVeb=4. bVec=3.5  nMe=1.2 BF=93.95  BR=0.8479 RE=1 RC=1.6 RB=11
+.param IS=1.0302f  ISE=5.58397E-13 ISC=5.87046E-10 NE=1.75  NC=1.74 VAF=94  var=2.33
+.param tf=200p tr=69.4n mje=0.2839  mjc=0.53 cje=3.94p cjc=3p kFt=3
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+.param Lc=7n Le=7n Lb=7n  a1=0.5 ; a1<=1.
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.ends 2n2369a_avalanche
+
+.subckt 2n3904_avalanche C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+
+.param IS=4.1799f BF=215 VAF=79.874  ISE=4.2698f NE=2 BR=10 VAR=40
++ ISC=2.5346p NC=1.4324  RB=14.6 RC=.53 re=0.1 CJE=9.5p MJE=.33333 CJC=7.7p
++ MJC=.33333 TF=480p  TR=129n 
++ bVce=50 bVcb=110  bVeb=8.5 bVec=6 kFt=5 nMe=2.5
+.param Lc=5n Le=5n Lb=5n  a1=0.7 ; a1<=1.
+*
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.ends 2n23904_avalanche
+
+.subckt 2n3904_avalanche_L C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=1000Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=1u NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+
+.param IS=4.1799f BF=215 VAF=79.874  ISE=4.2698f NE=2 BR=1 VAR=10
++ ISC=2.5346p NC=1.4324  RB=14.6 RC=.53 re=0.1 CJE=9.5p MJE=.33333 CJC=7.7p
++ MJC=.33333 TF=480p  TR=129n 
++ bVce=50 bVcb=110  bVeb=10. bVec=6 kFt=5 nMe=1.2
+.param Lc=5n Le=5n Lb=5n  a1=0.7 ; a1<=1.
+*
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.ends 2n23904_avalanche_L
+
+
+.subckt 2n2222_avalanche C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=100Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=10n NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+
+.param 
++ is=60f nf=1 bf=410 vaf=114  ise=14.8p ne=2 br=2 nr=1 var=24  re=0.3 rb=10 rc=0.1
++  cje=27.6p vje=0.8 mje=0.5 cjc=15p vjc=0.7 mjc=0.3 tf=0.5n tr=80n isc=1n nc=1.8 var=20
+
++ bVce=50 bVcb=90  bVeb=8.5 bVec=6 kFt=5 nMe=2
+.param Lc=5n Le=5n Lb=5n  a1=0.7 ; a1<=1.
+*
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.ends 2n2222_avalanche
+
+.subckt 2n2222_avalanche_L C B E
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=uramp(i(vac))*fa(br,v(ev,bv),var)*2/(1-(limit(v(ev,bv),0,Vebmax)/Vebmax)**nMe) rpar=100Meg tripdt={10m*tr}
+L1 C cv {Lc} Rser={Rc} Rpar={Rc*100}
+L2 ev E {Le} Rser={Re} Rpar={Re*100}
+L3 B bv {Lb} Rser={Rb} Rpar={Rb*100}
+C2 x 0 {tr} Rser=0
+B3 cv bv I=max(a1*v(x),v(y))
+B4 y 0 v=(uramp(i(vae)*2)*fc(bf,v(cv,bv),bVcb)+(0.1*is+isc))/MM(v(cv,bv),bVcb,nMc)-(0.1*is+isc) tripdt={100m*tf} tripdv=.1
+R1 x y 1
+.model De0 d is={is/2/af}
+.model De d is={is/2/af} tt={2*tf/kFt}
+.model Der d is={ise} cjo={cje} m={mje} n={ne}  NBV=1  IBV=.1u  BV={bveb}
+.model Dc0 d is={is/2/ar}
+.model Dc d is={is/2/ar} tt={2*tr}
+.model Dcr d is={isc} cjo={cjc} m={mjc} n={nc}; bv={bVcb+1} ibv=10n NBV=1
+.param af=bf/(bf+1)  ar=br/(br+1)
+
+.param 
++ is=60f nf=1 bf=410 vaf=114  ise=14.8p ne=2 br=2 nr=1 var=24  re=0.3 rb=10 rc=0.1
++  cje=27.6p vje=0.8 mje=0.5 cjc=15p vjc=0.7 mjc=0.3 tf=0.5n tr=80n isc=1n nc=1.8 var=20
+
++ bVce=50 bVcb=90  bVeb=8.5 bVec=6 kFt=5 nMe=1.2
+.param Lc=5n Le=5n Lb=5n  a1=0.7 ; a1<=1.
+*
+.func fa1(x)  {x/(1+x)}
+.func fb(x,y,z)  {(1+x*(1+y/z))}
+
+.param i0=1m ft=25.8m vx=ft*log(1+i0/is*af)
+.param ix=ise*(exp(vx/(ft*ne))-1)
+.param Bfx=(1/(1-af+ix/i0)-1)*(1+bVce/Vaf)
+.param  Vebmax=max((bVec-0.6)*fb(br,bVec-0.6,var)**(1/nMe),bVeb)
+.param nMc=log(1+Bfx)/log(bVcb/bVce)
+.func fa(x,y,z)  {1-1/(1+x*(1+y/z))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.func fc(x,y,z)  {Fa1(x*(1+y/z))}
+.ends 2n2222_avalanche_L

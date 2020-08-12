@@ -1,0 +1,32 @@
+* SGR20N40L FAIRCHILD NIGBT SPICE Model Parameters
+* ================================================
+* High Input ImPedance
+* High Peak Current Capability (150A)
+* Eagy Gate Drive
+* ================================================
+* Connections: 1(Collector) 2(Gate) 3(Emitter)
+* ------------------------------------------------
+.MODEL SGR20N40L NIGBT
++ TAU=4.6000E-7
++ KP=18.350
++ AREA=9.0533E-6
++ AGD=2.2633E-6
++ WB=8.2000E-5
++ VT=0.7005
++ KF=0.7305
++ CGS=4.5463E-8
++ COXD=1.5056E-7
++ VTD=-5
+* =================================================
+
+* SGN20N40L.sub by analogspiceman, rev. 1 August 7th 2004
+* - - - - - - - - C G E
+.subckt SGN20N40L 1 2 3
+M1 4 2 3 Qi
+Q1 3 4 1 Qo
+.model Qi vdmos(Rg=3 Rs=1.6 Vto=1.2 Kp=22 Is=0 ; static effects
++ Cgdmax=8n Cgdmin=10p Cgs=4n Cjo=1n) ; dynamic effects
+.model Qo pnp(Is=5u Nf=2.7 Bf=150 Rb=0.5 Ikf=200 ; static effects
++ Trb1=18m Eg=.75 Xtb=-.25 ; temperature effects
++ Cjc=1n Cje=0.3n tf=5n) ; dynamic effects
+.ends SGN20N40L

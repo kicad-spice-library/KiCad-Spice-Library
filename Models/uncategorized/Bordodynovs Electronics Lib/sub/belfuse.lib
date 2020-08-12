@@ -1,0 +1,134 @@
+* FUSE MODEL for some fuses from Belfuse
+* Helmut Sennewald, 12.06.2005
+*
+* Thermal resistance model including I^2*T behaviour 
+*
+* The idea behind this model
+* 
+* Measured current:   Imeas,       
+* Adjust it to improve the fit:   I = f(Imeas)      
+* Actual power dissipation of the fuse:   P=I^2*R(T) 
+* Steady state temperature depends on 
+* power and thermal resistance:   T=Tamb+P*Rth    
+* Resistance depends on temperature:   R(T)=R0*(1+alpha*T)   
+* Dynamic behaviour:  current prop. T loads a RC combination. 
+* Break(blow) condition:  If T>Tlimit -> break
+*
+* Hint, the ambient temperature T_AMB can be passed to
+* the model, e.g. T_AMB=25.
+*
+* Very high over current,  I > 10*In
+* C_th1 mainly models I^2*t 
+* T_break = I^2T / (I_actual*I_actual)
+*
+* Medium Over current, 2*In...10*In
+* C_th2 
+*
+* Long time heating, 1.0*In...2*In
+* C_th3
+*
+*
+* How to get the parameters?
+* 
+* 1. Set "Default"-table in Bcorr element!
+*    I=Table(I(BIabs),  0, 0.0,  1e4, 1.0e4)
+* 2. Set TAU2=1m, TAU3=100
+*
+* 3. Set I=20*Inom, 
+*    Adjust TAU1 to achieve T_break={I^2*T}/(20*20)
+* 4. Adjust TAU2 for I=5*Inom
+* 5. Adjust TAU3 for I=2*Inom
+*    It may be necessary to vary the ratio between R_TH2 and R_TH3
+*    The sum of the ratios must be always 1.0
+* 6. Goto 3 and check/correct until you see no more improvement
+*
+* 7. Finally fit the table of the "Bcorr" element
+
+* C1Q, 1A
+.subckt belfuse_c1q_1a A B
+V2 N001 N002 0
+BdTemp 0 dTemp I=I(BIcorr)*I(BIcorr)*R0*(1+ALPHA*V(dTemp))
+R_th1 dTemp N004 {R_TH1}
+C_th1 dTemp 0 {C_TH1}
+S1 N002 B N003 0 SW1
+R_th2 N004 N005 {R_TH2}
+C_th2 N004 0 {C_TH2}
+A1 set_break set_nobreak 0 0 0 N003 0 0 SRFLOP td=0.1u
+C_th3 N005 0 {C_TH3}
+BIcorr 0 Icorr I=Table(I(BIabs), 0, 0, 1,1.0, 1.5,1.2, 1.8,1.5, 2, 2, 3,3.2, 5,4.7, 1e4, 1.0e4)
+R1 Icorr 0 1
+BIabs 0 Iabs I=abs(I(V2))
+R2 Iabs 0 1
+BIabs1 0 set_break I=IF(V(dTemp)>{dT_MAX}, 1, 0)
+R3 set_break 0 1
+I2 0 set_nobreak PULSE(0 1 1u 1u 1u 2u 1e6)
+R5 set_nobreak 0 1
+R_th3 N005 N006 {R_TH3}
+B1 A N001 V=I(V2)*{R0}*(1+{ALPHA}*V(dTemp))
+V1 N006 0 {T_AMB}
+.MODEL SW1 SW(Ron=1u Roff=1G Vt=0.5 Vh=-0.4)
+.param I_NOM=1    ; current rating of the fuse
+.param R0=0.119    ; R_fuse at no current
+.param R100=0.17  ; R_fuse at 100% current
+.param R_BREAK=0.17 ; the same as R100%
+.param TAU1=70u
+.param TAU2=15m
+.param TAU3=100
+.param dT_MAX=1000        ; Melting temperature
+.param T_AMB=0                ; Ambient temperature
+.param I_BREAK=I_NOM*1.001
+.param P_BREAK=R_BREAK*I_BREAK*I_BREAK
+.param R_TH=(dT_MAX/P_BREAK)
+.param ALPHA=(R_BREAK-R0)/R0/dT_MAX
+.param R_TH1=R_TH*0.02
+.param R_TH2=R_TH*0.58
+.param R_TH3=R_TH*0.4
+.param C_TH1=TAU1/R_TH1
+.param C_TH2=TAU2/R_TH2
+.param C_TH3=TAU3/R_TH3
+.ends belfuse_c1q_1a
+
+
+* SSQ, 1A 
+.subckt belfuse_ssq_1a A B
+V2 N001 N002 0
+BdTemp 0 dTemp I=I(BIcorr)*I(BIcorr)*R0*(1+ALPHA*V(dTemp))
+R_th1 dTemp N004 {R_TH1}
+C_th1 dTemp 0 {C_TH1}
+S1 N002 B N003 0 SW1
+R_th2 N004 N005 {R_TH2}
+C_th2 N004 0 {C_TH2}
+A1 set_break set_nobreak 0 0 0 N003 0 0 SRFLOP td=0.1u
+C_th3 N005 0 {C_TH3}
+BIcorr 0 Icorr I=Table(I(BIabs), 0, 0.0, 2,2.0, 3,3.3, 5.5,5.50, 1e4, 1.0e4)
+R1 Icorr 0 1
+BIabs 0 Iabs I=abs(I(V2))
+R2 Iabs 0 1
+BIabs1 0 set_break I=IF(V(dTemp)>{dT_MAX}, 1, 0)
+R3 set_break 0 1
+I2 0 set_nobreak PULSE(0 1 1u 1u 1u 2u 1e6)
+R5 set_nobreak 0 1
+R_th3 N005 N006 {R_TH3}
+B1 A N001 V=I(V2)*{R0}*(1+{ALPHA}*V(dTemp))
+V1 N006 0 {T_AMB}
+.MODEL SW1 SW(Ron=1u Roff=1G Vt=0.5 Vh=-0.4)
+.param I_NOM=1    ; current rating of the fuse
+.param R0=0.11     ; R_fuse at no current
+.param R100=0.17  ; R_fuse at 100% current
+.param R_BREAK=0.17 ; the same as R100%
+.param TAU1=2.3m
+.param TAU2=63m
+.param TAU3=20
+.param dT_MAX=1000        ; Melting temperature
+.param T_AMB=0                ; Ambient temperature
+.param I_BREAK=I_NOM*1.001
+.param P_BREAK=R_BREAK*I_BREAK*I_BREAK
+.param R_TH=(dT_MAX/P_BREAK)
+.param ALPHA=(R_BREAK-R0)/R0/dT_MAX
+.param R_TH1=R_TH*0.02
+.param R_TH2=R_TH*0.3
+.param R_TH3=R_TH*0.68
+.param C_TH1=TAU1/R_TH1
+.param C_TH2=TAU2/R_TH2
+.param C_TH3=TAU3/R_TH3
+.ends belfuse_ssq_1a

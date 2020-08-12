@@ -1,0 +1,51 @@
+* Current Mode PWM Average Model
+* Auto-Toggeling between Continuous and Discontinuous Conduction Mode.
+*
+* Parameters :
+* - Lsw : Inductor value
+* - Fsw : Switching Frequency
+* - DCMax : Maximum Duty Cycle
+* - DCMin : Minimum Duty Cycle
+* - RISense : Current Sensor Equivalent Resistor value
+* - Slope : Slope compensation
+*
+.Subckt PWM-CM nA nC nP nVCtrl nD Params: Lsw=100uH Fsw=100kHz DCMax=0.95 DCMin=0.05 RISense=1 Slope=100m
+*               Active Pin
+*                  Common Pin
+*                     Passive Pin
+*                         Control Voltage Input
+*                               Duty Cycle Output
+*
+* Input Resistor on Control Pin
+RVCtrl nVCtrl 0 1Meg
+*
+* ON Duty Cycle
+EDuty nD 0 Value={V(nDPC)*V(nCx,nP)/(V(nA,nP)-V(nCx,nP)+1u)} ; EDuty
+* OFF Duty Cycle
+EDutyP nDP 0 Value={2*{Lsw}*{Fsw}*I(VSense)/(V(nDC)*V(nA,nCx)+1u)-V(nDC)} ; EDutyP
+* On Duty Cycle Clamp
+EDClamp nDC 0 Value={Limit(V(nD),{DCMin},{DCMax})} ; EDClamp
+* OFF Duty Cycle Clamp
+EDPClamp nDPC 0 Value={Limit(V(nDP),1-{DCMax},1-V(nDC))} ; EDPClamp
+*
+* Serie Resistor on Active Pin
+Rin nA nP 1G
+* Active Pin Current Generator
+GA nA nP Value={V(nDC)/(V(nDC)+V(nDPC)+1u)*I(VSense)} ; GA
+*
+* Serie Resistor on Commom Pin
+Rout nC nCz 1m
+* Current Sensor on Common Pin
+VSense nCx nCz 0V
+* Commom Pin Main Current Generator
+GC nP nCx Value={V(nVCtrl)/{RISense}} ; GC
+* Current Mode FeedBack Generator
+GMu nCx nP Value={{Slope}*V(nDC)/{RISense}/{Fsw}+V(nCx,nP)/{Lsw}*V(nDPC)*(1-(V(nDC)+V(nDPC))/2)/{Fsw}} ; GMu
+*
+* Continuous or Discontinuous Conduction Mode Selection
+EMode nMode 0 Value={If(2*{Lsw}*{Fsw}*I(VSense)/(V(nDC)*V(nA,nCx)+1u)<1,0,1)} ; EMode
+*
+* Variable Resonant Capacitor for Continuous Conduction Mode
+Cccm nCx nP Q=(If(V(nMode),4/({Lsw}*(2*pi*{Fsw})**2),1p))*x ; Cccm
+*
+.EndS PWM-CM

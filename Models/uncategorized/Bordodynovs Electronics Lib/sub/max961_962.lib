@@ -1,0 +1,440 @@
+* MAX961 FAMILY MACROMODELS
+* -------------------------
+* FEATURES:
+* Ultra-Fast, 7nS Propagation Delay (5mV overdrive)
+* Rail-to-Rail Input Voltage Range 
+* Low Power: 8.5mA Per Comparator (+5V)
+* Single 3V/5V Supply Operation
+* Available in 8-Pin uMAX/SO (Single MAX961)
+*              8-Pin uMAX/SO (Dual MAX962)
+*
+* PART NUMBER    DESCRIPTION
+* ___________    ___________________________________
+* MAX961         Single, int HYST, 7nS delay, latch        
+* MAX962         Dual, int HYST, 7nS delay
+* 
+*
+*   ////////////// MAX961 MACROMODEL //////////////////
+*
+*   ====>      REFER TO MAX961 DATA SHEET       <====
+*
+* connections:   +IN
+*                | -IN
+*                | | V+ 
+*                | | | V-
+*                | | | |       
+*                | | | | LE 
+*                | | | | |   GND  QOUT QOUTCOMP
+*                | | | | |   |    |    |
+.subckt max961   1 2 3 4 352 300  433  483
+*
+* NOTE1: QOUTCOMP IS ACTUALLY COMPLIMENTED QOUT. 
+* NOTE2: INCLUDE 
+*            .OPTION ITL4=50 RELTOL=0.001 
+*                                        TO ENHANCE CONVERGENCE. 
+***
+  f101    3  9 v1 1
+  Iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  Q2    8  21  7 qin
+  Q3    9  8  399 qmo
+  Q4    8  8  399 qmi
+  VMB 400 4 0V
+  VPB 399 3 0V
+***================
+VIN1 2 23 .95
+VIN2 1 25 .95
+***
+IPSUP 3 0 8.5ma
+INSUP 0 4 8.5ma
+***
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=3.33) 
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=3.3E-9) 
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  4  3  9  2
+  v1   10 11 dc 0
+  q5    5 11  44 qoc
+  vshift 44 4 0v
+  *clamps output, Q5 collector load.
+  R55 3 5 1meg
+  DP5 5 3 DP
+  DP6 4 5 DP
+***============= Hysterisis section
+GH 0 51 32 101 1E-6
+ECM 101 0 3 4 0.5
+RCM 101 0 10MEG
+****==============COMPARATOR POINT FOR CREATING LOGIC OUTPUT, +-1, hi,lo. 
+RH1 3 51 1E11
+RH2 4 51 1E11
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+***=================
+IHYST 55 0 -1E-9
+*GENERATES 1MV OF HYST. TO MIMIC SMOOTH TRANSITION. 
+RREF 55 0 1E6
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS. 
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*================
+*EH 3 98 3 4 0.5
+VVIRTUAL 98 0 0V
+G12 98 32 5 0 7.04E-3
+R15 98 32 140
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=181 Cjc=1E-15 Tf=42e-12 Tr=2E-9)
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*** **********************************  
+*** ********************************** 
+VCONNECT 302 32 0V
+* AND1
+* 302, 312 is the input, output is 333. 
+RN1 302 303 1MEG             
+DA1 305 330 DP
+DA2 300 305 DP
+RA2 304 305 1MEG
+EA1 304 300 POLY(1) 302 303 0 10 
+***
+RN10 312 303 1MEG ;node 303 is 1.4volts.            
+DA10 315 330 DP
+DA12A 300 315 DP
+RA12 314 315 1MEG 
+EA11 314 300 POLY(1) 312 303 0 -10
+*-10 COMPLIMENTS LE, SO LOW IS TRANSPARENT    
+***
+GAMULT 300 331 POLY(2) 305 300 315 300  0 0 0 0 1E-6 
+RAMULT 331 300 1G
+DA5 331 330 DP
+DA6 300 331 DP 
+EOA 332 300 331 300 1
+ROA 332 333 100
+***
+* AND2
+* 352, 362 is the input, output is 383. 
+RN12 352 303 1MEG             
+ILE 352 300 -20UA
+DA12 355 380 DP
+DA22 300 355 DP
+RA22 354 355 1MEG
+EA12 354 300 POLY(1) 352 303 0 -10
+*-10 COMPLIMENTS LE, SO LOW IS TRANSPARENT 
+***
+RN102 362 303 1MEG ;node 303 is 1.4volts.            
+DA102 365 380 DP
+DA122 300 365 DP
+RA122 364 365 1MEG 
+EA112 364 300 POLY(1) 362 303 0 10 
+***
+GAMULT2 300 381 POLY(2) 355 300 365 300  0 0 0 0 1E-6 
+RAMULT2 381 300 1G
+DA52 381 330 DP
+DA62 300 381 DP 
+EOA2 382 300 381 300 1
+ROA2 382 383 100
+***
+* OR1
+* 402,412 are the inputs, output is 433 
+RO1 402 403 1MEG             
+VO14 403 300 1.4V 
+VO1 430 300 5V
+DO1 405 430 DP
+DO2 300 405 DP
+RO2 404 405 1MEG ; WAS 1MEG
+EO1 404 300 POLY(1) 402 403 0 10 
+***
+RO10 412 403 1MEG ;node 403 is 1.4volts.            
+DO10 415 430 DP
+DO12 300 415 DP
+RO12O 414 415 300 ; WAS 1MEG
+EO11 414 300 POLY(1) 412 403 0 10 
+***
+GOADD1 300 431 POLY(2) 405 300 415 300 0 1E-6 1E-6 
+ROADD 431 300 1G
+DO5 431 3 DP
+DO6 300 431 DP 
+EOO 432 300 431 300 1
+ROO 432 433 125 ; OUTPUT IS 433
+* OR2 
+* 452,462 are the inputs, output is 488 
+RO12 452 403 1MEG             
+VO12 480 300 5V
+DO12O 455 480 DP
+DO22 300 455 DP
+RO22 454 455 1MEG ; WAS 1MEG
+EO12 454 300 POLY(1) 452 403 0 10 
+***
+RO102 462 403 1MEG ;node 403 is 1.4volts.            
+DO102 465 480 DP
+DO122 300 465 DP
+RO122 464 465 300 ; WAS 1MEG
+EO112 464 300 POLY(1) 462 403 0 10 
+***
+GOADD12 300 481 POLY(2) 455 300 465 300 0 1E-6 1E-6 
+ROADD2 481 300 1G
+DO52 481 3 DP
+*** was 3 was 480
+DO62 300 481 DP 
+EOO2 482 300 481 300 1
+ROO2 482 483 125 ; OUTPUT IS 483
+* INVERTER1
+*INPUT 602, OUTPUT  605
+RIN1 602 303 1MEG             
+DIA1 605 630 DP
+DIA2 300 605 DP
+vi1 630 300 5v
+RIA2 604 605 10k
+EIA1 604 300 POLY(1) 602 303 0 -10
+* INVERTER2
+*INPUT 612, OUTPUT 615
+RIN12 612 303 1MEG             
+DIA12 615 640 DP
+DIA22 300 615 DP
+vi12 640 300 5v
+RIA22 614 615 10k
+EIA12 614 300 POLY(1) 612 303 0 -10
+* INVERTER3
+*INPUT 622, OUTPUT 625
+RIN13 622 303 1MEG             
+DIA13 625 650 DP
+DIA23 300 625 DP
+vi13 650 300 5v
+RIA23 624 625 10k
+EIA13 624 300 POLY(1) 622 303 0 -10
+*** ********BIASING****************
+*** *******************************
+VA14 303 300 1.4V 
+VA1 330 300 5V
+*VDGND 300 0 0V ;           **** Will be brought out in subckt. 
+***
+* CONNECTIONS *********************
+VSH1 605 362 0V
+VSH2 312 352 0V
+VSH3 333 402 0V
+VSH4 383 462 0V
+VSH5 433 622 0V
+VSH6 625 452 0V
+VSH7 483 612 0V
+VSH8 615 412 0V
+VSH9 302 602 0V
+.ENDS
+*   ////////////// MAX962 MACROMODEL ////////////////// 
+*
+*   ====>      REFER TO MAX962 DATA SHEET       <==== 
+*
+* connections:   +IN
+*                | -IN
+*                | | V+ 
+*                | | | V-
+*                | | | |       
+*                | | | |  
+*                | | | |    GND  QOUT QOUTCOMP 
+*                | | | |    |    |    | 
+.subckt max962   1 2 3 4    300  433  483
+*
+* NOTE1: QOUTCOMP IS ACTUALLY COMPLIMENTED QOUT. 
+* NOTE2: INCLUDE 
+*            .OPTION ITL4=50 RELTOL=0.001 
+*                                        TO ENHANCE CONVERGENCE. 
+***
+vshortle 352 300 0v
+  f101    3  9 v1 1
+  Iee100   7  400 dc 100.0E-6
+  q101    9  20  7 qin
+  Q2    8  21  7 qin
+  Q3    9  8  399 qmo
+  Q4    8  8  399 qmi
+  VMB 400 4 0V
+  VPB 399 3 0V
+***================
+VIN1 2 23 .95
+VIN2 1 25 .95
+***
+IPSUP 3 0 11ma
+INSUP 0 4 11ma
+***
+EHYST 23 20 POLY(1) 0 60 0 1
+VS2 21 25 0V
+.model qin NPN(Is=800.0E-18 Bf=3.33) 
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=3.3E-9) 
+.MODEL PMOS PMOS 
+*(VTO=-1.7 KP=1.8E-3)
+  e1   10  4  3  9  2
+  v1   10 11 dc 0
+  q5    5 11  44 qoc
+  vshift 44 4 0v
+  *clamps output, Q5 collector load.
+  R55 3 5 1meg
+  DP5 5 3 DP
+  DP6 4 5 DP
+***============= Hysterisis section
+GH 0 51 32 101 1E-6
+ECM 101 0 3 4 0.5
+RCM 101 0 10MEG
+****==============COMPARATOR POINT FOR CREATING LOGIC OUTPUT, +-1, hi,lo. 
+RH1 3 51 1E11
+RH2 4 51 1E11
+DP1 51 52 DP
+DP2 53 51 DP
+VP1 52 0 1V
+VP2 53 0 -1V
+***=================
+IHYST 55 0 -1E-9
+*GENERATES 1MV OF HYST. TO MIMIC SMOOTH TRANSITION. 
+RREF 55 0 1E6
+*LOGIC OUTPUT, NODE 60 ALTERS THE POLARITY, SO 55 SHOULD ALWAYS BE POS. 
+GMULT 60 0 POLY(2) 51 0 55 0 0 0  0 0 1E-6
+RMULT 60 0 1E6
+*================
+*EH 3 98 3 4 0.5
+VVIRTUAL 98 0 0V
+G12 98 32 5 0 7.04E-3
+R15 98 32 140
+*========================
+.model qoc NPN(Is=800.0E-18 Bf=181 Cjc=1E-15 Tf=42e-12 Tr=2E-9)
+.MODEL DX  D(Is=800.0E-18)
+.MODEL DP D(N=0.001)
+*=======================
+***== MODELS USED ==***
+.MODEL DX2 D(IS=1E-15 n=0.001) 
+*** **********************************  
+*** ********************************** 
+VCONNECT 302 32 0V
+* AND1
+* 302, 312 is the input, output is 333. 
+RN1 302 303 1MEG             
+DA1 305 330 DP
+DA2 300 305 DP
+RA2 304 305 1MEG
+EA1 304 300 POLY(1) 302 303 0 10 
+***
+RN10 312 303 1MEG ;node 303 is 1.4volts.            
+DA10 315 330 DP
+DA12A 300 315 DP
+RA12 314 315 1MEG 
+EA11 314 300 POLY(1) 312 303 0 -10
+*-10 COMPLIMENTS LE, SO LOW IS TRANSPARENT    
+***
+GAMULT 300 331 POLY(2) 305 300 315 300  0 0 0 0 1E-6 
+RAMULT 331 300 1G
+DA5 331 330 DP
+DA6 300 331 DP 
+EOA 332 300 331 300 1
+ROA 332 333 100
+***
+* AND2
+* 352, 362 is the input, output is 383. 
+RN12 352 303 1MEG             
+ILE 352 300 -20UA
+DA12 355 380 DP
+DA22 300 355 DP
+RA22 354 355 1MEG
+EA12 354 300 POLY(1) 352 303 0 -10
+*-10 COMPLIMENTS LE, SO LOW IS TRANSPARENT 
+***
+RN102 362 303 1MEG ;node 303 is 1.4volts.            
+DA102 365 380 DP
+DA122 300 365 DP
+RA122 364 365 1MEG 
+EA112 364 300 POLY(1) 362 303 0 10 
+***
+GAMULT2 300 381 POLY(2) 355 300 365 300  0 0 0 0 1E-6 
+RAMULT2 381 300 1G
+DA52 381 330 DP
+DA62 300 381 DP 
+EOA2 382 300 381 300 1
+ROA2 382 383 100
+***
+* OR1
+* 402,412 are the inputs, output is 433 
+RO1 402 403 1MEG             
+VO14 403 300 1.4V 
+VO1 430 300 5V
+DO1 405 430 DP
+DO2 300 405 DP
+RO2 404 405 1MEG ; WAS 1MEG
+EO1 404 300 POLY(1) 402 403 0 10 
+***
+RO10 412 403 1MEG ;node 403 is 1.4volts.            
+DO10 415 430 DP
+DO12 300 415 DP
+RO12O 414 415 300 ; WAS 1MEG
+EO11 414 300 POLY(1) 412 403 0 10 
+***
+GOADD1 300 431 POLY(2) 405 300 415 300 0 1E-6 1E-6 
+ROADD 431 300 1G
+DO5 431 3 DP
+DO6 300 431 DP 
+EOO 432 300 431 300 1
+ROO 432 433 125 ; OUTPUT IS 433
+* OR2 
+* 452,462 are the inputs, output is 488 
+RO12 452 403 1MEG             
+VO12 480 300 5V
+DO12O 455 480 DP
+DO22 300 455 DP
+RO22 454 455 1MEG ; WAS 1MEG
+EO12 454 300 POLY(1) 452 403 0 10 
+***
+RO102 462 403 1MEG ;node 403 is 1.4volts.            
+DO102 465 480 DP
+DO122 300 465 DP
+RO122 464 465 300 ; WAS 1MEG
+EO112 464 300 POLY(1) 462 403 0 10 
+***
+GOADD12 300 481 POLY(2) 455 300 465 300 0 1E-6 1E-6 
+ROADD2 481 300 1G
+DO52 481 3 DP
+DO62 300 481 DP
+EOO2 482 300 481 300 1
+ROO2 482 483 125 ; OUTPUT IS 483
+* INVERTER1
+*INPUT 602, OUTPUT  605
+RIN1 602 303 1MEG             
+DIA1 605 630 DP
+DIA2 300 605 DP
+vi1 630 300 5v
+RIA2 604 605 10k
+EIA1 604 300 POLY(1) 602 303 0 -10
+* INVERTER2
+*INPUT 612, OUTPUT 615
+RIN12 612 303 1MEG             
+DIA12 615 640 DP
+DIA22 300 615 DP
+vi12 640 300 5v
+RIA22 614 615 10k
+EIA12 614 300 POLY(1) 612 303 0 -10
+* INVERTER3
+*INPUT 622, OUTPUT 625
+RIN13 622 303 1MEG             
+DIA13 625 650 DP
+DIA23 300 625 DP
+vi13 650 300 5v
+RIA23 624 625 10k
+EIA13 624 300 POLY(1) 622 303 0 -10
+*** ********BIASING****************
+*** *******************************
+VA14 303 300 1.4V 
+VA1 330 300 5V
+*VDGND 300 0 0V ;           **** Will be brought out in subckt. 
+***
+* CONNECTIONS *********************
+VSH1 605 362 0V
+VSH2 312 352 0V
+VSH3 333 402 0V
+VSH4 383 462 0V
+VSH5 433 622 0V
+VSH6 625 452 0V
+VSH7 483 612 0V
+VSH8 615 412 0V
+VSH9 302 602 0V
+.ENDS

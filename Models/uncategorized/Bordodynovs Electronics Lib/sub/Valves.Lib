@@ -1,0 +1,3231 @@
+Librería de válvulas termoiónicas. Reunida corregida y aumentada por Robertugo_2005.
+* El prefijo NH, denota un subcircuito sin filamento modelado (No Heater)
+* El sufijo DM, identifica a los modelos de Duncan Munro;el sufijo RY hace lo propio para los
+* modelos de Charles RYDEL, en éstos el sufijo TR, significa que el subcircuito modela a una
+* válvula tetrodo o pentodo como triodo, también están los modelos de Drew Bolce, con el sufijo
+* DB y para finalizar los  modelos derivados de  Norman Koren, Eric Vannerson
+* y otros; todos reunidos gracias a Internet.
+*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	
+* Connections: Plate
+*              | Cathode
+*              | |
+.SUBCKT 5AR4   P K
+GP  P  K  VALUE={3.96E-3*(PWR(V(P,K),1.5)+PWRS(V(P,K),1.5))/2}
+.ENDS 5AR4
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5AR4RY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=3.924m
+.ENDS
+.SUBCKT GZ34RY 1 2 3
+X1 1 2 3 5AR4RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+* 5U4GB pspice rectifier model
+*
+* The following parameters are not modelled:
+*
+*   (1) Filament and filament warmup time
+*   (2) Reverse voltage breakdown
+*   (3) Saturation
+*   (4) Interelectrode capacitance
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* 5U4GB maximum ratings:
+*
+*   PIV     1550V
+*   Max in  550V RMS
+*   Ia pk   1000mA repetitive  (4600mA transient)
+*
+*
+*             .----- Anode
+*             | .--- Cathode
+*             | |
+.SUBCKT 5U4GB A K
+GP  A  K  VALUE={7.55E-4*(PWR(V(A,K),1.5)+PWRS(V(A,K),1.5))/2}
+.ENDS 5U4GB
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5U4GBRY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=.755m
+.ENDS
+*	*	*	*	*	*	*	*	*
+* 5V3A pspice rectifier model
+*
+* The following parameters are not modelled:
+*
+*   (1) Filament and filament warmup time
+*   (2) Reverse voltage breakdown
+*   (3) Saturation
+*   (4) Interelectrode capacitance
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* 5V3A maximum ratings:
+*
+*   PIV     1550V
+*   Max in  550V RMS
+*   Iout    550mA DC output current
+*   Ia pk   1400mA repetitive  (6600mA transient)
+*
+*
+*            .----- Anode
+*            | .--- Cathode
+*            | |
+.SUBCKT 5V3A A K
+GP  A  K  VALUE={1.287E-3*(PWR(V(A,K),1.5)+PWRS(V(A,K),1.5))/2}
+.ENDS 5V3A
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5V3ARY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=1.287m
+.ENDS
+*	*	*	*	*	*	*	*	*
+* 5V4GA pspice rectifier model
+*
+* The following parameters are not modelled:
+*
+*   (1) Filament and filament warmup time
+*   (2) Reverse voltage breakdown
+*   (3) Saturation
+*   (4) Interelectrode capacitance
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* 5V4GA maximum ratings:
+*
+*   PIV     1400V
+*   Ia pk   525mA repetitive  (3500mA transient)
+*
+*
+*             .----- Anode
+*             | .--- Cathode
+*             | |
+.SUBCKT 5V4GA A K
+GP  A  K  VALUE={1.4E-3*(PWR(V(A,K),1.5)+PWRS(V(A,K),1.5))/2}
+.ENDS 5V4GA
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5V4RY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=1.76m
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT GZ32RY 1 2 3
+* A1 A2 C
+X1 1 2 3 5V4RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+* 5Y3GT pspice rectifier model
+*
+* The following parameters are not modelled:
+*
+*   (1) Filament and filament warmup time
+*   (2) Reverse voltage breakdown
+*   (3) Saturation
+*   (4) Interelectrode capacitance
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* 5Y3GT maximum ratings:
+*
+*   PIV     1400V
+*   Max in  500V RMS
+*   Iout    42mA DC output current (per anode)
+*   Ia pk   400mA repetitive  (2200mA transient)
+*
+*
+*             .----- Anode
+*             | .--- Cathode
+*             | |
+.SUBCKT 5Y3GT A K
+GP  A  K  VALUE={2.69E-4*(PWR(V(A,K),1.5)+PWRS(V(A,K),1.5))/2}
+.ENDS 5Y3GT
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5Y3GTRY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=.269m
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6AL5RY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=.18m
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6D22S A K
+GP  A  K  VALUE={6.769E-3*(PWR(V(A,K),1.2646)+PWRS(V(A,K),1.2646))/2}
+CP  A  K  12p
+.ENDS 6D22S
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6V4_RY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=.88m
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT EZ80RY 1 2 3
+* A1 A2 C
+X1 1 2 3 VALVE1 G=.88m
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+RF3 A G 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT END_DIODES_&_START_TRIODES ;*	*	*	*	*	*	*	*	*
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 76
+* MODEL:   NH76
+* NOTES:   No heater/grid model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH76 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 10 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.015 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1.8 )+URAMP(V(GG))* 0 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.001 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 12.8 )
+BEP  EP  0 V=(V(EM)** 1.6 )*V(RP)* 0.000008 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000025 
+CGK  G   K  0.0000000000035 
+CGA  G   A  0.0000000000028 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: SV572-3
+* MODEL:   SV5723
+* NOTES:   No heater model (virtual cathode)
+*	*	*	*	*	*	*	*	*
+.SUBCKT NHSV5723 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 0.0018 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.0012 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 0.5 )+URAMP(V(GG))* 0 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.0002 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 3.79928 )
+BEP  EP  0 V=(V(EM)** 1.4 )*V(RP)* 0.0000425 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0.0000349 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.000000000001 
+CGK  G   K  0.000000000004 
+CGA  G   A  0.000000000004 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* SV572-3 
+* This model was created by Eric Vannerson, using data from the Svetlana SV572-3 data sheet. 
+* Questions or comments may be sent to ericvann@earthlink.net. The model is offered without 
+* warranty of any kind; use at your own risk. 
+* 
+* Revision history: 
+* April 6, 1999 -- Created 
+* April 25, 1999 -- Revised to correct error in grid current (was too large by factor of 4) 
+* 
+*Connections: Plate 
+*		| Grid 
+*		| | Filament1 
+*		| | | Filament2 
+*		| | | | 
+.SUBCKT SV572_3 1 2 3 4 
+.PARAM 
++ CGF=7P CGP=8P CPF=1P 
+Rf1 3 10 {0.7875} 
+Rf2 4 10 {0.7875} 
+Ebivarpoly bivarpoly 0 POLY(2) (2,10) (1,10) 0 0.00326165 0.000927247 -6.61478e-07 
++ -1.90336e-06 -4.66966e-07 -8.92592e-09 1.0011e-09 2.53544e-09 4.42151e-10 
+Evptrans vptrans 0 POLY(1) (2,10) 381.879 -1.83142 0.0067966 
+Eipt ipt 0 POLY(1) (2,10) 0.310621 0.00150527 4.9858e-06 -5.73161e-09 -2.42485e-11 4.90307e-15 1.38818e-16 
+Ederiv deriv 0 POLY(1) (2,10) 0.000764037 -1.11871e-07 -3.29874e-09 1.4428e-12 6.12738e-14 
+Eunsat unsat 0 VALUE = {IF(V(1,10)<0,0, 
++ IF(V(bivarpoly)<0,0, 
++ IF(V(1,10)<V(vptrans),V(bivarpoly)**1.5, 
++ (V(ipt)+V(deriv)*(V(1,10)-V(vptrans)))**1.5)))} 
+Eipint ipint 0 VALUE = {IF(V(2,10)<0,V(unsat), 
++ (1.0-exp(-1.65*V(1,10)/V(2,10)))*V(unsat))} 
+Gip 1 10 ipint 0 1.0 
+Rp 1 10 100MEG 
+Eigint igint 0 VALUE = {IF(V(2,10)<0,0,V(2,10)*(6.90943e-05*V(2,10)+2.28861e-06*V(2,10)**.5*V(1,10))/ 
++ (0.0122676+0.0273447*V(2,10)+0.0261406*V(1,10)))} 
+Gig 2 10 igint 0 0.25 
+Rg 2 10 100MEG 
+Cgf 2 10 {Cgf} 
+Cgp 1 2 {Cgp} 
+Cpf 1 10 {Cpf} 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: SV572-10
+* MODEL:   SV57210
+* NOTES:   This model is not accurate for Vg >= +60V
+*	*	*	*	*	*	*	*	*
+.SUBCKT NHSV57210 A G K
+XV1 A G K TRIODENH
++PARAMS: LIP= 1.4 LIF= 0.0008 RAF= 0.001 RAS= 1 CDO= 0 
++ RAP=-0.00117 ERP= 1.38 
++ MU0= 10 MUR= 0.0001 EMC= 0.0000272 
++ GCO=-0.2 GCF= 0.0003 
++ CGA=5.00E-12 CGK=6.40E-12 CAK=1.00E-12
+.ENDS
+.SUBCKT SV57210 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.4 )* 0.0008 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.001 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1 )+URAMP(V(GG))*-0.00117 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.0001 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 10 )
+BEP  EP  0 V=(V(EM)** 1.38 )*V(RP)* 0.0000272 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)--0.2 )**1.5)* 0.0003 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.000000000001 
+CGK  G   K  0.0000000000064 
+CGA  G   A  0.000000000005 
+.ENDS
+
+*	*	*	*	*	*	*	*	*
+* This model was created by Eric Vannerson, using data from the Svetlana SV572-10 data sheet. 
+* Questions or comments may be sent to ericvann@earthlink.net. The model is offered without 
+* warranty of any kind; use at your own risk. 
+* 
+* Revision history: 
+* April 11, 1999 -- Created 
+* April 25, 1999 -- Revised to correct error in grid current (was too large by factor of 4) 
+* 
+* 		 Connections: Plate 
+* 		 | Grid 
+* 		 | | Filament1 
+* 		 | | | Filament2 
+* 		 | | | | 
+.SUBCKT SV572_10 1 2 3 4 
+.PARAM 
++ CGF=7P CGP=8P CPF=1P 
+Rf1 3 10 {0.7875} 
+Rf2 4 10 {0.7875} 
+Ebivarpoly bivarpoly 0 POLY(2) (2,10) (1,10) 0 0.00530932 0.000621768 -1.94875e-05 
++ -1.366e-06 -1.44984e-07 7.08133e-08 2.61984e-08 9.06238e-10 2.07195e-11 
+Eipint ipint 0 VALUE = {IF(V(1,10)<0,0, 
++ IF(V(bivarpoly)<0,0, 
++ V(bivarpoly)**1.5*(1.0-exp(-12 
++ *(V(1,10)/(V(2,10)+50))**2))))} 
+Gip 1 10 ipint 0 1.0 
+Rp 1 10 100MEG 
+Eigint igint 0 VALUE = {IF(V(2,10)<0,0,(0.00460839*V(2,10)+-1.31543e-06 
++ *V(2,10)**2)**1.5+(0.00212098*V(2,10)+1.53563e-05*V(2,10)**2)*exp(-0.0124132*V(1,10)))} 
+Gig 2 10 igint 0 0.25 
+Rg 2 10 100MEG 
+Cgf 2 10 {Cgf} 
+Cgp 1 2 {Cgp} 
+Cpf 1 10 {Cpf} 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* SV572B 
+*
+* This model was created April 15, 1999 by Eric Vannerson, using data from 
+* the Svetlana SV572B data sheet (with reference to the RCA 811-A data sheet 
+* dated May 20, 1949). Questions or comments may be sent to ericvann@earthlink.net. 
+* The model is offered without warranty of any kind; use at your own risk. 
+* 
+* Connections: Plate 
+*		| Grid 
+*		| | Filament1 
+*		| | | Filament2 
+*		| | | | 
+.SUBCKT SV572B 1 2 3 4 
+.PARAM 
++ CGF=5.9P CGP=6.0P CPF=0.8P 
+Rf1 3 10 {6.3/8} 
+Rf2 10 4 {6.3/8} 
+Epoly poly 0 POLY(2) (2,10) (1,10) 
++ -0.00398173 
++ 0.00182285 
++ 1.21148e-05 
++ -2.81751e-05 
++ 1.93947e-06 
++ 0.0 
++ 3.73694e-06 
++ -4.77805e-08 
++ 0.0 
++ 0.0 
++ -5.6177e-08 
++ 9.9102e-10 
++ 0.0 
++ 0.0 
++ 0.0 
++ 2.58459e-10 
++ -5.58546e-12 
++ 0.0 
++ 0.0 
++ 0.0 
++ 0.0 
+Eipint ipint 0 VALUE = {IF(V(1,10)<0,0,IF(V(2,10)<0,V(poly),V(poly)*(1-exp(-1.2*(V(1,10)/V(2,10))**2))))} 
+Gip 1 10 VALUE = {IF(V(ipint)>0,V(ipint),0)} 
+Rp 1 10 100MEG 
+Gig 2 10 VALUE = {IF(V(2,10)<0,0,V(2,10)*(0.000745364+(0.00223981+-4.81686e-06*V(2,10))*exp(-V(1,10)/(0.762427*V(2,10)+92.4444))))} 
+Cgf 2 10 {CGF} 
+Cgp 2 1 {CGP} 
+Cpf 1 10 {CPF} 
+Rg 2 10 100MEG 
+.ENDS 
+*	*	*	*	*	*	*	*	*
+*. 807, data from chf, #13
+*- caps values of fantasy!
+.subckt 807 a g k
+bout  ap k   i = ((uramp((v(ap, k)/8.9966)+v(g, k)))**1.5)/714.69
+cgk   g  k   7e-12
+cga   g  a   0.2e-12
+cak   a  k   6e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6913RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.524m MU=15.2 B=49.7 Vc=9.93
+X2 2 3 Igrid ALPHA=.04m BETA=.1U
+C1 1 2 1.6p
+C2 2 3 2.5p
+C3 1 3 .45p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+*. 845, data from chf, #19 pag 45->
+*- power amp, filament 10v/3.25a, plate 100w
+.subckt 845 a g k
+bout  ap k   i = ((uramp((v(ap, k)/5.2631)+v(g, k)))**1.5)/3586.23
+cgk   g  k   6e-12
+cga   g  a   13.5e-12
+cak   a  k   6.5e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 845_RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO2 G=.315m MU=5.02 B=690 Vc=-2.1 k=10
+X2 2 3 Igrid ALPHA=.8m BETA=6U
+C1 1 2 14.5p
+C2 2 3 6.0p
+C3 1 3 4.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+*. 6bx7 model based on euvm type 311
+.subckt 6bx7 a g k
+bout  ap k   i = ((uramp((v(ap, k)/9.88822)+v(g, k)))**1.5)/417.777
+cgk   g  k   4.8e-12
+cga   g  a   4.2e-12
+cak   a  k   1.2e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6BX7GT_RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=1.82m MU=9.42 B=48.8 Vc=-1.4
+X2 2 3 Igrid ALPHA=.4m BETA=3U
+C1 1 2 4.2p
+C2 2 3 5p
+C3 1 3 3.4p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT ABC1RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.639m MU=22.44 B=44.3 Vc=-1.14
+X2 2 3 Igrid ALPHA=.04m BETA=.1u
+C1 1 2 3p
+C2 2 3 3p
+C3 1 3 3p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT AD1RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.975m MU=3.96 B=172.7 Vc=1.35
+X2 2 3 Igrid ALPHA=.3m BETA=3U
+C1 1 2 17p
+C2 2 3 9p
+C3 1 3 5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT DA30RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.591m MU=3.1 B=365 Vc=8.52
+X2 2 3 Igrid ALPHA=.3m BETA=3U
+C1 1 2 13p
+C2 2 3 10p
+C3 1 3 6.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT ED8000RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO3 G=2.88m MU=3.3 B=21.2 C=.523 Vc=-4.33
+X2 2 3 Igrid ALPHA=.4m BETA=3U
+C1 1 2 2.6p
+C2 2 3 4p
+C3 1 3 .7p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT GL211RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO2 G=.467m MU=11.79 B=1587 Vc=-48.4 k=7.3
+X2 2 3 Igrid ALPHA=.8m BETA=6u
+C1 1 2 14.5p
+C2 2 3 6.0p
+C3 1 3 5.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT VT4CRY 1 2 3
+* ANODE G CAT
+X1 1 2 3 GL211RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GL211 Triode PSpice Model                      9/96, Rev. 1.0  (fp)
+* This model is valid for the following tubes:
+* GL211, VT4C;
+* at the following conditions:
+*  Plate voltage  :  0..2200V (grid negative),
+*                   100..700V (grid positive) (1)
+*  Grid voltage   : +50..-180V (2)
+*  Cathode current: 0..200mA
+*
+* (1) Plate current decrease and grid current increase at low plate
+*     voltage are not modeled.
+* (2) Since no data was available, grid current modeling is only 
+*     approximate. Adjust Gg if required.
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT GL211  P G K
+E1  2  0  VALUE={V(P,K)+12.11*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={9.39E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Gg  G  K  VALUE={358E-6*(PWR(V(G,K),1.5)+PWRS(V(G,K),1.5))/2}
+Cgk G  K  6.0P
+Cgp G  P  14.5P
+Cpk P  K  5.5P
+.ENDS GL211
+.SUBCKT VT4 1 2 3
+* ANODE G CAT
+X1 1 2 3 GL211
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT PX4RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.822m MU=4.7 B=174 Vc=-13.3
+X2 2 3 Igrid ALPHA=.2m BETA=3U
+C1 1 2 13.7p
+C2 2 3 7.7p
+C3 1 3 3.9p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT PX25RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=1.2m MU=7.9 B=205 Vc=-19.8
+X2 2 3 Igrid ALPHA=.2m BETA=3U
+C1 1 2 14.8p
+C2 2 3 11.4p
+C3 1 3 8.3p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT R120RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=1.5m MU=4.97 B=162 Vc=5.6
+X2 2 3 Igrid ALPHA=.2m BETA=3U
+C1 1 2 18.5p
+C2 2 3 10p
+C3 1 3 6p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT V45RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.34m MU=3.3 B=309 Vc=-3
+X2 2 3 Igrid ALPHA=.2m BETA=3U
+C1 1 2 7p
+C2 2 3 4p
+C3 1 3 3p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6BQ5TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=2.78m MU=17.1 B=41.3 Vc=-2.6
+X2 2 3 Igrid ALPHA=.05m BETA=1U
+C1 1 2 15p
+C2 2 3 11p
+C3 1 3 6.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT EL34TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=2.36m MU=8.7 B=42.3 Vc=1.6
+X2 2 3 Igrid ALPHA=.2m BETA=2U
+C1 1 2 20p
+C2 2 3 15.5p
+C3 1 3 7.2p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6CA7TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 EL34TR_RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5881TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.91m MU=7 B=84 Vc=2
+X2 2 3 Igrid ALPHA=.2m BETA=2U
+C1 1 2 15p
+C2 2 3 11p
+C3 1 3 9.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6550TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=1.57m MU=6.6 B=121 Vc=10.5
+X2 2 3 Igrid ALPHA=.3m BETA=2U
+C1 1 2 7.9p
+C2 2 3 9.3p
+C3 1 3 17p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6L6WGTR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.91m MU=7 B=84 Vc=2
+X2 2 3 Igrid ALPHA=.2m BETA=2U
+C1 1 2 15p
+C2 2 3 11p
+C3 1 3 9.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT KT66TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.784m MU=7 B=171.6 Vc=30.42
+X2 2 3 Igrid ALPHA=.2m BETA=2U
+C1 1 2 12p
+C2 2 3 14.5p
+C3 1 3 10p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT KT88TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=1.57m MU=6.6 B=121 Vc=10.5
+X2 2 3 Igrid ALPHA=.3m BETA=2U
+C1 1 2 7.9p
+C2 2 3 9.3p
+C3 1 3 17p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6V6GTR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.64m MU=7.0 B=71 Vc=11
+X2 2 3 Igrid ALPHA=.1m BETA=1U
+C1 1 2 13p
+C2 2 3 9p
+C3 1 3 7.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 7581TR_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.897m MU=6.7 B=67.4 Vc=6.2
+X2 2 3 Igrid ALPHA=.1m BETA=2U
+C1 1 2 15p
+C2 2 3 10p
+C3 1 3 6.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+*. 6bl7, model based on euvm type 311
+.subckt 6bl7 a g k
+bout  ap k   i = ((uramp((v(ap, k)/14.8353)+v(g, k)))**1.5)/397.744
+cgk   g  k   4.8e-12
+cga   g  a   4.2e-12
+cak   a  k   1.2e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes:
+* 12BH7A;6BL7
+* at the following conditions:
+*  Plate voltage  : 0..600V
+*  Grid voltage   : 0..-35V
+*  Cathode current: 0..50mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 12BH7A P G K
+E1  2  0  VALUE={V(P,K)+16.64*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={22.34E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  3.2P
+Cgp G  P  2.6P
+Cpk P  K  0.5P
+.ENDS 12BH7A
+.SUBCKT 6BL7A 1 2 3
+X1 1 2 3 12BH7A
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12BH7A_RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO3 G=1.25m MU=16.6 B=19.6 C=1.38 Vc=21.27
+X2 2 3 Igrid ALPHA=.04m BETA=.1U
+C1 1 2 2.6p
+C2 2 3 3.2p
+C3 1 3 .5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+* This model is valid for the following tubes:
+* 6SL7GT, ECC35, 5691;
+* at the following conditions:
+*  Plate voltage  : 0..450V
+*  Grid voltage   : 0..-6V
+*  Cathode current: 0..8mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 6SL7GT P G K
+E1  2  0  VALUE={V(P,K)+65.5*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={1.54E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  3.2P
+Cgp G  P  2.8P
+Cpk P  K  3.5P
+.ENDS 6SL7GT
+.SUBCKT ECC35 1 2 3
+X1 1 2 3 6SL7GT
+.ENDS
+.SUBCKT 5691 1 2 3
+X1 1 2 3 6SL7GT
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6SL7GT_RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.62m MU=62.7 B=7500 Vc=21.3
+X2 2 3 Igrid ALPHA=.04m BETA=.1U
+C1 1 2 3.8p
+C2 2 3 2.8p
+C3 1 3 3.2p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+.SUBCKT 5691Ry 1 2 3
+X1 1 2 3 6SL7GT_RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+*. 6sl7, model based on rca data sheets
+.subckt 6sl7 a g k
+bout  ap k   i = ((uramp((v(ap, k)/67.0734)+v(g, k)))**1.5)/945.925
+cgk   g  k   3.4e-12
+cga   g  a   2.8e-12
+cak   a  k   3.8e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+* GENERIC: 6SN7GTB&6cg7&6FQ7
+* MODEL:   6SN7GTB
+* NOTES:   Has heater model (one half of heater)
+*	*	*	*	*	*	*	*	*
+*. 6sn7, my model, based on rca data sheets
+.subckt 6sn7rca a g k
+bout  ap k   i = ((uramp((v(ap, k)/20.7392)+v(g, k)))**1.5)/972.563
+cgk   g  k   2.2e-12
+cga   g  a   4e-12
+cak   a  k   0.7e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6SN7GTBDM A G K H1 H2
+XV1 A G K H1 H2 TRIODE
++PARAMS: RCO= 3.2 RHO= 21 HTV= 6.3 HWU= 10.5 
++ LIP= 1 LIF= 0.0037 RAF= 0.02 RAS= 2 CDO= 0 
++ RAP= 0.002 ERP= 1.4 
++ MU0= 19.2642 MUR= 0.006167 EMC= 0.0000189 
++ GCO= 0 GCF= 0.000213 
++ CGA=3.90E-12 CGK=2.40E-12 CAK=7.00E-13
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 6SN7GTB
+* MODEL:   NH6SN7GTB
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH6SN7GTB A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 0.0037 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.02 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 2 )+URAMP(V(GG))* 0.002 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.006167 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 19.2642 )
+BEP  EP  0 V=(V(EM)** 1.4 )*V(RP)* 0.0000189 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0.000213 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000007 
+CGK  G   K  0.0000000000024 
+CGA  G   A  0.0000000000039 
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6SN7GTB_RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.835m MU=19 B=44.7 Vc=9.3
+X2 2 3 Igrid ALPHA=.05m BETA=.1U
+C1 1 2 2.8p
+C2 2 3 3.4p
+C3 1 3 3.2p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6CG7RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.687m MU=16.8 B=34 Vc=7
+X2 2 3 Igrid ALPHA=1m BETA=5U
+C1 1 2 3.6p
+C2 2 3 2.4p
+C3 1 3 .34p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+* This model is valid for the following tubes:
+* 6SN7GTB, ECC32, 6FQ7/6CG7, 5692;
+* at the following conditions:
+*  Plate voltage  : 0..450V
+*  Grid voltage   : 0..-18V
+*  Cathode current: 0..30mA
+*
+*
+*  Connections: Plate
+*               | Grid
+*               | | Cathode
+*               | | |
+.SUBCKT 6SN7GTB P G K
+E1  2  0  VALUE={V(P,K)+20.43*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={10.89E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  2.4P
+Cgp G  P  4.0P
+Cpk P  K  0.7P
+.ENDS
+*	*	*	*	*	*	*	*	*
+ Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 6SN7   1 2 3
+X1 1 2 3 Triodo MU=22.004 EX=1.2128 KG1=1213.7 KP=203.06 KVB=355.09
++	RGI=2000 CCG=2.4P CGP=3.9P CCP=0.7P
+.Ends
+.SUBCKT 6N8S  1 2 3 ; P G C (Triode) 24-Oct-2001
+X1 1 2 3 Triodo MU= 22.87  EX= 1.516  KG1=2209.8  KP=167.87 
++	KVB=155.4  VCT=0.70  RGI=1000 CCG=3P  CGP=1.2P CCP=4P
+.ENDS
+.Subckt 6SN7GT 1 2 3
+X1 1 2 3 6N8S
+.Ends
+.Subckt ECC32 1 2 3
+X1 1 2 3 6N8S
+.Ends
+.SUBCKT 5842   1 2 3
+X1 1 2 3 Triodo MU=42.4 EX=2.21 KG1=393 KP=629 KVB=446
++	RGI=2000 CCG=9.0P CGP=1.8P CCP=0.48P
+.ENDS
+.SUBCKT 6S33S 1 2 3  ; P G C; (Triode) 22-Oct-2001
+X1 1 2 3 Triodo MU=3.1 EX=1.4 KG1=163 KP=15 KVB=300 RGI=1000
++	CCG=2.3P  CGP=2.2P CCP=1.0P
+.ENDS
+*	*	*	*	*	*	*	*	*
+* euvm type 17
+*
+*. 6c19c/sop, based on "the tube directory" sophia measured.
+*- lookin for a low plate impedance bulb ??? :)
+.subckt 6c19c a g k
+bout  ap k   i = ((uramp((v(ap, k)/2.62419)+v(g, k)))**1.5)/647.903
+cgk   g  k   5e-12
+cga   g  a   5e-12
+cak   a  k   4e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6C33S 1 2 3
+X1 1 2 3 6S33S
+.ENDS
+*	*	*	*	*	*	*	*	*
+*. 6c33c-b, data from chf, #12 pag 30
+.subckt 6c33c-b a g k
+bout  ap k   i = ((uramp((v(ap, k)/2.73644)+v(g, k)))**1.5)/85.5547
+cgk   g  k   36e-12
+cga   g  a   37e-12
+cak   a  k   45e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6C33C-B_RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO3 G=5.126m MU=2 B=18.79 C=.944 Vc=.22
+X2 2 3 Igrid ALPHA=1m BETA=5U
+C1 1 2 10p
+C2 2 3 20p
+C3 1 3 7p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6N7S 1 2 3  ; P G C; (Triode) 20-Oct-2001  
+X1 1 2 3 Triodo MU=35.29 EX=1.48 KG1=3201.6 KP=590.54
++	KVB=87.5 VCT=0.75 RGI=1000 CCG=4.3P  CGP=2.4P CCP=5.4P
+.ENDS
+.Subckt P50-2T 1 2 3
+X1 1 2 3 GU50_T
+.Ends
+.SUBCKT 6N6P  1 2 3 ; P G C (Triode) 25-Oct-2001
+X1 1 2 3 Triodo MU= 17.22  EX= 1.715  KG1=1155.0  KP=87.74 
++	KVB=300.0  VCT=0.00 RGI=1000 CCG=4P  CGP=3P CCP=1.9P
+.ENDS
+.SUBCKT 6N23P  1 2 3 ; P G C (Triode) 26-Oct-2001
+X1 1 2 3 Triodo MU=33.04  EX=1.220  KG1=212.4  KP=183.83 
++	KVB=300.0  VCT=0.00 RGI=2000 CCG=3.6P  CGP=1.5P CCP=2P
+.ENDS
+*	*	*	*	*	*	*	*	*
+*. e182cc, model based on euvm type 317
+.subckt e182cc a g k
+bout  ap k   i = ((uramp((v(ap, k)/20.1785)+v(g, k)))**1.5)/137.904
+cgk   g  k   6.7e-12
+cga   g  a   4.6e-12
+cak   a  k   1.45e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+*. e288cc, model based on euvm type 317
+.subckt e288cc a g k
+bout  ap k   i = ((uramp((v(ap, k)/23.1522)+v(g, k)))**1.5)/105.79
+cgk   g  k   4.7e-12
+cga   g  a   1.8e-12
+cak   a  k   1.9e-12
+rleak g  gp  10e+3
+d1    a  ap  dx
+d2    k  ap  dx2
+d3    pg k   dx
+.model dx d(is=1.0e-12 rs=1.0)
+.model dx2 d(is=1.0e-9 rs=1.0)
+.ends
+*	*	*	*	*	*	*	*	*
+.Subckt ECC88 1 2 3
+X1 1 2 3 6N23P
+.Ends
+.Subckt 6DJ8T 1 2 3
+X1 1 2 3 6N23P
+.Ends
+.SUBCKT 6DJ8Tn 1 2 3  ; P G C; NEW MODEL
+X1 1 2 3 Triodo MU=28 EX=1.3 KG1=330 KP=320 KVB=300 RGI=2000
++	CCG=2.3P  CGP=2.1P CCP=.7P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 6DJ8 / ECC88
+* MODEL:   NH6DJ8
+* NOTES:   No heater or grid current model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH6DJ8 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 10 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.09 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 0.2 )+URAMP(V(GG))* 0 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.02 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 33 )
+BEP  EP  0 V=(V(EM)** 1.35 )*V(RP)* 0.0000795 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)--0.2 )**1.5)* 0 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000018 
+CGK  G   K  0.0000000000033 
+CGA  G   A  0.0000000000014 
+.ENDS
+
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6DJ8RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO2 G=4.6m MU=29.3 B=34.9 Vc=11.8 k=6.3
+X2 2 3 Igrid ALPHA=.04m BETA=.1U
+C1 1 2 1.4p
+C2 2 3 3.1p
+C3 1 3 .18p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+.SUBCKT 6922RY 1 2 3
+X1 1 2 3 6DJ8RY
+.ENDS
+.SUBCKT ECC88RY 1 2 3
+X1 1 2 3 6DJ8RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes:
+* 6DJ8/ECC88, 6922/E88CC, 7308;
+* at the following conditions:
+*  Plate voltage  : 0..300V
+*  Grid voltage   : 0..-8V
+*  Cathode current: 0..100mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 6DJ8   P G K
+E1  2  0  VALUE={V(P,K)+30.95*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={34.56E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  3.1P
+Cgp G  P  1.4P
+Cpk P  K  0.18P
+.ENDS 6DJ8
+.SUBCKT ECC88 1 2 3
+X1 1 2 3 6DJ8
+.ENDS
+.SUBCKT 6P3S_T  1 2 3 ; P G C (Triode Mode)  28-Oct-2001
+X1 1 2 3 Triodo MU=10.76  EX=1.314  KG1=712.7  KP=24.67
++	KVB=300.0  VCT=0.00  RGI=1k CCG=11P  CGP=1P CCP=8.2P
+.ENDS
+.Subckt 6L6G-T 1 2 3
+X1 1 2 3 6P3S_T
+.Ends
+.SUBCKT 6N5P  1 2 3 ; P G C (Triode)
+X1 1 2 3 Triodo MU=23.76  EX=1.244  KG1=300.1  KP=164.49 
++	KVB=300.0  VCT=0.00  RGI=2k CCG=3P  CGP=2.25P CCP=1.5P
+.ENDS
+.SUBCKT 6S41S  1 2 3 ; P G C (Triode) 30-Oct-2001
+X1 1 2 3 Triodo MU=2.58  EX=1.450  KG1=689.1  KP=9.98 
++	KVB=300.0  VCT=0.00  RGI=1k CCG=11P  CGP=15P CCP=5P
+.ENDS
+.SUBCKT 6N1P  1 2 3 ; P G C (Triode)  30-Oct-2001
+X1 1 2 3 Triodo MU=38.29  EX=1.761  KG1=1430.7  KP=245.76 
++	KVB=300.0  VCT=0.00 RGI=2k CCG=3P  CGP=2.25P CCP=1.5P
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 6N1P
+* MODEL:   NH6N1P
+* NOTES:   No heater/grid model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH6N1P A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 10 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.01 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1 )+URAMP(V(GG))* 0 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.01 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 37.5 )
+BEP  EP  0 V=(V(EM)** 1.6 )*V(RP)* 0.000005 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000015 
+CGK  G   K  0.0000000000032 
+CGA  G   A  0.0000000000016 
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT GU50_T  1 2 3 ; P G C (Triode Mode) 30-Oct-2001
+X1 1 2 3 Triodo MU=5.41  EX=1.366  KG1=1350.7  KP=34.52 
++	KVB=300.0  VCT=0.00 RGI=2k CCG=14P  CGP=0.1P CCP=9.2P
+.ENDS
+.Subckt LS50T 1 2 3
+X1 1 2 3 GU50_T
+.Ends
+.Subckt P50-2T 1 2 3
+X1 1 2 3 GU50_T
+.Ends
+.SUBCKT 6P45S_T  1 2 3 ; P G C (Triode Mode)02-Nov-2001 
+X1 1 2 3 Triodo MU=3.97  EX=1.512  KG1=517.5  KP=43.74 
++	KVB=300.0  VCT=0.00 RGI=1k CCG=55P  CGP=1.5P CCP=20P
+.ENDS
+.SUBCKT 6N3P-E  1 2 3 ; P G C (Triode) 16-Nov-2001
+X1 1 2 3 Triodo MU=31.33  EX=1.979  KG1=1920.5  KP=211.72 
++	KVB=300.0  VCT=0.00 RGI=1k CCG=2.5P  CGP=1.3P CCP=1.4P
+.ENDS
+.SUBCKT 6P14P_T  1 2 3 ; P G C (Triode Mode) 15-March-2002
+X1 1 2 3 Triodo MU=21.49  EX=1.428  KG1=514.4  KP=136.46
++	KVB=300.0  VCT=0.00 RGI=1k CCG=11P  CGP=0.2P CCP=7P
+.ENDS
+.Subckt 6BQ5T 1 2 3
+X1 1 2 3 6P14P_T
+.Ends
+.Subckt EL84T 1 2 3
+X1 1 2 3 6P14P_T
+.Ends
+.SUBCKT 6R3S-1_T  1 2 3 ; P G C (Triode Mode) 16-March-2002
+X1 1 2 3 Triodo MU=7.15  EX=1.418  KG1=419.4  KP=44.66
++	KVB=300.0  VCT=0.00 RGI=1k CCG=13P  CGP=0.3P CCP=6P
+.ENDS
+.SUBCKT 6F5P-T  1 2 3 ; P G C (Triode) 22-Sep-2002
+X1 1 2 3 Triodo MU=73.16  EX=1.668  KG1=522.9  KP=353.07 
++	KVB=519.0  VCT=0.60  RGI=1k CCG=3.5P  CGP=1.8P CCP=0.25P
+.ENDS
+.Subckt 6GV8T 1 2 3
+X1 1 2 3 6F5P-T
+.Ends
+.Subckt ECL85T 1 2 3
+X1 1 2 3 6F5P-T
+.Ends
+.SUBCKT 6F5P-PT  1 2 3 ; P G C (Pentode in Triode mode) 22-Sep-2002
+X1 1 2 3 Triodo MU=7.49  EX=1.622  KG1=1336.3  KP=59.91 
++	KVB=120  VCT=0  RGI=1k CCG=11.7P  CGP=0.7P CCP=8.8P
+.ENDS
+.Subckt 6GV8PT 1 2 3
+X1 1 2 3 6F5P-T
+.Ends
+.Subckt ECL85PT 1 2 3
+X1 1 2 3 6F5P-T
+.Ends
+.SUBCKT 6N13S  1 2 3 ; P G C (Triode) 31-Agu-2002
+X1 1 2 3 Triodo MU=2.35  EX=1.247  KG1=637.1  KP=12.4 
++	KVB=300  VCT=0  RGI=1k CCG=8P  CGP=10P CCP=3P
+.ENDS
+.Subckt 6AS7S 1 2 3
+X1 1 2 3 6N13S
+.Ends
+*	*	*	*	*	*	*	*	*
+* GENERIC: SV6AS7
+* MODEL:   NHSV6AS7
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NHSV6AS7 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 0.01 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.0058 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 0.7 )+URAMP(V(GG))* 0.035 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.0017 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 2.05 )
+BEP  EP  0 V=(V(EM)** 1.5 )*V(RP)* 0.0005 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.000000000003 
+CGK  G   K  0.000000000008 
+CGA  G   A  0.000000000011 
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6N3P  1 2 3 ; P G C (Triode) 03-Apr-2003
+X1 1 2 3 Triodo MU=34.82  EX=1.909  KG1=1445.3  KP=171.13 
++	KVB=300.0  VCT=0.00 RGI=1k CCG=2.5P  CGP=1.3P CCP=1.4P
+.ENDS
+.Subckt 2C51 1 2 3
+X1 1 2 3 6N3P
+.Ends
+.Subckt 6CC42 1 2 3
+X1 1 2 3 6N3P
+.Ends
+.SUBCKT 6N27P  1 2 3 ; P G C (Triode) 2-Decem-2004
+X1 1 2 3 Triodo MU=16.3  EX=1.3  KG1=350.1  KP=76.28 
++	KVB=150.0  VCT=0.00 RGI=1k CCG=3P  CGP=1.3P CCP=1.8P
+.ENDS
+.Subckt ECC86 1 2 3
+X1 1 2 3 6N27P
+.Ends
+.Subckt 6GM8 1 2 3
+X1 1 2 3 6N27P
+.Ends
+.SUBCKT 6P7S_T  1 2 3 ; P G C (Triode) 13-Dec-2004
+X1 1 2 3 Triodo MU=8.49  EX=1.270  KG1=903.4  KP=48.30 						
++	KVB=300.0 VCT=0.0 RGI=1k CCG=13.5P  CGP=0.7P CCP=7P
+.ENDS
+.SUBCKT 6N2P  1 2 3 ; P G C (Triode) 24-Dec-2004
+X1 1 2 3 Triodo MU=106.00  EX=1.398  KG1=1326.3  KP=415.26 						
++	KVB=4680.6  VCT=0.30  RGI=1k CCG=2.25P  CGP=0.7P CCP=2.5P
+.ENDS
+.SUBCKT 6S51N  1 2 3 ; P G C (Triode) 21 May 2004
+X1 1 2 3 Triodo MU=54.72  EX=1.248  KG1=123.5  KP=99.63 
++	KVB=300.0  VCT=0.00 RGI=1500 CCG=4.2P  CGP=1.8P CCP=2.5P
+.ENDS
+.SUBCKT 6S52N  1 2 3 ; P G C (Triode) 25 May 2004
+X1 1 2 3 Triodo MU= 70.32  EX= 1.250  KG1= 188.8  KP=230.58 
++	KVB=300.0  VCT=0.00 RGI=1500 CCG=4.35P  CGP=1.9P CCP=1.3P
+.ENDS
+.SUBCKT 6F12P_T  1 2 3 ; P G C (Triode) 07 Nov 2004
+X1 1 2 3 Triodo MU=523.74  EX= 1.039  KG1=  13.5  KP=384.91 
++	KVB= 300.0  VCT=  0.00 RGI=4500 CCG=4.6P  CGP=0.26P CCP=1.6P
+.ENDS
+.SUBCKT 6P18P_T  1 2 3 ; P G C (Triode)
+X1 1 2 3 Triodo MU= 16.23  EX= 1.470  KG1= 419.3  KP= 38.32 
++	KVB= 300.0  VCT=  0.00  RGI=1000 CCG=11.5P  CGP=0.2P CCP=6P
+.ENDS
+.SUBCKT 6S6B  1 2 3 ; P G C (Triode) 25-Feb-2004
+X1 1 2 3 Triodo MU=25.5  EX=1.361  KG1=846.1  KP=203.2 
++	KVB=300.0  VCT=0.00 RGI=1k CCG=3.3P  CGP=1.42P CCP=3.5P
+.ENDS
+.SUBCKT 12AT7 1 2 3  ; P G C; NEW MODEL
+X1 1 2 3 Triodo MU=60 EX=1.35 KG1=460 KP=300 KVB=300 RGI=2000
++	CCG=2.3P  CGP=2.2P CCP=1.0P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 12AT7 / ECC81
+* MODEL:   12AT7
+* NOTES:   Heater model for one half of heater (6.3V)
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AT7DM A G K H1 H2
+XV1 A G K H1 H2 TRIODE
++PARAMS: RCO= 6.2 RHO= 42 HTV= 6.3 HWU= 10.5 
++ LIP= 1 LIF= 0.0037 RAF= 0.09869 RAS= 1 CDO=-0.5 
++ RAP= 0.1 ERP= 1.4 
++ MU0= 45.093 MUR= 0.012937 EMC= 0.00000863 
++ GCO=-0.5 GCF= 0.00012 
++ CGA=1.60E-12 CGK=2.30E-12 CAK=4.00E-13
+.ENDS
+.SUBCKT ECC81DM 1 2 3
+X1 1 2 3 12AT7DM
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 12AT7 / ECC81
+* MODEL:   NH12AT7
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH12AT7 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 0.0037 
+BGG  GG  0 V=V(G)-V(K)--0.5 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.09869 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1 )+URAMP(V(GG))* 0.1 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.012937 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 45.093 )
+BEP  EP  0 V=(V(EM)** 1.4 )*V(RP)* 0.00000863 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)--0.5 )**1.5)* 0.00012 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000004 
+CGK  G   K  0.0000000000023 
+CGA  G   A  0.0000000000016 
+.ENDS
+.SUBCKT NHECC81 1 2 3
+X1 1 2 3 NH12AT7
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AT7RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO3 G=1.766m MU=45.3 B=3.92 C=.88 Vc=24.6
+X2 2 3 Igrid ALPHA=.04m BETA=.1U
+C1 1 2 1.6p
+C2 2 3 2.5p
+C3 1 3 .45p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+.SUBCKT ECC81RY 1 2 3
+X1 1 2 3 12AT7RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+* This model is valid for the following tubes:
+* 12AT7/ECC81, 6AB4/EC92, 6201, 6679;
+* at the following conditions:
+*  Plate voltage  : 0..500V
+*  Grid voltage   : 0..-8V
+*  Cathode current: 0..30mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 12AT7A  P G K
+E1  2  0  VALUE={V(P,K)+63.19*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={6.717E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  2.2P
+Cgp G  P  1.5P
+Cpk P  K  0.5P
+.ENDS
+*
+.SUBCKT ECC81A 1 2 3
+X1 1 2 3 12AT7A
+.ENDS
+.SUBCKT ECC81 1 2 3
+X1 1 2 3 12AT7
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AU7 1 2 3  ; P G C; NEW MODEL
+X1 1 2 3 Triodo MU=21.5 EX=1.3 KG1=1180 KP=84 KVB=300 RGI=2000
++	CCG=2.3P  CGP=2.2P CCP=1.0P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+.SUBCKT ECC82 1 2 3
+X1 1 2 3 12AU7
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 12AU7 / ECC82
+* MODEL:   12AU7
+* NOTES:   Heater model for one half of heater (6.3V)
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AU7DM A G K H1 H2
+XV1 A G K H1 H2 TRIODE
++PARAMS: RCO= 6.2 RHO= 42 HTV= 6.3 HWU= 10.5 
++ LIP= 1 LIF= 0.0037 RAF= 0.024778659 RAS= 2.040491735 CDO= 0 
++ RAP= 0.18 ERP= 1.35 
++ MU0= 14.27427 MUR= 0.005857103 EMC= 0.0000236 
++ GCO= 0 GCF= 0.00012 
++ CGA=1.60E-12 CGK=1.80E-12 CAK=4.50E-13
+.ENDS
+*
+.SUBCKT 6C4 1 2 3
+X1 1 2 3 12Au7DM
+.Ends
+*	*	*	*	*	*	*	*	*
+* GENERIC: 12AU7 / ECC82
+* MODEL:   NH12AU7
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH12AU7 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 0.0037 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.024778659 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 2.040491735 )+URAMP(V(GG))* 0.18 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.005857103 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 14.27427 )
+BEP  EP  0 V=(V(EM)** 1.35 )*V(RP)* 0.0000236 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0.00012 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.00000000000045 
+CGK  G   K  0.0000000000018 
+CGA  G   A  0.0000000000016 
+.ENDS
+.SUBCKT 6C4NH 1 2 3
+X1 1 2 3 NH12Au7
+.Ends
+
+
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AU7RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.524m MU=15.2 B=49.7 Vc=9.93
+X2 2 3 Igrid ALPHA=.04m BETA=.1U
+C1 1 2 1.6p
+C2 2 3 2.5p
+C3 1 3 .45p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT ECC82RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 12AU7RY
+.ENDS
+.SUBCKT 6C4RY 1 2 3
+X1 1 2 3 12Au7RY
+.Ends
+* 
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes:
+* 12AU7A/ECC82, 6680, 6C4/EC90, 12DW7/7247 (Unit #2);
+* at the following conditions:
+*  Plate voltage  : 0..400V
+*  Grid voltage   : 0..-18V
+*  Cathode current: 0..30mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 12AU7A P G K
+E1  2  0  VALUE={V(P,K)+18.28*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={10.88E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  1.6P
+Cgp G  P  1.5P
+Cpk P  K  0.5P
+.ENDS 12AU7A
+.SUBCKT ECC82A 1 2 3
+X1 1 2 3 12AU7A
+.ENDS
+.SUBCKT EC90A 1 2 3
+X1 1 2 3 12AU7A
+.ENDS
+.SUBCKT 6C4A 1 2 3
+X1 1 2 3 12AU7A
+.ENDS
+.SUBCKT 12DW7A 1 2 3
+X1 1 2 3 12AU7A
+.ENDS
+.SUBCKT 12AX7 1 2 3  ; P G C;  NEW MODEL
+X1 1 2 3 Triodo MU=100 EX=1.4 KG1=1060 KP=600 KVB=300 RGI=2000 
++	CCG=2.3P  CGP=2.4P CCP=.9P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+.SUBCKT ECC83 1 2 3
+X1 1 2 3 12AX7
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 12AX7 / ECC83
+* MODEL:   12AX7
+* NOTES:   Heater model for one half of heater (6.3V)
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AX7DM A G K H1 H2
+XV1 A G K H1 H2 TRIODE
++PARAMS: RCO= 6.2 RHO= 42 HTV= 6.3 HWU= 10.5 
++ LIP= 1.5 LIF= 0.000016 RAF= 0.076498 RAS= 1 CDO=-0.53056 
++ RAP= 0.18 ERP= 1.5 
++ MU0= 87.302 MUR=-0.013621 EMC= 0.00000111 
++ GCO=-0.2 GCF= 0.00001 
++ CGA=3.90E-12 CGK=2.40E-12 CAK=7.00E-13
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 12AX7 / ECC83
+* MODEL:   NH12AX7
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH12AX7 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 0.000016 
+BGG  GG  0 V=V(G)-V(K)--0.53056 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.076498 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1 )+URAMP(V(GG))* 0.18 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)*-0.013621 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 87.302 )
+BEP  EP  0 V=(V(EM)** 1.5 )*V(RP)* 0.00000111 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)--0.2 )**1.5)* 0.00001 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000007 
+CGK  G   K  0.0000000000024 
+CGA  G   A  0.0000000000039 
+.ENDS
+.SUBCKT ECC83DM 1 2 3
+*ANODE G CAT
+X1 1 2 3 NH12AX7
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 12AX7RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO2 G=1.02m MU=90.6 B=18 Vc=50.7 k=5
+X2 2 3 Igrid ALPHA=.01m BETA=.1U
+C1 1 2 1.7p
+C2 2 3 1.6p
+C3 1 3 .46p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT ECC83RY 1 2 3
+*ANODE G CAT
+X1 1 2 3 12AX7RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes:
+* 12AX7A/ECC83, 7025, 6EU7, 6681, 6AV6, 12DW7/7247 (Unit #1);
+* at the following conditions:
+*  Plate voltage  : 25..400V
+*  Grid voltage   : 0..-3.5V
+*  Cathode current: 0..8mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT 12AX7A P G K
+E1  2  0  VALUE={45+V(P,K)+95.43*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={1.147E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  1.6P
+Cgp G  P  1.7P
+Cpk P  K  0.46P
+.ENDS 12AX7A
+.SUBCKT ECC83 1 2 3
+X1 1 2 3 12AX7A
+.ENDS
+.SUBCKT 6EU7A 1 2 3
+X1 1 2 3 12AX7A
+.ENDS
+.SUBCKT 6AV6A
+X1 1 2 3 12AX7A
+.ENDS
+.SUBCKT 7025A 1 2 3
+X1 1 2 3 12AX7A
+.ENDS
+.SUBCKT 6681A 1 2 3
+X1 1 2 3 12AX7A
+.ENDS
+*	*	* p g c *
+.subckt RCA12ax7  1 2 3	*
+*	*	*	*	*	*	*	*	*
+eGIogVpc 20 0 value={log(v(1,3))}
+rGlogVpc 20 0 1 
+eG0 10 0 poly(1) <2,3>   -3.7694e+00   1.9947e+00   5.9432e-02    
+eG1 11 0 poly(1) <2,3>   -3.2024e-02  -4.1443e-02  -4.8236e-03 
+eG2 12 0 poly(1) <2,3>    1.9127e-02  -1.2189e-02  -1.5526e-03 
+eG3 13 0 poly(1) <2,3>   -1.1354e-02   4.9339e-03   6.1016e-04  
+rG0 10 0 1
+rG1 11 0 1
+rG2 12 0 1
+rG3 13 0 1
+gG   2 3 value={(exp(v(10)+v(20)*(v(11)+v(20)*(v(12)+v(20)*v(13)))))/170}
+*
+eP0 110 0 poly(1) <2,3>    -9.9158e+0  1.9145e+0 -2.8135e+0  1.8661e+0     
++                                                1.5643e+0  4.7240e-1  6.4276e-2  3.3101e-3 
+eP1 111 0 poly(1) <2,3>     9.5428e-1  3.2558e-2 -8.3349e-1 -4.8578e-2  
++                                                2.6213e-1  1.0492e-1  1.8921e-2  1.3632e-3 
+eP2 112 0 poly(1) <2,3>     9.5766e-2  2.5192e-2  2.2391e-1 -1.7040e-1 
++                                               -2.4952e-1 -1.0960e-1 -2.0981e-2 -1.4882e-3
+eP3 113 0 poly(1) <2,3>    -6.6107e-2 -3.9657e-2  7.5560e-2  3.1025e-2  
++                                                2.4265e-2  1.7002e-2  4.2512e-3  3.4761e-4
+eP4 114 0 poly(1) <2,3>     8.4148e-3  4.7989e-3 -1.3258e-2 -1.9288e-3  
++                                                5.2888e-4 -5.6853e-4 -2.4727e-4 -2.4359e-5
+rP0 110 0 1
+rP1 111 0 1
+rP2 112 0 1
+rP3 113 0 1
+rP4 114 0 1
+gP    1 3 value={(exp(v(110)+v(20)*(v(111)+v(20)*(v(112)+v(20)*(v(113)+v(20)*v(114))))))}
+Cgc 2 3 1.8p
+Cgp 2 1 1.7p
+Cpc 1 3 1.9p
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 2A3 1 2 3  ; P G C; NEW MODEL
+X1 1 2 3 Triodo MU=4.2 EX=1.4 KG1=1500 KP=60 KVB=300 RGI=2000
++	CCG=2.3P  CGP=2.2P CCP=1.0P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 2A3
+* MODEL:   NH2A3
+* NOTES:   No heater model (virtual cathode)
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH2A3 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 0.003 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.0082 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 0.423522 )+URAMP(V(GG))* 0.005 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.0015 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 4.2 )
+BEP  EP  0 V=(V(EM)** 1.55 )*V(RP)* 0.0000868 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0.0001 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000055 
+CGK  G   K  0.0000000000075 
+CGA  G   A  0.0000000000165 
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 2A3RY 1 2 3
+* 1 2 3
+X1 1 2 3 TRIO1 G=.782m MU=3.95 B=324 Vc=8.7
+X2 2 3 Igrid ALPHA=.2m BETA=3U
+C1 1 2 16.5p
+C2 2 3 7.5p
+C3 1 3 5.5p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 3CX300
+* MODEL:   NH3CX300
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH3CX300 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 10 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.00536 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1 )+URAMP(V(GG))* 0.005 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.0012 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 8.321 )
+BEP  EP  0 V=(V(EM)** 1.25 )*V(RP)* 0.000533 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0.0001 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.000000000001 
+CGK  G   K  0.000000000025 
+CGA  G   A  0.00000000001 
+.ENDS
+
+
+*	*	*	*	*	*	*	*	*
+* GENERIC: 300B
+* MODEL:   NH300B
+* NOTES:   No heater/grid model (virtual cathode)
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH300B A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1 )* 10 
+BGG  GG  0 V=V(G)-V(K)- 0 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.00311 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1.013608 )+URAMP(V(GG))* 0 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.000362 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 3.7992 )
+BEP  EP  0 V=(V(EM)** 1.5 )*V(RP)* 0.000116 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.0000000000043 
+CGK  G   K  0.000000000009 
+CGA  G   A  0.000000000015 
+.ENDS
+
+*	*	*	*	*	*	*	*	*
+.SUBCKT WE300B_RY 1 2 3
+* ANODE G CAT
+X1 1 2 3 TRIO1 G=.795m MU=3.64 B=284 Vc=-.76
+X2 2 3 Igrid ALPHA=.4m BETA=5U
+C1 1 2 15p
+C2 2 3 9p
+C3 1 3 4.3p
+RF1 1 3 200MEG
+RF2 2 3 50MEG
+.ENDS
+* WE300B Triode PSpice Model                     8/96, Rev. 1.0  (fp)
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes:
+* WE300B, STC4300B;
+* at the following conditions:
+*  Plate voltage  : 0..650V
+*  Grid voltage   : 0..-160V
+*  Cathode current: 0..200mA
+*
+*
+* Connections: Plate
+*              | Grid
+*              | | Cathode
+*              | | |
+.SUBCKT WE300B P G K
+E1  2  0  VALUE={V(P,K)+3.87*V(G,K)}
+R1  2  0  1.0K
+Gp  P  K  VALUE={119.5E-6*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+Cgk G  K  9.0P
+Cgp G  P  15P
+Cpk P  K  4.3P
+.ENDS
+.SUBCKT STC4300B 1 2 3
+X1 1 2 3 WE300B
+.ENDS
+.SUBCKT 300B 1 2 3  ; P G C; NEW MODEL
+X1 1 2 3 Triodo MU=3.95 EX=1.4 KG1=1550 KP=65 KVB=300 RGI=1000
++	CCG=2.3P  CGP=2.2P CCP=1.0P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+.SUBCKT 5751DB 1 2 3  ; P G C 
+X1 1 2 3 Triodo MU=97.5148 EX=0.9580 KG1=364.1804  KP=525.5452 KVB=510.31239 RGI=2000
++	CCG=2.3P  CGP=2.4P CCP=.9P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 5751
+* MODEL:   NH5751
+* NOTES:   No heater model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH5751 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 0.000016 
+BGG  GG  0 V=V(G)-V(K)--0.53056 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.075772 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 1 )+URAMP(V(GG))* 0.131285 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)*-0.0111 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 62.94685 )
+BEP  EP  0 V=(V(EM)** 1.5 )*V(RP)* 0.00000142 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)--0.2 )**1.5)* 0.00001 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.00000000000045 
+CGK  G   K  0.0000000000014 
+CGA  G   A  0.0000000000014 
+.ENDS
+*	*	*	*	*	*	*	*	*
+* GENERIC: 6BM8 / ECL82
+* MODEL:   NH6BM8
+* NOTES:   No heater or grid model
+*	*	*	*	*	*	*	*	*
+.SUBCKT NH6BM8 A G K
+* ANODE MODEL
+BLIM LI  0 V=(URAMP(V(A)-V(K))** 1.5 )* 10 
+BGG  GG  0 V=V(G)-V(K)--0.5 
+BRP1 RP1 0 V=URAMP(-V(GG)* 0.030667 )
+BRP2 RP2 0 V=V(RP1)-URAMP(V(RP1)-0.999)
+BRPF RP  0 V=(1-V(RP2)** 5 )+URAMP(V(GG))* 0.587 
+BGR  GR  0 V=URAMP(V(GG))-URAMP(-(V(GG)*(1+V(GG)* 0.035 )))
+BEM  EM  0 V=URAMP(V(A)-V(K)+V(GR)* 50 )
+BEP  EP  0 V=(V(EM)** 1.5 )*V(RP)* 0.00000256 
+BEL1 EL1 0 V=URAMP(V(EP))
+BEL  EL  0 V=V(EL1)-URAMP(V(EL1)-V(LI))
+BLD  LD  0 V=URAMP(V(EP)-V(LI))
+BAK  A   K I=V(EL)
+* GRID MODEL
+BGF  GF  0 V=(URAMP(V(G)-V(K)- 0 )**1.5)* 0 
+BG   G   K I=V(GF)+V(LD)
+* CAPS
+CAK  A   K  0.000000000004 
+CGK  G   K  0.0000000000027 
+CGA  G   A  0.000000000004 
+.ENDS
+.Subckt NHECL82 1 2 3
+X1 1 2 3 NH6BM8
+.Ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6AN8T 1 2 3  ; P G C; NEW MODEL   ; TRIODE SECTION
+X1 1 2 3 Triodo MU=21.2 EX=1.36 KG1=945 KP=84 KVB=300 RGI=2000
++	CCG=2.7P  CGP=2.2P CCP=1.0P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS. 
+.ENDS
+**********************************
+* File created 09 Aug 2010 (extracted from new_triodes.txt)
+* Early form models specifically
+* for VHF FM tunerhead circuit.
+*
+* Model format: LTspice
+* RF triodes macro model
+* as by Norman L. Koren
+*
+* DO NOT include the new KP behaviour
+* region (large negative grid voltage,
+* large plate voltage, and low plate
+* current).
+*
+* External node designations
+* Node A -> Anode
+* Node G -> Grid
+* Node K -> Cathode
+***********************************
+
+
+.subckt ECF80t A G K ; ECF80 triode as RF oscillator
++params: MU=22.97 EX=1.3 KG1=616.4 KP=71.31 KVB=150.9 VCT=0.50 CCG=3.0p cpg=2.2p CCP=2.3p Rgi=100
+
+Rg G 1 {Rgi} ; grid forward resistance
+D1 1 K DX ; grid forward diode
+
+RE1 E1 0 1G ; dummy so node E1 has two connections
+Ee1 E1 0 Value={(V(A,K)/kP) * log(1 + exp(kP * (1/mu + V(G,K)/sqrt(kVB + V(A,K)**2))))}
+GIP A K  Value={(pwr(V(E1),{EX})/{kG1}) * (1 + sgn(V(E1)))}
+
+* CM1 G  K  {ccg} }
+* CM2 A  G  {cpg} } DO NOT USE!
+* CM3 A  K  {ccp} }
+
+.MODEL DX D(Ron=1 Roff=1G Vfwd=0.75)
+.ends
+
+.subckt ECC88 A G K ; ECC88 triode as RF amplifier
++params: mu=28 ex=1.3 kg1=330 kp=320 kvb=300 ccg=2.3p cpg=2.1p ccp=0.7p rgi=100
+
+Rg G 1 {Rgi} ; grid forward resistance
+D1 1 K DX ; grid forward diode
+
+* Ee2 EP 0 Value=(V(A,K))
+* Re2 EP 0 1G
+* Ee3 EG 0 Value=(V(G,K))
+* Re3 EG 0 1G
+
+RE1 E1 0 1G ; dummy so node E1 has two connections
+Ee1 E1 0 Value={(V(A,K)/kP) * log(1 + exp(kP * (1/mu + V(G,K)/sqrt(kVB + V(A,K)**2))))}
+GIP A K  Value={(pwr(V(E1),{EX})/{kG1}) * (1 + sgn(V(E1)))}
+
+* CM1 G  K  {ccg}
+* CM2 A  G  {cpg}
+* CM3 A  K  {ccp}
+
+.MODEL DX D(Ron=1 Roff=1G Vfwd=0.75)
+.ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT END_TRIODES&START_TETR&PENT ;	*	*	*	*	*	*	*	*	*	*	*	*
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6AN8P 1 2 3 4 ;  P G2 G1 K  ;  SECTION
+X1 1 2 3 4 Tetro MU=45 EX=1.35 KG1=520 KG2=120 KP=120 KVB=18
++	CCG=8P CPG1=.8P CCP=3P RGI=2K 
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6DQ6A 1 2 3 4 ; P G2 G1 K (Beam Pentode)  14-Apr-2005 Robertugo
+X1 1 2 3 4 Tetro MU=12  EX=1.1 KG1=155 KP=16 KG2=750
++	KVB=9  RGI=1k CCG=14P  CPG1=0.5P CCP=7P
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6DQ6B 1 2 3 4 ; P G2 G1 K (Beam Pentode)  14-Apr-2005 Robertugo
+X1 1 2 3 4 Tetro MU=5  EX=1.7 KG1=2700 KP=17 KG2=20K
++	KVB=7.5 RGI=1k CCG=14P  CPG1=0.5P CCP=7P
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6BM8P A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/15)}
+Egs     gs      0       VALUE={LIMIT{V(S,K)/7+V(G,K)*1.3+V(A,K)/700,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.24)}
+Ecath   cc      0       VALUE={V(gs2)*V(at)}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={3.45E-3*V(cc)}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={V(gs2)*(1.1-V(at))}
+Gs      S       K       VALUE={3.7E-3*V(sc)*LIMIT{V(S,K),0,10}/10}
+*
+* Capacitances
+*
+Cg1     G       K       9.6p
+Cak     A       K       9.3p
+Cg1a    G       A       0.35p
+
+.ENDS
+.SUBCKT ECL82P 1 2 3 4
+X1 1 2 3 4 6BM8P
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT EL34 1 2 3 4; P G2 G1 K
+X1 1 2 3 4 Tetro MU=11 EX=1.35 KG1=650 KG2=4200 KP=60 KVB=24
++	CCG=15P CPG1=1P CCP=8P RGI=1K
+.ENDS
+.Subckt EL34Pent 5 4 3 2 1
+X1 1 2 3 4 5 Pento MU=11 EX=1.35 KG1=650 KG2=4200 KP=60 KVB=24
++	CCG=15P CPG1=1P CCP=8P RGI=1K
+.Ends
+*	*	*	*	*	*	*	*	*
+* Device type:		Power pentode
+* Device model:		6CA7/EL34
+*
+* Author:		Duncan Munro
+* Date:			2/5/97
+* Copyright:		(C)1997-2004 Duncan Amplification
+*
+*
+* V2 [12/10/97]: Screen current limited to prevent screen current
+*		 draw at Vs = 0.
+*
+* V4 [23/01/04]: LIMIT{x,y,z} statements changed to LIMIT(x,y,z)
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current is an approximation
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Queries via the forum at http://www.duncanamps.com/
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+*	*	*	*	*	*	*	*	*
+.SUBCKT EL34D A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat	at	0	VALUE={0.636*ATAN(V(A,K)/23)}
+Egs	gs	0	VALUE={LIMIT(V(S,K)/9.3+V(G,K)*0.95,0,1E6)}
+Egs2	gs2	0	VALUE={PWRS(V(gs),1.5)}
+Ecath  	cc    	0 	VALUE={V(gs2)*V(at)}
+*
+* Calculate anode current
+*
+Ga     	A     	K     	VALUE={1.86E-3*V(cc)}
+*
+* Calculate screen current
+*
+Escrn	sc	0	VALUE={V(gs2)*(1.1-V(at))}
+Gs     	S     	K	VALUE={1.518E-3*V(sc)*LIMIT(V(S,K),0,10)/10}
+*
+* Grid current (approximation - does not model low va/vs)
+*
+Gg	G	K	VALUE={PWR(LIMIT(V(G,K)+1,0,1E6),1.5)*50E-6}
+*
+* Capacitances
+*
+Cg1	G	K	15.4p
+Cak	A	K	8.4p
+Cg1a	G	A	1.1p
+
+.ENDS 
+.Subckt 6CA7D 1 2 3 4
+X1 1 2 3 4 EL34D
+.Ends
+*	*	*	*	*	*	*	*	*
+.SUBCKT EL34RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 PENTH1 G=1.99m MU=135 MU12=9.2 k1=21 k2=.1 k3=.072 k4=10.8 k5=11.5 k6=6.8 K=0.471m
+X2 3 4 Igrid ALPHA=.2m BETA=2U
+C2 1 0 7.2p
+C3 3 1 1p
+C5 3 4 15.5p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6CA7RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 EL34RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6L6GC 1 2 3 4 ;  P G2 G1 K
+X1 1 2 3 4 Tetro MU=8.7 EX=1.35 KG1=1460 KG2=4500 KP=48 KVB=12 CCG=14P CPG1=.85P CCP=12P RGI=1K
+.Ends
+.SUBCKT 5881 1 2 3 4
+X1 1 2 3 4 6L6GC
+.ENDS 
+.SUBCKT 6P3S  1 2 3 4 ; P G2 G1 K (Pentode) 17-Nov-2001
+X1 1 2 3 4 Tetro MU= 12.43  EX=1.000  KG1=364.6  KP=33.25   KG2=4500
++	KVB=29.3  VCT=0.00 RGI=1K CCG=11P CPG1=.85P CCP=8.2P
+.ENDS
+.Subckt 6L6G-P 1 2 3 4
+X1 1 2 3 4 6P3S
+.Ends
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes (within max. ratings):
+*                 6L6/G/GA/   5881/
+*                 GB, 1614,   6L6WGB,   6L6GC,   7581A,   7027A.
+*	*	*	*	*	*	*	*	*
+* Plate Dissip. :    19W        23W       30W      35W      35W
+* Screen Input  :   2.5W         3W        5W       5W       5W
+* Plate Voltage :   360V       400V      500V     500V     600V
+* Screen Voltage:   270V       400V      450V     450V     500V
+*
+* at the following conditions:
+*  Plate voltage  : 0..800V
+*  Screen voltage : 0..600V
+*  Grid voltage   : 0..-60V
+*  Cathode current: 0..400mA
+*
+*
+* Connections: Plate
+*              | Screen Grid
+*              | | Control Grid
+*              | | | Cathode
+*              | | | |
+.SUBCKT  6L6G P S G K
+Esp 2  0  VALUE={V(P,K)+15.15*V(S,K)+134.6*V(G,K)}
+E1  3  2  VALUE={7.731E-7*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+E2  3  4  VALUE={7.731E-7*PWR(15.15*V(S,K),1.5)*V(P,K)/60}
+E3  5  4  VALUE={(1-V(4,2)/ABS(V(4,2)+0.001))/2}
+R1  5  0  1.0K
+Gk  S  K  VALUE={V(3,2)}
+Gp  P  S  VALUE={0.94*(V(3,4)*(1-V(5,4))+V(3,2)*V(5,4))}
+Cgk G  K  5P
+Cgs G  S  5P
+Cgp G  P  0.6P
+Cpk P  K  6.5P
+.ENDS
+*	*	*	*	*	*	*	*	*
+* Device type:          Power beam tetrode
+* Device model:         6L6 (and variants)
+*
+* Author:               Duncan Munro
+* Date:                 4/6/97
+* Copyright:            (C)1997-2000 Duncan Amplification
+*
+* V2 [12/10/97]: Screen current limited to prevent screen current
+*                draw at Vs = 0.
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current is an approximation
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Email queries to postmaster@duncanamps.com
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+.SUBCKT 6L6 A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/5)}
+Eme     me      0       VALUE={PWR(LIMIT{V(A,K),0,2000},1.5)/1750}
+Emu     mu      0       VALUE={PWRS(V(G,K),1-(LIMIT{-V(G,K),30,9999}-30)/2000)}
+Egs     gs      0       VALUE={LIMIT{V(A,K)/2.5+V(S,K)*15.15+V(mu)*134,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.5)*0.8E-6}
+Ecath   cc      0       VALUE={LIMIT{V(gs2)*V(at),0,V(me)}}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={V(cc)}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={0.76*V(gs2)*(1.1-V(at))}
+Gs1      S       K       VALUE={V(sc)*LIMIT{V(S,K),0,10}/10}
+*
+* Grid current
+*
+Gg      G       K       VALUE={PWR(LIMIT{V(G,K)+1,0,1E6},1.5)*(1.25-V(at))*650E-6}
+*
+* Capacitances
+*
+Cg1     G       K       5.0p
+Cgs     G       S       5.0p
+Cak     A       K       6.5p
+Cg1a    G       A       0.6p
+.ENDS
+*
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6L6WGT_RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO2 G=.924m MU=140 MU12=7.71 k1=200 k2=4 k3=0 k4=7.9 k5=64.8 k6=26.3 K7=20U K8=2.5 K=0.036m
+X2 3 4 Igrid ALPHA=.2m BETA=2U
+C1 1 4 9.5p
+C2 3 1 .9p
+C3 3 4 11.5p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 7581RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO1 G=.878m MU=238 MU12=7.46 k1=93.2 k4=6.87
++k5=89.3 k6=34.9 K7=20U K8=2.5 K=0.022m
+X2 3 4 Igrid ALPHA=.1m BETA=2U
+C1 1 4 6.5p
+C2 3 1 .6p
+C3 3 4 10p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT GU50  1 2 3 4 ; P G2 G1 K (Pentode)  21-Nov-2001 
+X1 1 2 3 4 Tetro MU=73.53  EX=1.150  KG1=194.7  KP=13.28   KG2=4500
++	KVB=30.3  VCT=0.00  RGI=2k CCG=14P  CPG1=0.1P CCP=9.2P
+.ENDS
+.Subckt LS50 1 2 3 4
+X1 1 2 3 4 GU50
+.Ends
+.Subckt P50-2 1 2 3 4
+X1 1 2 3 4 GU50
+.Ends
+.SUBCKT 6F5P-P  1 2 3 4 ; P G2 G1 K  (Pentode) 25-Sep-2002
+X1 1 2 3 4 Tetro MU=11.5  EX=1.204  KG1=303.0  KP=34.87 KG2= 4500 
++	KVB=20.1  VCT=0.00  RGI=1k CCG=11.7P  CPG1=0.7P CCP=8.8P
+.ENDS
+.Subckt 6GV8P 1 2 3 4
+X1 1 2 3 4 6F5P-P
+.Ends
+.Subckt ECL85P 1 2 3 4
+X1 1 2 3 4 6F5P-P
+.Ends
+.SUBCKT 6F12P_P  1 2 3 4 ; P G2 G1 K (Pentode) 20-Nov-2004
+X1 1 2 3 4 Tetro MU= 71.45  EX= 1.350  KG1= 260.8  KP=7396.95   KG2= 4500
++	KVB=17.9  VCT=  0.00 RGI=4500k CCG=6.6P  CPG1=0.02P CCP=1.9P
+.ENDS
+.SUBCKT 6P18P_P  1 2 3 4 ; P G2 G1 K (Pentode) 20-Nov-2004
+X1 1 2 3 4 Tetro MU= 14.95  EX= 1.350  KG1= 568.0  KP=37.41   KG2= 4500
++	KVB=  34.4  VCT=  0.00  RGI=1000 CCG=11.5P  CPG1=0.2P CCP=6P
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 7591DB 1 2 3 4 ;  P G1 C G2
+X1 1 2 3 4 Tetro MU=16.187 EX=1.768 KG1=1417 KG2=4200 KG3=961.81 KP=32 KVB=31.31
++	CCG=14P CPG1=0.4P CCP=10P RGI=1K 
+* MU=10.2 EX=1.35 KG1=1460 KG2=4500 KP=48 KVB=12
+.ENDS
+*	*	*	*	*	*	*	*	*
+******************************************************
+* File created 09 Aug 2010, extract from new_tetrodes.txt
+* This version specifically for VHF / FM simulations.
+*
+* Model format: LTspice
+* New tetrodes macro model
+* as by Norman L. Koren
+* formulas @ http://www.normankoren.com/Audio/Tubemodspice_article.html
+* External node designations
+* Node A -> Anode
+* Node S -> Screen
+* Node G -> Grid
+* Node K -> Cathode
+*
+* MU = amplification factor.
+* EX = line curvature, typical range from 1.3 to 1.4, increases with EX.
+* kG1 = used to fit the equation to data for anode current.
+* kG2 = similar to kG1 for screen current (pentode).
+* KP (kP) behaviour region (A) (large negative grid voltage,
+* large plate voltage, and low plate current).
+* KVB "knee" of the characteristic curves, for positive bias.
+
+******************************************************
+
+.subckt Tetrode A S G K ; = ECF80 - base generic
++params: MU=46.13 EX=1.350 KG1=730 KG2=720 KP=149.94 KVB=8.0 VCT=0.00 RGI=100 CCG=5.2p cpg=0.0025p CCP=3.4p
+
+RE1   E1 0  1MEG ; dummy so node E1 has two connections
+Ee1   E1 0  Value={(V(S,K)/kP) * log(1+exp(kP * (1/Mu+V(G,K)/V(S,K))))}
+GIP   A  K  Value={(PWR(V(E1),EX)+PWRS(V(E1),EX))/KG1*ATAN(V(A,K)/KVB)}
+GIG2  S  K  Value={(EXP(EX*(LOG((V(S,K)/MU)+V(G,K)))))/KG2}
+
+* 'old' version:
+* GIG2  S  K  Value={pwr((V(G,K)+V(S,K)/mu),1.5)/kG2}
+
+R1    G  5  {rgi} ; for grid forward current
+D3    5  K  DX ; for grid diode action
+RZ    5  0  1G
+
+CM1   G  K  {ccg}
+CM2   A  G  {cpg}
+CM3   A  K  {ccp}
+
+RF1   A  0  1G ; }
+RF2   S  0  1G ; } prevent floating nodes
+RF3   G  0  1G ; }
+RF4   K  0  1G ; }
+
+.MODEL DX D(Ron=1 Roff=1G Vfwd=.75)
+.ends
+
+.subckt Tetrode2 A S G K
+* Only used by EF80
+RE1   E1 0  1MEG
+Ee1   E1 0  Value={(V(S,K)/{kP}) * log(1+exp({kP} * (1/{Mu}+V(G,K)/V(S,K))))}
+GIP   A  K  VALUE={pi/2*(PWR(V(E1),EX)+PWRS(V(E1),EX))/KG1*(1-exp(-2*V(A,K)/(pi*KVB)))}
+GIG2  S  K  Value={(EXP(EX*(LOG((V(S,K)/MU)+V(G,K)))))/KG2}
+
+R1    G  5  {rgi} ; for grid forward current
+D3    5  K  DX ; for grid diode action
+CM1   G  K  {ccg}
+CM2   A  G  {cpg}
+CM3   A  K  {ccp}
+RF1   A  0  1G ; }
+RF2   S  0  1G ; } prevent floating nodes
+RF3   G  0  1G ; }
+RF4   K  0  1G ; } 
+.MODEL DX D(Ron=1 Roff=1G Vfwd=.75)
+.ends
+
+.subckt Tetrode3 A S G K
+* Only used by EF85 & EF89
+RE1   E1 0  1MEG
+RE2   E2 0  1MEG ; dummy so node E2 has two connections
+
+* This bit provides variable mu depending on Vgk:
+Ee2   E2 0  Value {{mu}*(1+abs(V(G,K))/5)}
+
+Ee1   E1 0  Value={(V(S,K)/{kP}) * log(1+exp({kP} * (1/V(E2)+V(G,K)/V(S,K))))}
+GIP   A  K  VALUE={pi/2*(PWR(V(E1),EX)+PWRS(V(E1),EX))/KG1*(1-exp(-2*V(A,K)/(pi*KVB)))}
+GIG2  S  K  Value={(EXP(EX*(LOG((V(S,K)/V(E2))+V(G,K)))))/KG2}
+
+R1    G  5  {rgi} ; for grid forward current
+D3    5  K  DX ; for grid diode action
+CM1   G  K  {ccg}
+CM2   A  G  {cpg}
+CM3   A  K  {ccp}
+RF1   A  0  1G ; }
+RF2   S  0  1G ; } prevent floating nodes
+RF3   G  0  1G ; }
+RF4   K  0  1G ; } 
+.MODEL DX D(Ron=1 Roff=1G Vfwd=.75)
+.ends
+
+
+
+.subckt EF80 A S G K ; screen edited!
+* Philips data sheet AKA 6BX6
+XV1 A S G K Tetrode2
++params: MU=49.11 EX=1.420 KG1=620 KG2=690 KP=375.96 KVB=42.9 VCT=0.50 RGI=100 CCG=2.6p cpg=0.007p CCP=3.3p
+.ends
+
+.subckt EF85 A S G K ; variable mu pentode ; screen edited!
+* Philips data sheet
+XV1 A S G K Tetrode2
++params: MU=22.39 EX=1.350 KG1=1050 KG2=1350 KP=160.84 KVB=40.9 VCT=0.00 RGI=100 CCG=6.9p cpg=0.007p CCP=3.2p
+.ends
+
+.subckt EF89 A S G K ; variable mu pentode ; screen edited!
+* Philips data sheet AKA 6DA6
+XV1 A S G K Tetrode
++params: MU=30.52 EX=1.350 KG1=1110 KG2=460 KP=39.49 KVB=23.6 VCT=0.00 RGI=100 CCG=5.5p cpg=0.002p CCP=5.1p
+.ends
+
+.subckt ECF80p A S G K ; screen edited!
+* Philips data sheet AKA 6BL8  
+XV1 A S G K Tetrode
++params: MU=46.13 EX=1.350 KG1=730 KG2=720 KP=149.94 KVB=8.0 VCT=0.00 RGI=100 CCG=5.2p cpg=0.0025p CCP=3.4p
+.ends
+
+.subckt ECF82p A S G K ; screen edited!
+* Philips data sheet AKA 6U8
+XV1 A S G K Tetrode
++params: MU=37.97 EX=1.350 KG1=823 KG2=674 KP=90.97 KVB=20.1 VCT=0.00 RGI=100 CCG=5.0p cpg=0.007p CCP=3.5p
+.ends
+
+.subckt ECF83p A S G K ; screen edited!
+* Universal Vademecum (1960) 
+XV1 A S G K Tetrode
++params: MU=12.24 EX=1.350 KG1=2401.0 KG2=1740 KP=27.36 KVB=23.5 VCT=0.00 RGI=100 CCG=4.1p cpg=0.025p CCP=4.1p
+.ends
+
+.subckt ECF86p
+* Sylvania Technical Manual AKA 6HG8 
+XV1 A S G K Tetrode
++params: MU=64.17 EX=1.350 KG1=328.7 KG2=1500 KP=394.31 KVB=26.0 VCT=0.00 RGI=100 CCG=6.7p cpg=0.6p CCP=4.1p
+.ends
+*	*	*	*	*	*	*	*	*
+*Model to provide heater loading for power supply
+***.SUBCKT Heater 1 2 ;  H1 H2
+***+PARAMS: RCO= 6.2 RHO= 42 HTV= 6.3 HWU= 10.5
+.SUBCKT 7591Pent 5 4 3 2 1  ;  P G1 C G2
+*
+*+ PARAMS: MU=15.99 EX=1.8 KG1=1603.1 KG2=4200 KG3=962.3 
+*+ KP=299.5 KVB=31.38 CCG=15.2P CPG1=1.1P CCP=8.4P RGI=2K
+*
+X1 1 2 3 4 5 Pento MU=16.187 EX=1.77 KG1=1417.55 KG2=4500 KG3=961.81 
++	KP=299.5 KVB=31.31 CCG=15.2P CPG1=.75P CCP=8.4P RGI=2K
+.ENDS
+*	*	*	*	*	*	*	*	*
+* Device type:		Power pentode
+* Device model:		6BQ5/EL84
+*
+* Author:		Duncan Munro
+* Date:			12/5/97
+* Copyright:		(C)1997-2004 Duncan Amplification
+*
+*
+* V3 [12/10/97]: Screen current limited to prevent screen current
+*		 draw at Vs = 0.
+*
+* V4 [23/01/04]: LIMIT{x,y,z} statements changed to LIMIT(x,y,z)
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current is an approximation
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Queries via the forum at http://www.duncanamps.com/
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+.SUBCKT 6BQ5D A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat	at	0	VALUE={0.636*ATAN(V(A,K)/15)}
+Egs	gs	0	VALUE={LIMIT(V(S,K)/19+V(G,K)+V(A,K)/1400,0,1E6)}
+Egs2	gs2	0	VALUE={PWRS(V(gs),1.5)}
+Ecath  	cc    	0 	VALUE={V(gs2)*V(at)}
+*
+* Calculate anode current
+*
+Ga     	A     	K     	VALUE={3.2E-3*V(cc)}
+*
+* Calculate screen current
+*
+Escrn	sc	0	VALUE={V(gs2)*(1.1-V(at))}
+Gs     	S     	K	VALUE={2.0E-3*V(sc)*LIMIT(V(S,K),0,10)/10}
+*
+* Grid current (approximation - does not model low va/vs)
+*
+Gg	G	K	VALUE={PWR(LIMIT(V(G,K)+1,0,1E6),1.5)*50E-6}
+*
+* Capacitances
+*
+Cg1	G	K	10.8p
+Cak	A	K	6.5p
+Cg1a	G	A	0.5p
+.ENDS
+*
+.SUBCKT EL84D 1 2 3 4
+X1 1 2 3 4 6BQ5D
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6BQ5RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 PENTH1 G=2.89m MU=245 MU12=17.8 k1=38.7 k2=1.46 k3=.38 k4=17.8 k5=22 k6=11.7 K=0.22m
+X2 3 4 Igrid ALPHA=.05m BETA=1U
+C3 3 1 0.5p
+C5 3 4 10.8p
+C6 1 4 6.5p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+.SUBCKT EL84RY 1 2 3 4
+X1 1 2 3 4 6BQ5RY
+.ENDS
+*
+*	*	*	*	*	*	*	*	*
+* Device type:          Power pentode
+* Device model:         6KG6/EL509
+*                       (also 40KG6/PL509 as no heater model)
+*
+* Author:               Duncan Munro
+* Date:                 21/7/97
+* Copyright:            (C)1997-2000 Duncan Amplification
+*
+*
+* V2 [12/10/97]: Screen current limited to prevent screen current
+*                draw at Vs = 0.
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current is an approximation in the absence
+*       of suitable data
+*
+* Also see comments below, as the Svetlana EL509 is of different
+* construction and has different capacitances.
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Email queries to duncan@muffy.demon.co.uk
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+*	*	*	*	*	*	*	*	*
+*
+.SUBCKT 6KG6 A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/20)}
+Eme     me      0       VALUE={PWR(LIMIT{V(A,K),0,10000},1.5)/17}
+Emu     mu      0       VALUE={PWRS(V(G,K),1-(LIMIT{-V(G,K),5,9999}-5)/1150)}
+Egs     gs      0       VALUE={LIMIT{V(S,K)/19+V(mu)/4.3+V(A,K)/800,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.5)}
+Ecath   cc      0       VALUE={LIMIT{V(gs2)*V(at),0,V(me)}}
+Elim    el      0       VALUE={LIMIT{V(gs2)*V(at)-V(cc),0,99999}}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={6E-2*V(cc)}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={V(gs2)*(1.1-V(at))+1.2*V(el)}
+Gs      S       K       VALUE={1.2E-2*V(sc)*LIMIT{V(S,K),0,10}/10}
+*
+* Grid current (approximation - does not model low va/vs)
+*
+Gg      G       K       VALUE={PWR(LIMIT{V(G,K)+1,0,1E6},1.5)*50E-6}
+*
+* Capacitances
+* NOTE: Change Cg1 from 37p to 25p for Svetlana EL509
+*
+Cg1     G       K       37p
+Cak     A       K       18.5p
+Cg1a    G       A       2.5p
+.ENDS
+.Subckt 40KG6 1 2 3 4
+X1 1 2 3 4 6KG6
+.ENDS 
+.Subckt EL509 1 2 3 4
+X1 1 2 3 4 6KG6
+.ENDS
+.Subckt PL509 1 2 3 4
+X1 1 2 3 4 6KG6
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 5881RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO2 G=.924m MU=140 MU12=7.71 k1=200 k2=4 k3=0 k4=7.9 k5=64.8 k6=26.3 K7=20U K8=2.5 K=0.036m
+X2 3 4 Igrid ALPHA=.2m BETA=2U
+C1 1 4 9.5p
+C2 3 1 .9p
+C3 3 4 11.5p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6SJ7GT_RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 PENTH1 G=.606m MU=1500 MU12=16.1 k1=100 k2=1.5 k3=0 k4=15.1 k5=10 k6=6.6 K=.137m
+X2 3 4 Igrid ALPHA=.01m BETA=.1U
+C2 1 4 7p
+C3 3 1 .005p
+C5 3 4 7p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6V6GT_RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO1 G=.747m MU=494 MU12=8.86 k1=43 k4=5.6 k5=97.8 k6=43.4 K7=50U K8=2 K=0.015m
+X2 3 4 Igrid ALPHA=.1m BETA=1U
+C1 1 4 7.5p
+C2 3 1 .7p
+C3 3 4 9p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+.SUBCKT 6AQ5ry 1 2 3 4
+X1 1 2 3 4 6V6GT_RY
+.ENDS 6AQ5RY
+*	*	*	*	*	*	*	*	*
+* Device type:          Power beam tetrode
+* Device model:         6V6GT
+*
+* Author:               Duncan Munro
+* Date:                 4/5/97
+* Copyright:            (C)1997-2000 Duncan Amplification
+*
+*
+* V2 [12/10/97]: Screen current limited to prevent screen current
+*                draw at Vs = 0.
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current is an approximation
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Email queries to postmaster@duncanamps.com
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+*	*	*	*	*	*	*	*	*
+
+.SUBCKT 6V6 A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/10)}
+Eme     me      0       VALUE={PWR(LIMIT{V(A,K),0,2000},1.5)/1300}
+Egs     gs      0       VALUE={LIMIT{V(A,K)/600+V(S,K)/14+V(G,K)*0.65,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.5)*1.45E-3}
+Ecath   cc      0       VALUE={LIMIT{V(gs2)*V(at),0,V(me)}}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={V(cc)}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={0.7*V(gs2)*(1.1-V(at))}
+Gs      S       K       VALUE={V(sc)*LIMIT{V(S,K),0,10}/10}
+*
+* Grid current
+*
+Gg      G       K       VALUE={PWR(LIMIT{V(G,K)+1,0,1E6},1.5)*(1.25-V(at))*650E-6}
+*
+* Capacitances
+*
+Cg1     G       K       7.5p
+Cak     A       K       9p
+Cg1a    G       A       0.7p
+
+.ENDS 
+
+*	*	*	*	*	*	*	*	*
+*
+* This model is valid for the following tubes (within max. ratings):
+*                   6V6GTA,   6AQ5A/EL90,
+*                   7408,     6669.
+*	*	*	*	*	*	*	*	*
+* Plate Dissip. :    14W          12W
+* Screen Input  :   2.2W         2.0W
+* Plate Voltage :   350V         275V
+* Screen Voltage:   315V         275V
+*
+* at the following conditions:
+*  Plate voltage  : 0..500V
+*  Screen voltage : 0..450V
+*  Grid voltage   : 0..-50V
+*  Cathode current: 0..200mA
+*
+*
+* Connections: Plate
+*              | Screen Grid
+*              | | Control Grid
+*              | | | Cathode
+*              | | | |
+.SUBCKT 6V6GTA P S G K
+Esp 2  0  VALUE={V(P,K)+13.49*V(S,K)+130.4*V(G,K)}
+E1  3  2  VALUE={5.521E-7*(PWR(V(2),1.5)+PWRS(V(2),1.5))/2}
+E2  3  4  VALUE={5.521E-7*PWR(13.49*V(S,K),1.5)*V(P,K)/25}
+E3  5  4  VALUE={(1-V(4,2)/ABS(V(4,2)+0.001))/2}
+R1  5  0  1.0K
+Gk  S  K  VALUE={V(3,2)}
+Gp  P  S  VALUE={0.92*(V(3,4)*(1-V(5,4))+V(3,2)*V(5,4))}
+Cgk G  K  4.5P
+Cgs G  S  4.5P
+Cgp G  P  0.7P
+Cpk P  K  7.5P
+.ENDS 6V6GTA
+.SUBCKT 6AQ5A 1 2 3 4
+X1 1 2 3 4 6V6GTA
+.ENDS 6AQ5A
+.SUBCKT EL90 1 2 3 4
+X1 1 2 3 4 6V6GTA
+.ENDS EL90
+
+*	*	*	*	*	*	*	*	*
+.SUBCKT E80F_RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 PENTH1 G=.913m MU=140000 MU12=22.38 k1=20.34 k2=20.7 k3=.6 k4=25.67 k5=26.4 k6=15 K=.206m
+X2 3 4 Igrid ALPHA=.02m BETA=.1U
+C2 1 4 5.5P
+C3 3 1 .05P
+C5 3 4 4P
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+* Device type:          Power pentode
+* Device model:         Svetlana SV83
+*
+* Author:               Duncan Munro
+* Date:                 25/10/97
+* Copyright:            (C)1997-2000 Duncan Amplification
+*
+*
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current is an approximation
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Email queries to postmaster@duncanamps.com
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+*	*	*	*	*	*	*	*	*
+.SUBCKT SV83 A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/15)}
+Egs     gs      0       VALUE={LIMIT{V(S,K)/19+V(G,K)*1.2+V(A,K)/1400,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.5)*1.6}
+Ecath   cc      0       VALUE={V(gs2)*V(at)}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={LIMIT{3.5E-3*V(cc),0,9999}}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={V(gs2)*(1.1-V(at))}
+Gs      S       K       VALUE={2.0E-3*V(sc)*LIMIT{V(S,K),0,10}/10}
+*
+* Grid current (approximation - does not model low va/vs)
+*
+Gg      G       K       VALUE={PWR(LIMIT{V(G,K)+1,0,1E6},1.5)*50E-6}
+*
+* Capacitances
+*
+Cg1     G       K       13.5p
+Cak     A       K       7.0p
+Cg1a    G       A       0.07p
+.ENDS 
+*	*	*	*	*	*	*	*	*
+* Device type:          RF beam tetrode
+* Device model:         6146
+*
+* Author:               Duncan Munro
+* Date:                 13/8/97
+* Copyright:            (C)1997-2000 Duncan Amplification
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Email queries to duncan@muffy.demon.co.uk
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+.SUBCKT 6146 A S G K
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/10)}
+Eme     me      0       VALUE={LIMIT{V(A,K),0,10000}/130}
+Emu     mu      0       VALUE={PWRS(V(G,K),1-(LIMIT{-V(G,K),30,9999}-30)/2000)}
+Egs     gs      0       VALUE={LIMIT{V(A,K)/10+V(S,K)*4.5+V(mu)*19,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.5)*16E-6}
+Ecath   cc      0       VALUE={LIMIT{V(gs2)*V(at),0,V(me)}}
+Esd     sd      0       VALUE={LIMIT{V(gs2)*V(at)-V(me),0,99999}}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={V(cc)}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={2.5E-4*PWRS(V(S,K),1.5)*V(gs2)*(1.1-V(at))+V(sd)}
+Gs      S       K       VALUE={V(sc)}
+*
+* Grid current
+*
+Gg      G       K       VALUE={PWR(LIMIT{V(G,K)+1,0,1E6},1.5)*(1.25-V(at))*870E-6}
+*
+* Capacitances
+*
+Cg1     G       K       13.0p
+Cak     A       K       8.5p
+Cg1a    G       A       0.24p
+.ENDS 
+*	*	*	*	*	*	*	*	*
+.SUBCKT EF86RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 PENTH1 G=.78m MU=1000 MU12=31.6 k1=55.2 k2=1.08 k3=.5 k4=32.6 k5=24.8 k6=12.8 K=0.125m
+X2 3 4 Igrid ALPHA=.02m BETA=.1U
+C2 1 4 5.5P
+C3 3 1 .05P
+C5 3 4 4P
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+* Device type:          Pentode
+* Device model:         EF86
+*
+* Author:               Duncan Munro
+* Date:                 16/5/97
+* Copyright:            (C)1997-2000 Duncan Amplification
+* 
+* The following parameters are not modelled:
+*
+*   (1) Heater
+*   (2) Grid current
+*
+* Please note that this model is provided "as is" and
+* no warranty is provided in respect of its suitability
+* for any application.
+*
+* This model is provided for educational and non-profit use.
+*
+* Email queries to postmaster@duncanamps.com
+*
+* Pins   A  Anode
+*        S  Screen
+*        G  Grid
+*        K  Cathode
+*
+*	*	*	*	*	*	*	*	*
+.SUBCKT EF86 A S G K
+*
+* Calculate reduction in mu when Vg < -3V
+*
+Emu     mu      0       VALUE={LIMIT{V(G,K),-3,999}+LIMIT{V(G,K)+3,-999,0}*0.714}
+*
+* Calculate contribution to cathode current
+*
+Eat     at      0       VALUE={0.636*ATAN(V(A,K)/15)}
+Egs     gs      0       VALUE={LIMIT{V(S,K)/27.5+V(mu)*1.32+1,0,1E6}}
+Egs2    gs2     0       VALUE={PWRS(V(gs),1.5)}
+Ecath   cc      0       VALUE={V(gs2)*V(at)}
+*
+* Calculate anode current
+*
+Ga      A       K       VALUE={5.83E-4*V(cc)}
+*
+* Calculate screen current
+*
+Escrn   sc      0       VALUE={V(gs2)*(1.1-V(at))}
+Gs      S       K       VALUE={0.5E-3*V(sc)}
+*
+* Capacitances
+*
+Cg1     G       K       3.8p
+Cak     A       K       5.3p
+Cg1a    G       A       0.05p
+.ENDS 
+.SUBCKT 6550 1 2 3 4 ; P G2 G1 K
+X1 1 2 3 4 Tetro MU=7.9 EX=1.35 KG1=890 KG2=4200 KP=60 KVB=24
++	CCG=14P CPG1=.85P CCP=12P RGI=1K
+.Ends
+.SUBCKT KT88 1 2 3 4 ;  P G2 G1 K
+X1 1 2 3 4 Tetro MU=8.8 EX=1.35 KG1=730 KG2=4800 KP=32 KVB=16
++	CCG=14P CPG1=.85P CCP=12P RGI=1K
+.Ends 
+*	*	*	*	*	*	*	*	*
+.SUBCKT 6550RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO1 G=2.14m MU=219 MU12=7.8 k1=57.4 k4=7.8 k5=65.3 k6=28.8 K7=25U K8=2.5 K=0.107m
+X2 3 4 Igrid ALPHA=.3m BETA=2U
+C1 1 4 12p
+C2 3 1 1.2p
+C3 3 4 16p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT KT88RY 1 2 3 4
+X1 1 2 3 4 6550RY
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT KT66RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO1 G=.6m MU=488 MU12=6.39 k1=58.3 k4=7.46 k5=35.6 k6=16.3 K7=20U K8=2.5 K=0.059m
+X2 3 4 Igrid ALPHA=.2m BETA=2U
+C1 1 4 10p
+C2 3 1 1.1p
+C3 3 4 14.5P
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT KT90RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 TETRO2 G=3.28m MU=140 MU12=9.63 k1=80 k2=100 k3=.068 k4=7.46 k5=62 k6=28.6 K7=25U K8=2.5 K=0.11m
+X2 3 4 Igrid ALPHA=.4m BETA=3U
+C1 1 4 10p
+C2 3 1 1.8p
+C3 3 4 29P
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT NF2RY 1 2 3 4
+* Anode G2 G1 Cathode
+X1 1 2 3 4 PENTH1 G=1.5m MU=3500 MU12=24.3 k1=30 k2=100 k3=0.02 k4=24.3 k5=30 k6=20 K=0.4m
+X2 3 4 Igrid ALPHA=.02m BETA=.5U
+C2 1 4 8p
+C3 3 1 .1p
+C5 3 4 6p
+RF1 1 4 200MEG
+RF2 3 4 50MEG
+RF3 2 4 100MEG
+.ENDS
+.SUBCKT EndTetrodes&Pentodes_StartHeat&Aux ;	*	*	*	*	*	*	*	*	*	*	*
+.ends
+*	*	*	*	*	*	*	*	*
+**MODELLI MATEMATICI**
+*	*	*	*	*	*	*	*	*
+.SUBCKT TRIO1 A G C
+B1 A C I={G}*(1+V(G,C)/({B}-(V(G,C)/1000)))*(V(G,C)+((V(A,C)+{Vc})/{MU}))**1.5
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT TRIO2 A G C
+B1 A C I={G}*((1+V(G,C)/{B})*(V(G,C)+((V(A,C)+{Vc})/{MU}))**1.5)*(V(A,C)/(V(A,C)+{k}))
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT TRIO3 A G C
+B1 A C I={G}*(1+(V(G,C)/({B}-(V(G,C)/{C}))))*(V(G,C)+((V(A,C)+{Vc})/{MU}))**1.5
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT TETRO1 A G2 G1 C
+* Terme d'ecran
+B1 10 0 V=IF(V(A,C)>0,(V(G2,C)/{MU12})*(V(A,C)/((V(G2,C)/{k1})+V(A,C))),0)
+* Total
+B2 11 0 V={G}*(V(G1,C)+V(10,0)+(V(A,C)/{MU}))**1.5
+* Rajout de la caracteristique de saturation a faible tension
+B3 A C I=IF(({K7}*(V(A,C)**{K8}))>V(11,0),V(11,0),IF(V(A,C)>0,({K7}*(V(A,C)**{K8})),0))
+* Calcul du courant d'ecran
+B6 12 0 V=IF(V(G2,C)>0,(V(G1,C)+(V(G2,C)/{k4})),0)
+B7 G2 C I={K}*(V(12,0)**1.5)*((V(A,C)+{k5})/(V(A,C)+{k6}))**3
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT TETRO2 A G2 G1 C
+
+* Terme d'ecran
+B1 10 0 V=IF(V(A,C)>0,(V(G2,C)/{MU12})*(V(A,C)-({k3}*V(G1,C)))/((V(G2,C)/{k1})+V(A,C)),0)
+* Total
+B2 11 0 V={G}*((V(G1,C)+V(10,0))+(V(A,C)/({MU}*(1-(V(G1,C)/{k2})))))**1.5
+* Rajout de la caracteristique de saturation a faible tension
+B3 A C I=IF(({K7}*(V(A,C)**{K8}))>V(11,0),V(11,0),IF(V(A,C)>0,({K7}*(V(A,C)**{K8})),0))
+* Calcul du courant d'ecran
+B6 12 0 V=IF(V(G2,C)>0,(V(G1,C)+(V(G2,C)/{k4})),0)
+B7 G2 C I={K}*(V(12,0)**1.5)*((V(A,C)+{k5})/(V(A,C)+{k6}))**3
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT PENTH1 A G2 G1 C
+* Terme d'ecran
+B1 10 0 V=IF(V(A,C)>0,(V(G2,C)/{MU12})*(V(A,C)-({k3}*V(G1,C)))/((V(G2,C)/{k1})+V(A,C)),0)
+* Total
+B2 A C I={G}*((V(G1,C)+V(10,0))+(V(A,C)/({MU}*(1-(V(G1,C)/{k2})))))**1.5
+* Calcul du courant d'ecran
+B6 12 0 V=IF(V(G2,C)>0,(V(G1,C)+(V(G2,C)/{k4})),0)
+B7 G2 C I={K}*(V(12,0)**1.5)*((V(A,C)+{k5})/(V(A,C)+{k6}))**3
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT Igrid G1 C
+* Courant grille
+B4 6 0 V=IF(V(G1,C)>0,{ALPHA}*V(G1,C)**1.5,{BETA}/-(V(G1,C)-.1))
+B5 G1 C I=V(6,0)
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT VALVE1 A1 A2 C
+B1 1 0 V=IF(V(A1,C)>0,{G}*(V(A1,C)),0)
+B2 2 0 V=IF(V(A2,C)>0,{G}*(V(A2,C)),0)
+B3 A1 C I=V(1,0)**1.5
+B4 A2 C I=V(2,0)**1.5
+R1 C 0 1MEG
+.ENDS
+*	*	*	*	*	*	*	*	*
+.SUBCKT TRIODE A G K H1 H2
++PARAMS: RCO=1.6 RHO=10.5 HTV=6.3 HWU=10.5
++ LIP=1 LIF=3.7E-3 RAF=18E-3 RAS=1 CDO=0 RAP=4E-3
++ ERP=1.5 
++ MU0=17.3 MUR=19E-3 EMC=9.6E-6 GCO=0 GCF=213E-6
++ CGA=3.9p CGK=2.4p CAK=0.7p 
+
+************************************************************************
+*
+* Heater model
+*
+* Can be operated from AC or DC power sources.
+* NB: When operating from DC power sources, "Skip initial transient
+*     solution" must be checked, to make use of this model.
+*
+* PARAMETERS
+*
+*	RCO Heater resistance cold (ohms)
+*	RHO Heater resistance hot (ohms)
+*	HTV Normal heater voltage (V)
+* 	HWU Heater time to warm up to 90% of emission (seconds)
+*
+************************************************************************
+
+Rcool H1 HA {RCO}
+Rload HA HB 1M
+Esens HD 0  VALUE {V(HA,HB)*1000}
+Epwr  HE 0  VALUE {V(H1,H2)*V(HD)/(PWR({HTV},2)/{RHO})}
+RH1   HE HF 91k
+CH1   HF 0  {HWU/1E6}
+EH2   HG 0  VALUE {V(HF)}
+RH2   HG HH 270k
+CH2   HH 0  {HWU/1E6}
+EH3   HJ 0  VALUE {LIMIT(V(HH)-0.75,0,1E6)*4}
+RH3   HJ HK 91k
+CH3   HK 0  {HWU/1E6}
+Ghot  HB H2 VALUE {(1/(V(HG)+0.001))/({RHO}-{RCO})*V(HB,H2)}
+
+************************************************************************
+*
+* Anode/grid model
+*
+* Models reduction in mu at large negative grid voltages
+* Models change in Ra with negative grid voltages
+* Models limit in Ia with high +Vg and low Va
+*
+* PARAMETERS
+*
+*	LIP Conduction limit exponent
+*	LIF Conduction limit factor
+*	CDO Conduction offset
+*	RAF Anode resistance factor for neg grid voltages
+*	RAP Anode resistance factor for positive grid voltages
+*	ERP Emission power
+*	MU0 Mu between grid and anode at Vg=0
+*	MUR Mu reduction factor for large negative grid voltages
+*	EMC Emission coefficient
+*	GCO Grid current offset in volts
+*	GCF Grid current scale factor
+*
+************************************************************************
+
+Elim  LI 0  VALUE {PWR(LIMIT(V(A,K),0,1E6),{LIP})*{LIF}}
+Egg   GG 0  VALUE {V(G,K)-{CDO}}
+Erpf  RP 0  VALUE {1-PWR(LIMIT(-V(GG)*{RAF},0,0.999),{RAS})+LIMIT(V(GG),0,1E6)*{RAP}}
+Egr   GR 0  VALUE {LIMIT(V(GG),0,1E6)+LIMIT((V(GG))*(1+V(GG)*{MUR}),0,-1E6)}
+Eem   EM 0  VALUE {LIMIT(V(A,K)+V(GR)*{MU0},0,1E6)}
+Eep   EP 0  VALUE {PWR(V(EM),ERP)*{EMC}*V(RP)}
+Eel   EL 0  VALUE {LIMIT(V(EP),0,V(LI))}
+Eld   LD 0  VALUE {LIMIT(V(EP)-V(LI),0,1E6)}
+Ga    A  K  VALUE {V(HK)*V(EL)}
+
+************************************************************************
+*
+* Grid current model
+*
+* Models grid current, along with rise in grid current at low Va
+*
+************************************************************************
+Egf   GF 0  VALUE {PWR(LIMIT(V(G,K)-{GCO},0,1E6),1.5)*{GCF}}
+Gg    G  K  VALUE {(V(GF)+V(LD))*V(HK)}
+
+*
+* Capacitances and anti-float resistors
+*
+CM1	G	K	{CGK}
+CM2	A	G	{CGA}
+CM3	A	K	{CAK}
+RF1	A	0	1000MEG
+RF2	G	0	1000MEG
+RF3	K	0	1000MEG
+.ENDS
+*
+*	*	*	*	*	*	*	*	*	*
+.SUBCKT TRIODENH A G K
++PARAMS: LIP=1 LIF=3.7E-3 RAF=18E-3 RAS=1 CDO=0 RAP=4E-3
++ ERP=1.5
++ MU0=17.3 MUR=19E-3 EMC=9.6E-6 GCO=0 GCF=213E-6
++ CGA=3.9p CGK=2.4p CAK=0.7p 
+*	*	*	*	*	*	*	*	*	*
+*
+* Anode/grid model
+*
+* Models reduction in mu at large negative grid voltages
+* Models change in Ra with negative grid voltages
+* Models limit in Ia with high +Vg and low Va
+*
+* PARAMETERS
+*
+*	LIP Conduction limit exponent
+*	LIF Conduction limit factor
+*	CDO Conduction offset
+*	RAF Anode resistance factor for neg grid voltages
+*	RAP Anode resistance factor for positive grid voltages
+*	ERP Emission power
+*	MU0 Mu between grid and anode at Vg=0
+*	MUR Mu reduction factor for large negative grid voltages
+*	EMC Emission coefficient
+*	GCO Grid current offset in volts
+*	GCF Grid current scale factor
+*
+************************************************************************
+
+Elim  LI 0  VALUE {PWR(LIMIT(V(A,K),0,1E6),{LIP})*{LIF}}
+Egg   GG 0  VALUE {V(G,K)-{CDO}}
+Erpf  RP 0  VALUE {1-PWR(LIMIT(-V(GG)*{RAF},0,0.999),{RAS})+LIMIT(V(GG),0,1E6)*{RAP}}
+Egr   GR 0  VALUE {LIMIT(V(GG),0,1E6)+LIMIT((V(GG))*(1+V(GG)*{MUR}),0,-1E6)}
+Eem   EM 0  VALUE {LIMIT(V(A,K)+V(GR)*{MU0},0,1E6)}
+Eep   EP 0  VALUE {PWR(V(EM),ERP)*{EMC}*V(RP)}
+Eel   EL 0  VALUE {LIMIT(V(EP),0,V(LI))}
+Eld   LD 0  VALUE {LIMIT(V(EP)-V(LI),0,1E6)}
+Ga    A  K  VALUE {V(EL)}
+
+************************************************************************
+*
+* Grid current model
+*
+* Models grid current, along with rise in grid current at low Va
+*
+************************************************************************
+Egf   GF 0  VALUE {PWR(LIMIT(V(G,K)-{GCO},0,1E6),1.5)*{GCF}}
+Gg    G  K  VALUE {(V(GF)+V(LD))}
+
+*
+* Capacitances and anti-float resistors
+*
+CM1	G	K	{CGK}
+CM2	A	G	{CGA}
+CM3	A	K	{CAK}
+RF1	A	0	1000MEG
+RF2	G	0	1000MEG
+RF3	K	0	1000MEG
+
+.ENDS
+**********************************************************************
+
+*
+*	*	*	*	*	*	*	*	*
+* Norman Koren library. Eugene V. Karpov library for tubes of manufacture in USSR. 
+* Mithat Konar library.*	*	*	*	*	*	*	*	*
+*	*	*	*	*	*	*	*	*
+.Subckt Triodo 1 2 3 ; A G K
+E1 7 0 VALUE=
++{V(1,3)/KP*LOG(1+EXP(KP*(1/MU+V(2,3)/SQRT(KVB+V(1,3)*V(1,3)))))}
+RE1 7 0 1G
+G1 1 3 VALUE={(PWR(V(7),EX)+PWRS(V(7),EX))/KG1}
+RCP 1 3 1G    ; TO AVOID FLOATING NODES IN MU-FOLLOWER
+C1 2 3 {CCG}  ; CATHODE-GRID
+C2 2 1 {CGP}  ; GRID-PLATE
+C3 1 3 {CCP}  ; CATHODE-PLATE
+D3 5 3 DX     ; FOR GRID CURRENT
+R1 2 5 {RGI}  ; FOR GRID CURRENT
+.MODEL DX D(IS=1N RS=1 CJO=10PF TT=1N)
+.ENDS
+*	*	*	*	*	*	*	*	*
+.Subckt Tetro 1 4 2 3 ; P G2 G1 K
+RE1  7 0  1MEG      ; DUMMY SO NODE 7 HAS 2 CONNECTIONS
+E1   7 0  VALUE=  ; E1 BREAKS UP LONG EQUATION FOR G1.
++{V(4,3)/KP*LOG(1+EXP((1/MU+V(2,3)/V(4,3))*KP))}
+G1   1 3  VALUE={(PWR(V(7),EX)+PWRS(V(7),EX))/KG1*ATAN(V(1,3)/KVB)}
+G2   4 3  VALUE={(EXP(EX*(LOG((V(4,3)/MU)+V(2,3)))))/KG2}
+RCP  1 3  1G      ; FOR CONVERGENCE
+C1   2 3  {CCG}   ; CATHODE-GRID 1
+C2   1 2  {CPG1}  ; GRID 1-PLATE
+C3   1 3  {CCP}   ; CATHODE-PLATE
+R1   2 5  {RGI}   ; FOR GRID CURRENT
+D3   5 3  DX      ; FOR GRID CURRENT
+.MODEL DX D(IS=1N RS=1 CJO=10PF TT=1N)
+.ENDS
+*	*	*	*	*	*	*	*	*
+.Subckt Pento 1 5 4 2 3 ; P G2 G1 K
+RE1  7 0  1MEG      ; DUMMY SO NODE 7 HAS 2 CONNECTIONS
+E1   7 0  VALUE=  ; E1 BREAKS UP LONG EQUATION FOR G1.
++{V(4,3)/KP*LOG(1+EXP((1/MU+V(2,3)/V(4,3))*KP))}
+G1   1 3  VALUE={(PWR(V(7),EX)+PWRS(V(7),EX))/KG1*ATAN(V(1,3)/KVB)}
+G2   4 3  VALUE={(EXP(EX*(LOG((V(4,3)/MU)+V(2,3)))))/KG2}
+RCP  1 3  1G      ; FOR CONVERGENCE
+C1   2 3  {CCG}   ; CATHODE-GRID 1
+C2   1 2  {CPG1}  ; GRID 1-PLATE
+C3   1 3  {CCP}   ; CATHODE-PLATE
+R1   2 5  {RGI}   ; FOR GRID CURRENT
+D3   5 3  DX      ; FOR GRID CURRENT
+.MODEL DX D(IS=1N RS=1 CJO=10PF TT=1N)
+.ENDS
+*	*	*	*	*	*	*	*	*
+* Filamentos:
+* This model is valid at the following conditions:
+*  - Indirectly heated, oxide coated cathodes only;
+*  - Tungsten wire, Tnom=1400..1500K (cathode T=1050K);
+*  - Heater warm-up time=11s.
+*
+* This heater model can be operated either at AC (any waveform), DC
+* or any combination thereof, just like a real heater.  VNOM and INOM
+* are the nominal operating voltage and current of the heater
+* respectively.  If many heaters are connected in parallel, set INOM
+* to the sum of all heaters' currents.  These parameters are passed
+* to the model in the following way:
+*
+*  X1  Va  Vb   Heater  params: VNOM=6.3 INOM=4.8  *(4x6L6+4x12AX7A)
+*  X2  R1  R2   Heater  params: VNOM=5.0 INOM=1.9  *(1x5AR4/GZ34)
+*
+*
+.SUBCKT Filam f1 f2  params: VNOM=6.3 INOM=300m
+Grms  1  0  VALUE={1E-3*(V(f2,f1))*(V(f2,f1))/(VNOM*VNOM)}
+Rt    1  0  1k
+Ct    1  0  9.94m
+Gf   f2 f1  VALUE={V(f2,f1)*1.16*INOM/(VNOM*(PWR(V(1),0.3)+0.16))}
+.ENDS
+
+.SUBCKT 12AX7_KG 1 2 3  ; P G C;  NEW MODEL
++ PARAMS: MU=100 EX=1.4 KG1=1060 KP=600 KVB=300 RGI=2000
++ CCG=2.3P  CGP=2.4P CCP=.9P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS.
+* + CCG=2.35P  CGP=0.7P CCP=2.5P  ; ADD .7PF TO ADJACENT PINS; .5 TO OTHERS.
+E1 7 0 VALUE=
++{V(1,3)/KP*LOG(1+EXP(KP*(1/MU+V(2,3)/SQRT(KVB+V(1,3)*V(1,3)))))}
+RE1 7 0 1G
+G1 1 3 VALUE={(PWR(V(7),EX)+PWRS(V(7),EX))/KG1}
+RCP 1 3 1G    ; TO AVOID FLOATING NODES IN MU-FOLLOWER
+C1 2 3 {CCG}  ; CATHODE-GRID
+C2 2 1 {CGP}  ; GRID=PLATE
+C3 1 3 {CCP}  ; CATHODE-PLATE
+E2 77 0 VALUE={LOG(1+EXP(V(2,3)))-0.5}
+GP  2  3  VALUE={5E-4*(PWR(V(77,0),1.5)+PWRS(V(77,0),1.5))/2}
+.ENDS

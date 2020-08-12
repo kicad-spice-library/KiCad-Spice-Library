@@ -1,0 +1,295 @@
+* PIN-Diode Models from Infineon
+*
+* BA592, BA892, BAT18    single diode
+* BAR88_02V              single diode
+* BAR15_0                pseudo single BAR14,15,16
+* BAR15_1                2 diodes with common cathode
+*
+* http://www.infineon.com/cmc_upload/0/000/011/828/appli034.pdf
+*
+
+.SUBCKT BA592 100 200
+LAO   10  100    0.65nH       ; LAO
+CAC   10   20    120fF        ; CAC
+LAI    1   10    0.76nH       ; LAI
+LCO   20  200    0.60nH       ; LCO
+D1     1   20    D194
+.ENDS
+
+.SUBCKT BA892 100 200
+LAO   10  100    0.15nH       ; LAO
+CAC   10   20    90fF         ; CAC
+LAI    1   10    0.45nH       ; LAI
+LCO   20  200    0.10nH       ; LCO
+D1     1   20    D194
+.ENDS
+
+.SUBCKT BAT18 100 200
+LAO   10  100    0.63nH       ; LAO
+CAC   10   20    140fF        ; CAC
+LAI    1   10    0.67nH       ; LAI
+LCO   20  200    0.51nH       ; LCO
+D1     1   20    D194
+.ENDS
+
+.SUBCKT BAR88_02V 100 200
+LAO   10  100    0.15nH       ; LAO
+CAC   10   20    90fF         ; CAC
+LAI    1   10    0.45nH       ; LAI
+LCO   20  200    0.10nH       ; LCO
+D1     1   20    D0391
+.ENDS
+
+* A pseudo single BAR14,15,16
+.SUBCKT BAR15_0   100  300
+L1I    1   10    0.50nH       ; L1I
+*L2I    2   20    0.50nH       ; L2I
+*C12   10   20    61fF         ; C12
+C13    3   10    140fF        ; C13
+*C23    3   20    140fF        ; C23
+L1O   10  100    0.45nH       ; L1O
+*L2O   20  200    0.45nH       ; L2O
+L3O    3  300    0.41nH       ; L3O
+D1     1    3    D148
+*D2     2    3    D148
+.ENDS
+
+.SUBCKT BAR15_1 18 100 200 300
+L1I    1   10    0.50nH       ; L1I
+L2I    2   20    0.50nH       ; L2I
+C12   10   20    61fF         ; C12
+C13    3   10    140fF        ; C13
+C23    3   20    140fF        ; C23
+L1O   10  100    0.45nH       ; L1O
+L1O   20  200    0.45nH       ; L2O
+L3O    3  300    0.41nH       ; L3O
+D1     1    3    D148
+D2     2    3    D148
+.ENDS
+
+
+
+*****************************************************************
+* INFINEON technologies                                         *
+* RF & Discrete Semiconductors                                  *
+* PIN  DIODE SPICE ( DIODE CHIP ONLY )                          *
+*                                                               *
+* Version:  6                                                   *
+* Date:     November 2000                                       *
+*****************************************************************
+.MODEL D194 D(IS=185F RS=.30 N=1.305 BV=70 IBV=.1N
++ CJO=1.17P VJ=.12 M=.096 TT=125n)
+* 03.10.2000 INFINEON TECHNOLOGIES  
+*****************************************************************
+
+*****************************************************************
+* INFINEON technologies                                         *
+* RF & Discrete Semiconductors                                  *
+* PIN  DIODE SPICE ( DIODE CHIP ONLY )                          *
+*                                                               *
+* Version:  6                                                   *
+* Date:     April 2002                                          *
+*****************************************************************
+.MODEL D148 D(IS=38n RS=.30 N=1.948 Rs=0.8 BV=100 IBV=100u
+*+ CJO=0.368P VJ=1.1 M=0.284 TT=125n)
+* TT changed to 1u, Helmut
++ CJO=0.368P VJ=1.1 M=0.284 TT=1.0u)
+
+* For Aplac Simulation
+
+* RMIN=1 RMAX=3585 IS=38n N=1.948
+*  +A=0.156 K=0.822 TT=1.0u C=0.368p L=.8n
+
+* 03.05.2002 INFINEON TECHNOLOGIES  
+*****************************************************************
+
+*****************************************************************
+* Infineon Technologies AG                                      *
+* RF & Discrete Semiconductors                                  *
+* SPICE2G6 Model for PIN Diode BAR88... (Chip only)             *
+*                                                               *
+* Version:  1                                                   *
+* Date:     July 2002                              A. Boehme    *
+*****************************************************************
+.MODEL D0391 D(IS=100E-18 IKF=70E-3 CJO=350E-15 M=.1 VJ=.224 
++ ISR=100E-12 BV=80 IBV=5E-6 TT=500E-9)
+
+
+****************************************************************
+*  INFINEON TECHNOLOGIES AG
+* RF-PACKAGE EQUIVALENT CIRCUIT 
+* VALID UP TO 6 GHZ
+* >>> SOD123 <<< (RF-DIODE-PACKAGE)
+* FILENAME: SOD123.TXT
+
+* (C) 2001 INFINEON TECHNOLOGIES AG
+* Version 1.2             June 2001               A.Boehme
+****************************************************************
+*
+*                           CAC
+*             (10)          | |          (20)
+*              +------------| |------------+
+*              |            | |            |
+*         LAO  |                           |  LCO
+*     A---LLL--+                           +--LLL---C
+*   (100)      |                           |      (200)
+*              |  LAI                      |
+*              +--LLL---A' CHIP  C'--------+
+*                      (1)      (2)
+*
+*BLK
+*     IND    1   10    L=0.76nH       ; LAI
+*     CAP   10   20    C=120fF        ; CAC
+*     IND   10  100    L=0.65nH       ; LAO
+*     IND   20  200    L=0.60nH       ; LCO
+*     PACK: 4POR  1  2  100  200
+*     *           A' C'  A    C
+*END
+****************************************************************
+* PACK = NAME OF PACKAGE BLOCK, DEFINED AS 4-PORT
+* 1    = ANODE OF CHIP
+* 2    = CATHODE OF CHIP
+* 100  = ANODE OF COMPLETE DIODE IN PACKAGE
+* 200  = CATHODE OF COMPLETE DIODE IN PACKAGE
+* 
+* Add Spice model or discrete equivalent circuit for chip
+* between terminals (1) and (2)
+****************************************************************
+
+
+
+***************************************************************
+* INFINEON TECHNOLOGIES AG
+* RF-PACKAGE EQUIVALENT CIRCUIT 
+* VALID UP TO 6 GHZ
+* >>> SCD80 <<< (RF-DIODE-PACKAGE)
+* FILENAME: SCD80.TXT
+* (C) 2001 INFINEON TECHNOLOGIES AG
+* Version 1.1             June 2001             P. Moschovis
+***************************************************************
+*
+*                           CAC
+*             (10)          | |          (20)
+*              +------------| |------------+
+*              |            | |            |
+*         LAO  |                           |  LCO
+*     A---LLL--+                           +--LLL---C
+*   (100)      |                           |      (200)
+*              |  LAI                      |
+*              +--LLL---A' CHIP  C'--------+
+*                      (1)      (2)
+*
+*BLK
+*     IND    1   10    L=0.45nH       ; LAI
+*     CAP   10   20    C=90fF         ; CAC
+*     IND   10  100    L=0.15nH       ; LAO
+*     IND   20  200    L=0.1nH        ; LCO
+*     PACK: 4POR  1  2  100  200
+*     *           A' C'  A    C
+*END
+***************************************************************
+* PACK = NAME OF PACKAGE BLOCK
+* 1    = ANODE OF CHIP
+* 2    = CATHODE OF CHIP
+* 100  = ANODE OF COMPLETE DIODE IN PACKAGE
+* 200  = CATHODE OF COMPLETE DIODE IN PACKAGE
+* 
+* Add Spice model or discrete equivalent circuit for chip
+* between terminals (1) and (2)
+***************************************************************
+
+
+***************************************************************
+* INFINEON TECHNOLOGIES AG
+* RF-PACKAGE EQUIVALENT CIRCUIT 
+* VALID UP TO 6 GHZ
+* >>> SINGLE DIODES in SOT23 <<< 
+* FILENAME: SOT23_1.TXT
+* (C) 2001 INFINEON TECHNOLOGIES AG
+* Version 1.1            June 2001               P. Moschovis
+***************************************************************
+*
+*                           CAC
+*             (10)          | |          (20)
+*              +------------| |------------+
+*              |            | |            |
+*         LAO  |                           |  LCO
+*     A---LLL--+                           +--LLL---C
+*   (100)      |                           |      (200)
+*              |  LAI                      |
+*              +--LLL---A' CHIP  C'--------+
+*                      (1)      (20)
+*
+*BLK
+*     IND    1   10    L=0.67nH       ; LAI
+*     CAP   10   20    C=140fF        ; CAC
+*     IND   10  100    L=0.63nH       ; LAO
+*     IND   20  200    L=0.51nH       ; LCO
+*     PACK: 4POR  1  20  100  200
+*     *           A' C'  A    C
+*END
+***************************************************************
+* PACK = NAME OF PACKAGE BLOCK
+* 1    = ANODE OF CHIP
+* 2    = CATHODE OF CHIP
+* 100  = ANODE OF COMPLETE DIODE IN PACKAGE
+* 200  = CATHODE OF COMPLETE DIODE IN PACKAGE
+* 
+* Add Spice model or discrete equivalent circuit for chip
+* between terminals (1) and (2)
+***************************************************************
+
+
+* BAR14_1
+***************************************************************
+* INFINEON TECHNOLOGIES AG
+* RF-PACKAGE EQUIVALENT CIRCUIT 
+* VALID UP TO 6 GHZ
+* >>> DUAL DIODES in SOT323 <<<
+* FILENAME: SOT323_2.TXT
+* (C) 2001 INFINEON TECHNOLOGIES AG
+* Version 1.1            June 2001             P. Moschovis
+***************************************************************
+*
+*                           C12
+*             (10)          | |          (20)
+*              +------------| |------------+
+*              |            | |            |
+*         L1O  |  L1I   (1)     (2)   L2I  |  L2O
+*    A1---LLL--+--LLL---A1'     A2'---LLL--+--LLL---A2
+*   (100)      |           CHIPS           |       (200)
+*              |                           |
+*            -----           C'          -----
+*            ----- C13       |           ----- C23
+*              |             |(3)          |
+*              +-------------+-------------+
+*                            | 
+*                            L
+*                            L L3O
+*                            |
+*                            C (300)
+*
+*BLK
+*     IND    1   10    L=0.50nH       ; L1I
+*     IND    2   20    L=0.50nH       ; L2I
+*     CAP   10   20    C=61fF         ; C12
+*     CAP    3   10    C=140fF        ; C13
+*     CAP    3   20    C=140fF        ; C23
+*     IND   10  100    L=0.45nH       ; L1O
+*     IND   20  200    L=0.45nH       ; L2O
+*     IND    3  300    L=0.41nH       ; L3O
+*     PACK: 6POR  1   2   3  100  200  300
+*     *           A1' A2' C' A1   A2   C
+*END
+***************************************************************
+* PACK = NAME OF PACKAGE BLOCK
+* 1    = ANODE1
+* 2    = ANODE2
+* 3    = CATHODES
+* 100  = ANODE1 OF COMPLETE DIODE IN PACKAGE
+* 200  = ANODE2 OF COMPLETE DIODE IN PACKAGE
+* 300  = CATHODES OF COMPLETE DIODE IN PACKAGE
+* 
+* Add Spice model or discrete equivalent circuit for chip
+* between terminals (1) and (3) respectively (2) and (3) 
+***************************************************************

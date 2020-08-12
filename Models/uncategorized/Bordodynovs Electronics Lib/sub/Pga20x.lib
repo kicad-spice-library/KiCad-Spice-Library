@@ -1,0 +1,567 @@
+* PGA206 & PGA 207 HIGH SPEED PROGRAMMABLE GAIN AMPLIFIER
+
+*
+
+* Created 5/30/96 BCB
+
+*
+
+*  ------------------------------------------------------------------------ 
+
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+
+*  ------------------------------------------------------------------------ 
+
+* |-------------------------------------------------------------|
+
+* |  This macro model is being supplied as an aid to            |
+
+* |  circuit designs.  While it reflects reasonably close       |
+
+* |  similarity to the actual device in terms of performance,   |
+
+* |  it is not suggested as a replacement for breadboarding.    |
+
+* |  Simulation should be used as a forerunner or a supplement  |
+
+* |  to traditional lab testing.                                |
+
+* |                                                             |
+
+* |  Neither this library nor any part may be copied without    |
+
+* |  the express written consent of Burr-Brown Corporation.     |
+
+* |                                                             |
+
+* |  The users should carefully note the following factors      |
+
+* |  regarding this model.                                      |
+
+* |                                                             |
+
+* |-------------------------------------------------------------|
+
+*
+
+*                  V01
+
+*                  |   VIN-
+
+*                  |   |   VIN+
+
+*                  |   |   |   V-
+
+*                  |   |   |   |   VO2
+
+*                  |   |   |   |   |   REF
+
+*                  |   |   |   |   |   |   VO
+
+*                  |   |   |   |   |   |   |   SENSE
+
+*                  |   |   |   |   |   |   |   |   V+
+
+*                  |   |   |   |   |   |   |   |   |   DIG GND
+
+*                  |   |   |   |   |   |   |   |   |   |   A0
+
+*                  |   |   |   |   |   |   |   |   |   |   |   A1
+
+*                  |   |   |   |   |   |   |   |   |   |   |   |
+
+.SUBCKT   PGA206   1   4   5   8   9   10  11  12  13  14  15  16
+
+
+
+XG1      51      50      14      59      55      NOR
+
+XG4      51      50      14      56      AND
+
+XG2      56      51      14      58      XOR
+
+XG3      56      50      14      57      XOR
+
+XA1      4      31      13      8      1      OPAMP
+
+XA2      5      30      13      8      9      OPAMP
+
+XA3      40      41      13      8      11      OPAMP
+
+
+
+R1A      27      26      625
+
+R2A      26      25      1.25E3
+
+R3A      25      24      2.5E3
+
+R4AB      24      23      1.25E3
+
+R1B      20      21      625
+
+R2B      21      22      1.25E3
+
+R3B      22      23      2.5E3
+
+R1C      27      41      10000
+
+R2C      41      12      10000
+
+R3C      20      40      10000.2
+
+R4C      40      10      10000
+
+CF3      41      12      3E-12
+
+CF4      40      10      3E-12
+
+CF1      31      1      10E-12
+
+CF2      30      9      10E-12
+
+RO1      1      27      15
+
+RO2      9      20      15
+
+
+
+S1      31      27      59      14      SW
+
+S2      31      26      57      14      SW
+
+S3      31      25      58      14      SW
+
+S4      31      24      55      14      SW
+
+S5      30      23      55      14      SW
+
+S6      30      22      58      14      SW
+
+S7      30      21      57      14      SW
+
+S8      30      20      59      14      SW
+
+
+
+GA0      15      14      15      50      -100
+
+GA1      16      14      16      51      -100
+
+RA0      15      50      0.01
+
+RA1      16      51      0.01
+
+IVPS      14      13      0.2E-3
+
+IVMS      8      14      1.5E-3
+
+.ENDS
+
+
+
+* |-------------------------------------------------------------|
+
+*
+
+*                  V01
+
+*                  |   VIN-
+
+*                  |   |   VIN+
+
+*                  |   |   |   V-
+
+*                  |   |   |   |   VO2
+
+*                  |   |   |   |   |   REF
+
+*                  |   |   |   |   |   |   VO
+
+*                  |   |   |   |   |   |   |   SENSE
+
+*                  |   |   |   |   |   |   |   |   V+
+
+*                  |   |   |   |   |   |   |   |   |   DIG GND
+
+*                  |   |   |   |   |   |   |   |   |   |   A0
+
+*                  |   |   |   |   |   |   |   |   |   |   |   A1
+
+*                  |   |   |   |   |   |   |   |   |   |   |   |
+
+.SUBCKT   PGA207   1   4   5   8   9   10  11  12  13  14  15  16
+
+
+
+XG1      51      50      14      59      55      NOR
+
+XG4      51      50      14      56      AND
+
+XG2      56      51      14      58      XOR
+
+XG3      56      50      14      57      XOR
+
+XA1      4      31      13      8      1      OPAMP
+
+XA2      5      30      13      8      9      OPAMP
+
+XA3      40      41      13      8      11      OPAMP
+
+
+
+R1A      27      26      625
+
+R2A      26      25      1.875E3
+
+R3A      25      24      3.125E3
+
+R4AB      24      23      1.25E3
+
+R1B      20      21      625
+
+R2B      21      22      1.875E3
+
+R3B      22      23      3.125E3
+
+R1C      27      41      10000
+
+R2C      41      12      10000
+
+R3C      20      40      10000.2
+
+R4C      40      10      10000
+
+CF3      41      12      3E-12
+
+CF4      40      10      3E-12
+
+CF1      31      1      10E-12
+
+CF2      30      9      10E-12
+
+RO1      1      27      15
+
+RO2      9      20      15
+
+
+
+S1      31      27      59      14      SW
+
+S2      31      26      57      14      SW
+
+S3      31      25      58      14      SW
+
+S4      31      24      55      14      SW
+
+S5      30      23      55      14      SW
+
+S6      30      22      58      14      SW
+
+S7      30      21      57      14      SW
+
+S8      30      20      59      14      SW
+
+
+
+GA0      15      14      15      50      -100
+
+GA1      16      14      16      51      -100
+
+RA0      15      50      0.01
+
+RA1      16      51      0.01
+
+IVPS      14      13      0.2E-3
+
+IVMS      8      14      1.5E-3
+
+.ENDS
+*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*
+
+.MODEL SW VSWITCH(RON=1 ROFF=1000G VON=0.15 VOFF=0.1)
+.SUBCKT  AND  16  15  14  75
+
+D71  71 16 DX
+
+D72  71 15 DX
+
+D73  71 72 DX
+
+D74  72 73 DX
+
+Q71  74 73 14 QX
+
+Q72  75 74 14 QX
+
+R71  80 71 4E3
+
+R72  80 74 8E3
+
+R73  73 76 7E3
+
+R74  80 75 1E3
+
+VBIAS 14 76 2
+
+VSUP 80 14 5
+
+.MODEL  DX D(IS=1E-15)
+
+.MODEL  QX NPN(IS=800E-18 BF=500)
+
+.ENDS
+
+
+
+.SUBCKT   XOR 57 17 14 88
+
+* Logic cell - X-OR Gate
+
+R52     57      51      450
+
+R53     57      52      450
+
+Q50     55      51      14       QX
+
+Q52     53      52      14       QX
+
+R56     80      55      2000
+
+Q51     55      53      14       QX
+
+Q53     51      54      14       QX
+
+* A1 for switch 3, A0 for switch 2
+
+R54     53      17      450
+
+R55     54      17      450
+
+Q54     88   55      14       QX
+
+R57     80      88   2000
+
+VSUP    80      14     2.5
+
+
+
+.MODEL QX NPN(IS=800E-18 BF=500)
+
+.ENDS
+
+
+
+.SUBCKT NOR 16 15 14 85 86
+
+* Logic cell - NOR
+
+R61     16      61      450
+
+Q60     85  61      14       QX
+
+R62     15      63      450
+
+R60     80      85  3K
+
+Q61     85  63      14       QX
+
+VSUP    80      14     2
+
+Q62     86  85 14       QX
+
+R63     86  80      2000
+
+
+
+* Models
+
+*
+
+.MODEL QX NPN(IS=800E-18 BF=500)
+
+.ENDS
+
+
+
+* PGA207 operational amplifier "macromodel" subcircuit
+
+* created using Parts release 5.2 on 05/30/96 at 07:47
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.SUBCKT OPAMP    1 2 3 4 5
+
+*
+
+C1   11 12 7.002E-12
+
+C2    6  7 20.00E-12
+
+DC    5 53 DX
+
+DE   54  5 DX
+
+DLP  90 91 DX
+
+DLN  92 90 DX
+
+DP    4  3 DX
+
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 265.3E6 -30E6 30E6 30E6 -30E6
+
+GA    6  0 11 12 754.0E-6
+
+GCM   0  6 10 99 754.0E-12
+
+ISS  10  4 DC 600.0E-6
+
+HLIM 90  0 VLIM 1E3
+
+J1   11  2 10 JX
+
+J2   12  1 10 JX
+
+R2    6  9 100.0E3
+
+RD1   3 11 1.326E3
+
+RD2   3 12 1.326E3
+
+RO1   8  5 10
+
+RO2   7 99 5
+
+RP    3  4 8.036E3
+
+RSS  10 99 333.3E3
+
+VB    9  0 DC 0
+
+VC    3 53 DC 2.300
+
+VE   54  4 DC 1.500
+
+VLIM  7  8 DC 0
+
+VLP  91  0 DC 10
+
+VLN   0 92 DC 10
+
+.MODEL DX D(IS=800.0E-18)
+
+.MODEL JX NJF(IS=1.000E-12 BETA=947.5E-6 VTO=-1)
+
+.ENDS
+
+* PGA206 operational amplifier "macromodel" subcircuit
+
+* created using Parts release 5.2 on 05/30/96 at 07:47
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.SUBCKT OPAMP    1 2 3 4 5
+
+*
+
+C1   11 12 7.002E-12
+
+C2    6  7 20.00E-12
+
+DC    5 53 DX
+
+DE   54  5 DX
+
+DLP  90 91 DX
+
+DLN  92 90 DX
+
+DP    4  3 DX
+
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 265.3E6 -30E6 30E6 30E6 -30E6
+
+GA    6  0 11 12 754.0E-6
+
+GCM   0  6 10 99 754.0E-12
+
+ISS  10  4 DC 600.0E-6
+
+HLIM 90  0 VLIM 1E3
+
+J1   11  2 10 JX
+
+J2   12  1 10 JX
+
+R2    6  9 100.0E3
+
+RD1   3 11 1.326E3
+
+RD2   3 12 1.326E3
+
+RO1   8  5 10
+
+RO2   7 99 5
+
+RP    3  4 8.036E3
+
+RSS  10 99 333.3E3
+
+VB    9  0 DC 0
+
+VC    3 53 DC 2.300
+
+VE   54  4 DC 1.500
+
+VLIM  7  8 DC 0
+
+VLP  91  0 DC 10
+
+VLN   0 92 DC 10
+
+.MODEL DX D(IS=800.0E-18)
+
+.MODEL JX NJF(IS=1.000E-12 BETA=947.5E-6 VTO=-1)
+
+.ENDS

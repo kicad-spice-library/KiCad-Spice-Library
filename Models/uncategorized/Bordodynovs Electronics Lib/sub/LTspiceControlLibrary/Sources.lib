@@ -1,0 +1,35 @@
+** Sources
+
+.subckt TriangleWaveVoltage n+ n-
+V1 n+ n- PULSE({V1} {V2} {Tdelay} {tratio*(Tperiod-Ton)} {(1-tratio)*(Tperiod-Ton)} {Ton} {Tperiod} {Ncycles})
+.param V1=-1 V2=1 Tdelay=0 Tperiod=1 tratio=0.5 Ton=0.1m*Tperiod Ncycles=0
+.ends TriangleWaveVoltage
+
+.subckt 3PhaseWyeSinWaveVoltage R S T N
+V1 R N SINE({Voffset} {Vamp} {Freq} {Td} {Theta} {Phi} {Ncycles})
+V2 S N SINE({Voffset} {Vamp} {Freq} {Td} {Theta} {Phi-120} {Ncycles})
+V3 T N SINE({Voffset} {Vamp} {Freq} {Td} {Theta} {Phi+120} {Ncycles})
+.param Voffset=0 Vamp=1 Freq=1 Td=0 Theta=0 Phi=0 Ncycles=0
+.ends 3PhaseWyeSinWaveVoltage
+
+.subckt DCTransformer n1+ n1- n2+ n2- nc+ nc-
+Bi1 n1+ n1- I=-I(Bv1)*V(r) tripdt={tripdt} tripdv={tripdv}
+Bv1 n2+ n2- V=V(n1+,n1-)*V(r) tripdt={tripdt} tripdv={tripdv}
+B1 r 0 V=(V(nc+,nc-)-Vc1)/(Vc2-Vc1) tripdt={tripdt} tripdv={tripdv}
+.param Vc1=0 Vc2=1
+.param tripdt=1e300 tripdv=1
+.ends DCTransformer
+
+.subckt SolarCells s+ s- e+ e-
+G1 e- NSC0 s+ s- {Isc0/S0}
+D1 NSC0 e- Dsc
+R1 NSC0 e- {Rper1}
+R2 NSC1 NSC0 {Rser1}
+F1 NSC1 e- E1 {-1/Nper}
+E1 e+ e- NSC1 e- {Nser}
+.param Nser=1 Nper=1
+.param S0=1000 Isc0=1
+.param Rser1=10m Rper1=1k
+.param Is=10n Eg=1.11 N=1.2
+.model Dsc D Is={Is} Eg={Eg} N={N}
+.ends SolarCells

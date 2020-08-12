@@ -1,0 +1,55 @@
+* G:\SwCADIII\lib\sym\EXTRA\IRF\GATEDRV\IR2110.asc
+.SUBCKT IR2110A VDD HIN SD LIN VSS HO VB VS VCC COM LO 
+C1 Hin Vss 10p Rpar=750k
+D1 Hin Vdd Dd
+D2 Vss Hin Dd
+R1 Vdd 1 25e6
+S1 1 Vss 4 0 Si
+A1 Hin 1 0 0 0 0 4 0 SCHMITT Vt=0 Vh=0 Trise=50n Tfall=10n Td=60n Tripdt=10n
+C2 SD Vss 10p Rpar=750k
+D3 SD Vdd Dd
+D4 Vss SD Dd
+R2 Vdd 2 25e6
+S2 2 Vss 5 0 Si
+A2 SD 2 0 0 0 0 5 0 SCHMITT Vt=0 Vh=0 Td=80n Tripdt=20n
+C3 Lin Vss 10p Rpar=750k
+D5 Lin Vdd Dd
+D6 Vss Lin Dd
+R3 Vdd 3 25e6
+S3 3 Vss 6 0 Si
+A3 Lin 3 0 0 0 0 6 0 SCHMITT Vt=0 Vh=0 Trise=50n Tfall=10n Td=60n Tripdt=10n
+A4 0 0 4 0 5 0 7 0 Dflop
+A5 0 0 6 0 5 0 8 0 Dflop
+A6 Vb Vs 0 0 0 0 9 0 SCHMITT Vt=8.35 Vh=.15 Td=50n Tripdt=10n
+A7 9 0 4 7 10 12 11 0 AND Tau=18n Tripdt=5n
+S4 Ho Vb 11 0 SH
+S5 Ho Vs 12 0 SL
+C4 Vb Ho 22p
+C5 Ho Vs 22p Rpar=100k
+D7 Ho Vb Dd
+D8 Vs Ho Dd
+D9 Com Vb 525V
+D10 Vs Vb 25V
+D11 Vss Vdd 25Vdd
+D12 Vss Vcc 25V
+D13 Com Vcc 25V
+A8 Vcc Com 0 0 0 0 10 0 SCHMITT Vt=8.35 Vh=.15 Td=50n Tripdt=10n
+A9 10 8 0 0 6 14 13 0 AND Tau=18n Tripdt=5n
+S6 Lo Vcc 13 0 SH
+S7 Lo Com 14 0 SL
+C6 Vcc Lo 22p
+C7 Lo Com 22p Rpar=100k
+D14 Lo Vcc Dd
+D15 Com Lo Dd
+*.model D D
+*.lib G:\SwCADIII\lib\cmp\standard.dio
+* >> IR2110 Behavioral Model by analog@ieee.org 12/2005 Rev - <<
+.model Dd D(Ron=.5 Vfwd=.5)
+.model 25V D(Ron=.5 Vfwd=.5 Vrev=25.2 Roff=120k)
+.model 25Vdd D(Ron=.5 Vfwd=.5 Vrev=25.2 Roff=1e6)
+.model 525V D(Ron=.5 Vfwd=.5 Vrev=525 Roff=1e7)
+.model Si SW(Vt=.5 Vh=-.1 Ron=15e6 Roff=41e6)
+.model SH SW(Vt=.5 Vh=-.5 Ron=5 Ilimit=2.5 Vser=1.2)
+.model SL SW(Vt=.5 Vh=-.5 Ron=3 Ilimit=2.5)
+.backanno
+.ends

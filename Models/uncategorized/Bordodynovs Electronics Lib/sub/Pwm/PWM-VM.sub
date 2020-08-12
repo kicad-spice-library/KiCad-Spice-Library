@@ -1,0 +1,38 @@
+* Voltage Mode PWM Average Model
+* Auto-Toggeling between Continuous and Discontinuous Conduction Mode.
+*
+* Parameters :
+* - Lsw : Inductor value
+* - Fsw : Switching Frequency
+* - DCMax : Maximum Duty Cycle
+* - DCMin : Minimum Duty Cycle
+*
+.Subckt PWM-VM nA nC nP nD Params: Lsw=100uH Fsw=100kHz DCMax=0.95 DCMin=0.05
+*               Active Pin
+*                  Common Pin
+*                     Passive Pin
+*                        Duty Cycle Input
+*
+* Input Resistor on Duty Cycle Pin
+RDuty nD 0 1G
+*
+* OFF Duty Cycle
+EDutyP nDP 0 Value={2*{Lsw}*{Fsw}*I(VSense)/(V(nDC)*V(nA,nCx)+1u)-V(nDC)} ; EDutyP
+* On Duty Cycle Clamp
+EDClamp nDC 0 Value={Limit(V(nD),{DCMin},{DCMax})} ; EDClamp
+* OFF Duty Cycle Clamp
+EDPClamp nDPC 0 Value={Limit(V(nDP),1-{DCMax},1-V(nDC))} ; EDPClamp
+*
+* Serie Resistor on Active Pin
+Rin nA nP 1G
+* Active Pin Current Generator
+GA nA nP Value={V(nDC)/(V(nDC)+V(nDPC))*I(VSense)} ; GA
+*
+* Serie Resistor on Commom Pin
+Rout nC nCz 1m
+* Current Sensor on Common Pin
+VSense nCx nCz 0V
+* Commom Pin Main Current Generator
+EC nCx nP Value={V(nDC)/(V(nDC)+V(nDPC))*V(nA,nP)} ; EC
+*
+.EndS PWM-VM

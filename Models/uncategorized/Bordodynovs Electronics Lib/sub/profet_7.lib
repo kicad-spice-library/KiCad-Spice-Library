@@ -1,0 +1,584 @@
+* This is only a small part of Infineon's library
+* 
+* Library of Infineon Semiconductors (formerly Siemens) 
+*
+* $Revision:   1.0  $
+* $Author:   HIRASUNA  $
+* $Date:   11 Jul 2001 $
+*
+*****************************************************************
+* Simulation support: simulate@infineon.com                     *
+*****************************************************************
+*								*
+*****************************************************************
+* INFINEON Smart Power Switches                                 *
+* PSPICE Library for PROFETs Version 3.03               2/99    *
+*  BTS555                                                       *
+*  BTS550P                                                      * 
+*  BTS650P                                                      *
+*****************************************************************
+*
+*****************************************************************
+* Simulation support: simulate@infineon.com                     *
+*****************************************************************
+
+*$
+*
+.SUBCKT BTS550P/INF IN Vbb Out IS Tj Tcase Tamb 
+.MODEL DZE1 D (IS=1E-12,RS=5.5,BV=6.25,N=1.27,CJO=0.1P,VJ=0.75,M=0.33,IBV=.1M) 
+.MODEL DZE2 D (IS=1E-12,RS=5.5,BV=38,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.1M) 
+.MODEL DZE3 D (VJ=0.2) 
+.MODEL DZE4 D (IS=1E-12,RS=5.5,BV=9,N=1.27,CJO=0.1P,VJ=0.75,M=0.33,IBV=.1M)
+.MODEL DZE5 D (IS=1E-12,RS=5.5,BV=72,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.1M)
+.MODEL QNSCR NPN (TF=400N,TR=1.6U,CJC=2P,CJE=16P,XTB=2.5,
++ IS=1F,ISE=0.3N,NE=2,BF=300,BR=60,ISC=3N,NC=2) 
+
+*
+* Base chip for the BTS550P
+.SUBCKT BC550 GATE DRAIN SOURCE IS TJ Tcase Tamb 
+.PARAM   Cgs=6.14N Cox=12.65N Kgd=5.59N VSW=-1.61 cjo_ds=3.2n
+.PARAM   W=9.1 L=1.025U VTH=2.29 alpha=0.8 RG=10 RD=2.1M RS=0.4M LG=7N 
++LD=5N LS=3.5N
+.PARAM   nsub=9.7E16 tox=55E-9 uo=515 vmax=1.25E5 bv =49 trr=190n ISE=2.3n  
+.MODEL D_BODY   D (BV= {bv},CJO ={cjo_ds},TT ={trr},IS ={ISE})
+.MODEL DZE3 D (VJ=0.2) 
+.MODEL NMOS_L3 NMOS 
++(LEVEL=3,W={W},L={L},VTO={VTH},nsub={nsub},tox={tox},vmax={vmax},u0={uo})  
+.PARAM  selfh={1} Rth1={0.001794}  Rth2={0.0041547}  Rth3={0.023}  Rth4={0.042}  
++Rth5={0.065}  Rth6={0.033}
+.PARAM  CZth1={6.022E-4} CZth2={6.428E-4} CZth3={1.624E-3} CZth4={0.012} 
++CZth5={0.031} CZth6={0.41} RATIO={21500}
+R_RDUMMY         RDM RDP  1E12  
+V_VDR         Vdrain $N_0001 DC 0V AC 0V 
+R_RKLEIN         RDM RKP  .01m  
+G_G6         DCB gi VALUE { if (time>50n, DDT({Cox}*V(Vgox, 0)),0) }
+V_VID         DCB RDP DC 0V AC 0V 
+L_LD         DCB DRAIN  {LD}  
+E_E5         RDP RKP VALUE { {alpha}*(V(RDM)-V(DSB))**2+I(V_VID)*
++ {RD}/(300/(V(TJ)+273))**1.5 }
+R_Rth2         a b  {Rth2}  
+R_Rth3         b c  {Rth3}  
+C_CZth2         Tamb a  {CZth2}  
+C_CZth3         Tamb b  {CZth3}  
+R_Rth4         c d  {Rth4}  
+C_CZth6         Tamb e  {CZth6}  
+R_Rth6         e Tcase  {Rth6}  
+R_Rth5         d e  {Rth5}  
+C_CZth5         Tamb d  {CZth5}  
+C_CZth4         c Tamb  {CZth4}  
+C_CZth1         TJ Tamb  {CZth1}  
+R_Rth1         TJ a  {Rth1}  
+E_EVTH         vg gi VALUE { (V(TJ, 0)-{TEMP})*0.0025 }
+E_ABM11         Vdepl 0 VALUE { if (V(Vdg) >0.0, V(Vdg)   
++ +2*({Kgd}/{Cox})**2*(1-sqrt(1+(V(Vdg)/({Kgd}/{Cox})**2))),0)   }
+E_ABM24         Vgox 0 VALUE { V(Vdg)-V(Vdepl)     }
+G_ABMII3         DCB IS VALUE { if (I(V_VID)/
++ {RATIO}<0.01*(300/(V(TJ)+273))**1.5,   
++ I(V_VID)/{RATIO},0.01*(300/(V(TJ)+273))**1.5)   }
+L_LS         SOURCE 7  {LS}  
+R_RS         7 DSB  {Rs}  
+D_ZD1         IS n2 DZE3 
+R_RLKG         DSB gi  1E12  
+C_CGS1         DSB gi  {Cgs}  
+E_E7         Vdrain DSB RDM DSB 1
+M_X2         $N_0001 vg DSB DSB NMOS_L3
+G_ABMII2         RDM DSB VALUE { I(V_VDR)*((TEMP+273)/(V(TJ)+273))**1.5    }
+D_DBODY1         DSB DCB D_BODY 
+R_R8         DSB vg  1E12  
+G_G5         0 TJ VALUE { if (time>50n, V(DCB, DSB)*I(V_VID)*{selfh},0) }
+E_ABM25         Vdg 0 VALUE { V(DCB)-V(gi)+{alpha}*(V(RDM)-V(DSB))**2    }
+L_LG         GATE 5  {LG}  
+R_RG         5 gi  {RG}  
+E_Eis         n2 0 VALUE { if ( V(Vpcl)>0,V(Vpcl),0) }
+E_ABM15         Vpcl 0 VALUE { if ( (V(gi)-3)>V(DCB),V(DCB),V(gi)-3)    }
+.ENDS    
+R_Rvcont         vcon vcont  100k  
+C_ccon         0 vcont  .05n  
+R_Rvc2         cpi cp  4k  
+R_Rcp         cp vcp  120k  
+R_Ren         en enable  100k  
+C_cen         0 enable  .05n  
+E_ABM24         OTCN 0 VALUE { if (V(Tj)>190 | V(OTC)>3.5 ,0,5)    }
+R_Rth1         Ts Tj  1meg  
+E_ABM25         OTC 0 VALUE { if (V(Tj)<180 | V(OTCN)>3.5 ,0,5)    }
+C_CZth1         Ts 0  2.8n  
+E_ABM27         OTS 0 VALUE { if (V(Ts)<155 | V(OTSN)>3.5 ,0,5)    }
+E_ABM26         OTSN 0 VALUE { if (V(Ts)>165 | V(OTS)>3.5 ,0,5)    }
+E_ABM28         OT 0 VALUE { if (V(OTC)>3.5 | V(OTS)>3.5 ,5,0)    }
+C_cscd         0 scd  1n  
+E_ABM210         sc 0 VALUE { if (V(sci)>3.5 & V(scd)>3,5,0)    }
+R_rscd         sci scd  150k  
+S_S2         cpi Out vcont 0 S2
+RS_S2        vcont 0 1G
+.MODEL S2 VSWITCH Roff=1e6 Ron=100 Voff=3.5 Von=4
+R_Rsbl         Out sbl  300  
+E_ABM211         con 0 VALUE { if (V(Out)>2.0 & V(ine)>3.5,0,5)    }
+R_Rvdd         Vbb Vbr  100  
+E_ABM11         vcp 0 VALUE { if (2*V(cp)>V(Vbr)+12,   
++ V(Vbr)+12,2*V(cp))   }
+R_Rin         IN Vbr  120k  
+E_ABM212         ine 0 VALUE { if (V(Vbr)-V(IN)>3.9,5,0)    }
+R_Rbo         Out n1  20k  
+S_S5         Vbr n1 enable 0 S5
+RS_S5        enable 0 1G
+.MODEL S5 VSWITCH Roff=10e6 Ron=2k Voff=3.5 Von=4
+R_Rrb         Rbat Rbatv  100k  
+S_S3         cp sbl SBd 0 S3
+RS_S3        SBd 0 1G
+.MODEL S3 VSWITCH Roff=1e6 Ron=3k Voff=3.5 Von=4
+R_Rsb         SBcont SBd  100k  
+C_csb         0 SBd  .05n  
+E_ABM33         SBcont 0 VALUE { if ((V(Svg)+V(Sbq))>7.5 & V(enable)>3.5,5,0)  
++   }
+E_ABM32         vcon 0 VALUE { if (V(con)>2.5 | V(sc)>2.5 | V(OT)>2.5,5,0)    }
+E_ABM34         en 0 VALUE { if (V(OT)<3.5 & V(sc)<3.5 & V(ine)>3.5,5,0)    }
+E_ABM29         sci 0 VALUE { if ((V(Vbr)-V(Out))>7 & (V(Vbr)-V(IN))>4  
++ & V(OT)<3.5,5,0)   }
+E_Eref         Nscref 0 VALUE { if ( V(Out)+4.65<V(Vbr),V(Out)+4.65,V(Vbr)) }
+E_ABM22         Sbq 0 VALUE { if ((V(Vbr)-V(Out))>4.2,5,0)    }
+E_ABM21         Svg 0 VALUE { if ((V(g)-V(Out))>3.0,5,0)    }
+S_S4         n1 Nscref SBd 0 S4
+RS_S4        SBd 0 1G
+.MODEL S4 VSWITCH Roff=1e6 Ron=10 Voff=3.5 Von=4
+Q_Q4         Vbr n1 cp QNSCR
+Q_Q3         Vbr cl g QNSCR
+D_ZD3         IN Vbr DZE5 
+D_ZD1         Out n1 DZE1 
+D_ZD2         cl clb DZE2 
+D_ZD6         Vbr clb DZE3 
+S_S1         Vbr n1 Rbatv 0 S1
+RS_S1        Rbatv 0 1G
+.MODEL S1 VSWITCH Roff=10e6 Ron=500 Voff=3.5 Von=4
+E_ABM213         Rbat 0 VALUE { if (V(IN)-V(Vbr)>3.9,5,0)    }
+R_Rclamp         cl Out  100k  
+X_X4         g Vbb Out $N_0001 Tj Tcase Tamb BC550
+R_Rgate         g cp  1.3k  
+D_ZD4         IS CLis DZE3 
+D_ZD5         cl CLis DZE4 
+C_crb         0 Rbatv  .05n  
+S_S6         $N_0001 IS ine 0 S6
+RS_S6        ine 0 1G
+.MODEL S6 VSWITCH Roff=10e6 Ron=1 Voff=3.5 Von=4
+.ENDS    
+*$
+
+*$
+*
+.SUBCKT BTS555/INF IN Vbb Out IS Tj Tcase Tamb 
+.MODEL DZE1 D (IS=1E-12,RS=5.5,BV=6.25,N=1.27,CJO=0.1P,VJ=0.75,M=0.33,IBV=.1M) 
+.MODEL DZE2 D (IS=1E-12,RS=5.5,BV=38,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.1M) 
+.MODEL DZE3 D (VJ=0.2) 
+.MODEL DZE4 D (IS=1E-12,RS=5.5,BV=9,N=1.27,CJO=0.1P,VJ=0.75,M=0.33,IBV=.1M)
+.MODEL DZE5 D (IS=1E-12,RS=5.5,BV=72,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.1M)
+.MODEL QNSCR NPN (TF=400N,TR=1.6U,CJC=2P,CJE=16P,XTB=2.5,
++ IS=1F,ISE=0.3N,NE=2,BF=300,BR=60,ISC=3N,NC=2) 
+
+* Base chip for the BTS555
+.SUBCKT BC555 GATE DRAIN SOURCE IS TJ Tcase Tamb 
+.PARAM   Cgs=8.66N Cox=17.85N Kgd=7.88N VSW=-1.61 cjo_ds=4.5n
+.PARAM   W=12.83 L=1.025U VTH=2.29 alpha=0.8 RG=10 RD=1.49M RS=0.27M LG=7N 
++ LD=5N LS=2.5N
+.PARAM   nsub=9.7E16 tox=55E-9 uo=515 vmax=1.25E5 bv =49 trr=190n ISE=2.3n  
+.MODEL D_BODY   D (BV= {bv},CJO ={cjo_ds},TT ={trr},IS ={ISE})
+.MODEL DZE3 D (VJ=0.2) 
+.MODEL NMOS_L3 NMOS 
++(LEVEL=3,W={W},L={L},VTO={VTH},nsub={nsub},tox={tox},vmax={vmax},u0={uo})  
+.PARAM  selfh={1} Rth1={0.001177}  Rth2={0.00273}  Rth3={0.016}  Rth4={0.021}  
++Rth5={0.049}  Rth6={0.0328}
+.PARAM  CZth1={9.18E-4} CZth2={9.789E-4} CZth3={2.468E-3} CZth4={0.019} 
++CZth5={0.004917} CZth6={0.596} RATIO={28000}
+R_RDUMMY         RDM RDP  1E12  
+V_VDR         Vdrain $N_0001 DC 0V AC 0V 
+R_RKLEIN         RDM RKP  .01m  
+G_G6         DCB gi VALUE { if (time>50n, DDT({Cox}*V(Vgox, 0)),0) }
+V_VID         DCB RDP DC 0V AC 0V 
+L_LD         DCB DRAIN  {LD}  
+E_E5         RDP RKP VALUE { {alpha}*(V(RDM)-V(DSB))**2+I(V_VID)*
++ {RD}/(300/(V(TJ)+273))**1.5 }
+R_Rth2         a b  {Rth2}  
+R_Rth3         b c  {Rth3}  
+C_CZth2         Tamb a  {CZth2}  
+C_CZth3         Tamb b  {CZth3}  
+R_Rth4         c d  {Rth4}  
+C_CZth6         Tamb e  {CZth6}  
+R_Rth6         e Tcase  {Rth6}  
+R_Rth5         d e  {Rth5}  
+C_CZth5         Tamb d  {CZth5}  
+C_CZth4         c Tamb  {CZth4}  
+C_CZth1         TJ Tamb  {CZth1}  
+R_Rth1         TJ a  {Rth1}  
+E_EVTH         vg gi VALUE { (V(TJ, 0)-{TEMP})*0.0025 }
+E_ABM11         Vdepl 0 VALUE { if (V(Vdg) >0.0, V(Vdg)   
++ +2*({Kgd}/{Cox})**2*(1-sqrt(1+(V(Vdg)/({Kgd}/{Cox})**2))),0)   }
+E_ABM24         Vgox 0 VALUE { V(Vdg)-V(Vdepl)     }
+G_ABMII3         DCB IS VALUE { if (I(V_VID)/
++ {RATIO}<0.01*(300/(V(TJ)+273))**1.5,   
++ I(V_VID)/{RATIO},0.01*(300/(V(TJ)+273))**1.5)   }
+L_LS         SOURCE 7  {LS}  
+R_RS         7 DSB  {Rs}  
+D_ZD1         IS n2 DZE3 
+R_RLKG         DSB gi  1E12  
+C_CGS1         DSB gi  {Cgs}  
+E_E7         Vdrain DSB RDM DSB 1
+M_X2         $N_0001 vg DSB DSB NMOS_L3
+G_ABMII2         RDM DSB VALUE { I(V_VDR)*((TEMP+273)/(V(TJ)+273))**1.5    }
+D_DBODY1         DSB DCB D_BODY 
+R_R8         DSB vg  1E12  
+G_G5         0 TJ VALUE { if (time>50n, V(DCB, DSB)*I(V_VID)*{selfh},0) }
+E_ABM25         Vdg 0 VALUE { V(DCB)-V(gi)+{alpha}*(V(RDM)-V(DSB))**2    }
+L_LG         GATE 5  {LG}  
+R_RG         5 gi  {RG}  
+E_Eis         n2 0 VALUE { if ( V(Vpcl)>0,V(Vpcl),0) }
+E_ABM15         Vpcl 0 VALUE { if ( (V(gi)-3)>V(DCB),V(DCB),V(gi)-3)    }
+.ENDS    
+R_Rvcont         vcon vcont  100k  
+C_ccon         0 vcont  .05n  
+R_Rvc2         cpi cp  4k  
+R_Rcp         cp vcp  120k  
+R_Ren         en enable  100k  
+C_cen         0 enable  .05n  
+E_ABM24         OTCN 0 VALUE { if (V(Tj)>190 | V(OTC)>3.5 ,0,5)    }
+R_Rth1         Ts Tj  1meg  
+E_ABM25         OTC 0 VALUE { if (V(Tj)<180 | V(OTCN)>3.5 ,0,5)    }
+C_CZth1         Ts 0  2.8n  
+E_ABM27         OTS 0 VALUE { if (V(Ts)<155 | V(OTSN)>3.5 ,0,5)    }
+E_ABM26         OTSN 0 VALUE { if (V(Ts)>165 | V(OTS)>3.5 ,0,5)    }
+E_ABM28         OT 0 VALUE { if (V(OTC)>3.5 | V(OTS)>3.5 ,5,0)    }
+C_cscd         0 scd  1n  
+E_ABM210         sc 0 VALUE { if (V(sci)>3.5 & V(scd)>3,5,0)    }
+R_rscd         sci scd  150k  
+S_S2         cpi Out vcont 0 S2
+RS_S2        vcont 0 1G
+.MODEL S2 VSWITCH Roff=1e6 Ron=100 Voff=3.5 Von=4
+R_Rsbl         Out sbl  300  
+E_ABM211         con 0 VALUE { if (V(Out)>2.0 & V(ine)>3.5,0,5)    }
+R_Rvdd         Vbb Vbr  100  
+E_ABM11         vcp 0 VALUE { if (2*V(cp)>V(Vbr)+12,   
++ V(Vbr)+12,2*V(cp))   }
+R_Rin         IN Vbr  120k  
+E_ABM212         ine 0 VALUE { if (V(Vbr)-V(IN)>3.9,5,0)    }
+R_Rbo         Out n1  20k  
+S_S5         Vbr n1 enable 0 S5
+RS_S5        enable 0 1G
+.MODEL S5 VSWITCH Roff=10e6 Ron=2k Voff=3.5 Von=4
+R_Rrb         Rbat Rbatv  100k  
+S_S3         cp sbl SBd 0 S3
+RS_S3        SBd 0 1G
+.MODEL S3 VSWITCH Roff=1e6 Ron=3k Voff=3.5 Von=4
+R_Rsb         SBcont SBd  100k  
+C_csb         0 SBd  .05n  
+E_ABM33         SBcont 0 VALUE { if ((V(Svg)+V(Sbq))>7.5 & V(enable)>3.5,5,0)  
++   }
+E_ABM32         vcon 0 VALUE { if (V(con)>2.5 | V(sc)>2.5 | V(OT)>2.5,5,0)    }
+E_ABM34         en 0 VALUE { if (V(OT)<3.5 & V(sc)<3.5 & V(ine)>3.5,5,0)    }
+E_ABM29         sci 0 VALUE { if ((V(Vbr)-V(Out))>7 & (V(Vbr)-V(IN))>4,5,0)   }
+E_Eref         Nscref 0 VALUE { if ( V(Out)+4.65<V(Vbr),V(Out)+4.65,V(Vbr)) }
+E_ABM22         Sbq 0 VALUE { if ((V(Vbr)-V(Out))>4.2,5,0)    }
+E_ABM21         Svg 0 VALUE { if ((V(g)-V(Out))>3.0,5,0)    }
+S_S4         n1 Nscref SBd 0 S4
+RS_S4        SBd 0 1G
+.MODEL S4 VSWITCH Roff=1e6 Ron=10 Voff=3.5 Von=4
+Q_Q4         Vbr n1 cp QNSCR
+Q_Q3         Vbr cl g QNSCR
+D_ZD3         IN Vbr DZE5 
+D_ZD1         Out n1 DZE1 
+D_ZD2         cl clb DZE2 
+D_ZD6         Vbr clb DZE3 
+S_S1         Vbr n1 Rbatv 0 S1
+RS_S1        Rbatv 0 1G
+.MODEL S1 VSWITCH Roff=10e6 Ron=500 Voff=3.5 Von=4
+E_ABM213         Rbat 0 VALUE { if (V(IN)-V(Vbr)>3.9,5,0)    }
+R_Rclamp         cl Out  100k  
+X_X4         g Vbb Out $N_0001 Tj Tcase Tamb BC555
+R_Rgate         g cp  0.8k  
+D_ZD4         IS CLis DZE3 
+D_ZD5         cl CLis DZE4 
+C_crb         0 Rbatv  .05n  
+S_S6         $N_0001 IS ine 0 S6
+RS_S6        ine 0 1G
+.MODEL S6 VSWITCH Roff=10e6 Ron=1 Voff=3.5 Von=4
+.ENDS    
+*$
+
+*$
+*
+.SUBCKT BTS650P/INF IN Vbb Out IS Tj Tcase Tamb 
+.MODEL DZE1 D (IS=1E-12,RS=50,BV=5.47,N=1.27,CJO=0.2P,VJ=0.75,M=0.33,IBV=.2M) 
+.MODEL DZE2 D (IS=1E-12,RS=50,BV=38,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.2M) 
+.MODEL DZE3 D (VJ=0.2) 
+.MODEL DZE4 D (IS=1E-12,RS=5.5,BV=9,N=1.27,CJO=0.1P,VJ=0.75,M=0.33,IBV=2u)
+.MODEL DZE5 D (IS=1E-12,RS=5.5,BV=72,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.1M)
+.MODEL QNSCR NPN (TF=400N,TR=1.6U,CJC=2P,CJE=16P,XTB=2.5,
++ IS=1F,ISE=0.3N,NE=2,BF=300,BR=60,ISC=3N,NC=2) 
+
+* Base chip for the BTS650P
+.SUBCKT BC650 GATE DRAIN SOURCE IS TJ Tcase Tamb 
+.PARAM   Cgs=3.7N Cox=7.618N Kgd=3.37N VSW=-1.61 cjo_ds=1.92n
+.PARAM   W=5.248 L=1.025U VTH=2.29 alpha=0.8 RG=5 RD=3.2M RS=0.4M LG=7N
++ LD=5N LS=3.5N
+.PARAM   nsub=9.7E16 tox=55E-9 uo=515 vmax=1.25E5 bv =49 trr=110n ISE=2.3n  
+.MODEL D_BODY   D (BV= {bv},CJO ={cjo_ds},TT ={trr},IS ={ISE})
+.MODEL DZE3 D (VJ=0.2)
+.MODEL NMOS_L3 NMOS 
++(LEVEL=3,W={W},L={L},VTO={VTH},nsub={nsub},tox={tox},vmax={vmax},u0={uo})  
+.PARAM  selfh={1} Rth1={0.002977}  Rth2={0.006879}  Rth3={0.038}  Rth4={0.067}  
++Rth5={0.074}  Rth6={0.035}
+.PARAM  CZth1={3.625E-4} CZth2={3.876E-4} CZth3={9.822E-4} CZth4={7.643E-3} 
++CZth5={0.02} CZth6={0.147} RATIO={14000}
+R_RDUMMY         RDM RDP  1E12  
+V_VDR         Vdrain $N_0001 DC 0V AC 0V 
+R_RKLEIN         RDM RKP  .01m  
+G_G6         DCB gi VALUE { if (time>50n, DDT({Cox}*V(Vgox, 0)),0) }
+V_VID         DCB RDP DC 0V AC 0V 
+L_LD         DCB DRAIN  {LD}  
+E_E5         RDP RKP VALUE { {alpha}*(V(RDM)-V(DSB))**2+I(V_VID)*
++ {RD}/(300/(V(TJ)+273))**1.5 }
+R_Rth2         a b  {Rth2}  
+R_Rth3         b c  {Rth3}  
+C_CZth2         Tamb a  {CZth2}  
+C_CZth3         Tamb b  {CZth3}  
+R_Rth4         c d  {Rth4}  
+C_CZth6         Tamb e  {CZth6}  
+R_Rth6         e Tcase  {Rth6}  
+R_Rth5         d e  {Rth5}  
+C_CZth5         Tamb d  {CZth5}  
+C_CZth4         c Tamb  {CZth4}  
+C_CZth1         TJ Tamb  {CZth1}  
+R_Rth1         TJ a  {Rth1}  
+E_EVTH         vg gi VALUE { (V(TJ, 0)-{TEMP})*0.0025 }
+E_ABM11         Vdepl 0 VALUE { if (V(Vdg) >0.0, V(Vdg)   
++ +2*({Kgd}/{Cox})**2*(1-sqrt(1+(V(Vdg)/({Kgd}/{Cox})**2))),0)   }
+E_ABM24         Vgox 0 VALUE { V(Vdg)-V(Vdepl)     }
+G_ABMII3         DCB IS VALUE { if (I(V_VID)/
++ {RATIO}<0.01*(300/(V(TJ)+273))**1.5,   
++ I(V_VID)/{RATIO},0.01*(300/(V(TJ)+273))**1.5)   }
+L_LS         SOURCE 7  {LS}  
+R_RS         7 DSB  {Rs}  
+D_ZD1         IS n2 DZE3 
+R_RLKG         DSB gi  1E12  
+C_CGS1         DSB gi  {Cgs}  
+E_E7         Vdrain DSB RDM DSB 1
+M_X2         $N_0001 vg DSB DSB NMOS_L3
+G_ABMII2         RDM DSB VALUE { I(V_VDR)*((TEMP+273)/(V(TJ)+273))**1.5    }
+D_DBODY1         DSB DCB D_BODY 
+R_R8         DSB vg  1E12  
+G_G5         0 TJ VALUE { if (time>50n, V(DCB, DSB)*I(V_VID)*{selfh},0) }
+E_ABM25         Vdg 0 VALUE { V(DCB)-V(gi)+{alpha}*(V(RDM)-V(DSB))**2    }
+L_LG         GATE 5  {LG}  
+R_RG         5 gi  {RG}  
+E_Eis         n2 0 VALUE { if ( V(Vpcl)>0,V(Vpcl),0) }
+E_ABM15         Vpcl 0 VALUE { if ( (V(gi)-3)>V(DCB),V(DCB),V(gi)-3)    }
+.ENDS    
+R_Rvcont         vcon vcont  100k  
+C_ccon         0 vcont  .05n  
+R_Rvc2         cpi cp  4k  
+R_Rcp         cp vcp  120k  
+R_Ren         en enable  100k  
+C_cen         0 enable  .05n  
+E_ABM24         OTCN 0 VALUE { if (V(Tj)>190 | V(OTC)>3.5 ,0,5)    }
+R_Rth1         Ts Tj  1meg  
+E_ABM25         OTC 0 VALUE { if (V(Tj)<180 | V(OTCN)>3.5 ,0,5)    }
+C_CZth1         Ts 0  2.8n  
+E_ABM27         OTS 0 VALUE { if (V(Ts)<155 | V(OTSN)>3.5 ,0,5)    }
+E_ABM26         OTSN 0 VALUE { if (V(Ts)>165 | V(OTS)>3.5 ,0,5)    }
+E_ABM28         OT 0 VALUE { if (V(OTC)>3.5 | V(OTS)>3.5 ,5,0)    }
+C_cscd         0 scd  1n  
+E_ABM210         sc 0 VALUE { if (V(sci)>3.5 & V(scd)>3,5,0)    }
+R_rscd         sci scd  150k  
+S_S2         cpi Out vcont 0 S2
+RS_S2        vcont 0 1G
+.MODEL S2 VSWITCH Roff=1e6 Ron=100 Voff=3.5 Von=4
+R_Rsbl         Out sbl  300  
+E_ABM211         con 0 VALUE { if (V(Out)>2.0 & V(ine)>3.5,0,5)    }
+R_Rvdd         Vbb Vbr  100  
+E_ABM11         vcp 0 VALUE { if (2*V(cp)>V(Vbr)+12,   
++ V(Vbr)+12,2*V(cp))   }
+R_Rin         IN Vbr  120k  
+E_ABM212         ine 0 VALUE { if (V(Vbr)-V(IN)>3.9,5,0)    }
+R_Rbo         Out n1  20k  
+S_S5         Vbr n1 enable 0 S5
+RS_S5        enable 0 1G
+.MODEL S5 VSWITCH Roff=10e6 Ron=2k Voff=3.5 Von=4
+R_Rrb         Rbat Rbatv  100k  
+S_S3         cp sbl SBd 0 S3
+RS_S3        SBd 0 1G
+.MODEL S3 VSWITCH Roff=1e6 Ron=3k Voff=3.5 Von=4
+R_Rsb         SBcont SBd  100k  
+C_csb         0 SBd  .05n  
+E_ABM33         SBcont 0 VALUE { if ((V(Svg)+V(Sbq))>7.5 & V(enable)>3.5,5,0)  
++   }
+E_ABM32         vcon 0 VALUE { if (V(con)>2.5 | V(sc)>2.5 | V(OT)>2.5,5,0)    }
+E_ABM34         en 0 VALUE { if (V(OT)<3.5 & V(sc)<3.5 & V(ine)>3.5,5,0)    }
+E_ABM29         sci 0 VALUE { if ((V(Vbr)-V(Out))>7 & (V(Vbr)-V(IN))>4  
++ & V(OT)<3.5,5,0)   }
+E_Eref         Nscref 0 VALUE { if ( V(Out)+4.65<V(Vbr),V(Out)+4.65,V(Vbr)) }
+E_ABM22         Sbq 0 VALUE { if ((V(Vbr)-V(Out))>4.2,5,0)    }
+E_ABM21         Svg 0 VALUE { if ((V(g)-V(Out))>3.0,5,0)    }
+S_S4         n1 Nscref SBd 0 S4
+RS_S4        SBd 0 1G
+.MODEL S4 VSWITCH Roff=1e6 Ron=10 Voff=3.5 Von=4
+Q_Q4         Vbr n1 cp QNSCR
+Q_Q3         Vbr cl g QNSCR
+D_ZD3         IN Vbr DZE5 
+D_ZD1         Out n1 DZE1 
+D_ZD2         cl clb DZE2 
+D_ZD6         Vbr clb DZE3 
+S_S1         Vbr n1 Rbatv 0 S1
+RS_S1        Rbatv 0 1G
+.MODEL S1 VSWITCH Roff=10e6 Ron=500 Voff=3.5 Von=4
+E_ABM213         Rbat 0 VALUE { if (V(IN)-V(Vbr)>3.9,5,0)    }
+R_Rclamp         cl Out  100k  
+R_Rgate         g cp  1.3k  
+D_ZD4         IS CLis DZE3 
+D_ZD5         cl CLis DZE4 
+C_crb         0 Rbatv  .05n  
+S_S6         $N_0001 IS ine 0 S6
+RS_S6        ine 0 1G
+.MODEL S6 VSWITCH Roff=10e6 Ron=1 Voff=3.5 Von=4
+X_X4         g Vbb Out $N_0001 Tj Tcase Tamb BC650 
+.ENDS    
+
+*
+.SUBCKT BTS660P/INF IN Vbb Out IS Tj Tcase Tamb 
+.MODEL DZE1 D (IS=1E-12,RS=50,BV=5.47,N=1.27,CJO=0.2P,VJ=0.75,M=0.33,IBV=.2M) 
+.MODEL DZE2 D (IS=1E-12,RS=50,BV=58,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.2M) 
+.MODEL DZE3 D (VJ=0.2) 
+.MODEL DZE4 D (IS=1E-12,RS=5.5,BV=9,N=1.27,CJO=0.1P,VJ=0.75,M=0.33,IBV=2u)
+.MODEL DZE5 D (IS=1E-12,RS=5.5,BV=72,N=1.27,CJO=0.6P,VJ=0.75,M=0.33,IBV=.1M)
+.MODEL QNSCR NPN (TF=400N,TR=1.6U,CJC=2P,CJE=16P,XTB=2.5,
++ IS=1F,ISE=0.3N,NE=2,BF=300,BR=60,ISC=3N,NC=2) 
+
+* Base chip for the BTS660
+.SUBCKT BC660 GATE DRAIN SOURCE IS TJ Tcase Tamb 
+.PARAM   Cgs=3.7N Cox=7.618N Kgd=3.37N VSW=-1.61 cjo_ds=1.92n
+.PARAM   W=5.248 L=1.025U VTH=2.29 alpha=0.8 RG=5 RD=6.2M RS=0.4M LG=7N
++ LD=5N LS=3.5N
+.PARAM   nsub=9.7E16 tox=55E-9 uo=515 vmax=1.25E5 bv=60 trr=110n ISE=2.3n  
+.MODEL D_BODY   D (BV= {bv},CJO ={cjo_ds},TT ={trr},IS ={ISE})
+.MODEL DZE3 D (VJ=0.2)
+.MODEL NMOS_L3 NMOS 
++(LEVEL=3,W={W},L={L},VTO={VTH},nsub={nsub},tox={tox},vmax={vmax},u0={uo})  
+.PARAM  selfh={1} Rth1={0.002977}  Rth2={0.006879}  Rth3={0.038}  Rth4={0.067}  
++Rth5={0.074}  Rth6={0.035}
+.PARAM  CZth1={3.625E-4} CZth2={3.876E-4} CZth3={9.822E-4} CZth4={7.643E-3} 
++CZth5={0.02} CZth6={0.147} RATIO={14000}
+R_RDUMMY         RDM RDP  1E12  
+V_VDR         Vdrain $N_0001 DC 0V AC 0V 
+R_RKLEIN         RDM RKP  .01m  
+G_G6         DCB gi VALUE { if (time>50n, DDT({Cox}*V(Vgox, 0)),0) }
+V_VID         DCB RDP DC 0V AC 0V 
+L_LD         DCB DRAIN  {LD}  
+E_E5         RDP RKP VALUE { {alpha}*(V(RDM)-V(DSB))**2+I(V_VID)*
++ {RD}/(300/(V(TJ)+273))**1.5 }
+R_Rth2         a b  {Rth2}  
+R_Rth3         b c  {Rth3}  
+C_CZth2         Tamb a  {CZth2}  
+C_CZth3         Tamb b  {CZth3}  
+R_Rth4         c d  {Rth4}  
+C_CZth6         Tamb e  {CZth6}  
+R_Rth6         e Tcase  {Rth6}  
+R_Rth5         d e  {Rth5}  
+C_CZth5         Tamb d  {CZth5}  
+C_CZth4         c Tamb  {CZth4}  
+C_CZth1         TJ Tamb  {CZth1}  
+R_Rth1         TJ a  {Rth1}  
+E_EVTH         vg gi VALUE { (V(TJ, 0)-{TEMP})*0.0025 }
+E_ABM11         Vdepl 0 VALUE { if (V(Vdg) >0.0, V(Vdg)   
++ +2*({Kgd}/{Cox})**2*(1-sqrt(1+(V(Vdg)/({Kgd}/{Cox})**2))),0)   }
+E_ABM24         Vgox 0 VALUE { V(Vdg)-V(Vdepl)     }
+G_ABMII3         DCB IS VALUE { if (I(V_VID)/
++ {RATIO}<0.01*(300/(V(TJ)+273))**1.5,   
++ I(V_VID)/{RATIO},0.01*(300/(V(TJ)+273))**1.5)   }
+L_LS         SOURCE 7  {LS}  
+R_RS         7 DSB  {Rs}  
+D_ZD1         IS n2 DZE3 
+R_RLKG         DSB gi  1E12  
+C_CGS1         DSB gi  {Cgs}  
+E_E7         Vdrain DSB RDM DSB 1
+M_X2         $N_0001 vg DSB DSB NMOS_L3
+G_ABMII2         RDM DSB VALUE { I(V_VDR)*((TEMP+273)/(V(TJ)+273))**1.5    }
+D_DBODY1         DSB DCB D_BODY 
+R_R8         DSB vg  1E12  
+G_G5         0 TJ VALUE { if (time>50n, V(DCB, DSB)*I(V_VID)*{selfh},0) }
+E_ABM25         Vdg 0 VALUE { V(DCB)-V(gi)+{alpha}*(V(RDM)-V(DSB))**2    }
+L_LG         GATE 5  {LG}  
+R_RG         5 gi  {RG}  
+E_Eis         n2 0 VALUE { if ( V(Vpcl)>0,V(Vpcl),0) }
+E_ABM15         Vpcl 0 VALUE { if ( (V(gi)-3)>V(DCB),V(DCB),V(gi)-3)    }
+.ENDS    
+R_Rvcont         vcon vcont  100k  
+C_ccon         0 vcont  .05n  
+R_Rvc2         cpi cp  4k  
+R_Rcp         cp vcp  120k  
+R_Ren         en enable  100k  
+C_cen         0 enable  .05n  
+E_ABM24         OTCN 0 VALUE { if (V(Tj)>190 | V(OTC)>3.5 ,0,5)    }
+R_Rth1         Ts Tj  1meg  
+E_ABM25         OTC 0 VALUE { if (V(Tj)<180 | V(OTCN)>3.5 ,0,5)    }
+C_CZth1         Ts 0  2.8n  
+E_ABM27         OTS 0 VALUE { if (V(Ts)<155 | V(OTSN)>3.5 ,0,5)    }
+E_ABM26         OTSN 0 VALUE { if (V(Ts)>165 | V(OTS)>3.5 ,0,5)    }
+E_ABM28         OT 0 VALUE { if (V(OTC)>3.5 | V(OTS)>3.5 ,5,0)    }
+C_cscd         0 scd  1n  
+E_ABM210         sc 0 VALUE { if (V(sci)>3.5 & V(scd)>3,5,0)    }
+R_rscd         sci scd  150k  
+S_S2         cpi Out vcont 0 S2
+RS_S2        vcont 0 1G
+.MODEL S2 VSWITCH Roff=1e6 Ron=100 Voff=3.5 Von=4
+R_Rsbl         Out sbl  300  
+E_ABM211         con 0 VALUE { if (V(Out)>2.0 & V(ine)>3.5,0,5)    }
+R_Rvdd         Vbb Vbr  100  
+E_ABM11         vcp 0 VALUE { if (2*V(cp)>V(Vbr)+12,   
++ V(Vbr)+12,2*V(cp))   }
+R_Rin         IN Vbr  120k  
+E_ABM212         ine 0 VALUE { if (V(Vbr)-V(IN)>3.9,5,0)    }
+R_Rbo         Out n1  20k  
+S_S5         Vbr n1 enable 0 S5
+RS_S5        enable 0 1G
+.MODEL S5 VSWITCH Roff=10e6 Ron=2k Voff=3.5 Von=4
+R_Rrb         Rbat Rbatv  100k  
+S_S3         cp sbl SBd 0 S3
+RS_S3        SBd 0 1G
+.MODEL S3 VSWITCH Roff=1e6 Ron=3k Voff=3.5 Von=4
+R_Rsb         SBcont SBd  100k  
+C_csb         0 SBd  .05n  
+E_ABM33         SBcont 0 VALUE { if ((V(Svg)+V(Sbq))>7.5 & V(enable)>3.5,5,0)  
++   }
+E_ABM32         vcon 0 VALUE { if (V(con)>2.5 | V(sc)>2.5 | V(OT)>2.5,5,0)    }
+E_ABM34         en 0 VALUE { if (V(OT)<3.5 & V(sc)<3.5 & V(ine)>3.5,5,0)    }
+E_ABM29         sci 0 VALUE { if ((V(Vbr)-V(Out))>7 & (V(Vbr)-V(IN))>4  
++ & V(OT)<3.5,5,0)   }
+E_Eref         Nscref 0 VALUE { if ( V(Out)+4.65<V(Vbr),V(Out)+4.65,V(Vbr)) }
+E_ABM22         Sbq 0 VALUE { if ((V(Vbr)-V(Out))>4.2,5,0)    }
+E_ABM21         Svg 0 VALUE { if ((V(g)-V(Out))>3.0,5,0)    }
+S_S4         n1 Nscref SBd 0 S4
+RS_S4        SBd 0 1G
+.MODEL S4 VSWITCH Roff=1e6 Ron=10 Voff=3.5 Von=4
+Q_Q4         Vbr n1 cp QNSCR
+Q_Q3         Vbr cl g QNSCR
+D_ZD3         IN Vbr DZE5 
+D_ZD1         Out n1 DZE1 
+D_ZD2         cl clb DZE2 
+D_ZD6         Vbr clb DZE3 
+S_S1         Vbr n1 Rbatv 0 S1
+RS_S1        Rbatv 0 1G
+.MODEL S1 VSWITCH Roff=10e6 Ron=500 Voff=3.5 Von=4
+E_ABM213         Rbat 0 VALUE { if (V(IN)-V(Vbr)>3.9,5,0)    }
+R_Rclamp         cl Out  100k  
+R_Rgate         g cp  1.3k  
+D_ZD4         IS CLis DZE3 
+D_ZD5         cl CLis DZE4 
+C_crb         0 Rbatv  .05n  
+S_S6         $N_0001 IS ine 0 S6
+RS_S6        ine 0 1G
+.MODEL S6 VSWITCH Roff=10e6 Ron=1 Voff=3.5 Von=4
+X_X4         g Vbb Out $N_0001 Tj Tcase Tamb BC660 
+.ENDS    
+
+
+
+
+
+
+
+

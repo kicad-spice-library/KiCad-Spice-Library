@@ -1,0 +1,232 @@
+***********************************************************************************
+**** SPICE MODELING by JIM THOMPSON, http://www.analog-innovations.com/ © 2015 ****
+***********************************************************************************
+**** TI TL598 Pulse-Width-Modulation Control Circuit ****
+**** Model Derived Only with Datasheet Information - Performance?  YMMV ****
+*******************************************************************************************
+*** PIN Numbers:  1    2    3    4  5  6    7     8    9     10   11 12   13   14   15   16 
+.SUBCKT TL598    1IN+ 1IN- FDBK DTC CT RT SIGGND OUT1 OUT2 PWRGND VC VCC OCTRL REF 2IN- 2IN+
+R_NOF1         CT 0 1G
+V_HB2_VREFOS         VCC N_1 1V
+V_HB2_VUVOS         N_2 REF 1.2V
+X_HB2_U1         N_3 SIGGND REF SIGGND MOST_POS PARAMS: W=10m D=500m
+X_HB2_U2         N_1 N_4 N_3 SIGGND MOST_NEG PARAMS: W=10m D=500m
+V_HB2_VINTREF         N_4 SIGGND 5V
+X_HB2_U5         N_5 N_6 SIGGND B_INPUT_INV PARAMS: TP={TPDIG} VTH=0.5
+X_HB2_U6         N_6 N_32 SIGGND B_INPUT_INV PARAMS: TP={TPDIG} VTH=0.5
+X_HB2_U3         VCC N_2 N_7 SIGGND COMP_BEH_DIG PARAMS: TDLY={2*TPDIG}
++  DELTAV=5m
+X_HB2_U4         N_7 N_5 SIGGND B_INPUT_INV PARAMS: TP={TPDIG} VTH=0.5
+X_HB1_HB1_U1         N_12 N_13 N_14 SIGGND B_NOR-2IN PARAMS: TP={TPDIG} VTH=0.5
+X_HB1_HB1_U2         N_14 N_15 N_13 SIGGND B_NOR-2IN PARAMS: TP={TPDIG} VTH=0.5
+X_HB1_U1         N_8 CT N_15 SIGGND COMP_BEH_DIG PARAMS: TDLY={2*TPDIG}
++  DELTAV=1m
+X_HB1_U2         CT N_9 N_12 SIGGND COMP_BEH_DIG PARAMS: TDLY={2*TPDIG}
++  DELTAV=1m
+X_HB1_U3         N_10 SIGGND N_11 SIGGND MOST_POS PARAMS: W=10m D=500m
+V_HB1_VMIRROR         REF N_10 1.4V
+G_HB1_FLC1         REF CT VALUE 
++ {I(VF_HB1_FLC1)*(1)*(1+TANH(2.2/0.1*(V(REF,CT)-1)))/2} 
+        VF_HB1_FLC1 N_11 RT 0
+E_HB1_E1         N_8 SIGGND REF SIGGND 10m
+E_HB1_E2         N_9 N_8 REF SIGGND 666m
+GSw_HB1_Sw1         CT SIGGND VALUE {((TANH(9.485/0.1*(V(N_13,
++  SIGGND)-0.5))+1)/2)*(V(CT, SIGGND)/20)}
+.PARAM         TPCOMP=100ns TPDIG=10ns
+E_HB4_E1         N_16 PWRGND OCTRL PWRGND 0.2
+R_HB4_HB2_R6         N_21 N_22  2K 
+C_HB4_HB2_C1         N_22 PWRGND  100pF 
+R_HB4_HB2_R5         OUT1 PWRGND  100K 
+G_HB4_HB2_GLCSW1         VC N_23 VALUE 
++ {(((TANH(2.2/0.1*(V(N_22,PWRGND)-0.7))+1)/2))*(200mA)*(1+TANH(2.2/100m*(V(VC,N_23)-1.945V)))/2}
+R_HB4_HB2_R4         VC OUT1  100K 
+R_HB4_HB2_R1         N_23 OUT1  4.7 
+G_HB4_HB2_GLCSW2         N_24 PWRGND VALUE 
++ {(((TANH(2.2/-0.1*(V(N_22,PWRGND)-0.3))+1)/2))*(200mA)*(1+TANH(2.2/75m*(V(N_24,PWRGND)-270m)))/2}
+R_HB4_HB2_R2         OUT1 N_24  8.2 
+C_HB4_HB2_C3         N_24 PWRGND  10nF 
+C_HB4_HB2_C2         VC N_23  10nF 
+R_HB4_HB3_R6         N_25 N_26  2K 
+C_HB4_HB3_C1         N_26 PWRGND  100pF 
+R_HB4_HB3_R5         OUT2 PWRGND  100K 
+G_HB4_HB3_GLCSW1         VC N_27 VALUE 
++ {(((TANH(2.2/0.1*(V(N_26,PWRGND)-0.7))+1)/2))*(200mA)*(1+TANH(2.2/100m*(V(VC,N_27)-1.945V)))/2}
+R_HB4_HB3_R4         VC OUT2  100K 
+R_HB4_HB3_R1         N_27 OUT2  4.7 
+G_HB4_HB3_GLCSW2         N_28 PWRGND VALUE 
++ {(((TANH(2.2/-0.1*(V(N_26,PWRGND)-0.3))+1)/2))*(200mA)*(1+TANH(2.2/75m*(V(N_28,PWRGND)-270m)))/2}
+R_HB4_HB3_R2         OUT2 N_28  8.2 
+C_HB4_HB3_C3         N_28 PWRGND  10nF 
+C_HB4_HB3_C2         VC N_27  10nF 
+X_HB4_U1         N_17 N_38 N_18 PWRGND B_AND-2IN PARAMS: TP={TPDIG} VTH=0.5
+R_HB4_R1         OCTRL N_19  1.25K 
+R_HB4_R2         N_19 PWRGND  2.75K 
+X_HB4_U5         N_16 N_17 PWRGND B_INPUT_BUF PARAMS: TP=1ns VTH=0.5
+X_HB4_HB1_HB2_U5         N_32 N_29 PWRGND B_INPUT_INV PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_HB1_HB2_U3         N_30 N_38 N_40 PWRGND B_NAND-2IN PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_HB1_HB2_U4         N_40 N_29 N_31 N_38 PWRGND B_NAND-3IN PARAMS: TP=
++ {TPDIG} VTH=0.5
+X_HB4_HB1_HB2_U1         N_36 N_29 PWMINT N_30 PWRGND B_NAND-3IN PARAMS: TP=
++ {TPDIG} VTH=0.5
+X_HB4_HB1_HB2_U2         PWMINT N_35 N_31 PWRGND B_NAND-2IN PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_HB1_HB1_U5         N_32 N_33 PWRGND B_INPUT_INV PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_HB1_HB1_U3         N_34 N_35 N_36 PWRGND B_NAND-2IN PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_HB1_HB1_U4         N_36 N_33 N_37 N_35 PWRGND B_NAND-3IN PARAMS: TP=
++ {TPDIG} VTH=0.5
+X_HB4_HB1_HB1_U1         N_38 N_33 N_39 N_34 PWRGND B_NAND-3IN PARAMS: TP=
++ {TPDIG} VTH=0.5
+X_HB4_HB1_HB1_U2         N_39 N_40 N_37 PWRGND B_NAND-2IN PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_HB1_U1         PWMINT N_39 PWRGND B_INPUT_INV PARAMS: TP={TPDIG} VTH=0.5
+X_HB4_U4         N_18 PWMINT N_32 N_25 PWRGND B_NOR-3IN PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB4_U2         N_40 N_17 N_20 PWRGND B_AND-2IN PARAMS: TP={TPDIG} VTH=0.5
+D_HB4_D1         N_19 PWRGND DGENERIC 
+X_HB4_U3         N_20 PWMINT N_32 N_21 PWRGND B_NOR-3IN PARAMS: TP={TPDIG}
++  VTH=0.5
+X_HB3_U4         N_41 PWMINT SIGGND B_INPUT_BUF_HYS PARAMS: TP=1ns VTH=0.5
+E_HB3_E1         N_42 SIGGND VALUE { V(DTC, SIGGND)+110m }
+X_HB3_U3         N_43 N_44 N_41 SIGGND B_OR-2IN PARAMS: TP={TPDIG} VTH=0.5
+X_HB3_U2         N_42 CT N_44 SIGGND COMP_BEH_DIG PARAMS: TDLY={TPCOMP}
++  DELTAV=1m
+X_HB3_U1         FDBK CT N_43 SIGGND COMP_BEH_DIG PARAMS: TDLY={TPCOMP}
++  DELTAV=1m
+X_HB5_U1         1IN+ 1IN- N_45 OP-AMP-CONFIG PARAMS: GDC=10K GBW=0.8 SLEW=1
++  ROUT=100 VP=5 VN=0 PM=65
+R_HB5_NOF1         N_45 0 1G
+R_HB5_NOF3         N_46 0 1G
+X_HB5_U2         2IN+ 2IN- N_46 OP-AMP-CONFIG PARAMS: GDC=10K GBW=0.8 SLEW=1
++  ROUT=100 VP=5 VN=0 PM=65
+R_HB5_NOF2         FDBK 0 1G
+GDC_HB5_I1         FDBK SIGGND VALUE 
++ {(1+TANH(2.2/0.1*(V(FDBK,SIGGND)-0.4V)))/2*700uA}
+G_HB5_GLCSW1         REF FDBK VALUE 
++ {(((TANH(2.2/0.1*(V(N_45,FDBK)-0.6))+1)/2))*(3.7mA)*(1+TANH(2.2/400m*(V(REF,FDBK)-1.2)))/2}
+G_HB5_GLCSW2         REF FDBK VALUE 
++ {(((TANH(2.2/0.1*(V(N_46,FDBK)-0.6))+1)/2))*(3.7mA)*(1+TANH(2.2/400m*(V(REF,FDBK)-1.2)))/2}
+.MODEL   DGENERIC D
+.ENDS    TL598
+*******************************************************************************************
+.SUBCKT MOST_POS A B OUT COM PARAMS: W=0.1 D=500m
+.PARAM K={679m/W} F={D/K} 
+E OUT COM VALUE {(V(A)+V(B)+V(A,B)*TANH(K*V(A,B)))/2+F*(1-TANH(K*V(A,B))*TANH(K*V(A,B)))}
+.ENDS MOST_POS
+******************************************************************
+.SUBCKT MOST_NEG A B OUT COM PARAMS: W=0.1 D=500m
+.PARAM K={679m/W} F={D/K}
+E OUT COM VALUE {(V(A)+V(B)+V(B,A)*TANH(K*V(A,B)))/2-F*(1-TANH(K*V(A,B))*TANH(K*V(A,B)))}
+.ENDS MOST_NEG
+******************************************************************
+.SUBCKT B_INPUT_INV I O VN PARAMS: TP=1ns VTH=0.5
+R_R1  P VN  1 
+R_R2  P O  14 
+C_C1  P VN  {1.4067*TP} 
+E_E1  O VN VALUE {0.5+0.225*TANH(70*(V(P,VN)-0.5))+0.275*TANH(11*(V(P,VN)-0.5))}
+G_G1  VN P VALUE {(1-TANH(6*(V(I,VN)-VTH)))/2}
+.ENDS B_INPUT_INV
+*******************************************************************************************
+.SUBCKT B_INPUT_BUF_HYS I O VN PARAMS: TP=1ns VTH=0.5 
+R_R1  P VN  1 
+R_R2  P O  1
+C_C1  P VN  {0.8604527*TP} 
+E_E1  O VN VALUE {0.5+0.225*TANH(70*(V(P,VN)-0.5))+0.275*TANH(11*(V(P,VN)-0.5))}
+G_G1  VN P VALUE {(1+TANH(6*(V(I,VN)-VTH)))/2}
+.ENDS B_INPUT_BUF_HYS
+*******************************************************************************************
+.SUBCKT B_INPUT_BUF I O VN PARAMS: TP=1ns VTH=0.5
+R_R1  P VN  1 
+R_R2  P O  1G 
+C_C1  P VN  {1.51*TP} 
+E_E1  O VN VALUE {0.5+0.225*TANH(70*(V(P,VN)-0.5))+0.275*TANH(11*(V(P,VN)-0.5))}
+G_G1  VN P VALUE {(1+TANH(6*(V(I,VN)-VTH)))/2}
+.ENDS B_INPUT_BUF
+*******************************************************************************************
+.SUBCKT COMP_BEH_DIG INP INN OUT VN PARAMS: TDLY=10n DELTAV=5m
+.PARAM A={2.197774/DELTAV}
+R1 INT1 0 1G
+R2 INT1 INT2 {SQRT(TDLY/0.693147)}
+C1 INT2 0 {SQRT(TDLY/0.693147)}
+E2 OUT VN VALUE {V(INT2,0)}
+E1 INT1 0 VALUE {(TANH(A*V(INP,INN))+1)/2}
+.ENDS COMP_BEH_DIG
+*****************************************************************
+.SUBCKT OP-AMP-CONFIG INP INN OUT PARAMS: GDC=100K GBW=10 SLEW=1 ROUT=100 VP=10 VN=-10 PM=45
+.PARAM  PI=3.141593 PMR={PM/180*PI} GBR={GBW*1E6*2*PI} DELT={(90-PM)/90}
+.PARAM  OMEGAZ={GBR/DELT} PROCPM={(1-TAN(PMR/2))/(1+TAN(PMR/2))} L={(PROCPM-DELT)/GBR/GBR/(PROCPM-(1/DELT))}
+.PARAM  R={(1-OMEGAZ*OMEGAZ*L)/OMEGAZ}
+G1 0 N2 N1 0 1
+G2 N2 0 N2 N3 1
+R1 N3 OUT {ROUT}
+R2 N2 0 {GDC}
+R3 N5 N4 {R/(sqrt(L))} ;{R}
+E1 N3 0 VALUE {LIMIT(V(N2),{VN},{VP})}
+E2 N1 0 VALUE {LIMIT(V(N4),{-(SLEW)/(2*PI*GBW)},{SLEW/(2*PI*GBW)})}
+E3 N5 0 INP INN 1
+RE3 N5 0 100K
+E4 0 N6 INP INN 1 
+RE4 N6 0 100K
+C1 0 N2 {1/(2*PI*GBW*1E6)}
+C2 N4 N7 {sqrt(L)} ;1
+L1 N7 N6 {sqrt(L)} ;{L}
+.ENDS OP-AMP-CONFIG
+*****************************************************************
+.SUBCKT B_AND-2IN A B Y VN PARAMS: TP=1ns VTH=0.5
+XBUF1 A AP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+XBUF2 B BP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+EYA     YA VN VALUE {(1+TANH(4*(V(AP,VN)-0.5))/TANH(2))}
+EYB     YB VN VALUE {(1+TANH(4*(V(BP,VN)-0.5))/TANH(2))}
+EY      Y VN VALUE {V(YA)*V(YB)/4}
+.ENDS B_AND-2IN
+******************************************************************************************
+.SUBCKT B_NAND-2IN A B Y VN PARAMS: TP=1ns VTH=0.5
+XBUF1 A AP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+XBUF2 B BP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+EYA     YA VN VALUE {(1+TANH(4*(V(AP,VN)-0.5))/TANH(2))}
+EYB     YB VN VALUE {(1+TANH(4*(V(BP,VN)-0.5))/TANH(2))}
+EYI     YI VN VALUE {V(YA)*V(YB)/4}
+EY      Y VN  VALUE {-1*V(YI)+1}
+.ENDS B_NAND-2IN
+******************************************************************************************
+.SUBCKT B_NAND-3IN A B C Y VN PARAMS: TP=1ns VTH=0.5
+XBUF1 A AP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+XBUF2 B BP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+XBUF3 C CP VN B_INPUT_BUF PARAMS: TP={TP} VTH={VTH}
+EYA     YA VN VALUE {(1+TANH(4*(V(AP,VN)-0.5))/TANH(2))}
+EYB     YB VN VALUE {(1+TANH(4*(V(BP,VN)-0.5))/TANH(2))}
+EYC     YC VN VALUE {(1+TANH(4*(V(CP,VN)-0.5))/TANH(2))}
+EYI     YI VN VALUE {V(YA)*V(YB)*V(YC)/8}
+EY      Y VN  VALUE {-1*V(YI)+1}
+.ENDS B_NAND-3IN
+******************************************************************************************
+.SUBCKT B_NOR-2IN A B Y VN PARAMS: TP=1ns VTH=0.5
+XBUF1 A AP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+XBUF2 B BP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+EYA     YA VN VALUE {(1+TANH(4*(V(AP,VN)-0.5))/TANH(2))}
+EYB     YB VN VALUE {(1+TANH(4*(V(BP,VN)-0.5))/TANH(2))}
+EY      Y VN VALUE {V(YA)*V(YB)/4}
+.ENDS B_NOR-2IN
+******************************************************************************************
+.SUBCKT B_NOR-3IN A B C Y VN PARAMS: TP=1ns VTH=0.5
+XBUF1 A AP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+XBUF2 B BP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+XBUF3 C CP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+EYA     YA VN VALUE {(1+TANH(4*(V(AP,VN)-0.5))/TANH(2))}
+EYB     YB VN VALUE {(1+TANH(4*(V(BP,VN)-0.5))/TANH(2))}
+EYC     YC VN VALUE {(1+TANH(4*(V(CP,VN)-0.5))/TANH(2))}
+EY      Y VN VALUE {V(YA)*V(YB)*V(YC)/8}
+.ENDS B_NOR-3IN
+******************************************************************************************
+.SUBCKT B_OR-2IN A B Y VN PARAMS: TP=1ns VTH=0.5
+XBUF1 A AP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+XBUF2 B BP VN B_INPUT_INV PARAMS: TP={TP} VTH={VTH}
+EYA     YA VN VALUE {(1+TANH(4*(V(AP,VN)-0.5))/TANH(2))}
+EYB     YB VN VALUE {(1+TANH(4*(V(BP,VN)-0.5))/TANH(2))}
+EYI     YI VN VALUE {V(YA)*V(YB)/4}
+EY      Y VN  VALUE {-1*V(YI)+1}
+.ENDS B_OR-2IN
+*****************************************************************************************

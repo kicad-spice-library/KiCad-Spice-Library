@@ -1,0 +1,12 @@
+.subckt SwHist NodeMinus NodePlus Plus Minus RON=1 ROff=1e7 VT={Vtr} VH={Vho} 
+S5 NodePlus NodeMinus 8 0 smoothSW 
+Bcrtl 8 0 V = IF (V(plus)-V(minus) > V(ref), 1, 0)
+Bref ref1 0 V = IF (V(8) > 0.5, {VT-VH}, {VT+VH})
+Rdel ref1 ref 100 
+Cdel ref 0 100p
+.ic V(ref)={VT+VH}
+Rconvl 8 0 1e7
+Rconv2 plus 0 1e7 
+Rconv3 minus 0 1e7 
+.model smoothSW SW (RON={RON} ROFF={ROFF} VON=1 VOFF=0) 
+.ends

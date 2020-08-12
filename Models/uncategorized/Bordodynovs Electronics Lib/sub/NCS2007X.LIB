@@ -1,0 +1,240 @@
+*==========================================================
+* ON Semiconductor NCS325
+*
+* This model was developed for ON Semiconductor by:
+* 
+*   AEI Systems, LLC
+*   5777 W. Century Blvd., Suite 1160
+*   Los Angeles, California  90045
+* 
+* The model is Copyright © 2016, AEi Systems, LLC. All Rights Reserved. 
+* 
+* Analysis Note: This model may NOT be used for any Worst Case or thermal 
+* analysis and is only valid at 25C. Any attempt to use the model for 
+* end-of-life (EOL) performance assessments will yield erroneous results. 
+* To learn more and obtain a quotation for a worst-case analysis of this 
+* part and a related circuit, please contact AEi Systems directly. 
+* 
+* Use Restrictions: Users may not directly or indirectly display, sell 
+* or re-distribute this model or any derivative work therefrom without 
+* the prior written consent of both AEi Systems and ON Semiconductor. 
+* 
+* This model is subject to change without notice. Neither ON Semiconductor 
+* nor AEi Systems is responsible for updating this model.
+* 
+* For more information regarding translations of this model to other 
+* SPICE versions, worst-case analysis, stress and derating analysis, 
+* modeling services, model libraries, and other simulation products, 
+* please call AEi Systems at (310) 216-1144, or contact AEi Systems 
+* by email: info@aeng.com. Or visit AEi Systems on the web at http://www.AENG.com
+*
+* $Revision:   1.0b  $
+* $Author:   C.E. HYMOWITZ  $
+* $Date:     1 Feb 2014 19:35:55  $
+*==========================================================
+*$
+.SUBCKT NCS2007x 1 2 3 4 5
+*                | | | | |
+*                | | | | Output
+*                | | | Negative Supply
+*                | | Positive Supply
+*                | Inverting Input
+*                Non-inverting Input
+*
+*
+* The following op-amps are covered by this model:
+*      NCS2007x
+*
+* Date of model creation: 2-1-2016_7:35:55_PM
+* Level of Model Creator: 3.16 / 02-26-14
+*
+* Revision History:
+*      REV B: 01-Feb-16
+*       
+* Recommendations:
+*      Use PSPICE (or SPICE 2G6; other simulators may require translation)
+*      For a quick, effective design, use a combination of: data sheet
+*            specs, bench testing, and simulations with this macromodel
+*      For high impedance circuits, set GMIN=100F in the .OPTIONS statement
+*
+* Supported:
+*      Typical performance for temperature range (-40 to 125) degrees Celsius
+*      DC, AC, Transient, and Noise analyses.
+*      Most specs, including: offsets, DC PSRR, DC CMRR, input impedance,
+*            open loop gain, voltage ranges, supply current, ... , etc.
+*      Temperature effects for Ibias, Iquiescent, Iout short circuit 
+*            current, Vsat on both rails, Slew Rate vs. Temp and P.S.
+*
+* Not Supported:
+*      Some Variation in specs vs. Power Supply Voltage
+*      Vos distribution, Ib distribution for Monte Carlo
+*      Distortion (detailed non-linear behavior)
+*      Some Temperature analysis
+*      Process variation
+*      Behavior outside normal operating region
+*
+* Known Discrepancies in Model vs. Datasheet:
+*       
+*
+* Capacitances added for LTspice convergence
+*
+C101 16 1 10f
+C102 2 13 10f
+C103 30 31 10f
+C104 30 32 10f
+C105 35 3 10f
+C106 35 4 10f
+C107 55 57 10f
+C108 57 56 10f
+C109 50 51 10f
+C110 50 52 10f
+C111 96 5 10f
+C112 3 4 10f
+*
+*
+* Input Stage
+*
+V10  3 10 -210M
+R10 10 11 69.0K
+R11 10 12 69.0K
+G10 10 11 10 11 1.44M
+G11 10 12 10 12 1.44M
+C11 11 12 11.5E-15
+C12  1  0 3.5P
+E12 71 14 VALUE { (5.00U - 1u) + V(20) * 616M + V(21) * 616M + V(22) * 616M + V(23) * 616M }
+G12 1 0 62 0 1m
+G13 1 2 63 0 1u
+M12 11 14 15 15 NMI 
+M14 12 2 15 15 NMI 
+G14 2 0 62 0 1m
+C14  2  0 3.5P
+I15 15 4 500U
+V16 16 4 10.0M
+GD16 16 1 TABLE { V(16,1) } ((-100,-20.0P)(0,0)(1m,1u)(2m,1m)) 
+V13 3 13 -10.0M
+GD13 2 13 TABLE { V(2,13) } ((-100,-20.0P)(0,0)(1m,1u)(2m,1m)) 
+R71  1  0 5.00G
+R72  2  0 5.00G
+R73  1  2 50.0G
+*C13  1  2 1.00E-15
+*
+* Noise 
+*
+I20 21 20 450N
+D20 20  0 DN1
+D21  0 21 DN1
+I22 22 23 1N
+R22 22 0  1k
+R23  0 23 1k
+*
+* Open Loop Gain, Slew Rate
+*
+G30  0 30 12 11 1
+R30 30  0 1.00K
+G31 0 31 3 4 0.00
+I31 0 31 DC 103
+R31 31  0 1 TC=2.66M,-3.12U
+GD31 30 0 TABLE { V(30,31) } ((-100,-1n)(0,0)(1m,0.1)(2m,2))
+G32 32 0 3 4 0.00
+I32 32 0 DC 107
+R32 32  0 1 TC=2.05M,5.98U
+GD32 0 30 TABLE { V(30,32) } ((-2m,2)(-1m,0.1)(0,0)(100,-1n))
+G33  0 33 30 0 1m
+R33  33 0 1K
+G34  0 34 33 0 562M
+R34  34 0 1K
+C34  34 0 22.3U
+G37  0 37 34 0 1m
+R37  37 0 1K
+C37  37 0 20.9P
+G38  0 38 37 0 1m
+R38  39 0 1K
+L38  38 39 159N
+E38  35 0 38 0 1
+G35 33 0 TABLE { V(35,3) } ((-1,-1n)(0,0)(60.0,1n))(66.0,1))
+G36 33 0 TABLE { V(35,4) } ((-66.0,-1)((-60.0,-1n)(0,0)(1,1n))
+*
+* Output Stage
+*
+R80 50 0 100MEG
+G50 0 50 57 96 2
+R58 57  96 0.50
+R57 57  0 800
+C58  5  0 2.00P
+*
+* PSRR PLUS 
+*
+G57  0 57 VALUE { V(35) * 1.25M + V(110) + V(120) + V(130) } 
+* G110 THE DC GAIN FOR +PSRR AND L110 THE ROLL OFF WITH R110
+G110 0 110 3 0 1.25N
+L110 110 111 31.8M
+R110 111 0 1E6 
+GR110 111 0 111 0 1 
+*
+* PSRR MINUS 
+*
+* G120 THE DC GAIN FOR -PSRR AND L120 THE ROLL OFF WITH R120
+G120 0 120 4 0 992P
+L120 120 121 22.7M
+R120 121 0 1E6 
+GR120 121 0 121 0 1 
+*
+* CMRR 
+*
+* G130 THE DC GAIN FOR CMRR AND L130 THE ROLL OFF WITH R130 AND THE ZERO WITH R132
+G130 0 130 VALUE { ( V(15) ) * 7.02N } 
+L130 130 131 796U
+R130 131 0 1E6 
+R132 130 131 15.0K
+GR130 131 0 131 0 1 
+*
+GD55 55 57 TABLE { V(55,57) } ((-0.2m,-1)(-0.1m,-1m)(0,0)(10,1n))
+GD56 57 56 TABLE { V(57,56) } ((-0.2m,-1)(-0.1m,-1m)(0,0)(10,1n))
+E55 55  0 VALUE { 0.00 + V(3) * 1 + V(51) * -44.4M }
+E56 56  0 VALUE { 0.00 + V(4) * 1 + V(52) * -34.3M }
+R51 51 0 1k
+R52 52 0 1k
+GD51 50 51 TABLE { V(50,51) } ((-10,-1n)(0,0)(1m,1m)(2m,1))
+GD52 50 52 TABLE { V(50,52) } ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+G53  3  0 VALUE { -500U + V(51) * 1M }
+G54  0  4 VALUE { -500U + V(52) * -1M }
+*
+* Current Limit
+*
+G99 96 5 99 0 1
+R98 0 98 1 TC=0.00,0.00
+G97 0 98 TABLE { V(96,5) } ((-18.0,-50.0M)(-1.00M,-49.5M)(0,0)(1.00M,64.3M)(18.0,65.0M))
+E97 99 0 VALUE { V(98) * LIMIT((( V(3) - V(4) ) * 0.00 + 1.00), 0.00, 1E6 ) * LIMIT((( V(3) - V(4) ) * 1.17 + -588M), 0, 1) }
+D98 4 5 DESD
+D99 5 3 DESD
+*
+* Temperature / Voltage Sensitive IQuiscent
+*
+R61 0 61 1 TC=2.52M,-1.58U
+G61 3 4 61 0 1
+G60 0 61 TABLE { V(3, 4) } ((0, 0)(500M,4.66U)(2.7,433U)(5.00,438U)(15.0,450U)(25.0,466U)(36.0,495U))
+*
+* Temperature Sensitive offset voltage
+*
+I73 0 70 DC 1
+R74 0 70 1 TC=2.00U
+E75 1 71 VALUE {V(70)-1}
+*
+* Temp Sensistive IBias
+*
+I62 0 62 DC 1000uA
+R62 0 62 REXP  39.72243U
+*
+* Temp Sensistive Offset IBias
+*
+I63 0 63 DC 1000uA
+R63 0 63 REXP2  3.2765M
+*
+* Models
+.MODEL NMI NMOS(L=2.00U W=42.0U KP=200U LEVEL=1 )
+.MODEL DESD  D   N=1 IS=1.00E-15
+.MODEL DN1 D   IS=1P KF=40.0E-18 AF=1
+.MODEL REXP  RES TCE= 3.33842
+.MODEL REXP2  RES TCE= 984.21436M
+.ENDS NCS2007x
+*$

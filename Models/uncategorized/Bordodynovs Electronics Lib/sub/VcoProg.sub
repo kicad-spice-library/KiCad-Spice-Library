@@ -1,0 +1,140 @@
+*Libreria de Vco's
+.SUBCKT VPVCO	1	2		3				4	5	6
+*					IN	OUT	XDOT/OMEGA  KS A  fo
+*	VOLTAGE-PROGRAMMABLE VCO MODEL
+*	VOLTAGE ANALOG PARAMETERS:
+*	KS IS FREQUENCY SENSITIVITY IN KILOHERTZ/VOLT
+*	A IS AMPLITUDE OF OSCILLATION IN VOLTS
+*	fo IS OSCILLATION FREQUENCY IN KILOHERTZ WHEN INPUT IS ZERO
+RIN 1 0 1G
+R45 4 5 1G
+R6  6 0 1G
+*IMPLEMENT VOLTAGE CONTROLLED FREQUENCY TERMS FOR INTEGRATOR #1
+G1A 0 3 POLY(3)	7 0 1 0 4 0		0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+G1B 0 3 POLY(2)	7 0 6 0			0 0 0 0 1
+C1 3 10 .159154943M
+R1 3 0 1G
+*IMPLEMENT VOLTAGE CONTROLLED FREQUENCY TERMS FOR INTEGRATOR #2
+G2A 0 8 POLY(3)	3 0 1 0 4 0		0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+G2B 0 8 POLY(2)	3 0 6 0			0 0 0 0 1
+C2 8 0 .159154943M
+R2 8 0 1G
+*IMPLEMENT FIRST INTEGRAND WITH VARIABLE DAMPING TERM
+EXDD 7 0 POLY(3)	3 0 8 0 5 0
++ 0 0 -1 0 0 0 0 0 0 0 -.1 0 0 -.1 0  .1
+* - -  P2   - - - - - -  P10 - - P13 - P15
+R7 7 0 1G
+*OUTPUT BUFFER STAGE
+REO 2 0 1G
+EO 2 0 8 0 1
+*START-UP CIRCUITRY
+VSTART 9 0 PULSE (1 0)
+R9 9 0 1G
+*SET INITIAL AMPLITUDE TO V(5) VOLTAGE
+EIC 10 0 POLY(2)	9 0 5 0			0 0 0 0 -1
+.ENDS
+*
+* Nuevo VcoProg con fuentes B
+.subckt vcoprog 1 2 3 4 5 6
+Rin 1 0 1g
+RE0 2 0 1g
+B1a 0 3 I=V(7)*V(1)*V(4)
+B1b 0 3 I=V(7)*V(6)
+R1 3 0 1g
+B2a 0 8 I=V(3)*V(1)*V(4)
+B2b 0 8 I=V(3)*V(6)
+R2 8 0 1g
+C2 8 0 .159154943m
+Bxd 7 0 V=-V(8)-.1*V(3)**3-.1*V(3)*V(8)**2+.1*V(3)*V(5)**2
+R7 7 0 1g
+E0 2 0 8 0 1
+Vstart 9 0 PULSE(1 0)
+R9 9 0 1g
+Bic 10 0 V=-V(9)*V(5)
+C1 3 10 .159154943m
+R45 4 5 1g
+R6 6 0 1g
+.ends
+*
+.subckt vconew 1 2 3 4 5 6
+Rin n1 0 1g
+RE0 2 0 1g
+B1 0 3 I=V(7)*V(n1)*V(4)
+R1 3 0 1g
+B2 0 8 I=V(3)*V(n1)*V(4)
+R2 8 0 1g
+C2 8 0 {cval}
+Bxd 7 0 V=-V(8)-.1*V(3)**3-.1*V(3)*V(8)**2+.1*V(3)*V(5)**2
+R7 7 0 1g
+Ebuf 2 0 8 0 1
+Vstart 9 0 PULSE(0 {a})
+C1 3 9 {cval}
+R45 4 5 1g
+R6 6 0 1g
+Ef0 n1 1 6 0 {1/ks}
+.param cval=.159154943m
+.ends
+*
+.subckt vcodig 1 2 3 4 5 6 7
+Rin x 0 1g
+R2 2 0 1g
+B1 0 3 I=V(8)*V(x)*V(4)
+B2 0 9 I=V(3)*V(x)*V(4)
+Cb2 9 0 {cval} Rpar=1g
+Bxd 8 0 V=-V(9)-.1*V(3)**3-.1*V(3)*V(9)**2+.1*V(3)*V(5)**2
+R8 8 0 1g
+Ebuf 2 0 9 0 1
+Vstart 10 0 PULSE(0 {a})
+Cb1 3 10 {cval}
+R4_5 4 5 1g
+R6 6 0 1g
+Ef0 x 1 6 0 {1/ks}
+Bdig 7 0 V=Table (V(2), -1m,0,1m, {2*a})-{a}
+R7 7 0 1g
+R3 3 0 1g
+.param cval=.159154943m
+.ends
+*
+.subckt vcodig14 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+Rin x 14 1g
+R2 2 14 1g
+B1 14 3 I=V(A)*V(x)*V(4)
+B2 14 B I=V(3)*V(x)*V(4)
+Cb2 B 14 {cval} Rpar=1g
+Bxd A 14 V=-V(B)-.1*V(3)**3-.1*V(3)*V(B)**2+.1*V(3)*V(5)**2
+Ra A 14 1g
+Vstart z 14 PULSE(0 {a})
+Cb1 3 z {cval}
+R4_5 4 5 1g
+R6 6 14 1g
+Ef0 x 1 6 14 {1/ks}
+Bd0 7 14 V=Table (V(B), -1m,0,1m, {2*a})+{d-a}
+R7 7 14 1g
+R3 3 14 1g
+R12 12 14 1g
+Bd2 9 14 V=Table (V(3), -1m,0,1m, {2*a})+{d-a}
+Bd1 8 14 V=Table (-V(B), -1m,0,1m, {2*a})+{d-a}
+Bd3 10 14 V=Table (-V(3), -1m,0,1m, {2*a})+{d-a}
+Buf2 12 14 V=V(3)+{c}
+Buf0 2 14 V=V(B)+{c}
+Buf1 11 14 V=-V(B)+{c}
+R11 11 14 1g
+R9 9 14 1g
+R8 8 14 1g
+R13 13 14 1g
+Buf3 13 14 V=-V(3)+{c}
+R10 10 14 1g
+.ends
+*
+*MODEL NAME:  VCO
+*SYNTAX:    Xname node1 node2 VCO; analog behavioral model of VCO
+* Default center frequency is 1KHz. Must use UIC option on .TRAN statement
+* or bring out "int" node and set .IC V(int)=0.
+*
+.SUBCKT VCO ctrl out PARAMS: PI=3.1415927 FC=1KHz DFDV=1KHz/V
+EVCO out 0  VALUE={SIN(PI*(FC*TIME+V(int)))}
+RVCO out 0  1G
+GINT 0 int  ctrl 0  {DFDV*1u}
+CINT int 0  1u  IC=0
+RINT int 0  1G
+.ENDS

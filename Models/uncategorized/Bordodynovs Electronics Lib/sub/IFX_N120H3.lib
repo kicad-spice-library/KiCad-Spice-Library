@@ -1,0 +1,326 @@
+*****************************************************************
+* Level2 Version of 	1200V IGBT H3 DuoPack Models nov 2009	*
+*****************************************************************
+* INFINEON TECHNOLOGIES AG      		IFX_N120H3.LIB	*
+*								*
+*  (V0.5)     	11/09  					*
+*                                                               *
+*  								*
+*								*
+* Models provided by INFINEON are not warranted by INFINEON as  *
+* fully representing all of the specifications and operating    *
+* characteristics of the semiconductor product to which the     *
+* model relates. The model describe the characteristics of a    * 
+* typical device.                                               * 
+* In all cases, the current data sheet information for a given  *
+* device is the final design guideline and the only actual      *
+* performance specification.                                    *
+* Altough models can be a useful tool in evaluating device      *
+* performance, they cannot model exact device performance under *
+* all conditions, nor are they intended to replace bread-       *
+* boarding for final verification. INFINEON therefore does not  *
+* assume any liability arising from their use.                  *
+* INFINEON reserves the right to change models without prior    * 
+* notice.                                                       *
+*                                                               *
+* This library contains Level 2 models for the following	* 
+* INFINEON Technologies new (T2) 1200V IGBT3/ Power Diodes	*
+* devices/chip-models including lead inductances related	*
+* to packages:							*
+*								*
+*								*
+*								*
+* 1200V type			BV	Ice/A			*
+*								*	
+* IKW15N120H3			1200	15			*		
+* IKW25N120H3			1200	25			*		
+* IKW40N120H3			1200	40			*
+* 								*
+*								*	
+* 								*
+* the model is based on the publication:			*
+* 								*
+* R.Kraus, P.Türkes, J.Sigg					*
+* Physics-based Models Of Power Semiconductor Devices 		*
+* For The Circuit Simulator Spice				*
+* 								*
+* Power Electronics Specialists Conference, 1998.		* 
+* PESC 98 Record. 29th Annual IEEE				*
+*								*
+* SUPPORTemail:	simulate@infineon.com				*
+*****************************************************************
+.SUBCKT IKW15N120H3_L2 ano gate kat PARAMS: TJ=27
+*
+LANO ano anol 5n
+RLAN ano anol 100
+LKAT katl kat 7n 
+RLK katl kat 100
+XL76xxD anol gate katl L7XXXD_L2h3 PARAMS: TJ={TJ} Atotal=0.18054 A=0.1034 Rg=2
+XDIO katl anol L4XXXB_L2h3 PARAMS: TJ={TJ} A=0.02148 N_ideal=1.0
+.ENDS
+*$
+*****************************************************************
+.SUBCKT IKW25N120H3_L2 ano gate kat PARAMS: TJ=27
+* 
+LANO ano anol 5n
+RLAN ano anol 100
+LKAT katl kat 7n 
+RLK katl kat 100
+XL76xxD anol gate katl L7XXXD_L2h3 PARAMS: TJ={TJ} Atotal=0.272 A=0.1733 Rg=2
+XDIO katl anol L4XXXB_L2h3 PARAMS: TJ={TJ} A=0.0355 N_ideal=1.0
+.ENDS
+*$
+*****************************************************************
+.SUBCKT IKW40N120H3_L2 ano gate kat PARAMS: TJ=27
+* 
+LANO ano anol 5n
+RLAN ano anol 100
+LKAT katl kat 7n 
+RLK katl kat 100
+XL76xxD anol gate katl L7XXXD_L2h3 PARAMS: TJ={TJ} Atotal=0.414 A=0.296 Rg=6
+XDIO katl anol L4XXXB_Lh3 PARAMS: TJ={TJ} A=0.05638 N_ideal=1.0
+.ENDS
+*$
+****************************************************************
+.SUBCKT L7XXXD_L2h3 ano gate kat PARAMS: TJ=27 Atotal=1.5 A=1.2 Rg=1
+.PARAM q=1.6E-19 eps0=8.85E-14 epsi=11.8 eox=3.8 t0=273 k=1.381e-23 un=1350 up=450 u_surf=600 ni0=1.45e10 pi=3.1416 vsat=8e5
+.PARAM vlimit=7.5e6
+.PARAM TX1=100e-7 NX1=1.5e17 
+.PARAM NX2=0.8e15 LX1=8e-4 f_buf=0.05 NX3=7.23E13 TX2=6u ETX2=2 EMU=-1.5 BV_FW=1250 BV_RW=28 
+.PARAM WX2=115e-4
+.PARAM WX1=9.577m
+.PARAM LX2=2.5e-4 vsw=1
+.PARAM Rs=0.896m 
+.PARAM nzell={A*2.0661e5}
+.PARAM Ads={nzell*532.9n}
+.PARAM A_j={nzell*1.69u}
+.PARAM WX3={nzell*2.92m}
+.PARAM CX1={2.2095e-14}
+.PARAM CX2={nzell*2.0992e-13}
+.PARAM CX3={nzell*7.0623e-15}
+.PARAM CX4={(CX2+CX3)}
+.PARAM CX5={nzell*3.8372e-14}
+.PARAM Agd_d={nzell*408.8n}
+.PARAM Agd_fp={A-A_j+nzell*1.5184u}
+.PARAM Cje={Atotal*2.9393n} 
+.PARAM D=15.88
+.PARAM L=9.7628m 
+.PARAM Ise0={A*6.2717p}
+.PARAM Isbs2={A*3.1358p} 
+.PARAM Isbs2_g={A*2e-15} 
+.PARAM Isbs1={A*5.0396u} 
+.PARAM Isbs1_g={A*2.136e-19} 
+.PARAM Q0={A*110.92n}
+XCHANN dn g s channel_120H3 PARAMS: TJ={TJ} WX3={WX3} LX2={LX2} TX1={TX1} NX1={NX1} 
+GDE1 ano e1 VALUE={LIMIT(TANH(1e3*I(VDE1))*(((Isx1(TJ,V(xj1,0))**((t0+TJ)/(t0+27)))/Isx1(27,V(xj1,0)))**((t0+27)/(t0+TJ))*ABS(I(VDE1))**((t0+27)/(t0+TJ))-ABS(I(VDE1))),-1e9,1e9)}
+GDE2 ano e1 VALUE={LIMIT(TANH(1e3*I(VDE2))*(((Isx2(TJ)**((t0+TJ)/(t0+27)))/Isx2(27))**((t0+27)/(t0+TJ))*ABS(I(VDE2))**((t0+27)/(t0+TJ))-ABS(I(VDE2))),-1e9,1e9)}
+CPN ano_x e1 {Cje}
+RJE ano ano_x 1m
+GJCAP d kat VALUE={1e6*I(VIJCT)}
+VDE1 ano anx1 0
+VDE2 ano anx2 0
+DE1 anx1 e1 D11
+DE2 anx2 e1 D12
+DS kat d D2 
+.MODEL D11 D(IS={Isbs1} N=2)
+.MODEL D12 D(IS={Isbs2} N=1)
+.MODEL D2 D (IS={ISE0} BV={BV_FW})
+RG1 gate g {Rg /(((TJ+t0)/300)**EMU)}
+RS s kat {Rs/A}
+EVGCOX vgcox 0 VALUE={V(ox_fp,kat)-{vsw} }
+GICX4 g ox_fp VALUE={LIMIT(((CX4)/100+99*CX4*(1+tanh(10*V(vgcox,0)))/200)*1e6*I(VDUGD_fp),-1e9,1e9)}
+GICX1 g ox_d VALUE={LIMIT(((CX1)/100+99*CX1*(1+tanh(10*V(vgcox,0)))/200)*1e6*I(VDUGD_d),-1e9,1e9)}
+GICX5 g s VALUE={LIMIT((CX5+99*(CX4+CX1)*(1+tanh(-10*V(vgcox,0)))/200)*1e6*I(VDUGS),-1e9,1e9)}
+VIA e1 e 0
+EDEP_fp d ox_fp VALUE={MAX(Vdep_fp(V(d,g),QTOT(V(xj2,0))),0)}
+EDEP_d d ox_d VALUE={MAX(Vdep_d(V(d,g),QTOT1(V(xj1,0),I(VIPC))),0)}
+EGIA e d VALUE={(I(VIA))*Rb(V(b,0),TJ)}
+VINC d dn 0
+GIC ds kat VALUE={IPC(I(VINC),V(b,0),V(xj1,0),I(VDXJ),TJ)}
+VIPC d ds 0
+CQB b 0 1u,IC=0
+RHELP b 0 1meg
+GRQB b 0 VALUE={LIMIT(1u*V(b,0)*(1/(TAU_X(TJ,V(xj1,0)))),-1e9,1e9)}
+GRQB2 b 0 VALUE={LIMIT(INE(I(VINC),V(b,0),V(xj1,0),I(VDXJ),TJ)+f_buf*I(VIA),-1e9,1e9)}
+GRQB3 0 b VALUE={LIMIT(I(VINC),-1e9,1e9)}
+EV2 v2 0 VALUE={MAX(V(d,kat)-V1(MAX(xj(MAX(V(d,kat)-V1(V(xj1,0)),0),MAX(V(xj1,0),0.1m),I(VIPC)),.1m)),0)}
+RV2 v2 0 1meg
+GV0 0 v0 VALUE={V0(MAX(V(xj1),.1m),I(VIPC))-V(v0)}
+RV0 v0 0 1meg
+GV1 0 v1 VALUE={V1(MAX(V(xj1),.1m))-V(v1)}
+RV1 v1 0 1meg
+GK0 0 k0 VALUE={MAX(V(d,kat),0)-V(k1)}
+RK0 k0 0 1meg
+GK1 0 k1 VALUE={V1(MAX(V(xj1),.1m))+V0(MAX(V(xj1),.1m),I(VIPC))-V(k0)}
+RK1 k1 0 1meg
+EXJ xj1 0 VALUE={MAX(xj(MAX(V(d,kat)-V(v1),0),MAX(V(xj1,0),0.1m),I(VIPC)),.1m)}
+GX11 0 x11 VALUE={MAX(xj(MAX(V(d,kat)-V1(V(xj1,0)),0),MAX(V(xj1,0),0.1m),I(VIPC)),.1m)-V(x11)}
+RX11 x11 0 1meg
+CXJ xj 0 1u
+RXJ xjr xj .1m
+VDXJ xj1 xjr 0
+EXJ2 xj2 0 VALUE={MAX(xj(MAX(V(d,g)-V(v21),0),MAX(V(xj2,0),0.1m),0*I(VIPC)),.1m)}
+GX22 0 x22 VALUE={MAX(xj(MAX(V(d,g)-V1(V(xj2,0)),0),MAX(V(xj2,0),0.1m),0*I(VIPC)),.1m)-V(x22)}
+RX22 x22 0 1meg
+GV21 0 v21 VALUE={V1(MAX(V(xj2),.1m))-V(v21)}
+RV21 v21 0 1meg
+EDUGS du1 0 VALUE={V(g,s)}
+VDUGS du1 du1cr 0
+RDUGS du1cr du1c .1m 
+CDUGS du1c 0 1u
+EDUGD_d du2 0 VALUE={V(g,ox_d)}
+VDUGD_d du2 du2cr 0
+RDUGD_d du2cr du2c .1m 
+CDUGD_d du2c 0 1u
+EDUGD_fp du3 0 VALUE={V(g,ox_fp)}
+VDUGD_fp du3 du3cr 0
+RDUGD_fp du3cr du3c .1m 
+CDUGD_fp du3c 0 1u
+EJUNCT jct 0 VALUE={QTOT1(V(xj1,0),I(VIPC))}
+VIJCT jct cpr 0
+RIJCT cpr cp .1m
+CJCT 0 cp 1u
+.FUNC N1(X) {(q*NX3)*X}
+.FUNC N11(X,Y) {(q*NX3*vlimit+MAX(Y,0)/A)*X/vlimit }
+.FUNC N2(X) {q*NX2*LX1*(exp((X-WX2)/LX1)-exp(-WX2/LX1))}
+.FUNC QTOT(X) {(N1(X)+N2(X))}
+.FUNC QTOT1(X,Y) {(N11(X,Y)+N2(X))}
+.FUNC TAU_X(T,V) {TX2*((T+t0)/300)**{ETX2}}
+.FUNC VXX(T) {psi2(T)+TX1*sqrt(2*eps0*epsi*q*NX1*psi2(T))/eps0/eox}
+.FUNC EG(T) {1.16-7.02e-4*(T+t0)**2/(T+t0+1108)}
+.FUNC ni(T) {((T+t0)/300)**1.5*exp(1/(2*8.61e-5)*(-300*EG(T)+(t0+T)*EG(27))/(T+t0)/300)}
+.FUNC psi2(T) {2*k/q*(T+t0)*log(NX1/ni(T)/ni0)}
+.FUNC DA(T) {2*k*un*up/q/(un+up)*(T+t0)*(((T+t0)/300)**EMU)}
+.FUNC LA(T,V) {sqrt(DA(T)*TAU_X(T,V))}
+.FUNC Isx2(T) {LIMIT((Isbs2_g*ni0)*(k*ni0)*(t0+T)*(up+un)*(((T+t0)/300)**EMU)*ni(T)*ni(T),-1e9,1e9)} 
+.FUNC Isx1(T,V) {LIMIT((Isbs1_g*ni0) * sqrt(DA(T)/(TAU_X(T,V)))*ni(T),-1e9,1e9)} 
+.FUNC Vdep_fp(V,X) {V-Agd_fp/CX4*X}
+.FUNC Vdep_d(V,X) {V-Agd_d/CX1*X}
+.FUNC V0(X,Y) {LIMIT(0.5*X*X*((q*NX3/eps0/epsi)+MAX(Y,0)/A/vlimit/eps0/epsi),-1e9,1e9)} 
+.FUNC V1(X) {q*LX1**2*NX2*( exp(-WX2/LX1)-(LX1-X)/LX1*exp(-(WX2-X)/LX1))/eps0/epsi}
+.FUNC VS(X,Y) {V0(X,Y)+V1(X)}
+.FUNC xj(V,X,Y) {0.5*(2*eps0*epsi*V/X/((q*NX3*vlimit+MAX(Y,0)/A)/vlimit)+X)}
+*.FUNC Rb(X,T) {(WX1)*(WX1)/(un*(Q0)*(((T+t0)/300)**EMU)+(un+up)*MAX(X,0)*1e-6*(((T+t0)/300)**EMU))}
+.FUNC Rb(X,T) {WX2*WX2*LOG(1+2E-6*(1+up/un)*MAX(X,1m*Q0)/Q0)/(2E-6*(un+up)*(((T+t0)/300)**{EMU})*MAX(X,1m*Q0))}
+.FUNC FDX(V,X,T) {LIMIT(TANH(MAX(WX1-V,.1m)*1e6*X/(24*DA(T))),-1e9,1e9)}
+.FUNC Td(V,X,T) {LIMIT((0.1/DA(T))*MAX(WX1-V,.1m)*MAX(WX1-V,.1m)*(1-FDX(V,X,T)),-1e9,1e9)}
+.FUNC F1(V,T) {LIMIT(TAU_X(T,V)*(COSH(MAX(WX1-V,.1m)/LA(T,V))-1),-1e9,1e9)}
+.FUNC F2(V,X,T) {LIMIT(0.5*(1+2*FDX(V,X,T)/(1+FDX(V,X,T)*FDX(V,X,T))),-1e9,1e9)}
+.FUNC F3(V,X,T) {LIMIT(1+Td(V,X,T)/(TAU_X(T,V)),-1e9,1e9)}
+.FUNC QS0(V,T) {LIMIT((q*ni0)*A*LA(T,V)*ni(T)*TANH(0.5*MAX(WX1-V,.1m)/LA(T,V)),-1e9,1e9)}
+.FUNC Qbd(Y,Z,V,X,T) {LIMIT(MAX(Z,0)*1e-6+Td(V,X,T)*Y,-1e9,1e9)}
+.FUNC Qb0(Y,Z,V,X,T) {LIMIT(2*Qbd(Y,Z,V,X,T)/(F3(V,X,T)+SQRT(F3(V,X,T)*F3(V,X,T)+Td(V,X,T)*3*IQR(V,T)*Qbd(Y,Z,V,X,T)/QS0(V,T))),-1e9,1e9)}
+.FUNC INE(Y,Z,V,X,T) {LIMIT(0.75*IQR(V,T)*Qb0(Y,Z,V,X,T)**2/QS0(V,T),-1e9,1e9)}
+.FUNC IPC(Y,Z,V,X,T) {LIMIT((1/3)*Y+(4/3)*(Qb0(Y,Z,V,X,T)/F1(V,T)
++ +MAX(Qb0(Y,Z,V,X,T)/TAU_X(T,V)+INE(Y,Z,V,X,T)-Y,0)*F2(V,X,T)),-1e9,1e9)}
+.FUNC IQR(V,T) {Isx2(T)/QS0(V,T)}
+.ENDS
+*$
+.SUBCKT L4XXXB_L2h3 anode kath PARAMS: TJ=27 A=1 N_ideal=1
+.PARAM q=1.602e-19 eps0=8.85e-14 epsi=11.8 kb=1.38e-23 T0=273 ni0=1.45e10 un=1350 up=450 u_v={up/un}
+.PARAM WX2=110e-4 
+.PARAM NX2=6.04e14 LX1=7.4e-4 
+.PARAM a_norm=1e15 b1=1e-4 b2={1e-4/sqrt(1)} b3={1e-4/sqrt(1)} 
+.PARAM Npk1=1.48e15 wpk1={WX2-9.5e-4}
+.PARAM Npk2=0.28e15 wpk2={WX2-29e-4}
+.PARAM Npk3=0.47e15 wpk3={WX2-53e-4}
+.PARAM TX2=7u 
+.PARAM NX4=7.1e13 
+.PARAM pi=3.1416 ETX2=2
+.PARAM BV=400
+.PARAM vlimit0=10.4e6 vlim_dif=-5.6e4 
+.PARAM vlimit=7.5e7 f_buf=0.01
+.PARAM Ut=0.0235
+.PARAM D=15.8854
+.PARAM L=0.0105
+.PARAM Ise0={A*1.5287n}
+.PARAM Ise_g={A*1.4286p}
+.PARAM Ism0={A* 6.9986u}
+.PARAM Ism_g={A*3.204e-19}
+.PARAM CJ0={A*9.211n}
+.PARAM QN={A*1.2512u}
+.PARAM Ra={1.9816e-4/A} 
+RSERIE anode ano {Ra/(((TJ+t0)/300)**-1.5)}
+GDE ano mi VALUE={LIMIT(TANH(1e3*I(VDE))*(((ISE(TJ)**((t0+TJ)/(t0+27)))/ISE(27))**((t0+27)/(t0+TJ))*ABS(I(VDE))**((t0+27)/(t0+TJ))-ABS(I(VDE))),-1e6,1e6)}
+GD0 ano mi1 VALUE={LIMIT(TANH(1e3*I(VD0))*(((ISM(TJ,V(xj1,0))**((t0+TJ)/(t0+27)))/ISM(27,V(xj1,0)))**((t0+27)/(t0+TJ))*ABS(I(VD0))**((t0+27)/(t0+TJ))-ABS(I(VD0))),-1e6,1e6)}
+VDE ano ano1 0
+DE ano1 mi D1
+D0 ano2 mi1 D2
+VD0 ano ano2 0
+.model D1 D(is={Ise0} BV={BV} N={N_ideal})
+.model D2 D (is={Ism0} N=2)
+VID0 mi1 mi 0
+VITOT kat kath 0
+EGIR mi kat VALUE={I(VITOT)*Rd(V(q,0),TJ)}
+GID ano mi VALUE={LIMIT(IQ(V(xj1,0),I(VID0),V(q,0),I(VDXJ),TJ)-1e6*A*I(VIJCT),-1e6,1e6)}
+CQB q 0 1u
+RHELP q 0 1meg
+GRQB q 0 VALUE={LIMIT(1u*V(q,0)/TAU_X(TJ,V(xj1,0)),-1e6,1e6)}
+GIQ 0 q VALUE={LIMIT(IQ(V(xj1,0),I(VID0),V(q,0),I(VDXJ),TJ),-1e6,1e6) }
+GID0 0 q VALUE={LIMIT(I(VID0),-1e6,1e6)}
+GV1 v1 0 VALUE={MAX(V(mi,ano)-V1(MAX(xj(MAX(V(mi,ano)-V1(V(xj1,0)),0),I(VITOT),MAX(V(xj1,0),.1m)),0.1m)),0) }
+RV1 v1 0 1meg
+EXJ xj1 0 VALUE={MAX(xj(MAX(V(mi,ano)-V1(V(xj1,0)),0),I(VITOT),MAX(V(xj1,0),.1m)),0.1m)}
+GX1 0 xj1 VALUE={MAX(xj(MAX(V(mi,ano)-V1(V(xj1,0)),0),I(VITOT),MAX(V(xj1,0),.1m)),0.1m)-V(xj1)}
+RX1 xj1 0 1meg
+CXJ xj 0 1u
+RXJ xjr xj .1m
+VDXJ xj1 xjr 0
+EJUNCT jct 0 VALUE={QTOT(V(xj1,0))}
+VIJCT jct cpr 0
+CJCT cp 0 1u
+RCJCT cpr cp .1m
+.FUNC N11(X,Y) {(q*NX4*vlimit-MIN(Y,0)/A)*X/vlimit }
+.FUNC N1(X) {q*NX4 *X}
+.FUNC N2(X) {q*NX2*LX1*(exp((X-WX2)/LX1 )-exp(-WX2/LX1) )}
+.FUNC N31(X) {sqrt(q*q*a_norm*Npk1*b1*b1)*(arctan(sqrt(Npk1/a_norm/b1/b1)*(X-wpk1))+arctan(sqrt(Npk1/a_norm/b1/b1)*wpk1))}
+.FUNC N32(X) {sqrt(q*q*a_norm*Npk2*b2*b2)*(arctan(sqrt(Npk2/a_norm/b2/b2)*(X-wpk2))+arctan(sqrt(Npk2/a_norm/b2/b2)*wpk2))}
+.FUNC N33(X) {sqrt(q*q*a_norm*Npk3*b3*b3)*(arctan(sqrt(Npk3/a_norm/b3/b3)*(X-wpk3))+arctan(sqrt(Npk3/a_norm/b3/b3)*wpk3))}
+.FUNC QTOT(X) {N1(X)+N2(X)+N31(X)+N32(X)+N33(X)}
+.FUNC TAU_X(T,V) {TX2*((T+t0)/300)**{ETX2}/(1+1*(0.5+1/pi*arctan((V-wpk2)/LX1)))}
+.FUNC EG(T) {1.16-7.02e-4*(T+t0)**2/(T+t0+1108)}
+.FUNC ni(T) {((T+t0)/300)**1.5*exp(1/(2*8.61e-5)*(-300*EG(T)+(t0+T)*EG(27))/(T+t0)/300)}
+.FUNC DA(T) {2*kb*un*up/q/(un+up)*(T+t0)*(((T+t0)/300)**-1.5)}
+.FUNC LA(T,V) {sqrt(DA(T)*TAU_X(T,V))}
+.FUNC a0(T,V) {-0.85*tanh(0.5*wpk2/LA(T,V))}
+.FUNC a1(T,V) {(up/un)*(1+a0(T,V))/(1-a0(T,V))}
+.FUNC a2(T,V) {0.1/((1-0.5*(1-a1(T,V)*a1(T,V))*(1-a0(T,V))))}
+.FUNC ISE(T) {LIMIT((kb*ni0*ni0)*(T+t0)*un*(((T+t0)/300)**-1.5)*ise_g*ni(T)*ni(T),-1e6,1e6)}
+.FUNC ISM(T,V) {LIMIT((Ism_g*ni0)*ni(T)*sqrt(DA(T)/Tau_X(T,V)),-1e6,1e6)}
+.FUNC ATX1(X,Y) {0.5*X*X*((q*NX4/eps0/epsi)-MIN(Y,0)/A/vlimit/eps0/epsi )} 
+.FUNC ATX2(X) {q*LX1**2*NX2*(exp(-WX2/LX1)-(LX1-X)/LX1*exp(-(WX2-X)/LX1))/eps0/epsi}
+.FUNC ATX31(X) {(q*0.5*a_norm*b1*b1)*(2*ARCTAN((X-wpk1)*sqrt((Npk1/a_norm/b1/b1)))*sqrt(Npk1*wpk1*wpk1/a_norm/b1/b1)+2*ARCTAN(sqrt(((wpk1)**2)*(Npk1/a_norm/b1/b1)))*sqrt(Npk1*wpk1*wpk1/a_norm/b1/b1)+log(((a_norm/Npk1)*b1*b1+(X-wpk1)**2)/((a_norm/Npk1)*b1*b1+(wpk1)**2)))/eps0/epsi} 
+.FUNC ATX32(X) {(q*0.5*a_norm*b2*b2)*(2*ARCTAN((X-wpk2)*sqrt((Npk2/a_norm/b2/b2)))*sqrt(Npk2*wpk2*wpk2/a_norm/b2/b2)+2*ARCTAN(sqrt(((wpk2)**2)*(Npk2/a_norm/b2/b2)))*sqrt(Npk2*wpk2*wpk2/a_norm/b2/b2)+log(((a_norm/Npk2)*b2*b2+(X-wpk2)**2)/((a_norm/Npk2)*b2*b2+(wpk2)**2)))/eps0/epsi} 
+.FUNC ATX33(X) {(q*0.5*a_norm*b3*b3)*(2*ARCTAN((X-wpk3)*sqrt((Npk3/a_norm/b3/b3)))*sqrt(Npk3*wpk3*wpk3/a_norm/b3/b3)+2*ARCTAN(sqrt(((wpk3)**2)*(Npk3/a_norm/b3/b3)))*sqrt(Npk3*wpk3*wpk3/a_norm/b3/b3)+log(((a_norm/Npk3)*b3*b3+(X-wpk3)**2)/((a_norm/Npk3)*b3*b3+(wpk3)**2)))/eps0/epsi} 
+.FUNC V0(X,Y) {LIMIT(ATX1(X,Y)+ATX2(X)+ATX31(X)+ATX32(X)+ATX33(X),-1e6,1e6)}
+.FUNC V1(X) {LIMIT(ATX2(X)+ATX31(X)+ATX32(X)+ATX33(X),-1e6,1e6)}
+.FUNC xj(V,Y,X) {0.5*(2*eps0*epsi*(V/X/((q*NX4*vlimit-MIN(Y,0)/A)/vlimit))+X)}
+.FUNC w(T,V) {MAX(wpk1-V*(1+a1(T,V)),.1m)}
+.FUNC Rd(Z,T) {WX2*WX2/(un*QN*(((T+t0)/300)**-1.5)+(un+up)*MAX(Z,0)*1e-6*(((T+t0)/300)**-1.5))}
+.FUNC Td(V,U,T) {LIMIT(a2(T,V)*w(T,V)*w(T,V)/DA(T)/(1+w(T,V)*1e6*MAX(U,0)/4/DA(T)),-1e6,1e6)}
+.FUNC IQ(V,Y,Z,U,T) {LIMIT((Tau_X(T,V)*Y-MAX(1e-6*Z,0))/Td(V,U,T),-1e6,1e6)}
+.ENDS
+.SUBCKT channel_120H3 d g s PARAMS: TJ=27 WX3=1 LX2=2e-4 TX1=110e-7 NX1=2e17
+.PARAM q=1.6E-19 eps0=8.85E-14 epsi=11.8 eox=3.8 t0=273 kb=1.381e-23 ni0=1.45e10 un=1350 up=450 u_surf=600 vlimit=7.5e7 pi=3.1416 vsat=0.75e7 EMU=-2.5
+.PARAM Ngate=2.663e12
+.PARAM Nss=8.626e8
+.PARAM theta=0.05
+GIMOS dr s VALUE={imos(V(g,s),V(d,s),TJ)}
+RGIMOS dr d 1m
+REGS g s 1meg
+EVTH vth 0 VALUE={vto(TJ)}
+.FUNC EG(T) {1.16-7.02e-4*(T+t0)**2/(T+t0+1108)}
+.FUNC ni(T) {((T+t0)/300)**1.5*exp(1/(2*8.61e-5)*(-300*EG(T)+(t0+T)*EG(27))/(T+t0)/300)}
+.FUNC phi_ms(T) {kb*(T+t0)/q*log(NX1/Ngate)-q*Nss*TX1/eps0/eox}
+.FUNC psi2(T) {2.0*kb/q*(T+t0)*log(NX1/ni0/ni(T))}
+.FUNC vto(T) {phi_ms(T)+psi2(T)+TX1*sqrt(abs(2.0*eps0*epsi*q*NX1*psi2(T)))/eps0/eox}
+.FUNC vgs_eff(VG,T) {MAX(VG-vto(T),0)}
+.FUNC mu(VG,T) {(u_surf*((T+t0)/300.0)**EMU)/(1+MAX(vgs_eff(VG,T),0)*theta)}
+.FUNC Vb(VG,T) {vsat*LX2/mu(VG,T)}
+.FUNC vd_sat(VG,T) {MAX(vgs_eff(VG,T)+Vb(VG,T)-sqrt(abs(vgs_eff(VG,T)**2.0+Vb(VG,T)**2.0)),0)}
+.FUNC vmos(VG,VD,T) {MIN(vd_sat(VG,T),VD)}
+.FUNC kp(VG,VD,T) {mu(VG,T)*(WX3/LX2)*eox*eps0/TX1/(1.0+MAX(vmos(VG,VD,T)/Vb(VG,T),0))}
+.FUNC imos(VG,VD,T) {LIMIT(kp(VG,VD,T)*(vgs_eff(VG,T)*MIN(vmos(VG,VD,T),vgs_eff(VG,T))-0.5*MIN(vmos(VG,VD,T),vgs_eff(VG,T))*MIN(vmos(VG,VD,T),vgs_eff(VG,T))),0,1e6)}
+.ENDS
+
+*$

@@ -1,0 +1,165 @@
+* SN74LV4051A
+*****************************************************************************
+* (C) Copyright 2015 Texas Instruments Incorporated. All rights reserved.                                            
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+** Released by: WEBENCH(R) Design Center, Texas Instruments Inc.
+* Part: SN74LV4051A
+* Date: 05/27/2015
+* Model Type: Transient
+* Simulator: Pspice
+* Simulator Version: Pspice 16.2.0.s003
+* EVM Order Number: N/A 
+* EVM Users Guide: N/A
+* Datasheet: SCLS428H, 05 April 2005
+* Model Version: 1.00
+*
+*****************************************************************************
+* Updates:
+* Version 1.0 : New model
+*****************************************************************************
+* Notes :
+*
+*  1. The following parameters are being modeled: 
+*     Ron, Ron(p),Cic, Cis, Cos, Cf,,tpd,ten,tdis.
+*****************************************************************************
+*$
+.SUBCKT SN74LV4051A A B C INH COM GND Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7 VCC GND PARAMS: MUX =1
+C_Y0         Y0 GND 5.7e-12  
+C_Y1         Y1 GND 5.7e-12  
+C_Y2         Y2 GND 5.7e-12  
+C_Y3         Y3 GND 5.7e-12  
+C_Y4         Y4 GND 5.7e-12  
+C_Y5         Y5 GND 5.7e-12  
+C_Y6         Y6 GND 5.7e-12  
+C_Y7         Y7 GND 5.7e-12  
+C_CINH       INH GND 2e-12  
+C_COM        COM GND 23.4e-12  
+C_CFY0    COM Y0 0.5e-12  
+C_CFY1    COM Y1 0.5e-12  
+C_CFY2    COM Y2 0.5e-12  
+C_CFY3    COM Y3 0.5e-12  
+C_CFY4    COM Y4 0.5e-12  
+C_CFY5    COM Y5 0.5e-12  
+C_CFY6    COM Y6 0.5e-12  
+C_CFY7    COM Y7 0.5e-12  
+X_UA A A_INV VCC GND INV 
+X_UB B B_INV VCC GND INV 
+X_UC C C_INV VCC GND INV 
+X_UINH INH_DL INH_INV VCC GND INV 
+X_U0 A_INV B_INV C_INV INH_INV Y0_INT VCC GND NAND 
+X_U1 A B_INV C_INV INH_INV Y1_INT VCC GND NAND 
+X_U2 A_INV B C_INV INH_INV Y2_INT VCC GND NAND 
+X_U3 A B C_INV INH_INV Y3_INT VCC GND NAND 
+X_U4 A_INV B_INV C INH_INV Y4_INT VCC GND NAND 
+X_U5 A B_INV C INH_INV Y5_INT VCC GND NAND 
+X_U6 A_INV B C INH_INV Y6_INT VCC GND NAND 
+X_U7 A B C INH_INV Y7_INT VCC GND NAND
+X_0   Y0_INT GND  Y0 COM_DL   SW_H0 
+X_1   Y1_INT GND  Y1 COM_DL   SW_H0 
+X_2   Y2_INT GND  Y2 COM_DL   SW_H0
+X_3   Y3_INT GND  Y3 COM_DL   SW_H0
+X_4   Y4_INT GND  Y4 COM_DL   SW_H0
+X_5   Y5_INT GND  Y5 COM_DL   SW_H0
+X_6   Y6_INT GND  Y6 COM_DL   SW_H0
+X_7   Y7_INT GND  Y7 COM_DL   SW_H0
+.MODEL DBREAK D N=0.001 RS=0.001 T_ABS=27
+R_RINH      INH N685 {IF({MUX} == 0 , 2850 , 1010)}
+D_DINH1     N685 INH_DL DBREAK
+C_CINHL     INH_DL GND  2p  
+R_RINH1     INH N403 {IF({MUX} == 0 , 2300 , 2510)}
+D_DINH2     INH_DL N403 DBREAK 
+R_COM1       COM_DL  N38 {IF({MUX} == 0 , 26 , 8)}
+C_COM1       N38 GND  1p  
+R_COM2       N38 COM {IF({MUX} == 0 , 25 , 8)}
+
+*$
+.subckt SW_H0 1 2 3 4  
+S_SW_H0         3 4 1 2 _SW_H0
+RS_SW_H0         1 2 1G
+.MODEL         _SW_H0 VSWITCH Roff=3.3e6 Ron=30 Voff=2.1V Von=0.9V
+.ends SW_H0
+*$
+.SUBCKT INV X Y VCC GND
+X_SHI1    X GND VCC Y INV_SHI1 
+X_SLO1    X GND Y GND INV_SLO1 
+.ENDS INV
+*$
+.subckt INV_SLO1 1 2 3 4  
+S_SLO1         3 4 1 2 _SLO1
+RS_SLO1         1 2 1G
+.MODEL         _SLO1 VSWITCH Roff=3.3e6 Ron=30 Voff=0.9V Von=2.1V
+.ends INV_SLO1
+*$
+.subckt INV_SHI1 1 2 3 4  
+S_SHI1         3 4 1 2 _SHI1
+RS_SHI1         1 2 1G
+.MODEL         _SHI1 VSWITCH Roff=3.3e6 Ron=30 Voff=2.1V Von=0.9V
+.ends INV_SHI1
+*$
+.SUBCKT NAND A B C INH Y VCC GND 
+X_SLO2    B GND Y_INT1 Y_INT2 SLO2 
+X_SHI1    C GND VCC Y SHI1 
+X_SLO1    C GND Y Y_INT1 SLO1 
+X_SLO3    A GND Y_INT2 Y_INT3 SLO3 
+X_SLO4    INH GND Y_INT3 GND SLO4 
+X_SHI3    A GND VCC Y SHI3 
+X_SHI2    B GND VCC Y SHI2 
+X_SHI4    INH GND VCC Y SHI4 
+.ENDS
+*$
+.subckt SLO2 1 2 3 4  
+S_SLO2         3 4 1 2 _SLO2
+RS_SLO2         1 2 1G
+.MODEL         _SLO2 VSWITCH Roff=3.3e6 Ron=30 Voff=0.9V Von=2.1V
+.ends SLO2
+*$
+.subckt SHI1 1 2 3 4  
+S_SHI1         3 4 1 2 _SHI1
+RS_SHI1         1 2 1G
+.MODEL         _SHI1 VSWITCH Roff=3.3e6 Ron=30 Voff=2.1V Von=0.9V
+.ends SHI1
+*$
+.subckt SLO1 1 2 3 4  
+S_SLO1         3 4 1 2 _SLO1
+RS_SLO1         1 2 1G
+.MODEL         _SLO1 VSWITCH Roff=3.3e6 Ron=30 Voff=0.9V Von=2.1V
+.ends SLO1
+*$
+.subckt SLO3 1 2 3 4  
+S_SLO3         3 4 1 2 _SLO3
+RS_SLO3         1 2 1G
+.MODEL         _SLO3 VSWITCH Roff=3.3e6 Ron=30 Voff=0.9V Von=2.1V
+.ends SLO3
+*$
+.subckt SLO4 1 2 3 4  
+S_SLO4         3 4 1 2 _SLO4
+RS_SLO4         1 2 1G
+.MODEL         _SLO4 VSWITCH Roff=3.3e6 Ron=30 Voff=0.9V Von=2.1V
+.ends SLO4
+*$
+.subckt SHI3 1 2 3 4  
+S_SHI3         3 4 1 2 _SHI3
+RS_SHI3         1 2 1G
+.MODEL         _SHI3 VSWITCH Roff=3.3e6 Ron=30 Voff=2.1V Von=0.9V
+.ends SHI3
+*$
+.subckt SHI2 1 2 3 4  
+S_SHI2         3 4 1 2 _SHI2
+RS_SHI2         1 2 1G
+.MODEL         _SHI2 VSWITCH Roff=3.3e6 Ron=30 Voff=2.1V Von=0.9V
+.ends SHI2
+*$
+.subckt SHI4 1 2 3 4  
+S_SHI4         3 4 1 2 _SHI4
+RS_SHI4         1 2 1G
+.MODEL         _SHI4 VSWITCH Roff=3.3e6 Ron=30 Voff=2.1V Von=0.9V
+.ends SHI4
+.ENDS 

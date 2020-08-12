@@ -1,0 +1,132 @@
+*File: MAX9632.LIB
+*
+*** MACROMODEL FOR MAX9632 ***
+**************************************************************************************
+** STI Mod removed NC connections
+.subckt MAX9632 IN- IN+ VEE OUT VCC SHDN
+
+XAMP1 VCC VEE IN+ IN- OUT SHDN MAX9632_S
+**************************************************************************************
+
+.subckt MAX9632_S VCC VEE IN+ IN- OUT SHDN
+
+***Iq Variation with Vdd & Load***
+I_Iq         VCC VEE DC 3.664286e-003
+G_GQ         VCC VEE VINT VEE 7.936508e-006
+X_FLq    N9753217 OUT VEE VCC OpAmp_FLq
+
+***Shutdown***
+Rshdn SHDN 60 100k
+Dshdn VEE 60 Dzener
+Gshdn1 VCC VEE 60 VEE -1.745064m
+Gshdn VCC VEE SHDN VEE -7.936508e-006 
+V70 70 VEE 4.5 
+Gshdn2 VCC VEE SHDN 70 -6.821048u
+X_M41 VO 43 VEE VEE nmosmacro
+E_Eshdn2 43 VEE SHDN 44 1E5
+V_Vshdn2 44 VCC -2.99
+
+***Vdd Range***
+X_M3         VO N9753121 VEE VEE nmosmacro
+X_M4         VO N9753137 VEE VEE nmosmacro
+E_EL         N9753121 VEE VINT N97538991 -1E5
+E_EH         N9753137 VEE VINT N97539451 1E5
+V_VL         N97538991 VEE 4.500000e+000
+V_VH         N97539451 VEE 3.600000e+001
+
+*** Power-up Delay Time ***
+C_Cst         VEE N9752795  1n
+D_Dst         N9752795 N9755113 diodemacro 
+G_Gst         N9752795 VEE VCC VEE -1.000000e+003
+E_Est1         N9755113 VEE VCC VEE 1
+E_Est2         VINT VEE N9752795 VEE 1
+
+***Input Parameters***
+I_Ib+         IN+ VEE DC 3.750000e-008
+I_Ib-         IN- VEE DC 2.250000e-008
+R_Ri+         VCM IN+  5.000000e+011
+R_Ri-         IN- VCM  5.000000e+011
+V_Voff         N9752739 IN- -3.000000e-005
+
+***ICMR***
+X_M1         VO N9754397 VEE VEE nmosmacro
+X_M2         VO N9754361 VEE VEE nmosmacro
+E_EicL         N9754361 VEE VCM N97542791 -5E6
+E_EicH         N9754397 VEE VCM N97544611 1E5
+V_VicL         N97542791 VEE -5.000000e-002
+V_VicH         N97544611 VINT 5.000000e-002
+
+*** GBW Product & Slew Rate ***
+G_Gg         VM VEE IN+ N9752739 -1
+R_Rg         VEE VM  1.052274e+007
+C_Cgbw         VEE VGBW  2.893726e-009
+D_D1         VM N9753845 diodemacro 
+D_D2         N9753721 VM diodemacro 
+I_Isr         N9753845 N9753721 DC 8.681179e-002
+D_D3         VGBW N9753845 diodemacro 
+D_D4         N9753721 VGBW diodemacro 
+
+*** Phase Margin ***
+G_Gpm         N9752755 VEE VGBW VEE -1
+R_Rpm         VEE N9752755  1  
+C_Cpm         VEE N9752755 1.670694e-009
+
+*** PSRR ***
+C_Cps         VINT N9754047  16m  
+L_Lps         N9753297 VEE  1.061032e-002
+R_Rps         VEE N9754047  1k  
+R_Rps1         N9753297 N9752963  1 
+R_Rps2         VEE N9753297  1.333332e+006
+G_Gps1         N9752963 VEE N9754047 VEE -1.000000e-007
+G_Gps2         VM VEE N9752963 VEE -1
+
+*** CMRR ***
+E_Ecm         N97531790 VEE VCM VEE 1
+C_Ccm         N97531790 N9793192  16m  
+L_Lcm         N9794564 VEE 1.591541e-003
+R_Rcm         VEE N9793192  1Meg  
+R_Rcm1         N9794564 N9793623  1  
+R_Rcm2         VEE N9794564  1.999990e+005
+G_Gcm1         N9793623 VEE N9793192 VEE -1.778279e-007
+G_Gcm2         VM VEE N9793623 VEE -1
+
+*** O/P Stage ***
+G_Go         VO VEE N9752755 VEE -1.912987e-003
+R_Ro         VEE VO 5.227426e+002
+V_Vs1         N97533970 N9752921 4.332728e-002
+V_Vs2         N9753531 VEE 4.332728e-002
+D_Ds1         VO N9752921 diodemacro 
+D_Ds2         N9752867 VO diodemacro 
+X_Hs1    N9753481 VSH VINT N97533970 OpAmp_Hs1 
+X_Hs2    N9753481 VO N9752867 N9753531 OpAmp_Hs2 
+
+D_D5         VSH N9754491 diodemacro 
+D_D6         N9754425 VSH diodemacro 
+I_Ish         N9754491 N9754425 DC 1.800000e-001
+D_D7         N9753217 N9754491 diodemacro 
+D_D8         N9754425 N9753217 diodemacro 
+
+***********
+.model diodemacro d(n=0.001)  
+.model Dzener d(IS=0.5uA RS=6 BV=2 IBV=0.5uA) 
+*******************
+.subckt OpAmp_Hs1 1 2 3 4  
+H_Hs1         3 4 VH_Hs1 2.723559e+001
+VH_Hs1         1 2 0V
+.ends OpAmp_Hs1
+.subckt OpAmp_Hs2 1 2 3 4  
+H_Hs2         3 4 VH_Hs2 2.723559e+001
+VH_Hs2         1 2 0V
+.ends OpAmp_Hs2
+.subckt OpAmp_FLq 1 2 3 4  
+F_FLq         3 4 VF_FLq -1
+VF_FLq         1 2 0V
+.ends OpAmp_FLq
+***********
+.subckt nmosmacro d g s b
+m1 d g s b nmos
+.model nmos nmos(VTO=0.5 KP=100E-6 w=20u l=1u)
+.ends
+*******************
+.ENDS MAX9632_S
+.ends MAX9632

@@ -1,0 +1,85 @@
+.SUBCKT IPA60R125CFD7_L0  drain  gate  source
+.PARAM act=7.816
+
+X1  d1 g2 s2 cool_tech0c PARAMS: a={act}
+
+Lg     gate  g1    6.17E-09 Rser=0 Rpar=30
+Ld     drain d1    2.02E-09 Rser=0 Rpar=10
+Ls     source s1   2.92E-09 Rser=0 Rpar=10
+Rs      s1    s2   9.06E-04
+Rg     g1    g2     8
+
+.ENDS  IPA60R125CFD7_L0
+
+.SUBCKT cool_tech0c d1 g2 s2 PARAMS: a=1 
+
+** M O D E L:   P A R A M E T E R S **
+.PARAM  MOS_KP_A=4.12 
+.PARAM  MOS_VTO=4.726 
+.PARAM  MOS_THETA=0.0 
+.PARAM  MOS_ETA=0.0 
+.PARAM  MOS_RdA=0.69 
+.PARAM  MOS_TC_RD=14m 
+.PARAM  MOSR_KPR_A=9.166 
+.PARAM  MOSR_VTOR=-1 
+.PARAM  MOSR_LAMBDAR=0.15 
+.PARAM  Dbt_BV=600 
+.PARAM  Dbt_M=0.9 
+.PARAM  Dbt_CJ0_A=0.343n 
+.PARAM  Dbt_VJ=0.5 
+.PARAM  DBODY_IS_A=116000p
+.PARAM  DBODY_N=2.2
+.PARAM  DBODY_RRS=5u
+.PARAM  DBODY_EG=1.12
+.PARAM  DBODY_TT=250n
+.PARAM  DBODY_RSA=120m
+.PARAM  DBODY_RS_TC=3m
+.PARAM  DGD_M=0.55
+.PARAM  DGD_VJ=0.5
+
+.PARAM  CAP_Cox_Ac=0.027n
+.PARAM  CAP_Cgs_Ac=0.3n
+.PARAM  CAP_Cds1_Ac=2p
+
+.PARAM  MOS_KP={MOS_KP_A*a} 
+.PARAM  MOS_Rd={MOS_RdA/a} 
+.PARAM  MOSR_KPR={MOSR_KPR_A*a} 
+.PARAM  Dbt_CJ0={Dbt_CJ0_A*a}
+.PARAM  DBODY_IS={DBODY_IS_A*a}
+.PARAM  DBODY_RS={DBODY_RSA/a}
+.PARAM  CAP_Cox_c={CAP_Cox_Ac*a}
+.PARAM  CAP_Cgs_c={CAP_Cgs_Ac*a}
+.PARAM  CAP_Cds1_c={CAP_Cds1_Ac*a}
+
+
+M1      d2    g2    s2    s2    DMOS    L=1u   W=1u
+.MODEL DMOS NMOS ( KP= {MOS_KP}  VTO={MOS_VTO}  THETA={MOS_THETA}  VMAX=1.5e5  ETA={MOS_ETA}  LEVEL=3)
+Rd     d2    d1a    {MOS_Rd} TC1={MOS_TC_RD}
+.MODEL MVDR NMOS (KP={MOSR_KPR} VTO={MOSR_VTOR}   LAMBDA={MOSR_LAMBDAR})
+Mr d1 d2a d1a d1a MVDR W=1u L=1u
+Rx d2a d1a 1m
+
+Cds1 s2 d2 {CAP_Cds1_c}
+
+Dbd     s2    d2    Dbt
+.MODEL     Dbt    D(BV={Dbt_BV}   M={Dbt_M}  CJO={Dbt_CJ0}  VJ={Dbt_VJ})
+Dbody   s2   21    DBODY
+.MODEL DBODY  D(IS={DBODY_IS}  N={DBODY_N}  RS={DBODY_RRS}  EG={DBODY_EG}  TT={DBODY_TT})
+Rdiode  d1  21    {DBODY_RS} TC1={DBODY_RS_TC}
+
+.MODEL   sw    NMOS(VTO=0  KP=10   LEVEL=1)
+Maux      g2   c    a    a   sw
+Maux2     b    d    g2    g2   sw
+Eaux      c    a    d2    g2   1
+Eaux2     d    g2   d2    g2   -1
+
+Cox       b    d2   {8*CAP_Cox_c}
+
+.MODEL     DGD    D(M={DGD_M}   CJO={CAP_Cox_c}   VJ={DGD_VJ})
+Rpar      b    d2   1Meg
+Dgd       a    d2   DGD
+Rpar2     d2   a    10Meg
+
+Cgs     g2    s2    {CAP_Cgs_c}
+
+.ENDS cool_tech0c

@@ -1,0 +1,12 @@
+.subckt max1683 C1+ C1- GND_ in OUT
+V1 osc 0 PULSE(1 0 {0.5/35k} 30n 30n {0.5/35k-30n} {1/35k})
+R1 in GND_ 25k
+B1 G GND_ V=V(in,gnd_)*v(osc)
+S1 GND_ C1- G GND_ S1
+S2 C1- in G GND_ S2
+S3 OUT C1+ G GND_ S2
+S4 C1+ IN G GND_ S1
+.MODEL s1 SW(Roff=100G Ron={Rt} Vt=1.3 Vh=-0.2  ilimit=200m level=2 )
+.param Rt=0.9
+.MODEL s2 SW(Ron=100G Roff={Rt} Vt=1.3 Vh=-0.2 ilimit=200m  level=2 )
+.ends max1683

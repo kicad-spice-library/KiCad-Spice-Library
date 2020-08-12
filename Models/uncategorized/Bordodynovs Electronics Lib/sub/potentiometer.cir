@@ -1,0 +1,82 @@
+**********************************************************************
+* This is the potentiometers file
+* 
+* Contains the primatives for Linear, Logrithmic type A,
+* Anti-logrithmic type A, Logrithmic type B and Anti-logrithmic type B
+* potentiometers.
+*
+* linear potentiometer
+*      _____
+*  1--|_____|--2
+*        |
+*        3
+*
+.SUBCKT potlin 1 2 3
+.param w=limit(wiper,1m,.999)
+R0 1 3 {Rtot*(1-w)}
+R1 3 2 {Rtot*(w)}
+.ENDS
+*
+* Type A Logrithmic potentiometers split 90%:10% at the mid point
+*
+* This is the Logrithmic type A Potentiometer
+*      _____
+*  1--|_____|--2
+*        |
+*        3
+*
+.SUBCKT potloga 1 2 3
+.param w=limit(wiper,1m,.999)
+.param Ra = IF({w}==0.5, (0.9*Rtot), IF({w}>0.5,(0.9*Rtot)*(1-((w-0.5)*2)),(0.9*Rtot)+(0.1*Rtot*(2*w))) )
+.param Rb = IF({w}==0.5, (0.1*Rtot), IF({w}>0.5,(0.1*Rtot)+((w-0.5)*2)*(0.9*Rtot),(0.1*Rtot)*(w*2) )
+R13 1 3 {Ra}
+R32 3 2 {Rb}
+.ENDS
+*
+* Type A Anti-logrithmic potentiometers split 10%:90% at the mid point
+*
+* This is the Anti-logrithmic type A Potentiometer
+*      _____
+*  1--|_____|--2
+*        |
+*        3
+*
+.SUBCKT potaloga 1 2 3
+.param w=limit(wiper,1m,.999)
+.param Ra = IF({w}==0.5, (0.9*Rtot), IF({w}>0.5,(0.9*Rtot)*(1-((w-0.5)*2)),(0.9*Rtot)+(0.1*Rtot*(2*w))) )
+.param Rb = IF({w}==0.5, (0.1*Rtot), IF({w}>0.5,(0.1*Rtot)+((w-0.5)*2)*(0.9*Rtot),(0.1*Rtot)*(w*2) )
+R13 1 3 {Rb}
+R32 3 2 {Ra}
+.ENDS
+*
+* Type B logrithmic potentiometers split 70%:30% at the mid point
+*
+* This is the Logrithmic type B Potentiometer
+*      _____
+*  1--|_____|--2
+*        |
+*        3
+*
+.SUBCKT potlogb 1 2 3
+.param w=limit(wiper,1m,.999)
+.param Ra = IF({w}==0.5, (0.7*Rtot), IF({w}>0.5,(0.7*Rtot)*(1-((w-0.5)*2)),(0.7*Rtot)+(0.3*Rtot*(2*w))) )
+.param Rb = IF({w}==0.5, (0.3*Rtot), IF({w}>0.5,(0.3*Rtot)+((w-0.5)*2)*(0.7*Rtot),(0.3*Rtot)*(w*2) )
+R13 1 3 {Ra}
+R32 3 2 {Rb}
+.ENDS
+*
+* Type B Anti-logrithmic potentiometers split 30%:70% at the mid point
+*
+* This is the Anti-logrithmic type B Potentiometer
+*      _____
+*  1--|_____|--2
+*        |
+*        3
+*
+.SUBCKT potalogb 1 2 3
+.param w=limit(wiper,1m,.999)
+.param Ra = IF({w}==0.5, (0.7*Rtot), IF({w}>0.5,(0.7*Rtot)*(1-((w-0.5)*2)),(0.7*Rtot)+(0.3*Rtot*(2*w))) )
+.param Rb = IF({w}==0.5, (0.3*Rtot), IF({w}>0.5,(0.3*Rtot)+((w-0.5)*2)*(0.7*Rtot),(0.3*Rtot)*(w*2) )
+R13 1 3 {Rb}
+R32 3 2 {Ra}
+.ENDS

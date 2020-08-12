@@ -1,0 +1,53 @@
+* G:\SwCADIII\lib\sym\EXTRA\UC\UCC38083\UCC38083.asc
+.subckt UCC38083 Vfb Iset Ifb Rt Com OutB OutA Vdd
+C1 1 0 28.7p
+F1 Vdd 1 E1 -1
+A1 1 0 0 0 0 0 2 0 SCHMITT Vt=.85 Vh=.65 trise=10n td=10n tripdt=1n
+G1 1 0 2 0 340u
+E2 Iset COM 1 0 1
+F2 Vdd Ifb E2 -5
+S1 Ifb COM 2 0 S
+A2 2 3 0 0 0 4 0 0 SRFLOP trise=10n td=10n tripdt=10n
+A5 Ifb 9 0 0 0 0 3 0 SCHMITT Vt=-.3 Vh=-1m trise=50n td=50n tripdt=50n
+R2 COM 9 60k
+R1 9 Vfb 80k
+D3 9 10 Dc
+E4 10 COM 11 0 1
+A13 14 13 0 0 0 15 0 0 SRFLOP trise=10n td=10n tripdt=10n
+A11 0 ok 0 12 0 0 13 0 AND trise=10n td=10n tripdt=10n
+A10 11 0 0 0 0 12 0 0 BUF Ref=.5 trise=10n td=10n tripdt=10n
+C2 11 0 1n
+S2 11 0 16 15 SS
+A12 _ok 13 0 0 0 0 16 0 SRFLOP trise=10n td=10n tripdt=10n
+I1 0 11 .23u
+D5 11 Vd Dc
+A9 11 Vd 0 0 0 0 14 0 SCHMITT Vt=-1 Vh=-1m trise=50n td=50n tripdt=50n
+S3 OutA Vdd 6 16 H
+S4 Com OutA 16 6 L
+S5 OutB Vdd 7 16 H
+S6 Com OutB 16 7 L
+A6 COM Ifb 0 0 0 0 8 0 SCHMITT Vt=-.75 Vh=0 trise=50n td=50n tripdt=50n
+A7 0 8 0 Vok 0 _ok ok 0 AND trise=10n td=10n tripdt=10n
+A8 Vdd COM 0 0 0 0 Vok 0 SCHMITT Vt=10.4 Vh=2.1 Vhigh=2 trise=50n td=50n
+D2 COM 9 V82
+E1 Rt COM ok 0 1.5
+D1 1 Vok 3k
+E3 Vd 0 Vdd COM 1
+D4 COM Vdd 14V5
+A3 0 2 0 4 0 5 0 0 OR Rout=1 trise=10n td=10n tripdt=10n
+G2 Vdd COM ok 0 1m
+A4 5 0 0 0 0 7 6 0 SWITCHYARD
+*.model D D
+*.lib G:\SwCADIII\lib\cmp\standard.dio
+.model S SW(Ron=50 Vt=.5 Vh=-10m Ilimit=10m)
+.model SS SW(Ron=1k Vt=.5 Vh=-10m Ilimit=1m)
+.model H SW(Ron=10 Vt=.5 Vh=-20m Ilimit=.5)
+.model L SW(Ron=5 Vt=-.5 Vh=-20m Ilimit=1)
+.model Dc D(Ron=1)
+.model 3k D(Ron=3k)
+.model V82 D(Vrev=.82)
+.model 14V5 D(Roff=22k Rrev=50 Vrev=14.5)
+* >> UCC38083 <<\nBehavioral Model\nCopyright 2003 by\nanalog@ieee.org
+*.backanno
+.ends
+

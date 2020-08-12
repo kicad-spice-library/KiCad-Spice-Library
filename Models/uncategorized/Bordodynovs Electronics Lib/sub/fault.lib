@@ -1,0 +1,13 @@
+* failure mode analysis J meech Feb 2006
+* Requires global parameter "fault_No" = (0)1...
+* When global parameter "fault_No" == the subcircut parameter {fault}, the fault condition is activated.
+* Each symbol must have a unique fault value otherwise multiple faults will happen.
+.subckt short A B
+.param r_fault=if(fault_No==fault,0.001,100000000000000000000000000000000000000)
+R1 A B {r_fault} 
+.ends short
+
+.subckt open A B
+.param r_fault=if(fault_No==fault,100000000000000000000000000000000000000,0.001)
+R1 A B {r_fault} 
+.ends open

@@ -1,0 +1,27 @@
+.subckt MCP6001_AB 1 2 3 4 5 Vos=0.7m
+dIcc 3 4 dvcc
+.model dvcc d Vfwd=0.8 epsilon=100m Ron=3k ilimit=100uA 
+Cin 1 2 3p
+c14 1 4 3p
+C24 2 4 3p
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 N002 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink}
++ incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308  
+C3 5 4 1p
+C4 3 5 1p
+R2 N002 4 {2*Rout} noiseless
+R1 3 N002 {2*Rout} noiseless
+R3 3 1 {2*Rin} noiseless
+R4 3 2 {2*Rin} noiseless
+R5 2 4 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+G1 0 N002 4 N002 table(0 0 45 {2*slew*Cout})
+G2 N002 0 N002 3 table(0 0 45 {2*slew*Cout})
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=30 Roff=100Meg Vt=0 Vh=-50m Vser={Rail} ilimit={Ilimit} noiseless level=2 epsilon={epsilon})
+.param Slew=0.6Meg 
+.param Avol=500k GBW=1.Meg  ilimit=23m rail=0m  epsilon=1m
+.param en=28n enk=235 in=0.6f ink=0 incm=0 incmk=0 Rin=10T
+.ends MCP6001_AB

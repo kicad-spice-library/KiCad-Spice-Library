@@ -1,0 +1,1332 @@
+*LF351
+*Sngl WideBW JFET OpAmp pkg:DIP8 3,2,7,4,6. pkg:CAN8 3,2,7,4,6.
+*
+* Connections: 
+*               Non-Inverting Input
+*               |   Inverting Input
+*               |   |   Positive Power Supply
+*               |   |   |   Negative Power Supply
+*               |   |   |   |   Output
+*               |   |   |   |   |
+.SUBCKT LF351   1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*28.29E6 - I(VC)*30E6 + I(VE)*30E6 +
++              I(VLP)*30E6 - I(VLN)*30E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 1.59E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 50
+  RO2   7 99 25
+  RP    3  4 15E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 30
+  VLN   0 92 DC 30
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=12.5E-12 BETA=250.1E-6 VTO=-1)
+.ENDS LF351*LF353
+*Dual WideBW JFET OpAmp pkg:DIP8 (A:3,2,8,4,1)(B:5,6,8,4,7)
+*
+* Connections: 
+*               Non-Inverting Input
+*               |   Inverting Input
+*               |   |   Positive Power Supply
+*               |   |   |   Negative Power Supply
+*               |   |   |   |   Output
+*               |   |   |   |   | 
+.SUBCKT LF353   1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*28.29E6 - I(VC)*30E6 + I(VE)*30E6 +
++              I(VLP)*30E6 - I(VLN)*30E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 1.59E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 50
+  RO2   7 99 11.62
+  RP    3  4 15E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 30
+  VLN   0 92 DC 30
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=12.5E-12 BETA=250.1E-6 VTO=-1)
+.ENDS LF353* LM107
+* Linear Technology LM107 op amp model  
+* Written: 08-23-1989 15:53:34 Type: Bipolar npn input, internal comp.
+* Typical specs: 
+* Vos=7.0E-04, Ib=3.0E-08, Ios=1.5E-09, GBP=9.0E+05Hz, Phase mar.= 70 deg, 
+* SR(+)=5.0E-01V/us, SR(-)=4.8E-01V/us, Av= 104 dB, CMMR= 96 dB, 
+* Vsat(+)=1.00V, Vsat(-)=1.00V, Isc=+/-30.0mA, Iq= 1800uA
+* 
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM107  3   2   7   4   6 
+* INPUT
+RC1 7 80 5.895E+03
+RC2 7 90 5.895E+03
+Q1 80 2 10 QM1 
+Q2 90 3 11 QM2 
+C1 80 90 5.460E-12
+RE1 10 12 2.438E+03
+RE2 11 12 2.438E+03
+IEE 12 4 1.506E-05
+RE 12 0 1.328E+07
+CE 12 0 1.579E-12
+* INTERMEDIATE 
+GCM 0 8 12 0 2.689E-09
+GA 8 0 80 90 1.696E-04
+R2 8 0 1.000E+05
+C2 1 8 3.000E-11
+GB 1 0 8 0 1.401E+02
+* OUTPUT 
+RO1 1 6 3.333E+01
+RO2 1 0 6.667E+01
+RC 17 0 4.758E-05
+GC 0 17 6 0 2.102E+04
+D1 1 17 DM1 
+D2 17 1 DM1 
+D3 6 13 DM2 
+D4 14 6 DM2 
+VC 7 13 1.808E+00
+VE 14 4 1.808E+00
+IP 7 4 1.785E-03
+DSUB 4 7 DM2 
+* MODELS 
+.MODEL QM1 NPN (IS=8.000E-16 BF=2.439E+02)
+.MODEL QM2 NPN (IS=8.220E-16 BF=2.564E+02)
+.MODEL DM1 D (IS=3.337E-15)
+.MODEL DM2 D (IS=8.000E-16)
+.ENDS LM107*LM2902
+*Quad LoPwr SnglSup OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+*
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM2902 1   2   3   4   5
+C1   11 12 2.000E-12
+C2    6  7 6.000E-12
+CEE  10 99 388.6E-15
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+BEGND 99 0 V=0.5*V(3)+0.5*V(4)
+BFB 7 99 I=4.823E+7*I(VB)-5E+7*I(VC)+5E+7*I(VE)+5E+7*I(VLP)-5E+7*I(VLN)
+GA    6  0 11 12 41.47E-6
+GCM   0  6 10 99 414.7E-12
+IEE   3 10 DC 2.543E-6
+HLIM 90  0 VLIM 1K
+Q1   11  2 13 QX
+Q2   12  1 14 QX
+R2    6  9 100.0E3
+RC1   4 11 24.11E3
+RC2   4 12 24.11E3
+RE1  13 10 3.043E3
+RE2  14 10 3.043E3
+REE  10 99 78.65E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 37.62E3
+VB    9  0 DC 0
+VC    3 53 DC 1.800
+VE   54  4 DC .88
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX PNP(IS=800.0E-18 BF=32.03)
+.ENDS LM2902*LM2904 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+*
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM2904 1   2   3   4   5
+  C1   11 12 3.000E-12
+  C2    6  7 6.000E-12
+  CEE  10 99 388.6E-15
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+  FB    7 99 POLY(5) VB VC VE VLP VLN 0 48.23E6 
+  + -50E6 50E6 50E6 -50E6
+  GA    6  0 11 12 41.47E-6
+  GCM   0  6 10 99 414.7E-12
+  IEE   3 10 DC 2.543E-6
+  HLIM 90  0 VLIM 1K
+  Q1   11  2 13 QX
+  Q2   12  1 14 QX
+  R2    6  9 100.0E3
+  RC1   4 11 24.11E3
+  RC2   4 12 24.11E3
+  RE1  13 10 3.043E3
+  RE2  14 10 3.043E3
+  REE  10 99 78.65E6
+  RO1   8  5 50
+  RO2   7 99 25
+  RP    3  4 37.62E3
+  VB    9  0 DC 0
+  VC    3 53 DC 1.800
+  VE   54  4 DC .88
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 40
+  VLN   0 92 DC 40
+  DESD1  1  3 DX
+  DESD2  2  3 DX
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX PNP(IS=800.0E-18 BF=32.03)
+.ENDS LM2904* LM301A
+* Linear Technology LM301A op amp model
+* Written: 08-23-1989 15:55:44 Type: Bipolar npn input, external comp.
+* LM301A updated from original model on 05-21-1990
+* Typical specs: 
+* Vos=2.0E-03, Ib=7.0E-08, Ios=3.0E-09, GBP=9.0E+05Hz, Phase mar.= 70 deg,
+* SR(+)=5.0E-01V/us, SR(-)=4.8E-01V/us, Av= 104 dB, CMMR= 96 dB, 
+* Vsat(+)=1.00V, Vsat(-)=1.00V, Isc=+/-30.0mA, Iq= 1800uA
+* 
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |   CA
+*              |   |   |   |   |   |   CB
+*              |   |   |   |   |   |   |
+.SUBCKT LM301A 3   2   7   4   6   1   8 
+* USE C=30 PF IN MAIN CIRCUIT (CA TO CB).
+* INPUT
+RC1 7 80 5.895E+03
+RC2 7 90 5.895E+03
+Q1 80 2 10 QM1 
+Q2 90 3 11 QM2 
+C1 80 90 5.460E-12
+RE1 10 12 2.438E+03
+RE2 11 12 2.438E+03
+IEE 12 4 1.506E-05
+RE 12 0 1.328E+07
+CE 12 0 1.579E-12
+* INTERMEDIATE 
+GCM 0 8 12 0 2.689E-09
+GA 8 0 80 90 1.696E-04
+R2 8 0 1.000E+05
+* EXTERNAL COMP CAP USED FOR C2 (SEE NOTE ABOVE).
+GB 1 0 8 0 1.401E+02
+* OUTPUT 
+RO1 1 6 3.333E+01
+RO2 1 0 6.667E+01
+RC 17 0 4.758E-05
+GC 0 17 6 0 2.102E+04
+D1 1 17 DM1 
+D2 17 1 DM1 
+D3 6 13 DM2 
+D4 14 6 DM2 
+VC 7 13 1.808E+00
+VE 14 4 1.808E+00
+IP 7 4 1.785E-03
+DSUB 4 7 DM2 
+* MODELS 
+.MODEL QM1 NPN (IS=8.000E-16 BF=1.049E+02)
+.MODEL QM2 NPN (IS=8.647E-16 BF=1.095E+02)
+.MODEL DM1 D (IS=3.337E-15)
+.MODEL DM2 D (IS=8.000E-16)
+.ENDS LM301A* LM318
+* Linear Technology LM318 op amp model (with calls for LM318S8)
+* Written: 11-21-1989 Type: Bipolar npn input, internal comp.
+* LM318 updated from original model on 05-22-1990
+* Typical specs: 
+*       Ref. LM318 data sheet, LTC 1990 databook p2-311
+* Comments:
+*       Uses extended phase compensation; input differential mode clamp.
+* 
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM318  3   2   7   4   6
+* INPUT
+RC1 7 80 7.074E+02
+RC2 7 90 7.074E+02
+Q1 80 2 10 QM1 
+Q2 90 3 11 QM1
+*
+C1 80 91 300E-12
+RXC1 91 90 1E3
+CXC1 91 90 15E-12
+C2 1 8 5.000E-12
+*
+RB1 2 102 1.0000E+00
+RB2 3 103 1.0000E+00
+DDM1 102 104 DM2 
+VZ1 104 103 5.5 
+DDM2 103 105 DM2 
+VZ2 105 102 5.5 
+RE1 10 12 6.209E+02
+RE2 11 12 6.209E+02
+IEE 12 4 6.000E-04
+RE 12 0 3.332E+05
+CE 12 0 2.632E-13
+*
+GCM 0 8 12 0 1.414E-08
+GA 8 0 80 90 1.414E-03
+R2 8 0 1.000E+05
+GB 1 0 8 0 5.318E+01
+RO2 1 0 7.4000E+01
+*
+RS 1 6 1
+ECL 18 0 1 6 3.172E+01
+GCL 0 8 20 0 1
+RCL 20 0 1E3
+D1 18 20 DM1
+D2 20 18 DM1
+*
+D3A 131 70 DM3
+D3B 13 131 DM3
+GPL 0 8 70 7 1
+VC 13 6 3.6473
+RPLA 7 70 1E4
+RPLB 7 131 1E5
+D4A 60 141 DM3
+D4B 141 14 DM3
+GNL 0 8 60 4 1
+VE 6 14 3.6473
+RNLA 60 4 1E4
+RNLB 141 4 1E5
+*
+IP 7 4 4.400E-03
+DSUB 4 7 DM2 
+* MODELS 
+.MODEL QM1 NPN (IS=8.000E-16 BF=1.818E+03)
+.MODEL QM2 NPN (IS=9.347E-16 BF=2.222E+03)
+*
+.MODEL DM1 D (IS=1.000E-19)
+.MODEL DM2 D (IS=8.000E-16)
+.MODEL DM3 D (IS=1.000E-20)
+.ENDS LM318*LM324
+*Quad LoPwr SnglSup OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+*
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM324  1   2   3   4   5
+  C1   11 12 5.544E-12
+  C2    6  7 20E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*15.91E6 - I(VC)*20E6 + I(VE)*20E6 +
++              I(VLP)*20E6 - I(VLN)*20E6
+  GA    6  0 11 12 125.7E-6
+  GCM   0  6 10 99 7.067E-9
+  IEE   3 10 DC 10.04E-6
+  HLIM 90  0 VLIM 1K
+  Q1   11  2 13 QX
+  Q2   12  1 14 QX
+  R2    6  9 100E3
+  RC1   4 11 7.957E3
+  RC2   4 12 7.957E3
+  RE1  13 10 2.773E3
+  RE2  14 10 2.773E3
+  REE  10 99 19.92E6
+  RO1   8  5 50
+  RO2   7 99 50
+  RP    3  4 30.31E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.1
+  VE   54  4 DC .6
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 40
+  VLN   0 92 DC 40
+.MODEL DX D(IS=800E-18)
+.MODEL QX PNP(IS=800E-18 BF=250)
+.ENDS LM324*LM348
+*Quad 741 OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+*
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM348  1   2   3   4   5
+  C1   11 12 9.461E-12
+  C2    6  7 30E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 256.2E-6
+  GCM   0  6 10 99 4.023E-9
+  IEE  10  4 DC 15.06E-6
+  HLIM 90  0 VLIM 1K
+  Q1   11  2 13 QX
+  Q2   12  1 14 QX
+  R2    6  9 100E3
+  RC1   3 11 4.42E3
+  RC2   3 12 4.42E3
+  RE1  13 10 968
+  RE2  14 10 968
+  REE  10 99 13.28E6
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 51.28E3
+  VB    9  0 DC 0
+  VC    3 53 DC 3.6
+  VE   54  4 DC 3.6
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL QX NPN(IS=800E-18 BF=250)
+.ENDS LM348*LM358
+*Dual LoPwr, HiGain, SnglSup OpAmp pkg:DIP8 (A:3,2,8,4,1)(B:5,6,8,4,7)
+*
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT LM358  1   2   3   4   5
+C1   11 12 5.544E-12
+C2    6  7 20.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) 3 0 4 0 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 15.91E6 -20E6 20E6 20E6 -20E6
+GA    6  0 11 12 125.7E-6
+GCM   0  6 10 99 7.067E-9
+IEE   3 10 DC 10.04E-6
+HLIM 90  0 VLIM 1K
+Q1   11  2 13 QX
+Q2   12  1 14 QX
+R2    6  9 100.0E3
+RC1   4 11 7.957E3
+RC2   4 12 7.957E3
+RE1  13 10 2.773E3
+RE2  14 10 2.773E3
+REE  10 99 19.92E6
+RO1   8  5 50
+RO2   7 99 50
+RP    3  4 30.31E3
+VB    9  0 DC 0
+VC 3 53 DC 2.100
+VE   54  4 DC .6
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX PNP(IS=800.0E-18 BF=250)
+.ENDS LM358*MC3403
+*Quad LoPwr SnglSup OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+*
+* Connections: 
+*                Non-Inverting Input
+*                |   Inverting Input
+*                |   |   Positive Power Supply
+*                |   |   |   Negative Power Supply
+*                |   |   |   |   Output
+*                |   |   |   |   |
+.SUBCKT MC3403   1   2   3   4   5
+  C1   11 12 7.544E-12
+  C2    6  7 20E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*42.44E6 - I(VC)*40E6 + I(VE)*40E6 +
++              I(VLP)*40E6 - I(VLN)*40E6
+  GA    6  0 11 12 130.7E-6
+  GCM   0  6 10 99 2.235E-9
+  IEE   3 10 DC 12.4E-6
+  HLIM 90  0 VLIM 1K
+  Q1   11  2 13 QX
+  Q2   12  1 14 QX
+  R2    6  9 100E3
+  RC1   4 11 7.957E3
+  RC2   4 12 7.957E3
+  RE1  13 10 3.529E3
+  RE2  14 10 3.529E3
+  REE  10 99 16.13E6
+  RO1   8  5 37.5
+  RO2   7 99 37.5
+  RP    3  4 43.62E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.6
+  VE   54  4 DC 2.6
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 30
+  VLN   0 92 DC 30
+.MODEL DX D(IS=800E-18)
+.MODEL QX PNP(IS=800E-18 BF=30)
+.ENDS MC3403*TL022C
+*Dual LoPwr OpAmp pkg:DIP8 (A:3,2,8,4,1)(B:5,6,8,4,7)
+*
+* Connections: 
+*              Non-Inverting Input
+*              |   Inverting Input
+*              |   |   Positive Power Supply
+*              |   |   |   Negative Power Supply
+*              |   |   |   |   Output
+*              |   |   |   |   |
+.SUBCKT TL022C 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*1.697E6 - I(VC)*2E6 + I(VE)*2E6 +
++              I(VLP)*2E6 - I(VLN)*2E6
+  GA    6  0 11 12 47.13E-6
+  GCM   0  6 10 99 6.657E-9
+  IEE   3 10 DC 7.7E-6
+  HLIM 90  0 VLIM 1K
+  Q1   11  2 13 QX
+  Q2   12  1 14 QX
+  R2    6  9 100E3
+  RC1   4 11 21.22E3
+  RC2   4 12 21.22E3
+  RE1  13 10 13.95E3
+  RE2  14 10 13.95E3
+  REE  10 99 25.97E6
+  RO1   8  5 125
+  RO2   7 99 125
+  RP    3  4 245.1E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.6
+  VE   54  4 DC 2.6
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 6
+  VLN   0 92 DC 6
+.MODEL DX D(IS=800E-18)
+.MODEL QX PNP(IS=800E-18 BF=37.5)
+.ENDS TL022C*TL060
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |   N1/Comp
+*             |   |   |   |   |   |   Comp
+*             |   |   |   |   |   |   |
+.SUBCKT TL060 1   2   3   4   5   6   7
+*
+  C1   11 12 2.332E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*477.4E3 - I(VC)*500E3 + I(VE)*500E3 +
++              I(VLP)*500E3 - I(VLN)*500E3
+  GA    6  0 11 12 62.84E-6
+  GCM   0  6 10 99 2.178E-9
+  ISS   3 10 DC 35E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 15.91E3
+  RD2   4 12 15.91E3
+  RO1   8  5 200
+  RO2   7 99 200
+  RP    3  4 150E3
+  RSS  10 99 5.714E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.13
+  VE   54  4 DC 2.13
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 15
+  VLN   0 92 DC 15
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=64E-6 VTO=-1)
+.ENDS TL060*TL061
+*Sngl LoPwr JFETinput OpAmp pkg:DIP8 3,2,7,4,6
+*
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL061 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*318.3E3 - I(VC)*300E3 + I(VE)*300E3 +
++              I(VLP)*300E3 - I(VLN)*300E3
+  GA    6  0 11 12 94.26E-6
+  GCM   0  6 10 99 1.607E-9
+  ISS   3 10 DC 52.5E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 10.61E3
+  RD2   4 12 10.61E3
+  RO1   8  5 200
+  RO2   7 99 200
+  RP    3  4 150E3
+  RSS  10 99 3.81E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 15
+  VLN   0 92 DC 15
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=100.5E-6 VTO=-1)
+.ENDS TL061*TL062
+*Dual LoPwr JFETInput OpAmp pkg:DIP8 (A:3,2,8,4,1)(B:5,6,8,4,7)
+*
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL062 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*318.3E3 - I(VC)*300E3 + I(VE)*300E3 +
++              I(VLP)*300E3 - I(VLN)*300E3
+  GA    6  0 11 12 94.26E-6
+  GCM   0  6 10 99 1.607E-9
+  ISS   3 10 DC 52.5E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 10.61E3
+  RD2   4 12 10.61E3
+  RO1   8  5 200
+  RO2   7 99 200
+  RP    3  4 150E3
+  RSS  10 99 3.81E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 15
+  VLN   0 92 DC 15
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=100.5E-6 VTO=-1)
+.ENDS TL062*TL064
+*Quad LoPwr JFETInput OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+*
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL064 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*318.3E3 - I(VC)*300E3 + I(VE)*300E3 +
++              I(VLP)*300E3 - I(VLN)*300E3
+  GA    6  0 11 12 94.26E-6
+  GCM   0  6 10 99 1.607E-9
+  ISS   3 10 DC 52.5E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 10.61E3
+  RD2   4 12 10.61E3
+  RO1   8  5 200
+  RO2   7 99 200
+  RP    3  4 150E3
+  RSS  10 99 3.81E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 15
+  VLN   0 92 DC 15
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=100.5E-6 VTO=-1)
+.ENDS TL064*TL070
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |   N1/Comp
+*             |   |   |   |   |   |   Comp
+*             |   |   |   |   |   |   |
+.SUBCKT TL070 1   2   3   4   5   6   7
+*
+  C1   11 12 5.197E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*3.929E6 - I(VC)*4E6 + I(VE)*4E6 +
++              I(VLP)*4E6 - I(VLN)*4E6
+  GA    6  0 11 12 361.3E-6
+  GCM   0  6 10 99 1.908E-9
+  ISS   3 10 DC 234E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 2.947E3
+  RD2   4 12 2.947E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 21.43E3
+  RSS  10 99 854.7E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.18
+  VE   54  4 DC 2.18
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=32.5E-12 BETA=311E-6 VTO=-1)
+.ENDS TL070*TL071
+*Sngl LoNoise JFETInput OpAmp pkg:DIP8 3,2,7,4,6
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   | Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL071 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL071*TL072
+*Dual LoNoise JFETInput OpAmp pkg:DIP8 (A:3,2,8,4,1)(B:5,6,8,4,7)
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL072 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL072*TL074
+*Quad LoNoise JFETInput OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL074 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL074
+*TL075
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL075 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL075*TL080
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |   N1/Comp
+*             |   |   |   |   |   |   Comp
+*             |   |   |   |   |   |   |
+.SUBCKT TL080 1   2   3   4   5   6   7
+*
+  C1   11 12 5.197E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*3.803E6 - I(VC)*4E6 + I(VE)*4E6 +
++              I(VLP)*4E6 - I(VLN)*4E6
+  GA    6  0 11 12 377.6E-6
+  GCM   0  6 10 99 9.882E-9
+  ISS   3 10 DC 234E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 2.852E3
+  RD2   4 12 2.852E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 21.43E3
+  RSS  10 99 854.7E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=32.5E-12 BETA=332E-6 VTO=-1)
+.ENDS TL080*TL081
+*Sngl WideBW JFETInput OpAmp pkg:DIP8 3,2,7,4,6.
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL081 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 21.43E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL081*TL082
+*Dual WideBW JFETInput OpAmp pkg:DIP8 (A:3,2,8,4,1)(B:5,6,8,4,7)
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL082 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL082
+*TL084
+*Quad JFETInput OpAmp pkg:DIP14 (A:3,2,4,11,1)(B:5,6,4,11,7)(C:10,9,4,11,8)(D:12,13,4,11,14)
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL084 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL084*TL085
+*OpAmp
+*
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL085 1   2   3   4   5
+  C1   11 12 3.498E-12
+  C2    6  7 15E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*4.715E6 - I(VC)*5E6 + I(VE)*5E6 +
++              I(VLP)*5E6 - I(VLN)*5E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 8.942E-9
+  ISS   3 10 DC 195E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 150
+  RO2   7 99 150
+  RP    3  4 2.143E3
+  RSS  10 99 1.026E6
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 25
+  VLN   0 92 DC 25
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=270.1E-6 VTO=-1)
+.ENDS TL085*TL087
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL087 1   2   3   4   5
+  C1   11 12 3.887E-12
+  C2    6  7 12E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*6.189E6 - I(VC)*6E6 + I(VE)*6E6 +
++              I(VLP)*6E6 - I(VLN)*6E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 3.56E-9
+  ISS   3 10 DC 270E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 60
+  RO2   7 99 60
+  RP    3  4 11.54E3
+  RSS  10 99 740.7E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 30
+  VLN   0 92 DC 30
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=165.3E-6 VTO=-1)
+.ENDS TL087*TL088
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL088 1   2   3   4   5
+  C1   11 12 3.887E-12
+  C2    6  7 12E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*6.189E6 - I(VC)*6E6 + I(VE)*6E6 +
++              I(VLP)*6E6 - I(VLN)*6E6
+  GA    6  0 11 12 282.8E-6
+  GCM   0  6 10 99 3.56E-9
+  ISS   3 10 DC 270E-6
+  HLIM 90  0 VLIM 1K
+  J1   11  2 10 JX
+  J2   12  1 10 JX
+  R2    6  9 100E3
+  RD1   4 11 3.536E3
+  RD2   4 12 3.536E3
+  RO1   8  5 60
+  RO2   7 99 60
+  RP    3  4 11.54E3
+  RSS  10 99 740.7E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.2
+  VE   54  4 DC 2.2
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 30
+  VLN   0 92 DC 30
+.MODEL DX D(IS=800E-18)
+.MODEL JX PJF(IS=15E-12 BETA=165.3E-6 VTO=-1)
+.ENDS TL088*====================================================
+*TL322
+*OpAmp
+* Connections: 
+*             Non-Inverting Input
+*             |   Inverting Input
+*             |   |   Positive Power Supply
+*             |   |   |   Negative Power Supply
+*             |   |   |   |   Output
+*             |   |   |   |   |
+.SUBCKT TL322 1   2   3   4   5
+  C1   11 12 7.544E-12
+  C2    6  7 20E-12
+  DC    5 53 DX
+  DE   54  5 DX
+  DLP  90 91 DX
+  DLN  92 90 DX
+  DP    4  3 DX
+  BGND 99  0 V=V(3)*.5 + V(4)*.5
+  BB    7 99 I=I(VB)*42.44E6 - I(VC)*40E6 + I(VE)*40E6 +
++              I(VLP)*40E6 - I(VLN)*40E6
+  GA    6  0 11 12 130.7E-6
+  GCM   0  6 10 99 2.235E-9
+  IEE   3 10 DC 12.4E-6
+  HLIM 90  0 VLIM 1K
+  Q1   11  2 13 QX
+  Q2   12  1 14 QX
+  R2    6  9 100E3
+  RC1   4 11 7.957E3
+  RC2   4 12 7.957E3
+  RE1  13 10 3.529E3
+  RE2  14 10 3.529E3
+  REE  10 99 16.13E6
+  RO1   8  5 37.5
+  RO2   7 99 37.5
+  RP    3  4 43.62E3
+  VB    9  0 DC 0
+  VC    3 53 DC 2.6
+  VE   54  4 DC 2.6
+  VLIM  7  8 DC 0
+  VLP  91  0 DC 30
+  VLN   0 92 DC 30
+.MODEL DX D(IS=800E-18)
+.MODEL QX PNP(IS=800E-18 BF=30)
+.ENDS TL322
+
+* RC4136 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.01 ON 09/08/89 AT 16:07
+* (REV N/A) SUPPLY VOLTAGE: +/-15V
+* CONNECTIONS: NON-INVERTING INPUT
+* | INVERTING INPUT
+* | | POSITIVE POWER SUPPLY
+* | | | NEGATIVE POWER SUPPLY
+* | | | | OUTPUT
+*                | | | | |
+.SUBCKT RC4136 1 2 3 4 5
+*
+C1 11 12 2.664E-12
+C2 6 7 20.00E-12
+DC 5 53 DX
+DE 54 5 DX
+DLP 90 91 DX
+DLN 92 90 DX
+DP 4 3 DX
+EGND 99 0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB 7 99 POLY(5) VB VC VE VLP VLN 0 6.365E6 -6E6 6E6 6E6 -6E6
+GA 6 0 11 12 418.0E-6
+GCM 0 6 10 99 6.705E-9
+IEE 3 10 DC 34.28E-6
+HLIM 90 0 VLIM 1K
+Q1 11 2 13 QX
+Q2 12 1 14 QX
+R2 6 9 100.0E3
+RC1 4 11 2.652E3
+RC2 4 12 2.652E3
+RE1 13 10 1.122E3
+RE2 14 10 1.122E3
+REE 10 99 5.834E6
+RO1 8 5 125
+RO2 7 99 125
+RP 3 4 24.67E3
+VB 9 0 DC 0
+VC 3 53 DC 2.600
+VE 54 4 DC 2.600
+VLIM 7 8 DC 0
+VLP 91 0 DC 25
+VLN 0 92 DC 25
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX PNP(IS=800.0E-18 BF=121.4)
+.ENDS

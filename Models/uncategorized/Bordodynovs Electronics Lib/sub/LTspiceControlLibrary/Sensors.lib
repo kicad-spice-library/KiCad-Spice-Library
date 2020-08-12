@@ -1,0 +1,16 @@
+** Sensors
+
+.subckt CurrentSensor n+ n- vi
+V1 n+ n- 0 Rser=0
+H1 vi 0 V1 1
+.ends CurrentSensor
+
+.subckt 3HallSensors m+ m- u v w
+V1 m+ m- 0 Rser=0
+B1 Pe 0 V=idtmod(I(V1)*Np,Pm0*Np,2*pi) tripdt=1e300
+B2 u 0 V=(V(Pe)>=0)&(V(Pe)<pi) tripdt={tripdt}
+B3 v 0 V=(V(Pe)>=2/3*pi)&(V(Pe)<5/3*pi) tripdt={tripdt}
+B4 w 0 V=!((V(Pe)>=1/3*pi)&(V(Pe)<4/3*pi)) tripdt={tripdt}
+.param Np=3 Pm0=0
+.param tripdt=1u
+.ends 3HallSensors

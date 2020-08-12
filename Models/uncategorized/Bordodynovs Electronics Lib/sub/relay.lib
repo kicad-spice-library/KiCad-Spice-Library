@@ -1,0 +1,304 @@
+*                Helmut Sennewald  V1.0   01/24/2004
+* RELAYS
+*-------------------------------------------------------------------
+.SUBCKT RLY_SPDT0  coilp coilm in1 out1 out2 
++ VNOM=5 RCOIL=500 RON=0.2 ROFF=1T 
++ TON=1m VON=0.7 VOFF=0.3 
++ LCOIL=0.1 CCOIL=1f 
++ COFF=1f CCOUP=1f Lser=1p 
+*
+* Example version with parameter from instance
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.45*0.001*TON/log(1-VON)
+.PARAM C2=1*C1
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay, break before make
+* Delay until SW2 open
+RD1 3 5 1k
+CD1 5 0 {C1}
+EBUF 6 0  5 0 1
+B1 10 0 V=MIN(V(6),V(7))
+* Delay until SW1 close
+RD2 6 7 1k
+CD2 7 0  {C2}
+B2 20 0 V=MAX(V(6),V(7))
+*
+SW1 in1 out1 10 0 Switch1 
+SW2 in1 out2 20 0 Switch2
+COff1 in1 out1 {COFF}
+COff2 in1 out2 {COFF}
+CCoup out1 out2 {CCOUP}
+*
+.model Switch1 SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH} Lser={LSER})
+.model Switch2 SW(Ron={ROFF} Roff={RON} Vt={VT} Vh={VH} Lser={LSER})
+.ENDS
+
+*-------------------------------------------------------------------
+.SUBCKT RLY_REED1  coilp coilm in1 out1 out2 
++ VNOM=5 RCOIL=500 RON=0.2 ROFF=1T 
++ TON=1m VON=0.7 VOFF=0.3 
++ LCOIL=0.1 CCOIL=1f 
++ COFF=1f CCOUP=1f Lser=1p 
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.45*0.001*TON/log(1-VON)
+.PARAM C2=C1
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay, break before make
+* Delay until SW2 open
+RD1 3 5 1k
+CD1 5 0 {C1}
+EBUF 6 0  5 0 1
+B1 10 0 V=MIN(V(6),V(7))
+* Delay until SW1 close
+RD2 6 7 1k
+CD2 7 0  {C2}
+B2 20 0 V=MAX(V(6),V(7))
+*
+SW1 in1 out1 10 0 Switch1 
+SW2 in1 out2 20 0 Switch2
+COff1 in1 out1 {COFF}
+COff2 in1 out2 {COFF}
+CCoup out1 out2 {CCOUP}
+*
+.model Switch1 SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH} Lser={LSER})
+.model Switch2 SW(Ron={ROFF} Roff={RON} Vt={VT} Vh={VH} Lser={LSER})
+.ENDS
+
+*-------------------------------------------------------------------
+.SUBCKT RLY_SIG1  coilp coilm in1 out1 out2 
++ VNOM=5 RCOIL=150 RON=0.1 ROFF=1G
++ TON=5m VON=0.7 VOFF=0.3 
++ LCOIL=0.1 CCOIL=1f 
++ COFF=1f CCOUP=1f Lser=1p 
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.45*0.001*TON/log(1-VON)
+.PARAM C2=C1
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay, break before make
+* Delay until SW2 open
+RD1 3 5 1k
+CD1 5 0 {C1}
+EBUF 6 0  5 0 1
+B1 10 0 V=MIN(V(6),V(7))
+* Delay until SW1 close
+RD2 6 7 1k
+CD2 7 0  {C2}
+B2 20 0 V=MAX(V(6),V(7))
+*
+SW1 in1 out1 10 0 Switch1 
+SW2 in1 out2 20 0 Switch2
+COff1 in1 out1 {COFF}
+COff2 in1 out2 {COFF}
+CCoup out1 out2 {CCOUP}
+*
+.model Switch1 SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH} Lser={LSER})
+.model Switch2 SW(Ron={ROFF} Roff={RON} Vt={VT} Vh={VH} Lser={LSER})
+.ENDS
+
+*-------------------------------------------------------------------
+.SUBCKT RLY_POW1  coilp coilm in1 out1 out2 
++ VNOM=12 RCOIL=500 RON=0.02 ROFF=1G 
++ TON=20m VON=0.7 VOFF=0.3 
++ LCOIL=1 CCOIL=1f 
++ COFF=1f CCOUP=1f Lser=1p 
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.45*0.001*TON/log(1-VON)
+.PARAM C2=C1
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay, break before make
+* Delay until SW2 open
+RD1 3 5 1k
+CD1 5 0 {C1}
+EBUF 6 0  5 0 1
+B1 10 0 V=MIN(V(6),V(7))
+* Delay until SW1 close
+RD2 6 7 1k
+CD2 7 0  {C2}
+B2 20 0 V=MAX(V(6),V(7))
+*
+SW1 in1 out1 10 0 Switch1 
+SW2 in1 out2 20 0 Switch2
+COff1 in1 out1 {COFF}
+COff2 in1 out2 {COFF}
+CCoup out1 out2 {CCOUP}
+*
+.model Switch1 SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH} Lser={LSER})
+.model Switch2 SW(Ron={ROFF} Roff={RON} Vt={VT} Vh={VH} Lser={LSER})
+.ENDS
+
+*-------------------------------------------------------------------
+.SUBCKT RLY_2POW1  coilp coilm in1 out11 out12 in2 out21 out22
++ VNOM=12 RCOIL=500 RON=0.02 ROFF=1G 
++ TON=20m VON=0.7 VOFF=0.3 
++ LCOIL=1 CCOIL=1f 
++ COFF=1f CCOUP=1f Lser=1p 
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.45*0.001*TON/log(1-VON)
+.PARAM C2=C1
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay, break before make
+* Delay until SW2 open
+RD1 3 5 1k
+CD1 5 0 {C1}
+EBUF 6 0  5 0 1
+B1 10 0 V=MIN(V(6),V(7))
+* Delay until SW1 close
+RD2 6 7 1k
+CD2 7 0  {C2}
+B2 20 0 V=MAX(V(6),V(7))
+*
+SW1 in1 out11 10 0 Switch1 
+SW2 in1 out12 20 0 Switch2
+COff11 in1 out11 {COFF}
+COff12 in1 out12 {COFF}
+CCoup1 out11 out12 {CCOUP}
+*
+SW3 in2 out21 10 0 Switch1 
+SW4 in2 out22 20 0 Switch2
+COff21 in2 out21 {COFF}
+COff22 in2 out22 {COFF}
+CCoup2 out21 out22 {CCOUP}
+*
+.model Switch1 SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH} Lser={LSER})
+.model Switch2 SW(Ron={ROFF} Roff={RON} Vt={VT} Vh={VH} Lser={LSER})
+*
+.ENDS
+
+
+
+*-------------------------------------------------------------------
+.SUBCKT RLY_SIG1NO  coilp coilm in1 out1 
++ VNOM=5 RCOIL=150 RON=0.1 ROFF=1G
++ TON=5m VON=0.7 VOFF=0.3 
++ LCOIL=0.1 CCOIL=1f 
++ COFF=1f Lser=1p 
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.8*0.001*TON/log(1-VON)
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay until SW1 close
+RD1 3 5 1k
+CD1 5 0 {C1}
+*
+SW1 in1 out1 5 0 Switch1 
+COff1 in1 out1 {COFF}
+*
+.model Switch1 SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH} Lser={LSER})
+.ENDS
+
+*-------------------------------------------------------------------
+.SUBCKT RLY_SIG1NC  coilp coilm in1 out1 
++ VNOM=5 RCOIL=150 RON=0.1 ROFF=1G
++ TON=5m VON=0.7 VOFF=0.3 
++ LCOIL=0.1 CCOIL=1f 
++ COFF=1f Lser=1p 
+*
+* SPDT Relay
+* in1->out1  open if relay is not energized
+* in1->out2  on   if relay is not energized
+*
+.PARAM INOM=VNOM/RCOIL
+.PARAM VT=(VON+VOFF)/2
+.PARAM VH=(VON-VOFF)/2
+.PARAM C1=-0.8*0.001*TON/log(1-VON)
+*
+LCoil coilp 1 {LCOIL}
+RCoil 1 2 {RCOIL}
+VCoil 2 coilm 0
+CCoil coilp coilm {CCOIL}
+*
+*BCoil 3 0 V=I(VCoil)/INOM
+ECoil 3 0 VALUE={(I(VCoil)/INOM)}
+* Delay until SW1 close
+RD1 3 5 1k
+CD1 5 0 {C1}
+*
+SW1 in1 out1 5 0 Switch1 
+COff1 in1 out1 {COFF}
+*
+.model Switch1 SW(Ron={ROFF} Roff={RON} Vt={VT} Vh={VH} Lser={LSER})
+.ENDS
+

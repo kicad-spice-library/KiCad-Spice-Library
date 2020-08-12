@@ -1,0 +1,329 @@
+ Recopilated by Robertugo_2005
+**************************************************************************
+* OPA2662 WIDE-BAND, DUAL, OPERATIONAL TRANSCONDUCTANCE AMPLIFIER
+* CREATED 9/6/95  SB
+* REV.A
+*
+* CONNECTIONS:           BASE
+*                        |  EMITTER
+*                        |  |  COLLECTOR
+*                        |  |  |  POSITIVE VCC
+*                        |  |  |  |  NEGATIVE VCC
+*                        |  |  |  |  |  POSITIVE VCCOUT
+*                        |  |  |  |  |  |  NEGATIVE VCCOUT
+*                        |  |  |  |  |  |  |  IQ ADJUST
+*                        |  |  |  |  |  |  |  |   ENABLE
+.SUBCKT OPA2662X1/BB     2  10 11 1  8  16 9  5  EN 
+*
+* Bias Circuit
+I1  20  21  1E-6
+Q1  20  20 1   PIJ
+Q2  21  20 1   PIJ 
+Q4  20  21 22  NIJ 9
+Q3  21  21 8   NIJ
+R4   5  22    60
+R5  22   8  50E3
+C4   5   0    2pF
+*Enable Circuit
+Q40  20  40  1  PIJ
+R40  40   1   10k
+G1    0  40  VALUE={-20uA*((-1*V(EN,0))+5V)}
+Q45  21  45  8  NIJ
+R45  45   8   10k
+G2    0  45  VALUE={20uA*((-1*V(EN,0))+5V)}
+*Input 
+Q73  6  6  3 NIJ 
+Q12 20 20  1 PIJ 
+Q7   3  3 76 NIJ 
+Q6   4  4 76 PIJ  
+Q5   6 20  1 PIJ 2.3
+Q8  21  2  3 PIJ
+Q9  20  2  4 NIJ
+Q74 23 23  4 PIJ 
+Q10 23 21  8 NIJ 2.3
+Q11 21 21  8 NIJ 
+CB  2  0  1pF 
+*OTA (Collector Output)
+Q17 24 24 41  PIJ  4
+R17 16 41     15
+R18 16 32     3.5
+Q18 33 24 32  PIJ  18
+Q13 24 13 26  NIJ  1.5
+Q14 25 14 27  PIJ  1.5
+Q15 25 25 42  NIJ  4
+R15  9 42     15
+R16  9 31     3.5
+Q16 33 25 31  NIJ  18
+Q19 26 30 27  NIJ 
+Q20 27 30 26  PIJ 
+Q21 24 26 10  NIJ  3
+Q22 25 27 10  PIJ  3
+C12  24  0   10pF 
+C16  25  0   10pF 
+C13  13  0   3pF
+R13  13  6   220
+C14  23  0   3pF
+R14  23  14  220
+RC   33  34  0.05
+LC   34  11  1E-9
+CC   11  0   6.5pF
+CE   10  0   1.7pF 
+*
+.MODEL NIJ NPN (BF  = 110 IS  = 0.1567E-16
++CJC = 0.029E-12 AF  = 1.000    NE  = 1.366    XTB = 2.452    BR  = 12.89
++CJE = 0.017E-12 EG  = 1.183    NF  = 1.000    XTF = 9.000    IKF = 2.272E-3
++CJS = 0.050E-12 FC  = 0.900    NR  = 1.000    XTI = 2.000    IKR = 16.67E-3
++RB  = 228.0     IRB = 0.000    PTF = 0.000                   ISC = 5.248E-20
++RC  = 48.83     KF  = 0.000    VAR = 1.771                   ISE = 8.040E-18
++RE  = 5.065     MJC = 0.190    VJC = 0.526                   ITF = 6.683E-3
++TF  = 29.80E-12 MJE = 0.493    VJE = 0.816                   RBM = 60.00
++TR  = 65.00E-12 MJS = 0.348    VJS = 0.596                   XCJC= 0.0732
++VAF = 39.00     NC  = 1.634    VTF = 2.680)
+*
+.MODEL PIJ PNP (BF  = 110 IS  = 0.1567E-16
++CJC = 0.029E-12 AF  = 1.000    NE  = 1.366    XTB = 2.452    BR  = 12.89
++CJE = 0.017E-12 EG  = 1.183    NF  = 1.000    XTF = 9.000    IKF = 2.272E-3
++CJS = 0.050E-12 FC  = 0.900    NR  = 1.000    XTI = 2.000    IKR = 16.67E-3
++RB  = 228.0     IRB = 0.000    PTF = 0.000                   ISC = 5.248E-20
++RC  = 48.83     KF  = 0.000    VAR = 1.771                   ISE = 8.040E-18
++RE  = 5.065     MJC = 0.190    VJC = 0.526                   ITF = 6.683E-3
++TF  = 29.80E-12 MJE = 0.493    VJE = 0.816                   RBM = 60.00
++TR  = 65.00E-12 MJS = 0.348    VJS = 0.596                   XCJC= 0.0732
++VAF = 39.00     NC  = 1.634    VTF = 2.680)
+*
+.ENDS
+*
+* OPA2662 Macromodel Test
+*
+*X1 B  E  C  1  8  11  18  IQ  TTL  OPA2662X1/BB
+*Vcc1+   1   0    +5V
+*Vcc1-   8   0    -5V
+*Vcc2+  11   0    +5V
+*Vcc2-  18   0    -5V 
+*Cb1    1    0   1uF
+*Cb2    8    0   1uF
+*Cb3    11   0   2.2uF
+*Cb4    18   8   2.2uF
+*RQ  IQ   8    750
+*RC   C   0    40
+*RE   E   0    100
+*CE  E   0    5.6pF
+*.NODESET  V(X1.20)=4.18V  V(X1.21)=-4.18V
+*.ENDS
+**************************************************************************
+* OPA660X1 = MDB + MDT + MBC OPERATIONAL TRANSCONDUCTANCE AMPLIFIER
+*            AND BUFFER SIMPLIFIED MACROMODEL VERSION
+* CREATED 8/92 KL
+* REV.B  7/9/93 BCB: CLARIFCATION OF NODE SET INSTRUCTIONS
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* NOTE : FOR QUICKER CONVERSION USE THE NODESET V(Xyour.13)=+4.2758 AND
+*        V(Xyour.14)=-4.2774 IN THE ROOT SIMULATION FILE. ("Xyour" IS
+*        THE DEVICE NAME USED IN THE ROOT FILE.)
+*
+* CONNECTIONS:      IQ ADJUST
+*                   | E (EMITTER)
+*                   | | B (BASE)
+*                   | | | NEGATIVE SUPPLY
+*                   | | | | BUFFER IN
+*                   | | | | | BUFFER OUT
+*                   | | | | | | POSITIVE SUPPLY
+*                   | | | | | | | C (COLLECTOR)
+*                   | | | | | | | |
+.SUBCKT OPA660X1/BB 1 2 3 4 5 6 7 8
+*
+X1 4 5 6 7 13 14 MDB/OPA660X1   ; Diamond Buffer DB
+X2 2 3 4 7 8 13 14 MDT/OPA660X1 ; Diamond Transistor DT
+X3 1 4 7 13 14 MBC/OPA660X1     ; Biasing Circuit BC
+C201  1 0  2.0E-12
+C202  2 0  3.3E-12
+C206  6 0  2.0E-12
+C208  8 0  4.2E-12
+*
+.ENDS
+*
+*Diamond Buffer MDB
+.SUBCKT MDB/OPA660X1  4 5 6 7 13 14
+C71  71 0  0.06E-12
+C72  72 0  0.06E-12
+C73  73 0  2.00E-12
+R73  73 5  90
+Q71  71 13  7  PI/OPA660X1  2
+Q72  72 14  4  NI/OPA660X1  2
+Q73   4 73 71  PI/OPA660X1
+Q74   7 73 72  NI/OPA660X1
+Q75   7 71  6  NI/OPA660X1  7
+Q76   4 72  6  PI/OPA660X1  7
+*
+.ENDS
+*
+*Diamond Transistor MDT
+.SUBCKT MDT/OPA660X1  2 3 4 7 8 13 14
+R23  23 3  90
+C21  21 0  0.06E-12
+C22  22 0  0.06E-12
+C23  23 0  2.00E-12
+C25  25 0  28E-12
+C26  26 0  28E-12
+Q21  21 13  7  PI/OPA660X1  2
+Q22  22 14  4  NI/OPA660X1  2
+Q23   4 23 21  PI/OPA660X1
+Q24   7 23 22  NI/OPA660X1
+Q25  25 21  2  NI/OPA660X1  7
+Q26  26 22  2  PI/OPA660X1  7
+Q27  25 25  7  PIJ/OPA660X1
+Q28  26 26  4  NIJ/OPA660X1
+Q29   8 25  7  PIJ/OPA660X1
+Q30   8 26  4  NIJ/OPA660X1
+*
+.ENDS
+*
+* Biasing Circuit MBC
+.SUBCKT MBC/OPA660X1  1 4 7 13 14
+R122  122  4  50E3
+R123  122  1  100
+Q121  13 13   7  PI/OPA660X1
+Q122  13 14 122  NI/OPA660X1  9
+Q123  14 13   7  PI/OPA660X1
+Q124  14 14   4  NI/OPA660X1
+*
+.ENDS
+*
+.MODEL NI/OPA660X1  NPN
+.MODEL PI/OPA660X1  PNP
+.MODEL NIJ/OPA660X1  NPN (VAF=100)
+.MODEL PIJ/OPA660X1  PNP (VAF=100)
+*$
+**************************************************************************
+* OPA660X2 = MDB + MDT + MBC OPERATIONAL TRANSCONDUCTANCE AMPLIFIER
+*            AND BUFFER COMPLEX MACROMODEL VERSION
+*  CREATED  8/92   KL
+*  REV.A
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |-------------------------------------------------------------|
+*
+* CONNECTIONS:      IQ ADJUST
+*                   | E (EMITTER)
+*                   | | B (BASE)
+*                   | | | NEGATIVE SUPPLY
+*                   | | | | BUFFER IN
+*                   | | | | | BUFFER OUT
+*                   | | | | | | POSITIVE SUPPLY
+*                   | | | | | | | C (COLLECTOR)
+*                   | | | | | | | |
+.SUBCKT OPA660X2/BB 1 2 3 4 5 6 7 8
+* 
+X1 4 5 6 7 13 14 MDB/OPA660X2    ; Diamond Buffer DB
+X2 2 3 4 7 8 13 14 MDT/OPA660X2  ; Diamond Transistor DT
+X3 1 4 7 13 14 MBC/OPA660X2      ; Biasing Circuit BC
+C201  1 0  2E-12
+C202  2 0  2E-12
+C203  3 0  2E-12
+C205  5 0  2E-12
+C206  6 0  2E-12
+C208  8 0  2E-12
+*
+.ENDS
+*
+*Diamond Buffer MDB
+.SUBCKT MDB/OPA660X2  4 5 6 7 13 14
+R77 77 5 25
+Q71 74 13  7 7 PI/OPA660X2  2.8
+Q72 73 14  4 4 NI/OPA660X2  2.8
+Q73 73 73  7 7 PIJ/OPA660X2  18
+Q74 74 74  4 4 NIJ/OPA660X2  18
+Q75 79 73  7 7 PIJ/OPA660X2  18
+Q76 80 74  4 4 NIJ/OPA660X2  18
+Q77 74 77 79 7 PIJ/OPA660X2 
+Q78 73 77 80 4 NIJ/OPA660X2 
+Q79 79 79 78 4 NIJ/OPA660X2  6
+Q80 80 80 78 7 PIJ/OPA660X2  6
+Q81  7 79  6 4 NIJ/OPA660X2  18
+Q82  4 80  6 7 PIJ/OPA660X2  18
+*
+.ENDS
+*
+*Diamond Transistor MDT
+.SUBCKT MDT/OPA660X2  2 3 4 7 8 13 14
+R27 27 3 25
+R33 33 7 50
+R34 34 4 50
+R35 35 7 50
+R36 36 4 50
+C38  2 0 2.2E-12
+Q21 24 13  7 7 PI/OPA660X2  2.8
+Q22 23 14  4 4 NI/OPA660X2  2.8
+Q23 23 23  7 7 PIJ/OPA660X2  18
+Q24 24 24  4 4 NIJ/OPA660X2  18
+Q25 29 23  7 7 PIJ/OPA660X2  18
+Q26 30 24  4 4 NIJ/OPA660X2  18
+Q27 24 27 29 7 PIJ/OPA660X2 
+Q28 23 27 30 4 NIJ/OPA660X2 
+Q29 29 29 28 4 NIJ/OPA660X2  6
+Q30 30 30 28 7 PIJ/OPA660X2  6
+Q31 31 29  2 4 NIJ/OPA660X2  18
+Q32 32 30  2 7 PIJ/OPA660X2  18
+Q33 31 31 33 7 PIJ/OPA660X2  18
+Q34 32 32 34 4 NIJ/OPA660X2  18
+Q35  8 31 35 7 PIJ/OPA660X2  18
+Q36  8 32 36 4 NIJ/OPA660X2  18
+*
+.ENDS
+*
+* Biasing Circuit MBC
+.SUBCKT MBC/OPA660X2  1 4 7 13 14
+R122 122 4 50E3
+R123 122 1 100
+C121 121 0 10E-12
+C124 124 0 10E-12 
+I121 121 124 0.1E-6
+E13  13 0  121 0  1
+E14  14 0  124 0  1
+Q121 121 121   7 7 PI/OPA660X2 
+Q122 121 124 122 4 NI/OPA660X2  27
+Q123 124 121   7 7 PI/OPA660X2 
+Q124 124 124   4 4 NI/OPA660X2 
+Q125   4  13   7 7 PI/OPA660X2  32
+*
+.ENDS
+*
+* BIPOLAR TRANSISTOR MODELS
+.MODEL NI/OPA660X2  NPN
+.MODEL PI/OPA660X2  PNP
+.MODEL NIJ/OPA660X2  NPN (BF  = 110 IS  = 0.1567E-16
++CJC = 0.029E-12 AF  = 1.000    NE  = 1.366    XTB = 2.452    BR  = 12.89
++CJE = 0.017E-12 EG  = 1.183    NF  = 1.000    XTF = 9.000    IKF = 2.272E-3
++CJS = 0.050E-12 FC  = 0.900    NR  = 1.000    XTI = 2.000    IKR = 16.67E-3
++RB  = 228.0     IRB = 0.000    PTF = 0.000                   ISC = 5.248E-20
++RC  = 48.83     KF  = 0.000    VAR = 1.771                   ISE = 8.040E-18
++RE  = 5.065     MJC = 0.190    VJC = 0.526                   ITF = 6.683E-3
++TF  = 29.80E-12 MJE = 0.493    VJE = 0.816                   RBM = 60.00
++TR  = 65.00E-12 MJS = 0.348    VJS = 0.596                   XCJC= 0.0732
++VAF = 39.00     NC  = 1.634    VTF = 2.680)
+*
+.MODEL PIJ/OPA660X2  PNP (BF  = 110 IS  = 0.1567E-16
++CJC = 0.029E-12 AF  = 1.000    NE  = 1.366    XTB = 2.452    BR  = 12.89
++CJE = 0.017E-12 EG  = 1.183    NF  = 1.000    XTF = 9.000    IKF = 2.272E-3
++CJS = 0.050E-12 FC  = 0.900    NR  = 1.000    XTI = 2.000    IKR = 16.67E-3
++RB  = 228.0     IRB = 0.000    PTF = 0.000                   ISC = 5.248E-20
++RC  = 48.83     KF  = 0.000    VAR = 1.771                   ISE = 8.040E-18
++RE  = 5.065     MJC = 0.190    VJC = 0.526                   ITF = 6.683E-3
++TF  = 29.80E-12 MJE = 0.493    VJE = 0.816                   RBM = 60.00
++TR  = 65.00E-12 MJS = 0.348    VJS = 0.596                   XCJC= 0.0732
++VAF = 39.00     NC  = 1.634    VTF = 2.680)
+*$ 

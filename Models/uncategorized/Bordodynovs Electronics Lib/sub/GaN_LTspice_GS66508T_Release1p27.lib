@@ -1,0 +1,138 @@
+* Created in LTspice Version 4.13h                              *
+*                                            					*
+* GaN Systems Inc. Power Transistors                            *
+* LTSpice Library for GaN Transistors                           *
+* Version 1.27                                                  *
+*                                                               *
+*****************************************************************
+*****************************************************************
+*                                                               *
+* Models provided by GaN Systems Inc. are not warranted by      *
+* GaN Systems Inc. as                                           *
+* fully representing all of the specifications and operating    *
+* characteristics of the semiconductor product to which the     *
+* model relates. The model describe the characteristics of a    *
+* typical device.                                               *
+* In all cases, the current data sheet information for a given  *
+* device is the final design guideline and the only actual      *
+* performance specification.                                    *
+* Altough models can be a useful tool in evaluating device      *
+* performance, they cannot model exact device performance under *
+* all conditions, nor are they intended to replace bread-       *
+* boarding for final verification. GaN Systems Inc. therefore   *  
+* does not assume any liability arising from their use.         *
+* GaN Systems Inc. reserves the right to change models without  *
+* prior notice.                                                 *
+*                                                               *
+* This library contains models of the following GaN Systems     *
+* Inc. transistors:                                             *
+*                                                               *
+*   GS66508T                                 *
+*****************************************************************
+*$
+.subckt GS66508T gatein drainin sourcein T1 
+*
+.param conv_aide=1
+.param Rth_CasetoAmbient=0
+*
+.param aDi=0.25       cur={(1.3/3.6)*(0.069*75/80)*295/1}   slp=2.0   rpara=0.88
++      ITc=0.003       	  rTc=-0.0128      		       x0_0=0.31		   x0_1=0.255
++      di_gs1={7*4.3e-5}  di_gs2={2.6e-8}  	       di_gs3={100*0.8}    di_gs4={80*0.23}
++      Igs1=1.42e-10   	  Igs2={(3.0e-010)*(5.7)/20}       Igs3=4.9 	   Igs4=6.83e-01
++      Igs5=-7.85e-011    Igs6=-3.30     	       Igs7=6.0  
++      Igd1=5.49e-012  	  Igd2={2.6e-11*(7.5)/3}  	 Igd3=-3.09	   Igd4=12
++      Isd1=1.7e-013 	  Isd2=1e-12  	  	Isd3=0 	 Isd4=2.5
++      Isd5=5e-013 	  Isd6=10 	      	Isd7=4.5 	 of1=100 	of2=35
++	 ff1=0.345		  ff2=1.2 		  	ff3=4.5 	 ff4=0.5 	ff5=8    ff6=0.14
+*
+Rth T0 T1 {(0.35*3.6)*(15/75*80*(1+0.005*(Temp-27)))/295} 
+Cth 0 T1 {(1/3.6)*(2.4e-5*75/80)*295} 
+Rth_pkg_brd T0 0 {0.43+Rth_CasetoAmbient}
+Cth_pkg T0 0 {5e-3}
+*
+*
+bdtemp 0 T1 I = (if(v(drain,source)>0,  
++     (cur*(1-ITc*(V(T1)-0+Temp-25))*log(1.0+exp(21*(v(gate,source)-7.9+6.1-0.000*(Temp-25))/slp))* 
++	v(drain,source)/(1 + max(x0_0+x0_1*(v(gate,source)+9.1),0.2)*v(drain,source)))*
++	v(drainin,sourcein), 
++	(cur*(1-ITc*(v(T1)-0+Temp-25))*log(1.0+exp(21*(v(gate,drain)-7.9+6.1-0.000*(Temp-25))/slp))* 
++	v(source,drain)/(1 + max(x0_0+x0_1*(v(gate,drain)+9.1),0.2)*1.0*v(source,drain)))*
++	v(sourcein,drainin)))
+*
+*Note: Internal inductors can be disabled by uncommenting the following 3 lines and 
+*commenting out the next 6 lines.
+*
+*rd drainin drain {(3.6/4)*(0.95*rpara*(1-0*rTC*(Temp-25)))*18.2/295} tc=0.0128
+*rs sourcein source {(1*3.6)*(0.238*rpara*(1-0*rTc*(Temp-25)))/295} tc=0.0128
+*rg gatein gate {1.5}
+*
+rd drain3 drain {(3.6/4)*(0.95*rpara*(1-0*rTC*(Temp-25)))*18.2/295} tc=0.0135
+ld drainin drain3 {4.0e-10} Rser=0
+rs source3 source {(1*3.6)*(0.238*rpara*(1-0*rTc*(Temp-25)))/295} tc=0.0135
+Ls sourcein source3 {4.0e-11} Rser=0
+rg gatein gate1 {1.5}
+Lg gate1 gate {1e-9} Rser=0
+*
+Rcsdconv drain source {1000Meg/aDi}
+Rcgsconv gate source {1000Meg/aDi}
+Rcgdconv gate drain {1000Meg/aDi}
+*
+bswitch drain2 source2 I = (if (v(drain2,source2)>0,
++	(cur*(1-ITc*(v(T1)-0+Temp-25))*log(1.0+exp(21*(v(gate,source2)-7.9+6.1-0.00*(Temp-25))/slp))* 
++	v(drain2,source2)/(1 + max(x0_0+x0_1*(v(gate,source2)+9.1),0.2)*v(drain2,source2))),
++	(-cur*(1-ITc*(v(T1)-0+Temp-25))*log(1.0+exp(21*(v(gate,drain2)-7.9+6.1-0.00*(Temp-25))/slp))* 
++	v(source2,drain2)/(1 + max(x0_0+x0_1*(v(gate,drain2)+9.1),0.2)*1.0*v(source2,drain2)))) )
+R_drain2 drain2 drain {(1e-4)}
+R_source2 source2 source {(1e-4)}
+*
+**
+bgsdiode1 gate source1 I = (if( v(gate,source)>100,
++	(0.2*(1*conv_aide*10.5*aDi/1077*(di_gs1*(exp(16*(100.0)/di_gs3)-1)+di_gs2*(exp(16*
++	(100.0)/di_gs4)-1)))*(1+0.005*(Temp-27))*(1/3.6*295))*(1+0.09*exp(0.051*(Temp-27))),
++	(0.2*(1*conv_aide*10.5*aDi/1077*(di_gs1*(exp(16*(v(gate,source1))/di_gs3)-1)+di_gs2*
++	(exp(16*(v(gate,source1))/di_gs4)-1)))*(1+0.005*(Temp-27)))*(1/3.6*295))*(1+0.09*exp(0.051*(Temp-27))))
+R_source1 source1 source {(14.47/380)}
+*
+**
+bgddiode1 gate drain1 I = (if( v(gate,drain)>25,
++	(conv_aide*4*(0.5*aDi/1077*(di_gs1*(exp(0.3*(25.0)/di_gs3)-1)+di_gs2*(exp(0.3*
++	(25.0)/di_gs4)-1)))*(1+0.005*(Temp-27))*(0.2/3.6*295)),
++	(conv_aide*4*(0.5*aDi/1077*((di_gs1*1)*(exp(0.3*(v(gate,drain1))/(di_gs3*1))-1)
++	+(di_gs2*(1))*(exp(0.3*(v(gate,drain1))/(di_gs4*1))-1)))*(1+0.005*(Temp-27))*(0.2/3.6*295))))
+R_drain1 drain1 drain {14.47/380}
+*
+bdsdiode1 drain1 source1 I = (if( v(drain1,source1)>850,
++	(0.4e-9*conv_aide*200*(0.5*aDi/1077*(di_gs1*(exp(5*(850.0-630+((Temp-25)/1.75))/di_gs3)-1)+1*di_gs2*(exp(5*
++	(850.0-630+((Temp-25)/1.75))/di_gs4)-1)))*(1+0.1*(Temp-27))*(0.2/3.6*295)),
++	(0.4e-9*conv_aide*200*(0.5*aDi/1077*((di_gs1*1)*(exp(5*(v(drain1,source1)-630+((Temp-25)/1.75))/(di_gs3*1))-1)
++	+1*(di_gs2*(1))*(exp(5*(v(drain1,source1)-630+((Temp-25)/1.75))/(di_gs4*1))-1)))*(1+0.1*(Temp-27))*(0.2/3.6*295))))
+*
+bdsdiode2 drain1 source1 I = (if( v(drain1,source1)>750,
++	(0.1e-3*conv_aide*200*(0.5*aDi/1077*(di_gs1*(exp(0.5*(750.0-670)/di_gs3))))
++	*(1+0.06*exp(0.1*(Temp-27)))*(0.2/3.6*295)),
++	(0.1e-3*conv_aide*200*(0.5*aDi/1077*((di_gs1)*(exp(0.5*(v(drain,source)-670)/(di_gs3)))))
++	*(1+0.09*exp(0.1*(Temp-27)))*(0.2/3.6*295))))
+*
+bgddiode2 gate drain1 I = (if( v(gate,drain1)>30,
++	(conv_aide*1e-12*((0.1*di_gs1*(exp(3*(30-4)/1))+di_gs2*
++	(exp(3*(30-4)/1))))*(1+0.005*(Temp-25)))*(1/3.6*295),
++	(conv_aide*1e-12*((0.1*di_gs1*(exp(3*(v(gate,drain1)-4)/1))+di_gs2*
++	(exp(3*(v(gate,drain1)-4)/1))))*(1+0.005*(Temp-25)))*(1/3.6*295)))
+****
+*
+C_GS	 gate source  	{(1.25/7*Igs1/120/2.18)*3.5*295}
+C_GS1 gate source Q = ((1/7*10/120/2.18*1.5)*295*1.5*((0.5*Igs2*Igs4*log(1+exp(ff5*0.5*(v(gate,source)-Igs3+
++					4.6)/0.9933))-Igs5*Igs7*log(1+exp(ff6*(v(source,drain)-Igs6)/Igs7)))))
+*
+C_GD   gate drain  	{(0.8/17*Igd1/30/2.18)*1.5*295}  
+C_GD1  gate drain Q = ((0.7/7*1/25/2.18*0.8)*295*((0.5*Igs2*Igs4*log(1+exp(ff1*6*(v(gate,drain)-Igs3+of1-50)/
++					(Igs4*ff3)))+Igd2*Igd4*log(1+exp(0.5*ff2*(v(gate,drain)-Igd3+of2-30)/(Igd4
++					*ff4))))))
+*
+C_SD	 source drain  	{(2/7*Isd1/2.18)*10*295}
+C_SD1 source drain Q = (1/7*1/2.18*18*295*(4*Isd2*Isd4*log(1+exp(0.1*(v(source,drain)-Isd3+145)/Isd4))+
++                              Isd5*Isd7*log(1+exp(1.5*(v(source,drain)-Isd6+55)/Isd7)) 
++                             +5.7*0.0*(0.5*2.5e-12*0.643*log(1+exp(v(source,drain)-4.68+80))/(0.643
++					*3.5))))
+.ends
+*$

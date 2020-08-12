@@ -1,0 +1,42 @@
+
+
+.subckt spark_gap_AB 1 4 Vb_min=90 R0=1 Ron=10m V_fall=10 Tau=10u Vexp=150
+.param R_of={(Vb_min-V_fall-1)**3*27/4/R0**2}
+Cpar 1 4 1p
+BG_off 1 2 i=V(1,2)/R_Of*exp(pwrs((abs(V(1,2))-Vb_min)/Vexp,2)) Rpar=1T cpar=0.1p
+R_ion 1 2 R={R0}/V(ion)**0.75 ; dynamic ionization resistance
+Dfall 2 3 VV ; bidirectional cathode fall voltage
+Cdfall 2 3 5p Rser=10k ; for convergence
+V_ion 3 4 0 ; current sense for behavioral sources
+B_ion 0 ion I=I(V_ion)**2  Cpar={tau} Rpar=1 ; measure of channel ionization and ionization time constant
+.model VV d(Vfwd={V_fall} Vrev={V_fall} Ron={Ron} Roff={10*R_of} Epsilon=0.5 Revepsilon=0.5)
+.ends spark_gap_AB
+
+.subckt EM90X 1 4 
+X 1 4 spark_gap_AB Vb_min=90 R0=.1 Ron=10m V_fall=10 Tau=1m  Vexp=130
+.ends EM90X
+
+.subckt EM230X 1 4 
+X 1 4 spark_gap_AB Vb_min=230 R0=.1 Ron=10m V_fall=10 Tau=70u  Vexp=130
+.ends 
+
+.subckt EM300X 1 4 
+X 1 4 spark_gap_AB Vb_min=300 R0=1 Ron=10m V_fall=10 Tau=5u  Vexp=175 
+.ends 
+
+.subckt EM350X 1 4 
+X 1 4 spark_gap_AB Vb_min=350 R0=1 Ron=10m V_fall=10 Tau=7u  Vexp=190 
+.ends 
+
+.subckt EM400XG 1 4 
+X 1 4 spark_gap_AB Vb_min=400 R0=1 Ron=10m V_fall=10 Tau=8u  Vexp=190
+.ends 
+
+
+.subckt EM550X 1 4 
+X 1 4 spark_gap_AB Vb_min=550 R0=1 Ron=10m V_fall=10 Tau=10.3u  Vexp=150 
+.ends 
+
+.subckt EM3000XB 1 4 
+X 1 4 spark_gap_AB Vb_min=3000 R0=10 Ron=10m V_fall=10 Tau=13u  Vexp=900 
+.ends 

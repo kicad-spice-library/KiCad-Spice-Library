@@ -1,0 +1,79 @@
+* UCC27531
+*****************************************************************************
+* (C) Copyright 2012 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of
+** merchantability or fitness for a particular purpose. The model is
+** provided solely on an "as is" basis. The entire risk as to its quality
+** and performance is with the customer
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: WEBENCH Design Center, Texas Instruments Inc.
+* Model Version: Final 1.00
+*
+*****************************************************************************
+*
+* Updates:
+*
+* Final 1.00
+* Release to Web.
+*
+****************************************************************************
+.SUBCKT UCC27531 IN EN GND OUTL OUTH VDD
+R_U1_U4_R1 U1_U4_N14518546 U1_U4_N14518552 110
+C_U1_U4_C5 OUTH VDD 10pF
+R_U1_U4_R4 VDD U1_U4_N14518608 0.02
+R_U1_U4_R2 U1_U4_N14518578 U1_U4_N14518604 95
+R_U1_U4_R5 U1_U4_N14518760 GND 0.02
+C_U1_U4_C4 GND OUTL 10pF
+E_U1_U4_E1 U1_U4_N14518546 OUTH VALUE { IF(V(U1_U4_N14519164, 0) > 0.5,
++ 5, -5) }
+E_U1_U4_E2 OUTL U1_U4_N14518578 VALUE { IF(V(U1_U4_N14519164, 0) > 0.5,
++ -5, 5) }
+X_U1_U4_U4 U1_DRV U1_U4_N14519164 DELAY PARAMS: RINP=1K DELAY=13.5n
+C_U1_U4_C6 OUTL U1_U4_N14518604 10p
+M_U1_U4_M1 U1_U4_N14518608 U1_U4_N14518552 OUTH OUTH NMOS01
+C_U1_U4_C1 U1_U4_N14518552 U1_U4_N14518608 3p
+M_U1_U4_M2 U1_U4_N14518760 U1_U4_N14518604 OUTL OUTL PMOS01
+C_U1_U4_C2 U1_U4_N14518760 U1_U4_N14518604 3p
+C_U1_U4_C3 OUTH U1_U4_N14518552 4p
+X_U1_U3_U5 U1_U3_EN_TH EN U1_U3_N231828 COMP PARAMS: VHYS=0.9
+R_U1_U3_R1 U1_U3_N234978 EN 200k
+V_U1_U3_V1 U1_U3_N231824 GND 8.9
+X_U1_U3_U3 U1_U3_IN_TH IN U1_U3_N231812 COMP PARAMS: VHYS=1.0
+X_U1_U3_U7 U1_U3_UVLO U1_U3_EN_TH U1_U3_IN_TH U1_DRV AND3_BASIC_GEN
++ PARAMS: VDD=1 VSS=0 VTHRESH=500E-3
+X_U1_U3_U6 U1_U3_UVLO VDD U1_U3_N231824 COMP PARAMS: VHYS=0.7
+V_U1_U3_V3 U1_U3_N231812 GND 2
+V_U1_U3_V2 U1_U3_N231828 GND 1.9
+R_U1_U3_R2 IN GND 230k
+V_U1_U3_V4 U1_U3_N234978 GND 5.8
+
+.model NMOS01 NMOS VTO = 2 KP = 0.545 LAMBDA = 0.001
+.model PMOS01 PMOS VTO = -2 KP = 1.1 LAMBDA = 1m
+.model PMOS02 PMOS VTO = -2 KP = .889 LAMBDA = 1m
+.SUBCKT DELAY INP OUT PARAMS: RINP = 1k DELAY = 10n
+R1 INP 101 {RINP}
+C1 101 102 { 1.4427 * DELAY / RINP }
+E1 102 0 OUT 0 0.5
+E2 OUT 0 VALUE {IF(V(101) > 0.5, 1, 0)}
+.ENDS DELAY
+
+.SUBCKT COMP VOUT VINP VINN PARAMS: VHYS = 0.05
+bE1 0 VOUT i=IF(V(VINP)+V(VOUT)*VHYS > V(VINN),1,0) Rpar=1 Cpar=1n
+.ENDS COMP
+
+.SUBCKT AND3_BASIC_GEN A B C Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+E_ABMGATE Y 0 VALUE {IF(V(A) > {VTHRESH} & V(B) > {VTHRESH} & V(C) > {VTHRESH},{VDD},{VSS})}
+*RINT YINT Y 1
+*CINT Y 0 1f
+.ENDS AND3_BASIC_GEN
+
+.ENDS UCC27531

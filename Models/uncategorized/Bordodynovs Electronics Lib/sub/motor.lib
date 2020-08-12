@@ -1,0 +1,156 @@
+
+.SUBCKT DC_MOTOR  + - Velocity BEMF Torque
+
++PARAMS: LA=1.5M RA=.5 Ke=.05 KT=.05 JM=250U BM=.1M TL=0
+
+LA + 1 {La} Rser={Ra}
+
+R+ + 0 1G
+
+R- - 0 1G
+
+R1 1 0 1G
+
+bv1 1   -  v=-Ke*I(bTORQUE)
+
+bTORQUE Torque 0 V=Kt*I(bv1)-TL
+
+LINERT Torque 0 {Jm} Rser={Bm}
+
+bVELOCITY Velocity 0 V=-I(bTORQUE)
+
+b2 BEMF 0 V=V(1,-)
+
+.ENDS DC_MOTOR
+
+*
+
+
+.SUBCKT AC_MOTOR  A B C VELOCITY TORQUE RPM
+
++PARAMS: NP=2 J=.62 K=.97 LS=29.4M LR=29.7M RS=67M RR=32M
+
+.PARAM LR2={LR*1.5}
+
+.PARAM RR2={RR*1.5}
+
+.PARAM LM={SQRT(LS*LR)*K}
+
+.PARAM K0={LM/SQRT(LS*LR2)}
+
+.PARAM S3={SQRT(3)}
+
+RA A 2 {RS}
+
+LA N 20 {LS} Rser=0 ic=0
+vLA 20 2 0
+LB N 40 {LS} Rser=0 ic=0
+
+vLB 40 4 0
+RB 4 B {RS}
+
+LC N 60 {LS} Rser=0 ic=0
+
+vLC 60 6 0
+RC C 6 {RS}
+
+KAX LA LX {K0}
+
+KBX LB LX {-K0/2}
+
+KBY LB LY {K0*S3/2}
+
+KCX LC LX {-K0/2}
+
+KCY LC LY {-K0*S3/2}
+
+LY 8 90 {LR2} Rser=0 ic=0
+
+vLY 90 9 0
+EBY 9 0 VALUE = {-NP*V(VELOCITY)*(3/2*LM*I(vLA)+LR2*I(vLX))}
+
+RY 0 8 {RR2}
+
+GBT 0 VELOCITY VALUE = {NP*S3/2*LM*((I(vLB)-I(vLC))*I(vLX)-S3*I(vLA)*I(vLY))}
+
+CW VELOCITY 0 {J}
+
+LX 11 120 {LR2} Rser=0 ic=0
+vLX 120 12 0
+
+EBX 12 0 VALUE = {NP*V(VELOCITY)*(LM*S3/2*(I(vLB)-I(vLC))+LR2*I(vLY))}
+
+RX 0 11 {RR2}
+
+EBM TORQUE 0 VALUE = {I(GBT)}
+
+EBN RPM 0 VALUE = {V(VELOCITY)/2/3.14159265358979323846*60}
+
+R3 0 VELOCITY 1E12
+
+.ENDS AC_MOTOR
+
+
+
+.Subckt Load_motorAC0 Velocity Load_On  params: F0=50
+
+.FUNC TORQUE0(X) {0}
+.PARAM W0={(2*PI*F0/2)}
+
+.PARAM T0=60
+
+.FUNC TORQUE1(X) {X}
+
+.FUNC TORQUE2(X) {SGN(X)*X*X}
+
+R Load_on on 1Meg
+
+V on 0 1
+
+G1 VELOCITY 0 VALUE = {T0*Torque0(V(VELOCITY)/W0)*v(Load_On)}
+
+.ends Load_motorAC0
+
+
+.Subckt Load_motorAC1 Velocity Load_On  params: F0=50
+
+.FUNC TORQUE0(X) {0}
+
+.PARAM W0={(2*PI*F0/2)}
+
+.PARAM T0=60
+
+.FUNC TORQUE1(X) {X}
+
+.FUNC TORQUE2(X) {SGN(X)*X*X}
+
+R Load_on on 1Meg
+
+V on 0 1
+
+G1 VELOCITY 0 VALUE = {T0*Torque1(V(VELOCITY)/W0)*v(Load_On)}
+
+.ends Load_motorAC1
+
+
+.Subckt Load_motorAC2 Velocity Load_On  params: F0=50
+
+.FUNC TORQUE0(X) {0}
+
+
+.PARAM W0={(2*PI*F0/2)}
+ 
+.PARAM T0=60
+
+.FUNC TORQUE1(X) {X}
+
+.FUNC TORQUE2(X) {SGN(X)*X*X}
+
+R Load_on on 1Meg
+
+V on 0 1
+
+G1 VELOCITY 0 VALUE = {T0*Torque2(V(VELOCITY)/W0)*v(Load_On)}
+
+.ends Load_motorAC2
+

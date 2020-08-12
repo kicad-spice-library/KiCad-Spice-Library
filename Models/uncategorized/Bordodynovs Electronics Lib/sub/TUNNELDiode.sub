@@ -1,0 +1,189 @@
+.SUBCKT TUNNEL 1 20 
++ Vp=60mV Ip=50mA Vv=1.5V Iv=3mA Vpp=500mV  c=0.1pF L=0.1n m=1
+.param Vt={boltz*(TEMP+273.15)/echarge} 
+BTHE  1 2 I =  limit(-1,Ip*exp(-Vpp/Vt)*(exp(v(1,2)/vt)-1),1) Rpar=1G
+BTUN  1 2 I = limit(-1,Ip*((v(1,2)/Vp)*exp(1-v(1,2)/Vp))**if(v(1,2)<Vp,1,m),1) Rpar=1G
+BEXC  1 2 I = limit(-1,Iv*exp(v(1,2)-Vv)*(1-exp(-v(1,2)/vt)),1) Rpar=1G
+D 1 2 dmy
+.model  dmy d Vfwd=1. Vrev=1 Ron=10m Roff=1G
+C 1 2 {c}
+L 20 2 {L} Rpar=5
+.ENDS TUNNEL
+
+.SUBCKT 3I306G 1 20 
+x 1 20 tunnel Vp=170mV Ip=2.mA Vv=1V Iv=0.1mA Vpp=500mV  c=8pF L=0.1n m=5
+.ends
+
+.SUBCKT 3I306E 1 20 
+x 1 20 tunnel Vp=170mV Ip=2.mA Vv=1V Iv=0.1mA Vpp=500mV  c=7pF L=0.1n m=5
+.ends
+
+.SUBCKT 3I306j 1 20 
+x 1 20 tunnel Vp=170mV Ip=5.mA Vv=1V Iv=0.2mA Vpp=500mV  c=15pF L=0.1n m=3
+.ends
+
+.SUBCKT 3I306k 1 20 
+x 1 20 tunnel Vp=170mV Ip=5.mA Vv=1V Iv=0.2mA Vpp=500mV  c=14pF L=0.1n m=3
+.ends
+
+.SUBCKT 3I306L 1 20 
+x 1 20 tunnel Vp=170mV Ip=10mA Vv=1V Iv=0.4mA Vpp=503mV  c=12pF L=0.1n m=3
+.ends
+
+.SUBCKT 3I306M 1 20 
+x 1 20 tunnel Vp=170mV Ip=10mA Vv=1V Iv=0.4mA Vpp=503mV  c=30pF L=0.1n m=3
+.ends
+
+.SUBCKT 3I306N 1 20 
+x 1 20 tunnel Vp=170mV Ip=10mA Vv=1V Iv=0.4mA Vpp=503mV  c=30pF L=0.1n m=3
+.ends
+
+.SUBCKT 1N3712 1 20 
+x 1 20 tunnel Vp=65mV Ip=0.93mA Vv=2 Iv=0.5mA Vpp=500mV  c=5pF L=0.5n m=1.7
+.ends
+
+.SUBCKT 1N3713 1 20 
+x 1 20 tunnel Vp=65mV Ip=1mA Vv=2 Iv=0.4mA Vpp=510mV  c=3.5pF L=0.5n m=1.65
+.ends
+
+.SUBCKT 1N3714 1 20 
+x 1 20 tunnel Vp=65mV Ip=2mA Vv=2 Iv=1.3mA Vpp=500mV  c=10pF L=0.5n m=1.7
+.ends
+
+.SUBCKT 1N3715 1 20 
+x 1 20 tunnel Vp=65mV Ip=2mA Vv=2 Iv=1mA Vpp=510mV  c=7pF L=0.5n m=1.65
+.ends
+
+*SRC=1N3858;TN3858;Diodes;Tunnel;
+*SYM=TUNDIODE
+.SUBCKT 1N3858 1 2
+R1 1 3 2.5
+I0 3 2 1.2M
+D1 3 2 DIODE
+J1 4 2 3 NCHANNELJFET
+J2 4 3 2 PCHANNELJFET
+.MODEL NCHANNELJFET NJF(VTO=-.115V BETA=1.9 CGS=4P)
+.MODEL PCHANNELJFET PJF(VTO=-.115V BETA=1.9 CGS=4P)
+.MODEL DIODE D (RS=7 N=.6)
+.ENDS 
+
+* 1N2927 ; TUNNEL-DIODE ; Silicon (Si) ; Microsemi Corp. ; TO-18
+.SUBCKT 1N2927 1 4
+* TERMINALS:   A K
+* LEVEL 2
+R1 1 2 7.210024E-06
+L1 3 2 7.5E-09
+G1 3 4 VALUE={(.0001*V(3,4)/.075))*(EXP(1-(V(3,4)/.075)))}
+G2 3 4 VALUE={(.000035*EXP(V(3,4)-.475))}
+G3 3 4 VALUE={(.0001*EXP(-.8/.0259))*(EXP((V(3,4)/.0259)-1))}
+* (c) 15.05.1998 ISD Innovative Software Development
+.ENDS
+
+* 1N2927A ; TUNNEL-DIODE ; Silicon (Si) ; Microsemi Corp. ; TO-18
+.SUBCKT 1N2927A 1 4
+* TERMINALS:    A K
+* LEVEL 2
+R1 1 2 5.524063E-06
+L1 3 2 7.5E-09
+G1 3 4 VALUE={(.0001*V(3,4)/.07))*(EXP(1-(V(3,4)/.07)))}
+G2 3 4 VALUE={(.00003*EXP(V(3,4)-.475))}
+G3 3 4 VALUE={(.0001*EXP(-.825/.0259))*(EXP((V(3,4)/.0259)-1))}
+* (c) ISD Innovative Software Development
+.ENDS
+
+
+
+
+
+.Subckt 1N3716 1 2                                                                    
+.Param Vp=100mV Ip=4.7mA Vv=370mV Vt=26mV Vpp =525mV Iv=370uA                        
+Bthermal 1 2  I=Ip*exp(-Vpp/Vt)*(exp(v(1,2)/Vt)-1)                                
+Btunnel  1  2 I=Ip*(v(1,2)/Vp)*exp(1-v(1,2)/Vp)                                    
+Bexcess  1 2  I=Iv*exp(v(1,2)-Vv)                                                    
+Cd       1 2  25pF                                                                    
+.Ends 1N3716
+
+
+
+.subckt 1N3720  1 2
+d1 1 2 DF
+c1 1 2 150p
+f1 1 2 v2 1
+e0 10 0 1 2 1
+r10 10 20 1meg
+d10 0 20 dmod
+e1 5 0 20 0 1
+r1 5 4 1meg
+d2 4 6 dmod
+vv 6 0 0.35
+b1 0 7 i=157.018692*v(4)**5-171.7392416*v(4)**4
++ +69.81242627*v(4)**3-12.7181368*v(4)**2+0.9082578801*v(4)-70.59038009e-5
+r2 7 8 1u
+v2 8 0 DC 0
+.model DF d (N=3.819 IS=1.376e-4 BV=0.2 IBV=0.003 )
+.model dmod d (N=0.001)
+.ends 1n3720
+
+
+
+
+*Planar Tunnel Diode
+.SUBCKT MBD1057 1 2        ;1 - Anode   2 - Cathode
+D1 1 2 DF
+C1 1 2 0.3E-12
+E1 6 0 1 2 1.0 
+R1 5 6 100
+D2 5 0 DCUT
+G1 1 2 5 0 -29.263E-6 7.3533E-3 -83.688E-3 0.25456
+.MODEL DF D (IS=260.1E-9 N=2.65 CJO=0.001E-12)
+.MODEL DCUT D (N=0.1 RS=0.001 IS=1.0E-25 CJO=0.001E-12)
+.ENDS MBD1057
+
+*Planar Tunnel Diode
+.SUBCKT MBD2057 1 2        ;1 - Anode   2 - Cathode
+D1 1 2 DF
+C1 1 2 0.3E-12
+E1 6 0 1 2 1.0 
+R1 5 6 100
+D2 5 0 DCUT
+G1 1 2 5 0 -.40255E-6 9.204E-3 -112.173E-3 0.32731
+.MODEL DF D (IS=260.1E-9 N=2.65 CJO=0.001E-12)
+.MODEL DCUT D (N=0.1 RS=0.001 IS=1.0E-25 CJO=0.001E-12)
+.ENDS MBD2057
+
+*Planar Tunnel Diode
+.SUBCKT MBD3057 1 2        ;1 - Anode   2 - Cathode
+D1 1 2 DF
+C1 1 2 0.3E-12
+E1 6 0 1 2 1.0 
+R1 5 6 100
+D2 5 0 DCUT
+G1 1 2 5 0 -71.712E-6 13.058E-3 -124.09E-3 0.28390
+.MODEL DF D (IS=260.1E-9 N=2.65 CJO=0.001E-12)
+.MODEL DCUT D (N=0.1 RS=0.001 IS=1.0E-25 CJO=0.001E-12)
+.ENDS MBD3057
+
+*Planar Tunnel Diode
+.SUBCKT MBD4057 1 2        ;1 - Anode   2 - Cathode
+D1 1 2 DF
+C1 1 2 0.3E-12
+E1 6 0 1 2 1.0 
+R1 5 6 100
+D2 5 0 DCUT
+G1 1 2 5 0 -112.66E-6 17.831E-3 -169.14E-3 0.38706
+.MODEL DF D (IS=260.1E-9 N=2.65 CJO=0.001E-12)
+.MODEL DCUT D (N=0.1 RS=0.001 IS=1.0E-25 CJO=0.001E-12)
+.ENDS MBD4057
+
+*Planar Tunnel Diode
+.SUBCKT MBD5057 1 2        ;1 - Anode   2 - Cathode
+D1 1 2 DF
+C1 1 2 0.3E-12
+E1 6 0 1 2 1.0 
+R1 5 6 100
+D2 5 0 DCUT
+G1 1 2 5 0 -128.86E-6 20.645E-3 -164.36E-3 0.25235
+.MODEL DF D (IS=260.1E-9 N=2.65 CJO=0.001E-12)
+.MODEL DCUT D (N=0.1 RS=0.001 IS=1.0E-25 CJO=0.001E-12)
+.ENDS MBD5057
+

@@ -1,0 +1,96 @@
+*July 16, 2007
+*Doc. ID: 77560, S-71392, Rev. C
+*File Name: Si1016X_PS.txt and Si1016X_PS.lib
+*This document is intended as a SPICE modeling guideline and does not
+*constitute a commercial product data sheet.  Designers should refer to the
+*appropriate data sheet of the same number for guaranteed specification
+*limits.
+*Dn Gn Sn Dp Gp Sp
+.SUBCKT Si1016X 6 2 1 3 5 4  
+X1   6 2 1 Si1016N
+X2   3 5 4 Si1016P
+.ENDS Si1016X
+*N-CH
+.SUBCKT Si1016N 4 1 2
+M1   3 5 2 2 NMOS W=29549u L=0.50u 
+M2   2 5 2 4 PMOS W=29549u L=0.95u 
+R1   4 3     RTEMP 130E-3
+CGS  5 2     41E-12
+DBD  2 4     DBD
+XESD 1 5 2   Si1016N_ESD
+************************************************************  
+.MODEL  NMOS         NMOS (LEVEL  = 3        TOX    = 1.7E-8
++ RS     = 280E-3          RD     = 0        NSUB   = 1.5E17   
++ KP     = 5.6E-5          UO     = 650             
++ VMAX   = 0               XJ     = 5E-7     KAPPA  = 10E-2
++ ETA    = 1E-4            TPG    = 1  
++ IS     = 0               LD     = 0                             
++ CGSO   = 0               CGDO   = 0        CGBO   = 0 
++ NFS    = 0.8E12          DELTA  = 0.1)
+************************************************************  
+.MODEL  PMOS         PMOS (LEVEL  = 3        TOX    = 1.7E-8
++NSUB    = 2.6E16          TPG    = -1)   
+************************************************************  
+.MODEL DBD D (CJO=32E-12 VJ=0.38 M=0.30
++RS=1 FC=0.1 IS=1E-12 TT=4E-8 N=1 BV=20.5)
+************************************************************ 
+.MODEL RTEMP RES (TC1=10E-3 TC2=5.5E-6)
+************************************************************  
+.ENDS Si1016N
+*P-CH
+.SUBCKT Si1016P 4 1 2
+M1   3 5 2 2 PMOS W=29856u L=0.50u 
+M2   2 5 2 4 NMOS W=29856u L=0.50u
+R1   4 3     RTEMP 26E-2
+CGS  5 2     45E-12
+DBD  4 2     DBD
+XESD 1 5 2   Si1016P_ESD
+**************************************************************** 
+.MODEL  PMOS        PMOS ( LEVEL  = 3            TOX    = 1.7E-8
++ RS     = 32E-2           RD     = 0            NSUB   = 7E15   
++ KP     = 1.8E-5          UO     = 400             
++ VMAX   = 0               XJ     = 5E-7         KAPPA  = 2E-3
++ ETA    = 1E-4            TPG    = -1  
++ IS     = 0               LD     = 0                
++ CGSO   = 0               CGDO   = 0            CGBO   = 0 
++ NFS    = 0.8E12          DELTA  = 0.1)
+***************************************************************** 
+.MODEL  NMOS        NMOS ( LEVEL  = 3            TOX    = 1.7E-8
++NSUB    = 2E17            TPG    = -1)   
+***************************************************************** 
+.MODEL DBD D (CJO=30E-12 VJ=0.38 M=0.30
++RS=1 FC=0.5 IS=1E-12 TT=5E-8 N=1 BV=20.2)
+***************************************************************** 
+.MODEL RTEMP RES (TC1=10E-3  TC2=5.5E-6)
+***************************************************************** 
+.ENDS Si1016P
+***************************************************************** 
+.SUBCKT Si1016N_ESD 1 5 2
+rd1 1 6 1 TC=300
+d1 6 2 dleak
+.MODEL dleak d (IS=3E-9 XTI=350 EG=1.17 T_MEASURED=25 TBV1=0 N=34 BV=6.4) 
+rd2 1 7 34 TC=-0.0002
+d2 8 7 dout
+d3 8 2 dout
+.MODEL dout D (IS=5.1E-9 XTI=-35 EG=1.17 T_MEASURED=25 TBV1=-5.64e-4 N=2 BV=6.38)
+rpoly 1 5 100 TC=0.001
+rd4 5 9 100 TC=-0.015
+d4 10 9 din
+d5 10 2 din
+.MODEL din D (IS=5.1E-9 XTI=-30 EG=1.17 T_MEASURED=25 TBV1=-1.76e-4 N=1.5 BV=6.25)
+.ENDS Si1016N_ESD 
+***************************************************************** 
+.SUBCKT Si1016P_ESD 1 5 2
+rd1 2 6 1 TC=300
+d1 6 1 dleak 
+.MODEL dleak d (IS=3E-9 XTI=350 EG=1.17 T_MEASURED=25 TBV1=0 N=34 BV=6.4) 
+rd2 2 7 34 TC=-0.0002
+d2 8 7 dout
+d3 8 1 dout
+.MODEL dout D (IS=5.1E-9 XTI=-35 EG=1.17 T_MEASURED=25 TBV1=-5.64e-4 N=2 BV=6.38)
+rpoly 1 5 100 TC=0.001
+rd4 2 9 100 TC=-0.015
+d4 10 9 din
+d5 10 5 din
+.MODEL din D (IS=5.1E-9 XTI=-30 EG=1.17 T_MEASURED=25 TBV1=-1.76e-4 N=1.5 BV=6.25)
+.ENDS Si1016P_ESD

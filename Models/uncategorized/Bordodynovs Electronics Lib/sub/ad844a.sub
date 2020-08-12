@@ -1,0 +1,105 @@
+* AD844A SPICE Macro-model                  7/91, Rev. A   
+*                                           JCB / PMI
+*
+*
+* This version of the AD844 model simulates the worst case 
+* parameters of the 'A' grade.  The worst case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1991 by Analog Devices, Inc.
+*
+* Refer to "README.DOC" file for License Statement.  Use of this model
+* indicates your acceptance with the terms and provisions in the License Statement.
+*
+* Node assignments
+*              non-inverting input
+*              | inverting input
+*              | | positive supply
+*              | | |  negative supply
+*              | | |  |  output
+*              | | |  |  |  compensation node
+*              | | |  |  |  |
+.SUBCKT AD844A 1 2 99 50 28 12
+*
+* INPUT STAGE
+*
+R1   99  8     1E3
+R2   10 50     1E3
+V1   99  9     6.6
+D1   9   8     DX
+V2   11 50     6.6
+D2   10 11     DX
+I1   99  5     200E-6
+I2   4  50     200E-6
+Q1   50  3  5  QP 
+Q2   99  3  4  QN 
+Q3   8   6 30  QN
+Q4   10  7 30  QP 
+R3   5   6     300E3
+R4   4   7     300E3
+C1   99  6     8.8E-15
+C2   50  7     8.8E-15
+*
+* INPUT ERROR SOURCES
+* 
+GB1  99  1     POLY(1)  1  22  400E-9  150E-9
+GB2  99 30     POLY(1)  1  22  450E-9  160E-9
+VOS  3   1     300E-6
+LS1  30  2     1E-8
+CS1  99  2     1E-12
+CS2  50  2     1E-12
+*
+EREF 97  0     22  0  1
+*
+* GAIN STAGE & DOMINANT POLE
+*
+R5   12 97     2.2E6
+C3   12 97     5.5E-12
+G1   97 12     99  8  1E-3
+G2   12 97     10 50  1E-3
+V3   99 13     5.3
+V4   14 50     5.3
+D3   12 13     DX
+D4   14 12     DX
+*
+* POLE AT 70 MHZ
+*
+R8  17 97     1E6
+C4  17 97     3.18E-15
+G4  97 17     12 22  1E-6
+*
+* POLE AT 300 MHZ
+*
+R12 21 97     1E6
+C8  21 97     0.318E-15
+G8  97 21     17 22  1E-6
+*
+* OUTPUT STAGE
+*
+ISY 99 50     6.1E-3
+R13 22 99     16.7E3
+R14 22 50     16.7E3
+R15 27 99     30
+R16 27 50     30
+L2  27 28     6E-8
+G9  25 50     21 27  33.33E-3
+G10 26 50     27 21  33.33E-3
+G11 27 99     99 21  33.33E-3
+G12 50 27     21 50  33.33E-3
+V5  23 27     0.5
+V6  27 24     0.5
+D5  21 23     DX
+D6  24 21     DX
+D7  99 25     DX
+D8  99 26     DX
+D9  50 25     DY
+D10 50 26     DY
+*
+* MODELS USED
+*
+.MODEL QN   NPN(BF=1E9 IS=1E-15)
+.MODEL QP   PNP(BF=1E9 IS=1E-15)
+.MODEL DX   D(IS=1E-15)
+.MODEL DY   D(IS=1E-15 BV=50)
+.ENDS
+

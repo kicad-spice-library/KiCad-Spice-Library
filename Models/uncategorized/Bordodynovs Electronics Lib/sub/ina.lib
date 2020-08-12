@@ -1,0 +1,3520 @@
+* INA103 = A1_103 + A2_103 + A3_103 OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 10/30/90 AT 15:01
+* REV.A
+*  ------------------------------------------------------------------------ 
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+*  ------------------------------------------------------------------------ 
+*
+*
+***** INA103 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |   REFERENCE
+*                       |   |   |   |   |   |   GAIN SENSE 1
+*                       |   |   |   |   |   |   |   GAIN SENSE 2
+*                       |   |   |   |   |   |   |   |
+*.SUBCKT INA103         1   2   3   4   5   8   9  10  
+*** Reference: http://focus.ti.com/lit/ds/symlink/ina103.pdf, HS 6/8/2003
+*** Change, add missing pins, HS 6/8/2003 
+*** Change, remove internal shorts of feedback resistors to other pins, HS 6/8/2003   
+***                                                    -RG +RG -GD +GD SNS G100
+.SUBCKT INA103          1   2   3   4   5   8   9  10  109 110  11  12 105 111
+
+*** This would be the pin list if the original netlist will be used. HS 6/8/2003
+*.SUBCKT INA103         1   2   3   4   5   8   9  10    9  10  11  12   5 111
+*
+
+***** A1_103 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X1                     15  17   3   4  11   A1_103
+*
+
+***** A2_103 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X2                     15  16   3   4  12   A2_103
+*
+
+***** A3_103 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X3                     14  13   3   4   5   A3_103
+*
+
+*** Change, add resistor for  gain = 100, HS 6/8/2003 
+R910 109 111 60.6
+
+R1    11  13   6.0000K
+
+*** Change, seperate connection SENSE, HS 6/8/2003
+*R2    13   5   5.9994K
+R2    13   105   5.9994K
+
+C2    13   5   2.0000PF
+R3    12  14   6.0000K
+R4    14   8   6.0000K
+*
+
+*** Change, seperate connection -Rg, HS 6/8/2003
+*R1FB   9  11   3.0000K
+R1FB   109  11   3.0000K
+
+CC1   17  11  35.0000PF
+
+*** Change, seperate connection +Rg, HS 6/8/2003
+*R2FB  10  12   3.0000K
+R2FB  110  12   3.0000K
+
+CC2   16  12  35.0000PF
+*
+RCE   17   9   75MEG
+*
+I1     3  16  DC  1.300E-3
+I2     3  17  DC  1.300E-3
+I3    10   4  DC  1.300E-3
+I4     9   4  DC  1.300E-3
+*
+D1    17  15      DX
+D2    16  15      DX
+*
+Q1    16   1  10  QX
+Q2    17   2   9  QX
+*
+V1     3  15  DC  2.000
+*
+.MODEL DX D(IS=1.0E-24)
+
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+
+.ENDS
+
+* A1_103 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.03 ON 11/15/90 AT 13:24
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A1_103   1 2 3 4 5
+*
+C1   11 12 2.098E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E6 -3E6 3E6 3E6 -3E6
+GA    6  0 11 12 188.5E-6
+GCM   0  6 10 99 2.987E-9
+ISS   3 10 DC 100.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 5.305E3
+RD2   4 12 5.305E3
+RO1   8  5 20
+RO2   7 99 20
+RP    3  4 14.06E3
+RSS  10 99 2.000E6
+VB    9  0 DC 0
+VC    3 53 DC 3
+VE   54  4 DC 3
+VLIM  7  8 DC 0
+VLP  91  0 DC 50
+VLN   0 92 DC 50
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=2.500E-12 BETA=177.7E-6 VTO=-1)
+.ENDS
+
+* A2_103 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.03 ON 11/13/90 AT 11:47
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A2_103   1 2 3 4 5
+*
+C1   11 12 2.098E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E6 -3E6 3E6 3E6 -3E6
+GA    6  0 11 12 188.5E-6
+GCM   0  6 10 99 2.987E-9
+ISS   3 10 DC 100.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 5.305E3
+RD2   4 12 5.305E3
+RO1   8  5 20
+RO2   7 99 20
+RP    3  4 14.06E3
+RSS  10 99 2.000E6
+VB    9  0 DC 0
+VC    3 53 DC 3
+VE   54  4 DC 3
+VLIM  7  8 DC 0
+VLP  91  0 DC 50
+VLN   0 92 DC 50
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=2.500E-12 BETA=177.7E-6 VTO=-1)
+.ENDS
+
+* A3_103 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.03 ON 11/09/90 AT 10:20
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_103   1 2 3 4 5
+*
+C1   11 12 3.356E-12
+C2    6  7 8.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 16.62E6 -20E6 20E6 20E6 -20E6
+GA    6  0 11 12 301.6E-6
+GCM   0  6 10 99 4.780E-9
+ISS   3 10 DC 160.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 3.316E3
+RD2   4 12 3.316E3
+RO1   8  5 10
+RO2   7 99 10
+RP    3  4 14.06E3
+RSS  10 99 1.250E6
+VB    9  0 DC 0
+VC    3 53 DC 3
+VE   54  4 DC 3
+VLIM  7  8 DC 0
+VLP  91  0 DC 70
+VLN   0 92 DC 70
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=2.500E-12 BETA=284.3E-6 VTO=-1)
+.ENDS
+*
+*
+* Library of Burr-Brown Opamps
+* $Revision:   1.28  $
+* $Author:   RPEREZ  $
+* $Date:   25 Mar 1998 08:47:36  $
+*
+**************************************************************************
+*
+*                           WELCOME TO
+*
+*                      BURR-BROWN CORPORATION
+*                  SPICE BASED MACROMODEL LIBRARY
+*
+*                       6730 S. TUCSON BLVD.
+*                       TUCSON,  AZ  85706
+*                          800-548-6132
+*
+*
+*
+* INTRODUCTION
+* This library is a collection of SPICE macromodels of BURR-BROWN op amps,
+* difference amps, instrumentation amps, isolation amps, and analog 
+* function circuits. 
+*	
+* The Standard macromodels were derived using standard simulation
+* software. This software uses the common Boyle op amp model structure.
+*	
+* The second level of macromodel is an enhanced version of the standard
+* model, which is indicated by the suffix "E" in the model's name.
+* These models offer improved behaviour in terms of input bias current
+* and quiescent power. Also, voltage and current noise as well
+* as input capacitance is added.
+*
+* The Multiple Pole/Zero macromodels uses the same input stage as the 
+* standard or enhanced op amp macromodel, but has multiple poles and 
+* pole/zero pairs in the mid-section. These models have the designation
+* "M", and are primarily used for wide bandwidth op amps.
+*
+* In some instances, a fourth type of model is available, which are
+* designated by either a "X", "X1" or a "X2" suffix. The models of this
+* level are not a "macromodel", but rather a simplified circuit model
+* at the transistor level.
+*
+* This library is complemented by the application bulletin AB-020F, which
+* contains more information and details on the topologies used. Please write or call 
+* BURR-BROWN at the address and number given above in order to obtain one.
+*
+* APPLICATION INFORMATION
+* This library and the application bulletin are revised frequently.
+* To ensure that you have the most current revision, please contact your
+* nearest sales office or BURR-BROWN directly.
+*
+* Each model net-list starts with a header containing the part number and the 	
+* revision date. The structure of the net-list co
+* Also, the format of the file specification has been changed in order
+* to provide a better and faster overview. The 'date' following the file
+* name now reflects the actual date of creation of each model. The 'time'
+* is now used as an indicator for the revision status of each model. 
+* For example:
+* OPA131E.MOD   1-15-95  1:00:00 am   ---> REV.A
+* OPA121E.MOD   3-21-92  2:00:00 am   ---> REV.B    etc.
+*
+* Happy simulation!!
+*
+*  ------------------------------------------------------------------------ 
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+*  ------------------------------------------------------------------------ 
+* While reasonable care has been taken in their preparation, we cannot
+* be responsible for correct application on any and all computer
+* systems.
+*
+* Model users are hereby notified that these models are supplied
+* "as is", with no direct or implied responsibility on the part of
+* Burr-Brown for their operation within a customer circuit or system.
+* Further, Burr-Brown Corporation reserves the right to change these
+* models without prior notice.
+*
+* In all cases, the current data sheet information for a given real
+* device is your final design guideline, and is the only actual
+* performance guarantee.
+*$
+**************************************************************************
+* INA111 = A1_111 + A2_111 + A3_111 OP AMPS + PRECISION RESISTOR NETWORK
+* CREATED ON 12/1/92 AT 10:00 HB
+* REV.A
+* REV.B  18 JUNE 97 NPA: MOVED LEGAL DISCLAIMER TO BEGINNING OF FILE
+*
+* INA111 SUB-CIRCUIT
+* CONNECTIONS:             NON-INVERTING INPUT
+*                          |   INVERTING INPUT
+*                          |   |   POSITIVE POWER SUPPLY
+*                          |   |   |   NEGATIVE POWER SUPPLY
+*                          |   |   |   |   OUTPUT
+*                          |   |   |   |   |   REFERENCE
+*                          |   |   |   |   |   |   GAIN SENSE 1
+*                          |   |   |   |   |   |   |   GAIN SENSE 2
+*                          |   |   |   |   |   |   |   |
+.SUBCKT INA111/BB          1   2   3   4   5   8   9  10
+*
+* A1_111 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X1                     15  17   3   4  11   A1_111
+*
+* A2_111 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X2                     15  16   3   4  12   A2_111
+*
+* A3_111 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X3                     14  13   3   4   5   A3_111
+*
+R1    11  13   10.0000E3
+R3    12  14   10.0000E3
+R2    13   5    9.9993E3
+R4    14   8   10.0000E3
+C2    13   5    6.0000E-12
+C4    14   8    5.0000E-12
+R1FB   9  11   25.0000E3
+R2FB  10  12   25.0000E3
+CC1   17  11   5.0000E-12
+CC2   16  12   5.5000E-12
+RCE   17   9   400E6
+I1     3  16  DC  50.00E-6
+I2     3  17  DC  50.00E-6
+I3    10   4  DC  50.00E-6
+I4     9   4  DC  50.00E-6
+I5     3  21  DC 200.00E-6
+I6     3  22  DC 200.00E-6
+CG1    9   0  13.5000E-12
+CG2   10   0  12.0000E-12
+D1    17  15      DX
+D2    16  15      DX
+Q1    16  21  10  QX
+Q2    17  22   9  QX
+J1     4   1  21  JX
+J2     4   2  22  JX
+V1     3  15  DC  3.000
+*
+.MODEL DX D(IS=1.0E-24)
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+.MODEL JX PJF(IS=10.00E-12 BETA=500.0E-6 VTO=-1)
+.ENDS
+*
+* A1_111 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A1_111   1 2 3 4 5
+*
+C1   11 12 1.443E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E3 -3E3 3E3 3E3 -3E3
+GA    6  0 11 12 628.3E-6
+GCM   0  6 10 99 6.283E-6
+ISS   3 10 DC 250.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 1.592E3
+RD2   4 12 1.592E3
+RO1   8  5 60
+RO2   7 99 60
+RP    3  4 37.50E3
+RSS  10 99 800.0E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 60
+VLN   0 92 DC 60
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=789.5E-6 VTO=-1)
+.ENDS
+*
+* A2_111 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A2_111   1 2 3 4 5
+*
+C1   11 12 1.443E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E3 -3E3 3E3 3E3 -3E3
+GA    6  0 11 12 628.3E-6
+GCM   0  6 10 99 6.283E-6
+ISS   3 10 DC 250.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 1.592E3
+RD2   4 12 1.592E3
+RO1   8  5 60
+RO2   7 99 60
+RP    3  4 37.50E3
+RSS  10 99 800.0E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 60
+VLN   0 92 DC 60
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=789.5E-6 VTO=-1)
+.ENDS
+*
+* A3_111 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_111   1 2 3 4 5
+*
+C1   11 12 7.151E-12
+C2    6  7 12.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 27.96E6 -30E6 30E6 30E6 -30E6
+GA    6  0 11 12 377.0E-6
+GCM   0  6 10 99 1.889E-9
+ISS   3 10 DC 240.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 2.653E3
+RD2   4 12 2.653E3
+RO1   8  5 30
+RO2   7 99 30
+RP    3  4 37.50E3
+RSSS  10 99 833.3E3
+VB    9  0 DC 0
+VC    3 53 DC 2.300
+VE   54  4 DC 2.300
+VLIM  7  8 DC 0
+VLP  91  0 DC 25
+VLN   0 92 DC 25
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=296.0E-6 VTO=-1)
+.ENDS
+*$
+**************************************************************************
+* INA111E = A1_111E + A2_111E + A3_111E OP AMPS + PRECISION RESISTOR NETWORK
+* "E" IS ENHANCED MODEL
+* CREATED ON 12/1/92 AT 10:00 HB
+* REV.A
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |                                                             |
+* |  Neither this library nor any part may be copied without    |
+* |  the express written consent of Burr-Brown Corporation.     |
+* |                                                             |
+* |-------------------------------------------------------------|
+*
+* INA111E SUB-CIRCUIT
+* CONNECTIONS:             NON-INVERTING INPUT
+*                          |   INVERTING INPUT
+*                          |   |   POSITIVE POWER SUPPLY
+*                          |   |   |   NEGATIVE POWER SUPPLY
+*                          |   |   |   |   OUTPUT
+*                          |   |   |   |   |   REFERENCE
+*                          |   |   |   |   |   |   GAIN SENSE 1
+*                          |   |   |   |   |   |   |   GAIN SENSE 2
+*                          |   |   |   |   |   |   |   |
+.SUBCKT INA111E/BB         1   2   3   4   5   8   9  10
+*
+* A1_111E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X1                     15  17   3   4  11   A1_111E
+*
+* A2_111E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X2                     15  16   3   4  12   A2_111E
+*
+* A3_111E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X3                     14  13   3   4   5   A3_111E
+*
+R1    11  13   10.0000E3
+R3    12  14   10.0000E3
+R2    13   5    9.9993E3
+R4    14   8   10.0000E3
+C2    13   5    6.0000E-12
+C4    14   8    5.0000E-12
+R1FB   9  11   25.0000E3
+R2FB  10  12   25.0000E3
+CC1   17  11    5.0000E-12
+CC2   16  12    5.5000E-12
+RCE   17   9   400E6
+I1     3  16  DC  50.00E-6
+I2     3  17  DC  50.00E-6
+I3    10   4  DC  50.00E-6
+I4     9   4  DC  50.00E-6
+I5     3  21  DC 200.00E-6
+I6     3  22  DC 200.00E-6
+CG1    9   0   13.5000E-12
+CG2   10   0   12.0000E-12
+D1    17  15      DX
+D2    16  15      DX
+Q1    16  21  10  QX
+Q2    17  22   9  QX
+J1     4   1  21  JX
+J2     4   2  22  JX
+V1     3  15  DC  3.000
+C1CM   1   0    1.0E-12
+C2CM   2   0    1.0E-12
+CDIF   1   2    6.0E-12
+*
+.MODEL DX D(IS=1.0E-24)
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+.MODEL JX PJF(IS=10.00E-12 BETA=500.0E-6 VTO=-1)
+.ENDS
+*
+* A1_111E OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "E" IS ENHANCED MODEL
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A1_111E  1 2 3 4 5
+*
+C1   11 12 1.443E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E3 -3E3 3E3 3E3 -3E3
+GA    6  0 11 12 628.3E-6
+GCM   0  6 10 99 6.283E-6
+ISS   3 10 DC 250.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 1.592E3
+RD2   4 12 1.592E3
+RO1   8  5 60
+RO2   7 99 60
+*  RP    3  4 37.50E3
+RSS  10 99 800.0E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 60
+VLN   0 92 DC 60
+****************************
+* A1_111 "E" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  4.16E-4  1
+FQ2   0  4 POLY(1) VQ2  4.16E-4 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.25E5
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 1.0E-12
+C2CM  2  99 1.0E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=789.5E-6 VTO=-1)
+.ENDS
+*
+* A2_111E OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "E" IS ENHANCED MODEL
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A2_111E  1 2 3 4 5
+*
+C1   11 12 1.443E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E3 -3E3 3E3 3E3 -3E3
+GA    6  0 11 12 628.3E-6
+GCM   0  6 10 99 6.283E-6
+ISS   3 10 DC 250.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 1.592E3
+RD2   4 12 1.592E3
+RO1   8  5 60
+RO2   7 99 60
+*  RP    3  4 37.50E3
+RSS  10 99 800.0E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 60
+VLN   0 92 DC 60
+****************************
+* A2_111 "E" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  4.16E-4  1
+FQ2   0  4 POLY(1) VQ2  4.16E-4 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.25E5
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 1.0E-12
+C2CM  2  99 1.0E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=789.5E-6 VTO=-1)
+.ENDS
+*
+* A3_111E OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "E" IS ENHANCED MODEL
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_111E  1 2 3 4 5
+*
+C1   11 12 7.151E-12
+C2    6  7 12.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 27.96E6 -30E6 30E6 30E6 -30E6
+GA    6  0 11 12 377.0E-6
+GCM   0  6 10 99 1.889E-9
+ISS   3 10 DC 240.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 2.653E3
+RD2   4 12 2.653E3
+RO1   8  5 30
+RO2   7 99 30
+*  RP    3  4 37.50E3
+RSSS  10 99 833.3E3
+VB    9  0 DC 0
+VC    3 53 DC 2.300
+VE   54  4 DC 2.300
+VLIM  7  8 DC 0
+VLP  91  0 DC 25
+VLN   0 92 DC 25
+****************************
+* A3_111 "E" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  4.264E-4  1
+FQ2   0  4 POLY(1) VQ2  4.264E-4 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.25E5
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 1.0E-12
+C2CM  2  99 1.0E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=296.0E-6 VTO=-1)
+.ENDS
+*$
+**************************************************************************
+* INA111Z = A1_111Z + A2_111Z + A3_111Z OP AMPS + PRECISION RESISTOR NETWORK
+* "Z" IS ENHANCED MODEL
+* CREATED ON 12/1/92 AT 10:00 HB
+* REV.A
+* REV.B  13 June 97 NPA: Changed "E" to "Z" to correct run error
+* REV.C  18 JUNE 97 NPA: MOVED LEGAL DISCLAIMER TO BEGINNING OF FILE
+*
+* INA111Z SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |   REFERENCE
+*                       |   |   |   |   |   |   GAIN SENSE 1
+*                       |   |   |   |   |   |   |   GAIN SENSE 2
+*                       |   |   |   |   |   |   |   |
+.SUBCKT INA111Z/BB      1   2   3   4   5   8   9  10
+*
+* A1_111Z SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X1                     15  17   3   4  11   A1_111Z
+*
+* A2_111Z SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X2                     15  16   3   4  12   A2_111Z
+*
+* A3_111Z SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+X3                     14  13   3   4   5   A3_111Z
+*
+R1    11  13   10.0000E3
+R3    12  14   10.0000E3
+R2    13   5    9.9993E3
+R4    14   8   10.0000E3
+C2    13   5    6.0000E-12
+C4    14   8    5.0000E-12
+R1FB   9  11   25.0000E3
+R2FB  10  12   25.0000E3
+CC1   17  11    5.0000E-12
+CC2   16  12    5.5000E-12
+RCE   17   9    400E6
+I1     3  16  DC  50.00E-6
+I2     3  17  DC  50.00E-6
+I3    10   4  DC  50.00E-6
+I4     9   4  DC  50.00E-6
+I5     3  21  DC 200.00E-6
+I6     3  22  DC 200.00E-6
+CG1    9   0   13.5000E-12
+CG2   10   0   12.0000E-12
+D1    17  15       DX
+D2    16  15       DX
+Q1    16  21   10  QX
+Q2    17  22    9  QX
+J1     4   1   21  JX
+J2     4   2   22  JX
+V1     3  15  DC  3.000
+C1CM   1   0    1.0E-12
+C2CM   2   0    1.0E-12
+CDIF   1   2    6.0E-12
+*
+.MODEL DX D(IS=1.0E-24)
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+.MODEL JX PJF(IS=10.00E-12 BETA=500.0E-6 VTO=-1)
+.ENDS
+*
+* A1_111Z OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "Z" IS ENHANCED MODEL
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A1_111Z  1 2 3 4 5
+*
+C1   11 12 1.443E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E3 -3E3 3E3 3E3 -3E3
+GA    6  0 11 12 628.3E-6
+GCM   0  6 10 99 6.283E-6
+ISS   3 10 DC 250.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 1.592E3
+RD2   4 12 1.592E3
+RO1   8  5 60
+RO2   7 99 60
+*  RP    3  4 37.50E3
+RSS  10 99 800.0E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 60
+VLN   0 92 DC 60
+****************************
+* A1_111 "Z" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  4.16E-4  1
+FQ2   0  4 POLY(1) VQ2  4.16E-4 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.25E5
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 1.0E-12
+C2CM  2  99 1.0E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=789.5E-6 VTO=-1)
+.ENDS
+*
+* A2_111Z OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "Z" IS ENHANCED MODEL
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A2_111Z  1 2 3 4 5
+*
+C1   11 12 1.443E-12
+C2    6  7 5.000E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 2.653E3 -3E3 3E3 3E3 -3E3
+GA    6  0 11 12 628.3E-6
+GCM   0  6 10 99 6.283E-6
+ISS   3 10 DC 250.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 1.592E3
+RD2   4 12 1.592E3
+RO1   8  5 60
+RO2   7 99 60
+*  RP    3  4 37.50E3
+RSS  10 99 800.0E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 60
+VLN   0 92 DC 60
+****************************
+* A2_111 "Z" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  4.16E-4  1
+FQ2   0  4 POLY(1) VQ2  4.16E-4 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.25E5
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 1.0E-12
+C2CM  2  99 1.0E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=789.5E-6 VTO=-1)
+.ENDS
+*
+* A3_111Z OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+* "Z" IS ENHANCED MODEL
+* CREATED USING PARTS RELEASE 4.03 ON 11/1/92 AT 10:00
+*
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT A3_111Z  1 2 3 4 5
+*
+C1   11 12  7.151E-12
+C2    6  7 12.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 27.96E6 -30E6 30E6 30E6 -30E6
+GA    6  0 11 12 377.0E-6
+GCM   0  6 10 99 1.889E-9
+ISS   3 10 DC 240.0E-6
+HLIM 90  0 VLIM 1E3
+J1   11  2 10 JX
+J2   12  1 10 JX
+R2    6  9 100.0E3
+RD1   4 11 2.653E3
+RD2   4 12 2.653E3
+RO1   8  5 30
+RO2   7 99 30
+*  RP    3  4 37.50E3
+RSSS  10 99 833.3E3
+VB    9  0 DC 0
+VC    3 53 DC 2.300
+VE   54  4 DC 2.300
+VLIM  7  8 DC 0
+VLP  91  0 DC 25
+VLN   0 92 DC 25
+****************************
+* A3_111 "Z" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  4.264E-4  1
+FQ2   0  4 POLY(1) VQ2  4.264E-4 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.25E5
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  1.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 1.0E-12
+C2CM  2  99 1.0E-12
+*
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=5.000E-12 BETA=296.0E-6 VTO=-1)
+.ENDS
+*
+* INA117 = A3_117 OPERATIONAL AMPLIFIER + PRECISION RESISTOR NETWORK
+
+* CREATED ON 08/21/90 AT 12:54
+
+* REV.A
+
+*  ------------------------------------------------------------------------ 
+
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+
+*  ------------------------------------------------------------------------ 
+
+*
+
+*
+
+***** INA117 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |  INVERTING INPUT
+
+*                       |  |  POSITIVE POWER SUPPLY
+
+*                       |  |  |  NEGATIVE POWER SUPPLY
+
+*                       |  |  |  |  OUTPUT
+
+*                       |  |  |  |  |  REFERENCE A
+
+*                       |  |  |  |  |  |  REFERENCE B
+
+*                       |  |  |  |  |  |  |
+
+.SUBCKT INA117          1  2  3  4  5  8  9
+
+*
+
+***** A3_117 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |  INVERTING INPUT
+
+*                       |  | POSITIVE POWER SUPPLY
+
+*                       |  |  |  NEGATIVE POWER SUPPLY
+
+*                       |  |  |  |  OUTPUT
+
+*                       |  |  |  |  |
+
+X1                     14 13  3  4  5  A3_117
+
+*
+
+R1    2   13   380.0000K
+
+R2   13    5   380.0000K
+
+C2   13    5     0.500PF
+
+R3    1   14   380.0000K
+
+R4   14    8    19.9990K
+
+R5   13    9    21.1111K
+
+*
+
+C1CM 14    0     3PF
+
+C2CM 13    0     3PF
+
+CDIF 14   13     7PF
+
+*
+
+.ENDS
+
+* A3_117 OPERATIONAL AMPLIFIER "MACROMODEL" SUBCIRCUIT
+
+* CREATED USING PARTS RELEASE 4.03 ON 10/19/90 AT 12:37
+
+*
+
+* CONNECTIONS:   NON-INVERTING INPUT
+
+*                | INVERTING INPUT
+
+*                | | POSITIVE POWER SUPPLY
+
+*                | | | NEGATIVE POWER SUPPLY
+
+*                | | | | OUTPUT
+
+*                | | | | |
+
+.SUBCKT A3_117   1 2 3 4 5
+
+*
+
+C1   11 12 9.283E-12
+
+C2    6  7 13.00E-12
+
+DC    5 53 DX
+
+DE   54  5 DX
+
+DLP  90 91 DX
+
+DLN  92 90 DX
+
+DP    4  3 DX
+
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 4.081E6 -4E6 4E6 4E6 -4E6
+
+GA    6  0 11 12 408.4E-6
+
+GCM   0  6 10 99 408.4E-12
+
+IEE  10  4 DC 39.14E-6
+
+HLIM 90  0 VLIM 1K
+
+Q1   11  2 13 QX
+
+Q2   12  1 14 QX
+
+R2    6  9 100.0E3
+
+RC1   3 11 2.449E3
+
+RC2   3 12 2.449E3
+
+RE1  13 10 1.118E3
+
+RE2  14 10 1.118E3
+
+REE  10 99 5.110E6
+
+RO1   8  5 60
+
+RO2   7 99 60
+
+RP    3  4 20.53E3
+
+VB    9  0 DC 0
+
+VC    3 53 DC 4.500
+
+VE   54  4 DC 2
+
+VLIM  7  8 DC 0
+
+VLP  91  0 DC 20
+
+VLN   0 92 DC 20
+
+.MODEL DX D(IS=800.0E-18)
+
+.MODEL QX NPN(IS=800.0E-18 BF=278.6)
+
+.ENDS
+*
+*
+*
+* INA118 = A1_118 + A2_118 + A3_118 OP AMPS + PRECISION RESISTOR NETWORK
+
+* CREATED ON 05/20/94 AT 15:01
+
+* REV.A
+
+*  ------------------------------------------------------------------------ 
+
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+
+*  ------------------------------------------------------------------------ 
+
+*
+
+*
+
+***** INA118 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |   INVERTING INPUT
+
+*                       |   |   POSITIVE POWER SUPPLY
+
+*                       |   |   |   NEGATIVE POWER SUPPLY
+
+*                       |   |   |   |   OUTPUT
+
+*                       |   |   |   |   |   REFERENCE
+
+*                       |   |   |   |   |   |   GAIN SENSE 1
+
+*                       |   |   |   |   |   |   |   GAIN SENSE 2
+
+*                       |   |   |   |   |   |   |   |
+
+.SUBCKT INA118          1   2   3   4   5   8   9  10
+
+*
+
+***** A1_118 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |   INVERTING INPUT
+
+*                       |   |   POSITIVE POWER SUPPLY
+
+*                       |   |   |   NEGATIVE POWER SUPPLY
+
+*                       |   |   |   |   OUTPUT
+
+*                       |   |   |   |   |
+
+X1                     15  17   3   4  11   A1_118
+
+*
+
+***** A2_118 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |   INVERTING INPUT
+
+*                       |   |   POSITIVE POWER SUPPLY
+
+*                       |   |   |   NEGATIVE POWER SUPPLY
+
+*                       |   |   |   |   OUTPUT
+
+*                       |   |   |   |   |
+
+X2                     15  16   3   4  12   A2_118
+
+*
+
+***** A3_118 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |   INVERTING INPUT
+
+*                       |   |   POSITIVE POWER SUPPLY
+
+*                       |   |   |   NEGATIVE POWER SUPPLY
+
+*                       |   |   |   |   OUTPUT
+
+*                       |   |   |   |   |
+
+X3                     14  13   3   4   5   A3_118
+
+*
+
+R1    11  13   60.0000K
+
+R2    13   5   59.994K
+
+R3    12  14   60.0000K
+
+R4    14   8   60.0000K
+
+CIN   13  14    4.0000PF
+
+*
+
+R1FB   9  11   25.0000K
+
+CC1   17  11  13.0000PF
+
+R2FB  10  12   25.0000K
+
+CC2   16  12  13.0000PF
+
+CG1    9   0  10.0000PF
+
+CG2   10   0   9.0000PF
+
+*
+
+RCE   17   9   1.7G
+
+*
+
+I1     3  16  DC  15.00E-6
+
+I2     3  17  DC  15.00E-6
+
+IB1CAN 3   1  DC  29.00E-9
+
+IB2CAN 3   2  DC  29.00E-9
+
+Ibal   0   4  DC  31.30E-6
+
+*
+
+D1    15  17      DX
+
+D2    15  16      DX
+
+*
+
+Q1    16   1  10  QX
+
+Q2    17   2   9  QX
+
+*
+
+V1     3  15  DC  1.100
+
+*
+
+
+
+.MODEL DX D(IS=1.0E-24)
+
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+
+.ENDS
+
+
+
+* A1_118 operational amplifier "macromodel" subcircuit
+
+* created using Parts release 6.0 on 05/20/94 at 09:20
+
+* Parts is a MicroSim product.
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.subckt A1_118   1 2 3 4 5
+
+*
+
+  c1   11 12 1.340E-12
+
+  c2    6  7 10.00E-12
+
+  dc    5 53 dx
+
+  de   54  5 dx
+
+  dlp  90 91 dx
+
+  dln  92 90 dx
+
+  dp    4  3 dx
+
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+
+  fb    7 99 poly(5) vb vc ve vlp vln 0 127.3E6 -130E6 130E6 130E6 -130E6
+
+  ga    6  0 11 12 110.0E-6
+
+  gcm   0  6 10 99 11.00E-12
+
+  iss   3 10 dc 10.00E-6
+
+  hlim 90  0 vlim 1K
+
+  j1   11  2 10 jx
+
+  j2   12  1 10 jx
+
+  r2    6  9 100.0E3
+
+  rd1   4 11 9.095E3
+
+  rd2   4 12 9.095E3
+
+  ro1   8  5 50
+
+  ro2   7 99 25
+
+  rp    3  4 900.0E12
+
+  rss  10 99 20.00E6
+
+  vb    9  0 dc 0
+
+  vc    3 53 dc .6
+
+  ve   54  4 dc .6
+
+  vlim  7  8 dc 0
+
+  vlp  91  0 dc 20
+
+  vln   0 92 dc 20
+
+.model dx D(Is=800.0E-18)
+
+.model jx PJF(Is=15.00E-12 Beta=1.209E-3 Vto=-1)
+
+.ends
+
+
+
+
+
+* A2_118 operational amplifier "macromodel" subcircuit
+
+* created using Parts release 6.0 on 05/20/94 at 09:20
+
+* Parts is a MicroSim product.
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.subckt A2_118   1 2 3 4 5
+
+*
+
+  c1   11 12 1.340E-12
+
+  c2    6  7 10.00E-12
+
+  dc    5 53 dx
+
+  de   54  5 dx
+
+  dlp  90 91 dx
+
+  dln  92 90 dx
+
+  dp    4  3 dx
+
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+
+  fb    7 99 poly(5) vb vc ve vlp vln 0 127.3E6 -130E6 130E6 130E6 -130E6
+
+  ga    6  0 11 12 110.0E-6
+
+  gcm   0  6 10 99 11.00E-12
+
+  iss   3 10 dc 10.00E-6
+
+  hlim 90  0 vlim 1K
+
+  j1   11  2 10 jx
+
+  j2   12  1 10 jx
+
+  r2    6  9 100.0E3
+
+  rd1   4 11 9.095E3
+
+  rd2   4 12 9.095E3
+
+  ro1   8  5 50
+
+  ro2   7 99 25
+
+  rp    3  4 900.0E12
+
+  rss  10 99 20.00E6
+
+  vb    9  0 dc 0
+
+  vc    3 53 dc .6
+
+  ve   54  4 dc .6
+
+  vlim  7  8 dc 0
+
+  vlp  91  0 dc 20
+
+  vln   0 92 dc 20
+
+.model dx D(Is=800.0E-18)
+
+.model jx PJF(Is=15.00E-12 Beta=1.209E-3 Vto=-1)
+
+.ends
+
+
+
+
+
+* A3_118 operational amplifier "macromodel" subcircuit
+
+* created using Parts release 6.0 on 05/20/94 at 09:22
+
+* Parts is a MicroSim product.
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.subckt A3_118   1 2 3 4 5
+
+*
+
+  c1   11 12 3.501E-12
+
+  c2    6  7 10.00E-12
+
+  dc    5 53 dx
+
+  de   54  5 dx
+
+  dlp  90 91 dx
+
+  dln  92 90 dx
+
+  dp    4  3 dx
+
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+
+  fb    7 99 poly(5) vb vc ve vlp vln 0 212.2E6 -210E6 210E6 210E6 -210E6
+
+  ga    6  0 11 12 75.40E-6
+
+  gcm   0  6 10 99 754.0E-12
+
+  iee  10  4 dc 9.002E-6
+
+  hlim 90  0 vlim 1K
+
+  q1   11  2 13 qx
+
+  q2   12  1 14 qx
+
+  r2    6  9 100.0E3
+
+  rc1   3 11 13.26E3
+
+  rc2   3 12 13.26E3
+
+  re1  13 10 7.514E3
+
+  re2  14 10 7.514E3
+
+  ree  10 99 22.22E6
+
+  ro1   8  5 75
+
+  ro2   7 99 75
+
+  rp    3  4 103.09E3
+
+  vb    9  0 dc 0
+
+  vc    3 53 dc 1.400
+
+  ve   54  4 dc .8
+
+  vlim  7  8 dc 0
+
+  vlp  91  0 dc 4.5
+
+  vln   0 92 dc 11.5
+
+.model dx D(Is=800.0E-18)
+
+.model qx NPN(Is=800.0E-18 Bf=4.500E3)
+
+.ends
+*
+* INA121E = A1_121E + A2_121E + A3_121E OP AMPS + PRECISION RESISTOR NETWORK
+* V.1 CREADTED BY JW 6/4/98
+*
+* |------------------------------------------------------------------------|
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+* |------------------------------------------------------------------------|
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |                                                             |
+* |  Neither this library nor any part may be copied without    |
+* |  the express written consent of Burr-Brown Corporation.     |
+* |                                                             |
+* |-------------------------------------------------------------|
+*
+***** INA121E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |   REFERENCE
+*                       |   |   |   |   |   |   GAIN SENSE 1
+*                       |   |   |   |   |   |   |   GAIN SENSE 2
+*                       |   |   |   |   |   |   |   |
+ .SUBCKT INA121E        1   2   3   4   5   8   9  10
+*
+***** A1_121E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+ X1                    15  17   3   4  11   A1_121E
+*
+***** A2_121E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+ X2                    15  16   3   4  12   A2_121E
+*
+***** A3_121E SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+ X3                    14  13   3   4   5   A3_121E
+*
+CIN   13  14   4PF		
+C4    14   8   .50000E-12	
+CC1   17  11   11.00E-12
+CC2   16  12   11.00E-12
+CG1    9   0   11.500E-12	
+CG2   10   0   10.000E-12			
+*
+R1    11  13   40.0000E3
+R2    13   5   39.996E3
+R3    12  14   40.0000E3
+R4    14   8   40.0000E3
+*
+R1FB   9  11   25.0000E3
+R2FB  10  12   25.0000E3
+*
+RCE   17   9   500E6		
+*
+I1     3  16  DC  10.00E-6
+I2     3  17  DC  10.00E-6
+I3    10   4  DC  10.00E-6
+I4     9   4  DC  10.00E-6
+I5     3  21  DC  30.00E-6
+I6     3  22  DC  30.00E-6
+*
+Q1    16  21  10  QX
+Q2    17  22   9  QX
+*
+D1    17  15      DX
+D2    16  15      DX
+D12   15  17	  DX
+D22   15  16	  DX
+*
+J1     4  31  21  JX
+J2     4  33  22  JX
+G11  31 4 POLY(2) (21,1) (4,1) 28E-12 3E-12 4.2E-12
+G21  33 4 POLY(2) (22,2) (4,2) 28E-12 3E-12 4.2E-12
+V1     3  15  DC  1.000
+*
+******************************
+*			     *
+* Additions for the INA121E  *
+* (Enhanced) macromodel	     *
+*			     *
+******************************
+*************************
+*			*
+* Anti-inversion clamps *
+*			*
+*************************
+* POS INPUT PROTECTION
+RINP 1    30   10
+J1P  31   32   30  jy 15x
+J2P  32   32   30  jz 1x
+D1P  31   3    dx
+D2P  4    31   dx
+* NEG INPUT PROTECTION
+RINN 2    35   10
+J1N  33   34   35  jy 15x
+J2N  34   34   35  jz 1x
+D1N  33   3    dx
+D2N  4    33   dx
+.MODEL DX D(IS=1.0E-24)
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+.MODEL JX PJF(IS=1E-12 BETA=750.0E-6 VTO=-1)
+.MODEL JY PJF(IS=800.0E-18 VTO=-1.2 BETA=10U LAMBDA=13M)
+.MODEL JZ PJF(IS=800.0E-18 VTO=-1.2 BETA=1U LAMBDA=13M)
+.ENDS
+
+* A1_121E operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 05/28/98 at 13:16
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A1_121E  1 2 3 4 5
+*
+  c1   11 12 2.8868E-12
+  c2    6  7 10.000E-12
+  css  10 99 1.0000E-30
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.684E6 -1E3 1E3 18E6 -18E6
+  ga    6  0 11 12 1.2566E-3
+  gcm   0  6 10 99 12.566E-9
+  iss   3 10 dc 12.000E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx1
+  j2   12  1 10 jx2
+  r2    6  9 100.00E3
+  rd1   4 11 795.77
+  rd2   4 12 795.77
+  ro1   8  5 1
+  ro2   7 99 9
+  rp    3  4 3E6
+  rss  10 99 16.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.6621
+  ve   54  4 dc 1.0621
+  vlim  7  8 dc 0
+  vlp  91  0 dc 5
+  vln   0 92 dc 5
+******************************
+*			     *
+* Additions for the INA121E  *
+* (Enhanced) macromodel	     *
+* A1_121E sub-circuit	     *
+*			     *
+******************************
+* OUTPUT SUPPLY MIRROR
+  FQ3   0 20 POLY(1) VLIM 0 1
+  DQ1  20 21 DX
+  DQ2  22 20 DX
+  VQ1  21  0 0
+  VQ2  22  0 0 
+  FQ1   3  0 POLY(1) VQ1 70u 1
+  FQ2   0  4 POLY(1) VQ2 70u -1
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model jx1 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.model jx2 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.ends
+
+* A2_121E operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 05/28/98 at 13:16
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A2_121E  1 2 3 4 5
+*
+  c1   11 12 2.8868E-12
+  c2    6  7 10.000E-12
+  css  10 99 1.0000E-30
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.684E6 -1E3 1E3 18E6 -18E6
+  ga    6  0 11 12 1.2566E-3
+  gcm   0  6 10 99 12.566E-9
+  iss   3 10 dc 12.000E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx1
+  j2   12  1 10 jx2
+  r2    6  9 100.00E3
+  rd1   4 11 795.77
+  rd2   4 12 795.77
+  ro1   8  5 1
+  ro2   7 99 9
+  rp    3  4 3E6
+  rss  10 99 16.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.6621
+  ve   54  4 dc 1.0621
+  vlim  7  8 dc 0
+  vlp  91  0 dc 5
+  vln   0 92 dc 5
+******************************
+*			     *
+* Additions for the INA121E  *
+* (Enhanced) macromodel	     *
+* A2_121E sub-circuit	     *
+*			     *
+******************************
+* OUTPUT SUPPLY MIRROR
+  FQ3   0 20 POLY(1) VLIM 0 1
+  DQ1  20 21 DX
+  DQ2  22 20 DX
+  VQ1  21  0 0
+  VQ2  22  0 0 
+  FQ1   3  0 POLY(1) VQ1 70u 1
+  FQ2   0  4 POLY(1) VQ2 70u -1
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model jx1 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.model jx2 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.ends
+
+* A3_121E operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 05/28/98 at 13:18
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A3_121E  1 2 3 4 5
+*
+  c1   11 12 1.6246E-12
+  c2    6  7 10.000E-12
+  cee  10 99 714.29E-15
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 1.3263E9 -1E3 1E3 1E9 -1E9
+  ga    6  0 11 12 50.265E-6
+  gcm   0  6 10 99 502.65E-12
+  iee   3 10 dc 7.5400E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx1
+  q2   12  1 14 qx2
+  r2    6  9 100.00E3
+  rc1   4 11 19.894E3
+  rc2   4 12 19.894E3
+  re1  13 10 12.928E3
+  re2  14 10 12.928E3
+  ree  10 99 26.525E6
+  ro1   8  5 1
+  ro2   7 99 9
+  rp    3  4 3E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.6905
+  ve   54  4 dc 1.0905
+  vlim  7  8 dc 0
+  vlp  91  0 dc 15
+  vln   0 92 dc 15
+******************************
+*			     *
+* Additions for the INA121E  *
+* (Enhanced) macromodel	     *
+* A3_121E sub-circuit	     *
+*			     *
+******************************
+*OUTPUT SUPPLY MIRROR
+  FQ3   0 20 POLY(1) VLIM 0 1
+  DQ1  20 21 DX
+  DQ2  22 20 DX 
+  VQ1  21  0 0
+  VQ2  22  0 0 
+  FQ1   3  0 POLY(1) VQ1 150U 1
+  FQ2   0  4 POLY(1) VQ2 150U -1
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model qx1 PNP(Is=800.00E-18 Bf=187.50)
+.model qx2 PNP(Is=800.00E-18 Bf=187.50)
+.ends
+*
+* INA121 = A1_121 + A2_121 + A3_121 OP AMPS + PRECISION RESISTOR NETWORK
+* V1.0 CREATED BY JW 6/4/98
+*
+* |------------------------------------------------------------------------|
+* |  NOTICE: THE INFORMATION PROVIDED HEREIN IS BELIEVED TO BE RELIABLE;   |
+* |  HOWEVER; BURR-BROWN ASSUMES NO RESPONSIBILITY FOR INACCURACIES OR     |
+* |  OMISSIONS.  BURR-BROWN ASSUMES NO RESPONSIBILITY FOR THE USE OF THIS  |
+* |  INFORMATION, AND ALL USE OF SUCH INFORMATION SHALL BE ENTIRELY AT     |
+* |  THE USER'S OWN RISK.  NO PATENT RIGHTS OR LICENSES TO ANY OF THE      |
+* |  CIRCUITS DESCRIBED HEREIN ARE IMPLIED OR GRANTED TO ANY THIRD PARTY.  |
+* |  BURR-BROWN DOES NOT AUTHORIZE OR WARRANT ANY BURR-BROWN PRODUCT FOR   |
+* |  USE IN LIFE-SUPPORT DEVICES AND/OR SYSTEMS.                           |
+* |------------------------------------------------------------------------|
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |                                                             |
+* |  Neither this library nor any part may be copied without    |
+* |  the express written consent of Burr-Brown Corporation.     |
+* |                                                             |
+* |-------------------------------------------------------------|
+*
+***** INA121 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |   REFERENCE
+*                       |   |   |   |   |   |   GAIN SENSE 1
+*                       |   |   |   |   |   |   |   GAIN SENSE 2
+*                       |   |   |   |   |   |   |   |
+ .SUBCKT INA121         1   2   3   4   5   8   9  10
+*
+***** A1_121 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+ X1                    15  17   3   4  11   A1_121
+*
+***** A2_121 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+ X2                    15  16   3   4  12   A2_121
+*
+***** A3_121 SUB-CIRCUIT
+* CONNECTIONS:          NON-INVERTING INPUT
+*                       |   INVERTING INPUT
+*                       |   |   POSITIVE POWER SUPPLY
+*                       |   |   |   NEGATIVE POWER SUPPLY
+*                       |   |   |   |   OUTPUT
+*                       |   |   |   |   |
+ X3                    14  13   3   4   5   A3_121
+*
+CIN   13  14   4PF		
+C4    14   8   .50000E-12
+CC1   17  11   11.00E-12
+CC2   16  12   11.00E-12
+CG1    9   0   11.5000E-12	
+CG2   10   0   10.000E-12
+*
+R1    11  13   40.0000E3
+R2    13   5   39.996E3
+R3    12  14   40.0000E3
+R4    14   8   40.0000E3		
+*
+R1FB   9  11   25.0000E3
+R2FB  10  12   25.0000E3
+*
+RCE   17   9   500E6		
+*
+I1     3  16  DC  10.00E-6
+I2     3  17  DC  10.00E-6
+I3    10   4  DC  10.00E-6
+I4     9   4  DC  10.00E-6
+I5     3  21  DC  30.00E-6
+I6     3  22  DC  30.00E-6	
+*
+Q1    16  21  10  QX
+Q2    17  22   9  QX
+*
+J1     4   1  21  JX
+J2     4   2  22  JX
+G11    1   4  POLY(2) (21,1) (4,1) 0 3E-12 1.75E-12
+G12    2   4  POLY(2) (22,2) (4,2) 0 3E-12 1.75E-12
+*
+D1    17  15      DX
+D2    16  15      DX
+D12   15  17	  DX
+D22   15  16	  DX
+V1     3  15  DC  1.000
+.MODEL DX D(IS=1.0E-24)
+.MODEL QX NPN(IS=800.0E-18 BF=500)
+.MODEL JX PJF(IS=1E-12 BETA=750.0E-6 VTO=-1)
+.ENDS
+* A1_121 operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 05/28/98 at 13:16
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A1_121   1 2 3 4 5
+*
+  c1   11 12 2.8868E-12
+  c2    6  7 10.000E-12
+  css  10 99 1.0000E-30
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.684E6 -1E3 1E3 18E6 -18E6
+  ga    6  0 11 12 1.2566E-3
+  gcm   0  6 10 99 12.566E-9
+  iss   3 10 dc 12.000E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx1
+  j2   12  1 10 jx2
+  r2    6  9 100.00E3
+  rd1   4 11 795.77
+  rd2   4 12 795.77
+  ro1   8  5 1
+  ro2   7 99 9
+  rp    3  4 3E6
+  ip    3  4 dc 80uA
+  rss  10 99 16.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.6621
+  ve   54  4 dc 1.0621
+  vlim  7  8 dc 0
+  vlp  91  0 dc 5
+  vln   0 92 dc 5
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model jx1 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.model jx2 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.ends
+* A2_121 operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 05/28/98 at 13:16
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A2_121   1 2 3 4 5
+*
+  c1   11 12 2.8868E-12
+  c2    6  7 10.000E-12
+  css  10 99 1.0000E-30
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 17.684E6 -1E3 1E3 18E6 -18E6
+  ga    6  0 11 12 1.2566E-3
+  gcm   0  6 10 99 12.566E-9
+  iss   3 10 dc 12.000E-6
+  hlim 90  0 vlim 1K
+  j1   11  2 10 jx1
+  j2   12  1 10 jx2
+  r2    6  9 100.00E3
+  rd1   4 11 795.77
+  rd2   4 12 795.77
+  ro1   8  5 1
+  ro2   7 99 9
+  rp    3  4 3E6
+  ip    3  4 dc 80u
+  rss  10 99 16.667E6
+  vb    9  0 dc 0
+  vc    3 53 dc 1.6621
+  ve   54  4 dc 1.0621
+  vlim  7  8 dc 0
+  vlp  91  0 dc 5
+  vln   0 92 dc 5
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model jx1 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.model jx2 PJF(Is=1.5000E-12 Beta=.13159 Vto=-1)
+.ends
+* A3_121 operational amplifier "macromodel" subcircuit
+* created using Parts release 8.0 on 05/28/98 at 13:18
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A3_121   1 2 3 4 5
+*
+  c1   11 12 1.6246E-12
+  c2    6  7 10.000E-12
+  cee  10 99 714.29E-15
+  dc    5 53 dy
+  de   54  5 dy
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 1.3263E9 -1E3 1E3 1E9 -1E9
+  ga    6  0 11 12 50.265E-6
+  gcm   0  6 10 99 502.65E-12
+  iee   3 10 dc 7.5400E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx1
+  q2   12  1 14 qx2
+  r2    6  9 100.00E3
+  rc1   4 11 19.894E3
+  rc2   4 12 19.894E3
+  re1  13 10 12.928E3
+  re2  14 10 12.928E3
+  ree  10 99 26.525E6
+  ro1   8  5 1
+  ro2   7 99 9
+  rp    3  4 3E6
+  ip    3  4 dc 150u
+  vb    9  0 dc 0
+  vc    3 53 dc 1.6905
+  ve   54  4 dc 1.0905
+  vlim  7  8 dc 0
+  vlp  91  0 dc 15
+  vln   0 92 dc 15
+.model dx D(Is=800.00E-18)
+.model dy D(Is=800.00E-18 Rs=1m Cjo=10p)
+.model qx1 PNP(Is=800.00E-18 Bf=187.50)
+.model qx2 PNP(Is=800.00E-18 Bf=187.50)
+.ends
+*
+*
+*
+* INA132E = A3_132E OPERATIONAL AMPLIFIER + PRECISION RESISTOR NETWORK
+
+* "E" IS ENHANCED MODEL
+
+* CREATED ON 11/11/96 AT 2:50
+
+* REV.A
+
+* REV.B  20 JUNE 97 NPA: MOVED LEGAL DISCLAIMER TO BEGINNING OF FILE
+
+*
+
+***** INA132E SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |  INVERTING INPUT
+
+*                       |  |  POSITIVE POWER SUPPLY
+
+*                       |  |  |  NEGATIVE POWER SUPPLY
+
+*                       |  |  |  |  OUTPUT
+
+*                       |  |  |  |  |  REFERENCE
+
+*                       |  |  |  |  |  |  SENSE
+
+*                       |  |  |  |  |  |  |
+
+.SUBCKT INA132E         1  2  3  4  5  8  9
+
+*
+
+***** A3_132E SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |  INVERTING INPUT
+
+*                       |  |  POSITIVE POWER SUPPLY
+
+*                       |  |  |  NEGATIVE POWER SUPPLY
+
+*                       |  |  |  |  OUTPUT
+
+*                       |  |  |  |  |
+
+X1                     14 13  3  4  5  A3_132E
+
+*
+
+  R1   2  13   40000
+
+  R2   13  9   39997
+
+  C2   13  9   .15p
+
+  R3   1  14   40000
+
+  R4   14  8   40000
+
+*
+
+*
+
+.ENDS
+
+*
+
+* INA132E operational amplifier "macromodel" subcircuit
+
+* created using Parts release 6.0 on 11/08/96 at 17:04
+
+* Parts is a MicroSim product.
+
+* Notes on construction of the INA132E Extended Macromodel
+
+*
+
+* Differential and Common-Mode capacitances for the op-amp have been
+
+*  eliminated because the inputs to the op-amp are not brought out of
+
+*  the package. This limits the capacitance at those nodes. Any effect
+
+*  on the AC performance of the part (particularly the AC CMRR) is
+
+*  minimal because of the INA132's bandwidth of 300kHz
+
+*
+
+* The noise of the simulated op-amp is larger than that in the actual
+
+*  circuit. This comes from the op-amp that was generated by the Micro-
+
+*  Sim Parts program. It should be noted that the dominant source of
+
+*  voltage noise is the four 40K resistors. VN1, VN2, DN1, DN2, and EN
+
+*  are included so that the 1/f noise is accurately simulated.
+
+*  The input bias current is also roughly half of the actual circuit.
+
+*  This discrepancy also comes from the Parts program.
+
+*
+
+* Simulations involving capacitive load drive are approximate. In the
+
+*  actual circuit, the output stage characteristics change more
+
+*  with the type of load. Swing to the rails are also modeled with 
+
+*  approximations for the same reasons.
+
+*
+
+* While using the simulation in single supply, the simulation may not
+
+*  give the correct result for the current coming out of the supplies
+
+*  due to the nature of the model. The model was designed for dual
+
+*  supply operation.
+
+*
+
+* For further information see the INA132 data sheet and the Burr-Brown
+
+*  Spice Based Macromodels Applications Bulletin.
+
+*
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.subckt A3_132E  1 2 3 4 5
+
+*
+
+  c1   11 12 7.279E-12
+
+  c2    6  7 40.00E-12
+
+  dc    5 53 dx
+
+  de   54  5 dx
+
+  dlp  90 91 dx
+
+  dln  92 90 dx
+
+  dp    4  3 dx
+
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+
+  fb    7 99 poly(5) vb vc ve vlp vln 0 1.326E9 -1E9 1E9 1E9 -1E9
+
+  ga    6  0 11 12 75.40E-6
+
+  gcm   0  6 10 99 377.0E-12
+
+  iee   3 10 dc 4.730E-6
+
+  hlim 90  0 vlim 1K
+
+  q1   11  2 13 qx
+
+  q2   12 64 14 qx          
+
+  r2    6  9 100.0E3
+
+  rc1   4 11 13.26E3
+
+  rc2   4 12 13.26E3
+
+  re1  13 10 .9k           
+
+  re2  14 10 .9k       
+
+  ree  10 99 42.28E6
+
+  ro1   8  5  200           
+
+  ro2   7 99  200           
+
+  vb    9  0 dc 0
+
+  vc    3 53 dc 1.350
+
+  ve   54  4 dc .80
+
+  vlim  7  8 dc 0
+
+  vlp  91  0 dc 12
+
+  vln   0 92 dc 12
+
+
+
+
+
+**********************************
+
+*                                *
+
+* Additions for the              *
+
+* INA132E (enhanced) macro model *
+
+*                                *
+
+**********************************
+
+
+
+  rp    3  4  5E6           ; replace rp w/ rp and ip to
+
+                            ; get correct Iq change w/supply
+
+  dq1  20  21  dx
+
+  dq2  22  20  dx
+
+  vq1  21  0   0
+
+  vq2  22  0   0
+
+  fq1  3   0   poly(1) vq1  149u  1      ; Models current from
+
+  fq2  0   4   poly(1) vq2  149u  -1     ; supplies with load
+
+  fq3  0   20  poly(1) vlim 0     1
+
+
+
+  vn1  61  0   .6                        ; Noise model (1/f portion)
+
+  vn2  0   62  .6
+
+  dn1  61  63  dy
+
+  dn2  63  62  dy
+
+  en   64  1   63  0  .6
+
+
+
+.model dx D(Is=800.0E-18)
+
+.model dy D(Is=1.9E-16 AF=1 KF=2.258E-17)
+
+.model qx PNP(Is=800.0E-18 Bf=300)
+
+.ENDS 
+
+*.ENDS INA132E
+
+*
+
+*
+*  ------------------------------------------------------------------------ 
+
+*
+
+*
+
+*
+
+* INA132 = A3_132 OPERATIONAL AMPLIFIER + PRECISION RESISTOR NETWORK
+
+* CREATED ON 11/12/96 AT 4:50
+
+* REV.A
+
+* REV.B  18 JUNE 97 NPA: MOVED LEGAL DISCLAIMER TO BEGINNING OF FILE
+
+*
+
+*  Notes on the INA132 macromodel:  The only modification
+
+*  made to the standard model was the inclusion of current source
+
+*  ip. The combination of ip and rp give a better simulation of
+
+*  quiescent current over different supply voltages.
+
+*
+
+*
+
+***** INA132 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |  INVERTING INPUT
+
+*                       |  |  POSITIVE POWER SUPPLY
+
+*                       |  |  |  NEGATIVE POWER SUPPLY
+
+*                       |  |  |  |  OUTPUT
+
+*                       |  |  |  |  |  REFERENCE
+
+*                       |  |  |  |  |  |  SENSE
+
+*                       |  |  |  |  |  |  |
+
+.SUBCKT INA132          1  2  3  4  5  8  9
+
+*
+
+***** A3_132 SUB-CIRCUIT
+
+* CONNECTIONS:          NON-INVERTING INPUT
+
+*                       |  INVERTING INPUT
+
+*                       |  |  POSITIVE POWER SUPPLY
+
+*                       |  |  |  NEGATIVE POWER SUPPLY
+
+*                       |  |  |  |  OUTPUT
+
+*                       |  |  |  |  |
+
+X1                     14 13  3  4  5  A3_132
+
+*
+
+  R1   2  13   40000
+
+  R2   13  9   39997
+
+  C2   13  9   .15p
+
+  R3   1  14   40000
+
+  R4   14  8   40000
+
+*
+
+*
+
+.ENDS
+
+*
+
+* INA132 operational amplifier "macromodel" subcircuit
+
+* created using Parts release 6.0 on 11/08/96 at 17:04
+
+* Parts is a MicroSim product.
+
+*
+
+* connections:   non-inverting input
+
+*                | inverting input
+
+*                | | positive power supply
+
+*                | | | negative power supply
+
+*                | | | | output
+
+*                | | | | |
+
+.subckt A3_132   1 2 3 4 5
+
+*
+
+  c1   11 12 7.279E-12
+
+  c2    6  7 40.00E-12
+
+  dc    5 53 dx
+
+  de   54  5 dx
+
+  dlp  90 91 dx
+
+  dln  92 90 dx
+
+  dp    4  3 dx
+
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+
+  fb    7 99 poly(5) vb vc ve vlp vln 0 1.326E9 -1E9 1E9 1E9 -1E9
+
+  ga    6  0 11 12 75.40E-6
+
+  gcm   0  6 10 99 377.0E-12
+
+  iee   3 10 dc 4.730E-6
+
+  hlim 90  0 vlim 1K
+
+  q1   11  2 13 qx
+
+  q2   12  1 14 qx          
+
+  r2    6  9 100.0E3
+
+  rc1   4 11 13.26E3
+
+  rc2   4 12 13.26E3
+
+  re1  13 10 .9k        
+
+  re2  14 10 .9k           
+
+  ree  10 99 42.28E6
+
+  ro1   8  5  200           
+
+  ro2   7 99  200           
+
+  vb    9  0 dc 0
+
+  vc    3 53 dc 1.350
+
+  ve   54  4 dc .80
+
+  vlim  7  8 dc 0
+
+  vlp  91  0 dc 12
+
+  vln   0 92 dc 12
+
+  rp    3  4  5E6       
+
+  ip    3  4  149u     
+
+
+
+.model dx D(Is=800.0E-18)
+
+.model qx PNP(Is=800.0E-18 Bf=300)
+
+*
+.ENDS
+*.ENDS INA132
+*
+* INA154E = A3_154E OPERATIONAL AMPLIFIER + PRECISION RESISTOR NETWORK
+* CREATED ON 7/25/97 AT 15:00
+* REV A
+* REV.B  20 JUNE 97 NPA: MOVED LEGAL DISCLAIMER TO BEGINNING OF FILE
+*
+*
+***** INA154E SUB-CIRCUIT
+* CONNECTIONS:		NON-INVERTING INPUT
+*			|  INVERTING INPUT
+*			|  |  POSITIVE POWER SUPPLY
+*			|  |  |  NEGATIVE POWER SUPPLY
+*			|  |  |  |  OUTPUT
+*			|  |  |  |  |  REFERENCE
+*			|  |  |  |  |  |  SENSE
+*			|  |  |  |  |  |  |
+.SUBCKT INA154E		1  2  3  4  5  8  9
+*
+X1       14 13 3 4 5  A3_154E
+*
+R1       2 13   25K
+R2       13 9   24.9985K
+R3       1 14   25K
+R4       14 8   25K
+*
+CDIF     14 13  1.8PF
+C1CM     4 14   0.05PF
+*
+.ENDS
+*
+* A3_154E operational amplifier "macromodel" subcircuit
+* created using Parts release 6.3a on 07/24/97 at 11:39
+* Parts is a MicroSim product.
+*
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt A3_154E  1 2 3 4 5
+*
+  c1   11 12 7.151E-12
+  c2    6  7 12.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 122.8E6 -120E6 120E6 120E6 -120E6
+  ga    6  0 11 12 271.4E-6
+  gcm   0  6 10 99 271.4E-12
+  iee  10  4 dc 168.5E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   3 11 3.684E3
+  rc2   3 12 3.684E3
+  re1  13 10 3.366E3
+  re2  14 10 3.366E3
+  ree  10 99 1.187E6
+  ro1   8  5 15
+  ro2   7 99 15
+  vb    9  0 dc 0
+  vc    3 53 dc 2.500
+  ve   54  4 dc 2.200
+  vlim  7  8 dc 0
+  vlp  91  0 dc 70
+  vln   0 92 dc 70
+****************************
+* A3_154E "E" - ENHANCEMENTS
+****************************
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  2.1E-3  1
+FQ2   0  4 POLY(1) VQ2  2.1E-3 -1
+* QUIESCIENT CURRENT
+RQ    3  4  2.8E5
+****************************
+.model dx D(Is=800.0E-18)
+.model qx NPN(Is=800.0E-18 Bf=336)
+.ends
+*.ENDS INA154E
+*
+* BEGIN MODEL INA159
+* BEGIN NOTES
+* MODEL TEMPERATURE RANGE IS
+* -40 C TO +125 C, NOT ALL
+* PARAMETERS TRACK THOSE OF
+* THE REAL PART VS TEMPERATURE
+* END NOTES
+* BEGIN FEATURES
+* CLOSED LOOP GAIN AND PHASE
+* OUTPUT VOLTAGE NOISE W 1/F
+* INPUT COMMON MODE VOLTAGE RANGE
+* CMRR WITH FREQUENCY EFFECTS
+* PSRR WITH FREQUENCY EFFECTS
+* SLEW RATE
+* SETTLING TIME TO 0.1%
+* QUIESCENT CURRENT
+* QUIESCENT CURRENT VS VOLTAGE
+* RAIL TO RAIL OUTPUT STAGE
+* HIGH CLOAD EFFECTS
+* CLASS AB BIAS IN OUTPUT STAGE
+* OUTPUT CURRENT THROUGH SUPPLIES
+* OUTPUT CURRENT LIMITING
+* OUTPUT CLAMPS TO RAILS
+* OUTPUT SWING VS OUTPUT CURRENT
+* OUTPUT SWING VS SUPPLY VOLT
+* END FEATURES
+* PINOUT ORDER +IN -IN +V -V OUT SENSE REF1 REF2
+* PINOUT ORDER  3   2   7  4  6    5     1    8
+.SUBCKT INA159 3 2 7 4 6 5 1 8
+Q20 9 10 11 QLN
+R3 12 13 20
+R4 14 13 20
+R10 10 15 1E3
+R11 16 17 1E3
+R12 17 7 7
+R13 4 15 7
+R16 18 19 300
+R17 20 21 7
+R18 11 22 7
+D5 6 7 DD
+D6 4 6 DD
+D7 23 0 DIN
+D8 24 0 DIN
+I8 0 23 0.1E-3
+I9 0 24 0.1E-3
+E2 11 0 4 0 1
+E3 21 0 7 0 1
+D9 25 0 DVN
+D10 26 0 DVN
+I10 0 25 0.1E-3
+I11 0 26 0.1E-3
+E4 27 28 25 26 0.037
+G2 29 28 23 24 2.8E-17
+R22 4 7 18.5E3
+R28 30 3 100E3
+E5 31 0 32 0 1
+E6 33 0 11 0 1
+E7 34 0 35 0 1
+R30 31 36 1E5
+R31 33 37 1E5
+R32 34 38 1E5
+R33 0 36 10
+R34 0 37 10
+R35 0 38 10
+E10 39 30 38 0 0.03E-6
+R36 40 35 1E3
+R37 35 41 1E3
+C6 31 36 2E-12
+C7 33 37 2E-12
+C8 34 38 8E-9
+E11 42 39 37 0 5E-3
+E12 29 42 36 0 5E-3
+E14 43 11 21 11 0.5
+D11 18 21 DD
+D12 11 18 DD
+M1 44 45 15 15 NOUT L=3U W=1200U
+M2 46 47 17 17 POUT L=3U W=1400U
+M3 48 48 20 20 POUT L=3U W=1400U
+M4 49 50 12 12 PIN L=3U W=160U
+M5 51 52 14 14 PIN L=3U W=160U
+M8 53 53 22 22 NOUT L=3U W=400U
+R43 54 47 100
+R44 55 45 100
+G3 18 43 56 43 0.2E-3
+R45 43 18 60E6
+C12 19 6 15E-12
+R46 11 49 2E3
+R47 11 51 2E3
+C13 49 51 1E-12
+C14 29 0 3E-12
+C15 27 0 3E-12
+C16 6 0 0.5E-12
+D13 45 9 DD
+D14 57 47 DD
+Q15 57 16 21 QLP
+V18 29 58 12E-6
+M19 59 60 32 32 PIN L=6U W=500U
+E17 41 0 29 0 1
+E18 40 0 28 0 1
+M23 60 60 32 32 PIN L=6U W=500U
+V21 59 13 0.9
+R59 6 46 28
+R60 44 6 28
+J1 61 29 61 JNC
+J2 61 27 61 JNC
+J3 27 62 27 JNC
+J4 29 62 29 JNC
+C21 29 63 2E-12
+E20 64 43 51 49 1
+R62 64 56 1E4
+C23 56 43 0.1E-12
+G7 65 43 18 43 -1E-3
+G8 43 66 18 43 1E-3
+G9 43 67 53 11 1E-3
+G10 68 43 21 48 1E-3
+D17 68 65 DD
+D18 66 67 DD
+R66 65 68 100E6
+R67 67 66 100E6
+R68 68 21 1E3
+R69 11 67 1E3
+E23 21 54 21 68 1
+E24 55 11 67 11 1
+R70 66 43 1E6
+R71 67 43 1E6
+R72 43 68 1E6
+R73 43 65 1E6
+R75 42 29 1E9
+R76 39 42 1E9
+R77 30 39 1E9
+R78 28 27 1E9
+R79 43 56 1E9
+R81 54 21 1E9
+R82 11 55 1E9
+R83 35 0 1E9
+G14 60 11 69 0 250E-6
+I21 7 4 0.35E-3
+R149 28 5 20E3
+V78 32 61 0
+V79 62 11 0.15
+R155 48 21 1E8
+R156 11 53 1E8
+R157 15 45 1E8
+R158 17 47 1E8
+R159 63 27 100
+V82 32 21 1.95
+R225 52 27 5
+R226 50 58 5
+G34 27 0 70 0 10E-12
+I40 27 0 1E-12
+I45 0 71 1E-3
+D43 71 0 DD
+V111 71 72 0.7
+R293 0 72 1E6
+E92 73 0 72 0 -571
+R294 0 73 1E6
+R295 74 73 1E6
+D44 75 74 DD
+V112 75 76 27
+V113 74 70 26.4
+I46 0 77 1E-3
+D45 77 0 DD
+V114 77 78 0.7
+R296 0 78 1E6
+E93 76 0 78 0 1
+G35 29 0 70 0 10E-12
+I47 29 0 1E-12
+R300 0 70 1E9
+R301 0 70 1E9
+R372 30 8 40E3
+R373 2 28 100E3
+C50 28 5 5.4E-12
+C52 30 8 2.7E-12
+V133 69 79 1
+R377 0 69 1E12
+D61 79 80 DD
+V134 80 0 2.2
+R378 81 79 1E3
+D62 82 81 DD
+R379 0 81 1E6
+D63 83 81 DD
+R380 81 82 1E12
+R381 81 83 1E12
+E118 82 0 28 29 20
+E119 83 0 28 29 -20
+I60 48 53 170E-6
+E123 84 43 38 0 -2000
+R388 84 18 60E6
+R389 60 32 1E12
+R390 0 69 1E12
+R391 0 38 1E12
+R392 30 1 40E3
+C53 30 1 2.7E-12
+R393 0 80 1E12
+.MODEL DVN D KF=8E-12 IS=1E-16
+.MODEL DD D
+.MODEL DIN D
+.MODEL QLN NPN
+.MODEL QLP PNP
+.MODEL JNC NJF
+.MODEL POUT PMOS KP=200U VTO=-0.7
+.MODEL NOUT NMOS KP=200U VTO=0.7
+.MODEL PIN PMOS KP=200U VTO=-0.7
+.MODEL NIN NMOS KP=200U VTO=0.7
+.MODEL NIQ NMOS KP=200U VTO=0.7 IS=1E-18
+.MODEL NEN NMOS KP=200U VTO=0.5 IS=1E-18
+.MODEL PEN PMOS KP=200U VTO=-0.7 IS=1E-18
+.MODEL PSW PMOS KP=200U VTO=-7.5 IS=1E-18
+.MODEL NSW NMOS KP=200U VTO=7.5 IS=1E-18
+.ENDS
+* END MODEL INA159
+* INA170 SPICE Macro-model 
+*          
+*   Rev. A    27 June 2003, by W.K. Sands
+*
+*   Rev. B    4 August 2003 By Neil Albaugh: ADDED HEADER TEXT & EDITED TEXT
+*
+*	This macromodel has been optimized to model the AC, DC, and transient response performance within 
+*     the device data sheet specified limits. 
+*     Correct operation of this macromodel has been verified on MicroSim P-Spice ver. 8.0 and on 
+*     PENZAR Development TopSPICE ver. 6.82d. For help with other analog simulation software, 
+*     please consult your software supplier. 
+*
+*  
+*   Copyright 2003 by Texas Instruments Corporation
+*
+*
+* OPERATING NOTES
+*
+* MODEL TEMPERATURE RANGE IS -55 C TO +150 C, NOT ALL PARAMETERS ACCURATELY TRACK 
+* THOSE OF AN ACTUAL INA170 OVER THE FULL TEMPERATURE RANGE BUT ARE AS CLOSE AS PRACTICAL
+*
+* BEGIN MODEL INA170
+*
+* PINOUT ORDER VIN- VIN+ VREF GND ROS OUT V+
+* PINOUT ORDER   1    2    3   4   5   6   8
+*
+* OPERATING NOTES
+* THE INTERNAL OFFSET SOURCE, V71 IS SET
+* AT 1 MILLIVOLT SO THE OUTPUT STAGE IS
+* ENOUGH ON WITH ZERO SIGNAL TO GIVE THE
+* PROPER BANDWIDTH IN AN AC ANALYSIS WITH
+* NO INPUT SIGNAL OR OFFSET PRESENT. THIS
+* WILL GIVE SLIGHTLY LARGER THAN TYPICAL
+* OUTPUT ERRORS. FOR TYPICAL OUTPUT ERRORS
+* CHANGE V71 TO 0.35 MILLIVOLT.
+*
+* MODEL FEATURES
+* THIS MODEL FEATURES INPUT RANGE, OUTPUT
+* SWING, OUTPUT COMPLIANCE, BANDWIDTH,
+* GAIN VS RL, CMRR VS FREQ, PSRR VS FREQ,
+* SETTLING TIME, QUIESCENT CURRENT AND
+* QUIESCENT CURRENT VERSUS SUPPLY VOLTAGE,
+* OUTPUT CURRENT DRAWN THROUGH THE SUPPLY,
+* OUTPUT IMPEDANCE, INPUT OFFSET, INPUT
+* BIAS CURRENT, AND NOISE. THE OFFSETING
+* AMPLIFIER HAS LIMITED COMMON MODE
+* VOLTAGE RANGE AND LIMITED BANDWIDTH.
+*
+.SUBCKT INA170 1 2 3 4 5 6 8
+V71 14 12 1E-3
+Q1 9 10 11 QPI
+Q2 10 10 11 QPI
+Q3 10 10 12 QPI
+Q4 13 10 12 QPI
+R1 11 2 1E3
+R2 14 1 1E3
+Q5 15 15 8 QPI
+Q6 16 15 8 QPI
+Q7 9 17 18 QI
+Q8 8 9 17 QI
+Q9 16 19 18 QI
+Q10 8 13 19 QI
+Q11 13 20 18 QI
+Q12 11 16 21 QI
+Q13 21 21 16 QI
+I1 17 18 5E-6
+I2 10 18 5E-6
+I3 19 18 5E-6
+R3 21 6 500
+I4 15 18 20E-6
+R5 22 16 8E3
+C1 13 22 1.5E-12
+C6 18 6 5E-12
+C7 6 8 0.5E-12
+E2 23 17 8 0 0.15E-6
+E3 20 23 2 0 -2.5E-6
+D1 18 11 DD
+D2 18 14 DD
+D3 11 24 DD
+D4 14 24 DD
+D5 8 24 DD
+D6 18 8 DD
+D7 6 24 DD
+D8 18 6 DD
+R10 18 24 1E9
+R11 23 20 1E9
+R12 17 23 1E9
+L1 18 4 1N
+R13 18 4 10
+C8 18 2 1E-12
+C9 18 1 1E-12
+Q14 25 26 27 QPI
+Q15 28 5 29 QI
+Q16 14 25 5 QI
+Q17 5 5 25 QI
+I5 8 30 6E-6
+R15 31 25 20E3
+C10 26 31 8E-12
+Q18 26 3 32 QI
+Q19 33 30 18 QI
+Q20 30 30 18 QI
+Q21 28 28 34 QPI
+Q22 26 28 35 QPI
+R16 34 8 1E3
+R17 35 8 1E3
+R18 36 29 10E3
+R19 36 32 10E3
+R20 27 8 1E3
+Q23 25 37 18 QI
+Q24 37 37 18 QI
+I6 8 37 3E-6
+V74 36 33 0.25
+D9 5 24 DD
+D10 18 5 DD
+D11 18 3 DD
+D12 3 24 DD
+I17 0 38 1E-3
+D15 38 0 DD
+V76 39 38 -0.658
+R22 0 39 10E3
+G2 8 18 39 0 -65E-6
+I18 18 8 15E-6
+.MODEL DD D IS=3.0E-14 BV=90 RS=10
+.MODEL QI NPN
++IS=1E-15 BF=200 BR=0.1 NF=1 NR=1 EG=1.2056 ISE=1E-17
++NE=1.5 ISC=1E-17 NC=1.5 VAF=125 VAR=15 IKF=6E-3 RB=1.2E3
++RBM=65 RE=5 IKR=6E-3 IRB=60E-6 RC=750 CJE=0.5E-12 VJE=0.77
++MJE=0.3 CJC=0.6E-12 VJC=0.64 MJC=0.425 CJS=0.05E-12 VJS=0.58
++MJS=0.5  FC=0 XCJC=1 TF=300E-12 TR=1E-6 XTF=1
++VTF=0 ITF=10E-3 PTF=5 XTI=2.3
++ XTB=1.5 KF=0.16E-15 AF=1
+.MODEL QPI PNP
++IS=1E-15 BF=200 BR=0.1 NF=1 NR=1 EG=1.2056 ISE=1E-17
++NE=1.5 ISC=1E-17 NC=1.5 VAF=125 VAR=15 IKF=6E-3 RB=1.2E3
++RBM=65 RE=5 IKR=6E-3 IRB=60E-6 RC=750 CJE=0.5E-12 VJE=0.77
++MJE=0.3 CJC=0.6E-12 VJC=0.64 MJC=0.425 CJS=0.05E-12 VJS=0.58
++MJS=0.5  FC=0 XCJC=1 TF=50E-9 TR=1E-6 XTF=1
++VTF=0 ITF=10E-3 PTF=5 XTI=2.3
++ XTB=1.5 KF=0.16E-15 AF=1
+.ENDS
+* END MODEL INA170
+* BEGIN MODEL INA163
+*
+* MODEL CREATED 3 AUGUST 2004 BY W.K.SANDS
+* COPYRIGHT TEXAS INSTRUMENTS CORP.
+*
+* MODEL OPERATES FROM -55 TO +125 C
+*
+* SOME PARAMETERS DO NOT TRACK THOSE
+* OF THE REAL PART BUT THEY ARE AS CLOSE AS POSSIBLE
+*
+* BEGIN FEATURES
+*
+* CLOSED LOOP BANDWIDTH
+* SLEW RATE
+* INPUT VOLTAGE NOISE WITH 1/F
+* INPUT CURRENT NOISE WITH 1/F
+* CMRR
+* PSRR
+* VREF FUNCTION
+* GAIN EQUATION
+* OUTPUT SWING VS CURRENT
+* OUTPUT CURRENT IS DRAWN THROUGH SUPPLY RAILS
+* OUTPUT IMPEDANCE
+* INPUT CAPACITANCE
+* INPUT BIAS CURRENT
+* QUIESCENT CURRENT
+* END FEATURES
+*
+* PINOUT ORDER VO1 RG1 VIN- VIN+ V- SEN VO REF V+ RG- VO2
+* PINOUT ORDER  1   3   4    5    6  8   9  10 11  12  14
+*
+.SUBCKT INA163 1 3 4 5 6 8 9 10 11 12 14
+*
+Q17 6 15 16 QOP
+Q21 11 17 16 QON
+D7 18 0 DIN
+D8 19 0 DIN
+I8 0 18 0.1E-3
+I9 0 19 0.1E-3
+E2 20 0 6 0 1
+E3 21 0 11 0 1
+D9 22 0 DVN
+D10 23 0 DVN
+I10 0 22 0.1E-3
+I11 0 23 0.1E-3
+E4 24 3 22 23 0.15
+G2 4 24 18 19 5.4E-4
+E5 25 0 21 0 1
+E6 26 0 20 0 1
+E7 27 0 28 0 1
+R30 25 29 1E3
+R31 26 30 1E3
+R32 27 31 1E3
+R33 0 29 0.1
+R34 0 30 0.1
+R35 0 31 0.1
+R36 28 32 1E3
+R37 28 33 1E3
+C6 25 29 1E-12
+C7 26 30 1E-12
+C8 27 31 0.5E-12
+E11 34 35 30 0 -0.005005
+E12 36 34 29 0 -0.005005
+Q22 20 37 17 QDP
+Q23 21 37 15 QDN
+I13 21 17 1E-3
+I14 15 20 1E-3
+R38 0 38 10
+R39 0 37 10
+C9 38 0 30E-12
+C10 37 0 10E-12
+E15 39 40 41 0 1
+E16 40 42 41 0 1
+E17 43 0 40 0 1
+D11 44 21 DD
+D12 20 45 DD
+V11 42 45 1.85
+V12 44 39 1.6
+I15 0 46 1E-3
+D13 46 0 DD
+V13 41 46 -0.71465
+C11 40 0 3.33E-12
+D14 47 48 DD
+D15 48 49 DD
+R40 48 40 330
+R41 0 48 30E6
+F1 48 0 V14 -0.18
+E18 50 0 36 0 0.999
+R42 50 51 35
+C12 52 0 15E-12
+C13 36 0 2E-12
+V14 51 53 0
+R43 16 54 7
+G3 38 0 40 0 0.1
+G4 37 0 38 0 0.1
+C14 16 0 2P
+L1 54 1 4E-9
+R45 54 1 40
+E20 47 43 41 0 1
+E21 49 43 41 0 -1
+L2 52 53 5E-9
+R47 52 53 400
+E10 35 4 31 0 1
+C26 24 36 0.4E-12
+V15 21 55 3.3
+V16 56 20 3.3
+D16 24 55 DV
+D17 56 24 DV
+D18 4 55 DV
+D19 56 4 DV
+I16 0 4 2E-6
+R76 0 41 1E9
+R77 34 36 1E9
+R78 35 34 1E9
+R79 4 35 1E9
+R80 3 24 1E9
+R81 42 40 1E9
+R82 40 39 1E9
+E22 32 0 4 0 1
+E23 33 0 24 0 1
+I17 0 24 -0.4E-6
+V18 52 24 0
+R84 3 1 3.015E3
+Q24 6 57 58 QOP
+Q25 11 59 58 QON
+D22 60 0 DIN
+D23 61 0 DIN
+I18 0 60 0.1E-3
+I19 0 61 0.1E-3
+E24 62 0 6 0 1
+E25 63 0 11 0 1
+D24 64 0 DVN
+D25 65 0 DVN
+I20 0 64 0.1E-3
+I21 0 65 0.1E-3
+E26 66 12 64 65 0.15
+G5 5 66 60 61 5.4E-4
+E27 67 0 63 0 1
+E28 68 0 62 0 1
+E29 69 0 70 0 1
+R88 67 71 1E3
+R89 68 72 1E3
+R90 69 73 1E3
+R91 0 71 0.1
+R92 0 72 0.1
+R93 0 73 0.1
+R94 70 74 1E3
+R95 70 75 1E3
+C27 67 71 1E-12
+C28 68 72 1E-12
+C29 69 73 0.5E-12
+E30 76 77 72 0 0.005
+E31 78 76 71 0 0.005
+Q26 62 79 59 QDP
+Q27 63 79 57 QDN
+I23 63 59 1E-3
+I24 57 62 1E-3
+R96 0 80 10
+R97 0 79 10
+C30 80 0 30E-12
+C31 79 0 10E-12
+E32 81 82 83 0 1
+E33 82 84 83 0 1
+E34 85 0 82 0 1
+D26 86 63 DD
+D27 62 87 DD
+V21 84 87 1.85
+V22 86 81 1.6
+I25 0 88 1E-3
+D28 88 0 DD
+V23 83 88 -0.71465
+C32 82 0 3.33E-12
+D29 89 90 DD
+D30 90 91 DD
+R98 90 82 330
+R99 0 90 30E6
+F2 90 0 V24 -0.18
+E35 92 0 78 0 0.999
+R100 92 93 35
+C33 94 0 15E-12
+C34 78 0 2E-12
+V24 93 95 0
+R101 58 96 7
+G6 80 0 82 0 0.1
+G7 79 0 80 0 0.1
+C35 58 0 2P
+L3 96 14 4E-9
+R102 96 14 40
+E36 89 85 83 0 1
+E37 91 85 83 0 -1
+L4 94 95 5E-9
+R103 94 95 400
+E38 77 5 73 0 1
+C36 66 78 0.4E-12
+V25 63 97 3.3
+V26 98 62 3.3
+D31 66 97 DV
+D32 98 66 DV
+D33 5 97 DV
+D34 98 5 DV
+I26 0 5 2E-6
+R104 0 83 1E9
+R105 76 78 1E9
+R106 77 76 1E9
+R107 5 77 1E9
+R108 12 66 1E9
+R109 84 82 1E9
+R110 82 81 1E9
+E39 74 0 5 0 1
+E40 75 0 66 0 1
+I27 0 66 -0.4E-6
+V28 94 66 0
+R112 12 14 3E3
+Q28 6 99 100 QOP
+Q29 11 101 102 QON
+D35 9 11 DD
+D36 6 9 DD
+D37 103 0 DIN
+D38 104 0 DIN
+I28 0 103 0.1E-3
+I29 0 104 0.1E-3
+E41 105 0 6 0 1
+E42 106 0 11 0 1
+D39 107 0 DVS
+D40 108 0 DVS
+I30 0 107 0.1E-3
+I31 0 108 0.1E-3
+E43 109 110 107 108 10.4
+G8 111 109 103 104 2.9E-13
+R115 6 11 1E6
+E44 112 0 106 0 1
+E45 113 0 105 0 1
+E46 114 0 115 0 1
+R116 112 116 1E4
+R117 113 117 1E4
+R118 114 118 1E4
+R119 0 116 1
+R120 0 117 1
+R121 0 118 1
+R122 115 119 1E3
+R123 115 120 1E3
+C37 112 116 6E-9
+C38 113 117 6E-9
+C39 114 118 30E-9
+E47 121 122 117 0 0.2
+E48 123 121 116 0 0.2
+Q30 105 124 125 QDP
+Q31 106 124 126 QDN
+I32 11 6 7E-3
+I33 106 101 1E-3
+I34 99 105 1E-3
+R124 0 127 10
+R125 0 124 10
+C40 127 0 300P
+C41 124 0 100P
+E49 128 129 130 0 1
+E50 129 131 130 0 1
+E51 132 0 129 0 1
+D41 133 106 DD
+D42 105 134 DD
+V31 131 134 1.85
+V32 133 128 1.6
+I35 0 135 1E-3
+D43 135 0 DD
+V33 130 135 -0.71465
+C42 129 0 120E-12
+D44 136 137 DD
+D45 137 138 DD
+R126 137 129 418
+R127 0 137 3E6
+F3 137 0 V34 -0.25
+E52 139 0 123 0 0.999
+R128 139 140 50
+C43 141 0 5E-12
+C44 123 0 1.5E-12
+V34 140 142 0
+R129 143 144 20
+G9 127 0 129 0 0.1
+G10 124 0 127 0 0.1
+C45 144 0 2E-12
+L5 144 9 4E-9
+R130 144 9 40
+E53 136 132 130 0 1
+E54 138 132 130 0 -1
+L6 145 142 5E-9
+R131 145 142 400
+E55 122 111 118 0 0.5
+C46 109 123 0.4E-12
+V35 106 146 1.13
+V36 147 105 1.13
+D46 109 146 DV
+D47 147 109 DV
+D48 111 146 DV
+D49 147 111 DV
+I36 0 111 2E-12
+R132 0 130 1E9
+R133 121 123 1E9
+R134 122 121 1E9
+R135 111 122 1E9
+R136 110 109 1E9
+R137 131 129 1E9
+R138 129 128 1E9
+E56 119 0 111 0 1
+E57 120 0 109 0 1
+I37 0 109 -0.4E-12
+V38 141 109 0
+E58 145 0 141 0 0.999
+R140 110 8 6E3
+R142 1 110 6E3
+R143 111 14 6E3
+R144 10 111 6.003E3
+R145 143 102 50
+R146 100 143 5
+R147 125 101 50
+R148 99 126 5   
+.MODEL QON NPN VAF=150 BF=80 IKF=0.5 RE=1 RC=1
+.MODEL QOP PNP VAF=150 BF=80 IKF=0.5 RE=1 RC=1
+.MODEL QDP PNP
+.MODEL QDN NPN
+.MODEL DD D
+.MODEL DV D RS=10E3
+.MODEL DVN D KF=2E-17
+.MODEL DIN D KF=8E-17
+.MODEL DVS D KF=6.5E-17
+.ENDS
+* END MODEL INA163

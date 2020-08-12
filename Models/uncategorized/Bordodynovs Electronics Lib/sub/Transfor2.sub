@@ -1,0 +1,21 @@
+.subckt Transfor2 an1 bn1 an2 bn2 Params: 
++ mU=2000 Hc=15 Bs=.44 Br=.15 A=0.245e-4  Lm=1.75e-2 Lg=0 FEDDY=2MEG
++ N1=100 N2=100  RL1=1m RL2=1m  Ls1=1u  Ls2=1u Cn1=1p Cn2=1p
+Ln1 N002 bn1 {Ln1} Rser=1u
+Ln2 N003 bn2 {Ln2} Rser={RL2} Cpar={Cn2}
+L3 N001 an1 {Ls1}
+L4 an2 N003 {Ls2}
+R1 N002 N001 {RL1}
+C1 N001 bn1 {Cn1} Rpar={Rfeddy}
+Lnonlin N002 bn1 Hc={Hc} Bs={Bs} Br={Br} A={A} Lm={Lm} Lg={Lg} N={N1}
+K Ln1 Ln2  {K12}
+.param mU0=4e-7*pi
+.param mUChan=Br*(Bs-Br)/(Hc*Bs*mU0)
+*vmuchen chan 0 {mUChen}
+.param mUx=1/(1/mU-1/mUChan}
+.param Alx=A/Lm*mUx*mU0
+.param Ln1=N1*N1*Alx
+.param Ln2=N2*N2*Alx
+.param K12=sgn(mUx}
+.param RFeddy=A/Lm*mU*mU0*Feddy*2*pi*N1*N1
+.ends Transfor2

@@ -1,0 +1,201 @@
+.subckt njf_subthres D G S beta=0.0378643 vto=-0.37 lambda=4.783719m is=3.55773e-14 n=1 rd=10.6565 rs=6.8790487 cgd=3.99e-11 cgs=4.06518e-11 pb=0.981382 mj=0.794653 fc=0.5 kf=5e-18 af=1 isr=1.5p nr=2 Ksubthres=200m
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends njf_subthres
+
+*.model kp303a njf vt0=-0.9 beta=1.6m lambda=0.02 rd=30 rs=35 cgs=5p cgd=4p is=100f B=1.2 kf=1.e-16 af=1.4 
+*.model BF861A_n njf VTO=-0.5111 BETA=15.19E-3 LAMBDA=35.93E-3 IS=410.2E-18 ALPHA=1.000E-6 VK=1 RD=4.164 RS=4.164 CGD=6.299E-12 CGS=6.299E-12 PB=0.6917 KF=21.54E-18 AF=0.7958 BETATCE=-0.5 VTOTC=-2.500E-3
+*.model BF861B_n njf VTO=-0.6391 BETA=13.93E-3 LAMBDA=47.02E-3 IS=376.9E-18 ALPHA=1.000E-6 VK=1 RD=3.577 RS=3.577 CGD=6.025E-12 CGS=6.025E-12 PB=0.7072 KF=20.35E-18 AF=0.7958 BETATCE=-0.5 VTOTC=-2.500E-3
+*.model BF861C_n njf VTO=-1.145 BETA=15.22E-3 LAMBDA=44.94E-3 IS=415.7E-18 ALPHA=1.000E-6 VK=1 RD=15.20 RS=15.20 CGD=6.581E-12 CGS=6.581E-12 PB=0.7395 KF=11.22E-18 AF=0.7958 BETATCE=-0.5 VTOTC=-2.500E-3
+*.model bf862_n njf(beta=47.800m rd=.8 rs=7.5 lambda=37.3m vto=-.57093 is=424.6p cgd=7.4p pb=.5 fc=.5 cgs=8.29p kf=10e-18 af=1 alpha=1m nr=2 isr=2.995p vtotc=-2m betatce=-.5 xti=3 vk=59.97 m=.6015 
+*.MODEL LSK170A_n NJF BETA=0.0378643 VTO=-0.4025156 LAMBDA=4.783719m IS=3.55773E-14 N=1 RD=10.6565 RS=6.8790487 CGD=3.99E-11 CGS=4.06518E-11 PB=0.981382 MJ=0.794653 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+*.MODEL LSK170B_n NJF BETA=0.0350699 VTO=-0.5375582 LAMBDA=4.951m IS=2.76212E-14 N=1 RD=7.82168 RS=6.9525888 CGD=4.36E-11 CGS=4.36E-11 PB=1.2 MJ=0.8892205 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+*.MODEL LSK170C_n NJF BETA=0.0278541 VTO=-0.800434 LAMBDA=0.0122435 IS=2.45217E-14 N=1 RD=12 RS=5.8 CGD=4.22E-11 CGS=4.23E-11 PB=0.9265487 MJ=0.6098477 FC=0.5 KF=4e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+*MODEL LSK389A_n NJF BETA=0.0378643 VTO=-0.4025156 LAMBDA=4.783719m IS=3.55773E-14 N=1 RD=10.6565 RS=6.8790487 CGD=3.99E-11 CGS=4.06518E-11 PB=0.981382 MJ=0.794653 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+*.MODEL LSK389B_n NJF BETA=0.0350699 VTO=-0.5375582 LAMBDA=4.951m IS=2.76212E-14 N=1 RD=7.82168 RS=6.9525888 CGD=4.36E-11 CGS=4.36E-11 PB=1.2 MJ=0.8892205 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+*.MODEL LSK389C_n NJF BETA=0.0278541 VTO=-0.800434 LAMBDA=0.0122435 IS=2.45217E-14 N=1 RD=12 RS=5.8 CGD=4.22E-11 CGS=4.23E-11 PB=0.9265487 MJ=0.6098477 FC=0.5 KF=4e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+
+.subckt kp303a_x D G S  Ksubthres=200m
++ vt0=-0.9 beta=1.6m lambda=0.02 rd=30 rs=35 cgs=5p cgd=4p is=100f B=1.2 kf=1.e-16 af=1.4 
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends 
+
+.subckt BF861A_x D G S  Ksubthres=200m
++ VTO=-0.5111 BETA=15.19E-3 LAMBDA=35.93E-3 IS=410.2E-18 ALPHA=1.000E-6 VK=1 RD=4.164 RS=4.164 CGD=6.299E-12 CGS=6.299E-12 PB=0.6917 KF=21.54E-18 AF=0.7958 BETATCE=-0.5 VTOTC=-2.500E-3
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+
+.ends subckt BF861B_x D G S  Ksubthres=200m
++ njf VTO=-0.6391 BETA=13.93E-3 LAMBDA=47.02E-3 IS=376.9E-18 ALPHA=1.000E-6 VK=1 RD=3.577 RS=3.577 CGD=6.025E-12 CGS=6.025E-12 PB=0.7072 KF=20.35E-18 AF=0.7958 BETATCE=-0.5 VTOTC=-2.500E-3
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends 
+
+.subckt BF861C_x D G S  Ksubthres=200m
++ VTO=-1.145 BETA=15.22E-3 LAMBDA=44.94E-3 IS=415.7E-18 ALPHA=1.000E-6 VK=1 RD=15.20 RS=15.20 CGD=6.581E-12 CGS=6.581E-12 PB=0.7395 KF=11.22E-18 AF=0.7958 BETATCE=-0.5 VTOTC=-2.500E-3
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends
+
+.subckt BF862_x D G S  Ksubthres=200m
++ beta=47.800m rd=.8 rs=7.5 lambda=37.3m vto=-.57093 is=424.6p cgd=7.4p pb=.5 fc=.5 cgs=8.29p kf=10e-18 af=1 alpha=1m nr=2 isr=2.995p vtotc=-2m betatce=-.5 xti=3 vk=59.97 m=.6015 
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends 
+
+.subckt LSK170A _x D G S  Ksubthres=200m
++BETA=0.0378643 VTO=-0.4025156 LAMBDA=4.783719m IS=3.55773E-14 N=1 RD=10.6565 RS=6.8790487 CGD=3.99E-11 CGS=4.06518E-11 PB=0.981382 MJ=0.794653 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends 
+
+.subckt LSK170B_x D G S  Ksubthres=200m
++ BETA=0.0350699 VTO=-0.5375582 LAMBDA=4.951m IS=2.76212E-14 N=1 RD=7.82168 RS=6.9525888 CGD=4.36E-11 CGS=4.36E-11 PB=1.2 MJ=0.8892205 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends
+
+.subckt LSK170C_x D G S  Ksubthres=200m
++ BETA=0.0278541 VTO=-0.800434 LAMBDA=0.0122435 IS=2.45217E-14 N=1 RD=12 RS=5.8 CGD=4.22E-11 CGS=4.23E-11 PB=0.9265487 MJ=0.6098477 FC=0.5 KF=4e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends
+
+.subckt LSK389A _x D G S  Ksubthres=200m
++BETA=0.0378643 VTO=-0.4025156 LAMBDA=4.783719m IS=3.55773E-14 N=1 RD=10.6565 RS=6.8790487 CGD=3.99E-11 CGS=4.06518E-11 PB=0.981382 MJ=0.794653 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends 
+
+.subckt LSK389B_x D G S  Ksubthres=200m
++ BETA=0.0350699 VTO=-0.5375582 LAMBDA=4.951m IS=2.76212E-14 N=1 RD=7.82168 RS=6.9525888 CGD=4.36E-11 CGS=4.36E-11 PB=1.2 MJ=0.8892205 FC=0.5 KF=5e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends
+
+.subckt LSK389C_x D G S  Ksubthres=200m
++ BETA=0.0278541 VTO=-0.800434 LAMBDA=0.0122435 IS=2.45217E-14 N=1 RD=12 RS=5.8 CGD=4.22E-11 CGS=4.23E-11 PB=0.9265487 MJ=0.6098477 FC=0.5 KF=4e-18 AF=1 isr=1p nr=2 Alpha=1u Vk=100
+M1 N002 G N004 N004 Msub
+M2 N003 G N001 N001 Msub
+D1 N001 N002 Di
+D2 N004 N003 Di
+Ri N004 S {Rs}
+Rd D N001 {Rd}
+D3 G N001 DpnD
+D4 G N004 DpnS
+.model Msub VDMOS Rb=999T is=0.1f n=1000 Vto={vto}  lambda={ lambda}  KP={2*beta}  kf={kf*2.3e-11} Af={af} Ksubthres={Ksubthres} noiseless
+.model Di d vfwd=0 ron=100u Roff=999T Epsilon=0m
+.model Dpnd d is={is/2} n={n} cjo={cgd} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.model Dpns d is={is/2} n={n} cjo={cgs} mj={mj} fc={fc} isr={isr/2} nr={nr} VJ={PB}
+.ends

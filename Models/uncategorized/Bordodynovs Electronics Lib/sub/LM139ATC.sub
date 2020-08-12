@@ -1,0 +1,24 @@
+* Homemade LM139 SPICE-friendly subcircuit model
+* © Copyright Tony Casey, tony@ritecom.com, 2018
+.subckt LM139ATC  + - V+ V- OC params: Vofs=0
+Q1 V- N004 N002 0 QP
+I1 V+ N001 100µ load
+Q2 V- N005 N003 0 QP
+Q3 N006 N002 N001 0 QP
+Q4 N007 N003 N001 0 QP
+D1 N001 N002 DX
+D2 N001 N003 DX
+I2 V+ DRV 100µ load
+Q5 N007 N006 V- 0 QN
+Q6 N006 N006 V- 0 QN
+Q7 DRV N007 V- 0 QN
+Q8 OC DRV V- 0 QN
+D3 N005 N003 DX
+D4 N004 N002 DX
+C2 V+ DRV 1p5
+V1 N004 + {Vofs/2}
+V2 - N005 {Vofs/2}
+.MODEL QP PNP(IS=1E-16 BF=60 Cje=1p Cjc=300f Rb=300 Re=10 Rc=10 subs=2 Tf=10n)
+.MODEL QN NPN(IS=1E-16 BF=200 Cje=1p5 Cjc=500f Rb=100 Re=10 Rc=10)
+.MODEL DX D(IS=2E-18 Cjo=1p5)
+.ends

@@ -1,0 +1,30 @@
+* TL2575ADJ model by Geoff Western (aka Alec_t).
+* Model is based on functional block diagram in Texas Instruments datasheet.
+* Duty cycle limits, voltage limits, temperature effects and thermal shutdown are not modelled.
+* Device power dissipation is not modelled accurately.
+
+.SUBCKT TL2575ADJ Fbk In Off Gnd Out
+B1 0 c I=if(v(s),0.5u,2.9u)
+Ca c 0 50p
+A1 c 0 0 0 0 N004 N002 0 SCHMITT vt=0.6 vh=0.5 vhigh=1.2 td=50n
+D1 c N004 D n=0.1
+Sa In N001 N003 0 SW
+Cc In N001 2p
+A5 Off 0 0 0 0 0 N006 0 SCHMITT vt=1.3 vh=0.1 td=20n
+A2 Fbk 0 0 0 0 0 N009 0 SCHMITT vt=1.23 vh=0.01 td=20n
+A4 N002 N005 0 0 0 0 N003 0 SRFLOP
+B2 N008 0 v=i(D6)
+A3 N009 0 s 0 N006 0 N005 0 OR
+Cb N007 0 60p
+Rint N008 N007 1Meg
+A6 N007 0 0 0 0 0 s 0 SCHMITT vt=.3 vh=.1 td=20n
+B3 In 0 I=if(v(off)>1.3,200u,6m)
+D6 N001 Out D
+D2 Fbk in D
+D3 0 Fbk D
+D4 Off in D
+D5 0 Off D
+.model D D
+.lib standard.dio
+.model sw sw(ron=.2 roff=1e8 vt=0.5 vh=0)
+.ENDS TL2575ADJ

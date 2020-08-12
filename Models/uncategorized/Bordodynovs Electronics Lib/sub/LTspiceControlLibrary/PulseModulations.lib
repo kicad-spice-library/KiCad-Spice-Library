@@ -1,0 +1,76 @@
+** Pulse Modulations
+
+.lib LTspiceControlLibrary\Sources.lib
+
+.subckt PWM I P
+X1 C 0 TriangleWaveVoltage V1={Vin1} V2={Vin2} Tperiod={Tperiod} tratio=1 Tdelay={Tdelay} Ncycles=0
+B2 P 0 V=V(I)>=V(C) tripdt={tripdt} ic=0
+.param Vin1=0 Vin2=1 Tperiod=100u Tdelay=0 tripdt=1m*Tperiod
+.ends PWM
+
+.subckt 3PhaseComplementaryPWM U V W up un vp vn wp wn
+X1 CN 0 TriangleWaveVoltage V1={Vin1} V2={Vin2-Vdead} Tperiod={Tperiod} tratio=0.5 Tdelay={Tdelay} Ncycles=0
+V1 CP CN {Vdead}
+B1 up 0 V=V(U)>=V(CP) tripdt={tripdt} ic=0
+B2 un 0 V=V(U)<=V(CN) tripdt={tripdt} ic=0
+B3 vp 0 V=V(V)>=V(CP) tripdt={tripdt} ic=0
+B4 vn 0 V=V(V)<=V(CN) tripdt={tripdt} ic=0
+B5 wp 0 V=V(W)>=V(CP) tripdt={tripdt} ic=0
+B6 wn 0 V=V(W)<=V(CN) tripdt={tripdt} ic=0
+.param Vin1=-1 Vin2=1 Tperiod=100u Tdead=1u Tdelay=0 tripdt=1*Tdead
+.param Vdead=2*(Vin2-Vin1)/(Tperiod/Tdead+2)
+.ends 3PhaseComplementaryPWM
+
+.subckt ComplementaryBufferWithDeadtime I P N
+B1 P 0 V=idt(1,0,inv(V(I)))>=Tdead tripdt={tripdt}
+B2 N 0 V=idt(1,0,buf(V(I)))>=Tdead tripdt={tripdt}
+.param Tdead=1u tripdt=1*Tdead
+.ends ComplementaryBufferWithDeadtime
+
+.subckt RisingEdgeDetector I P
+A1 I 0 0 0 0 0 P1 0 BUF Td={Tedge}
+B1 P 0 V=buf(V(I))&inv(V(P1)) tripdt={tripdt}
+.param Tedge=1u tripdt=0.1*Tedge
+.ends RisingEdgeDetector
+
+.subckt FallingEdgeDetector I P
+A1 I 0 0 0 0 0 P1 0 BUF Td={Tedge}
+B1 P 0 V=inv(V(I))&buf(V(P1)) tripdt={tripdt}
+.param Tedge=1u tripdt=0.1*Tedge
+.ends FallingEdgeDetector
+
+.subckt BothEdgesDetector I P
+A1 I 0 0 0 0 0 P1 0 BUF Td={Tedge}
+B1 P 0 V=buf(V(I))^buf(V(P1)) tripdt={tripdt}
+.param Tedge=1u tripdt=0.1*Tedge
+.ends BothEdgesDetector
+
+.subckt PulseTimer I P
+B1 P 0 V=idt(F,ic,buf(V(I))) tripdt={tripdt} tripdv={tripdv}
+.param F=1 ic=0
+.param tripdt=1e300 tripdv=1
+.ends PulseTimer
+
+.subckt OnOffDelay I P
+B1 P1 0 V=(
++ if(time<=0, buf(V(I)),
++ if(idt(1,0,inv(buf(V(I))^V(P)))>max(0,if(V(P),Toff,Ton)), inv(V(P)),
++ V(P)
++ )) )
++ tripdt={tripdt}
+A1 P1 0 0 0 0 0 P2 0 BUF
+E1 P 0 P2 0 1
+.param Ton=1u Toff=1u tripdt={0.1*if(Ton<=0,Toff,if(Toff<=0,Ton,min(Ton,Toff)))}
+.ends OnOffDelay
+
+.subckt OnOffDelay2 I Ton Toff P
+B1 P1 0 V=(
++ if(time<=0, buf(V(I)),
++ if(idt(1,0,inv(buf(V(I))^V(P)))>max(0,if(V(P),V(Toff),V(Ton))), inv(V(P)),
++ V(P)
++ )) )
++ tripdt={tripdt}
+A1 P1 0 0 0 0 0 P2 0 BUF
+E1 P 0 P2 0 1
+.param tripdt=1u
+.ends OnOffDelay2

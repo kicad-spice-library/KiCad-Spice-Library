@@ -1,0 +1,143 @@
+********************************************************************************
+* UnitedSiC G3 650V-80mohm SiC JFET Spice Circuit Model v2.0
+* Copyright 2018 United Silicon Carbide, Inc.
+* This is a PRELIMINARY Spice Model of UJ3N065080K3S
+*
+*
+* The model does not include all possible conditions and effects, 
+* in particular it doesn't include: 
+*	Self heating
+*	leakage current in blocking state
+*	Drain to source breakdown is notional only
+*
+********************************************************************************
+
+*** UJ3N065080K3S ***
+.subckt UJ3N065080K3S nd ng ns
+*#ASSOC Category="N-Channel JFET" Symbol=njfet
+Ld	nd	nd1		5n
+Ljg	ng	ng1		10n
+Ls	ns	ns1		2n
+xj1	nd1	ng1	ns1	jfet_G3_650V_Ron params: Ron=75m Rgon=4 Rgoff=4
+.ends
+ 
+*** 650V JFETs ***
+.subckt jfet_G3_650V_Ron d g s params: Ron=0 Rgon=0 Rgoff=0
+*#ASSOC Category="N-Channel JFET" Symbol=njfet
+.param Ron1={Ron}
+.param Rgon1={Rgon}
+.param Rgoff1={Rgoff}
+.param a= {75m/{Ron1}}
+X1 di gi s jfet_G3_650V params: ascale={a}
+XCgs gi s Cgs_650V params: acgs={a}
+XCgd gi di Cgd_650V params: acgd={a}
+Cgdex gi di {25p * {a} }	
+Cgsex gi s {80p * {a} }					
+Rd d di Rtemp {50m/{a}}
+.MODEL Rtemp RES (TC1=2.112e-3, TC2=3.6244e-5)
+GRg g gi value={if(v(g,gi)>0,v(g,gi)/{Rgon1},v(g,gi)/{Rgoff1})}
+.ends jfet_G3_650V_Ron
+
+*** Shared Subcircuit for 650V JFETs ***
+.subckt jfet_G3_650V d g s Params: ascale=0
+.param Fc1=0.5
+.param Pb1=3.25
+.param M1=0.5
+.param Vd0=400
+.param gos={0.0178*{ascale}}
+.param gfs={0.6*23.5*{ascale}} ;org model 1*23.5
+.param f=1.763
+.param vth=-12
+
+.param cgs1=0.375n
+.param cgd1=0.0404n
+
+.param bt={({f}*{gfs}+2*{gos}*{Vd0}/{vth})/2/(-{vth})}
+.param lamd={1*{gos}/{bt}/{vth}/{vth}}
+.param cgs0={pwr((1+30/{Pb1}),{M1})*{cgs1}}
+.param cgd0={pwr((1+{Vd0}/{Pb1}),{M1})*{cgd1}}
+
+J1 d g s jfet_650 1e-30
+Dgs g s Dgs_iv 1e-30
+Dgd g d Dgd_iv 1e-30
+Rgs  g s 1Meg
+Rgd  g  d 10Meg
+
+.MODEL jfet_650 NJF(
++ Beta={{bt}*1e30} BetaTce=-200m Vto={vth} VtoTc=-10m  lambda={lamd}
++ Is=1e-30 
++ Cgs={{cgs0}*{ascale}*1e30} Cgd={{cgd0}*{ascale}*1e30} Fc={Fc1} Pb={Pb1}
++ M={M1})
+
+.MODEL Dgs_iv D (CJO=0 BV=40 IS=1e-20 ISR=1e-20 Eg=3.5 Rs=0)
+.MODEL Dgd_iv D (CJO=0 BV=850 IBV=1m IS=1e-20 ISR=1e-20 Eg=3.5 Rs={15.1m/{ascale}/1e30})
+.ends jfet_G3_650V
+
+* Cgs network	
+.subckt Cgs_650V g s params: acgs=0
+.param c0=1n
+.param vsgmin=-2
+.param vsgmax=15
+.param a1={0.25n*{acgs}}
+.param b1=1
+.func Qgs1(u) {- {a1} / {b1} *(exp(- {b1} *u)-1)}  
+
+.param a2={0.35n*{acgs}}
+.param b2=0.5
+.param c2=8.7
+				
+.func Qgs2(u) 
++	{if(abs(u)<{vsgmax},
++	{a2}*u + {a2}*(-{b2})*log(cosh((u-{c2})/-{b2}))
++	-{a2}*(-{b2})*log(cosh(-{c2}/-{b2})), 
++	{a2}*{vsgmax} + {a2}*(-{b2})*log(cosh(({vsgmax}-{c2})/-{b2}))
++	-{a2}*(-{b2})*log(cosh(-{c2}/-{b2})))} 
+				
+E1 s m1 value={v(s,g)-Qgs1(v(s,g))/{c0}}
+C01 m1 g {c0}
+E2 s m2 value={v(s,g)-Qgs2(limit(v(s,g),-{vsgmax},{vsgmax}))/{c0}}
+C02 m2 g {c0}
+
+.ends Cgs_650V
+
+* Cgd network
+.subckt Cgd_650V g d params:acgd=0
+
+.param c0=1n
+
+.param a1={0.2n*{acgd}}
+.param b1=0.6
+.param c1=19
+.param vdgmax1=30
+
+.func Qgd1(u) 
++	{if(abs(u)<{vdgmax1},
++	{a1}*u + {a1}*(-{b1})*log(cosh((u-{c1})/-{b1}))
++	-{a1}*(-{b1})*log(cosh(-{c1}/-{b1})), 
++	{a1}*{vdgmax1} + {a1}*(-{b1})*log(cosh(({vdgmax1}-{c1})/-{b1}))
++	-{a1}*(-{b1})*log(cosh(-{c1}/-{b1})))} 
+
+.param a2={0*{acgd}}
+.param b2=0.5
+.param c2=9.5
+.param vdgmax2=15
+
+.func Qgd2(u) 
++	{if(abs(u)<{vdgmax2},
++	(-1)*({a2}*u + {a2}*(-{b2})*log(cosh((u-{c2})/-{b2}))
++	-{a2}*(-{b2})*log(cosh(-{c2}/-{b2}))), 
++	(-1)*({a2}*{vdgmax2} + {a2}*(-{b2})*log(cosh(({vdgmax2}-{c2})/-{b2}))
++	-{a2}*(-{b2})*log(cosh(-{c2}/-{b2}))))}
+
+
+E1 d m1 value={v(d,g)-Qgd1(limit(v(d,g),-{vdgmax1},+{vdgmax1}))/{c0}}
+C01 m1 g {c0}
+E2 d m2 value={v(d,g)-Qgd2(limit(v(d,g),-{vdgmax2},+{vdgmax2}))/{c0}}
+C02 m2 g {c0}
+
+.ends Cgd_650V
+
+
+*** End of File ***
+ 
+

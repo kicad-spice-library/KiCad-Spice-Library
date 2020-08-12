@@ -1,0 +1,267 @@
+* OrCAD Model Editor - Version 9.0
+
+*$
+* ADA4817 Spice Model  Rev. B, 7/2008 CK
+*
+* Refer to "README.DOC" file for License Statement.
+* Use of this model indicates your acceptance with
+* the terms and provisions in the License Statement.
+*
+* The following parameters are accurately modeled;
+*
+*    
+*       FET Input common mode range
+*       Bandwidth 960 MHz 
+*       Voltage noise ~ 4nV/rtHz
+*       Slew Rate ~ 840V/us
+*       Input Capacitance Cm ~1.3pF and Dm ~0.1pF
+*       Vos is static and will not vary ~ 1.5 mV
+*       Distortion is not characterized       
+*       Output Swing is not characterized. (it's currently Rail to Rail)
+*
+*    Node assignments
+*                  non-inverting input
+*                  | inverting input
+*                  | | positive supply
+*                  | | |  negative supply
+*                  | | |  |  output
+*                  | | |  |  |
+.SUBCKT ADA4817  1 2 99 50 45
+
+* FET INPUT STAGE
+
+Eos 9 2 poly(1) 100 98 4.2m 1
+Cd 1 2 0.1p
+Ccm1 1 0 1.5p
+Ccm2 2 0 1.5p
+J1 5 1 4 pmod 
+J2 6 9 4 pmod
+Ib1 1 0 2p
+Ib2 9 0 2p
+R3 50 5 rnoise 1
+R4 50 6 rnoise 1
+I11 99 4 1m
+
+Ccap 45 2 0.8p
+
+* COMMON-MODE GAIN NETW0RK
+
+*Ecm 80 98 POLY(2) 2 98 1 98 0 .5 .5 
+
+* GAIN STAGE & POLE AT 130 kHz
+
+Ecc 97 0 99 0 1
+Ess 52 0 50 0 1
+Eref 98 0 POLY(2) 99 0 50 0 0 .5 .5 
+
+G1 13 98 5 6 0.045e3
+R7 13 98 Rnoise 255e3
+C3 13 98 30p
+V1 97 14 2.25
+V2 16 52 2.25
+D1 13 14 DX
+D2 16 13 DX
+
+* POLE AT 1 GHz
+G2 98 43 13 98 1
+R10 98 43 rnoise 1
+C5 98 43 112p
+
+* POLE AT 1.3 GHz
+G3 98 53 43 98 1
+R11 98 53 rnoise 1
+C6 98 53 112p
+
+*POLE AT 130 GHz
+*G4 98 63 53 98 1
+*R12 98 63 rnoise 1
+*C7 98 63 0.122p
+
+* BUFFER STAGE
+Gbuf 98 81 53 98 1e-2
+Rbuf 81 98 Rnoise 100
+* OUTPUT STAGE
+
+Vo1 99 90 0
+Vo2 51 50 0
+R18 25 90 rnoise .02
+R19 25 51 rnoise .02
+*D100 45 250 Dx
+*D101 250 45 Dx
+Vcd 25 45 0
+G6 25 90 99 81 50
+G7 51 25 81 50 50
+V4 26 25 -0.8355
+V5 25 27 -0.8355
+D5 81 26 Dx
+D6 27 81 DX
+
+Fo1 98 70 vcd 1
+D7 70 71 DX
+D8 72 70 DX
+vi1 71 98 0
+Vi2 98 72 0
+
+Erefq 96 0 45 0 1 
+Iq 99 50 -0.1017
+Fq1 96 99 POLY(2) Vo1 Vi1 0 1 -1
+Fq2 50 96 POLY(2) Vo2 Vi2 0 1 -1
+
+****** Voltage noise stage
+
+rnoise1 39 98 5.5e-4
+vnoise1 39 98 0
+vnoise2 101 98 0.75
+dnoise1 101 39 dn
+fnoise1 100 98 vnoise1 1
+rnoise2 100 98 1
+
+.model Rnoise RES(T_abs=-275)
+.model pmod pjf (beta=0.5e-2, T_abs=-10)
+.MODEL DX D (T_abs=-10)
+.model dn d(kf=2e-12,af=1, T_abs=-4)
+
+.ENDS
+*$
+* ADA4817 Spice Macro-model
+* Description: Amplifier
+* Generic Desc:
+* Developed by: CK/ADI
+* Revision History:
+*   1.4 (1/2013) Updated to new header style
+*   1.3 (4/2012)
+* Copyright 2012 by Analog Devices Inc.
+*
+*
+* BEGIN Notes:
+*
+* Not Modeled:
+*    Distortion
+*
+* Parameters modeled include:
+*    FET Input common mode range
+*    Bandwidth 1050 MHz 
+*    Voltage noise ~ 4nV/rtHz
+*    Slew Rate ~ 840V/us
+*    Input Capacitance Cm ~1.3pF and Dm ~0.1pF
+*    Vos is static and will not vary ~ 1.5 mV
+*    Output Swing swing
+*
+* END Notes
+*
+*
+*
+* Node assignments
+*                  non-inverting input
+*                  | inverting input
+*                  | | positive supply
+*                  | | |  negative supply
+*                  | | |  |  output
+*                  | | |  |  |  FB output 
+*                  | | |  |  |  |
+.SUBCKT ADA4817-1    1 2 99 50 45 46
+
+* FET INPUT STAGE
+*Eos 9 2 poly(1) 100 98 4.2m 1
+Vos 9 2 1.5m
+Cd 1 2 0.1p
+Ccm1 1 0 1.3p
+Ccm2 2 0 1.3p
+J1 5 1 4 pmod 
+J2 6 9 4 pmod
+Ib1 1 0 2p
+Ib2 9 0 2p
+Dnil 9 42 DX
+Vnil 99 42 3.4
+Dpil 1 44 DX
+Vpil 99 44 3.4
+*R3 50 5 1
+*R4 50 6 1
+HR3 50 55 VR3 1
+VR3 55 5 DC 0
+HR4 50 66 VR4 1
+VR4 66 6 DC 0
+I11 99 4 1m
+Ccap 46 2 0.1p
+
+* COMMON-MODE GAIN NETW0RK
+Ecm 80 98 POLY(2) 2 98 1 98 0 .5 .5 
+
+Ecc 97 0 99 0 1
+Ess 52 0 50 0 1
+Eref 98 0 POLY(2) 99 0 50 0 0 .5 .5 
+
+* GAIN STAGE & POLE AT 130 kHz
+G1 13 98 5 6 0.045e3
+R7 13 98 rnoise 255e3
+*HR7 13 198 VR7 255E3
+*VR7 198 98 DC 0
+C3 13 98 40p
+V1 97 14 1.65
+V2 16 52 1.55
+D1 13 14 DX
+D2 16 13 DX
+
+* POLE AT 1 GHz
+G2 98 43 13 98 1
+R10 98 43 1
+C5 98 43 100p
+
+* POLE AT 1.3 GHz
+G3 98 53 43 98 1
+R11 98 53 1
+C6 98 53 100p
+
+*POLE AT 130 GHz
+*G4 98 63 53 98 1
+*R12 98 63 rnoise 1
+*C7 98 63 0.122p
+
+* BUFFER STAGE
+Gbuf 98 81 53 98 1e-2
+Rbuf 81 98 100
+
+* OUTPUT STAGE
+Vo1 99 90 0
+Vo2 51 50 0
+R18 25 90 .02
+R19 25 51 .02
+*D100 45 250 Dx
+*D101 250 45 Dx
+Vcd 255 45 0
+Lout 255 25 0.1p
+G6 25 90 99 81 50
+G7 51 25 81 50 50
+V4 26 25 -0.8355
+V5 25 27 -0.8355
+D5 81 26 Dx
+D6 27 81 DX
+R111 45 46 0.1
+
+Fo1 98 70 vcd 1
+D7 70 71 DX
+D8 72 70 DX
+vi1 71 98 0
+Vi2 98 72 0
+
+Erefq 96 0 45 0 1 
+Iq 99 50 0.0185
+Fq1 96 99 POLY(2) Vo1 Vi1 0 1 -1
+Fq2 50 96 POLY(2) Vo2 Vi2 0 1 -1
+
+****** Voltage noise stage
+rnoise1 39 98 1.8e-3
+vnoise1 39 98 0
+vnoise2 101 98 0.75
+dnoise1 101 39 dn
+fnoise1 100 98 vnoise1 1
+rnoise2 100 98 1
+
+.model Rnoise RES(T_abs=0)
+.model pmod pjf (beta=0.5e-2, T_abs=-10)
+.MODEL DX D (T_abs=0)
+.model dn d(kf=2e-12,af=1, T_abs=-4)
+
+.ENDS
+;$SpiceType=AMBIGUOUS
+*$

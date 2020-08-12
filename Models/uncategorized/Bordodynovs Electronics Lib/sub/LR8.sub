@@ -1,0 +1,19 @@
+* Quick'n'dirty behavioural model of Microchip LR8 high voltage regulator
+* Tony Casey, tony@ritecom.com, 20200524
+*
+* Displays reasonable approximations to:
+*   Transient response to load, &
+*   Load regulation 500uA < Iload < 10mA: ~1.4%
+*   Turn-on voltage for Vout=5V
+*   - according to Fig 3-7 in datasheet
+*
+.subckt LR8 IN ADJ OUT
+S1 OUT IN N001 OUT mySW
+G1 N001 REF OUT REF 1m
+I1 IN N001 10u load
+R1 N001 REF 90k
+D1 ADJ REF D1V2
+C2 OUT N001 40p Rser=350k
+.model D1V2 D(Vfwd=0.6 Vrev=1.21 Ron=10 Roff=100Meg Rrev=2 )
+.model mySW SW(Ron=10 Roff=1Meg Vser=2 Vt=5 Vh=-2 Ilimit=20m level=2 oneway)
+.ends LR8

@@ -1,0 +1,205 @@
+.SUBCKT MCP6561_my 1 2 3 4 5
+*               | | | | |
+*               | | | | Output
+*               | | | Negative Supply
+*               | | Positive Supply
+*               | Inverting Input
+*               Non-inverting Input
+*
+*
+* The following op-amps are covered by this model:
+*      MCP6561/1R/1U/2/4
+*
+*
+* Revision History:
+*      REV A: 31-Jan-11, Created model
+*      REV B: 09-Apr-11, Fixed output voltage swing    
+*
+* Recommendations:
+*      Use PSPICE (or SPICE 2G6; other simulators may require translation)
+*      For a quick, effective design, use a combination of: data sheet
+*            specs, bench testing, and simulations with this macromodel
+*      For high impedance circuits, set GMIN=100F in the .OPTIONS statement
+*      Can disable Hysteresis for faster response in large circuits by adding comments
+*      in front of statements flagged below
+*
+* Supported:
+*      Typical performance for temperature range (-40 to 125) degrees Celsius
+*      DC, AC, Transient, and Noise analyses.
+*      Most specs, including: offsets, DC PSRR, DC CMRR, input impedance,
+*            open loop gain, voltage ranges, supply current, ... , etc.
+*      Temperature effects for Ibias, Iquiescent, Iout short circuit 
+*            current, Vsat on both rails, Slew Rate vs. Temp and P.S.
+*
+* Not Supported:
+*      Some Variation in specs vs. Power Supply Voltage
+*      Vos distribution, Ib distribution for Monte Carlo
+*      Distortion (detailed non-linear behavior)
+*      Some Temperature analysis
+*      Process variation
+*      Behavior outside normal operating region
+*
+* Input Stage
+V10  3 10 -450M
+R10 10 11 690K
+R11 10 12 690K
+G10 10 11 10 11 144U
+G11 10 12 10 12 144U
+C11 11 12 576E-18
+C12  1  0 4.00P
+*E12 71 14 POLY(6) 20 0 21 0 22 0 23 0 26 0 27 0   2.1M 86.2K 86.2K 86.2K 86.2K 1 1
+E12 71 14 POLY(7) 20 0 21 0 22 0 23 0 26 0 27 0 111 0
++ 1.5M 55 55 15 15 1 1 -.5M
+* LINE ABOVE FOR HYSTERESIS, LINE BELOW FOR NO HYSTERESIS
+*+ 1.5M 55 55 15 15 1 1 0
+G12 1 0 62 0 1m
+G13 1 2 63 0 1u
+M12 11 14 15 15 NMI 
+M14 12 2 15 15 NMI 
+G14 2 0 62 0 1m
+C14  2  0 4.00P
+I15 15 4 50.0U
+V16 16 4 -250M
+GD16 16 1 TABLE {V(16,1)} ((-100,-100E-15)(0,0)(1m,1u)(2m,1m)) 
+V13 3 13 -250M
+GD13 2 13 TABLE {V(2,13)} ((-100,-100E-15)(0,0)(1m,1u)(2m,1m)) 
+R71  1  0 10.0E12
+R72  2  0 10.0E12
+R73  1  2 10.0E12
+*C13  1  2 1.00E-15
+*
+* Noise, PSRR, and CMRR
+I20 21 20 423U
+D20 20  0 DN1
+D21  0 21 DN1
+I22 22 23 1N
+R22 22 0  1k
+R23  0 23 1k
+G26  0 26 POLY(2) 3 0 4 0   0.00 -316U -316U
+R26 26  0 1
+G27  0 27 POLY(2) 1 0 2 0  -2.75M 158U 158U
+R27 27  0 1
+*
+* Open Loop Gain, Slew Rate
+G30  0 30 12 11 1
+R30 30  0 1.00K
+Cr30 30 0 1f
+G31 0 31 3 4 14.7
+I31 0 31 DC 13.7
+R31 31  0 1 TC=0.00,0.00
+GD31 30 0 TABLE {V(30,31)} ((-100,-1n)(0,0)(1m,0.1)(2m,2))
+G32 32 0 3 4 14.7
+I32 32 0 DC 13.7
+R32 32  0 1 TC=0.00,0.00
+GD32 0 30 TABLE {V(30,32)} ((-2m,2)(-1m,0.1)(0,0)(100,-1n))
+G33  0 33 30 0 1m
+R33  33 0 1K
+G34  0 34 33 0 1.00
+R34  34 0 1K
+C34  34 0 353N
+G37  0 37 34 0 1m
+R37  37 0 1K
+C37  37 0 15.9E-15
+G38  0 38 37 0 1m
+R38  39 0 1K
+L38  38 39 15.9N
+E38  35 0 38 0 1
+G35 33 0 TABLE {V(35,3)} ((-1,-1n)(0,0)(2.00,1n))(2.2,1))
+G36 33 0 TABLE {V(35,4)} ((-2.2,-1)((-2.00,-1n)(0,0)(1,1n))
+*
+* Output Stage
+*R80 50 0 100MEG
+*CR80 50 0 1f 
+*G50 0 50 57 96 2
+BG50 0 50 i=v(57,96)*2 Rpar=100Meg Cpar=1f tripdv=1m tripdt=10n ;my
+R58 57  96 0.50
+CR58 57  96 10f ;my
+R57 57  0 10.0
+CR57 57  0 1f ;my
+C58  5  0 2.00P
+G57  0 57 POLY(3) 3 0 4 0 35 0 0 37.5M 50.0M 100M
+*GD55 55 57 TABLE {V(55,57)} ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D55 57 55 dm ;my
+D55s 57 55 dms ;my
+*GD56 57 56 TABLE {V(57,56)} ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D56 56 57 dm ;my
+D56s 56 57 dms ;my
+E55 55  0 POLY(2) 3 0 51 0 0.00 1 -40.0M
+E56 56  0 POLY(2) 4 0 52 0 1.36M 1 -17.8M
+R51 51 0 1k
+CR51 51 0 1f
+R52 52 0 1k
+CR52 52 0 1f
+*GD51 50 51 TABLE {V(50,51)} ((-10,-1n)(0,0)(1m,1m)(2m,1))
+D51 50 51 dm ;my
+D51s 50 51 dms ;my
+*GD52 50 52 TABLE {V(50,52)} ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D52 52 50 dm ;my
+D52s 52 50 dms ;my
+
+.model dm d ron=1m Epsilon=20u Roff=20G Vfwd=1m
+.model dms d ron=1 Roff=20G Vfwd=0 Epsilon=10u
+
+G53  3  0 POLY(1) 51 0  -50.0U 1M
+G54  0  4 POLY(1) 52 0  -50.0U -1M
+*
+* Current Limit
+G99 96 5 99 0 1
+R98 0 98 1 TC=-1.00M,2.20U
+G97 0 98 TABLE { V(96,5) } ((-11.0,-6.5M)(-1.00M,-6.43M)(0,0)(1.00M,6.43M)(11.0,6.5M))
+*E97 99 0 VALUE { V(98)*((V(3)-V(4))*2.39 + -3.30)}
+E97 99 0 VALUE { V(98)*LIMIT(((V(3)-V(4))*2.39 + -3.30),0.00,1E6)}
+D98 4 5 DESD
+D99 5 3 DESD
+*
+* Temperature / Voltage Sensitive IQuiscent
+R61 0 61 1 TC=2.36M,-625N
+G61 3 4 61 0 1
+G60 0 61 TABLE {V(3, 4)} 
++ ((0,0)(800M,930N)(1.8,88.0U)(2.00,89.0U)
++ (3.00,90.0U)(5.00,94.0U)(6.00,97.0U))
+*
+* Temperature Sensitive offset voltage
+I73 0 70 DC 1uA
+*R74 0 70 1 TC=2.00
+R74 0 70 1 TC=0.00
+E75 1 71 70 0 1 
+*
+* Temp Sensistive IBias
+I62 0 62 DC 1uA
+R62 0 62 REXP  9.47302M
+*
+* Temp Sensistive Offset IBias
+I63 0 63 DC 1uA
+R63 0 63 250M TC=473M,5.03M
+*
+* Hysteresis
+G110 0 110 POLY(2) 3 0 4 0  10.1 -100M 100M
+R110 110 0 1 TC=1.8M,0
+*E111 111 0 VALUE { V(110) * SGN(V(57) }
+* LINE ABOVE CAUSED CONVERGENCE ERROR, USE TWO LINES BELOW INSTEAD
+E111 111 0 VALUE { V(110) * V(112) }
+E112 112 0 TABLE {V(120,0)} ((-1,1)(-1m,0.99)(1m,-0.99)(1,-1))
+C120  120 0  1u
+G120 0 120 TABLE {V(57,4)} ((-1m,-1)(1m,1))
+R120 0 120 1
+C121 121 120 2p
+C122 122 120 2p
+V121 121 0 1
+V122 122 0 -1
+* Node 120 above is output of FF.  Can substitute with node 57 for
+* direct input from output state.
+*
+* Hyst FF Node 120 is output of FF
+*X_U113 0 0 113 114 120 115 $G_DPWR $G_DGND DFFRSH
+*E114 114 0 TABLE {V(57,0)}((-1,-1n)(1m,0)(2m,4)(1,4.01))
+*R113 0 115 1k
+*E113 113 0 TABLE {V(57,0)}((-1,4.01)(-2m,4)(-1m,1n)(0,0))
+*
+*
+* Models
+.MODEL NMI NMOS(L=2.00U W=42.0U KP=20.0U LEVEL=1 )
+.MODEL DESD  D   N=1 IS=1.00E-15
+.MODEL DN1 D   IS=1P KF=50.0P AF=1
+.MODEL REXP  RES TCE= 4.41236
+.ENDS MCP6561

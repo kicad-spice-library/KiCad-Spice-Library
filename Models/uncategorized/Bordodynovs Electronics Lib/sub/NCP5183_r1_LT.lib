@@ -1,0 +1,243 @@
+* PSpice Model Editor - Version 16.3.0
+* Modified for LTspiceXVII - eetech00@yahoo.com
+*$
+* source NCP5183_MODEL_R1
+.subckt NCP5183 HIN LIN GND DRVL VCC HB DRVH VB
++ params: vinl=0.8 vccoff=8.3 vboff=8.3 vbon=8.8 vccon=8.8 vinh=2.5
+R_R3         0 N00733  250k TC=0,0 
+R_R4         0 N00904  250k TC=0,0 
+R_R5         N150433 N30296  3.3k TC=0,0 
+BE_ABM1 N02730 0 V=IF(V(N02318)>{Vccon},3,0)
+BE_ABM2 N105114 0 V=IF(V(N02318)<{Vccoff},3,0)
+R_R6         N155296 N15879  3.3k TC=0,0 
+*X_U1         0 0 0 N105114 N02730 VCC_OK N152211 RSFFPC_ABM  PARAMS: VIH=0.8
+X_U1         0 0 0 N105114 N02730 N152211 VCC_OK  RSFFPC_ABM  PARAMS: VIH=0.8
++  VOH=3.5 VOL=0.4
+X_S1    N00733 0 N00733 0 SCHEMATIC1_S1 
+BE_ABM3 N103872 0 V=IF(V(VCC_OK)>1,(IF(V(N00733)>{Vinh},3,0)),0)
+BE_ABM4 N155986 0 V=IF(V(VCC_OK)>1,(IF(V(N00733)<{Vinl},3,0)),0)
+X_U3         0 0 0 N155982 N103872 N155317 M_UN0001 RSFFPC_ABM  PARAMS: VIH=0.8
++  VOH=3.5 VOL=0.4
+BE_ABM5 N139162 0 V=IF(V(VCC_OK)>1,(IF(V(N00904)>{Vinh},3,0)),0)
+BE_ABM6 N152188 0 V=IF(V(VCC_OK)>1,(IF(V(N00904)<{Vinl},3,0)),0)
+X_U4         N142312 N151166 0 N152184 0 N150426 M_UN0002 RSFFPC_ABM  PARAMS:
++  VIH=0.8 VOH=3.5 VOL=0.4
+R_R7         HB 0  100meg TC=0,0 
+BE_ABM8 N08867 0 V=(V(N07230)-V(HB))
+X_S2    VB HB VB HB SCHEMATIC1_S2 
+BE_ABM9 N08502 0 V=IF(V(N08867)>{Vbon},3,0)
+X_U6         0 0 0 N104944 N08502 VB_OK N149108 RSFFPC_ABM  PARAMS: VIH=0.8
++  VOH=3.5 VOL=0.4
+BE_ABM10 N104944 0 V=IF(V(N08867)<{Vboff},3,0)
+X_S3    N14318 0 N15509 N14318 SCHEMATIC1_S3 
+R_R9         N14318 0  100m TC=0,0 
+X_S4    N15879 0 DRVL N15509 SCHEMATIC1_S4 
+X_S5    N15879 0 N15417 DRVL SCHEMATIC1_S5 
+X_S6    N15399 N15417 VCC N15399 SCHEMATIC1_S6 
+R_R10         N15399 N15417  100m TC=0,0 
+C_C1         0 N15879  10p  TC=0,0 
+C_C2         DRVL 0  10p  TC=0,0 
+X_S7    N15879 0 N20773 0 SCHEMATIC1_S7 
+X_S8    N15879 0 VCC N20773 SCHEMATIC1_S8 
+C_C3         0 N20773  300p  TC=0,0 
+R_R13         VCC 0  165k TC=0,0 
+R_R14         VCC N02318  50k TC=0,0 
+C_C5         0 N02318  50p IC=0 TC=0,0 
+X_S11    N30296 0 N30240 DRVH SCHEMATIC1_S11 
+C_C6         0 N30296  10p  TC=0,0 
+X_S14    N30296 0 VB N30490 SCHEMATIC1_S14 
+X_S9    N30042 HB N30266 N30042 SCHEMATIC1_S9 
+C_C7         HB N30490  920p  TC=0,0 
+R_R17         VB HB  250k TC=0,0 
+X_S12    N30222 N30240 VB N30222 SCHEMATIC1_S12 
+X_S10    N30296 0 DRVH N30266 SCHEMATIC1_S10 
+R_R16         N30222 N30240  100m TC=0,0 
+X_S13    N30296 0 N30490 HB SCHEMATIC1_S13 
+R_R15         N30042 HB  100m TC=0,0 
+R_R18         N07230 VB  10k TC=0,0 
+C_C8         HB N07230  100p IC=0 TC=0,0 
+C_C10         HB DRVH  10p  TC=0,0 
+R_R21         N20773 0  1meg TC=0,0 
+C_C12         HB N30266  50p  TC=0,0 
+C_C13         N30240 VB  50p  TC=0,0 
+C_C17         0 N15509  50p  TC=0,0 
+C_C18         N15417 VCC  50p  TC=0,0 
+X_S15    N00904 0 N00904 0 SCHEMATIC1_S15 
+X_S16    VCC 0 VCC 0 SCHEMATIC1_S16 
+R_R11         N00733 LIN  10 TC=0,0 
+R_R12         N00904 HIN  10 TC=0,0 
+C_C4         N00904 0  10p  TC=0,0 
+C_C9         N00733 0  10p  TC=0,0 
+R_R27         VB N112548  500 TC=0,0 
+D_D1         0 VCC D1N4148 
+D_D2         0 N00904 D1N4148 
+D_D4         HB VB D1N4148 
+D_D3         0 N00733 D1N4148 
+D_D5         N112544 N112548 DMURA160T3/ON 
+D_D6         N112540 N112544 DMURA160T3/ON 
+D_D7         VCC N112540 DMURA160T3/ON 
+X_U8         VB_OK VCC_OK N142312  vcc 0 AND2
+X_U9         N152211 N155986 N155982 vcc 0 OR2
+X_U10         N149108 N152211 N152188 N152184 vcc 0 OR3
+X_U11         N139162 N151166 vcc 0 DELAY PARAMS:
++ DELAY=3n TOL=10 IO_LEVEL=0 MNTYMXDLY=0
+X_U12         N150426 N150433 vcc 0 DELAY PARAMS:
++ DELAY=80n TOL=10 IO_LEVEL=0 MNTYMXDLY=0
+X_U13         N155317 N155296 vcc 0 DELAY PARAMS:
++ DELAY=80n TOL=10 IO_LEVEL=0 MNTYMXDLY=0
+.model D1N4148 D(Is=2.52n Rs=.568 N=1.752
++ Cjo=4p M=.4 tt=20n Iave=200m Vpk=75 mfg=OnSemi type=silicon)
+.MODEL DMURA160T3/ON D(
++IS=1.11356e-09 RS=0.283217 N=1.57799 EG=1.22127
++XTI=0.05 BV=600 IBV=5e-06 CJO=2.2552e-11
++VJ=0.4 M=0.356372 FC=0.5 TT=9.47851e-08
++KF=0 AF=1
++)
+.ends NCP5183
+*$
+.subckt SCHEMATIC1_S1 1 2 3 4  
+S_S1         3 4 1 2 _S1
+RS_S1         1 2 1G
+.MODEL         _S1 VSWITCH Roff=1e7 Ron=100m Voff=20 Von=20.5
+.ends SCHEMATIC1_S1
+*$
+.subckt SCHEMATIC1_S2 1 2 3 4  
+S_S2         3 4 1 2 _S2
+RS_S2         1 2 1G
+.MODEL         _S2 VSWITCH Roff=1e7 Ron=100m Voff=19.6 Von=20
+.ends SCHEMATIC1_S2
+*$
+.subckt SCHEMATIC1_S3 1 2 3 4  
+S_S3         3 4 1 2 _S3
+RS_S3         1 2 1G
+.MODEL         _S3 VSWITCH Roff=100m Ron=1e7 Voff=0.42 Von=0.44
+.ends SCHEMATIC1_S3
+*$
+.subckt SCHEMATIC1_S4 1 2 3 4  
+S_S4         3 4 1 2 _S4
+RS_S4         1 2 1G
+.MODEL         _S4 VSWITCH Roff=900m Ron=1e7 Voff=0.4 Von=1.7
+.ends SCHEMATIC1_S4
+*$
+.subckt SCHEMATIC1_S5 1 2 3 4  
+S_S5         3 4 1 2 _S5
+RS_S5         1 2 1G
+.MODEL         _S5 VSWITCH Roff=1e7 Ron=1.5 Voff=1.7 Von=3
+.ends SCHEMATIC1_S5
+*$
+.subckt SCHEMATIC1_S6 1 2 3 4  
+S_S6         3 4 1 2 _S6
+RS_S6         1 2 1G
+.MODEL         _S6 VSWITCH Roff=100m Ron=1e7 Voff=0.415 Von=0.445
+.ends SCHEMATIC1_S6
+*$
+.subckt SCHEMATIC1_S7 1 2 3 4  
+S_S7         3 4 1 2 _S7
+RS_S7         1 2 1G
+.MODEL         _S7 VSWITCH Roff=10 Ron=1e7 Voff=0.4 Von=1.7
+.ends SCHEMATIC1_S7
+*$
+.subckt SCHEMATIC1_S8 1 2 3 4  
+S_S8         3 4 1 2 _S8
+RS_S8         1 2 1G
+.MODEL         _S8 VSWITCH Roff=1e7 Ron=30 Voff=1.7 Von=3
+.ends SCHEMATIC1_S8
+*$
+.subckt SCHEMATIC1_S11 1 2 3 4  
+S_S11         3 4 1 2 _S11
+RS_S11         1 2 1G
+.MODEL         _S11 VSWITCH Roff=1e7 Ron=1.5 Voff=1.7 Von=3
+.ends SCHEMATIC1_S11
+*$
+.subckt SCHEMATIC1_S14 1 2 3 4  
+S_S14         3 4 1 2 _S14
+RS_S14         1 2 1G
+.MODEL         _S14 VSWITCH Roff=1e7 Ron=20 Voff=1.7 Von=3
+.ends SCHEMATIC1_S14
+*$
+.subckt SCHEMATIC1_S9 1 2 3 4  
+S_S9         3 4 1 2 _S9
+RS_S9         1 2 1G
+.MODEL         _S9 VSWITCH Roff=100m Ron=1e7 Voff=0.42 Von=0.44
+.ends SCHEMATIC1_S9
+*$
+.subckt SCHEMATIC1_S12 1 2 3 4  
+S_S12         3 4 1 2 _S12
+RS_S12         1 2 1G
+.MODEL         _S12 VSWITCH Roff=100m Ron=1e7 Voff=0.415 Von=0.445
+.ends SCHEMATIC1_S12
+*$
+.subckt SCHEMATIC1_S10 1 2 3 4  
+S_S10         3 4 1 2 _S10
+RS_S10         1 2 1G
+.MODEL         _S10 VSWITCH Roff=900m Ron=1e7 Voff=0.4 Von=1.7
+.ends SCHEMATIC1_S10
+*$
+.subckt SCHEMATIC1_S13 1 2 3 4  
+S_S13         3 4 1 2 _S13
+RS_S13         1 2 1G
+.MODEL         _S13 VSWITCH Roff=5 Ron=1e7 Voff=0.4 Von=1.7
+.ends SCHEMATIC1_S13
+*$
+.subckt SCHEMATIC1_S15 1 2 3 4  
+S_S15         3 4 1 2 _S15
+RS_S15         1 2 1G
+.MODEL         _S15 VSWITCH Roff=1e7 Ron=100m Voff=20 Von=20.5
+.ends SCHEMATIC1_S15
+*$
+.subckt SCHEMATIC1_S16 1 2 3 4  
+S_S16         3 4 1 2 _S16
+RS_S16         1 2 1G
+.MODEL         _S16 VSWITCH Roff=1e7 Ron=100m Voff=20 Von=20.5
+.ends SCHEMATIC1_S16
+*$
+* Added RSFFPC_ABM - eetech00@yahoo.com
+.subckt RSFFPC_ABM S CLK R CLR PRE Q QBAR Params: VIH=1.5 VOH=5 VOL=0
+A6 S pccn 0 ri 0 0 cs 0 AND Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A5 R pccn 0 0 0 0 cr 0 AND Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A4 CLR CLK PRE 0 0 0 pccn 0 AND Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A7 R 0 0 0 0 ri 0 0 BUF Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A2 rst QBAR 0 0 0 Q 0 0 OR Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A9 0 0 0 set Q QBAR 0 0 OR Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A1 PRE 0 0 0 0 prei 0 0 BUF Tau={tau} Tripdt={tdt} Vhigh={VOH} Vlow={VOL} Ref={VIH} Td={td}
+A3 CLR 0 0 0 0 clri 0 0 BUF Tau={tau} Tripdt={tdt} Vhigh={VOH} Vlow={VOL} Ref={VIH} Td={td+1n}
+A8 clri cr 0 0 0 0 rst 0 OR Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+A10 0 cs prei 0 0 0 set 0 OR Tau={tau} Tripdt={tdt} Td={td} Vhigh={VOH} Vlow={VOL} Ref={VIH}
+R1 CLR 0 1e8
+R2 R 0 1e8
+R3 CLK 0 1e8
+R4 S 0 1e8
+R5 PRE 0 1e8
+.param tau=10n
+.param tdt=2n
+.param td=1n
+.ends RSFFPC_ABM
+*
+* Added DELAY - eetech00@yahoo.com
+.subckt DELAY in out vcc vgnd Params: DELAY=3n TOL=10 IO_LEVEL=0 MNTYMXDLY=0
++ VIH=0.8 VOH=3.5 VOL=0.4 Tau=2n TDT=0.5n
+A1 in 0 0 0 0 0 out 0 BUF Ref={VIH} Vhigh={VOH} Vlow={VOL} Tau={TAU} Tripdt={TDT} Td={DELAY}
+R1 in 0 1G
+.ends
+*
+* Added OR2 - eetech00@yahoo.com
+.SUBCKT OR2 in1 in2 out vcc vgnd Params: VIH=0.8 VOH=3.5 VOL=0.4 Tau=2n TDT=0.5n TD=2n
+A1 in1 in2 0 0 0 0 out 0 OR Ref={VIH} Vhigh={VOH} Vlow={VOL} Tau={TAU} Tripdt={TDT} Td={TD}
+R1 in1 0 1G
+R2 in2 0 1G
+.ENDS
+*
+* Added OR3 - eetech00@yahoo.com
+.SUBCKT OR3 in1 in2 in3 out vcc vgnd Params: VIH=0.8 VOH=3.5 VOL=0.4 Tau=2n TDT=0.5n TD=2n
+A1 in1 in2 in3  0 0 0 out 0 OR Ref={VIH} Vhigh={VOH} Vlow={VOL} Tau={TAU} Tripdt={TDT} Td={TD}
+R1 in1 0 1G
+R2 in2 0 1G
+R3 in3 0 1G
+.ENDS
+*
+* Added AND2 - eetech00@yahoo.com
+.SUBCKT AND2 in1 in2 out vcc vgnd Params: VIH=0.8 VOH=3.5 VOL=0.4 Tau=2n TDT=0.5n TD=2n
+A1 in1 in2 0 0 0 0 out 0 AND Ref={VIH} Vhigh={VOH} Vlow={VOL} Tau={TAU} Tripdt={TDT} Td={TD}
+R1 in1 0 1G
+R2 in2 0 1G
+.ENDS

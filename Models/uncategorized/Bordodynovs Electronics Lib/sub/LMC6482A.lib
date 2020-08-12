@@ -1,0 +1,130 @@
+*//////////////////////////////////////////////////////////////////////
+* (C) National Semiconductor, Inc.
+* Models developed and under copyright by:
+* National Semiconductor, Inc.  
+
+*/////////////////////////////////////////////////////////////////////
+* Legal Notice: This material is intended for free software support.
+* The file may be copied, and distributed; however, reselling the 
+*  material is illegal
+
+*////////////////////////////////////////////////////////////////////
+* For ordering or technical information on these models, contact:
+* National Semiconductor's Customer Response Center
+*                 7:00 A.M.--7:00 P.M.  U.S. Central Time
+*                                (800) 272-9959
+* For Applications support, contact the Internet address:
+*  amps-apps@galaxy.nsc.com
+
+
+*//////////////////////////////////////////////////////////
+*LMC6482A CMOS Dual OP-AMP MACRO-MODEL
+*//////////////////////////////////////////////////////////
+*
+* connections:       non-inverting input
+*                    |   inverting input
+*                    |   |   positive power supply
+*                    |   |   |   negative power supply
+*                    |   |   |   |   output
+*                    |   |   |   |   |
+*                    |   |   |   |   |
+.SUBCKT LMC6482A     1   2  99  50  40
+* CAUTION:  SET .OPTIONS GMIN=1E-16 TO CORRECTLY MODEL INPUT BIAS CURRENT.
+*
+*Features:
+*Operates from single or dual supplies
+*Rail-to-rail input and output swing
+*Ultra low input current =             10fA
+*Slew rate =                        1.2V/uS
+*
+*NOTE: Model is for single device only and simulated
+*      supply current is 1/2 of total device current.
+*      Noise is not modeled.
+*      Asymmetrical gain is not modeled.
+*
+*****************INPUT STAGE************** 
+*
+I1  99  4 17U
+M1   5  2 4 99 MOSFET
+R3   5 50 5.651K
+M2   6  7 4 99 MOSFET
+R4   6 50 5.651K
+*Fp2=5.9 MHz
+C4   5  6 2.3868P
+G0  98  9 6 5 4.4165E-2
+R0  98  9 1K
+DP1  1 99 DA
+DP2 50  1 DB
+DP3  2 99 DB
+DP4 50  2 DA
+*For accurate Ib , set GMIN<=1E-16 on .OPTIONS line.
+*
+***********COMMON MODE EFFECT***********
+*
+I2  99 50 420.5U
+*^Quiescent current                   
+EOS  7  1 POLY(1) 16 49 .75E-3 1
+*Offset voltage..........^
+R8  99 49 40K
+R9  49 50 40K
+*
+***************POLE STAGE*************** 
+*
+*Fp=13.3 MHz
+G3  98 15 9 49 1E-3
+R12 98 15 1K
+C5  98 15 11.967P
+*
+************POLE/ZERO STAGE*************
+*
+*Fp=600 KHz, Fz= 1.4MHz
+G5  98 18 15 49 1E-3
+R14 98 18 1K
+R15 98 19 750
+C6  19 18 151.58P
+*
+*********COMMON-MODE ZERO STAGE*********
+*
+*Fpcm=20 KHz
+G4  98 16 POLY(2) 1 49 2 49 0 2.812E-8 2.812E-8
+L2  98 17 7.958M
+R13 17 16 1K
+*
+**************SECOND STAGE**************
+*
+EH  99 98 99 49 1
+G1  98 29 18 49 5.6667E-6 
+R5  98 29 100.37MEG
+V2  99  8 1.56
+D1  29  8 DX
+D2  10 29 DX
+V3  10 50 1.56
+*
+**************OUTPUT STAGE**************
+*
+F6  99 50 VA7 1
+*^Dynamic supply current
+F5  99 35 VA8 1
+D3  36 35 DX
+VA7 99 36 0
+D4  35 99 DX
+E1  99 37 99 49 1
+VA8 37 38 0
+G6  38 40 49 29 16.667E-3  
+R16 38 40 2.3886K  
+V4  30 40 .77
+D5  30 99 DX
+V5  40 31 .77
+D6  50 31 DX
+*Fp1=2.343 Hz
+C3  29 39 17P
+R6  39 40 1K
+*
+***************MODELS USED**************
+*
+.MODEL DA D(IS=2E-14)
+.MODEL DB D(IS=1E-14)
+.MODEL DX D(IS=1E-14)
+.MODEL MOSFET PMOS(VTO=0 KP=1.842E-3)
+.ENDS
+*$

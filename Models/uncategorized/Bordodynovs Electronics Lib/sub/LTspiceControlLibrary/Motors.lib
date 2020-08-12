@@ -1,0 +1,92 @@
+** Motors
+
+.subckt DCMotor e+ e- m+ m-
+Re1 e+ Ne01 {Ra}
+Le1 Ne01 Ne02 {La} Rser=0
+He1 Ne02 e- Lm1 {-Ke}
+Rm1 m+ Nm01 {Dm}
+Lm1 Nm01 Nm02 {Jm} Rser=0
+Hm1 Nm02 m- Le1 {Kt}
+.param Ra=1 La=1m Ke=0.01 Dm=10u Jm=10u
+.param Kt=Ke
+.ends DCMotor
+
+.subckt PMSMotor U V W m+ m-
+Rd1 Vd Nd01 {Ra}
+Ld1 Nd01 Nd02 {Ld} Rser=0
+Bd1 Nd02 0 V=-Lq*I(Lq1)*V(Oe) tripdt={tripdt} tripdv={tripdv}
+Rq1 Vq Nq01 {Ra}
+Lq1 Nq01 Nq02 {Lq} Rser=0
+Bq1 Nq02 Nq03 V=Ld*I(Ld1)*V(Oe) tripdt={tripdt} tripdv={tripdv}
+Eq1 Nq03 0 Oe 0 {Ke}
+Rm1 m+ Nm01 {Dm}
+Lm1 Nm01 Nm02 {Jm} Rser=0
+Bm1 Nm02 Nm03 V=Np*(Ld-Lq)*I(Ld1)*I(Lq1) tripdt={tripdt} tripdv={tripdv}
+Hm1 Nm03 m- Lq1 {Np*Kt}
+Gu1 U 0 Iu 0 1
+Gv1 V 0 Inw Iu 1
+Gw1 W 0 0 Inw 1
+H1 Oe 0 Lm1 {-Np}
+G2 0 Pe Oe 0 1
+C2 Pe 0 1
+R2 Pe Npe01 1 ; workaround to avoid a warning that node Pe is floating
+E2 Npe01 0 Pe 0 1 ; workaround
+.ic V(Pe)={Pm0*Np}
+B3 sinPe 0 V=sin(V(Pe)) tripdt={tripdt} tripdv={tripdv}
+B4 cosPe 0 V=cos(V(Pe)) tripdt={tripdt} tripdv={tripdv}
+E5 Vuv 0 U V 1
+E6 Vwu 0 W U 1
+E7 Va 0 Vuv Vwu {sqrt(1/6)}
+E8 Vb 0 V W {sqrt(1/2)}
+B9 Vd 0 V=V(Va)*V(cosPe)+V(Vb)*V(sinPe) tripdt={tripdt} tripdv={tripdv}
+B10 Vq 0 V=-V(Va)*V(sinPe)+V(Vb)*V(cosPe) tripdt={tripdt} tripdv={tripdv}
+B11 Ia 0 V=I(Ld1)*V(cosPe)-I(Lq1)*V(sinPe) tripdt={tripdt} tripdv={tripdv}
+B12 Ib 0 V=I(Ld1)*V(sinPe)+I(Lq1)*V(cosPe) tripdt={tripdt} tripdv={tripdv}
+E13 Iu 0 Ia 0 {sqrt(2/3)}
+E14 Ikb 0 Ib 0 {-sqrt(2)}
+E15 Inw 0 Iu Ikb 0.5
+.param Ra=0.1 Ld=1m Lq=1m Ke=0.1 Dm=0.1m Jm=0.1m Np=3
+.param Kt=Ke
+.param Pm0=0
+.param tripdt=1e300 tripdv=1
+.ends PMSMotor
+
+.subckt InductionMotor U V W m+ m- fa2 fb2
+Rd11 Vd1 Nd101 {R1}
+Ld11 Nd101 Nd102 {Ll1} Rser=0
+Ld12 Nd102 0 {M} Rser=0
+Rq11 Vq1 Nq101 {R1}
+Lq11 Nq101 Nq102 {Ll1} Rser=0
+Lq12 Nq102 0 {M} Rser=0
+Rd21 0 Nd201 {R2}
+Ld21 Nd201 Nd202 {Ll2} Rser=0
+Ld22 Nd202 Nd203 {M} Rser=0
+Bd21 Nd203 0 V=V(fb2)*V(Oe2) tripdt={tripdt} tripdv={tripdv}
+Rq21 0 Nq201 {R2}
+Lq21 Nq201 Nq202 {Ll2} Rser=0
+Lq22 Nq202 Nq203 {M} Rser=0
+Bq21 Nq203 0 V=-V(fa2)*V(Oe2) tripdt={tripdt} tripdv={tripdv}
+Rm1 m+ Nm01 {Dm}
+Lm1 Nm01 Nm02 {Jm} Rser=0
+Bm1 Nm02 m- V=Np*(V(fmq1)*I(Ld22)-V(fmd1)*I(Lq22)) tripdt={tripdt} tripdv={tripdv}
+Kd1 Ld12 Ld22 1
+Kq1 Lq12 Lq22 1
+Hfa21 fmd1 0 Ld12 {M}
+Hfa22 fa2 fmd1 Ld22 {L2}
+Hfb21 fmq1 0 Lq12 {M}
+Hfb22 fb2 fmq1 Lq22 {L2}
+Gu1 U 0 Iu 0 1
+Gv1 V 0 Inw Iu 1
+Gw1 W 0 0 Inw 1
+H1 Oe2 0 Lm1 {-Np}
+E2 Vuv 0 U V 1
+E3 Vwu 0 W U 1
+E4 Vd1 0 Vuv Vwu {sqrt(1/6)}
+E5 Vq1 0 V W {sqrt(1/2)}
+H6 Iu 0 Ld12 {sqrt(2/3)}
+H7 Ikb 0 Lq12 {-sqrt(2)}
+E8 Inw 0 Iu Ikb 0.5
+.param R1=1 R2=1 M=0.1 Ll1=1m Ll2=1m Dm=10m Jm=10m Np=2
+.param L1=M+Ll1 L2=M+Ll2
+.param tripdt=1e300 tripdv=1
+.ends InductionMotor

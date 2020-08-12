@@ -1,0 +1,25 @@
+.Subckt R+Current_noise_dB R+ R- R=1K Vn_dB=-15 Cp=0.1p
+.param IonVV=1750u*(10**(Vn_dB/20))**2
+CR1 R+ Test {Cp} Rpar={R}
+B1 N003 N001 I=v(R+,test)**2*IonVV
+B2 Test R- V=I(VAnoise)
+VAnoise N002 0 0
+Q1 0 N002 N003 0 NPNn temp=27
+Q2 0 N002 N001 0 PNPn temp=27
+.MODEL pnpn pnp is=1f  bf=1 af=1 kf=1n 
+.MODEL npnn npn is=1f  bf=1 af=1 kf=1n
+.ends 
+
+.Subckt R+Current_noise R+ R- R=1K Vn=1 Cp=0.1p
+.param IonVV=1750u*Vn**2
+CR1 R+ Test {Cp} Rpar={R} 
+B1 N003 N001 I=v(R+,R-)**2*IonVV
+B2 Test R- V=I(VAnoise)
+*b3 R R- v=v(vn)
+VAnoise N002 0 0
+Q1 0 N002 N003 0 NPNn temp=27
+Q2 0 N002 N001 0 PNPn temp=27
+.MODEL pnpn pnp is=0.001f  bf=1 af=1 kf=1n 
+.MODEL npnn npn is=0.001f  bf=1 af=1 kf=1n 
+*RN  vn 0 {R} noiseless
+.ends 

@@ -1,0 +1,301 @@
+* UCC28C45 and UCC38C45
+*****************************************************************************
+* (C) Copyright 2016 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of
+** merchantability or fitness for a particular purpose. The model is
+** provided solely on an "as is" basis. The entire risk as to its quality
+** and performance is with the customer
+*****************************************************************************
+*
+* This model was developed for Texas Instruments Incorporated by:
+* AEi Systems, LLC
+* 5777 W. Century Blvd., Suite 876
+* Los Angeles, California 90045
+*
+* This model is subject to change without notice. Neither Texas Instruments Incorporated
+* nor AEi Systems is responsible for updating this model.
+* For more information regarding modeling services, model libraries and simulation
+* products, please call AEi Systems at (310) 216-1144, or contact AEi Systems by email:
+* info@AENG.com. Or visit AEi Systems on the web at http://www.AENG.com.
+*
+*****************************************************************************
+*
+** Released by: WEBENCH Design Center, Texas Instruments Inc.
+* Parts: UCC28C45 and UCC38C45
+* Date: 03/16/2016
+* Model Type: Transient
+* Simulator: PSpice
+* Simulator Version: 16.0.0.p001
+* Reference Design: SLUA274A, Rev Oct 2008
+* Datasheet: SLUS458D, Rev Jan 2007
+*
+*****************************************************************************
+*
+* Updates:
+*
+* Final 1.00
+* Release to web.
+* Changed UVLO Thresholds from UCC28C41 model
+*
+*****************************************************************************
+.SUBCKT UCC28C45_STEADY COMP FB CS RTCT GND OUT VDD VREF
+****OSCILLATOR*****
+STOF1 8 GND RTCT GND SOSC
+BGBDISCH RTCT GND I=IF(V(8,GND)<2.5&V(13,GND)>2.5,8.4e-3,0)
+RPULL 8 VREF 100K
+****UVLO***********
+STOF2 VDD 19 VDD GND SUVLO
+RUVLO 19 GND 1MEG
+RSTDBY VDD GND 309K ; startup current
+ROP 10 GND 2535 ; operating current
+****REFERENCE*******
+BEBREF 13 GND V=IF(V(19,GND)>6,5,0)
+RREG 10 VREF 0.158
+CREF VREF GND 1N
+V3 13 10 0
+**GB6 19 GND Value = { IF ( V(19,GND) > 4 , (I(V3)) , 0 ) }
+BGB6 19 GND I=IF(V(19,GND)>4,IF((I(V3)-I(BEMY19))>2,2,IF((I(V3)-I(BEMY19))<0,0,(I(V3)-I(BEMY19)))),0)
+****CURRENT COMPARATOR*******
+BEB3 21 GND V=IF(V(CS,GND)>V(16,GND),5,0)
+R7 CS GND 1MEG
+RDELAY 21 22 1K
+CDELAY 22 GND 200P
+****ERROR AMPLIFIER**********
+XAMP VREF FB COMP GND 28C4xAMP
+****OFFSET LIMITER***********
+R4 12 11 2MEG
+R6 11 GND 1MEG
+BEB2 16 GND V=IF(V(11,GND)>1,1,V(11,GND))
+V4 COMP 9 1
+D1 9 12 D2
+****OUTPUT DRIVER************
+BEMY19 191 GND V=V(19,GND)
+XDRIVE 191 GND 5 OUT FETOUTC4X ; FETOUTC4X 2845OUT
+****S-R LATCH****************
+XLATCH 8 VREF 22 GND 6 7 FFLOPC2
+****50% LIMIT TOGGLE*********
+XToggle 8 150 GND GND 50 51 FFLOPC2
+BEBT 150 GND V=IF(V(VREF,GND)>2.5&V(50,GND)>2.5,5,0)
+****OUTPUT AND GATE**********
+BEOut 5 GND V=IF(V(VREF,GND)>2.5&V(7,GND)>2.5 & V(50,GND) > 2.5, 5, 0 )
+.MODEL SOSC SW (RON=.01 ROFF=1MEG VT=1.45 VH=0.95) ; VT=1.45 set to match 53k @ 3.3n/10k
+* Updated the UVLO Threshold from UCC28C41
+*.MODEL SUVLO SW (RON=.01 ROFF=10MEG VT=6.8 VH=0.2)
+.MODEL SUVLO SW (RON=.01 ROFF=10MEG VT=8.0 VH=0.4)
+.MODEL D2 D
+.ENDS UCC28C45_STEADY
+*$
+* UCC28C41 and UCC38C41
+*****************************************************************************
+* (C) Copyright 2009 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of
+** merchantability or fitness for a particular purpose. The model is
+** provided solely on an "as is" basis. The entire risk as to its quality
+** and performance is with the customer
+*****************************************************************************
+*
+* This model was developed for Texas Instruments Incorporated by:
+* AEi Systems, LLC
+* 5777 W. Century Blvd., Suite 876
+* Los Angeles, California 90045
+*
+* This model is subject to change without notice. Neither Texas Instruments Incorporated
+* nor AEi Systems is responsible for updating this model.
+* For more information regarding modeling services, model libraries and simulation
+* products, please call AEi Systems at (310) 216-1144, or contact AEi Systems by email:
+* info@AENG.com. Or visit AEi Systems on the web at http://www.AENG.com.
+*
+*****************************************************************************
+*
+** Released by: Analog eLab Design Center, Texas Instruments Inc.
+* Parts: UCC28C41 and UCC38C41
+* Date: 02/17/2009
+* Model Type: Transient Startup
+* Simulator: PSpice
+* Simulator Version: 16.0.0.p001
+* Reference Design: SLUA274A, Rev Oct 2008
+* Datasheet: SLUS458D, Rev Jan 2007
+*
+*****************************************************************************
+*
+* Updates:
+*
+* Final 1.00
+* Release to web.
+*
+*****************************************************************************
+.SUBCKT UCC28C45_START COMP FB CS RTCT GND OUT VDD VREF
+****OSCILLATOR*****
+STOF1 8 GND RTCT GND SOSC
+BGBDISCH RTCT GND I=IF(V(8,GND)<2.5&V(13,GND)>2.5,8.4e-3,0)
+RPULL 8 VREF 100K
+****UVLO***********
+STOF2 VDD 19 VDD GND SUVLO
+RUVLO 19 GND 1MEG
+***CDUMMY 19 GND 0.01p
+RSTDBY VDD GND 309K ; startup current
+ROP 10 GND 2535 ; operating current
+****REFERENCE*******
+BEBREF 13 GND V=IF(V(19,GND)>6,5,0)
+RREG 10 VREF 0.158
+CREF VREF GND 1N
+V3 13 10 0
+***GB6 19 GND Value = { IF ( V(19,GND) > 7 , I(V3) , 0 ) }
+BGB6 19 GND I=IF(V(19,GND)>4,IF((I(V3)-I(BEMY19))>100e-3,100e-3,IF((I(V3)-I(BEMY19))<0,0,(I(V3)-I(BEMY19)))),0)
+****CURRENT COMPARATOR*******
+BEB3 21 GND V=IF(V(CS,GND)>V(16,GND),5,0)
+R7 CS GND 1MEG
+RDELAY 21 22 1K
+CDELAY 22 GND 200P
+****ERROR AMPLIFIER**********
+XAMP VREF FB COMP GND 28C4xAMP
+****OFFSET LIMITER***********
+R4 12 11 2MEG
+R6 11 GND 1MEG
+BEB2 16 GND V=IF(V(11,GND)>1,1,V(11,GND))
+V4 COMP 9 1
+D1 9 12 D2
+****OUTPUT DRIVER************
+BEMY19 191 GND V=V(19,GND)
+***XDRIVE 19 GND 5 OUT FETOUTC4X ; FETOUTC4X 2845OUT
+XDRIVE 191 GND 5 OUT FETOUTC4X ; FETOUTC4X 2845OUT
+****S-R LATCH****************
+XLATCH 8 VREF 22 GND 6 7 FFLOPC2
+****50% LIMIT TOGGLE*********
+XToggle 8 150 GND GND 50 51 FFLOPC2
+BEBT 150 GND V=IF(V(VREF,GND)>2.5&V(50,GND)>2.5,5,0)
+****OUTPUT AND GATE**********
+BEOut 5 GND V=IF(V(VREF,GND)>2.5&V(7,GND)>2.5 & V(50,GND) > 2.5, 5, 0 )
+.MODEL SOSC SW (RON=.01 ROFF=1MEG VT=1.45 VH=0.95) ; VT=1.45 set to match 53k @ 3.3n/10k
+* Updated the UVLO Threshold from UCC28C41
+*.MODEL SUVLO SW (RON=.01 ROFF=5MEG VT=6.8 VH=0.2)
+.MODEL SUVLO SW (RON=.01 ROFF=5MEG VT=8.0 VH=0.4)
+.MODEL D2 D
+.ENDS UCC28C45_START
+*$
+.SUBCKT 28C4xAMP 4 1 9 20
+* VREF INV OUT V-
+R1 10 4 100K
+R2 10 20 100K
+R3 6 20 316MEG
+C1 6 20 8.7p ; Bandwidth
+E1 5 20 6 20 1
+R4 1 20 50MEG ; Input Bias
+I2 4 9 1m ; Isource
+R6 20 3 300
+Q1 20 13 9 QPMOD
+I3 13 20 68U
+D14 3 13 DMOD
+D15 20 6 DCLAMP
+L1 2 3 10U
+C2 3 20 200P
+R9 5 2 5
+C5 2 20 0.02U
+G1 20 6 10 1 100U
+.MODEL QPMOD PNP BF=217.647 ; sets the Isink current
+.MODEL DCLAMP D (RS=10 BV=6.8 IBV=.01)
+.MODEL DMOD D
+.ENDS 28C4xAMP
+*$
+.SUBCKT 2845OUT 4 7 3 12
+* +V -V IN OUT
+I3 4 8 100U
+D3 8 4 DMOD
+D4 12 8 DMOD
+Q3 8 1 9 QIN
+Q4 12 9 7 QMOD
+Q5 4 8 6 QMOD
+I4 7 1 .9e-3
+R1 3 2 10K
+Q8 1 2 7 QIN
+Q2 4 6 12 QMOD2
+.MODEL QMOD NPN RC=1.5 RE=.5 RB=100 IKF=0.5 CJC=0.4P
+.MODEL QMOD2 NPN TF=400P TR=400P
+.MODEL QIN NPN BF=100 BR=2 IS=1E-16 VAF=50 CJE=1.5P CJC=.15P TR=1N TF=4N
+.MODEL DMOD D RS=1 IS=0.4U
+.ENDS 2845OUT
+*$
+.SUBCKT FETOUTC4X Vcc Gnd In Out
+* Vcc -V IN OUT
+* simplify with b element with 5.5 ohms make it stiff vcc and zero
+Rm1 Vcc Out 10MEG
+M1 Vcc 3 Out Out _NMOS
+Rm2 Out Gnd 10MEG
+M2 Gnd 3 Out Out _PMOS
+BEB1 2 Out V=IF(V(In,Gnd)>2,5,-5)
+R1 2 3 75
+C2 3 Gnd 10p
+C3 3 Vcc 10p
+R2 3 Gnd 10MEG
+.MODEL _NMOS NMOS KP=1 NSUB=1E-9 RD=10 VTO=3
+.MODEL _PMOS PMOS KP=1 RD=5.5 VTO=-3 NSUB=1E-9
+.ENDS FETOUTC4X
+*$
+.SUBCKT FFLOPC2 1 2 11 12 5 6
+* CLK D R S QB Q
+X1 7 4 2 8 NAND3_0C2
+X2 8 3 10 9 NAND3_0C2
+X3 1 8 10 7 NAND3_1C2
+X4 4 9 1 10 NAND3_0C2
+X5 4 7 6 5 NAND3_1C2
+X6 5 10 3 6 NAND3_0C2
+X7 11 4 INV
+X8 12 3 INV
+.ENDS FFLOPC2
+*$
+
+*.SUBCKT FFLOPC2 CLK D R S Qi Qn
+*A1 D 0 CLK S R Qi Qn 0 DFLOP Vhigh=5 Vlow=0 Tau=20n Tripdt=2n Ref=800e-3 IC=0
+*.ENDS FFLOPC2
+
+.SUBCKT NAND3_0C2 1 2 3 4
+BE1 5 0 V=IF((V(1)>800e-3)&(V(2)>800e-3)&(V(3)>800e-3),0,5)
+R1 5 4 100
+C1 4 0 20P IC=0
+.ENDS NAND3_0C2
+*$
+.SUBCKT NAND3_1C2 1 2 3 4
+BE1 5 0 V=IF((V(1)>800e-3)&(V(2)>800e-3)&(V(3)>800e-3),0,5)
+R1 5 4 100
+C1 4 0 20P IC=3.5
+.ENDS NAND3_1C2
+*$
+.SUBCKT INV 1 2
+BE1 3 0 V=IF(V(1)>800mV,0,5)
+R1 3 2 100
+C1 2 0 10P IC=3.5
+.ENDS INV
+*$
+
+.SUBCKT FLYBACK_UCC28C4x 1 7 5 4 6 PARAMS: L=12u NC=100 NP=1 RB=6.8 F=190k EFF=1 TS=300n
+* VIN RTN VC VOUT D
+*Used for voltage or current mode buck & buck-boost converters.
+*{L} primary inductance in Henries
+*{NC} current transformer turns ratio
+*{NP} Power transformer turns ratio
+*{F} switching frequency in Hz
+*{EFF} efficiency
+*{RB} current transformer burden resistor in ohms
+*{TS} propagation delay time in the current loop
+*
+*B1 IS INPUT CURRENT
+BGB1 1 7 I=V(4)*I(VM1)/(EFF*V(1))
+*B2 IS PEAK INDUCTOR CURRENT
+BEB2 2 7 V=IF(V(5)>0,(V(5)*NC/(RB))+(V(1)*TS/L),0)
+*B3 IS MINIMUM INDUCTOR CURRENT
+BEB3 3 7 V=IF(V(2)-(1/NP*V(4)/(L*F*(1+(1/NP*V(4)/V(1)))))>0,V(2)-(1/NP*V(4)/(L*F*(1+(1/NP*V(4)/V(1))))),0)
+*B4 IS OUTPUT CURRENT
+BGB4 7 8 I=L*F*EFF*(V(2)^2-V(3)^2)/(2*V(4))
+*B5 IS DUTY CYCLE
+BEB5 6 7 V=IF(L*F*(V(2)-V(3))/V(1)<1,L*F*(V(2)-V(3))/V(1),1)
+VM1 8 4
+.ENDS FLYBACK_UCC28C4x
+
+
+

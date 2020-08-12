@@ -1,0 +1,114 @@
+.subckt SN10502 inp inn  vcc vee out
+.MODEL D_break D
++ RS=1.0000E-1
++ CJO=1.0000E-13
++ IS=100e-15
+.MODEL pnp_bc2 PNP
++ IS=10.000E-15
++ BF=112.33
++ VAF=100
++ IKF=10.025E-3
++ ISE=14.614E-15
++ NE=1.3804
++ VAR=100
++ IKR=10.000E-3
++ NK=.78839
++ RE=1
++ RB=30
++ RC=60
++ CJE=40.000E-15
++ VJE=.65
++ MJE=.23
++ CJC=50.000E-15
++ VJC=.95
++ MJC=.23
++ TF=44.136E-12
++ XTF=7.3687
++ VTF=15.631
++ ITF=.49092
++ TR=10.000E-9
++ KF=0.6e-16
++ AF=0.003
+.MODEL npn_bc2 NPN
++ IS=10.000E-18
++ BF=227.40
++ VAF=100
++ IKF=10.010E-3
++ ISE=128.92E-18
++ NE=1.5434
++ VAR=100
++ IKR=10.000E-3
++ NK=.44803
++ RE=1
++ RB=30
++ RC=60
++ CJE=30.000E-15
++ VJE=.85
++ MJE=.13
++ CJC=40.000E-15
++ MJC=.53
++ TF=30.331E-12
++ XTF=145.11
++ VTF=71.634
++ ITF=3.3583
++ TR=10.000E-9
++ KF=0.6e-16
++ AF=0.003
+* source SN10502
+R_R21         N1 N2  400
+G_G2         OUT EREF N04630 EREF 40m
+C_C2         EREF N04630  3p
+Q_Q2         N01711 N01210 N2 NPN_BC2 6
+C_C3         EREF OUT  4p
+Q_Q3         VEE N01132 N1 PNP_BC2 6
+Q_Q7         VCC INP N01132 NPN_BC2 6
+C_C1         EREF IP  695f
+X_F3    VCC N01678 VCC IP SCHEMATIC1_F3
+I_I1         VCC N01210 DC 1000u
+Q_Q4         VEE N01306 N2 PNP_BC2 6
+R_R20         EREF IP  790
+Q_Q8         VCC INN N01306 NPN_BC2 6
+C_C9         N01678 N01711  1500f
+C_C7         N1 N2  5f
+I_I2         N01306 VEE DC 1000u
+X_U1         IP EREF N04630 EREF GMAXIN PARAMS:  GM=70m IL=60M
+I_I3         VCC N01067 DC 1000u
+X_F4    VCC N01711 VCC IP SCHEMATIC1_F4
+I_I4         N01132 VEE DC 1000u
+R_R5         N04630 N05247  26.0
+E_E1         EREF VEE VCC VEE 0.5
+C_C4         N05247 OUT  110p
+R_R4         EREF OUT  24.5k
+Q_Q5         VEE INP N01067 PNP_BC2 6
+Q_Q1         N01678 N01067 N1 NPN_BC2 6
+R_R3         EREF N04630  1k
+Q_Q6         VEE INN N01210 PNP_BC2 6
+D_D1         OUT N47000 D_BREAK 4
+D_D2         N47030 OUT D_BREAK 4
+V_V5         N47030 VEE 0.92
+V_V4         N47000 VCC -0.92
+
+*$
+
+
+.subckt SCHEMATIC1_F3 1 2 3 4
+F_F3         3 4 VF_F3 0.8
+VF_F3         1 2 0V
+.ends SCHEMATIC1_F3
+*$
+
+.subckt SCHEMATIC1_F4 1 2 3 4
+F_F4         3 4 VF_F4 -0.8
+VF_F4         1 2 0V
+.ends SCHEMATIC1_F4
+*$
+
+.SUBCKT Gmaxin   1 2 3 4
++ PARAMS:
++ gm = 1 ;
++ IL = 10m;
+Gout 3 4 value={limit(v(1,2)*gm,IL*exp(abs(v(1,2))/6.2),-IL*exp(abs(v(1,2))/6.2))}
+.ENDS
+
+
+.ends SN10502

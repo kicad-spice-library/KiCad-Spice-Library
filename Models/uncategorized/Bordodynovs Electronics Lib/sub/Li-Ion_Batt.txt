@@ -1,0 +1,37 @@
+*Lithium 3.6 volt 
+*SYM=Lithium
+.SUBCKT Li-ion_Batt + - SOC N=5 C=2.5 Tscale=3600 SOC=100
+B + Hi v=(N-1)*V(Hi,-)
+*
+*C is the amp-hour battery capacity
+*SOH is the initial state of charge in percent
+*Tscale turns hours into seconds by default
+C1 SOC 0 {36*C/Tscale} IC={SOC}
+BA1  0 OCV  i=
++ TABLE(V(soc), 0,0, 1.03217, 3.54396, 5.60322,
++ 3.60771, 10.1743, 3.67558, 16.2198, 3.71877, 24.6247, 3.76401,
++ 29.3432, 3.78252, 36.7158, 3.81131, 44.6783, 3.83393, 52.9357,
++ 3.8545, 59.866, 3.87918, 65.7641, 3.89974, 74.0214, 3.94293,
++ 79.9196, 3.97172, 87.4397, 4.03136, 93.3378, 4.08483, 100.858,
++ 4.1671) Rpar=1 Cpar={1u/Tscale} 
+V1 3 12 0
+B1 0 SOC I=i(V1)
+B6 2 7 I=C*1e-14*exp(38*v(2,7)/(V(N)+1m)) Cpar=1u Rpar=1Meg
+*R1 12 - {3.6*24*3600/(.05*C*Tscale)}
+D1 3 4 _D1_mod Temp=27
+.MODEL _D1_mod D IS={1.0e-14*C} N=.1 
+D2 4 3 _D1_mod Temp=27
+R2 4 2 {.0869/C}
+C2 4 2 {2k*C/Tscale}
+R3 3 4 {6.8/C}
+C3 3 4 {1.5k*C/Tscale}
+R4 7 Hi {240m/C}
+D3 9 2 _D3_mod Temp=27
+*.MODEL _D3_mod D N=5m
+.MODEL _D3_mod D Vfwd=3m Ron=10m ;Vrev=0.3 roff=10k Rrev=10m
+B2 0 N  i=.5*exp(-v(SOC)/20) Rpar=1 Cpar=1u
+R5 9 Hi {180m/C}
+B5 11 0 V=100*i(V1)
+R6 11 0 1k
+B3 12 - V=v(OCV)
+.ENDS Li-ion_Batt
