@@ -1,0 +1,32 @@
+* Copyright © Linear Technology Corp. 2003.  All rights reserved.
+*
+* new
+.subckt 2pole 1 2 3 4 5
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 N003 0 OTA G={.1*Avol/Rout} ref={Vos}
++ Iout={.1*slew*Cout} Cout={Cout} en={en} enk={enk}
++ in={in} ink={ink} Vhigh=1e308 Vlow=-1e308 Rout={Rout}
+C3 5 4 1p
+C4 3 5 1p
+R3 3 2 1G noiseless
+G1 0 N002 N003 0 {10/Rout}
+R1 3 N002 {2*Rout} noiseless
+R2 N002 4 {2*Rout} noiseless
+C1 N002 0 {X*Cout/Avol}
+S5 0 N003 N003 3 C
+S6 N003 0 4 N003 C
+R4 3 1 1G noiseless
+R5 1 4 1G noiseless
+R6 2 4 1G noiseless
+.model C SW(Ron=100 Roff=1T Vt=2 Vh=-1 noiseless)
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail}
++ ilimit={Ilimit} noiseless)
+.param Avol=1Meg GBW=10Meg Slew=10Meg rail=0 Vos=0 ilimit=25m
+.param en=0 enk=0 in=0 ink=0 phimargin=45
+.param X table(phimargin,29.4,3.5,32.1,2.9,33.8,2.6,35.8,2.3,
++38.1,2,40.9,1.7,43.2,1.5,45.9,1.3,49.2,1.1,53.2,0.9,58.2,0.7,
++64.7,0.5,73,0.3,86.1,0.05)
+.ends 2pole

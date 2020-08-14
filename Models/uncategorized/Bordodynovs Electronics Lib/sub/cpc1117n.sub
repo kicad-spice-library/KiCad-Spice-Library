@@ -1,0 +1,19 @@
+.subckt cpc1117n A K D1 D2
+M1 D2 G S S n
+M2 D1 G S S n
+D1 S G dphoto n=12
+R1 S G 10Meg
+D2 A N001 Led
+C1 D2 A 0.5p Rpar=1T
+C2 D1 K 0.5p Rpar=1T
+B1 G S I=uramp(i(v1))*1.5m
+V1 N001 K 0
+.model n vdmos(rg=25 vto=-3 rds=100meg kp=0.5
++ theta=0.225 rd=0.25  rb=40m ksubthres=100m
++ mtriode=0.5 lambda=50m cgdmin=3p cgdmax=50p
++ cgs=130p tt=100n ibv=25u nbv=5 a=0.7 is=1.4e-13
++ cjo=35p bv=65 m=0.36 vj=0.8)
+.model Led d(is=1e-16 rs=3 n=1.5 eg=1.8 cjo=18p tt=100n)
+.model dphoto d(is=4.5p rs=150 n=1.3
++ xti=4 eg=1.11 cjo=14p m=1.96 vj=1.9)
+.ends cpc1117n

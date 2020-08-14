@@ -1,0 +1,34 @@
+*model by Alexander Bordodynov
+.subckt db3 C E Vk=32 Delta_V=19V Ibo=10uA Rs=10
+.param  bVce={Vk-Delta_V}  bVcb={Vk} Re={Rs/2}
+D1 bv P001 De0
+D2 bv ev De
+D3 bv ev Der
+Vae P001 ev 0
+D4 bv N001 Dc0
+Vac N001 cv 0
+D5 bv cv Dc
+D6 bv cv Dcr
+B2 ev bv I=(uramp(i(vac)*2)*af+ise)/MM(v(ev,bv),bVcb,nMc)-ise 
+B3 cv bv I=(uramp(i(vae)*2)*af+ise)/MM(v(cv,bv),bVcb,nMc)-ise 
+*C2 ev bv 2p 
+*C3 cv bv 2p 
+R1 C cv {Re}
+R2 ev E {Re}
+R3 C E {bVcb/Ibo}
+.model De0 d is={is/2/af} cjo=1f
+.model De d is={is/2/af} tt={2*tf}
+.model Der d is={ise}  n={ne} cjo=200p m=1
+.model Dc0 d is={is/2/af} cjo=1f
+.model Dc d is={is/2/af} tt={2*tf}
+.model Dcr d is={ise}  n={ne} cjo=200p m=1
+.param af=bf/(bf+1)
+.param nMc={log(1+Bf)/log(bVcb/(bVce-0.6))}
+.func MM(x,y,z)  {1+1f-(limit(x,0,y)/y)**z}
+.param   BF=5  
+.param is=10f ise=100p ne=2
+.param tf=23n  
+.ends db3
+
+
+

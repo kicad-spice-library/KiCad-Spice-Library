@@ -1,0 +1,4101 @@
+* File     : TRANSIL_ST.LIB
+* Revision : 1.0
+* Date     : 8/29/97
+*
+***************************************************************************************
+* Information included is believed to be accurate and reliable. However, *
+* ST Microelectronics assumes no responsibility for the consequences of  *
+* use of such information nor for any infringement of patents or other   *
+* rights of third parties which may result from its use. No license is   *
+* granted by implication or otherwise under any patent patent rights of  *
+* ST Microelectronics. Specification mentionned in this publication are  *
+* subject to change without notice. This publication superseedes and 	 *
+* replaces all information previously supplied. ST Microelectronics      *
+* products are not authorized for use as critical components in life     *
+* support or systems without express written approval of ST              *
+* Microelectronics.                          	                         *
+*                                                                    	 *			*
+*    (c) 1997 ST Microelectronics. All rights reserved.     	         *
+*                                                                    	 *			*
+*           ST Microelectronics GROUP OF COMPANIES                       *
+* Australia - Brazil - France - Germany - Hong Kong - Italy - Japan  	 *
+* Korea - Malaysia - Malta - Morocco - The Netherlands - Singapore   	 *
+* Spain - Sweden - Switzerland - Taiwan - United Kingdom - U.S.A.    	 *
+*									 *
+***************************************************************************************
+*
+
+*$
+* UNIDIRECTIONAL TRANSIL
+
+*$
+.SUBCKT TRANSIL  Anode  Cathode  PARAMS:
++ IRM=1u VBRnom=12  VBRmax=13  IR=1m 
++ VCLmax=20  Ipp=100  Cjof=1n
++ ISF=1f  NF=1  RSF=1m  IKFF=1000
+
+
+
+* IRM		Stand-off current at VRM
+* VBR		Breakdown voltage
+* IR		Reverse current at VBR
+* VCL		Clamping voltage
+* Ipp		Surge current
+* Cjo		junction capacitance at 0V
+* IS		Saturation current
+* N		Emission coefficient
+* RS		Serie résistance
+* IKF		High injection knee current
+
+ 
+Drev    A_int    Cathode    TRANSR
+Dfwd   Anode   Cathode    TRANSF
+Dr       A_int    Anode       DTRANS
+
+
+
+***** REVERSE BEHAVIOUR *****
+
+.MODEL  TRANSR  D(
++ IS={IRM/2}   RS={(VCLmax-VBRmax)/Ipp}
++ BV={VBRnom}  IBV={IR}
++ IKF=1000  Cjo=1p  M=.3333  VJ=.6
++ ISR=1n  TT=1u )
+
+
+****************** FORWARD BEHAVIOUR ******************
+***** JUNCTION CAPACITANCE BEHAVIOUR Cj(VR) *****
+
+.MODEL   TRANSF  D(
++ IS={ISF}  N={NF}  RS={RSF}  IKF={IKFF}
++ Cjo={Cjof}  M=.3333  VJ=0.6  ISR=1.000E-21
++ BV=1000  IBV=1n  TT=1u )
+
+
+.MODEL   DTRANS  D(
++ IS=1n  N=.01  RS=1u  IKF=1000  Cjo=1p
++ M=.3333  VJ=.6  ISR=1n  BV=1000  IBV=1u
++ TT=1u )
+
+.ENDS
+*$
+
+
+*********** BIDIRECTIONAL TRANSIL **********
+
+******** PARAMETERS DESCRIPTION ********
+
+*********** LOW VOLTAGE ************
+
+*$
+.SUBCKT   TRANSILB   Anode1  Anode2   PARAMS:
++ IRM=1u VBRnom=12  VBRmax=13  IR=1m 
++ VCLmax=20  Ipp=100  Cjof=1n
++ ISBF=1f  NBF=1
+
+***** SCHEMATICS DESCRIPTION *****
+
+Drev1    A_int1     Cathode   TRANSR
+Dfwd1   Anode1    Cathode  TRANSBF
+Dr1       A_int1     Anode1    DTRANS
+Drev2    A_int2     Cathode   TRANSR
+Dfwd2   Anode2    Cathode   TRANSBF
+Dr2       A_int2     Anode2     DTRANS
+
+
+***** REVERSE BEHAVIOUR *****
+
+.MODEL  TRANSR  D(
++ IS={IRM/2}   RS={(VCLmax-VBRmax)/Ipp}
++ BV={VBRnom}  IBV={IR}
++ IKF=1000  Cjo=1p  M=.3333  VJ=.6
++ ISR=1p  TT=1u )
+
+
+***** JUNCTION CAPACITANCE BEHAVIOUR *****
+
+.MODEL   TRANSBF   D(
++ IS={ISBF}  N={NBF}  RS=1u  IKF=1000
++ Cjo={Cjof}  M=.3333  VJ=.6  ISR=1p
++ BV=1000  IBV=100u  TT=1u )
+
+
+
+.MODEL   DTRANS  D(
++ IS=1n  N=.01  RS=1u  IKF=1000  Cjo=1p
++ M=.3333  VJ=.6  ISR=1p  BV=1000  IBV=100u
++ TT=1u )
+
+.ENDS
+
+
+*********** HIGH VOLTAGE ************
+
+*$
+.SUBCKT   TRANSILBHT   Anode1  Anode2   PARAMS:
++ IRM=1u VBRnom=12  VBRmax=13  IR=1m 
++ VCLmax=20  Ipp=100  Cjof=1n
+
+******* SCHEMATICS DESCRIPTION *******
+
+Drev1    A_int1     Cathode   TRANSR
+Dfwd1   Anode1    Cathode  TRANSBF
+Dr1       A_int1     Anode1    DTRANS
+Drev2    A_int2     Cathode   TRANSR
+Dfwd2   Anode2    Cathode   TRANSBF
+Dr2       A_int2     Anode2     DTRANS
+
+
+********** REVERSE BEHAVIOUR **********
+
+.MODEL  TRANSR  D(
++ IS={IRM/2}   RS={(VCLmax-VBRmax)/Ipp}
++ BV={VBRnom}  IBV={IR}
++ IKF=1000  Cjo=1p  M=.3333  VJ=.6
++ ISR=1p  TT=1u )
+
+
+***** JUNCTION CAPACITANCE BEHAVIOUR *****
+
+.MODEL   TRANSBF   D(
++ IS=1p  N=1  RS=1m  IKF=1000
++ Cjo={Cjof}  M=.3333  VJ=.6  ISR=1p
++ BV=1000  IBV=100u  TT=1u )
+
+
+
+.MODEL   DTRANS  D(
++ IS=1p  N=1  RS=1m  IKF=1000  Cjo=1p
++ M=.3333  VJ=.6  ISR=1p  BV=1000  IBV=100u
++ TT=1u )
+
+.ENDS
+
+
+*********************************TRANSILS MODELS**********************************
+
+
+
+*************************************************************************************************
+*				1.5KE FAMILY					*
+*************************************************************************************************
+
+*$
+.SUBCKT  KE6V8A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=746  Cjof=9.5n
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE6V8CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=746  Cjof=9.5n
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  KE7V5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.61
++ IR=10m  VCLmax=14.5  Ipp=690  Cjof=8500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE7V5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.61
++ IR=10m  VCLmax=14.5  Ipp=690  Cjof=8500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=11.6
++ IR=10m  VCLmax=18.6  Ipp=538  Cjof=7000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=11.6
++ IR=10m  VCLmax=18.6  Ipp=538  Cjof=7000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.7
++ IR=1m  VCLmax=21.7  Ipp=461  Cjof=6000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.7
++ IR=1m  VCLmax=21.7  Ipp=461  Cjof=6000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=16.8
++ IR=1m  VCLmax=27.2  Ipp=368  Cjof=5000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=16.8
++ IR=1m  VCLmax=27.2  Ipp=368  Cjof=5000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=308  Cjof=4300p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=308  Cjof=4300p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=254  Cjof=3700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=254  Cjof=3700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=234  Cjof=3500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=234  Cjof=3500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE27A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=207  Cjof=3200p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE27CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=207  Cjof=3200p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=187  Cjof=2900p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=187  Cjof=2900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=169  Cjof=2700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=169  Cjof=2700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE36A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=156  Cjof=2500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE36CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=156  Cjof=2500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE39A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=143  Cjof=2400p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE39CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=143  Cjof=2400p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE47A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=119  Cjof=2050p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE47CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=119  Cjof=2050p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE56A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=100  Cjof=1800p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE56CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=100  Cjof=1800p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE62A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=62  VBRmax=65.1
++ IR=1m  VCLmax=111  Ipp=90  Cjof=1700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE62CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=62  VBRmax=65.1
++ IR=1m  VCLmax=111  Ipp=90  Cjof=1700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE68A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=83  Cjof=1550p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE68CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=83  Cjof=1550p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE82A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=69  Cjof=1350p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE82CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=69  Cjof=1350p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=56  Cjof=1150p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=56  Cjof=1150p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  KE120A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=47  Cjof=1000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE120CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=47  Cjof=1000p
+.ENDS
+
+*$
+.SUBCKT  KE150A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=38  Cjof=850p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE150CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=38  Cjof=850p
+.ENDS
+
+*$
+.SUBCKT  KE180A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=31.5  Cjof=725p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE180CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=31.5  Cjof=725p
+.ENDS
+
+*$
+.SUBCKT  KE200A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=28  Cjof=675p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE200CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=28  Cjof=675p
+.ENDS
+
+*$
+.SUBCKT  KE220A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=26  Cjof=625p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE220CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=26  Cjof=625p
+.ENDS
+
+*$
+.SUBCKT  KE250A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=23  Cjof=560p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE250CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=23  Cjof=560p
+.ENDS
+
+*$
+.SUBCKT  KE300A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=19  Cjof=500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE300CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=19  Cjof=500p
+.ENDS
+
+*$
+.SUBCKT  KE350A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=16  Cjof=430p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE350CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=16  Cjof=430p
+.ENDS
+
+*$
+.SUBCKT  KE400A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=14  Cjof=390p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE400CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=14  Cjof=390p
+.ENDS
+
+*$
+.SUBCKT  KE440A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=13  Cjof=360p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  KE440CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=13  Cjof=360p
+.ENDS
+*$
+
+
+
+*************************************************************************************************
+*				BZW04 FAMILY 				*
+*************************************************************************************************
+
+
+*$
+.SUBCKT  BZW04-5V8  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1m   VBRnom=6.8    VBRmax=7.14
++ IR=10m    VCLmax=13.4   Ipp=174   Cjof=3500p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-5V8B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=174  Cjof=3500p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-6V4  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=160  Cjof=3100p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-6V4B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=160  Cjof=3100p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-8V5  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=124  Cjof=2000p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-8V5B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=124  Cjof=2000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-10  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=106  Cjof=1550p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-10B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=106  Cjof=1550p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-13  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=85  Cjof=1200p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-13B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=85  Cjof=1200p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-15  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=71  Cjof=975p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-15B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=71  Cjof=975p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-19  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=59  Cjof=800p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-19B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=59  Cjof=800p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW04-20  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=54  Cjof=725p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-20B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=54  Cjof=725p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-23  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=48  Cjof=625p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-23B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=48  Cjof=625p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-26  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=43  Cjof=575p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-26B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=43  Cjof=575p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-28  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=39  Cjof=510p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-28B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=39  Cjof=510p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-31  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=36  Cjof=480p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-31B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=36  Cjof=480p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-33  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=33  Cjof=450p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-33B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=33  Cjof=450p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-40  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=27  Cjof=370p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-40B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=27  Cjof=370p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-48  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=23  Cjof=320p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-48B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=23  Cjof=320p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-58  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=19  Cjof=270p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-58B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=19  Cjof=270p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-70  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=16  Cjof=230p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-70B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=16  Cjof=230p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-85  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=13  Cjof=200p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-85B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=13  Cjof=200p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW04-102  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=11  Cjof=170p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-102B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=11  Cjof=170p
+.ENDS
+
+*$
+.SUBCKT  BZW04-128  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=9  Cjof=145p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-128B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=9  Cjof=145p
+.ENDS
+
+*$
+.SUBCKT  BZW04-154  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=7  Cjof=125p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-154B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=7  Cjof=125p
+.ENDS
+
+*$
+.SUBCKT  BZW04-171  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=6.5  Cjof=20p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-171B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=6.5  Cjof=20p
+.ENDS
+
+*$
+.SUBCKT  BZW04-188  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=6  Cjof=110p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-188B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=6  Cjof=110p
+.ENDS
+
+*$
+.SUBCKT  BZW04-213  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=5.2  Cjof=100p
++ ISF=23.63f   NF=2.031  RSF=26.31m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-213B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=5.2  Cjof=100p
+.ENDS
+
+*$
+.SUBCKT  BZW04-256  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=4.3  Cjof=90p
++ ISF=23.63f   NF=2.031  RSF=26.31m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-256B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=4.3  Cjof=90p
+.ENDS
+
+*$
+.SUBCKT  BZW04-273  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=320  VBRmax=336
++ IR=1m  VCLmax=564  Ipp=4  Cjof=85p
++ ISF=23.63f   NF=2.031  RSF=26.31m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-273B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=320  VBRmax=336
++ IR=1m  VCLmax=564  Ipp=4  Cjof=85p
+.ENDS
+
+*$
+.SUBCKT  BZW04-299  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=3.7  Cjof=80p
++ ISF=23.63f   NF=2.031  RSF=26.31m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-299B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=3.7  Cjof=80p
+.ENDS
+
+*$
+.SUBCKT  BZW04-342  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=3.2  Cjof=75p
++ ISF=23.63f   NF=2.031  RSF=26.31m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-342B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=3.2  Cjof=75p
+.ENDS
+
+*$
+.SUBCKT  BZW04-376  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=3  Cjof=70p
++ ISF=23.63f   NF=2.031  RSF=26.31m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  BZW04-376B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=3  Cjof=70p
+.ENDS
+*$
+
+
+*************************************************************************************************
+*				BZW06 FAMILY				*
+*************************************************************************************************
+
+*$
+.SUBCKT  BZW06-5V8  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-5V8B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-6V4  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-6V4B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-8V5  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=215  Cjof=2800p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-8V5B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=215  Cjof=2800p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-10  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-10B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-13  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-13B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-15  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-15B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-19  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-19B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  BZW06-20  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-20B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-23  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-23B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-26  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+*$
+
+.SUBCKT  BZW06-26B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-28  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-28B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-31  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-31B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-33  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-33B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-40  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=48  Cjof=800p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-40B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=48  Cjof=800p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-48  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=40  Cjof=700p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-48B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=40  Cjof=700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-58  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-58B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-70  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=27  Cjof=550p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-70B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=27  Cjof=550p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-85  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-85B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW06-102  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=19  Cjof=450p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-102B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=19  Cjof=450p
+.ENDS
+
+*$
+.SUBCKT  BZW06-128  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-128B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
+.ENDS
+
+*$
+.SUBCKT  BZW06-154  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=12.6  Cjof=360p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-154B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=12.6  Cjof=360p
+.ENDS
+
+*$
+.SUBCKT  BZW06-171  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-171B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
+.ENDS
+
+*$
+.SUBCKT  BZW06-188  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-188B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
+.ENDS
+
+*$
+.SUBCKT  BZW06-213  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=9  Cjof=310p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-213B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=9  Cjof=310p
+.ENDS
+
+*$
+.SUBCKT  BZW06-256  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=7.6  Cjof=290p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-256B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=7.6  Cjof=290p
+.ENDS
+
+*$
+.SUBCKT  BZW06-273  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=320  VBRmax=336
++ IR=1m  VCLmax=564  Ipp=7.1  Cjof=280p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-273B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=320  VBRmax=336
++ IR=1m  VCLmax=564  Ipp=7.1  Cjof=280p
+.ENDS
+
+*$
+.SUBCKT  BZW06-299  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=6.5  Cjof=270p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-299B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=6.5  Cjof=270p
+.ENDS
+
+*$
+.SUBCKT  BZW06-342  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=5.7  Cjof=360p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-342B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=5.7  Cjof=360p
+.ENDS
+
+*$
+.SUBCKT  BZW06-376  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  BZW06-376B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p
+.ENDS
+*$
+
+*************************************************************************************************
+*				BZW50 FAMILY				*
+*************************************************************************************************
+
+*$
+.SUBCKT  BZW50-10  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u        VBRnom=12.4   VBRmax=13.6    IR=1m
++ VCLmax=23.4   Ipp=2564      Cjof=24000p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-10B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u        VBRnom=12.4   VBRmax=13.6   IR=1m
++ VCLmax=23.4   Ipp=2564      Cjof=24000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-12  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=14.8   VBRmax=16.3   IR=1m
++ VCLmax=28    Ipp=2143      Cjof=18500p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-12B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=14.8   VBRmax=16.3   IR=1m
++ VCLmax=28    Ipp=2143      Cjof=18500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-15  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=18.5   VBRmax=20.4   IR=1m
++ VCLmax=35    Ipp=1714      Cjof=13500p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-15B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=18.5   VBRmax=20.4   IR=1m
++ VCLmax=35    Ipp=1714      Cjof=13500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-18  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u        VBRnom=22.2   VBRmax=24.4   IR=1m
++ VCLmax=41.5   Ipp=1446      Cjof=11500p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-18B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u        VBRnom=22.2   VBRmax=24.4   IR=1m
++ VCLmax=41.5   Ipp=1446      Cjof=11500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-22  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=27.1    VBRmax=29.8   IR=1m
++ VCLmax=51    Ipp=1177       Cjof=8500p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-22B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=27.1    VBRmax=29.8   IR=1m
++ VCLmax=51    Ipp=1177       Cjof=8500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-27  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=33.3   VBRmax=36.6   IR=1m
++ VCLmax=62    Ipp=968       Cjof=7000p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-27B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=33.3   VBRmax=36.6   IR=1m
++ VCLmax=62    Ipp=968       Cjof=7000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-33  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=40.7   VBRmax=44.7  IR=1m
++ VCLmax=76    Ipp=789       Cjof=5750p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-33B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=40.7   VBRmax=44.7  IR=1m
++ VCLmax=76    Ipp=789       Cjof=5750p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-39  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=48.1   VBRmax=53    IR=1m
++ VCLmax=90    Ipp=667       Cjof=4800p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-39B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=48.1   VBRmax=53    IR=1m
++ VCLmax=90    Ipp=667       Cjof=4800p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-47  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=57.8    VBRmax=63.6   IR=1m
++ VCLmax=108   Ipp=556        Cjof=4100p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-47B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=57.8    VBRmax=63.6   IR=1m
++ VCLmax=108   Ipp=556        Cjof=4100p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-56  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=69.1   VBRmax=76    IR=1m
++ VCLmax=129   Ipp=465       Cjof=3400p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-56B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=69.1   VBRmax=76    IR=1m
++ VCLmax=129   Ipp=465       Cjof=3400p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-68  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=84    VBRmax=92.4   IR=1m
++ VCLmax=157   Ipp=382      Cjof=3000p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-68B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u       VBRnom=84    VBRmax=92.4   IR=1m
++ VCLmax=157   Ipp=382      Cjof=3000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  BZW50-82  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=101.2   VBRmax=111   IR=1m
++ VCLmax=189   Ipp=317        Cjof=2600p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-82B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u       VBRnom=101.2   VBRmax=111   IR=1m
++ VCLmax=189   Ipp=317        Cjof=2600p
+.ENDS
+
+*$
+.SUBCKT  BZW50-100  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=123.5   VBRmax=136   IR=1m
++ VCLmax=228   Ipp=263        Cjof=2300p
++ ISF=20.33p    NF=1.101    RSF=2.261m   IKFF=0.1683
+.ENDS
+
+*$
+.SUBCKT  BZW50-100B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u       VBRnom=123.5   VBRmax=136   IR=1m
++ VCLmax=228   Ipp=263        Cjof=2300p
+.ENDS
+
+*$
+.SUBCKT  BZW50-120  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=148.1   VBRmax=163   IR=1m
++ VCLmax=274   Ipp=219        Cjof=1900p
++ ISF=11.39p     NF=2.13     RSF=4.706m    IKFF=0.116
+.ENDS
+
+*$
+.SUBCKT  BZW50-120B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u       VBRnom=148.1   VBRmax=163   IR=1m
++ VCLmax=274   Ipp=219        Cjof=1900p
+.ENDS
+
+*$
+.SUBCKT  BZW50-150  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=185.2   VBRmax=204   IR=1m
++ VCLmax=343   Ipp=175        Cjof=1700p
++ ISF=11.39p     NF=2.13     RSF=4.706m    IKFF=0.116
+.ENDS
+
+*$
+.SUBCKT  BZW50-150B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u       VBRnom=185.2   VBRmax=204   IR=1m
++ VCLmax=343   Ipp=175        Cjof=1700p
+.ENDS
+
+*$
+.SUBCKT  BZW50-180  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u       VBRnom=222   VBRmax=244   IR=1m
++ VCLmax=410   Ipp=146      Cjof=1500p
++ ISF=11.39p     NF=2.13     RSF=4.706m    IKFF=0.116
+.ENDS
+
+*$
+.SUBCKT  BZW50-180B  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u       VBRnom=222   VBRmax=244   IR=1m
++ VCLmax=410   Ipp=146      Cjof=1500p
+.ENDS
+*$
+
+
+*************************************************************************************************
+*				P6KE FAMILY					*
+*************************************************************************************************
+
+*$
+.SUBCKT  P6KE6V8A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE6V8CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE7V5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE7V5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=215  Cjof=2800p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=215  Cjof=2800p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  P6KE24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE27A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE27CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE36A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE36CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE39A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE39CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE47A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=48  Cjof=800p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE47CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=47  VBRmax=49.4
++ IR=1m  VCLmax=84  Ipp=48  Cjof=800p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE56A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=40  Cjof=700p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE56CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=56  VBRmax=58.8
++ IR=1m  VCLmax=100  Ipp=40  Cjof=700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE68A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE68CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE82A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=27  Cjof=550p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE82CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=82  VBRmax=86.1
++ IR=1m  VCLmax=146  Ipp=27  Cjof=550p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  P6KE120A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=19  Cjof=450p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE120CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=120  VBRmax=126
++ IR=1m  VCLmax=212  Ipp=19  Cjof=450p
+.ENDS
+
+*$
+.SUBCKT  P6KE150A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE150CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
+.ENDS
+
+*$
+.SUBCKT  P6KE180A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=12.6  Cjof=360p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE180CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=180  VBRmax=189
++ IR=1m  VCLmax=317  Ipp=12.6  Cjof=360p
+.ENDS
+
+*$
+.SUBCKT  P6KE200A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE200CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
+.ENDS
+
+*$
+.SUBCKT  P6KE220A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE220CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
+.ENDS
+
+*$
+.SUBCKT  P6KE250A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=9  Cjof=310p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE250CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=250  VBRmax=263
++ IR=1m  VCLmax=442  Ipp=9  Cjof=310p
+.ENDS
+
+*$
+.SUBCKT  P6KE300A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=7.6  Cjof=290p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE300CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=300  VBRmax=315
++ IR=1m  VCLmax=529  Ipp=7.6  Cjof=290p
+.ENDS
+
+*$
+.SUBCKT  P6KE350A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=6.5  Cjof=270p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE350CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=350  VBRmax=368
++ IR=1m  VCLmax=618  Ipp=6.5  Cjof=270p
+.ENDS
+
+*$
+.SUBCKT  P6KE400A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=5.7  Cjof=360p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE400CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=400  VBRmax=420
++ IR=1m  VCLmax=706  Ipp=5.7  Cjof=360p
+.ENDS
+
+*$
+.SUBCKT  P6KE440A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p
++ ISF=27.04f   NF=2.032  RSF=27.38m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  P6KE440CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=440  VBRmax=462
++ IR=1m  VCLmax=776  Ipp=5.2  Cjof=350p
+.ENDS
+*$
+
+
+*************************************************************************************************
+*				SMAJ FAMILY					*
+*************************************************************************************************
+
+*$
+.SUBCKT  SMAJ5_0A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=800u   VBRnom=6.8   VBRmax=7.6 
++ IR=10m  VCLmax=13.4  Ipp=174  Cjof=3500p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ5_0CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=800u   VBRnom=6.8   VBRmax=7.6 
++ IR=10m  VCLmax=13.4  Ipp=174  Cjof=3500p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMAJ6_0A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=800u  VBRnom=7.0  VBRmax=7.9
++ IR=10m  VCLmax=13.7  Ipp=170  Cjof=3300p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ6_0CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=800u  VBRnom=7.0  VBRmax=7.9
++ IR=10m  VCLmax=13.7  Ipp=170  Cjof=3300p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMAJ6_5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.5
++ IR=10m  VCLmax=14.5  Ipp=160  Cjof=3100p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ6_5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.5
++ IR=10m  VCLmax=14.5  Ipp=160  Cjof=3100p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMAJ8_5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=11.1
++ IR=1m  VCLmax=18.6  Ipp=124  Cjof=2000p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ8_5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=11.1
++ IR=1m  VCLmax=18.6  Ipp=124  Cjof=2000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMAJ10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.1
++ IR=1m  VCLmax=21.7  Ipp=106  Cjof=1550p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.1
++ IR=1m  VCLmax=21.7  Ipp=106  Cjof=1550p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=14  VBRmax=15.7
++ IR=1m  VCLmax=25.3  Ipp=91  Cjof=1325p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=14  VBRmax=15.7
++ IR=1m  VCLmax=25.3  Ipp=91  Cjof=1325p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ13A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=15  VBRmax=17.0
++ IR=1m  VCLmax=27.2  Ipp=85  Cjof=1200p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ13CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=15  VBRmax=17.0
++ IR=1m  VCLmax=27.2  Ipp=85  Cjof=1200p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=18  VBRmax=19.7
++ IR=1m  VCLmax=32.5  Ipp=71  Cjof=975p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=18  VBRmax=19.7
++ IR=1m  VCLmax=32.5  Ipp=71  Cjof=975p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=22  VBRmax=23.6
++ IR=1m  VCLmax=39.3  Ipp=59  Cjof=800p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=22  VBRmax=23.6
++ IR=1m  VCLmax=39.3  Ipp=59  Cjof=800p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ20A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=24  VBRmax=26.2
++ IR=1m  VCLmax=42.8  Ipp=54  Cjof=725p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ20CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=24  VBRmax=26.2
++ IR=1m  VCLmax=42.8  Ipp=54  Cjof=725p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=27  VBRmax=28.8
++ IR=1m  VCLmax=48.3  Ipp=48  Cjof=625p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=27  VBRmax=28.8
++ IR=1m  VCLmax=48.3  Ipp=48  Cjof=625p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=28  VBRmax=31.5
++ IR=1m  VCLmax=50  Ipp=46  Cjof=600p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=28  VBRmax=31.5
++ IR=1m  VCLmax=50  Ipp=46  Cjof=600p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ26A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=30  VBRmax=34.1
++ IR=1m  VCLmax=53.5  Ipp=43  Cjof=575p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ26CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=30  VBRmax=34.1
++ IR=1m  VCLmax=53.5  Ipp=43  Cjof=575p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ28A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=33  VBRmax=36.7
++ IR=1m  VCLmax=59  Ipp=39  Cjof=510p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ28CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=33  VBRmax=36.7
++ IR=1m  VCLmax=59  Ipp=39  Cjof=510p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=36  VBRmax=39.3
++ IR=1m  VCLmax=64.3  Ipp=36  Cjof=480p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=36  VBRmax=39.3
++ IR=1m  VCLmax=64.3  Ipp=36  Cjof=480p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=39  VBRmax=43.3
++ IR=1m  VCLmax=69.7  Ipp=33  Cjof=450p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=39  VBRmax=43.3
++ IR=1m  VCLmax=69.7  Ipp=33  Cjof=450p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ40A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=47  VBRmax=52.4
++ IR=1m  VCLmax=84  Ipp=27  Cjof=370p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ40CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=47  VBRmax=52.4
++ IR=1m  VCLmax=84  Ipp=27  Cjof=370p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ48A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=56  VBRmax=62.9
++ IR=1m  VCLmax=100  Ipp=23  Cjof=320p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ48CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=56  VBRmax=62.9
++ IR=1m  VCLmax=100  Ipp=23  Cjof=320p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ58A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=68  VBRmax=76.0
++ IR=1m  VCLmax=121  Ipp=19  Cjof=270p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ58CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=68  VBRmax=76.0
++ IR=1m  VCLmax=121  Ipp=19  Cjof=270p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ70A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=82  VBRmax=91.8
++ IR=1m  VCLmax=146  Ipp=16  Cjof=230p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ70CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=82  VBRmax=91.8
++ IR=1m  VCLmax=146  Ipp=16  Cjof=230p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ85A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=100  VBRmax=111.4
++ IR=1m  VCLmax=178  Ipp=13  Cjof=200p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ85CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=100  VBRmax=111.4
++ IR=1m  VCLmax=178  Ipp=13  Cjof=200p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMAJ100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=120  VBRmax=131
++ IR=1m  VCLmax=212  Ipp=11  Cjof=170p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=120  VBRmax=131
++ IR=1m  VCLmax=212  Ipp=11  Cjof=170p
+.ENDS
+
+*$
+.SUBCKT  SMAJ130A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=150  VBRmax=169.9
++ IR=1m  VCLmax=265  Ipp=9  Cjof=145p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ130CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=150  VBRmax=169.9
++ IR=1m  VCLmax=265  Ipp=9  Cjof=145p
+.ENDS
+
+*$
+.SUBCKT  SMAJ154A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=180  VBRmax=201.8
++ IR=1m  VCLmax=317  Ipp=7  Cjof=125p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ154CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=180  VBRmax=201.8
++ IR=1m  VCLmax=317  Ipp=7  Cjof=125p
+.ENDS
+
+*$
+.SUBCKT  SMAJ170A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=200  VBRmax=223.0
++ IR=1m  VCLmax=353  Ipp=6.5  Cjof=120p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ170CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=200  VBRmax=223.0
++ IR=1m  VCLmax=353  Ipp=6.5  Cjof=120p
+.ENDS
+
+*$
+.SUBCKT  SMAJ188A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=220  VBRmax=246.6
++ IR=1m  VCLmax=388  Ipp=6  Cjof=110p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMAJ188CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=220  VBRmax=246.6
++ IR=1m  VCLmax=388  Ipp=6  Cjof=110p
+.ENDS
+*$
+
+
+*************************************************************************************************
+*				SMBJ FAMILY					*
+*************************************************************************************************
+
+
+*$
+.SUBCKT  SMBJ5_0A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=800u  VBRnom=6.8  VBRmax=7.6
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ5_0CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=800u  VBRnom=6.8  VBRmax=7.6
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMBJ6_0A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=800u  VBRnom=7.0  VBRmax=7.9
++ IR=10m  VCLmax=13.7  Ipp=290  Cjof=3850p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ6_0CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=800u  VBRnom=7.0  VBRmax=7.9
++ IR=10m  VCLmax=13.7  Ipp=290  Cjof=3850p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMBJ6_5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.5
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ6_5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.5
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMBJ8_5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=11.1
++ IR=1m  VCLmax=19.5  Ipp=205  Cjof=2800p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMBJ8_5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=11.1
++ IR=1m  VCLmax=19.5  Ipp=205  Cjof=2800p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMBJ10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.1
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.1
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=14  VBRmax=15.7
++ IR=1m  VCLmax=25.3  Ipp=157  Cjof=2025p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=14  VBRmax=15.7
++ IR=1m  VCLmax=25.3  Ipp=157  Cjof=2025p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ13A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=15  VBRmax=17.0
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ13CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=15  VBRmax=17.0
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=18  VBRmax=19.7
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=18  VBRmax=19.7
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=22  VBRmax=23.6
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=22  VBRmax=23.6
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ20A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=24  VBRmax=26.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ20CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=24  VBRmax=26.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=27  VBRmax=28.8
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=27  VBRmax=28.8
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=28  VBRmax=31.5
++ IR=1m  VCLmax=50  Ipp=80  Cjof=1112p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=28  VBRmax=31.5
++ IR=1m  VCLmax=50  Ipp=80  Cjof=1112p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ26A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=30  VBRmax=34.1
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ26CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=30  VBRmax=34.1
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ28A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=33  VBRmax=36.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ28CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=33  VBRmax=36.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=36  VBRmax=39.3
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=36  VBRmax=39.3
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=39  VBRmax=43.3
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=39  VBRmax=43.3
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ40A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=47  VBRmax=52.4
++ IR=1m  VCLmax=84  Ipp=48  Cjof=800p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ40CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=47  VBRmax=52.4
++ IR=1m  VCLmax=84  Ipp=48  Cjof=800p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ48A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=56  VBRmax=62.9
++ IR=1m  VCLmax=100  Ipp=40  Cjof=700p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ48CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=56  VBRmax=62.9
++ IR=1m  VCLmax=100  Ipp=40  Cjof=700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ58A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=68  VBRmax=76.0
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ58CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=68  VBRmax=76.0
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ70A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=82  VBRmax=91.8
++ IR=1m  VCLmax=146  Ipp=27  Cjof=550p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ70CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=82  VBRmax=91.8
++ IR=1m  VCLmax=146  Ipp=27  Cjof=550p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ85A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=100  VBRmax=111.4
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ85CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=100  VBRmax=111.4
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SMBJ100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=120  VBRmax=131
++ IR=1m  VCLmax=212  Ipp=19  Cjof=450p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=120  VBRmax=131
++ IR=1m  VCLmax=212  Ipp=19  Cjof=450p
+.ENDS
+
+*$
+.SUBCKT  SMBJ130A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=150  VBRmax=169.9
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ130CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=150  VBRmax=169.9
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
+.ENDS
+
+*$
+.SUBCKT  SMBJ154A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=180  VBRmax=201.8
++ IR=1m  VCLmax=317  Ipp=12.6  Cjof=360p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ154CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=180  VBRmax=201.8
++ IR=1m  VCLmax=317  Ipp=12.6  Cjof=360p
+.ENDS
+
+*$
+.SUBCKT  SMBJ170A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=200  VBRmax=223
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ170CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=200  VBRmax=223
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
+.ENDS
+
+*$
+.SUBCKT  SMBJ188A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=220  VBRmax=246.6
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
++ ISF=27.04f   NF=1.016  RSF=13.69m   IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SMBJ188CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=220  VBRmax=246.6
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
+.ENDS
+*$
+
+
+*************************************************************************************************
+*				SMCJ FAMILY					*
+*************************************************************************************************
+
+
+*$
+.SUBCKT  SMCJ5_0A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=800u  VBRnom=6.8  VBRmax=7.6
++ IR=10m  VCLmax=13.4  Ipp=746  Cjof=9500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ5_0CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=800u  VBRnom=6.8  VBRmax=7.6
++ IR=10m  VCLmax=13.4  Ipp=746  Cjof=9500p
++ ISBF=1n  NBF=0.01
+.ENDS
+
+*$
+.SUBCKT  SMCJ6_0A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=800u  VBRnom=7.0  VBRmax=7.9
++ IR=10m  VCLmax=13.7  Ipp=730  Cjof=9000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ6_0CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=800u  VBRnom=7.0  VBRmax=7.9
++ IR=10m  VCLmax=13.7  Ipp=730  Cjof=9000p
++ ISBF=1n  NBF=0.01
+.ENDS
+
+*$
+.SUBCKT  SMCJ6_5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.5
++ IR=10m  VCLmax=14.5  Ipp=690  Cjof=8500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ6_5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.5
++ IR=10m  VCLmax=14.5  Ipp=690  Cjof=8500p
++ ISBF=1n  NBF=0.01
+.ENDS
+
+*$
+.SUBCKT  SMCJ8_5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=11.1
++ IR=1m  VCLmax=19.5  Ipp=512  Cjof=7000p
++ ISF=23.63f   NF=1.015   RSF=13.16m   IKFF=49.83
+.ENDS
+
+*$
+.SUBCKT  SMCJ8_5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=11.1
++ IR=1m  VCLmax=19.5  Ipp=512  Cjof=7000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SMCJ10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.1
++ IR=1m  VCLmax=21.7  Ipp=461  Cjof=6000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.1
++ IR=1m  VCLmax=21.7  Ipp=461  Cjof=6000p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=14  VBRmax=15.7
++ IR=1m  VCLmax=25.3  Ipp=394  Cjof=5250p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=14  VBRmax=15.7
++ IR=1m  VCLmax=25.3  Ipp=394  Cjof=5250p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ13A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=15  VBRmax=17.0
++ IR=1m  VCLmax=27.2  Ipp=368  Cjof=5000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ13CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=15  VBRmax=17.0
++ IR=1m  VCLmax=27.2  Ipp=368  Cjof=5000p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=18  VBRmax=19.7
++ IR=1m  VCLmax=32.5  Ipp=308  Cjof=4300p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=18  VBRmax=19.7
++ IR=1m  VCLmax=32.5  Ipp=308  Cjof=4300p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=22  VBRmax=23.6
++ IR=1m  VCLmax=39.3  Ipp=254  Cjof=3700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=22  VBRmax=23.6
++ IR=1m  VCLmax=39.3  Ipp=254  Cjof=3700p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ20A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=24  VBRmax=26.2
++ IR=1m  VCLmax=42.8  Ipp=234  Cjof=3500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ20CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=24  VBRmax=26.2
++ IR=1m  VCLmax=42.8  Ipp=234  Cjof=3500p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=27  VBRmax=28.8
++ IR=1m  VCLmax=48.3  Ipp=207  Cjof=3200p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=27  VBRmax=28.8
++ IR=1m  VCLmax=48.3  Ipp=207  Cjof=3200p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=28  VBRmax=31.5
++ IR=1m  VCLmax=50  Ipp=200  Cjof=3050p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=28  VBRmax=31.5
++ IR=1m  VCLmax=50  Ipp=200  Cjof=3050p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ26A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=30  VBRmax=34.1
++ IR=1m  VCLmax=53.5  Ipp=187  Cjof=2900p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ26CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=30  VBRmax=34.1
++ IR=1m  VCLmax=53.5  Ipp=187  Cjof=2900p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ28A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=33  VBRmax=36.7
++ IR=1m  VCLmax=59  Ipp=169  Cjof=2700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ28CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=33  VBRmax=36.7
++ IR=1m  VCLmax=59  Ipp=169  Cjof=2700p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=36  VBRmax=39.3
++ IR=1m  VCLmax=64.3  Ipp=156  Cjof=2500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=36  VBRmax=39.3
++ IR=1m  VCLmax=64.3  Ipp=156  Cjof=2500p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=39  VBRmax=43.3
++ IR=1m  VCLmax=69.7  Ipp=143  Cjof=2400p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=39  VBRmax=43.3
++ IR=1m  VCLmax=69.7  Ipp=143  Cjof=2400p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ40A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=47  VBRmax=52.4
++ IR=1m  VCLmax=84  Ipp=119  Cjof=2050p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ40CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=47  VBRmax=52.4
++ IR=1m  VCLmax=84  Ipp=119  Cjof=2050p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ48A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=56  VBRmax=62.9
++ IR=1m  VCLmax=100  Ipp=100  Cjof=1800p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ48CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=56  VBRmax=62.9
++ IR=1m  VCLmax=100  Ipp=100  Cjof=1800p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ58A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=68  VBRmax=76.0
++ IR=1m  VCLmax=121  Ipp=83  Cjof=1550p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ58CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=68  VBRmax=76.0
++ IR=1m  VCLmax=121  Ipp=83  Cjof=1550p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ70A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=82  VBRmax=91.8
++ IR=1m  VCLmax=146  Ipp=69  Cjof=1350p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ70CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=82  VBRmax=91.8
++ IR=1m  VCLmax=146  Ipp=69  Cjof=1350p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ85A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=100  VBRmax=111.4
++ IR=1m  VCLmax=178  Ipp=56  Cjof=1150p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ85CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1u  VBRnom=100  VBRmax=111.4
++ IR=1m  VCLmax=178  Ipp=56  Cjof=1150p
++ ISBF=1p  NBF=0.65
+.ENDS
+
+*$
+.SUBCKT  SMCJ100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=120  VBRmax=131
++ IR=1m  VCLmax=212  Ipp=47  Cjof=1000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=120  VBRmax=131
++ IR=1m  VCLmax=212  Ipp=47  Cjof=1000p
+.ENDS
+
+*$
+.SUBCKT  SMCJ130A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=150  VBRmax=169.9
++ IR=1m  VCLmax=265  Ipp=38  Cjof=850p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ130CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=150  VBRmax=169.9
++ IR=1m  VCLmax=265  Ipp=38  Cjof=850p
+.ENDS
+
+*$
+.SUBCKT  SMCJ154A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=180  VBRmax=201.8
++ IR=1m  VCLmax=317  Ipp=31.5  Cjof=725p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ154CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=180  VBRmax=201.8
++ IR=1m  VCLmax=317  Ipp=31.5  Cjof=725p
+.ENDS
+
+*$
+.SUBCKT  SMCJ170A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=200  VBRmax=223
++ IR=1m  VCLmax=353  Ipp=28  Cjof=675p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ170CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=200  VBRmax=223
++ IR=1m  VCLmax=353  Ipp=28  Cjof=675p
+.ENDS
+
+*$
+.SUBCKT  SMCJ188A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1u  VBRnom=220  VBRmax=246.6
++ IR=1m  VCLmax=388  Ipp=26  Cjof=625p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SMCJ188CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=1u  VBRnom=220  VBRmax=246.6
++ IR=1m  VCLmax=388  Ipp=26  Cjof=625p
+.ENDS
+*$
+
+
+
+*************************************************************************************************
+*				SM6T FAMILY 					*
+*************************************************************************************************
+
+*$
+.SUBCKT  SM6T6V8A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T6V8CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=298  Cjof=4000p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T7V5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T7V5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=7.88
++ IR=10m  VCLmax=14.5  Ipp=276  Cjof=3700p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=215  Cjof=2800p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=10  VBRmax=10.5
++ IR=1m  VCLmax=18.6  Ipp=215  Cjof=2800p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=12.6
++ IR=1m  VCLmax=21.7  Ipp=184  Cjof=2300p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=15.8
++ IR=1m  VCLmax=27.2  Ipp=147  Cjof=1900p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=123  Cjof=1600p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=102  Cjof=1350p
++ ISBF=1n  NBF=.01
+.ENDS
+
+*$
+.SUBCKT  SM6T24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=93  Cjof=1250p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T27A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T27CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=83  Cjof=1150p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=76  Cjof=1075p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=68  Cjof=1000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T36A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T36CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=62  Cjof=950p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T39A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T39CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=57  Cjof=900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T68A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T68CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=33  Cjof=625p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=22.5  Cjof=500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM6T150A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T150CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=15  Cjof=400p
+.ENDS
+
+*$
+.SUBCKT  SM6T200A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T200CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=11.3  Cjof=350p
+.ENDS
+
+
+*$
+.SUBCKT  SM6T220A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
++ ISF=27.04f  NF=1.016  RSF=13.69m  IKFF=41.7
+.ENDS
+
+*$
+.SUBCKT  SM6T220CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=10.3  Cjof=330p
+.ENDS
+*$
+
+
+
+
+*************************************************************************************************
+*				SM15T FAMILY 				*
+*************************************************************************************************
+
+
+*$
+.SUBCKT  SM15T6V8A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=746  Cjof=9.5n
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T6V8CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=1m  VBRnom=6.8  VBRmax=7.14
++ IR=10m  VCLmax=13.4  Ipp=746  Cjof=9.5n
++ ISBF=1n  NBF=.01
+.ENDS
+
+
+*$
+.SUBCKT  SM15T7V5A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.61
++ IR=10m  VCLmax=14.5  Ipp=690  Cjof=8500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T7V5CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=500u  VBRnom=7.5  VBRmax=8.61
++ IR=10m  VCLmax=14.5  Ipp=690  Cjof=8500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+
+*$
+.SUBCKT  SM15T10A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=11.6
++ IR=10m  VCLmax=18.6  Ipp=538  Cjof=7000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T10CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=10u  VBRnom=10  VBRmax=11.6
++ IR=10m  VCLmax=18.6  Ipp=538  Cjof=7000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T12A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.7
++ IR=1m  VCLmax=21.7  Ipp=461  Cjof=6000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T12CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=12  VBRmax=13.7
++ IR=1m  VCLmax=21.7  Ipp=461  Cjof=6000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T15A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=16.8
++ IR=1m  VCLmax=27.2  Ipp=368  Cjof=5000p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T15CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=15  VBRmax=16.8
++ IR=1m  VCLmax=27.2  Ipp=368  Cjof=5000p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T18A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=308  Cjof=4300p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T18CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=18  VBRmax=18.9
++ IR=1m  VCLmax=32.5  Ipp=308  Cjof=4300p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T22A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=254  Cjof=3700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T22CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=22  VBRmax=23.1
++ IR=1m  VCLmax=39.3  Ipp=254  Cjof=3700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T24A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=234  Cjof=3500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T24CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=24  VBRmax=25.2
++ IR=1m  VCLmax=42.8  Ipp=234  Cjof=3500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T27A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=207  Cjof=3200p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T27CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=27  VBRmax=28.4
++ IR=1m  VCLmax=48.3  Ipp=207  Cjof=3200p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T30A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=187  Cjof=2900p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T30CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=30  VBRmax=31.5
++ IR=1m  VCLmax=53.5  Ipp=187  Cjof=2900p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T33A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=169  Cjof=2700p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T33CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=33  VBRmax=34.7
++ IR=1m  VCLmax=59  Ipp=169  Cjof=2700p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T36A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=156  Cjof=2500p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T36CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=36  VBRmax=37.8
++ IR=1m  VCLmax=64.3  Ipp=156  Cjof=2500p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T39A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=143  Cjof=2400p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T39CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=39  VBRmax=41
++ IR=1m  VCLmax=69.7  Ipp=143  Cjof=2400p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T68A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=83  Cjof=1550p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T68CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=68  VBRmax=71.4
++ IR=1m  VCLmax=121  Ipp=83  Cjof=1550p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T100A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=56  Cjof=1150p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T100CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILB  PARAMS:
++ IRM=5u  VBRnom=100  VBRmax=105
++ IR=1m  VCLmax=178  Ipp=56  Cjof=1150p
++ ISBF=1p  NBF=.65
+.ENDS
+
+*$
+.SUBCKT  SM15T150A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=38  Cjof=850p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T150CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=150  VBRmax=158
++ IR=1m  VCLmax=265  Ipp=38  Cjof=850p
+.ENDS
+
+*$
+.SUBCKT  SM15T200A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=28  Cjof=675p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T200CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=200  VBRmax=210
++ IR=1m  VCLmax=353  Ipp=28  Cjof=675p
+.ENDS
+
+*$
+.SUBCKT  SM15T220A  Anode  Cathode
+X1  Anode  Cathode  TRANSIL  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=26  Cjof=625p
++ ISF=277.5f  NF=1.076  RSF=6.939m  IKFF=17.55
+.ENDS
+
+*$
+.SUBCKT  SM15T220CA  Anode1  Anode2
+X1  Anode1  Anode2  TRANSILBHT  PARAMS:
++ IRM=5u  VBRnom=220  VBRmax=231
++ IR=1m  VCLmax=388  Ipp=26  Cjof=625p
+.ENDS
+*$
+
+* This library contents 490 models.
+* End of library.

@@ -1,0 +1,98 @@
+*  BUF634 SIMPLIFIED CIRCUIT MACROMODEL
+*  CREATED 1/2/95   SB
+*  REV. A
+*  REV. B  1 FEB 2000 BY NPA: CORRECTED NODE 102 CONNECTION, RENAMED AS BUF634
+* + Alexander Bordodynov
+*
+*  30MV TYPICAL INPUT OFFSET MODELED BY "VOS"; THIS MAY BE SET TO ZERO IF DESIRED.
+* ------------------------------------------------------------------------
+*|(C) Copyright Texas Instruments Incorporated 2007. All rights reserved. |
+*|                                                                        |
+*|This Model is designed as an aid for customers of Texas Instruments.    |
+*|No warranties, either expressed or implied, with respect to this Model  |
+*|or its fitness for a particular purpose is claimed by Texas Instruments |
+*|or the author.  The Model is licensed solely on an "as is" basis.  The  |
+*|entire risk as to its quality and performance is with the customer.     |
+* ------------------------------------------------------------------------
+*
+* CONNECTIONS:    INPUT
+*                 |  POSITIVE POWER SUPPLY
+*                 |  |  NEGATIVE POWER SUPPLY
+*                 |  |  |  OUTPUT
+*                 |  |  |  |
+.SUBCKT BUF634_AB    1  80 90 16 BW
+*
+RIN    1     2    200
+R1     6    13    500
+R2     4     9    500
+RO1   15    16    5
+RO2   16    17    5
+*R5    20    90    150
+R51    20    BW   138
+R52    BW    90   4k
+R6    23    90   12k
+R7    94    90    60
+R8    98    90    40
+R9    80    85    40
+R10   80    86    60
+*
+CP     1     2    1E-10
+C1     13    90    1.25p ;1.5E-12
+C2     9     90    1.25p ;1.5E-12
+CO     16    90    2E-12
+*
+Q1     5   102    3   QN 8
+Q2     8   102    7   QP 8
+Q3     4   8   94   QN 8
+Q4     6   5   86   QP 8
+Q5    90   9   10   QP 8
+Q6    80  13   12   QN 8
+Q7    90  10   17   QP 96
+Q8    80  12   15   QN 96
+Q9    22  21   20   QN 2
+Q10    5  21   20   QN 2
+Q11   22  24   80   QP 4
+Q12    8  22   24   QP 4
+*
+D1     3    4   DX  8
+D2    85    5   DX  8
+D3     8   98   DX  8
+D4     6    7   DX  8
+D5    11   10   DX  2
+D6    12   11   DX  2
+D8    21   23   DX  2 
+D9    80   24   DX  4
+D10    7   73   DX  8
+D11   73    3   DX  8
+*
+ISS   80  21  60E-6
+*
+*Input Errors
+*
+VOS     2  102    30E-3
+IB     80    1    5E-6
+CIN    1     90    6E-12
+*
+*Input Protection Circuit
+*
+R29    2   57  1E3
+R30   16   58  1E3
+Q57   16   57  2   QN  4
+Q58    2   58  16  QN  4
+V1    16   57    3
+V2     2   58    3
+*
+*Short Circuit Current Protection
+*
+R24   15   14   1.5E3
+R25   14   16   1E3
+R26   16   18   1E3
+R27   18   17   1.5E3
+Q35   86   14   16   QN
+Q36   94   18   16   QP
+*
+i 5 8 -35u
+.MODEL DX D( cjo=100f  IS=1f)
+.MODEL QN NPN(IS=1f  BF=200 cje=100f Rb=500  cjc=100f vaf=100 ne=2 ise=1p)
+.MODEL QP PNP(IS=1f BF=200 cje=100f Rb=500  cjc=100f vaf=100  ne=2 ise=1p)
+.ENDS BUF634_AB

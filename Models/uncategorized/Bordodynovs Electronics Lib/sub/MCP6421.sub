@@ -1,0 +1,215 @@
+.SUBCKT MCP6421_AB 1 2 3 4 5
+*               | | | | |
+*               | | | | Output
+*               | | | Negative Supply
+*               | | Positive Supply
+*               | Inverting Input
+*               Non-inverting Input
+*
+
+* Recommendations:
+*      Use PSPICE (or SPICE 2G6; other simulators may require translation)
+*      For a quick, effective design, use a combination of: data sheet
+*            specs, bench testing, and simulations with this macromodel
+*      For high impedance circuits, set GMIN=100F in the .OPTIONS statement
+*
+* Supported:
+*      Typical performance for temperature range (-40 to 125) degrees Celsius
+*      DC, AC, Transient, and Noise analyses.
+*      Most specs, including: offsets, DC PSRR, DC CMRR, input impedance,
+*            open loop gain, voltage ranges, supply current, ... , etc.
+*      Temperature effects for Ibias, Iquiescent, Iout short circuit
+*            current, Vsat on both rails, Slew Rate vs. Temp and P.S.
+*
+* Not Supported:
+*      Some Variation in specs vs. Power Supply Voltage
+*      Vos distribution, Ib distribution for Monte Carlo
+*      Distortion (detailed non-linear behavior)
+*      Some Temperature analysis
+*      Process variation
+*      Behavior outside normal operating region
+*
+* Known Discrepancies in Model vs. Datasheet:
+*
+*
+* Input Stage
+*
+V10  3 10 -210M
+R10 10 11 69.0K
+Cr10 10 11 10f
+R11 10 12 69.0K
+Cr11 10 12 10f
+C11_12 11 12 10f
+G10 10 11 10 11 1.44M
+G11 10 12 10 12 1.44M
+C11 11 12 115E-15
+C12  1  0 12.0P
+*E12 71 14 VALUE { - 1u + (V(20) + V(21)+ V(22) + V(23)) * 17.2 }
+bE12 14 71 i=-1u + (V(20) + V(21)+ V(22) + V(23)) * 17.2 Rpar=1 Cpar=0.1n
+G12 1 0 62 0 1m
+G13 1 2 63 0 1u
+M12 11 14 15 15 NMI
+M14 12 2 15 15 NMI
+G14 2 0 62 0 1m
+C14  2  0 12P
+I15 15 4 500U
+V16 16 4 10m
+.model d16_13 d Ron=0.985 Vfwd=0.99m epsilon=0.05m Roff=100T
+*GD16 16 1 TABLE { V(16,1) } ((-100,-10.0E-15)(0,0)(1m,1u)(2m,1m))
+D16 16 1 d16_13
+V13 3 13 -10M
+*GD13 2 13 TABLE { V(2,13) } ((-100,-10.0E-15)(0,0)(1m,1u)(2m,1m))
+D13 2 13 d16_13
+
+R71  1  0 100E12
+R72  2  0 100E12
+R73  1  2 100E12
+*C13  1  2 6.00P
+*
+* Noise
+*
+I20 21 20 423U
+D20 20  0 DN1
+D21  0 21 DN1
+I22 22 23 1N
+R22 22 0  1k
+R23  0 23 1k
+*
+* Open Loop Gain, Slew Rate
+*
+G30  0 30 12 11 1
+R30 30  0 1.00K
+Cr30 30 0 0.1p
+*G31 0 31 3 4 0.00
+I31 0 31 DC 95.4
+R31 31  0 1 TC=2.50M,-9.81U
+Cr31 31 0 0.1n
+GD31 30 0 TABLE { V(30,31) } ((-100,-1n)(0,0)(1m,0.1)(2m,2))
+*G32 32 0 3 4 0.00
+I32 32 0 DC 109
+R32 32  0 1 TC=2.53M,-14.9U
+Cr32 32 0 0.1n
+GD32 0 30 TABLE { V(30,32) } ((-2m,2)(-1m,0.1)(0,0)(100,-1n))
+G33  0 33 30 0 1m
+R33  33 0 1K
+Cr33 33 0 0.1p
+G34  0 34 33 0 562M
+R34  34 0 1K
+C34  34 0 813U
+G37  0 37 34 0 1m
+R37  37 0 1K
+C37  37 0 757P
+G38  0 38 37 0 1m
+*R38  39 0 1K
+L38  38 0 159N Rser=1k 
+*E38  35 0 38 0 1
+bE38  0 35 i=v(38) Rpar=1 Cpar=0.1n
+G35 33 0 TABLE { V(35,3) } ((-1,-1n)(0,0)(300,1n))(330,1))
+G36 33 0 TABLE { V(35,4) } ((-330,-1)((-300,-1n)(0,0)(1,1n))
+*
+* Output Stage
+*
+R80 50 0 100MEG
+Cr80 50 0 0.1f
+G50 0 50 57 96 2
+R58 57  96 0.50
+R57 57  0 6.00K
+Cr57 57 0 100f
+C58  5  0 2.00P
+*
+* PSRR PLUS
+*
+G57  0 57 VALUE { V(35) * 166U + V(110) + V(120) + V(130) }
+* G110 THE DC GAIN FOR +PSRR AND L110 THE ROLL OFF WITH R110
+G110 0 110 3 0 8.35N
+L110 110 111 244U
+*R110 111 0 1E6
+*GR110 111 0 111 0 1
+R110 111 0 1 noiseless
+*
+* PSRR MINUS
+*
+* G120 THE DC GAIN FOR -PSRR AND L120 THE ROLL OFF WITH R120
+G120 0 120 4 0 7.44N
+L120 120 121 636U  
+*R120 121 0 1E6
+*GR120 121 0 121 0 1
+R120 121 0  1 noiseless
+*
+* CMRR
+*
+* G130 THE DC GAIN FOR CMRR AND L130 THE ROLL OFF WITH R130
+G130 0 130 VALUE { ( V(1) + V(2) ) * 9.37N /2 }
+L130 130 131 26.5U  
+*GR130 131 0 131 0 1
+R130 131 0 1 noiseless
+
+*
+*GD55 55 57 TABLE { V(55,57) } ((-0.2m,-1)(-0.1m,-1m)(0,0)(10,1n))
+*GD56 57 56 TABLE { V(57,56) } ((-0.2m,-1)(-0.1m,-1m)(0,0)(10,1n))
+D55 57 55  D57 
+D56 56 57  D57
+.model d57 D Ron=0.0985m Vfwd=0.099m epsilon=0.005m Roff=100T  
+E55 55  0 VALUE { V(3) + V(51) * -30.0M }
+E56 56  0 VALUE { V(4) + V(52) * -25.8M }
+R51 51 0 1k
+Cr51 51 0 0.1p
+R52 52 0 1k
+Cr52 52 0 0.1p
+*GD51 50 51 TABLE { V(50,51) } ((-10,-1n)(0,0)(1m,1m)(2m,1))
+*GD52 50 52 TABLE { V(50,52) } ((-2m,-1)(-1m,-1m)(0,0)(10,1n))
+D51 50 51 D50
+D52 52 50 D50
+.model D50 d Ron=0.985m Vfwd=0.99m epsilon=0.05m Roff=100T
+G53  3  0 VALUE { -500U + V(51) * 1M }
+G54  0  4 VALUE { -500U + V(52) * -1M }
+*
+* Current Limit
+*
+*G99 96 5 99 0 1
+BG99 96 5 i=V(98) * LIMIT((V(3,4) * 850M-275M), 0, 1E6 ) * LIMIT((V(3,4)*4 -5), 0, 1) Cpar=1p
+R98 0 98 1 TC=-5.23M,22.1U
+Cr98 0 98 1n
+G97 0 98 TABLE { V(96,5) } ((-5.6,-5M)(-1M,-4.95M)(0,0)(1M,4.95M)(5.6,5M))
+*E97 99 0 VALUE { V(98) * LIMIT((( V(3) - V(4) ) * 850M + -275M), 0.00, 1E6 ) * LIMIT((( V(3) - V(4) ) * 4.00 + -5.00), 0, 1) }
+D98 4 5 DESD
+D99 5 3 DESD
+*
+* Temperature / Voltage Sensitive IQuiscent
+*
+R61 0 61 1 TC=3.19M,-5.34U
+Cr61 0 61 10n
+G61 3 4 61 0 1
+G60 0 61 TABLE { V(3, 4) } ((0, 0)(500M,42.0N)(1.00,3.00U)(1.5,3.8U)(3.00,4.1U)(5.00,4.2U)(6.00,4.3U))
+*
+* Temperature Sensitive offset voltage
+*
+*I73 0 70 DC 1uA
+*R74 0 70 1 TC=3.00
+*Cr74 0 70 100n 
+*E75 1 71 70 0 1
+VE74 1 71 {1u*(1-3*(Temp-27))}
+*
+* Temp Sensistive IBias
+*
+I62 0 62 DC 1000uA
+R62 0 62 REXP  803.70754N
+Cr62 0 62 10u
+*
+* Temp Sensistive Offset IBias
+*
+I63 0 63 DC 1000uA
+R63 0 63 REXP2  360.33671U
+Cr63 0 63 25u
+*
+* Models
+.MODEL NMI NMOS(L=2.00U W=42.0U KP=200U lambda=10m LEVEL=1 )
+.MODEL DESD  D   N=1 IS=1.00E-15  cjo=1f
+.MODEL DN1 D   IS=1P KF=1.00E-15 AF=1 cjo=1f
+.MODEL REXP  RES TCE= 6.94224
+.MODEL REXP2  RES TCE= 1.46255
+.ENDS MCP6421
+
+
+
+

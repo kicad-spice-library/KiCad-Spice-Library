@@ -1,0 +1,12 @@
+.subckt H11F1M_AB A C R1 R2
+.param  Vt=100m
+dled1 A 6 LED1
+VT 6 C 0
+dled2 A C LED2
+B 0 T i=(165+(0.07229* ((2*i(Vt))**(-1.5)))) Rpar=1 Cpar=2.u
+BRES R1 R2 i=if(abs(v(R1,R2))>Vt  ,
++  sgn(v(R1,R2))/V(T)/2*Vt ,
++  V(R1,R2)/V(T)/Vt*(Vt-0.5*abs(V(R1,R2)))) Cpar=15p Rpar=300Meg
+.model Led1  d(is=0.5e-20 ) 
+.model Led2  d(is=0.5e-20 cjo=18p)
+.ends  H11F1M_AB

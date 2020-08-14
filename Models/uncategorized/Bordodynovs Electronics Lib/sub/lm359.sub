@@ -1,0 +1,54 @@
+*//////////////////////////////////////////////////////////
+*LM359 DUAL HIGH-SPEED NORTON AMPLIFIER MACRO-MODEL
+*//////////////////////////////////////////////////////////
+**  Rev :  9/29/97  ABG
+* Connections:      I_IN(+)
+*                   | COMMON
+*                   | | I_IN(-)
+*                   | | |   Output
+*                   | | | |   VCC
+*                   | | | | | Comp.
+*                   | | | | | | ISET(out)  
+*                   | | | | | | | ISET(in)
+*                   | | | | | | | |
+.SUBCKT LM359       1 2 3 4 5 6 7 8 
+Q1 1 1 2 QINMOD
+Q2 3 1 2 QINMOD
+Q3 6 3 2 QINMOD
+Q4 6 41 5 QPMOD
+FA1 41 5 VSNS2 2e-2  
+CMP1 6 2 13e-12   
+EA1 35 39 6 2 1.0 
+R_XT 35 19 1e4 
+RSER 19 36 100 
+C_XT 36 2 3e-13 
+Q5 5 19 11 QOUT1 
+Q6 5 11 12 QBG 10  
+RSC 12 4 10  
+Q15 4 18 2 QBG 10  
+FB1 2 18 VSNS1 0.09 
+Q18 6 24 2 QINMOD  
+RQ18 24 25 100
+EQ18 25 2 12 4 1.7
+EPSR2 39 2 47 2 1.0 
+EPSR1 46 2 5 2 1.0  
+CBG 46 47 1e-3 
+RBG 47 2 10K 
+DO1 5 13 DMOD1
+VSNS1 13 14 DC 0  
+RSET1 14 7 500  
+DO2 16 2 DMOD1
+VSNS2 15 16 DC 0   
+RSET2 8 15 500  
+RPWR 5 2 3.3K  
+.MODEL DMOD1 D
+.MODEL QPMOD PNP (BF=100  VAF=110 )
+.MODEL QINMOD NPN (BF=100 RE=5 RC=100) 
+.MODEL QOUT1 NPN (BF=100 RC=50)   
+.MODEL QBG NPN (BF=100 RC=10)     
+.ENDS
+*
+.subckt LM359N 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1 7 4 6 2 12 3 1 8 LM359
+X2 9 11 10 14 12 13 1 8 LM359
+.ends

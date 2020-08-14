@@ -1,0 +1,70 @@
+* Library of IGBT Driver VOL3120
+* Copyright VISHAY, Inc. 2019 All Rights Reserved.
+
+************
+.SUBCKT VOL3120  A C VEE VO VCC
+************
+D_D1         100 C D3120EMIT 
+V_Vsens      A 100 0Vdc
+G_G3         VO VEE VALUE { if(v(logic)<=5,{LIMIT((V(VO, VEE)*0.72) - 0.15, 0, 2.5)},0) }
+G_G2         VCC_INT VO_int VALUE { if(v(logic)>5,{LIMIT((V(VCC_INT, VO)*0.99) - 1.88, 0, 2.5)},0) }
+R_R2         101 LOGIC  1k TC=0,0 
+E_E1         101 C VALUE { If(((I(V_Vsens)>3.5m) & (V(VCC_INT)>10.74)), 10, 0) }
+C_C3         C LOGIC  3.11e-10  TC=0,0 
+X_U1         VCC VCC_INT VEE UVLO PARAMS:  VON=12.25 VOFF=10.75
+R_R6         NC1 0  1e9 TC=0,0 
+R_R10        Vo VEE 100K
+C_C10        Vo VEE 10n
+V_Vsens2     VO_int Vo 0
+G_G4         VCC 0 VALUE {if (V(LOGIC)>5,{I(V_Vsens2)+1m},1m)}
+.MODEL D3120emit d
++IS=9.09338e-10 RS=100 N=0.685406 EG=1.3
++XTI=4 BV=5 IBV=1e-05 CJO=6.01157e-11
++VJ=1 M=0.499997 FC=0.5 TT=1e-09
++KF=0 AF=1
+.ENDS VOL3120
+******************
+**** UVLO CIRCUIT ****
+** VH = (VON - VOFF)/2
+** VT = VOFF + VH
+*            VIN  OUT Gnd
+*            |    |   |
+.SUBCKT UVLO 1    2   30 params: VON=12 VOFF=10
+X1 1 3 1 30 SWhyste params: RON=1 ROFF=1E6 VT={((VON-VOFF)/2) + VOFF} VH={(VON-VOFF)/2}
+RUV 3 30 100K
+E1 4 0 Value = { IF ( V(3,30) > 5V, V(1) , V(30) ) }
+RD 4 2 1
+CD 2 0 780n
+.ENDS UVLO
+*******
+.SUBCKT SWhyste NodeMinus NodePlus Plus Minus PARAMS: RON=1 ROFF=1MEG VT=5 VH=2
+S5 NodePlus NodeMinus 8 0 smoothSW
+EBcrtl 8 0 Value = { IF ( V(plus)-V(minus) > V(ref), 1, 0 ) }
+EBref ref1 0 Value = { IF ( V(8) > 0.5, {VT-VH}, {VT+VH} ) }
+Rdel ref1 ref 100
+Cdel ref 0 100p  IC={VT+VH}
+Rconv1 8 0 10Meg
+Rconv2 plus 0 10Meg
+Rconv3 minus 0 10Meg
+.model smoothSW VSWITCH (RON={RON} ROFF={ROFF} VON=1 VOFF=0)
+.ends SWhyste
+******
+**==================================================================*
+* Note:                                                             *
+* Although models can be a useful tool in evaluating device         *
+* performance, they cannot model exact device performance           *
+* under all conditions, nor are they intended to replace            *
+* breadboarding for final verification!                             *
+*                                                                   *
+* Models provided by VISHAY Semiconductors GmbH are not             *
+* as fully representing all of the specifications and operating     *
+* characteristics of the semiconductor product to which the         *
+* model relates.                                                    *
+* The models describe the characteristics of typical devices.       *
+* In all cases, the current data sheet information for a given      *
+* device is the final design guideline and the only actual          *
+* performance specification.                                        *
+* VISHAY Semiconductors does not assume any liability arising       *
+* from the model use. VISHAY Semiconductors reserves the right to   *
+* change models without prior notice.				                *
+**==================================================================*

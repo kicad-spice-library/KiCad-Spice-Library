@@ -1,0 +1,141 @@
+* AD8014 SPICE model 
+* Description: Amplifier
+* Generic Desc: 400 MHz low power high speed op amp
+* Developed by: Steve Reine/Eberhard Brunner
+* Revision History: 08/10/2012 - Updated to new header style
+*
+* Copyright 2012 by Analog Devices, Inc.
+*
+* BEGIN Notes:
+*
+* Not Modeled:
+*    
+* Parameters modeled include: 
+*
+* END Notes
+*
+* Node assignments
+*                        non-inverting input
+*                        |  inverting input
+*                        |  |  positive supply
+*                        |  |  |   negative supply
+*                        |  |  |   |  output
+*                        |  |  |   |  |
+.SUBCKT AD8014 		 1  2  99  50 28
+
+
+***** Input stage 
+
+q1  50  3  5  qp1
+q2  99  5  4  qn1
+q3  99  3  6  qn1
+q4  50  6  4  qp1
+v1   4  2  0
+i1  99  5  0.299e-3
+i2   6  50 0.299e-3
+cin1  1  98 1e-12
+cin2  2  98 2.3e-12
+
+
+
+***** Input error sources
+
+Vos    3  1  2e-3 
+*fbn   2  98 poly(1) vnoise3 5e-6 1e-3
+*fbp   1  98 poly(1) vnoise3 5e-6 1e-3
+
+
+
+***** Gain stage
+
+f1    98  7 poly(1) v1 0 1.12 0 100
+rgain 7  98 1.3e6
+cgain 7  98 1.85e-12
+vcl1  99 8  0.52
+vcl2  9  50 0.52
+dcl1  7  8  d1
+dcl2  9  7  d1
+
+gcm 98 7 poly(2) 98 0 30 0 0 1e-5 1e-5
+
+
+
+***** Second Pole
+
+epole2 14 98 7 98 1
+rpole2 14 15 1
+cpole2 15 98 270e-12
+
+
+
+***** Third Pole at 1.2GHz
+
+epole3 17 98 15 98 1
+rpole3 17 16 1
+cpole3 16 98 133e-12
+
+
+
+***** Reference stage
+
+eref   98 0 poly(2) 99 0 50 0 0 0.5 0.5
+ecmref 30 0 poly(2) 1 0 2 0 0 0.5 0.5
+
+***** VNoise stage
+
+*rnoise1 19 98 10.6e-3
+*vnoise1 19 98 0
+*vnoise2  21 98 0.53
+*dnoise1 21 19 dn
+
+*fnoise1 20 98 vnoise3 1
+*rnoise2 23 98 1
+
+***** INoise stage
+
+*rnoise3 22 98 0.46e-3
+*vnoise3 22 98 0
+*vnoise4 24 98 0.6
+*dnoise2 24 22 dn
+
+*fnoise2 23 98 vnoise3 1
+*rnoise4 23 98 1
+
+***** Buffer stage
+
+gbuf 98 13 16 98 1e-2
+rbuf 98 13 1e2
+
+***** Output current reflected to supplies
+
+fcurr 98 40 voc 1
+vcur1 26 98 0
+vcur2 98 27 0
+dcur1 40 26 d1
+dcur2 27 40 d1
+
+***** Output stage
+
+rout1 10 90 .2
+rout2 10 91 .2
+vo1 99 90 0
+vo2 91 50 0
+voc 10 28 0
+fout1 0  99 poly(2) vo1 vcur1 0 1 -1
+fout2 50 0  poly(2) vo2 vcur2 0 1 -1
+rout3 28 98 1e6
+gout1 10 90 99 13 5
+gout2 10 91 50 13 5
+
+vcl3 10 11 -0.795
+vcl4 12 10 -0.795
+dcl4 11 13 d1
+dcl3 13 12 d1
+.model qp1 pnp()
+.model qn1 npn()
+.model d1 d()
+.model dn d()
+.ends ad8014
+
+
+

@@ -1,0 +1,110 @@
+* AD8244 SPICE Macro-model
+* Description: Amplifier
+* Generic Desc: Precision Quad JFET-Input Buffer
+* Developed by: Ron Gobbi, Scott Hunt
+* 
+* Revision History:
+* 1.0(10/2013) - RG
+* 2.0(11/2013) - SH - (Output current reflected in supplies. Bug fixes.)
+* 
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html for License Statement. Use of this model
+* indicates your acceptance of the terms and provisions in the License Statement.
+*
+*
+* BEGIN Notes:
+*
+* Not Modeled:
+*   Temperature effects
+*   PSRR
+*
+* Parameters modeled include:
+*   Vos
+*   Gain error
+*   Input Bias Current
+*   Noise, including 1/f and wideband
+*   Output range
+*   Input range 
+*   Supply current
+*   Slew rate
+*   Gain/phase
+*   Bandwidth
+*   Output current clamping
+*   Output current reflected in supplies
+*
+* Supply range:
+*    Single Supply: 3V to 36V
+*    Dual Supplies: +/-1.5V to +/-18V
+*
+* Typical Specifications used in Model
+*
+* END Notes
+*
+* Node Assignments
+*              Vin
+*               | +Vs
+*               |  |  -Vs
+*               |  |   |  Vout
+*               |  |   |   |
+.SUBCKT AD8244  1  99  50  30
+
+*Input
+G3 0 7 1 0 1
+R5 0 7 1 
+Ibias 1 0 5e-013
+V14 33 51 1
+D6 33 7 DX
+V12 98 4 1 
+D5 7 4 DX
+V2 32 60 0.0001
+
+*Voltage Noise
+VN1 0 40 0
+RN1 40 0 0.0166
+HN 7 60 VN1 13
+VN2 0 41 0.1
+DN1 41 40 DN
+
+*Slew Rate
+Gsl 0 34 32 31 1
+Csl 31 0 1e-08
+Rsl 31 0 1000000000
+R1 34 0 1000
+D7 34 37 DX
+V9 37 0 8
+D8 38 34 DX
+V10 0 38 8
+Gs2 0 31 34 0 0.001
+
+*Gain and Dominant Pole 
+Gg1 0 14 31 10 0.01
+Cg1 0 14 6.5e-009
+Rg1 0 14 100000 
+
+*Secondary Pole and Output
+Rg2 10 0 500
+Cg2 10 0 1.25e-010
+Gg2 0 10 14 0 0.02
+V1 23 9 0.8
+H1 9 51 POLY(1) V11 0 0 24000
+D2 23 10 DX
+H2 98 2 POLY(1) V11 0 0 24000
+V5 2 13 0.8 
+D1 10 13 DX
+V11 10 30 0
+
+*Supply Current
+IQ 99 50 0.00018
+E1 98 0 99 0 1
+E2 0 51 0 50 1
+F1 0 3 V11 1
+D3 3 6 DX
+V6 6 0 0
+D4 8 3 DX
+V8 0 8 0
+F2 99 0 V6 1
+F3 0 50 V8 1
+
+.model DX  D(IS=1e-14, RS=0)
+.model DN  D(IS=1e-14, RS=0, KF=5e-5)
+
+.ENDS AD8244

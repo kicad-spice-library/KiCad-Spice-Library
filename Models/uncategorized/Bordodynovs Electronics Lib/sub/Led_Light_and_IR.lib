@@ -1,0 +1,326 @@
+.Subckt IR A C P tt =200n
+* P in mWatt
+Dr 4  C dr 
+Df1 4  C Df0
+D1 4  5 Df1
+VAm 5  C 0
+Rs A  4  1.35 
+Btok 6  0 v=i(vam)*v(tk)
+BA1 p   0 v=Tbl(v(6),-1,0, 0,0, 1m,80u, 20m,6m, 200m,60m, 1,280m,  2,350m)
+I1 0  tk DC 2m 
+R1 0  tk   1K tc1 = -0.006
+.model dr D  is = 1n   n = 10   cjo = 25p  vj=2  bv = 5   ibv = 100u  
+.model Df0 D  is = 1e-16   n = 1.4   tt ={2*tt}   eg = 2  
+.model Df1 D  is = 1e-16   n = 1.4   eg = 2          
+.ends iR
+
+.Subckt TSAL6400 A C P 
+* P in mWatt
+Dr 4  C dr 
+Df1 4  C Df0
+D1 4  5 Df1
+VAm 5  C 0
+Rs A  4  1.35 
+Btok 6  0 v=i(vam)*v(tk)
+BA1 p   0 v=Tbl(v(6),-1,0, 0,0, 1m,80u, 20m,6m, 200m,60m, 1,280m,  2,350m)
+I1 0  tk DC 2m 
+R1 0  tk   1K tc1 = -0.006
+.model dr D  is = 1n   n = 10   cjo = 25p  vj=2  bv = 5   ibv = 100u  
+.model Df0 D  is = 1e-16   n = 1.4   tt =750n   eg = 2  
+.model Df1 D  is = 1e-16   n = 1.4   eg = 2          
+.ends TSAL6400
+
+.subckt tlgd233p a c p
+* tlgd233p from toshiba   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dtlgd233p
+.model dtlgd233p d is=38.021f n=1.3149 rs=10.932 cjo=1p m=.3333 vj=.75 bv=5 ibv=100u tt=5n
+beled p 0 v=uramp(i(vled))**1.127967*exp(3.0392-3.5205876*i(vled))
+vled vc c
+.ends tlgd233p
+
+.subckt tlgd231 a c p
+* tlgd231 from toshiba   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dtlgd231
+.model dtlgd231 d is=189.96e-15 n=1.4012 rs=10.915 ikf=309.41 cjo=1p m=.3333 vj=.75 bv=5 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.192877*exp(2.51304-3.5475*i(vled))
+vled vc c
+.ends tlgd231
+
+.subckt slr-322yy a c p
+* slr-322yy from rohm   *i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322yy
+.model dslr-322yy d is=466.35p n=2.028 rs=12.8825 cjo=1p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.40967*exp(1.9452-5.8889495*i(vled))
+vled vc c
+.ends slr-322yy
+
+.subckt slr-322yc a c p
+* slr-322yc from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322yc
+.model dslr-322yc d is=466.35p n=2.0280 rs=12.8825 cjo=1p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.40967*exp(1.945-5.88895*i(vled))
+vled vc c
+.ends slr-322yc
+
+.subckt slr-322vr a c p
+* slr-322vr from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322vr
+.model dslr-322vr d is=40.012n n=2.3923 rs=11.076 cjo=35p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.3065*exp(1.412709-1.98197*i(vled))
+vled vc c
+.ends slr-322vr
+
+.subckt slr-322vc a c p
+* slr-322vc from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322vc
+.model dslr-322vc d is=40.012n n=2.3923 rs=11.076 cjo=35p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.3054*exp(1.875681-1.823149*i(vled))
+vled vc c
+.ends slr-322vc
+
+.subckt slr-322mg a c p
+* slr-322mg from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322mg
+.model dslr-322mg d is=6.5062e-9 n=2.6008 rs=12.015 cjo=1p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.3513*exp(1.7443-10.759*i(vled))
+vled vc c
+.ends slr-322mg
+
+.subckt slr-322mc a c p
+* slr-322mc from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322mc
+.model dslr-322mc d is=6.5062n n=2.6008 rs=12.215 cjo=1p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.3439*exp(2.609529-10.736268*i(vled))
+vled vc c
+.ends slr-322mc
+
+.subckt slr-322du a c p
+* slr-322du from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322du
+.model dslr-322du d is=4.9616u n=4.4846 rs=7.1771 cjo=1p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.3951*exp(1.37576-6.8445*i(vled))
+vled vc c
+.ends slr-322du
+
+.subckt slr-322dc a c p
+* slr-322dc from rohm   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dslr-322dc
+.model dslr-322dc d is=4.9616u n=4.4846 rs=7.1771 cjo=1p m=.3333 vj=.75 bv=4 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.38829*exp(2.2635-6.8232*i(vled))
+vled vc c
+.ends slr-322dc
+
+.subckt mled96 a c p
+* mled96 from motorola   * rap 10/97
+dled a vc dmled96
+rleak a vc 40meg
+vled vc c
+beled p 0 v=uramp(i(vled))**1.17*exp(-2.114-4.0658*i(vled))
+.model dmled96 d is=10e-21 n=1.5219 rs=1.7433 cjo=50p m=.3333 vj=.75 bv=5.3573 ibv=10 tt=5n
+.ends mled96
+
+.subckt lys260 a c p
+* lys260 from infineon    * i-team@nikkel 12/28/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dlys260
+.model dlys260 d is=10.000e-16 n=.57883 rs=18.515 cjo=10.000e-12 m=.3333 vj=.75 bv=5.9 ibv=0.1u tt=5n
+beled p 0 v=uramp(i(vled))**1.4897*exp(-1.11227-4.5621969*i(vled))
+vled vc c
+.ends lys260
+
+.subckt lss260 a c p
+* lss260 from infineon   * i-team@nikkel 12/28/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dlss260
+.model dlss260 d is=10.000e-16 n=.57883 rs=18.515 cjo=12p m=.3333 vj=.75 bv=5.9 ibv=.1u tt=5n
+beled p 0 v=uramp(i(vled))**1.46334*exp(-1.25153-2.0806235*i(vled))
+vled vc c
+.ends lss260
+
+.subckt ld275-2 a c p
+* ld275-2 from infineon    * i-team@nikkel 12/27/00
+* p=(light) radiant intensity in milli-watts per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld275-2
+.model dld275-2 d is=55.440e-7 n=1.9469 rs=.42192 cjo=25p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.0029*exp(-1.4832-0.1774*i(vled))
+vled vc c
+.ends ld275-2
+
+.subckt ld275-1 a c p
+* ld275-1 from infineon    * i-team@nikkel 12/27/00
+* p=(light) radiant intensity in milli-watts per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld275-1
+.model dld275-1 d is=55.440e-7 n=1.9469 rs=.42192 cjo=25p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.00638*exp(-1.926884-0.193167*i(vled))
+vled vc c
+.ends ld275-1
+
+.subckt ld274-3 a c p
+* ld274-3 from infineon    * i-team@nikkel 12/27/00
+* p=(light) radiant intensity in milli-watts per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld274-3
+.model dld274-3 d is=55.440e-7 n=1.9469 rs=.42192 cjo=25p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.0073*exp(-0.02744-0.19548*i(vled))
+vled vc c
+.ends ld274-3
+
+.subckt ld274-2 a c p
+* ld274-2 from infineon    * i-team@nikkel 12/27/00
+* p=(light) radiant intensity in milli-watts per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld274-2
+.model dld274-2 d is=55.440e-7 n=1.9469 rs=.42192 cjo=25p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.00636*exp(-0.3175-0.1931*i(vled))
+vled vc c
+.ends ld274-2
+
+.subckt ld274 a c p
+* ld274 from infineon    * i-team@nikkel 12/27/00
+* p=(light) radiant intensity in milli-watts per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld274
+.model dld274 d is=55.440e-7 n=1.9469 rs=.42192 cjo=25p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.0063*exp(-0.8566-0.19096*i(vled))
+vled vc c
+.ends ld274
+
+.subckt ld271l a c p
+* ld271l from infineon    * i-team@nikkel 12/26/00
+* p=(light) radiant intensity in milli-watt per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld271l
+.model dld271l d is=2.2926u n=1.0356 rs=.39669 cjo=40p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.004575*exp(-1.874-0.16149*i(vled))
+vled vc c
+.ends ld271l
+
+.subckt ld271hl a c p
+* ld271hl from infineon    * i-team@nikkel 12/26/00
+* p=(light) radiant intensity in milli-watt per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld271hl
+.model dld271hl d is=2.2926u n=1.0356 rs=.39669 cjo=40p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.00452*exp(-1.8102-0.16138*i(vled))
+vled vc c
+.ends ld271hl
+
+.subckt ld271h a c p
+* ld271 from infineon    * i-team@nikkel 12/26/00
+* p=(light) radiant intensity in milli-watt per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld271h
+.model dld271h d is=2.2926u n=1.0356 rs=.39669 cjo=40p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.0045*exp(-1.81-0.161381*i(vled))
+vled vc c
+.ends ld271h
+
+.subckt ld271 a c p
+* ld271 from infineon    * i-team@nikkel 12/26/00
+* p=(light) radiant intensity in milli-watt per steradian as o/p voltage
+vdrop a a1 1
+dled a1 vc dld271
+.model dld271 d is=2.2926e-6 n=1.0356 rs=.39669 cjo=40p m=.3333 vj=.75 bv=5.9 ibv=10n tt=5n
+beled p 0 v=uramp(i(vled))**1.004575* exp(-1.8744-0.16149*i(vled))
+vled vc c
+.ends ld271
+
+.subckt gl8tr2 a c p
+* gl8tr2 from sharp   * i-team@nikkel 12/21/2000
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dgl8tr2
+.model dgl8tr2 d is=4.000e-10 n=1.6058 rs=.94694 cjo=1p m=.3333 vj=.75 bv=5 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.33276*exp(1.8597895-19.099*i(vled))
+vled vc c
+.ends gl8tr2
+
+.subckt gl8lr2 a c p
+* dgl8lr2 from sharp   * i-team@nikkel  21/12/2000
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dgl8lr2
+.model dgl8lr2 d is=10.505e-18 n=.63632 rs=2.3645 cjo=30p m=.3333 vj=.75 bv=5 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.22187* exp(1.8315-10.604*i(vled))
+vled vc c
+.ends gl8lr2
+
+.subckt gl8hy2 a c p
+* gl8hy2 from sharp   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dgl8hy2
+.model dgl8hy2 d is=214.89p n=1.8906 rs=7.574 cjo=35p m=.3333 vj=.75 bv=5 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.82612*exp(3.661978-32.26083*i(vled))
+vled vc c
+.ends gl8hy2
+
+.subckt gl8hd2 a c p
+* gl8hd2 from sharp   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dgl8hd2
+.model dgl8hd2 d is=190.25p n=1.7735 rs=8.11 cjo=20p m=.3333 vj=.75 bv=5 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.7252*exp(4.014576-32.932*i(vled))
+vled vc c
+.ends gl8hd2
+
+.subckt gl8eg2 a c p
+* gl8eg2 from sharp   * i-team@nikkel 12/21/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dgl8eg2
+.model dgl8eg2 d is=266.83f n=1.439 rs=8.4446 cjo=35p m=.3333 vj=.75 bv=5 ibv=10u tt=5n
+beled p 0 v=uramp(i(vled))**1.407238*exp(2.5093-3.0308*i(vled))
+vled vc c
+.ends gl8eg2
+
+.Subckt F5D1  A C P 
+Dr 4  C dr 
+Df1 4  C Df0
+D1 4  5 Df1
+VAm 5  C 0
+Rs A  4  1.5 
+Btok 6  0 v=i(vam)*v(tk)
+b P 0 v=0.12*uramp(v(6)-0.002)
+I1 0  tk DC 2m 
+R1 0  tk resistor  1K 
+.model dr D  is = 1n   n = 10   cjo = 70p  vj=2  bv = 3   ibv = 10u  
+.model Df0 D  is = 3e-18   n = 1.5   tt =1.3u   eg = 2  
+.model Df1 D  is = 3e-18   n = 1.5   eg = 2    
+.model resistor r    tc1 = -0.006        
+.ends 
+
+.subckt and233gcp a c p
+* and233gcp from and   * i-team@nikkel 12/22/00
+* p=(light) luminous intensity in milli-candelas as o/p voltage
+vdrop a a1 1
+dled a1 vc dand233gcp
+.model dand233gcp d is=4.6p n=1.6133 rs=8.15 cjo=1p m=.3333 vj=.75 bv=5 ibv=80u tt=5n
+beled p 0 v=uramp(i(vled))**1.155*exp(2.9413-3.5059*i(vled))
+vled vc c
+.ends and233gcp

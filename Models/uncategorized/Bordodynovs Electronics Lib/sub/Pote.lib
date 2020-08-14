@@ -1,0 +1,673 @@
+* This is the potentiometer
+*      _____
+*  1--|_____|--2
+*        |
+*        3
+*
+.SUBCKT potentiometer 1 2 3
+.param w=limit(SET,1m,.999)
+R0 1 3 {Rt*(1-w)}
+R1 3 2 {Rt*(w)}
+.ENDS
+.SUBCKT POT 1 2 3 PARAMS: Rt=1K SET=0.5
+RA 1 3 {Rt*(1-SET)+.001}
+RB 3 2 {Rt*SET+.001}
+.ENDS
+.SUBCKT pot10t 1 2 3
+.param w=limit(set,1m,9.99)
+R0 1 3 {Rt*(1-0.1*w)}
+R1 3 2 {Rt*0.1*(w)}
+.ENDS
+
+* A Collection of Potentiometers
+* ==============================
+* Helmut Sennewald,                          12/23/2003         V1.1
+*
+*    Models:
+*       potentiometer    old style LTSPICE potentiometer
+*       pot_lin          k*x
+*       pot_pow          x^k
+*       pot_plog         exp(k*(1-x))
+*       pot_nlog         exp(kx)
+*       pot_tab          table(x)
+*       pot_piher_plog   piecewise linear, datasheet
+*       pot_radiohm_plog piecewise linear, measured
+*    
+*
+*       1 ____    Set=1 
+*             |  
+*            | |  3
+*            | |<---- Set 0..1
+*            | |
+*       Rtap | |  Tap 
+*            | |
+*       2 ____|   Set=0
+*
+* 
+*     RT = total resistance
+*     Set = ratio of travel of the wiper
+*     RTAP = reference resistance at wiper=Tap
+*            It is needed only for pot_plog, pot_nlog and pot_pow.
+*            RTAP is measured between pin-2 and wiper.
+*     TAP = ratio of travel when Rtap is reached
+*--------------------- The Linear Potentiometer ---------------------
+*      
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+.SUBCKT PotLin 1 2 3
+* Parameters: Rt, set
+.param w=limit(0.01m,set,0.99999)
+*
+R1 1 3 {Rt*(1-w)}
+R2 3 2 {Rt*(w)}
+.ENDS
+*
+*------------- The Ideal Power Function Potentiometer ---------------
+*
+* It is interesting to know that the power log. curve is a
+* good fit to so called "log"-potentiometers, because most of 
+* them have not true logarithm dependency in reality.
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+*  RTAP is resistance at travel TAP
+*  Example: Rt=10k, R=1k @ 0.5   (half way)
+*           RTAP=1k, TAP=0.5
+*  RTAP and TAP define a point of the curve resistance versus ratio.
+*
+.SUBCKT pot_pow 1 2 3
+* Parameters: Rt, set, Rtap, Tap
+.param w=limit(0.01m,set,0.99999)
+*
+.param pwrexp=ln(RTAP/RT)/ln(TAP)
+.param ratio=w**pwrexp
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+* The Audio Potentiometer
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+*  RTAP is resistance at travel TAP
+*  Example: Rt=10k, R=1k @ 0.5   (half way)
+*           RTAP=1k, TAP=0.5
+*  RTAP and TAP define a point of the curve resistance versus ratio.
+.SUBCKT pot_audio 1 2 3
+.param w=limit(0.01m,set,0.99999)
+*
+.param pwrexp=ln(RTAP/RT)/ln(TAP)
+.param ratio=w**pwrexp
+.param RTAP=50k, TAP=0.5
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+*---------- The Ideal Positive Logarithm Potentiometer --------------
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+*  RTAP is resistance at travel TAP
+*  Example: Rt=10k, R=1 @ 0.001  
+*           RTAP=1, TAP=0.001
+*  RTAP and TAP define a point of the curve resistance versus ratio.
+*
+.SUBCKT pot_plog 1 2 3
+* Parameters: Rt, Set, Rtap, Tap
+.param w=limit(0.01m,Set,0.99999)
+*
+.param pwrexp=ln(RTAP/RT)/(1-TAP)
+.param ratio=exp(pwrexp*(1-w))
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+
+
+
+*---------- The Ideal Negative Logarithm Potentiometer -------------
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+*  RTAP is resistance at travel TAP
+*  Example: Rt=10k, R=1 @ 0.999  
+*           RTAP=1, TAP=0.999
+*  RTAP and TAP define a point of the curve resistance versus ratio.
+*
+.SUBCKT pot_nlog 1 2 3
+* Parameters: Rt, Set, Rtap, Tap
+.param w=limit(0.01m,Set,0.99999)
+*
+.param pwrexp=ln(RTAP/RT)/(TAP)
+.param ratio=exp(pwrexp*(w))
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+
+
+
+* ------------ The Arbtrary(Table) Potentiometer --------------------
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+.SUBCKT pot_tab 1 2 3
+* Parameters: Rt, Set
+.param w=limit(0.01m,Set,0.99999)
+*
+.param ratio=TABLE(w, 0,0.01m, 0.1, 0.001, 0.2, 0.003, 0.3, 0.01, 
++ 0.4, 0.05, 0.5, 0.1, 0.6, 0.2, 0.7, 0.35,
++ 0.8, 0.6, 0.9, 0.9, 0.95, 0.98, 1.0, 0.99999) 
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+
+
+
+*---------- A Positive "Logarithm" Potentiometer from PIHER ---------
+*
+* PIHER shows three piecewise linear functions in their datasheet
+* for the resistance dependenncy.
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+.SUBCKT pot_piher_plog 1 2 3
+* Parameters: Rt, Set
+.param w=limit(0.01m,Set,0.99999)
+*
+.param ratio=TABLE(w, 0,0.01m, 0.05,0.01m, 0.33,0.04, 0.66,0.16, 
++ 0.95,0.99, 1.0,0.99999)
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+
+
+
+*--------- A Positive "Logarithm" Potentiometer from RADIOHM. -------
+*
+* RADIOHM shows a smooth "logarithm/power" curve in the datasheet. 
+* My own measurements on a 100kOhm stero pot has shown that it
+* consists of five piecwise linear sections. 
+*
+* 1.0 <----- 0.0
+*        |3
+*      __V__
+*  1--|_____|--2
+*        
+*  o--R1-o-R2--o
+*
+.SUBCKT pot_radiohm_plog 1 2 3
+* Parameters: Rt, Set
+.param w=limit(0.01m,Set,0.99999)
+*
+.param ratio=TABLE(w, 0,0.01m, 0.1,0.01m, 0.3,0.012, 0.42,0.047, 
++ 0.52,0.105, 0.64,0.25, 0.95,0.99999, 1.0,0.99999)
+*
+R1 1 3 {Rt*(1-ratio)}
+R2 3 2 {Rt*(ratio)}
+.ENDS
+* A Collection of Tapped Potentiometers
+* =====================================
+* Helmut Sennewald,                          12/23/2003         V1.1
+*
+*    Models:
+*       pot_tap_lin       k*x
+*       pot_tap_pow       x^k
+*       pot_tap_plog      exp(k*(1-x))
+*       pot_tap_nlog      exp(k*x)
+*       pot_tap_tab       table(x)
+*    
+*
+*       1 ____    1.0=Set
+*             |  
+*            | |  3
+*            | |<---- Set 0..1
+*   Tap  4 --| |
+*   Rtap     | |
+*            | |
+*       2 ____|   0.0=Set
+*
+* 
+*     RT = total resistance
+*     SET = ratio of travel of the wiper
+*     RTAP = resistance between "4" and "2" at position TAP.
+*     TAP = ratio of travel when the wiper reaches the tap, e.g. 0.5
+
+
+
+* --- Potentiometer with a power "logarithm" characteristic and a tap ---
+*
+* The tap is typically at about 50%(tap=0.5) of the potentiometer's travel.
+* RTAP is the resistance between node 4 and node 2 at position TAP.
+*
+*  v=V0*Set^const
+*  tap at Set=0.5(50%), Rtap=0.1(10%)*Rt
+*  const = ln(0.5)/ln(0.1)
+*
+*          3  wiper
+*          V
+* 1.0 <------------------------- 0.0       
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  |   R3     R4
+*                  4 tap
+*
+*     Rt=R1+R2+R3+R4
+*     Rtap=R3+R4
+*
+.SUBCKT pot_tap_pow 1 2 3 4 
+* Parameters RT, SET, RTAP, TAP
+*
+.param w=limit(Set,0.01m,.99999)
+.param TAP1=limit(0.01m, TAP, 0.99999)
+.param pwrexp=ln(RTAP/RT)/ln(TAP1)
+*
+.param ratio=w**pwrexp
+.param RD=Rt*ratio
+*
+R1 1 5 {limit(0.01m, (RT-RD), (RT-RTAP-0.01m)}
+R2 5 4 {limit(0.01m, (RD-RTAP), (RT-RTAP-0.01m)}
+R3 4 6 {limit(0.01m, (RTAP-RD), (RTAP-0.01m)}
+R4 6 2 {limit(0.01m, (RD), (RTAP-0.01m)}
+*
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+*
+vsw 7 0 {w}
+.model sw1 SW(Ron=1m, Roff=1T vt={TAP1})
+.model sw2 SW(Ron=1T, Roff=1m vt={TAP1})
+*
+.ENDS
+
+
+
+* --- Potentiometer with a positive "logarithm" characteristic and a tap ---
+*
+* The tap is typically at about 50%(tap=0.5) of the potentiometer's travel.
+* RTAP is the resistance between node 4 and node 2 at position TAP.
+*
+*  v=V0*exp(const*(1-Set))
+*  tap at Set=0.5(50%), Rtap=0.1(10%)*Rt
+*  const = ln(0.5)/ln(0.1)
+*
+*          3  wiper
+*          V
+* 1.0 <------------------------- 0.0       
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  |   R3     R4
+*                  4 tap
+*
+*     Rt=R1+R2+R3+R4
+*     Rtap=R3+R4
+*
+.SUBCKT pot_tap_plog 1 2 3 4 
+* Parameters RT, SET, RTAP, TAP
+*
+.param w=limit(Set,0.01m,.99999)
+.param TAP1=limit(0.01m, TAP, 0.99999)
+.param pwrexp=ln(RTAP/RT)/(1-TAP1)
+*
+.param ratio=exp(pwrexp*(1-w))
+.param RD=Rt*ratio
+*
+R1 1 5 {limit(0.01m, (RT-RD), (RT-RTAP-0.01m)}
+R2 5 4 {limit(0.01m, (RD-RTAP), (RT-RTAP-0.01m)}
+R3 4 6 {limit(0.01m, (RTAP-RD), (RTAP-0.01m)}
+R4 6 2 {limit(0.01m, (RD), (RTAP-0.01m)}
+*
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+*
+vsw 7 0 {w}
+.model sw1 SW(Ron=1m, Roff=1T vt={TAP1})
+.model sw2 SW(Ron=1T, Roff=1m vt={TAP1})
+*
+.ENDS
+
+
+
+* --- Potentiometer with a negative "logarithm" characteristic and a tap ---
+*
+* The tap is typically at about 50%(tap=0.5) of the potentiometer's travel.
+* RTAP is the resistance between node 4 and node 2 at position TAP.
+*
+*  v=V0*exp(const*Set)
+*  tap at Set=0.5(50%), Rtap=0.1(10%)*Rt
+*  const = ln(0.5)/ln(0.1)
+*
+*          3  wiper
+*          V
+* 1.0 <------------------------- 0.0       
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  |   R3     R4
+*                  4 tap
+*
+*     Rt=R1+R2+R3+R4
+*     Rtap=R3+R4
+*
+.SUBCKT pot_tap_nlog 1 2 3 4 
+* Parameters RT, SET, RTAP, TAP
+*
+.param w=limit(Set,0.01m,.99999)
+.param TAP1=limit(0.01m, TAP, 0.99999)
+.param pwrexp=ln(RTAP/RT)/(TAP1)
+*
+.param ratio=exp(pwrexp*(w))
+.param RD=Rt*ratio
+*
+R1 1 5 {limit(0.01m, (RT-RD), (RT-RTAP-0.01m)}
+R2 5 4 {limit(0.01m, (RD-RTAP), (RT-RTAP-0.01m)}
+R3 4 6 {limit(0.01m, (RTAP-RD), (RTAP-0.01m)}
+R4 6 2 {limit(0.01m, (RD), (RTAP-0.01m)}
+*
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+*
+vsw 7 0 {1-w}
+.model sw1 SW(Ron=1m, Roff=1T vt={TAP1})
+.model sw2 SW(Ron=1T, Roff=1m vt={TAP1})
+*
+.ENDS
+
+
+
+* ----- Potentiometer with a linear characteristic and a tap -----
+* The tap value is defined by RTAP.
+* RTAP is the resistance between node 4 and node 2 at position TAP.
+* The tap is typically at about 50%(tap=0.5) of the potentiometer's travel.
+* Parameter TAP is ignored by this model.
+*
+*  v=V0*Set^const
+*  tap at Set=0.5(50%), Rtap=0.1(10%)*Rt
+*  const = ln(0.5)/ln(0.1)
+*
+*          3  wiper
+*          V
+* 1.0 <------------------------- 0.0       
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  |   R3     R4
+*                  4 tap
+*
+*     Rt=R1+R2+R3+R4
+*     Rtap=R3+R4
+*
+.SUBCKT pot_tap_lin 1 2 3 4  
+* Parameters RT, SET, RTAP
+*
+.param ratio=limit(Set,0.01m,.99999)
+*
+.param RD=Rt*ratio
+.param TAP1=limit(0.01m, (RTAP/RT), 0.99999)
+*
+R1 1 5 {limit(0.01m, (RT-RD), (RT-RTAP-0.01m)}
+R2 5 4 {limit(0.01m, (RD-RTAP), (RT-RTAP-0.01m)}
+R3 4 6 {limit(0.01m, (RTAP-RD), (RTAP-0.01m)}
+R4 6 2 {limit(0.01m, (RD), (RTAP-0.01m)}
+*
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+*
+vsw 7 0 {ratio}
+.model sw1 SW(Ron=1m, Roff=1T vt={TAP1})
+.model sw2 SW(Ron=1T, Roff=1m vt={TAP1})
+*
+.ENDS
+
+
+* --- Potentiometer with an arbitrary characteristic and a tap ---
+*
+* It allows to define a flat region around the tap as we can
+* often see in the datasheets.
+* It requires the definition of a table within this model.
+* The tap is typically at about 50%(tap=0.5) of the potentiometer's travel.
+* RTAP is the resistance between node 4 and node 2 at position TAP.
+*
+*  v=V0*table(Set)
+*
+*          3  wiper
+*          V
+* 1.0 <------------------------- 0.0       
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  |   R3     R4
+*                  4 tap
+*
+*     Rt=R1+R2+R3+R4
+*     Rtap=R3+R4
+*
+.SUBCKT pot_tap_tab 1 2 3 4 
+* Parameters RT, SET, RTAP, TAP
+*
+.param w=limit(Set,0.01m,.99999)
+.param TAP1=limit(0.01m, TAP, 0.99999)
+*
+.param ratio=TABLE(w, 0,0, 0.1, 0.001, 0.2, 0.003, 0.3, 0.01, 
++ 0.4, 0.05, 0.48, 0.1, 0.52, 0.1, 0.6, 0.2, 0.7, 0.35,
++ 0.8, 0.6, 0.9, 0.9, 0.95, 0.98, 1.0, 1.0) 
+*
+.param RD=Rt*ratio
+*
+R1 1 5 {limit(0.01m, (RT-RD), (RT-RTAP-0.01m)}
+R2 5 4 {limit(0.01m, (RD-RTAP), (RT-RTAP-0.01m)}
+R3 4 6 {limit(0.01m, (RTAP-RD), (RTAP-0.01m)}
+R4 6 2 {limit(0.01m, (RD), (RTAP-0.01m)}
+*
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+*
+vsw 7 0 {w}
+.model sw1 SW(Ron=1m, Roff=1T vt={TAP1})
+.model sw2 SW(Ron=1T, Roff=1m vt={TAP1})
+*
+.ENDS
+* Potentiometer with a logarithm characteristic and a tap.
+* The tap is typically at about 50%(tap=0.5) of the poentiometer's travel.
+* RTAP is the resistance between node 4 and node 2.
+*
+*  v=V0*wiper^const
+*  tap at wiper=0.5(50%), Rtap=0.1(10%)*Rtot
+*  const = ln(0.5)/ln(0.1)
+*
+*          3  wiper
+*          V
+* 1.0 <------------------------- 0.0       
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  |   R3     R4
+*                  4 tap
+*
+*     Rtot=R1+R2+R3+R4
+*     Rtap=R3+R4
+*
+.SUBCKT pot_tap_audio 1 2 3 4  RT={RT} SET={SET} RTAP={RTAP} TAP={TAP} 
+.param w=limit(set,0.1m,.9999)
+
+.param pwrexp=ln(RTAP/RT)/ln(TAP)
+.param ratio=w**pwrexp
+
+.param RD=Rtot*ratio
+
+R1 1 5 {limit(1m, (RT-RD), (RT-RTAP-1m)}
+R2 5 4 {limit(1m, (RD-RTAP), (RT-RTAP-1m)}
+R3 4 6 {limit(1m, (RTAP-RD), (RTAP-1m)}
+R4 6 2 {limit(1m, (RD), (RTAP-1m)}
+
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+
+vsw 7 0 {w}
+.model sw1 SW(Ron=1m, Roff=1T vt=0.5)
+.model sw2 SW(Ron=1T, Roff=1m vt=0.5)
+.ENDS 
+
+* Potentiometer with a linear characteristic and a tap.
+* The tap value is defined by RTAP.
+* RTAP is the resistance between node 4 and node 2.
+* Parameter TAP is ignored by this model.
+*
+*  v=V0*set^const
+*  tap at set=0.5(50%), Rtap=0.1(10%)*Rt
+*  const = ln(0.5)/ln(0.1)
+*
+*          3
+*          V
+*      ------------------------>        
+*      ___  5 ___     ___  6 ___
+*  1--|___|--|___|-o-|___|--|___|--2
+*                  |
+*      R1      R2  4   R3     R4
+*
+*     Rt=R1+R2+R3+R4
+*     Rtap=R1+R2
+*
+.SUBCKT pot_tap_linear 1 2 3 4  RT={RT} SET={SET} RTAP={RTAP} TAP={TAP}
+* Parameter TAP has been ignored 
+.param w=limit(set,0.1m,.9999)
+*
+.param ratio=w
+*
+.param RD=Rt*ratio
+*
+R1 1 5 {limit(1m, (RT-RD), (RT-RTAP-1m)}
+R2 5 4 {limit(1m, (RD-RTAP), (RT-RTAP-1m)}
+R3 4 6 {limit(1m, (RTAP-RD), (RTAP-1m)}
+R4 6 2 {limit(1m, (RD), (RTAP-1m)}
+*
+sw5 5 3 7 0 sw1
+sw6 6 3 7 0 sw2
+*
+vsw 7 0 {w}
+.model sw1 SW(Ron=1m, Roff=1T vt=0.5)
+.model sw2 SW(Ron=1T, Roff=1m vt=0.5)
+*
+.ENDS
+*---------------------------------------------------------------------------
+* 3 to 1 switch with selection
+* sel=1  selects in1
+* ...
+* sel=3  selects in3
+*
+*                 in1
+*                 | in2
+*                 | | in3
+*                 | | | out
+*                 | | | | 
+.subckt sw_3_to_1 1 2 3 4 sel={sel}
+S1 1 4  11 0 My_sw_3_to_1
+S2 2 4  12 0 My_sw_3_to_1
+S3 3 4  13 0 My_sw_3_to_1
+B1 11 0 V=IF({sel}>0.5 & {sel}<1.5, 1, -1)
+B2 12 0 V=IF({sel}>1.5 & {sel}<2.5, 1, -1)
+B3 13 0 V=IF({sel}>2.5 & {sel}<3.5, 1, -1)
+.model My_sw_3_to_1 SW(Ron=.1 Roff=1e9 Vt=0)
+.ENDS
+.subckt 1P3T 1 2 3 4 
+R12 1 2 { IF ( SET < 2, 1u, 1T) }
+R13 1 3 { IF ( SET <= 2 & SET >= 2, 1u, 1T) }
+R14 1 4 { IF ( SET > 2, 1u, 1T) }
+.ends
+*	*	*	*	*	*	*	*	*	*
+* 5 to 1 switch with selection
+* sel=0  selects none
+* sel=1  selects in1
+* ...
+* sel=5  selects in5
+*
+*                 in1
+*                 | in2
+*                 | | in3
+*                 | | | in4
+*                 | | | | in5
+*                 | | | | | out
+*                 | | | | | |
+.subckt sw_5_to_1 1 2 3 4 5 6 sel={sel}
+S1 1 6  11 0 My_sw_5_to_1
+S2 2 6  12 0 My_sw_5_to_1
+S3 3 6  13 0 My_sw_5_to_1
+S4 4 6  14 0 My_sw_5_to_1
+S5 5 6  15 0 My_sw_5_to_1
+B1 11 0 V=IF({sel}>0.5 & {sel}<1.5, 1, -1)
+B2 12 0 V=IF({sel}>1.5 & {sel}<2.5, 1, -1)
+B3 13 0 V=IF({sel}>2.5 & {sel}<3.5, 1, -1)
+B4 14 0 V=IF({sel}>3.5 & {sel}<4.5, 1, -1)
+B5 15 0 V=IF({sel}>4.5 & {sel}<5.5, 1, -1)
+.model My_sw_5_to_1 SW(Ron=.1 Roff=1e9 Vt=0)
+.ENDS
+*
+.subckt swtime 1 2
+Von N1 0 PULSE(0 1 {Ton})
+S1 1 2 N2 0 Switch
+Voff N1 N2 PULSE(0 1 {Toff})
+.MODEL Switch SW(Vt=1m Ron=1m Roff=1e7)
+.ends
+*
+* Simple Switches
+* Martin Sadler
+*
+* SET = 0, switch off
+* SET = 1, Switch on
+
+.subckt spst 1 2
+Rsw12 1 2 {1T*(1-SET)+.001}
+.ends spst
+
+.subckt spdt 1 2 3
+Rsw12 1 2 {1T*(1-SET)+.001}
+Rsw13 1 3 {1T*SET+.001}
+Rsw23 2 3 {1T}
+.ends spdt
+
+.subckt dpdt 1a 2a 3a 1b 2b 3b
+Rswa12 1a 2a {1T*(1-SET)+.001}
+Rswa13 1a 3a {1T*SET+.001}
+Rswa23 2a 3a {1T}
+Rswb12 1b 2b {1T*(1-SET)+.001}
+Rswb13 1b 3b {1T*SET+.001}
+Rswb23 2b 3b {1T}
+.ends dpdt

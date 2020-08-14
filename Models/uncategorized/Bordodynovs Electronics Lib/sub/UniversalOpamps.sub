@@ -1,0 +1,95 @@
+* Copyright © Linear Technology Corp. 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006.  All rights reserved.
+*
+.subckt level1 1 2 3 4 5
+A1 2 1 0 0 0 0 5 0 OTA G={Avol/Rout} ref={Vos} linear Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308 Rout={Rout}
+R5 2 3 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+R1 3 1 {2*Rin} noiseless
+R2 2 4 {2*Rin} noiseless
+.param Rout=.1
+.param Cout={Avol/GBW/2/pi/Rout}
+.param Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G
+.ends level1
+*
+.subckt level2 1 2 3 4 5
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 N002 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R2 N002 4 {2*Rout} noiseless
+R1 3 N002 {2*Rout} noiseless
+R3 3 1 {2*Rin} noiseless
+R4 3 2 {2*Rin} noiseless
+R5 2 4 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+G1 0 N002 4 N002 table(0 0 10 {2*slew*Cout})
+G2 N002 0 N002 3 table(0 0 10 {2*slew*Cout})
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless)
+.param Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G
+.ends level2
+*
+.subckt level3a 1 2 3 4 5
+S1 5 3 N003 5 Q
+S2 4 5 5 N003 Q
+A1 2 1 0 0 0 0 N002 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R3 3 2 {2*Rin} noiseless
+G1 0 N003 N002 0 {1/Rout}
+R2 N003 0 {Rout} noiseless
+C1 N003 0 {X*Cout/Avol}
+R4 3 1 {2*Rin} noiseless
+R5 1 4 {2*Rin} noiseless
+R6 2 4 {2*Rin} noiseless
+G2 0 N002 4 N002 table(0 0 10 {2*slew*Cout})
+G3 N002 0 N002 3 table(0 0 10 {2*slew*Cout})
+R1 N002 4 {2*Rout} noiseless
+R7 3 N002 {2*Rout} noiseless
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless)
+.param Avol=1Meg GBW=10Meg Slew=10Meg rail=0 Vos=0 ilimit=25m
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G phimargin=45
+.param X table(phimargin,29.4,3.5,32.1,2.9,33.8,2.6,35.8,2.3,38.1,2,40.9,1.7,43.2,1.5,45.9,1.3,49.2,1.1,53.2,0.9,58.2,0.7,64.7,0.5,73,0.3,86.1,0.05)
+.ends level3a
+*
+.subckt level3b 1 2 3 4 5
+S1 5 3 N007 5 Q
+S2 4 5 5 N007 Q
+A1 2 1 0 0 0 0 N002 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R3 3 2 {2*Rin} noiseless
+R4 3 1 {2*Rin} noiseless
+R5 1 4 {2*Rin} noiseless
+R6 2 4 {2*Rin} noiseless
+G2 0 N007 N006 0 10µ
+R9 0 N007 100K noiseless
+G1 0 N003 N002 0 {2/Rz}
+C1 N003 0 {.768*Cd}
+L1 N003 N004 41.2µ
+R1 N003 0 {Rz} noiseless
+R2 N006 0 {Rz} noiseless
+L2 N004 N005 23.8µ
+L3 N005 N006 11.04µ
+C2 N004 0 {.294*Cd}
+C5 N005 0 {.178*Cd}
+C6 N006 0 {.0375*Cd}
+G3 0 N002 4 N002 table(0 0 10 {2*slew*Cout})
+G4 N002 0 N002 3 table(0 0 10 {2*slew*Cout})
+R7 3 N002 {2*Rout} noiseless
+R8 N002 4 {2*Rout} noiseless
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless)
+.param Avol=1Meg GBW=10Meg Slew=10Meg rail=0 Vos=0 ilimit=25m
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G phimargin=45
+.param delay=(90-MIN(phimargin,89))/360/GBW
+.param Rz=sqrt(100u/Cd)
+.param Cd=delay*delay/100u
+.ends level3b

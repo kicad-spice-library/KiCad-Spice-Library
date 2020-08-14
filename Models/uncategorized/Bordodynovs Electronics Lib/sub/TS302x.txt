@@ -1,0 +1,220 @@
+****************************************************************************
+*
+* WARNING : please consider following remarks before usage
+*
+* 1) All models are a tradeoff between accuracy and complexity (ie. simulation
+*    time).
+* 2) Macromodels are not a substitute to breadboarding, they rather confirm the
+*    validity of a design approach and help to select surrounding component values.
+* 3) A macromodel emulates the NOMINAL performance of a TYPICAL device within
+*    SPECIFIED OPERATING CONDITIONS (ie. temperature, supply voltage, etc.).
+*    Thus the macromodel is often not as exhaustive as the datasheet, its goal
+*    is to illustrate the main parameters of the product.
+* 4) Data issued from macromodels used outside of its specified conditions
+*    (Vcc, Temperature, etc) or even worse: outside of the device operating
+*    conditions (Vcc, Vicm, etc) are not reliable in any way.
+*
+****************************************************************************
+****
+***  TS3021/TS3022  Spice macromodel subckt
+***
+***  Version 2.0 (March 2011)
+****                      
+************ CONNECTIONS: 
+****             NON-INVERTING INPUT
+****              |  INVERTING INPUT
+****              |   |   POSITIVE POWER SUPPLY
+****              |   |    |   NEGATIVE POWER SUPPLY
+****              |   |    |    |  OUTPUT  
+****              |   |    |    |   |     
+****              |   |    |    |   |  
+.SUBCKT TS302x   VP  VM  VCCP VCCN  VS
+
+******************************
+*  Icc
+******************************
+
+    E_ICCSAT_HIGH ICC_OUT_HIGH 0 VALUE={TABLE( V(VCCP,VCCN) , 2 , {64e-6 - IEE} , 
+   + 3.3 , {65e-6 - IEE} , 5 , {67e-6 -IEE} )}    
+  
+    E_ICCSAT_LOW ICC_OUT_LOW 0 VALUE={TABLE( V(VCCP,VCCN) , 2 , {75e-6 - IEE} , 
+   + 3.3 , {77e-6 - IEE} , 5 , {80e-6 -IEE} )} 
+
+    R_ICCSAT_HIGH ICC_OUT_HIGH 0 1K
+    R_ICCSAT_LOW ICC_OUT_LOW 0 1K
+    G_ICCSAT VCCP VCCN VALUE={IF( V(VS)>V(Vccp,Vccn)/2 ,
++V(Icc_out_high), V(Icc_out_low) ) }
+    M_NMOS2 VO_DIFF_PLUS VM VEE_N VCCN_ENHANCED MOS_N L={L} W={W}
+    M_NMOS1 VO_DIFF_MINUS NET180 VEE_N VCCN_ENHANCED MOS_N L={L} W={W}
+    IIN_BIAS_VM VREF VM DC 80n
+    IEE_N VEE_N VCCN_ENHANCED DC {IEE}
+    IIN_BIAS_VP VREF VP DC 80n
+    V59 NET0175 NET0214 DC {Vd_compensazione}
+    V58 NET0205 NET0146 DC {Vd_compensazione}
+    VI0 NET180 VP DC 0
+    VPROT_IN_P_VCCP NET144 NET181 DC {V_DPROT}
+    V_ENHANCE_VCCN VCCN_ENHANCED VCCN DC {VCCN_enhance}
+    V_ENHANCE_VCCP VCCP_ENHANCED VCCP DC {VCCP_enhance}
+    VPROT_IN_M_VCCN NET152 NET256 DC {V_DPROT}
+    VPROT_IN_P_VCCN NET154 NET155 DC {V_DPROT}
+    VPROT_IN_M_VCCP NET242 NET173 DC {V_DPROT}
+    VVLIM_LOW_VB NET216 NET0206 DC {Vd_compensazione}
+    VVLIM_HIGH_VB NET0233 NET212 DC {Vd_compensazione}
+    D_ENABLE_FALL V_c_fall VB_D_G_RF DIODE_rf
+    D_ENABLE_RISE VB_D_G_RF V_c_rise DIODE_rf
+    D41 VB_D_VOD NET0175 DIODE_NOVd
+    D40 NET0146 VB_D_VOD DIODE_NOVd
+    DPROT_IN_M_VCCP VM NET173 DIODE_VLIM
+    G_IOUT_SINKED VCCN 0 VALUE={IF(I(VreadIo)>0, 0, I(VreadIo))}
+    G_IOUT_SOURCED VCCP 0 VALUE={IF(I(VreadIo)>0, I(VreadIo),0)}
+    DPROT_IN_M_VCCN NET152 VM DIODE_VLIM
+    DPROT_IN_P_VCCP NET180 NET181 DIODE_VLIM   
+    DPROT_IN_P_VCCN NET154 NET180 DIODE_VLIM
+    D3 VB_D_G NET0233 DIODE_NOVd
+    D4 NET0206 VB_D_G DIODE_NOVd
+    CIN_DIFF_VP VP VREF 2.7p
+    CIN_DIFF_VM VM VREF 2.7p
+    E66 NET0214 0 VCCP 0 1.0
+    E65 NET0205 0 VCCN 0 1.0
+    EVLIM_HIGH_VB NET212 0 VCCP 0 1.0
+    EVLIM_LOW_VB NET216 0 VCCN 0 1.0
+    E2_REF NET258 0 VCCN 0 1.0
+    E_VREF VREF 0 NET250 0 1.0
+    E1_REF NET228 0 VCCP 0 1.0
+    E_VAL_VDEP_SOURCE VAL_VDEP_SOURCE 0 VALUE={( -92.08371040724474 +
++72.77526395173992*V(Vccp,Vccn) +
++1.5082956259414868*V(Vccp,Vccn)*V(Vccp,Vccn) )  -5000*I(VreadIo) }
+    E_VAL_VDEP_SINK VAL_VDEP_SINK 0 VALUE={(54.866515837108246
++-60.88989441930893*V(Vccp,Vccn)
+++0.6033182503774749*V(Vccp,Vccn)*V(Vccp,Vccn) ) -5000*I(VreadIo) }
+    E_VDEP_SOURCE VDEP_SOURCE 0 VALUE={IF(V(val_vdep_source)>=0, 0,
++V(val_vdep_source))}
+    E_VDEP_SINK VDEP_SINK 0 VALUE={IF(V(val_vdep_sink)<=0 , 0 ,
++V(val_vdep_sink))}    
+    EILIM_SINK VB_3_SINK VDEP_SINK VB_3 0 1.0
+    DILIM_SINK VB_3_SINK VB_3 DIODE_ILIM
+    EILIM_SOURCE VB_3_SOURCE VDEP_SOURCE VB_3 0 1.0
+    DILIM_SOURCE VB_3 VB_3_SOURCE DIODE_ILIM        
+    R_RISE_FALL VREF VB_D_G_RF {R_rise_fall}
+    R_DELAY_VOD VREF VB_D_VOD {R_delay}    
+    G_DELAY_VOD VB_D_VOD VREF VO_DIFF_MINUS VO_DIFF_PLUS {1/R_delay}
+    R_DELAY_VCC VREF VB_D_VOD_VCC {R_delay}
+    G_DELAY_VCC VB_D_VOD_VCC VREF VREF VB_D_VOD {1/R_delay}
+    RPROT_IN_P_VCCP NET144 VCCP 15K
+    RPROT_IN_M_VCCP VCCP NET242 15K
+    RD1 VCCP_ENHANCED VO_DIFF_MINUS {RD}
+    RD2 VCCP_ENHANCED VO_DIFF_PLUS {RD}    
+    RPROT_IN_M_VCCN VCCN NET256 15K
+    RPROT_IN_P_VCCN NET155 VCCN 15K
+    R1_REF NET228 NET250 1Meg
+    R_GAIN VB_D_G VREF {R1}
+    R2_REF NET250 NET258 1Meg
+    G_RISE_FALL VREF VB_D_G_RF VB_D_G VREF {1/R_rise_fall}
+
+
+******************************
+*  VCCAP C_FALL
+******************************
+
+   E_C_FALL V_VALORI_C_FALL 0  VALUE={ TABLE( V(VCCP,VCCN) , 2 , 28p , 
+   + 3.3 , 1p , 5 , 1p )/CAP_scale }   
+   X_C_FALL V_VALORI_C_FALL 0    VREF V_C_FALL   VCCAP_PSPICE 
+   +PARAMS: CAP_scale={CAP_scale}  Rserie=1
+  
+  
+******************************
+*  VCCAP C_RISE
+******************************  
+
+   E_C_RISE V_VALORI_C_RISE 0 VALUE={ TABLE( V(VCCP,VCCN) , 2 , 46p ,
+   + 3.3 , 42p , 5 , 1p )/CAP_scale }
+   X_C_RISE V_VALORI_C_RISE 0 V_C_RISE VREF VCCAP_PSPICE 
+   +PARAMS:  CAP_scale={CAP_scale}  Rserie=1 
+
+
+******************************
+*  VCCAP C_VOD
+******************************
+
+   E_C_VOD  V_VALORI_C_VOD 0  VALUE={ TABLE( V(VP,VM),-140m , 3.4p ,
+   + -120m , 2.88p , -110m , 2.45p , -100m , 2.1p ,    
+   + -90m , 1.76p , -80m , 1.48p , -70m , 1.27p, 
+   + -60m , 1.095p , -40m , 0.84p , -20m , 0.65p , 
+   + 20m , 0.66p , 40m , 0.83p , 60m , 1.11p , 
+   + 70m , 1.28p , 80m , 1.48p , 90m , 1.76p , 
+   + 100m , 2.1p , 110m , 2.45p , 120m , 2.88p , 
+   + 140m , 3.4p )/CAP_scale }
+   X_C_VOD V_VALORI_C_VOD 0 VB_D_VOD VREF VCCAP_PSPICE  
+   +PARAMS:  CAP_scale={CAP_scale}  Rserie=1    
+
+           
+        
+******************************
+*  VCCAP C_VCC 
+****************************** 
+
+
+    E_C_VCC  v_valori_c_vcc 0  VALUE={ IF(V(VP,VM)>0, 
+    +TABLE( V(VCCP,VCCN), 2 , 1f , 3.3 , 0.16p , 5 , 0.36p),
+    +TABLE( V(VCCP,VCCN), 2 , 1f , 3.3 , 0.13p , 5 , 0.31p ))/CAP_scale} 
+    X_C_VCC  v_valori_c_vcc 0    VB_D_VOD_VCC  VREF  VCCAP_PSPICE 
+    +PARAMS: CAP_scale={CAP_scale}  Rserie=1
+  
+  
+    G_GAIN VREF VB_D_G VB_D_VOD_VCC VREF 1    
+    RO_2 VB_3 VB_2 1m
+    RO_1 VREF VB_2 {Ro_1}
+    G_OUT VREF VB_2 VB_D_G_RF VREF {1/Ro_1}
+    VREADIO VB_4 VS DC 0
+
+
+******************************
+*  VCRES Ro_3
+******************************
+
+     E_RO_3 VB_3 VB_4  VALUE={ TABLE( V(VCCP,VCCN), 2 , 35 , 3.3 , 15 , 5 , 10 )*I(VreadIo)} 
+
+
+*******************************************************************************
+*
+.PARAM CAP_scale=1e-15
+.PARAM A0=1.15976E+06 
+.PARAM IEE=10u
+.PARAM W=100u
+.PARAM L=10u
+.PARAM gm_mos=99.72u
+.PARAM RD=20k
+.PARAM R_delay={RD}
+.PARAM R1={A0/(gm_mos*RD)}
+.PARAM R_rise_fall=100
+.PARAM Ro_1=20
+.PARAM VCCP_enhance=-300m
+.PARAM VCCN_enhance=-550m
+.PARAM V_DPROT=150m
+.PARAM Vd_compensazione=-788.4u
+.MODEL MOS_N  NMOS LEVEL=1 VTO=+0.65  KP=100E-6
+.MODEL DIODE_rf D LEVEL=1 IS=10E-15 N=1
+.MODEL DIODE_NOVd D LEVEL=1 IS=10E-15 N=0.001
+.MODEL DIODE_VLIM D LEVEL=1 IS=0.8E-15   
+.MODEL DIODE_ILIM D LEVEL=1 IS=0.8E-15  
+*
+*******************************************************************************
+
+.ENDS TS302x
+
+
+*******************************************************
+******* SUBCKT VOLTAGE CONTROLLED CAPACITOR for SPICE
+*******************************************************
+
+.SUBCKT VCCAP_PSPICE Vctrl_plus Vctrl_minus Vout_plus Vout_minus  
++ PARAMS: CAP_scale=1u  Rserie=1
+EVin 2 0 VALUE={1/V(Vctrl_plus,Vctrl_minus)}
+EV2 8 Vout_plus POLY(2) 6 0 2 0 0 0 0 0 1 0 0 0 0 0
+RR1 8 Vout_minus {Rserie}
+GI1 0 6 Vout_minus 8 {1/Rserie}
+RR2 0 6 100G 
+CC1 6 0 {CAP_scale}  
+.ENDS VCCAP_PSPICE
+
+

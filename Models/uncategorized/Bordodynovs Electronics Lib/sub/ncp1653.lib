@@ -1,0 +1,207 @@
+* This model here is for educational use only. 
+* The provided model NCP1653.lib is a modified version of a model from ONSemi.
+* The translated and the original model are not correct in all features. 
+* Original model: 
+* http://www.onsemi.com/pub/Collateral/ISPICE%20SWITCHED%20MODEL.DWG
+* http://www.onsemi.com/pub/Collateral/ISPICE%20AVERAGE%20MODEL.DWG
+* Further links: 
+* http://www.onsemi.com/PowerSolutions/product.do?id=NCP1653P
+* http://www.onsemi.com/pub/Collateral/AND8184-D.PDF
+* http://www.onsemi.com/pub/Collateral/AND8185-D.PDF
+* http://www.onsemi.com/pub/Collateral/NCP1653-D.PDF
+* http://www.onsemi.com/pub/Collateral/TND321-D.PDF
+* http://www.onsemi.com/pub/Collateral/TND313-D.PDF
+* 
+* SUBCKT PSW1 and PSW2 replaced by model SW.
+* SUBCKT LATCH_HD and LATCH_HDX7 simplified with A-device.
+* SUBCKT NCP1653, interface pin FB replaced by PIN1.
+*.SUBCKT NCP1653 FB VCONTROL PIN3 CSIN CSOUT GND DRV VCC
+.SUBCKT NCP1653 PIN1 VCONTROL PIN3 CSIN CSOUT GND DRV VCC
+* Source Onsemi: ISPICE SWITCHED MODEL.DWG
+* This translated model is for educational use only
+*
+*Rdumm GND 0 10m
+R1 4 3 10
+V3 ref 0 DC=2.5V
+C1 4 0 100p
+R5 BOin 0 1
+* B1 Vreg1 0 V=300k*(200u-V(FB))>2.5V ? 2.5V :300k*(200u-V(FB))<0V ? 0 : 300k*(200u-V(FB))
+B1 Vreg1 0 V=IF(300k*(200u-V(FB))>2.5V, 2.5V, IF(300k*(200u-V(FB))<0V, 0, 300k*(200u-V(FB))))
+
+*X3 Vcc DRV OUTON 0 PSW1 RON=10 VON=5 VOFF=3
+S100 Vcc DRV OUTON 0 PSW1
+.model PSW1 SW(RON=10 ROFF=1e6 VON=5 VOFF=3)
+
+.SUBCKT PSW1 1 2 3 4 
+.param RON=1 ROFF=1MEG VON=1 VOFF=0
+*Connections + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps
+* VON > Voff Case
+* IF V(3,4) > VON THEN RSwitch=RON, IF V(3,4) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+*B1 1 2 I=V(3,4) < {VOFF} ? V(1,2)/{ROFF} : V(3,4) > {VON} ?
+*+ V(1,2)/{RON} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) + 
+*+ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
+*+ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VON-VOFF)^3} ))
+B1 1 2 I=IF(V(3,4) < {VOFF}, V(1,2)/{ROFF}, IF(V(3,4) > {VON}, 
++ V(1,2)/{RON}, V(1,2)/ (EXP(LN({(RON*ROFF)**.5}) + 
++ 3 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2}) / ({2* (VON-VOFF)}) - 
++ 2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})**3 / {(VON-VOFF)**3} ))))
+.ENDS
+
+*X10 DRV 0 OUTON 0 PSW2 RON=8 VON=3 VOFF=5
+S101 DRV 0 OUTON 0 PSW2
+.model PSW2 SW(RON=8 ROFF=1e6 VON=3 VOFF=5)
+
+.SUBCKT PSW2 1 2 3 4 
+.param RON=1 ROFF=1MEG VON=0 VOFF=1
+*Connections + - NC+ NC-
+*Parameters: Ron On Resistance in Ohms, Roff Off Resistance in Ohms
+* VON On Current in Amps, VOFF Off Current in Amps
+* VON < Voff Case
+* IF V(3,4) > VON THEN RSwitch=RON, IF V(3,4) < VOFF THEN RSwitch=ROFF, ELSE
+* RSwitch will smoothly transistion between the on and off states
+*B1 1 2 I=V(3,4) < {VON} ? V(1,2)/{RON} : V(3,4) > {VOFF} ?
+*+ V(1,2)/{ROFF} : V(1,2)/ (EXP(LN({(RON*ROFF)^.5}) - (3 * LN({RON/ROFF}) * 
+*+ (V(3,4) - {(VON+VOFF)/2}) / {2* (VOFF-VON)}) + 
+*+ (2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})^3 / {(VOFF-VON)^3} )))
+B1 1 2 I=IF(V(3,4) < {VON}, V(1,2)/{RON}, IF( V(3,4) > {VOFF},
++ V(1,2)/{ROFF}, V(1,2)/ (EXP(LN({(RON*ROFF)**.5}) - (3 * LN({RON/ROFF}) * 
++ (V(3,4) - {(VON+VOFF)/2}) / {2* (VOFF-VON)}) + 
++ (2 * LN({RON/ROFF}) * (V(3,4) - {(VON+VOFF)/2})**3 / {(VOFF-VON)**3} )))))
+.ENDS
+
+R2 CLK 5 10
+R4 Vreg Vcontrol 300k
+C2 5 0 10p
+*B8 OCP 0 V=-V(CSin)>200u ? 10 : 0
+B8 OCP 0 V=IF(-V(CSin)>200u , 10 , 0)
+R3 19 0 100k
+R13 FB 0 1
+Rdumm2 BObar 0 1
+Rdumm3 BObarX 0 1k
+
+X4 29 22 BObarX 19 LATCH_HDX7 
+
+.SUBCKT LATCH_HD 4 3 6 5 
+.param VHIGH=10 VLOW=100m VUND=100m
+*A1 s r 0 0 0 q_ q 0 SRFLOP
+A1 4 3 0 0 0 5 6 0 SRFLOP VHIGH=10 VLOW=100m REF=3 TD=2n TRISE=10n TRIPDT=1n
+*				  S R Q QB
+* 1   2 3  4  5  6
+* CLK D R  S  QB Q
+*Rdum1 1 0 1k
+*Rdum2 2 0 1k
+*A6 [4] [40] A2D_001					; Analog Set to Digital Set
+*A7 [3] [30] A2D_001					; Analog Reset to Digital Reset
+*A8 [31] [5] D2A_001					; Digital Q\ to analog Q\
+*A9 [32] [6] D2A_001					; Digital Q to analog Q
+*A3 40 41 INV_001					; Set\
+*A4 30 42 INV_001					; Reset\	
+*A1 50 50 41 42 32 31 DFF_001		; HDL Flip-Flop
+*A2 50 PDOWN_001
+*.MODEL DFF_001 d_dff(clk_delay=1.0N nset_delay=1.0N nreset_delay=1.0N rise_delay=1.0N 
+*+ fall_delay=1.0N ic=1 data_load=1.0P clk_load=1.0P nset_load=1.0P nreset_load=1.0P)
+*.MODEL PDOWN_001 D_pulldown(load=1.0P)
+*.MODEL A2D_001 adc_bridge(in_low=100.0M in_high=3.0 rise_delay=1.0N fall_delay=1.0N)
+*.MODEL D2A_001 dac_bridge(out_low={VLOW} out_high={VHIGH} out_undef={VUND} t_rise=10N
+*+ t_fall=10N input_load=1.0P)
+*.MODEL INV_001 d_inverter(rise_delay=1.0N fall_delay=1.0N input_load=1.0P)
+.ENDS LATCH_HD
+
+*B9 29 0 V=V(BOin)<12.5u ? 10 : 0
+B9 29 0 V=IF(V(BOin)<12.5u , 10 , 0)
+*B10 22 0 V=V(BOin)>25u ? 10 : 0
+B10 22 0 V=IF(V(BOin)>25u , 10 , 0)
+*B11 Fault1 0 V=(V(BObar)+V(OVP)+V(OCP))>5 ? 10 : 0
+B11 Fault1 0 V=IF((V(BObar)+V(OVP)+V(OCP))>5 , 10 , 0)
+R66 Fault1 Fault 1k
+C66 Fault 0 1nF
+R8 pin3 BOin 4k
+*R9 pin1 FB 4k
+R9 pin1 FB 2.5k
+
+*B3 OVP 0 V=V(FB)>(214u-(V(OVP)*0.4u)) ? 10 : 0
+B3 OVP 0 V=IF(V(FB)>(214u-(V(OVP)*0.4u)) , 10 , 0)
+*B5 Vreg 0 V=-V(BOin)*V(CSin)>3000p ? 0 : V(Vreg1)
+B5 Vreg 0 V=IF(-V(BOin)*V(CSin)>3000p , 0 , V(Vreg1))
+R7 Vreg1 Vreg 1k
+I1 0 osc DC=200uA
+*B6 23 0 V=V(fault)+V(off)>5 ? 5 : V(ramp)>V(ref) ? 5 : 0
+B6 23 0 V=IF(V(fault)+V(off)>5 , 5 , IF(V(ramp)>V(ref) , 5 , 0))
+B7 ramp 0 V=V(CSout)+V(osc)
+R6 CLK 15 2k
+
+X2 0 osc 5 SWITCH 
+
+.SUBCKT SWITCH 1 2 3
+*Connections   Term1 Term2 Control
+* The switch is OPEN WHEN V(3) = 0, It is CLOSED WHEN V(3) <> 0
+* The ON RESISTANCE IS 1 / V(3)
+* The OFF RESISTANCE IS 1E10
+R1 1 2 1E10
+G1 1 2 POLY(2) 1 2 3 0 0 0 0 0 1
+.ENDS
+
+R11 37 0 100k
+C8 15 0 2nF
+
+X5 38 39 off 37 LATCH_HDX7 
+
+*B12 38 0 V=V(Vcc)<10V ? V(FB)<20u ? 10 : 0
+B12 38 0 V=IF(V(Vcc)<10V , IF( V(FB)<20u , 10 , 0), 0)
+*B13 39 0 V=V(Vcc)<15V ? 0 : V(FB)>30u ? 10 : 0
+B13 39 0 V=IF(V(Vcc)<15V , 0 , IF(V(FB)>30u , 10 , 0))
+
+X7 9 15 CLK 28 LATCH_HDX7  
+
+.SUBCKT LATCH_HDX7 4 3 6 5 
+.param VHIGH=10 VLOW=0m VUND=0m
+*A1 s r 0 0 0 q_ q 0 SRFLOP
+A1 4 3 0 0 0 5 6 0 SRFLOP VHIGH=10 VLOW=0 REF=3 TD=2n TRISE=10n TRIPDT=1n
+*				  S R Q QB
+* 1   2 3  4  5  6
+* CLK D R  S  QB Q
+*Rdum1 1 0 1k
+*Rdum2 2 0 1k
+*A6 [4] [40] A2D_001					; Analog Set to Digital Set
+*A7 [3] [30] A2D_001					; Analog Reset to Digital Reset
+*A8 [31] [5] D2A_001					; Digital Q\ to analog Q\
+*A9 [32] [6] D2A_001					; Digital Q to analog Q
+*A3 40 41 INV_001					; Set\
+*A4 30 42 INV_001					; Reset\	
+*A1 50 50 41 42 32 31 DFF_001		; HDL Flip-Flop
+*A2 50 PDOWN_001
+*.MODEL DFF_001 d_dff(clk_delay=1.0N nset_delay=1.0N nreset_delay=1.0N rise_delay=1.0N 
+*+ fall_delay=1.0N ic=1 data_load=1.0P clk_load=1.0P nset_load=1.0P nreset_load=1.0P)
+*.MODEL PDOWN_001 D_pulldown(load=1.0P)
+*.MODEL A2D_001 adc_bridge(in_low=100.0M in_high=3.0 rise_delay=1.0N fall_delay=1.0N)
+*.MODEL D2A_001 dac_bridge(out_low={VLOW} out_high={VHIGH} out_undef={VUND} t_rise=10N
+*+ t_fall=10N input_load=1.0P)
+*.MODEL INV_001 d_inverter(rise_delay=1.0N fall_delay=1.0N input_load=1.0P)
+.ENDS LATCH_HDX7
+
+R15 18 0 100k
+*B4 9 0 V=V(osc)>V(ref) ? 5 : 0
+B4 9 0 V=IF(V(osc)>V(ref) , 5 , 0)
+C7 osc 0 800pF
+X3x CLK 23 OUTON 18 LATCH_HDX7 
+I2 Vcc 0 DC=20u
+R14 28 0 100k
+X6 0 41 off SWITCH
+R19 CSin 0 1
+*B33 CL 0 V=V(CSout)>(10-V(CL)) ? 1 : 0
+B33 CL 0 V=IF(V(CSout)>(10-V(CL)) , 1 , 0)
+R33 CL2 CL 1k
+C33 CL2 0 10nF
+*B32 CSout 0 I=((12.5k*V(CSin)*V(BOin)/(V(Vcontrol)+10u))*(1-V(CL2)))<-200u ? -200u : ((12.5k*V(CSin)*V(BOin)/(V(Vcontrol)+10u))*(1-V(CL2)))>0 ? 0 : ((12.5k*V(CSin)*V(BOin)/(V(Vcontrol)+10u))*(1-V(CL2)))
+B32 CSout 0 I=IF(((12.5k*V(CSin)*V(BOin)/(V(Vcontrol)+10u))*(1-V(CL2)))<-200u , -200u , IF( ((12.5k*V(CSin)*V(BOin)/(V(Vcontrol)+10u))*(1-V(CL2)))>0 , 0 , ((12.5k*V(CSin)*V(BOin)/(V(Vcontrol)+10u))*(1-V(CL2)))))
+*#save  @G3[i] @G3[p]
+R17 Vcc 41 3k
+X8 0 Vcontrol 4 SWITCH 
+X9 0 CSin off SWITCH
+*B14 3 0 V=V(BObar)+V(off)>5 ? 10 : 0
+B14 3 0 V=IF(V(BObar)+V(off)>5 , 10 , 0)
+
+.ENDS

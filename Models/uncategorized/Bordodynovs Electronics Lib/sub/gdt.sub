@@ -1,0 +1,37 @@
+* Gas Discharge Tube Subcircuit Model
+*   Taken off the SPECTRUM MicroCap website
+*   Implementation of Christophe Basso's model in 
+*   "SPICE model simulates spark-gap arrestor", EDN 7/3/97
+*
+*
+.SUBCKT GDT  Pin1     Pin2
+*            input return
+*
+R2 Pin1 Pin2 10Meg
+C1 Pin1 Pin2 {Cpar}
+C2 Pin1 Switch {Carc}
+R4 Pin2 Switch 1E10
+V1 Pin1 N003 0
+L1 N003 N004 {Lp1}
+R1 N003 N004 {Rp1}
+R3 N004 N005 {Rneg}
+C3 Switchchk 0 10p
+D1 N007 Switch DCLAMP
+D2 N007 N005 DCLAMP
+B1 Switch Pin2 I=V(Switch,Pin2)*V(Switchchk)
+B2 N008 0 V=if( abs(V(Pin1,Pin2))>V(Thresh),10,IF(ABS(I(V1))>Isus,10,10n) )
+R5 Switchchk N008 10
+B3 Thresh 0 V=VThres+(VThres*V(Ion))
+R3X Thresh 0 1MEG
+B6 N001 0 V=-100Meg*V(Dif)
+R6 N001 Dif 1Meg
+C4 Dif N002 1µ
+B5 N002 0 V=V(Pin1,Pin2)
+B8 Dvdt 0 V=100*V(Dif)
+R8X Dvdt 0 1MEG
+B9 N006 0 V=abs(V(Dvdt))
+B4 Ion 0 V=table(V(N006), 0, 0, 10m, 1m, 100m, 86m, 1, 217m, 10, 521m, 100, 956m)
+R4X Ion 0 1MEG
+.model DCLAMP D(BV=Varc, type=ZENER)
+*.params VThres Varc Isus Rneg Lp1 Rp1 Cpar Carc
+.ENDS

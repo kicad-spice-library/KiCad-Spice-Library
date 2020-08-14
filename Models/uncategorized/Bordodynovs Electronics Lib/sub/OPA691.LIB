@@ -1,0 +1,213 @@
+* OPA691
+*****************************************************************************
+* (C) Copyright 2011 Texas Instruments Incorporated. All rights reserved.                                            
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: Analog eLab Design Center, Texas Instruments Inc.
+* Part: OPA691
+* Date: 15JUL2011
+* Model Type: ALL IN ONE
+* Simulator: PSPICE
+* Simulator Version: 16.0.0.p001
+* EVM Order Number: N/A
+* EVM Users Guide: N/A
+* Datasheet: SBOS226D – DECEMBER 2001– REVISED JULY 2008
+*
+* Model Version: 1.0
+*
+*****************************************************************************
+*
+* Updates:
+*
+* Version 1.0 : 
+* Release to Web
+*
+*****************************************************************************
+* THIS MODEL IS APPLICABLE TO OPA691, OPA2691, OPA3691
+* NOTES:
+* This macromodel predicts well: DC, small-signal AC, noise,
+* and transient performance under a wide range
+* of conditions.
+*
+* This macromodel does not predict well: distortion
+* (harmonic, intermod, diff. gain & phase, ...),
+* temperature effects, board parasitics, differences
+* between package styles, and process changes
+*
+* For Spice3F4 users they might need to un-comment the lines for the F 
+* function and comment out the Lines for PSpice F functions
+* and subckts. First try the present netlist then comment out lines if 
+* errors appear.
+* General form:
+* FXXXXXXX N+ N- <POLY(ND)> VN1 <VN2 ...> P0 <P1 ...> <IC=...>
+* Examples:
+* F1 12 10 VCC 1MA 1.3M
+*
+* For some simulators the subckt for the F statement need to be placed 
+* inside the ends statement followed by carriage return  
+*
+*Known Problems: - None
+* CONNECTIONS:
+*               Non-Inverting Input
+*               | Inverting Input
+*               | |  Positive Supply
+*               | |  |  Negative Supply
+*               | |  |  |  Out
+*               | |  |  |  |   Disable
+*               | |  |  |  |   | 
+*               | |  |  |  |   |  
+*               | |  |  |  |   |  
+.SUBCKT OPA691 + - V+ V- Out DisA 
+
+.PARAM x8 = 1
+.PARAM x1 = {x8/8}
+.PARAM x14 = {x1*14}
+.PARAM x16 = {x8*2}
+.PARAM x72 = {x8*9}
+.PARAM x96 = {x8*12}
+.PARAM x300 = {x8*37.5}
+
+C_C1         Vmid DisA  2p  
+R_R5         Vmid DisA  100G  
+R_R1         $N_0001 Vmid  10k  
+R_R49         $N_0003 $N_0002  4k  
+Q_Q29         $N_0005 $N_0004 $N_0003 NPN8 {x96}
+Q_Q30         $N_0003 $N_0004 $N_0005 PNP8 {x72}
+Q_Q22         $N_0006 $N_0005 Out NPN8 {x300}
+R_R48         $N_0005 $N_0007  4k  
+R_R52         $N_0006 V+  2  
+D_D6         V+ $N_0008 DX 1
+D_D10         V+ $N_0009 DX 1
+R_R45         $N_0007 $N_0010  10k  
+R_R46         $N_0010 $N_0002  10k  
+Q_Q35         V+ $N_0010 $N_0011 NPN8 {x1}
+R_R24         Out $N_0010  10  
+Q_Q24         $N_0012 $N_0003 Out PNP8 {x300}
+Q_Q21         $N_0013 $N_0007 $N_0010 NPN8 {x14}
+Q_Q42         $N_0013 $N_0013 $N_0014 PNP8 {x16}
+Q_Q23         $N_0015 $N_0002 $N_0010 PNP8 {x14}
+Q_Q44         $N_0015 $N_0015 $N_0016 NPN8 {x16}
+R_R2         Vmid $N_0017  10k  
+R_R3         DisA V+  66.67k  
+X_F1    $N_0018 $N_0001 V+ $N_0019 OPA691_Model_F1 
+D_D14         $N_0020 $N_0021 DX 1
+D_D12         $N_0022 $N_0023 DX 1
+D_D13         $N_0021 $N_0022 DX 1
+D_D11         $N_0023 $N_0024 DX 1
+D_D15         $N_0024 $N_0025 DX 1
+D_D16         $N_0025 $N_0026 DX 1
+D_D17         $N_0026 $N_0027 DX 1
+D_D18         $N_0027 $N_0020 DX 1
+X_S1    DisA 0 $N_0028 $N_0029 OPA691_Model_S1 
+R_R21         $N_0030 V+  420  
+R_R19         $N_0008 V+  420  
+R_R20         $N_0009 V+  420  
+C_C7         $N_0016 $N_0014  11.53p  
+Q_Q2         $N_0031 $N_0031 $N_0024 NPN8 {x8}
+Q_Q1         $N_0032 $N_0032 $N_0024 PNP8 {x8}
+Q_Q13         $N_0033 $N_0033 $N_0008 PNP8 {x8}
+Q_Q17         $N_0034 $N_0034 $N_0035 NPN8 {x8}
+Q_Q20         V+ $N_0036 $N_0002 NPN8 {x14}
+Q_Q8         $N_0033 $N_0031 $N_0020 NPN8 {x8*0.9}
+Q_Q4         $N_0034 $N_0032 $N_0020 PNP8 {x8*0.9}
+R_R47         $N_0036 $N_0011  2k  
+C_C6         $N_0037 $N_0013  1p  
+Q_Q14         $N_0036 $N_0033 $N_0009 PNP8 {x8*0.9}
+Q_Q15         $N_0007 $N_0033 $N_0030 PNP8 {x8*0.9}
+Q_Q18         $N_0036 $N_0034 $N_0038 NPN8 {x8*0.9}
+Q_Q19         $N_0002 $N_0034 $N_0039 NPN8 {x8*0.9}
+R_R42         V+ $N_0040  10  
+R_R41         V+ $N_0014  45  
+V_V2         $N_0029 Vmid 2.87V
+Q_Q41         $N_0005 $N_0013 $N_0040 PNP8 {x16*0.95}
+Q_Q43         $N_0003 $N_0015 $N_0037 NPN8 {x16*0.95}
+R_R58         - $N_0020  20  
+X_F3    $N_0028 $N_0018 V+ $N_0031 OPA691_Model_F3 
+C_C2         $N_0036 $N_0040  0.6p  
+C_C3         $N_0037 $N_0036  0.7p  
+I_I27         $N_0041 $N_0042 DC 0.001fA  
+D_D30         $N_0042 0 DN3 .25
+D_D31         0 $N_0041 DN3 .25
+R_R59         + $N_0024  1m  
+E_E1         $N_0017 V- V+ V- 0.5
+R_R31         V+ V-  133.33k  
+Q_Q16         V- $N_0036 $N_0007 PNP8 {x14}
+R_R17         V- $N_0038  420  
+D_D9         $N_0038 V- DX 1
+Q_Q36         V- $N_0010 $N_0011 PNP8 {x1}
+R_R18         V- $N_0039  420  
+R_R44         $N_0037 V-  10  
+R_R43         $N_0016 V-  45  
+R_R53         V- $N_0012  2  
+R_R16         V- $N_0035  420  
+D_D5         $N_0035 V- DX 1
+X_F4    $N_0019 V- $N_0032 V- OPA691_Model_F4 
+G_G14         + 0 POLY(2) $N_0042 0 $N_0041 0 0 0 38u
+
+.MODEL DN3 D( IS=.1F AF=1.0 KF=39.0E-17)
+
+.MODEL DX D
++ IS=1.0000E-15
+
+.MODEL NPN8 NPN
++ IS = 7.604E-18 BF = 1.570E+02 NF = 1.000E+00 VAF= 7.871E+01
++ IKF= 3.975E-02 ISE= 3.219E-14 NE = 2.000E+00 BR = 7.614E-01
++ NR = 1.000E+00 VAR= 1.452E+00 IKR= 8.172E-02 ISC= 7.618E-21
++ NC = 1.847E+00 RB = 1.060E+02 IRB= 0.000E+00 RBM= 2.400E+00
++ RE = 2.520E+00 RC = 1.270E+02 CJE= 1.120E-13 VJE= 7.591E-01
++ MJE= 5.406E-01 TF = 1.213E-11 XTF= 2.049E+00 VTF= 1.813E+00
++ ITF= 4.293E-02 PTF= 0.000E+00 CJC= 8.208E-14 VJC= 6.666E-01
++ MJC= 4.509E-01 XCJC=8.450E-02 TR = 4.000E-11 CJS= 1.160E-13
++ VJS= 5.286E-01 MJS= 4.389E-01 XTB= 1.022E+00 EG = 1.120E+00
++ XTI= 1.780E+00 KF = 3.500E-16 AF = 1.000E+00 FC = 8.273E-01
+
+.MODEL PNP8 PNP
++ IS = 7.999E-18 BF = 1.418E+02 NF = 1.000E+00 VAF= 4.158E+01
++ IKF= 1.085E-01 ISE= 2.233E-15 NE = 1.505E+00 BR = 3.252E+01
++ NR = 1.050E+00 VAR= 1.093E+00 IKR= 5.000E-05 ISC= 6.621E-16
++ NC = 1.150E+00 RB = 6.246E+01 IRB= 0.000E+00 RBM= 2.240E+00
++ RE = 2.537E+00 RC = 1.260E+02 CJE= 9.502E-14 VJE= 7.320E-01
++ MJE= 4.930E-01 TF = 1.303E-11 XTF= 3.500E+01 VTF= 3.259E+00
++ ITF= 2.639E-01 PTF= 0.000E+00 CJC= 1.080E-13 VJC= 7.743E-01
++ MJC= 5.000E-01 XCJC=8.504E-02 TR = 1.500E-10 CJS= 1.290E-13
++ VJS= 9.058E-01 MJS= 4.931E-01 XTB= 1.732E+00 EG = 1.120E+00
++ XTI= 2.000E+00 KF = 3.500E-16 AF = 1.000E+00 FC = 8.500E-01
+
+*
+
+.subckt OPA691_Model_F1 1 2 3 4  
+F_F1         3 4 VF_F1 2
+VF_F1         1 2 0V
+.ends OPA691_Model_F1
+*
+
+.subckt OPA691_Model_S1 1 2 3 4  
+S_S1         3 4 1 2 _S1
+RS_S1         1 2 1G
+.MODEL         _S1 VSWITCH Roff=1e12 Ron=1u Voff=1.4 Von=3.0
+.ends OPA691_Model_S1
+*
+
+.subckt OPA691_Model_F3 1 2 3 4  
+F_F3         3 4 VF_F3 2
+VF_F3         1 2 0V
+.ends OPA691_Model_F3
+*
+
+.subckt OPA691_Model_F4 1 2 3 4  
+F_F4         3 4 VF_F4 1
+VF_F4         1 2 0V
+.ends OPA691_Model_F4
+.ENDS    OPA691

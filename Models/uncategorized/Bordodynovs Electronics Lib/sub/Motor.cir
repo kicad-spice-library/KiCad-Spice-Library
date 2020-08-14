@@ -1,0 +1,26 @@
+.subckt Motor  VA+ VA- VF+ VF- omega torque theta_out Ea_out Params: La=1 Ra=1 Lf=1 Rf=1 Laf=1 J=1 B=1 ic_omega=0 ic_theta=0
+
+**Stator**
+Lf Vf+ 100 {Lf} Rser={Rf}
+vLf 100 Vf- 0
+**Rotor (or armature)**
+R1 Va+ 2 {Ra}
+L1 2 Ea {La}
+Ebackemf Ea Va- Value ={v(omega)*Laf*I(vLf)}
+
+**Mechanical side
+Gtorque 0 omega_ value = {I(Ebackemf)*Laf*I(vLf)}
+Vtorquesense omega_ omega 0
+CIntertia omega 0 {J}
+.ic v(omega)={ic_omega}
+Rfriction omega 0 {1/B}
+
+**Measurements
+EtorqueSignal torque 0 value={I(Ebackemf)*Laf*I(vLf)}
+Gtheta 0 theta omega 0 1
+Ctheta theta 0 1
+.ic v(theta)={ic_theta}
+Etheta_out theta_out 0 value={v(theta)}
+Ea_out Ea_out 0 value={v(Ea,Va-)}
+
+.ends

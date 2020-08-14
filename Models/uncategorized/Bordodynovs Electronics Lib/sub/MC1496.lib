@@ -1,0 +1,46 @@
+** SPICE MODEL (Device-Level) for 1496 BALANCED MODULATOR/DEMODULATOR
+*******
+.SUBCKT MC1496 PIN1 PIN2 PIN3 PIN4 PIN5 PIN6 PIN7 PIN8 PIN9 PIN10 PIN11 PIN12
++  PIN13 PIN14
+R_R4         PIN14 PIN7 1G
+R_R5         PIN14 PIN9 1G
+R_R6         PIN14 PIN11 1G
+R_R7         PIN14 PIN13 1G
+R_R1         N_1 PIN14 500
+R_R2         N_2 PIN14 500
+R_R3         N_3 PIN14 500
+R_R9         SUB PIN14 10
+X_Q1         PIN6 PIN8 N_4 [SUB]  NPN3
+X_Q3         PIN6 PIN10 N_5 [SUB]  NPN3
+X_Q2         PIN12 PIN10 N_4 [SUB]  NPN3
+X_Q4         PIN12 PIN8 N_5 [SUB]  NPN3
+X_Q5         N_4 PIN4 PIN3 [SUB]  NPN3
+X_Q6         N_5 PIN1 PIN2 [SUB]  NPN3
+X_Q7         PIN3 PIN5 N_2 [SUB]  NPN3
+X_Q8         PIN2 PIN5 N_3 [SUB]  NPN3
+X_Q9         PIN5 PIN5 N_1 [SUB]  NPN3
+****************************************
+.SUBCKT NPN3 1 2 3 4
+Q1 5 2 3 4 N1 3
+Q2 4 5 2 4 P1 2
+D1 2 3 DZ
+D2 4 5 DCS
+R1 1 5 50
+.ENDS NPN3
+.MODEL  N1 NPN  (IS=5E-16 ;LOT/UNIFORM=90%  DEV/GAUSS=3%)
++ BF=220 ;LOT/UNIFORM=50%  DEV/GAUSS=2%)
++ BR=0.7  NR=1
++ ISE=3.5E-16   IKF=3E-3  IKR=3E-2  NE=1.4  NC=0.8  VAF=60
++ VAR=7   RC=15  RE=2  RB=200  RBM=100  IRB=3E-4  XTB=1.17
++ XTI=2.2   EG=1.235  TF=69.09E-12  TR=9E-9  XTF=0.3  VTF=6
++ ITF=5E-5   CJE=0.105E-12  MJE=0.8  VJE=0.8  ISC=1E-15
++ KF=2E-13   AF=1.4
+.MODEL P1 PNP IS=1E-15  BF=100  BR=.01  CJE=0.14E-12
+.MODEL DZ D IS=1E-16  RS=250  BV=5.9  ;LOT=0.3  DEV=0.05)
++ TBV1=1.8E-4  VJ=.6  M=0.5  IBV=10UA  EG=1.11  XTI=3  N=1.75
+.MODEL DCS D  IS=1E-17  CJO=0.7E-12
+.ENDS    MC1496
+******************************************************************
+** REPOSTING OF THIS FILE MUST INCLUDE THE FOLLOWING ACKNOWLEDGEMENT:
+** COURTESY OF JIM THOMPSON, <http://www.analog-innovations.com/>
+******************************************************************

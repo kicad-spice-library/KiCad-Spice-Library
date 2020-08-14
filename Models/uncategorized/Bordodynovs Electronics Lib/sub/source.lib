@@ -1,0 +1,235 @@
+.subckt noise_Gauss 1 2 params: Ft=10k RMS0=1m dt=0
+.param a=RMS0
+.param tpdv=RMS0*0.2
+B1 1 2 V=a*SQRT(-2*LN(1E-5+rand((time+dt)*ft*2)))*SIN(2*PI*rand((time+dt)*ft*2+2345)) tripdv={tpdv} tripdt={1m/Ft}
+.ends
+
+.subckt noise_Gauss4 p m params: Rms=1 Ft=20K
+.param aex=1/exp(1)
+XU1 N003 N004 noise_Gauss RMS0={0.5*RMS} ft={ft}
+XU2 N004 N005 noise_Gauss RMS0={0.5*RMS} ft={ft*1.1} td=10.41
+XU3 N005 0 noise_Gauss RMS0={0.5*RMS} ft={ft*1.2} td=11.79
+XU4 N002 N003 noise_Gauss RMS0={0.5*RMS} Ft={Ft*1.3} td=12.33333
+R1 N001 N002 1k
+C1 N001 0 {10u*Pi/Ft}
+R2 x N001 10k
+C2 x 0 {1u*Pi/Ft}
+B1 p m V=V(x)
+.ends
+
+.Subckt Gauss out 1 params: Amp=1 Tst=100n W=500n  Wh=100n T=10u N=10
+.param Sigma=Wh*0.4225
+V1 x 0 PULSE(0 1 {Tst} {W/2} {W/2} 0 {T} {N})
+B2 out 1 V=exp(-0.5*((V(x)-1)*W/2/sigma)**2)*u(v(x))*Amp tripdv={0.1*Amp} tripdt={1m*W}
+.ends
+
+.Subckt parabola out 1 params: Amp=1 Tst=100n W=500n  Wh=100n T=10u N=10
+.params m=ln(0.5)/ln(wh/w)
+V1 x 0 PULSE(0 1 {Tst} {W/2} {W/2} 0 {T} {N})
+B2 out 1 V=(1-(1-V(x))**m)*u(v(x))*Amp tripdv={0.1*Amp} tripdt={1m*W}
+.ends
+
+.subckt bounce in out params: Tb=10m Ti=0.8m
+B1 t 0 V=absdelay(v(in),{Tb})
+V2 d 0 PULSE(0 1 {Ti*0.01} {Ti*0.01} {Ti*0.01} {Ti*0.49} {Ti}) trigger v(trig)>0.5
+A1 in t 0 0 0 0 trig 0 XOR Trise=100n ref=0.2
+A2 in t 0 0 0 0 b 0 AND trise=100n ref=0.2
+B2 out 0 V=(v(in)+v(t)*(1-v(b)) )*(1-v(d))
+.ends
+
+.subckt stair y params: Tstart=0 Ts=1m Vmin=-1  Vmax=1 Ns=32  offset=0
+.func mod (x,m) int(x)- int(int(x)/m)*m
+B1 x 0 V=mod((Time-{Tstart})/{Ts},{2*Ns})
+B2 y 0 V=((((if ((V(x)<{Ns+1} ) , V(x) , {2*Ns}-v(x))-{Ns/2}))/Ns+0.5)*(Vmax-Vmin)+Vmin)*u(Time-{Tstart})+offset
+.ends
+
+.Subckt 3Phases F1 F2 F3 Nul V=220 Fr=50
+V1 F1  Nul DC 0 SIN( 0 {1.4142*V} {Fr} 0 0 0)
+V3 F3  Nul DC 0 SIN( 0 {1.4142*V} {fr} 0 0 120)
+V2 F2  Nul DC 0 SIN( 0 {1.4142*V} {fr} 0 0 240)
+.ends 3Phases
+
+.Subckt IEC1000_4_4 COM OUT
+R1 N3  5  50
+V1 N1  COM DC 4000
+R2 N3  COM  10m
+V s  0 PULSE( 1 0 10u 10n 10n 1 2)
+C2 5  OUT  10n
+S2 N2  N3  s 0 S2_switch off
+C1 N2  COM  6u
+S1 N1  N2  s 0 switch on
+.model switch SW  vt = .5   vh = 0   ron = 10m   roff = 1Gig
+.model S2_switch SW  vt = .5   vh = 0   ron = 1gig   roff = 1m
+.ends
+
+* IEC61000_4_2
+.subckt IEC61000_4_2 ESD+ ESD- Level=4 TD=10m
+L1 ESD+ 1 2.4µ Rser=330
+L2 ESD+ 2 140n Rser=200
+C1 1 6 150p ic=0
+C2 2 6 8p ic=0
+V2 6 ESD- pulse 0 {2000*Level} {td} 1n 1 1 2
+.ends
+
+
+.Subckt rectified_voltage N1 N2 V0_diode=0.5 Rdiode=1m Vac=220 Fr=50 fi=0
+v p 0 ac   0  sin (0  {Vac}   {Fr}  0 0  {fi})
+B1 4  N2 v=1.4142*abs(v(p))
+b2 4  N1  i=uramp(v(4,N1)-2*V0_diode)/(2*Rdiode) Rpar=1Gig
+.ends
+
+
+.Subckt ISO_7637-3_24V P M params: level=4 Tstart=0
+.param Vs=tbl({level},1,14,2,28,3,56,4,80)
+V2 trig1 0 PULSE(0 1 {Tstart} 1n 1n 10.05m 100m 100)
+V3 N002 0 PULSE(0 {Vs*1.3} {Tstart} 1n 1n 4.n 100u)
+D1 N002 x Dt
+C1 x 0 1n
+B1 N001 M V=V(x)*v(trig1)
+R1 P N001 50
+C2 P M 2p
+.model Dt d Ron=3.2 Roff=41 Vfwd=0
+.ends
+
+.Subckt ISO_7637-3_12V_b P M params: level=4 Tstart=0
+.param Vs=tbl({level},1,10,2,20,3,30,4,40)
+V2 trig1 0 PULSE(0 1 {Tstart} 1n 1n 10.05m 100m 100)
+V3 N002 0 PULSE(0 {Vs*1.3} {Tstart} 1n 1n 4.n 100u)
+D1 N002 x Dt
+C1 x 0 1n
+B1 N001 M V=V(x)*v(trig1)
+R1 P N001 50
+C2 P M 2p
+.model Dt d Ron=3.2 Roff=41 Vfwd=0
+.ends
+
+.Subckt ISO_7637-3_12V_a P M params: level=4 Tstart=0
+.param Vs=tbl({level},1,-10,2,-20,3,-40,4,-60)
+V2 trig1 0 PULSE(0 1 {Tstart} 1n 1n 10.05m 100m 100)
+V3 N002 0 PULSE(0 {Vs*1.3} {Tstart} 1n 1n 4.n 100u)
+D1 x N002 Dt
+C1 x 0 1n
+B1 N001 M V=V(x)*v(trig1)
+R1 P N001 50
+C2 P M 2p
+.model Dt d Ron=3.2 Roff=41 Vfwd=0
+.ends
+
+
+.subckt Pulse1_12V p m params: Level=4    t1=0.5
+V1 y 0 PULSE({Va} 0 100u 10n 10n {t2} {t1})
+V3 N002 0 PULSE(0 {Vs} 150.5u 900n 10n 0.2u {t1})
+C1 x 0 1n
+B1 N001 m V=V(y)+v(x)
+R1 p N001 {Ri}
+D1 x N002 swt
+.param Va=13.5 t2=200m Ri=10
+.param Vs=tbl(Level, 3,-75,4,-100)
+.model swt d Ron=10 Roff=0.8Meg Vfwd=0
+.ends
+
+.subckt Pulse1_24V p m params: Level=4    t1=0.5
+V1 y 0 PULSE({Va} 0 100u 10n 10n {t2} {t1})
+V3 N002 0 PULSE(0 {Vs} 150.5u 2700n 10n 0.2u {t1})
+C1 x 0 0.5n
+B1 N001 m V=V(y)+v(x)
+R1 p N001 {Ri}
+D1 x N002 swt
+.param Va=27 t2=200m Ri=50
+.param Vs=tbl(Level, 3,-450,4,-600)
+.model swt d Ron=10 Roff=0.8Meg Vfwd=0
+.ends
+
+.subckt Pulse2a p m params: Level=4    t1=0.2
+.param Vs=tbl(Level, 3,37,4,50)
+.param Va=13.5 t2=200m Ri=2
+V3 N002 0 PULSE({Va} {Vs} 150u 900n 10n 0.2u {t1})
+C1 x 0 500p
+B1 N001 m V=v(x)
+R1 p N001 {Ri}
+D1 N002 x swt
+.tran 1.6
+.model swt d Ron=10 Roff=50k Vfwd=0
+.param Level=4    t1=0.2
+.ends
+
+****** VIDEO GENERATOR SUBCKT *******
+.SUBCKT VIDEO NTSC
+* HORIZONTAL SYNC TIP
+V_HSYNC 1 0 PULSE(0 -0.4 1.4U 0.2U 0.2U 4.7U 63.56U)
+
+* COLOR BURST
+V_CB 2 0 SIN(0 0.2 3579545)
+V_CB_GATE 3 0 PULSE(0 1 7U 0.2U 0.2U 2.6U 63.56U)
+E_CB 4 0 POLY(2) (2 0) (3 0) 0 0 0 0 1
+
+* HORIZONTAL INTERVAL
+E_HI 5 0 POLY(2) (1 0) (4 0) 0 1 1
+
+* ACTIVE VIDEO - WHITE BAR
+V_WB2 55 0 PULSE(0 1 13.4U 0.2U 0.2U 18U 63.56U)
+
+* ACTIVE VIDEO - 2T PULSE
+V_2TGEN 50 0 SIN(0 1 894886 0 0 203)
+E_2TGN 51 0 POLY(1) (50 0) 0 0 1
+V_2TGAT 52 0 PULSE(0 1 35.1255U 1N 1N 557N 63.56U)
+E_2TGTE 53 0 POLY(2) (51 0) (52 0) 0 0 0 0 1
+
+* ACTIVE VIDEO - STAIRCASE
+V_SC1 56 0 PULSE(0 0.18 47.4U 10N 10N 15U 63.56U)
+V_SC2 57 0 PULSE(0 0.18 50.4U 10N 10N 12U 63.56U)
+V_SC3 58 0 PULSE(0 0.18 53.4U 10N 10N 9U 63.56U)
+V_SC4 59 0 PULSE(0 0.18 56.4U 10N 10N 6U 63.56U)
+V_SC5 60 0 PULSE(0 0.18 59.4U 10N 10N 3U 63.56U)
+
+* ACTIVE VIDEO - CHROMA
+V_CB_STC 61 0 PULSE(0 1 43.4U 10N 10N 19U 63.56U)
+E_CBSTC 62 0 POLY(2) (2 0) (61 0) 0 0 0 0 1
+
+E_COMP NTSC 0 POLY(9)
++ (5 0) (55 0) (53 0)
++ (62 0) (56 0) (57 0) (58 0)
++ (59 0) (60 0)
++ 0 1 1 1 1 1 1 1 1 1
+
+R0 1 0 1MEG
+R1 2 0 1MEG
+R2 3 0 1MEG
+R3 4 0 1MEG
+R4 5 0 1MEG
+R5 50 0 1MEG
+R6 51 0 1MEG
+R7 52 0 1MEG
+R8 53 0 1MEG
+R8A 55 0 1MEG
+R9 56 0 1MEG
+R10 57 0 1MEG
+R11 58 0 1MEG
+R12 59 0 1MEG
+R13 60 0 1MEG
+R14 61 0 1MEG
+R15 62 0 1MEG
+R16 NTSC 0 1MEG
+.ENDS VIDEO
+
+.subckt flickernoise out1 out2 params: en=20n fce=200
+.params iref=1p q=1.602e-19
+D1 N001 0 Denoise
+H1 out1 out2 Vesen {en/iref}
+Ien 0 N001 {iref**2/q/2}
+Cen N001 N002 1
+Vesen N002 0 0
+.model Denoise D(is=0.0001f kf ={2*q*fce}, af=1)
+.ends flickernoise
+
+.subckt logica8 Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7 Params:T=1u tr=3n tf=3n V1=5 V2=0 delay=0.5u rser=50 delayQ=0
+V0 Q0 0 Rser={rser} pulse {v1} {v2} {delay} {tf} {tr} {(T-tr-tf)/2} {T}
+V1 Q1 0 Rser={rser} pulse {v1} {v2} {delay+delayQ+T/2} {tf} {tr} {(2*T-tr-tf)/2} {2*T}
+V2 Q2 0 Rser={rser} pulse {v1} {v2} {delay+2*delayQ+1.5*T} {tf} {tr} {(4*T-tr-tf)/2} {4*T}
+V3 Q3 0 Rser={rser} pulse {v1} {v2} {delay+3*delayQ+3.5*T} {tf} {tr} {(8*T-tr-tf)/2} {8*T}
+V4 Q4 0 Rser={rser} pulse {v1} {v2} {delay+4*delayQ+7.5*T} {tf} {tr} {(16*T-tr-tf)/2} {16*T}
+V5 Q5 0 Rser={rser} pulse {v1} {v2} {delay+5*delayQ+15.5*T} {tf} {tr} {(32*T-tr-tf)/2} {32*T}
+V6 Q6 0 Rser={rser} pulse {v1} {v2} {delay+6*delayQ+31.5*T} {tf} {tr} {(64*T-tr-tf)/2} {64*T}
+V7 Q7 0 Rser={rser} pulse {v1} {v2} {delay+7*delayQ+63.5*T} {tf} {tr} {(128*T-tr-tf)/2} {128*T}
+.ends logica8
+

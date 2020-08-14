@@ -1,0 +1,47 @@
+* LM709 SPICE Model
+* Datasheet: http://www.national.com/ds.cgi/LM/LM709.pdf
+* Helmut Sennewald 
+* 
+* Input compensation B (8) --------------------\
+* Input compensation A (1) -----------------\  |
+* Output compensation (5) --------------\   |  |
+* Output (6) -----------------------\   |   |  |
+* Negative supply (4) ----------\   |   |   |  |
+* Positive supply (7) -------\  |   |   |   |  |
+* Inverting input (2) ----\  |  |   |   |   |  |
+* non-inverting input(3)  |  |  |   |   |   |  |    
+*                     |   |  |  |   |   |   |  |
+.subckt LM709        In+ In- V+ V- OUT COMP A  B
+Q7 v+ N001 N005 0 NPN1
+R5 v+ N001 10k
+Q3 N001 N006 N003 0 NPN1
+Q4 N001 N003 N002 0 NPN1
+R1 N005 N006 25k
+R3 N003 N004 3k
+Q15 N004 N004 N002 0 NPN1
+R2 N005 A 25k
+Q2 A in- N007 0 NPN1
+Q1 N006 in+ N007 0 NPN1
+Q5 B A N009 0 NPN1
+R4 N009 N004 3k
+Q6 B N009 N002 0 NPN1
+R6 v+ B 10k
+R8 N002 N011 3.6k
+R10 N011 N010 10k
+Q10 N010 N010 V- 0 NPN1
+Q11 N007 N010 N008 0 NPN1
+R11 N008 V- 2.4k
+R9 N012 N011 10k
+Q8 v+ B N013 0 NPN1
+R7 N013 N012 1k
+Q9 comp N002 N012 0 PNP1
+R13 N014 V- 75
+R12 comp N014 10k
+Q12 N015 comp N014 0 NPN1
+Q13 V- N015 out 0 PNP1
+Q14 v+ N015 out 0 NPN1
+R14 v+ N015 20k
+R15 N012 out 30k
+.MODEL NPN1 NPN (BF=100 VAF=50 RB=100 CJE=4P CJC=2P CJS=2P TF=0.5N TR=10N)
+.MODEL PNP1 PNP (BF=15 VAF=50 CJC=4P CJE=8P RB=100  TF=20N TR=200N)
+.ends LM709

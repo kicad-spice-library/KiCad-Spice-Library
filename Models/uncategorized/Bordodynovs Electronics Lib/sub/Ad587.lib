@@ -1,0 +1,187 @@
+* AD587J SPICE Macromodel 11/93, Rev. A
+* AAG / PMI
+*
+* This version of the AD587 voltage reference model simulates the worst case
+* parameters of the 'J' grade.  The worst case parameters used correspond
+* to those parameters in the data sheet.
+*
+* Copyright 1993 by Analog Devices, Inc.
+*
+* Refer to "README.DOC" file for License Statement.  Use of this model
+* indicates your acceptance with the terms and provisions in the License Statement.
+*
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |  NOISE REDUCTION
+*               |  |  |  |  |
+.SUBCKT AD587J  2  4  5  6  8
+*
+* BURIED ZENER REFERENCE
+*
+I1 4 50 DC 6.9923E-3
+R1 50 4 1E3 TC=20E-6
+EN 10 50 41 0 1
+G1 4 10 2 4 7E-8
+F1 4 10 POLY(2) VS1 VS2 (0,7E-5,7E-5)
+R2 10 8 4E3
+I2 8 0 DC 0
+*
+* NOISE VOLTAGE GENERATOR
+*
+VN1 40 0 DC 2
+DN1 40 41 DEN
+DN2 41 42 DEN
+VN2 0 42 DC 2
+*
+* INTERNAL OP AMP AND DOMINANT POLE @ 1.5 Hz
+*
+G2 4 11 8 26 1E-3
+R3 11 4 3.1623E8
+C1 11 4 3.3553E-10
+D1 11 12 DX
+V1 2 12 DC 2.2
+*
+* SECONDARY POLE @ 3 MHz
+*
+G3 4 13 11 4 1E-6
+R4 13 4 1E6
+C2 13 4 5.3052E-14
+*
+* OUTPUT STAGE
+*
+ISY 2 4 3E-3
+FSY 2 4 V1 -1
+RSY 2 4 77.778E3
+*
+G4 4 14 13 4 1E-5
+R5 14 4 1E5
+FSC1 14 4 VSC1 1
+R7 20 21 13.35
+R8 21 22 10
+FSC2 14 4 VSC2 1
+Q1 4 14 15 QP
+I3 2 15 DC 100E-6
+Q2 2 15 17 QN
+I4 17 4 DC 100E-6
+Q3 4 15 18 QP
+I5 2 18 DC 100E-6
+Q4 2 18 19 QN
+VS1 20 19 DC 0
+VS2 22 23 DC 0
+Q5 25 17 23 QP
+RF 22 26 6E3
+RT 26 5 140E3
+RI 26 4 14E3
+LO 22 6 1E-7
+*
+* SHORT-CIRCUIT CURRENT LIMITING
+*
+VSC1 2 24 DC 0
+QSC1 24 20 21 QN
+*
+VSC2 2 16 DC 0
+QSC2 16 25 4 QN
+R9 25 4 10
+*
+.MODEL QN NPN(IS=1E-15 BF=1E3)
+.MODEL QP PNP(IS=1E-15 BF=1E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DEN D(IS=1E-12 RS=5.77069E5 AF=1 KF=1.87644E-15)
+.ENDS AD587J
+*
+* AD587K SPICE Macromodel 11/93, Rev. A
+* AAG / PMI
+*
+* This version of the AD587 voltage reference model simulates the worst case
+* parameters of the 'K' grade.  The worst case parameters used correspond
+* to those parameters in the data sheet.
+*
+* Copyright 1993 by Analog Devices, Inc.
+*
+* Refer to "README.DOC" file for License Statement.  Use of this model
+* indicates your acceptance with the terms and provisions in the License Statement.
+*
+*  NODE NUMBERS
+*               VIN
+*               |  GND
+*               |  |  TRIM
+*               |  |  |  VOUT
+*               |  |  |  |  NOISE REDUCTION
+*               |  |  |  |  |
+.SUBCKT AD587K  2  4  5  6  8
+*
+* BURIED ZENER REFERENCE
+*
+I1 4 50 DC 6.99565E-3
+R1 50 4 1E3 TC=10E-6
+EN 10 50 41 0 1
+G1 4 10 2 4 7E-8
+F1 4 10 POLY(2) VS1 VS2 (0,7E-5,7E-5)
+R2 10 8 4E3
+I2 8 0 DC 0
+*
+* NOISE VOLTAGE GENERATOR
+*
+VN1 40 0 DC 2
+DN1 40 41 DEN
+DN2 41 42 DEN
+VN2 0 42 DC 2
+*
+* INTERNAL OP AMP AND DOMINANT POLE @ 1.5 Hz
+*
+G2 4 11 8 26 1E-3
+R3 11 4 3.1623E8
+C1 11 4 3.3553E-10
+D1 11 12 DX
+V1 2 12 DC 2.2
+*
+* SECONDARY POLE @ 3 MHz
+*
+G3 4 13 11 4 1E-6
+R4 13 4 1E6
+C2 13 4 5.3052E-14
+*
+* OUTPUT STAGE
+*
+ISY 2 4 3E-3
+FSY 2 4 V1 -1
+RSY 2 4 77.778E3
+*
+G4 4 14 13 4 1E-5
+R5 14 4 1E5
+FSC1 14 4 VSC1 1
+R7 20 21 13.35
+R8 21 22 10
+FSC2 14 4 VSC2 1
+Q1 4 14 15 QP
+I3 2 15 DC 100E-6
+Q2 2 15 17 QN
+I4 17 4 DC 100E-6
+Q3 4 15 18 QP
+I5 2 18 DC 100E-6
+Q4 2 18 19 QN
+VS1 20 19 DC 0
+VS2 22 23 DC 0
+Q5 25 17 23 QP
+RF 22 26 6E3
+RT 26 5 140E3
+RI 26 4 14E3
+LO 22 6 1E-7
+*
+* SHORT-CIRCUIT CURRENT LIMITING
+*
+VSC1 2 24 DC 0
+QSC1 24 20 21 QN
+*
+VSC2 2 16 DC 0
+QSC2 16 25 4 QN
+R9 25 4 10
+*
+.MODEL QN NPN(IS=1E-15 BF=1E3)
+.MODEL QP PNP(IS=1E-15 BF=1E3)
+.MODEL DX D(IS=1E-15)
+.MODEL DEN D(IS=1E-12 RS=5.77069E5 AF=1 KF=1.87644E-15)
+.ENDS AD587K

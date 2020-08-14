@@ -1,0 +1,56 @@
+** Coordinate Transformations
+
+.subckt xy-rpTransformation x y r p
+B1 r 0 V=hypot(V(x),V(y)) tripdt={tripdt} tripdv={tripdv}
+B2 p 0 V=atan2(V(y),V(x)) tripdt={tripdt} tripdv={tripdv}
+.param tripdt=1e300 tripdv=1
+.ends xy-rpTransformation
+
+.subckt rp-xyTransformation r p x y
+B1 x 0 V=V(r)*cos(V(p)) tripdt={tripdt} tripdv={tripdv}
+B2 y 0 V=V(r)*sin(V(p)) tripdt={tripdt} tripdv={tripdv}
+.param tripdt=1e300 tripdv=1
+.ends rp-xyTransformation
+
+.subckt xyRotation x1 y1 p x2 y2
+B1 cosp 0 V=cos(V(p)) tripdt={tripdt} tripdv={tripdv}
+B2 sinp 0 V=sin(V(p)) tripdt={tripdt} tripdv={tripdv}
+B3 x2 0 V=V(x1)*V(cosp)-V(y1)*V(sinp) tripdt={tripdt} tripdv={tripdv}
+B4 y2 0 V=V(x1)*V(sinp)+V(y1)*V(cosp) tripdt={tripdt} tripdv={tripdv}
+.param tripdt=1e300 tripdv=1
+.ends xyRotation
+
+.subckt uw-abTransformation u w a b
+E1 n2w 0 0 w 2
+E2 a 0 u 0 {K*3/2}
+E3 b 0 n2w u {K*sqrt(3)/2}
+.param K=sqrt(2/3)
+.ends uw-abTransformation
+
+.subckt uvw-aboTransformation u v w a b o
+E1 n2u 0 0 u 2
+E2 nv 0 0 v 1
+E3 nvnw 0 nv w 1
+E4 a 0 nvnw n2u {K/2}
+E5 b 0 v w {K*sqrt(3)/2}
+E6 o 0 u nvnw {K*sqrt(1/2)}
+.param K=sqrt(2/3)
+.ends uvw-aboTransformation
+
+.subckt ab-uvwTransformation a b u v w
+E1 kb 0 b 0 {-sqrt(3)}
+E2 nw 0 a kb {K/2}
+E3 u 0 a 0 {K}
+E4 v 0 nw u 1
+E5 w 0 0 nw 1
+.param K=sqrt(2/3)
+.ends ab-uvwTransformation
+
+.subckt abo-uvwTransformation a b o u v w
+X1 a b u1 v1 w1 ab-uvwTransformation K={K}
+E1 no1 0 o 0 {-K*sqrt(1/2)}
+E2 u 0 u1 no1 1
+E3 v 0 v1 no1 1
+E4 w 0 w1 no1 1
+.param K=sqrt(2/3)
+.ends abo-uvwTransformation

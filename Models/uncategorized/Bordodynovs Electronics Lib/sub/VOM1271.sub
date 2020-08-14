@@ -1,0 +1,20 @@
+.subckt VOM1271 A K  N P
+D1 A K CAP
+D2 A 1 LED
+R1 A 1 2.4e6
+R2 1 K 10m tc=-3m5, -18u
+C1 V A 0p1
+C2 N K 2p
+G1 N V 1 K 155m
+D3 V N PV n=11
+I1 V N TBL(0 0 0.3 80n 0.6 0u8 18 3u)
+D4 V P Do
+Q1 N V P Qo
+.model CAP d Rs=1 Cjo=100p M=1.2 Vj=0.4
++ Is=1e-30 N=20 ; disable diode
+.model LED d Is=0n6 Rs=30m N=3.17 Xti=41 Eg=0.8
+.model PV d Is=60p Rs=0.3 N=2.5 Cjo=20p Xti=45 Eg=0.5
+.model Do d Is=5f Rs=8 N=1.7 Cjo=1p
+.model Qo pnp Is=1f Bf=200 Xtb=1.5 Vaf=100 BVbe=6.2
++ Rb=200 Rc=10 Re=8 Cjc=0p5 Cje=1p
+.ends VOM1271 

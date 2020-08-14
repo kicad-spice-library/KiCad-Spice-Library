@@ -1,0 +1,174 @@
+* AD8237 SPICE Macro-model
+* Description: Micropower, Zero Drift, Rail to Rail In-Amp
+* Developed by: Fotjana Bida
+* Revision History:
+* 1.0 (08/30/2012) - FB
+*
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+*
+*
+* Not Modeled:
+*   Temperature effects
+*   CM SR limitation
+*
+* Parameters modeled include:
+*   Gain
+*	Bandwidth
+*	Noise
+*	CMRR vs. frequency
+*	PSRR vs. frequency
+*	Vosi
+*	Ibias/Ios
+*	Ibias vs. VCM
+*	Ibias vs. Vdiff
+*	Input Capacitance
+*	Quiescent Current
+*	Input/Output clamping
+*	Max Diff Input limitation
+*	Gain Error
+*	Pulse vs. cap load
+*
+* Node assignments
+*                 BW Mode selection
+*                 |   non-inverting input
+*                 |   |    inverting input
+*                 |   |    |    negative supply
+*                 |   |    |    |    positive supply
+*                 |   |    |    |    |    Reference
+*                 |   |    |    |    |    |    Feedback pin
+*                 |   |    |    |    |    |    |    output
+*                 |   |    |    |    |    |    |     |
+*                 |   |    |    |    |    |    |     |
+*                 |   |    |    |    |    |    |     |
+.SUBCKT AD8237   BW  IN+  IN-  -Vs  +Vs  REF  FB  VOUT
+* Setting input Vos
+VOS N014 IN+ 37.5e-6
+VOS1 N025 REF 37.5e-6
+* Setting Ibias
+I23 IN- 0 -1e-12
+I24 FB 0 -1e-12
+I1 IN+ 0 -650e-12
+I2 REF 0 -650e-12
+* Input Buffers
+G7 0 V+ N016 V+ 1
+R4 V+ 0 10E9
+G8 0 V- N004 V- 1
+R5 V- 0 10E9
+* Vary Ibias with VCM
+G1 0 IN+ N021 N023 1.26e-9
+R13 IN+ N021 10e9
+R14 N021 IN- 10e9
+R15 +Vs N023 10e9
+R16 N023 -Vs 10e9
+G2 0 IN- N021 N023 1.26e-9
+*****
+E10 VPOSx 0 +Vs 0 1
+E11 VNEGx 0 -Vs 0 1
+* Set Isup
+I3 +Vs -Vs 130E-6
+* Setting Noise
+H3 N003 IN- V24 67.3
+V24 N001 0 0
+R19 N001 0 .0166
+* Setting Gm stage
+G4 0 Out_inp V- V+ 100e-6
+G5 0 Out_inp FB N025 100e-6
+R10 Out_inp 0 10e9
+R11 Out_inp 0 10E9
+* Setting the output amp
+G6 0 sub_out 0 Out_inp 1
+R1 sub_out 0 10E9
+* Setting Comp Cap for BWLO and BWHI
+* BW - gm*vin*C1
+C1 sub_out N020 85e-12
+C2 N020 N019 25e-12
+* Common Mode input clamping
+D7 V+ N012 D
+D8 N018 V+ D
+V3 VPOSx N012 0.55
+V4 N018 VNEGx 0.6
+D9 V- N002 D
+D10 N006 V- D
+V5 VPOSx N002 0.55
+V6 N006 VNEGx 0.6
+* Setting Positive PSRR
+* Pos_PSRR: DC set R7/(R6+R7), the cap defines roll off (R7//C3)
+EPSRR+ N015 N014 100 200 1
+E1 100 0 N024 0 1
+R6 200 100 1
+R7 0 200 1e6
+C3 200 0 0.3e-6
+R9 N024 0 1e6
+C4 +Vs N024 100e-6
+* Setting Negative PSRR
+* Neg_PSRR: DC set R17/(R12+R17), the cap defines roll off
+EPSRR- N004 N003 300 400 1
+E2 300 0 N026 0 1
+R12 400 300 0.5
+R17 0 400 1e6
+C5 400 0 0.5e-6
+R18 N026 0 1e6
+C6 -Vs N026 100e-6
+* output clamping
+D16 N013 N009 D
+D18 N017 N013 D
+V1 N017 N022 0.7
+V13 N005 N009 0.7
+* Monitor I_out
+H1 VPOSx N005 V_current 1
+H2 N022 VNEGx V_current 1
+V_current VOUT N013 0
+* Setting CMRR
+* G12*R24 is the gain for CMRR test.  L2/R24 will set the f_corner.
+ECMRR N016 N015 cmrr_out 0 1
+L2 N028 0 15
+R24 cmrr_out N028 500
+G12 0 cmrr_out VCM 0 8e-10
+R22 IN+ VCM 10e9
+R23 VCM IN- 10e9
+* Vary Ibias with Vdiff
+G11 IN+ IN- IN+ IN- -0.5e-8
+* Using a Switch to change the BW mode from Lo to Hi
+* When using the SW, there will be and Ron when SW is closed, and Roff when SW is open.
+* Depending on how to use the SW, set Ron, Roff values
+* Default values: Ron=small, Roff=large
+* Vh=0 which V hysteresis. When 0, SW will always be either completely ON or OFF
+* The Voltage across +/- controls the switch. In this case when BW_Mode=Von, the SW will close
+* When BW_Mode=Voff SW is OFF (or open) both C1&C2 will be on (BWHI)
+* HIBW set when both C1 & C2 are on
+S1 N020 N019 BW 0 SW
+.model SW Vswitch (Ron=1e-3 Roff=1e9 Von=-2.5 Voff=+2.5 Vh=0)
+* Adding High freq pole & zero
+* (G9)*R = DC value (1.2dB)
+* adding high freq poles (C7/R21) ~300kHz
+* adding high freq zero (C1/R28) ~120kHz
+G9 0 N013 sub_out 0 0.0023
+R21 N013 0 500
+C7 N013 0 2e-9
+R28 N019 Out_inp 10k
+* C8 & C10 set input cap. Cin=10pF for CM,Cin=5pF for Diff
+C8 IN- 0 10e-12
+C10 IN+ 0 10e-12
+* max Input Diff_volt = 1.1V from VDD
+E3 N010 V- VPOSX N007 1
+E4 V- N011 VPOSX N008 1
+D1 V+ N010 D
+D2 N011 V+ D
+V7 N007 VNEGX 1.6
+V8 N008 VNEGX 1.6
+* Vary Ibias with VCM
+G3 0 REF N027 N029 1.26e-9
+R8 FB N027 10e9
+R20 N027 REF 10e9
+G10 0 FB N027 N029 1.26e-9
+R2 +Vs N029 10e9
+R3 N029 -Vs 10e9
+* set the model of DIO
+.model D D
+*******
+.backanno
+.ends AD8237

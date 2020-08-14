@@ -1,0 +1,68 @@
+* C:\Program Files\LTC\LTspiceIV\My Drawings\IF transformer master.asc
+
+******************************************************
+* Model generated on 15 Aug 2010
+* Model format: LTspice
+* IF transformers macro model
+* External node designations
+* Node 1 -> primary Vcc/HT
+* Node 2 -> primary collector/anode
+* Node 3 -> secondary base/grid
+* Node 4 -> secondary earth
+* Node 5 -> secondary centre-tap + tertiary winding (where applicable)
+*
+* IF TRANSFORMER MODELS
+* double-tuned primary and secondary.
+* All essential values in symbol SpiceLine.
+* Lp=primary inductance; Ls=secondary inductance;
+* Cp=primary tuning cap; Cs=secondary tuning cap;
+* Rs=secondary parallel resistance
+******************************************************
+
+.subckt if-transformer 1 2 3 4
++ Cp={Cp} Cs={Cs} Lp={Lp} Ls={Ls} Rs={Rs}
+
+R1 2 0 1G
+R2 4 0 1G
+L1 1 2 {Lp} Rser=1 Rpar=100k Cpar={Cp}
+L2 3 4 {Ls} Rser=1 Rpar={Rs} Cpar={Cs}
+K1 L1 L2 1.5e-2
+.ends
+
+
+.subckt if-centre-tap 1 2 3 4 5
++ Cp={Cp} Cs={Cs} Lp={Lp} Ls={Ls} Rs={Rs}
+
+R1 2 0 1G
+R2 4 0 1G
+L1 1 2 {Lp} Rser=1 Rpar=100k
+L2 3 5 {Ls/4} Rser=1 Rpar={Rs/2}
+L3 5 4 {Ls/4} Rser=1 Rpar={Rs/2}
+C1 1 2 {Cp}
+C2 3 4 {Cs}
+K1 L1 L2 1.5e-2
+K2 L2 L3 1
+K3 L1 L3 1.5e-2
+.ends
+
+
+.subckt if-tertiary 1 2 3 4 5
++ Cp={Cp} Cs={Cs} Lp={Lp} Ls={Ls} Rs={Rs}
+
+R1 2 0 1G
+R2 4 0 1G
+L1 1 2 {Lp} Rser=1 Rpar=100k
+L2 3 CT {Ls/4} Rser=1 Rpar={Rs/2}
+L3 CT 4 {Ls/4} Rser=1 Rpar={Rs/2}
+C1 1 2 {Cp}
+C2 3 4 {Cs}
+L4 5 CT {Lp} Rser=1
+K1 L1 L2 1.5e-2
+K2 L2 L3 1
+K3 L1 L3 1.5e-2
+K4 L1 L4 .9
+K5 L2 L4 1.5e-2
+K6 L3 L4 1.5e-2
+.ends
+
+

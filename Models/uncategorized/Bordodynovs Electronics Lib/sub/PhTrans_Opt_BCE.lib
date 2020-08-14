@@ -1,0 +1,104 @@
+* optical input:                                               
+*    connect voltage source between optical input(+) and       
+*    optical input(-) with voltage representing                 
+*    irradiance (1 mV represents 1 mW/cm2)                     
+*    For default (no light), set both optical inputs to        
+*    ground (0) = 0VDC                                           
+*---------------------------------------------------------------*
+* parameter SENS:                                              
+*    the subcircuit also contains a parameter that may         
+*    be changed/handed over by the user:                       
+*    SENS = rel. spectral sensitivity in % for the wavelength  
+*           of interest normalized to the peak rel. sensitivity
+*    default = 100 (%). Needs to be adapted according to       
+*              datasheet for wavelength of interest            
+*              For standard IR phototransistor 100(%) works     
+*              typ. well for 850-950 nm                        
+*              For ambient light sensors 100(%) refers to      
+*              around 550 nm                                   
+*    RESP = photocurrent / irradiance, e.g. 50uA/1mW/cm2 = 50e-3 (mA/(mW/cm2))          
+*              usually this parameter don’t need to be changed 
+*             1e-2 to compensate for percentage in SENS       
+*    LENS = lens-factor, defaut = 1 for no lens                
+*---------------------------------------------------------------*
+* The model includes parameters for:                            
+*    1) forward direction (Vcollector > Vemitter)              
+* The model has limited accuracy for:                          
+*    2) near-saturation and saturation condition               
+*    3) base transit time (dynamic behavor)                    
+*    4) noise                                                  
+*    5) intrinsic optical-electrical conversion frequ. response
+*****************************************************************
+
+*F003
+**** BPX38 SENS=100 at 880nm, lens=1 
+*** 11/9/2011
+.subckt BPX38 Opt Base Coll Emit
++params: SENS=100 resp=3.6e-5 lens=1
+Bi Emit Base i={SENS*resp*lens}*v(Opt) Rpar=10G
+Q001 Coll Base Emit F003
+.MODEL F003 NPN (IS=4.92e-14 BF=220 NF=1.035 VAF=468
++ ISE=4.92e-14 NE=2 RE=1.42 RC=43 IKF=130e-3
++ CJE=5.37E-11 MJE=0.347 VJE=0.69 FC=0.5 CJC=3.67E-12
++ MJC=0.43 VJC=0.481 TF=12e-9)
+.ends
+*
+**** BPX43 SENS=100 at 880nm, lens=6.4 
+*** 11/9/2011
+.subckt BPX43 Opt Base Coll Emit
++params: SENS=100 resp=3.6e-5 lens=6.4
+Bi Emit Base i={SENS*resp*lens}*v(Opt) Rpar=10G
+Q001 Coll Base Emit F003
+.MODEL F003 NPN (IS=4.92e-14 BF=220 NF=1.035 VAF=468
++ ISE=4.92e-14 NE=2 RE=1.42 RC=43 IKF=130e-3
++ CJE=5.37E-11 MJE=0.347 VJE=0.69 FC=0.5 CJC=3.67E-12
++ MJC=0.43 VJC=0.481 TF=12e-9)
+.ends
+
+**** SFH3401 SENS=100 at 850nm, lens=1 
+*** 11/9/2011
+.subckt SFH3401 Opt Base Coll Emit
++params: SENS=100 resp=2.5e-5 lens=1
+Bi Emit Base i={SENS*resp*lens}*v(Opt) Rpar=10G
+Q001 Coll Base Emit F144
+.MODEL F144 NPN (IS=6.02e-14 BF=510 NF=1.043 VAF=229
++ IKF=61E-3 ISE=6.02E-14 NE=2 RE=2.84 
++ CJE=1.96E-11 MJE=0.336 VJE=0.671 FC=0.5 CJC=3.87E-11
++ MJC=0.445 VJC=0.539 TF=0.1e-13)
+.ends
+
+**** SFH303 SENS=100 at 990nm, lens=4 
+*** 11/9/2011
+.subckt SFH303 Opt Base Coll Emit
++params: SENS=100 resp=2.13e-5 lens=4
+Bi Emit Base i={SENS*resp*lens}*v(Opt) Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=383.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+*
+**** BPY62 SENS=100 at 830nm, lens=5.5 
+*** 11/9/2011
+.subckt BPY62 Opt Base Coll Emit
++params: SENS=100 resp=2.13e-5 lens=5.5
+Bi Emit Base i={SENS*resp*lens}*v(Opt) Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+**** BP103 SENS=100 at 850nm, lens=1 
+*** 11/9/2011
+.subckt BP103 Opt Base Coll Emit
++params: SENS=100 resp=2.13e-5 lens=1
+Bi Emit Base i={SENS*resp*lens}*v(Opt) Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends

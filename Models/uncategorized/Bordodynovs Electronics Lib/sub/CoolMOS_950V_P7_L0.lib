@@ -1,0 +1,460 @@
+************************ L0 TECHNOLOGY MODEL *************************
+**********************************************************************
+
+.SUBCKT cool_tech0a d1 g2 s2 PARAMS: a=1 
+
+** M O D E L:   P A R A M E T E R S **
+.PARAM  MOS_KP_A={4.05} 
+.PARAM  MOS_VTO={3.6} 
+.PARAM  MOS_THETA={0.2} 
+.PARAM  MOS_ETA={0.0+0.00} 
+.PARAM  MOS_RdA={2.1} 
+.PARAM  MOS_TC_RD={14m*1.0} 
+.PARAM  MOSR_KPR_A={2.2} 
+.PARAM  MOSR_VTOR={-1*1.0} 
+.PARAM  MOSR_LAMBDAR={0.15*1.2} 
+.PARAM  Dbt_BV={950} 
+.PARAM  Dbt_M={0.9*1.0} 
+.PARAM  Dbt_CJ0_A={0.3n} 
+.PARAM  Dbt_VJ={0.5*1.0} 
+.PARAM  DBODY_IS_A={300p}
+.PARAM  DBODY_N={1.5}
+.PARAM  DBODY_RRS={5u*1}
+.PARAM  DBODY_EG={1.12*1}
+.PARAM  DBODY_TT=250n
+.PARAM  DBODY_RSA={70m}
+.PARAM  DBODY_RS_TC={1.5m}
+.PARAM  DGD_M={0.55*1.0}
+.PARAM  DGD_VJ={0.5*1.0}
+
+.PARAM  CAP_Cox_Aa={0.025n}
+.PARAM  CAP_Cgs_Aa={0.15n}
+.PARAM  CAP_Cds1_Aa={1.1p}
+
+
+.PARAM  MOS_KP={MOS_KP_A*a} 
+.PARAM  MOS_Rd={MOS_RdA/a} 
+.PARAM  MOSR_KPR={MOSR_KPR_A*a} 
+.PARAM  Dbt_CJ0={Dbt_CJ0_A*a}
+.PARAM  DBODY_IS={DBODY_IS_A*a}
+.PARAM  DBODY_RS={DBODY_RSA/a}
+.PARAM  CAP_Cox_a={CAP_Cox_Aa*a}
+.PARAM  CAP_Cgs_a={CAP_Cgs_Aa*a}
+.PARAM  CAP_Cds1_a={CAP_Cds1_Aa*a}
+
+
+
+M1      d2    g2    s2    s2    DMOS    L=1u   W=1u
+.MODEL DMOS NMOS ( KP= {MOS_KP}  VTO={MOS_VTO}  THETA={MOS_THETA}  VMAX=1.5e5  ETA={MOS_ETA}  LEVEL=3)
+Rd     d2    d1a    {MOS_Rd} TC1={MOS_TC_RD}
+.MODEL MVDR NMOS (KP={MOSR_KPR} VTO={MOSR_VTOR}   LAMBDA={MOSR_LAMBDAR})
+Mr d1 d2a d1a d1a MVDR W=1u L=1u
+Rx d2a d1a 1m
+
+Cds1 s2 d2 {CAP_Cds1_a}
+
+Dbd     s2    d2    Dbt
+.MODEL     Dbt    D(BV={Dbt_BV}   M={Dbt_M}  CJO={Dbt_CJ0}  VJ={Dbt_VJ})
+Dbody   s2   21    DBODY
+.MODEL DBODY  D(IS={DBODY_IS}  N={DBODY_N}  RS={DBODY_RRS}  EG={DBODY_EG}  TT={DBODY_TT})
+Rdiode  d1  21    {DBODY_RS} TC1={DBODY_RS_TC}
+
+.MODEL   sw    NMOS(VTO=0  KP=10   LEVEL=1)
+Maux      g2   c    a    a   sw
+Maux2     b    d    g2    g2   sw
+Eaux      c    a    d2    g2   1
+Eaux2     d    g2   d2    g2   -1
+
+Cox       b    d2   {10*CAP_Cox_a}
+
+.MODEL     DGD    D(M={DGD_M}   CJO={CAP_Cox_a}   VJ={DGD_VJ})
+Rpar      b    d2   1Meg
+Dgd       a    d2   DGD
+Rpar2     d2   a    10Meg
+
+Cgs     g2    s2    {CAP_Cgs_a}
+
+
+.ENDS cool_tech0a
+
+**********************************************************************
+
+.SUBCKT cool_tech0b d1 g2 s2 PARAMS: a=1 
+
+** M O D E L:   P A R A M E T E R S **
+.PARAM  MOS_KP_A={4.05} 
+.PARAM  MOS_VTO={3.6} 
+.PARAM  MOS_THETA={0.2} 
+.PARAM  MOS_ETA={0.0+0.00} 
+.PARAM  MOS_RdA={2.1} 
+.PARAM  MOS_TC_RD={17m} 
+.PARAM  MOSR_KPR_A={2.2} 
+.PARAM  MOSR_VTOR={-1*1.0} 
+.PARAM  MOSR_LAMBDAR={0.15*1.2} 
+.PARAM  Dbt_BV={950} 
+.PARAM  Dbt_M={0.9*1.0} 
+.PARAM  Dbt_CJ0_A={0.3n} 
+.PARAM  Dbt_VJ={0.5*1.0} 
+.PARAM  DBODY_IS_A={300p}
+.PARAM  DBODY_N={1.5}
+.PARAM  DBODY_RRS={5u*1}
+.PARAM  DBODY_EG={1.12*1}
+.PARAM  DBODY_TT=250n
+.PARAM  DBODY_RSA={70m}
+.PARAM  DBODY_RS_TC={1.1m}
+.PARAM  DGD_M={0.55*1.0}
+.PARAM  DGD_VJ={0.5*1.0}
+
+.PARAM  CAP_Cox_Ab={0.027n}
+.PARAM  CAP_Cgs_Ab={0.18n}
+.PARAM  CAP_Cds1_Ab={1.3p}
+
+
+.PARAM  MOS_KP={MOS_KP_A*a} 
+.PARAM  MOS_Rd={MOS_RdA/a} 
+.PARAM  MOSR_KPR={MOSR_KPR_A*a} 
+.PARAM  Dbt_CJ0={Dbt_CJ0_A*a}
+.PARAM  DBODY_IS={DBODY_IS_A*a}
+.PARAM  DBODY_RS={DBODY_RSA/a}
+.PARAM  CAP_Cox_b={CAP_Cox_Ab*a}
+.PARAM  CAP_Cgs_b={CAP_Cgs_Ab*a}
+.PARAM  CAP_Cds1_b={CAP_Cds1_Ab*a}
+
+
+
+M1      d2    g2    s2    s2    DMOS    L=1u   W=1u
+.MODEL DMOS NMOS ( KP= {MOS_KP}  VTO={MOS_VTO}  THETA={MOS_THETA}  VMAX=1.5e5  ETA={MOS_ETA}  LEVEL=3)
+Rd     d2    d1a    {MOS_Rd} TC1={MOS_TC_RD}
+.MODEL MVDR NMOS (KP={MOSR_KPR} VTO={MOSR_VTOR}   LAMBDA={MOSR_LAMBDAR})
+Mr d1 d2a d1a d1a MVDR W=1u L=1u
+Rx d2a d1a 1m
+
+Cds1 s2 d2 {CAP_Cds1_b}
+
+Dbd     s2    d2    Dbt
+.MODEL     Dbt    D(BV={Dbt_BV}   M={Dbt_M}  CJO={Dbt_CJ0}  VJ={Dbt_VJ})
+Dbody   s2   21    DBODY
+.MODEL DBODY  D(IS={DBODY_IS}  N={DBODY_N}  RS={DBODY_RRS}  EG={DBODY_EG}  TT={DBODY_TT})
+Rdiode  d1  21    {DBODY_RS} TC1={DBODY_RS_TC}
+
+.MODEL   sw    NMOS(VTO=0  KP=10   LEVEL=1)
+Maux      g2   c    a    a   sw
+Maux2     b    d    g2    g2   sw
+Eaux      c    a    d2    g2   1
+Eaux2     d    g2   d2    g2   -1
+
+Cox       b    d2   {10*CAP_Cox_b}
+
+.MODEL     DGD    D(M={DGD_M}   CJO={CAP_Cox_b}   VJ={DGD_VJ})
+Rpar      b    d2   1Meg
+Dgd       a    d2   DGD
+Rpar2     d2   a    10Meg
+
+Cgs     g2    s2    {CAP_Cgs_b}
+
+
+.ENDS cool_tech0b
+
+**********************************************************************
+
+.SUBCKT cool_tech0c d1 g2 s2 PARAMS: a=1 
+
+** M O D E L:   P A R A M E T E R S **
+.PARAM  MOS_KP_A={4.05} 
+.PARAM  MOS_VTO={3.6} 
+.PARAM  MOS_THETA={0.2} 
+.PARAM  MOS_ETA={0.0+0.00} 
+.PARAM  MOS_RdA={2.1} 
+.PARAM  MOS_TC_RD={17m} 
+.PARAM  MOSR_KPR_A={2.2} 
+.PARAM  MOSR_VTOR={-1*1.0} 
+.PARAM  MOSR_LAMBDAR={0.15*1.2} 
+.PARAM  Dbt_BV={950} 
+.PARAM  Dbt_M={0.9*1.0} 
+.PARAM  Dbt_CJ0_A={0.3n} 
+.PARAM  Dbt_VJ={0.5*1.0} 
+.PARAM  DBODY_IS_A={300p}
+.PARAM  DBODY_N={1.5}
+.PARAM  DBODY_RRS={5u*1}
+.PARAM  DBODY_EG={1.12*1}
+.PARAM  DBODY_TT=250n
+.PARAM  DBODY_RSA={70m}
+.PARAM  DBODY_RS_TC={1.1m}
+.PARAM  DGD_M={0.55*1.0}
+.PARAM  DGD_VJ={0.5*1.0}
+
+.PARAM  CAP_Cox_Ac={0.04n}
+.PARAM  CAP_Cgs_Ac={0.25n}
+.PARAM  CAP_Cds1_Ac={1.95p}
+
+
+.PARAM  MOS_KP={MOS_KP_A*a} 
+.PARAM  MOS_Rd={MOS_RdA/a} 
+.PARAM  MOSR_KPR={MOSR_KPR_A*a} 
+.PARAM  Dbt_CJ0={Dbt_CJ0_A*a}
+.PARAM  DBODY_IS={DBODY_IS_A*a}
+.PARAM  DBODY_RS={DBODY_RSA/a}
+.PARAM  CAP_Cox_c={CAP_Cox_Ac*a}
+.PARAM  CAP_Cgs_c={CAP_Cgs_Ac*a}
+.PARAM  CAP_Cds1_c={CAP_Cds1_Ac*a}
+
+
+
+M1      d2    g2    s2    s2    DMOS    L=1u   W=1u
+.MODEL DMOS NMOS ( KP= {MOS_KP}  VTO={MOS_VTO}  THETA={MOS_THETA}  VMAX=1.5e5  ETA={MOS_ETA}  LEVEL=3)
+Rd     d2    d1a    {MOS_Rd} TC1={MOS_TC_RD}
+.MODEL MVDR NMOS (KP={MOSR_KPR} VTO={MOSR_VTOR}   LAMBDA={MOSR_LAMBDAR})
+Mr d1 d2a d1a d1a MVDR W=1u L=1u
+Rx d2a d1a 1m
+
+Cds1 s2 d2 {CAP_Cds1_c}
+
+Dbd     s2    d2    Dbt
+.MODEL     Dbt    D(BV={Dbt_BV}   M={Dbt_M}  CJO={Dbt_CJ0}  VJ={Dbt_VJ})
+Dbody   s2   21    DBODY
+.MODEL DBODY  D(IS={DBODY_IS}  N={DBODY_N}  RS={DBODY_RRS}  EG={DBODY_EG}  TT={DBODY_TT})
+Rdiode  d1  21    {DBODY_RS} TC1={DBODY_RS_TC}
+
+.MODEL   sw    NMOS(VTO=0  KP=10   LEVEL=1)
+Maux      g2   c    a    a   sw
+Maux2     b    d    g2    g2   sw
+Eaux      c    a    d2    g2   1
+Eaux2     d    g2   d2    g2   -1
+
+Cox       b    d2   {8*CAP_Cox_c}
+
+.MODEL     DGD    D(M={DGD_M}   CJO={CAP_Cox_c}   VJ={DGD_VJ})
+Rpar      b    d2   1Meg
+Dgd       a    d2   DGD
+Rpar2     d2   a    10Meg
+
+Cgs     g2    s2    {CAP_Cgs_c}
+
+
+.ENDS cool_tech0c
+
+
+**********************************************************************
+********************** L0 PACKAGE MODEL  *****************************
+**********************************************************************
+
+.SUBCKT IPA95R450P7_L0  drain  gate  source
+.PARAM act=7.16    
+
+X1  d1 g2 s2 cool_tech0a PARAMS: a={act}
+
+Lg     gate  g1    6.17n Rpar=30 Rser=0
+Ld     drain d1    2.02n Rpar=10 Rser=0
+Ls     source s1   2.92n Rpar=15 Rser=0
+Rs      s1    s2   906u
+Rg     g1    g2     1
+
+.ENDS  IPA95R450P7_L0
+
+**********************************************************************
+
+.SUBCKT IPU95R450P7_L0  drain  gate  source
+.PARAM act=7.16    
+
+X1  d1 g2 s2 cool_tech0a PARAMS: a={act}
+
+Lg     gate  g1    3.42n Rpar=15 Rser=0
+Ld     drain d1    1.01n Rpar=5 Rser=0
+Ls     source s1   1.57n Rpar=7.5 Rser=0
+Rs      s1    s2   619u
+Rg     g1    g2     1
+
+.ENDS  IPU95R450P7_L0
+
+**********************************************************************
+.SUBCKT IPD95R450P7_L0  drain  gate  source
+.PARAM act=7.16    
+
+X1  d1 g2 s2 cool_tech0a PARAMS: a={act}
+
+Lg     gate  g1    4.1n Rpar=20 Rser=0
+Ld     drain d1    81.8p Rpar=0.4 Rser=0
+Ls     source s1   2.71n Rpar=13 Rser=0
+Rs      s1    s2   645u
+Rg     g1    g2     1
+
+.ENDS  IPD95R450P7_L0
+
+**********************************************************************
+
+.SUBCKT IPA95R750P7_L0  drain  gate  source
+.PARAM act=4.46   
+
+X1  d1 g2 s2 cool_tech0a PARAMS: a={act}
+
+Lg     gate  g1    6.17n Rpar=30 Rser=0
+Ld     drain d1    2.02n Rpar=10 Rser=0
+Ls     source s1   2.92n Rpar=15 Rser=0
+Rs      s1    s2   906u
+Rg     g1    g2     1
+
+.ENDS  IPA95R750P7_L0
+
+**********************************************************************
+
+.SUBCKT IPU95R750P7_L0  drain  gate  source
+.PARAM act=4.46    
+
+X1  d1 g2 s2 cool_tech0a PARAMS: a={act}
+
+Lg     gate  g1    3.42n Rpar=17 Rser=0
+Ld     drain d1    1.01n Rpar=5 Rser=0
+Ls     source s1   1.57n Rpar=7 Rser=0
+Rs      s1    s2   619u
+Rg     g1    g2     1
+
+.ENDS  IPU95R750P7_L0
+
+**********************************************************************
+.SUBCKT IPD95R750P7_L0  drain  gate  source
+.PARAM act=4.46    
+
+X1  d1 g2 s2 cool_tech0a PARAMS: a={act}
+
+Lg     gate  g1    4.1n Rpar=20 Rser=0
+Ld     drain d1    81.8p Rpar=.4 Rser=0
+Ls     source s1   2.71n Rpar=13.5 Rser=0
+Rs      s1    s2   645u
+Rg     g1    g2     1
+
+.ENDS  IPD95R750P7_L0
+
+**********************************************************************
+
+.SUBCKT IPA95R1K2P7_L0  drain  gate  source
+.PARAM act=2.71
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    6.18n Rpar=30 Rser=0
+Ld     drain d1    2.13n Rpar=10 Rser=0
+Ls     source s1   3.68n Rpar=18 Rser=0
+Rs      s1    s2   3.37m
+Rg     g1    g2     1
+
+.ENDS  IPA95R1K2P7_L0
+
+**********************************************************************
+
+.SUBCKT IPU95R1K2P7_L0  drain  gate  source
+.PARAM act=2.71
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    3.42n Rpar=17 Rser=0
+Ld     drain d1    1.06n Rpar=5 Rser=0
+Ls     source s1   2.14n Rpar=10 Rser=0
+Rs      s1    s2   2.38m
+Rg     g1    g2     1
+
+.ENDS  IPU95R1K2P7_L0
+
+**********************************************************************
+
+.SUBCKT IPD95R1K2P7_L0  drain  gate  source
+.PARAM act=2.71
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    4.06n Rpar=20 Rser=0
+Ld     drain d1    82.4p Rpar=0.4 Rser=0
+Ls     source s1   3.34n Rpar=17 Rser=0
+Rs      s1    s2   2.31m
+Rg     g1    g2     1
+
+.ENDS  IPD95R1K2P7_L0
+
+**********************************************************************
+
+.SUBCKT IPN95R1K2P7_L0  drain  gate  source
+.PARAM act=2.71
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    2.59n Rpar=15 Rser=0
+Ld     drain d1    379p Rpar=2 Rser=0
+Ls     source s1   1.85n Rpar=8 Rser=0
+Rs      s1    s2   7.52m
+Rg     g1    g2     1
+
+.ENDS  IPN95R1K2P7_L0
+
+**********************************************************************
+
+.SUBCKT IPU95R2K0P7_L0  drain  gate  source
+.PARAM act=1.67
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    3.42n Rpar=17 Rser=0
+Ld     drain d1    1.06n Rpar=5 Rser=0
+Ls     source s1   2.14n Rpar=10 Rser=0
+Rs      s1    s2   2.38m
+Rg     g1    g2     1
+
+.ENDS  IPU95R2K0P7_L0
+
+**********************************************************************
+
+.SUBCKT IPD95R2K0P7_L0  drain  gate  source
+.PARAM act=1.67
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    4.06n Rpar=20 Rser=0
+Ld     drain d1    82.4p Rpar=0.4 Rser=0
+Ls     source s1   3.34n Rpar=16 Rser=0
+Rs      s1    s2   2.31m
+Rg     g1    g2     1
+
+.ENDS  IPD95R2K0P7_L0
+
+**********************************************************************
+
+.SUBCKT IPN95R2K0P7_L0  drain  gate  source
+.PARAM act=1.67
+
+X1  d1 g2 s2 cool_tech0b PARAMS: a={act}
+
+Lg     gate  g1    2.59n Rpar=15 Rser=0
+Ld     drain d1    379p Rpar=2 Rser=0
+Ls     source s1   1.85n Rpar=10 Rser=0
+Rs      s1    s2   7.52m
+Rg     g1    g2     1
+
+.ENDS  IPN95R2K0P7_L0
+
+**********************************************************************
+
+.SUBCKT IPU95R3K7P7_L0  drain  gate  source
+.PARAM act=0.82
+
+X1  d1 g2 s2 cool_tech0c PARAMS: a={act}
+
+Lg     gate  g1    3.42n Rpar=17 Rser=0
+Ld     drain d1    1.06n Rpar=5 Rser=0
+Ls     source s1   3.2n Rpar=16 Rser=0
+Rs      s1    s2   5.50m
+Rg     g1    g2     1.5
+
+.ENDS  IPU95R3K7P7_L0
+
+**********************************************************************
+
+.SUBCKT IPN95R3K7P7_L0  drain  gate  source
+.PARAM act=0.82
+
+X1  d1 g2 s2 cool_tech0c PARAMS: a={act}
+
+Lg     gate  g1    2.68n Rpar=15 Rser=0
+Ld     drain d1    540p Rpar=2.5 Rser=0
+Ls     source s1   3.04n Rpar=15 Rser=0
+Rs      s1    s2   22.9m
+Rg     g1    g2     1.5
+
+.ENDS  IPN95R3K7P7_L0

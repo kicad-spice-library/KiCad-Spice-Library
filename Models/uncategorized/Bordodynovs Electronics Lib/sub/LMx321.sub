@@ -1,0 +1,168 @@
+* LMX321 MACROMODEL
+* ------------------------------
+* Revision 0, 8/2003
+* Note .subckt LMX321 pin order reassignment for LTSpice 5/2018
+* ------------------------------
+* The LMX321 family of op amps are low-cost, low-voltage, general purpose opamps.
+* These devices offer rail to rail outputs and ground sensing inputs and operate
+* from single +2.3V to +7V suppply.
+* ------------------------------
+* Connections
+*      1  = IN+
+*      2  = VEE
+*      3  = IN-
+*      4  = OUT
+*      5  = VCC
+**************************
+* Change subcircuit connection order for use with LTSpice symbol opamp2.asy:
+*     1 = IN+, 2 = IN-, 3 = V+, 4 = V-, 5 = OUT
+* Original order:
+*     .SUBCKT LMX321 1 2 3 4 5
+* Updated order:
+*     .SUBCKT LMX321 1 3 5 2 4
+***************************
+.SUBCKT LMX321 1 3 5 2 4
+ XAMP1 5 2 1 3 4 OPAMP
+.ENDS
+**************************
+
+**************************
+.SUBCKT OPAMP 10 18 7 6 75
+* 10 = VCC
+* 18 = VEE
+*  7 = IN+
+*  6 = IN-
+* 75 = OUT
+*****************
+VS1 10 11 0V
+IBIAS 11 12 61.3U
+DBIAS 18 12 DA
+RE1 12 91 1.005K
+RE2 12 92 1.005K
+QI1 13 15 91 QP1
+*INPUT BIAS CURRENT AND OFFSET
+QI2 14 16 92 QP2
+RIN1 15 20 3MEG
+*COMMON MODE INPUT RESISTANCE
+RIN2 16 20 3MEG
+DIN1 15 10 DB
+DIN2 18 15 DB
+DIN3 16 10 DB
+DIN4 18 16 DB
+ECR1 15 32 111 20 1
+*DC PSRR AND CMRR
+VOS 17 32 1M
+*INPUT OFFSET VOLTAGE
+DP1 17 112 DB
+*INPUT PROTECTION DIODES
+DP2 112 113 DB
+DP3 113 16 DB
+DP4 16 114 DB
+DP5 114 115 DB
+DP6 115 17 DB
+RP1 17 7 3.5K
+RP2 16 6 3.5K
+RC1 13 18 1.856K
+RC2 14 18 1.856K
+C1 13 14 14.0P
+FSUP 18 10 VS1 1
+*TO COMPENSATE SUPPLY CURRENT
+*****************
+*GAIN STAGE
+*106dB GAIN
+GA 21 20 14 13 326.8U
+RO1 21 20 30606
+GB 22 20 21 20 1
+RO2 22 20 20K
+EF 23 20 22 20 1
+CC 23 21 36.8P
+*DOMINANT POLE AT 6.5HZ
+EG 20 18 10 18 0.5
+GCP 22 20 110 20 10
+*PSRR AC RESPONSE
+*****
+DVL1 22 33 DA
+*VOLTAGE LIMITING
+VMIN1 59 33 6.85M
+DVL2 34 22 DA
+VMIN2 34 60 4M
+ELIM2 59 61 10 18 0.5
+ELIM1 63 60 10 18 0.5
+ECOMP2 62 20 65 66 1
+ECOMP1 64 20 65 66 1
+HCOMP2 62 61 VIS3 53.4
+HCOMP1 64 63 VIS3 32.52
+*****************
+EOUT 65 20 22 20 1
+*VOLTAGE FOLLOWER
+ROUT1 65 66 150
+*OPEN LOOP OUTPUT RESISTANCE
+VIS3 66 67 0V
+*****************
+**CURRENT LIMIT
+DSC1 67 68 DA
+DSC2 69 67 DA
+DSC3 69 70 DA
+DSC4 70 68 DA
+ISC1 68 69 25MA
+*LIMITING CURRENT T0 25MA
+RSC 68 69 10MEG
+*****************
+ROUT2 70 75 0.1M
+RLOAD 75 20 10MEG
+*****************
+*SUPPLY CURRENT
+*BIAS CURRENT
+DSUP 18 10 DB
+RSUP 10 18 200K
+ISUP 10 18 95UA
+*BIAS CURRENT
+*LOAD CURRENT
+FSUP1 20 77 VIS3 1
+CSUP 77 20 1P
+DSUP1 20 77 DB
+DSUP2 77 78 DB
+VIS4 78 20 0V
+FSUP2 10 18 VIS4 1
+*****************
+*PSRR DC AND AC
+ESUP1 79 20 10 18 1
+CPSRR 79 80 7.5P
+RPSRR 80 20 5K
+GPSRR1 20 110 80 20 0.05
+*AC
+GPSRR2 20 111 79 20 10.5U
+*DC -92dB
+RRDC 111 20 1
+RRR 110 20 1
+*****************
+*CMRR DC AND AC
+ECM1 81 20 12 18 1
+GCM2 20 111 81 20 10U
+*DC -96dB
+*****************
+*MAX COMMON MODE INPUT VCC-0.9V
+DIL 12 83 DA
+RIL 83 84 50
+VIL 85 84 0.9V
+EIL 85 18 10 18 1
+*****************
+*MINIMUM SUPPLY VOLTAGE SET AT 2.3
+DVL3 18 12 DA
+DVL4 12 86 DA
+FVL 86 18 VIS5 1
+VVL 87 18 2.3V
+VIS5 87 88 0V
+DVL5 88 89 DA
+RVL 89 90 300
+EVL1 90 18 10 18 1
+**********************************************************
+.MODEL QP1 PNP(IS=16E-15 BF=1700)
+.MODEL QP2 PNP(IS=16E-15 BF=1610.5)
+.MODEL DA D(N=0.1M)
+.MODEL DB D(IS=100E-14)
+**********************************************************
+.ENDS
+
+
+* Copyright (c) 2003-2012 Maxim Integrated Products.  All Rights Reserved.

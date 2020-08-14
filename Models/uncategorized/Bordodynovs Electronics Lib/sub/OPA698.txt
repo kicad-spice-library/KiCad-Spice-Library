@@ -1,0 +1,125 @@
+* OPA698  Unit Gain Wide Bandwidth Voltage Limiting Amp
+* REV. A - Created 7/02/04 Rea.Schmid@ti.com
+*
+*
+* NOTES:
+*   1- This macromodel predicts well: DC, small-signal AC,
+*      noise, and transient performance under a wide range
+*      of conditions
+*   2- This macromodel does not predict well: distortion
+*      (harmonic, intermod, diff. gain & phase, ...),
+*      temperature effects, board parasitics, differences
+*      between package styles, and process changes
+*   3- Limit numeric command is a statement supported by most spice 
+*      simulators. Not all simulators recognize this statement,
+*      therefore contact TI and provide what spice program you are
+*      working with for help.
+*
+* |-------------------------------------------------------------|
+* |  This macro model is being supplied as an aid to            |
+* |  circuit designs.  While it reflects reasonably close       |
+* |  similarity to the actual device in terms of performance,   |
+* |  it is not suggested as a replacement for breadboarding.    |
+* |  Simulation should be used as a forerunner or a supplement  |
+* |  to traditional lab testing.                                |
+* |                                                             |
+* |  Neither this library nor any part may be copied without    |
+* |  the express written consent of Texas Instruments Corp.     |
+* |-------------------------------------------------------------|
+*
+* CONNECTIONS:
+*              Non-Inverting Input
+*              | Inverting Input
+*              | |  Positive Supply
+*              | |  |   Negative Supply
+*              | |  |   |  Out
+*              | |  |   |  |  Limit Hi
+*              | |  |   |  |  |  Limit Lo
+*              | |  |   |  |  |  |
+*              | |  |   |  |  |  |
+.SUBCKT OPA698 + -  V+ V- Out VH VL 
+D1         17 14 DI 1
+Q3         13 10 14 NPN8 .667
+R3         17 19  500  
+R4         18 21  500  
+Q4         15 11 14 PNP8 .667
+Q1         V- - 10 PNP8 .667
+R6         V- 23  420  
+R2         V- 16  420  
+D2         14 18 DI 1
+R1         12 V+  420  
+R5         22 V+  420  
+Q2         V+ - 11 NPN8 .667
+R7         24 V+  820  
+eU5         34 0 VALUE {LIMIT(V(32),V(VL)-10m,V(VH)+10m)}
+G12         0 32 NCMP 0 1m
+D4         20 21 DI 1
+D3         19 20 DI 1
+R8         V- 27  890  
+I3         V+ 17 DC 480u  
+I5         V+ 19 DC 480u  
+I6         21 V- DC 480u  
+I4         18 V- DC 480u  
+I2         11 V- DC 290u  
+I7         V+ 28 DC 290u  
+I8         29 V- DC 290u  
+I1         V+ 10 DC 290u  
+I9         V+ 36 DC 2.5m  
+I10         37 V- DC 4.5m  
+V1         V+ 33 DC 1.85  
+V2         35 V- DC 1.85  
+Q5         13 13 12 PNP8 .667
+Q6         15 15 16 NPN8 .667
+Q7         20 13 22 PNP8 .667
+Q8         20 15 23 NPN8 .667
+Q9         25 25 24 PNP8 1
+Q10         25 28 20 NPN8 .667
+Q11         26 29 20 PNP8 .667
+Q12         26 26 27 NPN8 1
+Q13         V- + 28 PNP8 .667
+Q14         V+ + 29 NPN8 .667
+Q15         NCMP 25 30 PNP8 1
+Q16         NCMP 26 31 NPN8 1
+Q17         V- 34 36 PNP8 29
+Q18         V+ 34 37 NPN8 29
+Q19         V+ 36 Out NPN8 29
+Q20         V- 37 Out PNP8 29
+D5         34 33 Da 1
+D6         35 34 Da 1
+R10         30 V+  420  
+R11         V- 31  420  
+R12         0 32  1K  
+C1         NCMP V+  3.75p  
+C2         32 0  500f  
+C3         0 +  1p  
+*
+*Models for circuit OPA698
+*
+.MODEL Da D IS=1F
+.MODEL DI D IS=1F
+*
+.MODEL NPN8 NPN
++ IS = 7.604E-18 BF = 1.570E+02 NF = 1.000E+00 VAF= 7.871E+01
++ IKF= 3.975E-02 ISE= 3.219E-14 NE = 2.000E+00 BR = 7.614E-01
++ NR = 1.000E+00 VAR= 1.452E+00 IKR= 8.172E-02 ISC= 7.618E-21
++ NC = 1.847E+00 RB = 1.060E+02 IRB= 0.000E+00 RBM= 2.400E+00
++ RE = 2.520E+00 RC = 1.270E+02 CJE= 1.120E-15 VJE= 7.591E-01
++ MJE= 5.406E-01 TF = 1.213E-11 XTF= 2.049E+00 VTF= 1.813E+00
++ ITF= 4.293E-02 PTF= 0.000E+00 CJC= 8.208E-14 VJC= 6.666E-01
++ MJC= 4.509E-01 XCJC=8.450E-02 TR = 4.000E-11 CJS= 1.160E-15
++ VJS= 5.286E-01 MJS= 4.389E-01 XTB= 1.022E+00 EG = 1.120E+00
++ XTI= 1.780E+00 KF = 3.500E-16 AF = 1.000E+00 FC = 8.273E-01
+*
+.MODEL PNP8 PNP
++ IS = 7.999E-18 BF = 1.418E+02 NF = 1.000E+00 VAF= 4.158E+01
++ IKF= 1.085E-01 ISE= 2.233E-15 NE = 1.505E+00 BR = 3.252E+01
++ NR = 1.050E+00 VAR= 1.093E+00 IKR= 5.000E-05 ISC= 6.621E-16
++ NC = 1.150E+00 RB = 6.246E+01 IRB= 0.000E+00 RBM= 2.240E+00
++ RE = 2.537E+00 RC = 1.260E+02 CJE= 9.502E-14 VJE= 7.320E-01
++ MJE= 4.930E-01 TF = 1.303E-11 XTF= 3.500E+01 VTF= 3.259E+00
++ ITF= 2.639E-01 PTF= 0.000E+00 CJC= 1.080E-13 VJC= 7.743E-01
++ MJC= 5.000E-01 XCJC=8.504E-02 TR = 1.500E-10 CJS= 1.290E-13
++ VJS= 9.058E-01 MJS= 4.931E-01 XTB= 1.732E+00 EG = 1.120E+00
++ XTI= 2.000E+00 KF = 3.500E-16 AF = 1.000E+00 FC = 8.500E-01
+
+.ENDS    OPA698

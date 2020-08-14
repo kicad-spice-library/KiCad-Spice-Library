@@ -1,0 +1,32 @@
+* Simple Amplifier
+*
+* Parameters :
+* - Gain : Amplifier Gain
+* - Pole : Amplifier Pole (-3dB Bandwidth)
+* - VHigh : Amplifier Maximum Output Voltage
+* - VLow : Amplifier Minimum Output Voltage
+*
+.Subckt AmpSimp nN nP nOut Params: Gain=30000 Pole=30 VHigh=4V VLow=-4V
+*               -  +  Out
+*
+* Other internal parameters
+.Param Trans=100u RsOut=10 RsIn=1G
+* RC network for bandwidth calculus
+.Param REq=Gain/Trans CEq=1/(2*pi*REq*Pole)
+*
+* Differential Input resistor
+Rin nP nN {RsIn}
+*
+* Tansconductance amplifier
+GAmp 0 nAmp nP nN {Trans}
+* RC Network to limit the Bandwidth
+R nAmp 0 {REq}
+C nAmp 0 {CEq}
+*
+* Voltage Clamp output
+EOut N001 0 Value={Limit(V(nAmp),{VHigh},{VLow})}
+*
+* Output Resistor
+R1 nOut N001 {RsOut}
+*
+.EndS AmpSimp

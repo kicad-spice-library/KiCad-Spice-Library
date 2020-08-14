@@ -1,0 +1,200 @@
+* ADG719 MACROMODEL
+* Description: Converter
+* Generic Desc: Single SPDT 1 ohm analog switch 1.8V
+* Developed by: Y.WONG 
+* Revision History: 08/10/2012 - Updated to new header style
+* 1.0 (08/2008)
+* Copyright 2012 by Analog Devices, Inc.
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html for License Statement. Use of this model 
+* indicates your acceptance of the terms and provisions in the License Statement.
+*
+* BEGIN Notes:
+*
+* Not Modeled:
+*    
+* Parameters modeled include: 
+*
+* END Notes
+*
+* Connections
+*      1  = IN
+*      2  = VDD
+*      3  = GND
+*      4  = S1 
+*      5  = D
+*      6  = S2
+*****************
+.SUBCKT ADG719 1 2 3 4 5 6 
+
+X1 4 5 1 2 3 LOWONSWITCH
+X2 6 5 1 2 3 HIGHONSWITCH
+DINA 1 2 DX
+DINB 3 1 DX
+CC 4 6 0.22p
+
+.MODEL DX D(IS=1E-12 N=0.5 RS=0.1)
+.ENDS
+
+****************
+* Logic High On Switch
+*
+* Connections
+*      101 = S
+*      102 = D
+*      103 = VIN
+*      104 = VDD 
+*      105 = GND
+*****************
+
+.SUBCKT HIGHONSWITCH  101 102 103 104 105
+x1 103 104 105 108 BUFF
+X2 108 109 104 105 VSENSE
+X3 109 105 110 ENABLEDELAY
+X4 101 102 110 104 105 SWITCH
+
+*MODELS USED
+.ENDS
+
+****************
+* Logic Low On Switch
+*
+* Connections
+*      101 = S
+*      102 = D
+*      103 = VIN
+*      104 = VDD 
+*      105 = GND
+*****************
+
+.SUBCKT LOWONSWITCH  101 102 103 104 105
+x1 103 104 105 108 NOTGATE
+X2 108 109 104 105 VSENSE
+X3 109 105 110 ENABLEDELAY
+X4 101 102 110 104 105 SWITCH
+
+*MODELS USED
+.ENDS
+
+*****************
+* BUFF LOGIC
+*
+* Connections
+*      201 = INPUT
+*      202 = VDD
+*      203 = GND
+*      204 = OUTPUT
+*****************
+.SUBCKT BUFF 201 202 203 204
+SBUFF 205 203 201 203 SMOD2
+RBUFF 205 202 5G
+EBUFFER 204 203 205 203 1
+
+*MODELS USED
+.MODEL SMOD2 VSWITCH(RON=1E-3 ROFF=1E11 VON=0.8 VOFF=2.4)
+.ENDS
+
+*****************
+* NOT LOGIC
+*
+* Connections
+*      201 = INPUT
+*      202 = VDD
+*      203 = GND
+*      204 = OUTPUT
+*****************
+.SUBCKT NOTGATE 201 202 203 204
+SNOT 205 203 201 203 SMOD2
+RNOT 205 202 5G
+EBUFFER 204 203 205 203 1
+
+*MODELS USED
+.MODEL SMOD2 VSWITCH(RON=1E-3 ROFF=1E11 VON=2.4 VOFF=0.8)
+.ENDS
+
+****************
+* Switch
+*
+* Connections
+*      201 = S
+*      202 = D
+*      203 = VIN
+*      204 = VDD 
+*      205 = GND
+*****************
+
+.SUBCKT SWITCH  201 202 203 204 205 
+
+*ANALOG SWITCH
+S1 201 208 203 205 SMOD1
+S2 204 207 203 205 SMOD2
+S3 204 207 201 205 SMOD3 
+S4 204 207 202 205 SMOD3
+RD 207 205 5G
+S5 208 202 207 205 SMOD4
+
+DS1 201 204 DX 
+DS2 205 201 DX
+DD1 202 204 DX
+DD2 205 202 DX
+
+*ON OFF ISOLATION*
+CSD 201 202 0.1p
+
+*BANDWIDTH  
+CSB 201 204 7.192p
+CDB 202 204 7.192p
+
+*CHARGE INJECTION
+CGS 201 203 1.669p
+CGD 202 203 1.669p
+
+*MODELS USED
+.MODEL SMOD1 VSWITCH(RON=2.5 ROFF=1.77E6 VON=2.4 VOFF=0.8)
+.MODEL SMOD2 VSWITCH(RON=1E-3 ROFF=1E11 VON=2.4 VOFF=0.8)
+.MODEL SMOD3 VSWITCH(RON=1E-3 ROFF=1E11 VON=0.8 VOFF=1.0)
+.MODEL SMOD4 VSWITCH(RON=1E-3 ROFF=3.5E11 VON=2.4 VOFF=0.8)
+.MODEL DX D(IS=1E-12 N=0.5 RS=0.1)
+.ENDS
+
+*****************
+* ENABLE DELAY
+*
+* Connections
+*      301 = INPUT
+*      302 = COM
+*      303 = OUTPUT
+*****************
+.SUBCKT ENABLEDELAY 301 302 303
+
+EENBUFFER 304 302 301 302 1
+RFEN 304 306 6k
+CFEN 306 302 2.0p
+DBREAKEN 306 305 DZ
+RBEN 305 304 3k
+EENBUFFEROUT 303 302 306 302 1 
+
+*MODELS USED
+.MODEL DZ D(IS=1E-14 N=0.04)
+.ENDS
+
+*****************
+* OPERATING VOLTAGE 
+*
+* Connections
+*      601 = INPUT
+*      602 = OUTPUT
+*      603 = VDD
+*      604 = GND
+*****************
+.SUBCKT VSENSE 601 602 603 604 
+SD1 601 606 603 604 SMOD3
+SD2 606 607 603 604 SMOD4
+RD0 607 604 5G
+EBUFFER 602 604 607 604 1
+
+*MODELS USED
+.MODEL SMOD3 VSWITCH(RON=1E-3 ROFF=1E11 VON=2.7 VOFF=2.6)
+.MODEL SMOD4 VSWITCH(RON=1E-3 ROFF=1E11 VON=5.5 VOFF=5.6)
+.ENDS
+
+

@@ -1,0 +1,75 @@
+***********************************************************************************
+**** SPICE MODELING by JIM THOMPSON, http://www.analog-innovations.com/ © 2014 ****
+***********************************************************************************
+*               IN+
+*               | IN-
+*               | | GND
+*               | | | OUT
+*               | | | | VPLUS                
+*               | | | | |
+.SUBCKT TDA2003 1 2 3 4 5 
+R_R6         1 N_1  150K 
+RCON_TAG2         1 0 1G
+V_VOS2          N_2  2  0.65V
+R_R8         5 N_3  20K 
+V_VOS1          N_1  3  1.3V
+F_F1         2 3 VF_F1 0.5
+        VF_F1 N_3 3 1.8V
+**         Text Force ** 
+.MODEL         D D
+D_D1         N_4 N_5 D 
+RCON_TAG3         N_6 0 1G
+G_G1         N_7 N_6 VALUE { 5A*TANH(450*V(N_8, N_6)) }
+R_R7         2 4  20K 
+F_F3         N_4 5 VF_F3 1
+        VF_F3 5 N_7 0
+D_D2         5 N_4 D 
+R_RNOF1         5 4  1G 
+RFUD1      N_9  N_8  1
+RFUD2      N_8 0 1G
+RCON_TAG4         N_9 0 1G
+R_RNOF2         4 3  1G 
+C_COUT         4 3  5pF 
+F_F2         5 3 VF_F2 1
+        VF_F2 N_5 5 0
+X_U1         1 N_2 N_9 5 3 OpAmpConfigRails PARAMS: GDC=100K GBW=10 SLEW=1
++  ROUT=100 PM=45 VMP=0.65 VMN=0.65 W=10m
+R_ROUT         N_6 4  120m 
+.ENDS    TDA2003
+****
+.SUBCKT OpAmpConfigRails INP INN OUT VP VN PARAMS: GDC=100K GBW=10 SLEW=1 ROUT=100 PM=45 VMP=0.5 VMN=0.5 W=10m
+.PARAM  PI=3.141593 PMR={PM/180*PI} GBR={GBW*1E6*2*PI} DELT={(90-PM)/90}
+.PARAM  OMEGAZ={GBR/DELT} PROCPM={(1-TAN(PMR/2))/(1+TAN(PMR/2))} L={(PROCPM-DELT)/GBR/GBR/(PROCPM-(1/DELT))}
+.PARAM  R={(1-OMEGAZ*OMEGAZ*L)/OMEGAZ}
+RRR VP VN 100Meg
+G1 0 N2 N1 0 1
+G2 N2 0 N2 N3 1
+R1 N3 OUT {ROUT}
+R2 N2 0 {GDC}
+R3 N5 N4 {R/(sqrt(L))} ;{R}
+XLIM N2 N3 VP VN SwingLimiter PARAMS: VMP={VMP} VMN={VMN} W={W}
+E2 N1 0 VALUE {LIMIT(V(N4),{-(SLEW)/(2*PI*GBW)},{SLEW/(2*PI*GBW)})}
+E3 N5 0 INP INN 1
+RE3 N5 0 100K
+E4 0 N6 INP INN 1 
+RE4 N6 0 100K
+C1 0 N2 {1/(2*PI*GBW*1E6)}
+C2 N4 N7 {sqrt(L)} ;1
+L1 N7 N6 {sqrt(L)} ;{L}
+.ENDS OpAmpConfigRails
+***********************************************************************************
+.SUBCKT MOST_POS A B OUT COM PARAMS: W=0.1
+E OUT COM VALUE {(TANH(V(A,B)/(0.679*W))*V(A,B)+V(A)+V(B))/2}
+.ENDS MOST_POS
+***********************************************************************************
+.SUBCKT MOST_NEG A B OUT COM PARAMS: W=0.1
+E OUT COM VALUE {(TANH(V(B,A)/(0.679*W))*V(A,B)+V(A)+V(B))/2}
+.ENDS MOST_NEG
+***********************************************************************************
+.SUBCKT SwingLimiter IN OUT VP VN PARAMS: VMP=0.5 VMN=0.5 W=10m
+X_U1         N_1 N_2 OUT 0 MOST_NEG PARAMS: W={W}
+V_VOS2          N_3  VN  {VMN}
+V_VOS1          VP  N_2  {VMP}
+X_U2         IN N_3 N_1 0 MOST_POS PARAMS: W={W}
+.ENDS   SwingLimiter
+***********************************************************************************

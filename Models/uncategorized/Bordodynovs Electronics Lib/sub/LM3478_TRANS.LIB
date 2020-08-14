@@ -1,0 +1,348 @@
+* LM3478
+*****************************************************************************
+* (C) Copyright 2017, 2016 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: WEBENCH Design Center, Texas Instruments Inc.
+* Part: LM3478
+* Date: 21APR2017
+* Model Type: TRANSIENT
+* Simulator: PSPICE
+* Simulator Version: 16.2.0.p001
+* EVM Order Number: LM3478/88
+* EVM User's Guide: SNVA656A-June 2012-Revised October 2013
+* Datasheet: SNVS085W-JULY 2000-REVISED DECEMBER 2014
+*
+* Model Version: Final 1.10
+*
+*****************************************************************************
+*
+* Updates:
+* Final 1.10
+* Release to Web
+* <Made below change to the model>
+*  Included steady state parameter SS in the .LIB and Symbol.
+*
+* Final 1.00
+* Release to Web.
+*
+*****************************************************************************
+*
+* Model Usage Notes:
+*
+* A. Features have been modelled
+*	1. Short circuit Protection
+*	2. 100kHz to 1MHz Adjustable Frequency with Shutdown
+*	3. Internal Push-Pull Driver With 1A Peak Current Capability
+*	4. Device enable & disable by EN input
+*	5. Internal Soft-Start of 4ms
+*	6. VIN UVLO protection
+*	7. Output Over-voltage protection
+*
+* B. Features haven't been modelled
+*	1. Input Current vs Input Voltage
+*	2. Temperature dependent characteristics
+*   3. Ground pin is tied to 0V internally hence this model cannot be used in inverting topology
+*
+*****************************************************************************
+.SUBCKT LM3478_TRANS AGND COMP DR FA_SD FB ISEN PGND VIN PARAMS: SS=0
+R_Rin2g         VIN PGND  1G TC=0,0
+R_R_OC         OCDLY OC  216.45 TC=0,0
+R_ROC2toG         OC1 AGND  10G TC=0,0
+R_R_LDO         VIN V7P2  1MEG TC=0,0
+C_Css         SS AGND  1uF IC=0 TC=0,0
+R_Ruv         N16930285 N16931482  1 TC=0,0
+BE_ABM6         REF 0 V= IF( V(SS) > 1.26, 1.26, V(SS))
+X_U6         N16908277 N16875644 N16909753 RESET AND3_BASIC_GEN PARAMS: VDD=1
++  VSS=0 VTHRESH=500E-3
+C_Cuv         N16930285 AGND  1n  TC=0,0
+BE_Edriver         N16855996 DR V=IF(V(PWM_CLK) > 0.5, 3, -3)
+BG_Iss         N16850239 SS I=IF(V(OSCSHUT) < 1 & V(UVLO) > 2 &
++  V(OC2)<0.4, 1uF*(1.26-V(SS))/({Tstart}/2.7), (V(AGND)-V(SS))/1k)
+R_R1         N16981880 N16982093  1k TC=0,0
+R_Rss2g         SS AGND  1G TC=0,0
+M_M2         PGND DRVRSIG DR DR MPDRVR
+BE_E_OC2         OC1 AGND V=IF (V(OC) > 0.5, IF(V(OCDLY) > 0.5, 1 , 0), 0)
+X_U1 PWM_CLK N16855935 SET PWM
+M_M1         VCC DRVRSIG DR DR MNDRVR
+V_Iss_tst         AGND N16850239
++PULSE 0 0 0
+C_C_OC         OCDLY AGND  1n  TC=0,0
+E_E_bias         VCC PGND V7P2 PGND 1
+BE_GAIN4         UVLO 0 V=2.5 * V(N16930285)
+V_V3         N16943348 N16943331 -418m
+D_D_LDO         PGND V7P2 DZ7P2
+X_erramp         VGM_REF FB COMP lmerr_amp
+BE_ABM166         N16943331 0 V=IF(V(FA_SD_30UHIGH)>0.5,0,2.8)
+X_U9         COMP N16943348 d_d1
+X_U7         VIN N16926804 N16927149 N16931482 COMPHYS_BASIC_GEN PARAMS: VDD=1
++  VSS=0 VTHRESH=0.5
+V_V2         N16927149 AGND 170m
+BG_ABMII1         AGND ISEN I=(V(RAMP) - 0.1)*38.5e-6
+R_R_sen2G         ISEN AGND  1G TC=0,0
+R_R_FBspike         FB_NOSPIKE FBVAL  100 TC=0,0
+X_U138         RESET N16983200 N16855935 AND2_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+X_U137         OC OC2 N16907101 OR2_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+BE_OVgen         OV AGND V=IF(V(FB_NOSPIKE, AGND) + 60mV*V(OV) >
++  V(VGM_REF)+50mV, 1, 0)
+BE_ABM167         N16981880 0 V=IF(V(FA_SD)>1.35,1,0)
+BE_GAIN3         FBVAL 0 V=1.0 * V(FB)
+X_U2 CLK FA FA_SD_30UHIGH RAMP OSCSHUT OC UVLO OSCR
+BE_E_OC         OC AGND V=IF (V(COMP_POS) > 156m - 0.01*V(OC), 1, 0)
+BE_ABM164         COMP_NEG 0 V=1.08*V(COMP) -1.48 - 0.0646*(V(RAMP) - 0.1)
+C_C_FBspike         FB_NOSPIKE AGND  1n  TC=0,0
+X_U10         N16945907 CLK OC2 N16988765 srlatchrhp_basic_gen PARAMS: VDD=1
++  VSS=0 VTHRESH=0.5
+BE_E_OC3         N16945907 AGND V=if (v(COMP_POS) > .343 - 0.01*v(OC2), 1,
++  0)
+R_Rdriver         N16855996 DRVRSIG  1 TC=0,0
+BE_ABM165         N16875644 0 V=IF( V(COMP_POS) > V(COMP_NEG), 0 ,1)
+C_Cdriver         DRVRSIG DR  1nF  TC=0,0
+C_C1         N16982093 AGND  1n  TC=0,0
+X_U4         N16982093 N16983200 INV_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+V_V1         N16926804 AGND 2.85
+BE_GAIN2         COMP_POS 0 V=1 * V(ISEN)
+X_U5         OV N16909753 INV_BASIC_GEN PARAMS: VDD=1 VSS=0 VTHRESH=500E-3
+R_Rov2g         OV AGND  1G TC=0,0
+V_IFA         FA FA_SD
++PULSE 0 0 0
+BE_ABM7         VGM_REF 0 V=IF({SS} < 0.5, V(REF), 1.26)
+X_U3         N16907101 N16908277 INV_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+BE_ABM4         SET 0 V=IF ((V(CLK) > 1) & (V(OSCSHUT) < 0.5) & (V(OV) <
++  0.5),1, 0)
+.PARAM Tstart=4m
+
+*$
+.SUBCKT OSCR CLK FA FA_SD_30uhigh RAMP SHUT SLOW Vs
+BE_rampgen         RAMP 0 V=0.1+(1.3-V(12))*(V(SAWTOOTH)-0.1)/0.8
+BE_SLOWtst2         CLK 0 V=IF(V(N16832334) > 0.5, 2.8, 0.2)
+C_Crmp         SAWTOOTH 0P1V  69.44pF IC=0 TC=0,0
+V_IFA         FAINT FA
++PULSE 0 0 0
+BE_shutgen         SHUT 0 V=IF (V(13)>1, 2, 0)
+BE_E12gen         12 0 V=V(3)*(1-V(5))
+BE_VFAgen         FA_GEN 0 V=IF (V(VS) > 1.5, V(VS) - 1.5, 0)
+X_U2         N16789125 FA_SD_30UHIGH BUF_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=0.5
+R_RFA_int         FA_GEN FAINT  1k TC=0,0
+C_Cshut         13 0  1nF  TC=0,0
+X_U9         N16789125 FA_SD_INT d_d1
+R_R12toG         12 0  10G TC=0,0
+R_Rslow         SLOW 0  1G TC=0,0
+BE_SLOWtst         N16819994 0 V=IF(V(FABY5) > 0.5, V(FSW)/5, V(FSW))
+C_Cfa         N16789125 0  1n IC=0 TC=0,0
+R_Rfa         FA_SD_INT N16789125  43.29k TC=0,0
+BE_pulsgen         N16828837 0 V=IF(V(VCO_SQ) > 1u, 1, 0)
+X_U5         13 5 d_d1
+BE_VCO_SIN         VCO_SQ 0 V=SIN(2*3.142*V(N16819994)*TIME)
+BG_ABMII2         0P1V SAWTOOTH I=IF(V(CLK) < 1  & V(FSW) > 1u,
++  I(V_IFA)/(V(FA)+2210*I(V_IFA)), (V(0P1V)-V(SAWTOOTH))/100)
+BE_ABM6         FSW 0 V=IF(V(FA_SD_INT) > 0.5, 0,
++  ((4.503E11*I(V_IFA))/(1-1k*I(V_IFA)))**0.79365 )
+C_Cshut_dly         5 0  150nF  TC=0,0
+R_Rsaw2G         SAWTOOTH 0  10G TC=0,0
+X_U10         SLOW CLK FABY5 N16834021 srlatchrhp_basic_gen PARAMS: VDD=1 VSS=0
++  VTHRESH=0.5
+R_Rrmp2G         RAMP 0  10G TC=0,0
+BE_FA         FA_SD_INT 0 V=IF(V(FA) > 1.35, 1, 0)
+R_Rshut_dly         3 5  1 TC=0,0
+V_p1V         0P1V 0 PULSE 0 0.1 0
+R_Rshut         VS 13  100k TC=0,0
+X_U788         N16828837 N16832334 rising_oneshot PARAMS:  PULSE=155n VDD=1
++  VSS=0 VTHRESH=0.5
+BE_Eshut_dly         3 0 V=IF(I(V_IFA) > 100u/65, 0, 1)
+R_Rshut2g         SHUT 0  10G TC=0,0
+.ENDS OSCR
+*$
+.SUBCKT PWM PWM_CLK RESET SET
+V_V2         N167973070 0 1
+X_U138         TONMIN N16795506 INV_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+BE_ABM55         TONMIN 0 V=IF(V(TON325N)>1,1,0)
+BG_ABMII5         0 TON325N I=IF(V(PWM_CLK) > 0.5, 12.6u,0)
+R_R5         0 TONMIN  1Meg TC=0,0
+X_U139         TON325N N167973070 d_d
+X_U17         PWM_CLK N16793497 SET N16793493 N16793552 N16793493
++  dffsbrb_rhpbasic_gen PARAMS: VDD=1 VSS=0 VTHRESH=500E-3
+V_V1         N16793493 0 1
+X_U137         RESET N16795506 N16793552 OR2_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+C_C1         TON325N 0  4p IC=0 TC=0,0
+X_U1_S14    PWM_CLK 0 TON325N 0 PWM_U1_S14
+.ENDS PWM
+*$
+.subckt PWM_U1_S14 1 2 3 4
+S_S14         3 4 1 2 _S14
+RS_S14         1 2 1G
+.MODEL         _S14 VSWITCH Roff=1e9 Ron=1 Voff=0.75 Von=0.25
+.ends PWM_U1_S14
+*$
+.SUBCKT LMERR_AMP PLUS MINUS OUT
+R1 PLUS 0 1G
+R2 MINUS 0 1G
+R3 4 0 1G
+D1 11 OUT _LMERR
+.MODEL _LMERR D BV=1
+V2 11 0 DC = 1.3
+BGB7 0 OUT I=25E-6*V(9)
+BEB9 3 0 V=V(1)
+BGB3 0 4 I=1000*(V(PLUS,MINUS)-V(2))
+R5 3 9 1K
+R7 0 2 10K
+R8 2 1 300K
+C4 4 0 10U
+BEB4 5 0 V=V(4)
+R9 5 1 1
+C5 1 0 .02U
+D2 9 10 _D2_MOD
+.MODEL _D2_MOD D BV=9
+R10 OUT 0 48K
+V5 10 0 DC = 5
+.ENDS LMERR_AMP
+*$
+.MODEL DZ7P2 D  (IS=10F BV=7.2 IBV=10uA rs=0 n=1.00000 vj=1.00000 m=0.5)
+*$
+.model MPdrvr	PMOS (KP=2 RD=1 VTO=-2)
+*$
+.model MNdrvr	NMOS (KP=2 RD=1 VTO=2)
+
+*************************** Basic Components ******************************
+.SUBCKT COMPHYS_BASIC_GEN INP INM HYS OUT PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+EIN INP1 INM1 INP INM 1
+BEHYS INP1 INP2 V=IF( V(1) > {VTHRESH},-V(HYS),0)
+BEOUT OUT 0 V=IF( V(INP2)>V(INM1), {VDD} ,{VSS})
+R1 OUT 1 1
+C1 1 0 5n
+RINP1 INP1 0 1K
+.ENDS COMPHYS_BASIC_GEN
+*$
+.SUBCKT AND2_BASIC_GEN A B Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+BE_ABMGATE  0  Y i=IF(V(A) > {VTHRESH}  & V(B) > {VTHRESH},{VDD},{VSS}) Rpar=1 Cpar=1n
+.ENDS AND2_BASIC_GEN
+*$
+.SUBCKT AND3_BASIC_GEN A B C Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+BE_ABMGATE  0  Y i=IF(V(A) > {VTHRESH}  &
++ V(B) > {VTHRESH} &
++ V(C) > {VTHRESH},{VDD},{VSS}) Rpar=1 Cpar=1n
+.ENDS AND3_BASIC_GEN
+*$
+.SUBCKT OR2_BASIC_GEN A B Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+BE_ABMGATE   0 Y i=IF(V(A) > {VTHRESH}  |
++ V(B) > {VTHRESH},{VDD},{VSS}) Rpar=1 Cpar=1n
+.ENDS OR2_BASIC_GEN
+*$
+.SUBCKT INV_BASIC_GEN A  Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+BE_ABMGATE  0  Y i=IF(V(A) > {VTHRESH} ,
++ {VSS},{VDD}) Rpar=1 Cpar=1n
+.ENDS INV_BASIC_GEN
+*$
+.SUBCKT BUF_DELAY_BASIC_GEN A  Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5 DELAY = 10n
+BE_ABMGATE1   0 YINT2 i=IF(V(A) > {VTHRESH} ,
++ {VDD},{VSS}) Rpar=1 Cpar={DELAY*1.3}
+BE_ABMGATE2   0 Y i=IF(V(YINT2) > {VTHRESH} ,
++ {VDD},{VSS}) Rpar=1 Cpar=1n
+.ENDS BUF_DELAY_BASIC_GEN
+*$
+.SUBCKT DFFSBRB_RHPBASIC_GEN Q QB CLK D RB SB PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+***Set has higher priority in this
+** Changed the delay from 7n/10n to 15n/20n to help larger time step simulations
+**Faster flip-flops require a a smaller time step to simulate
+X1 CLK CLKdel INV_DELAY_BASIC_GEN PARAMS: VDD={VDD} VSS={VSS} VTHRESH={VTHRESH} DELAY = 15n
+X2 CLK CLKdel CLKint AND2_BASIC_GEN PARAMS: VDD={VDD} VSS={VSS} VTHRESH={VTHRESH}
+BGQ 0 Qint I=IF(V(RB) < {VTHRESH},-5,IF(V(SB)< {VTHRESH},5, IF(V(CLKint)> {VTHRESH},
++ IF(V(D)> {VTHRESH},5,-5),0)))
+CQint Qint 0 1n
+RQint Qint 0 1000MEG
+D_D10 Qint MY5 D_D1
+V1 MY5 0 5
+D_D11 0 Qint D_D1
+EQ Qqq 0 Qint 0 1
+X3 Qqq Qqqd1 BUF_DELAY_BASIC_GEN PARAMS: VDD={VDD} VSS={VSS} VTHRESH={VTHRESH} DELAY = 20n
+RQq Qqqd1 Q 1
+BEQb Qbr 0 V=IF( V(Q) > {VTHRESH}, {VSS},{VDD})
+RQb Qbr Qb 1
+Cdummy1 Q 0 1nF
+Cdummy2 QB 0 1nF
+.MODEL D_D1 D( IS=1e-15 TT=10p Rs=0.05 N=.1  )
+.IC V(Qint) {VSS}
+.ENDS DFFSBRB_RHPBASIC_GEN
+*$
+.subckt d_d 1 2
+d1 1 2 dd
+.model dd D (Is = 1e-14 Rs = 0.1 N = 0.1 TT = 10p)
+.ends d_d
+*$
+.SUBCKT INV_DELAY_BASIC_GEN A  Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5 DELAY = 10n
+BE_ABMGATE1  0  YINT2 i=IF(V(A) > {VTHRESH} ,
++ {VDD},{VSS}) Rpar=1 Cpar={DELAY*1.3}
+BE_ABMGATE2   0 Y i=IF(V(YINT2) > {VTHRESH} ,
++ {VSS},{VDD}) Rpar=1 Cpar=1n
+.ENDS INV_DELAY_BASIC_GEN
+*$
+.SUBCKT BUF_BASIC_GEN A  Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+BE_ABMGATE   0 Y  i=IF(V(A) > {VTHRESH} ,
++ {VDD},{VSS}) Rpar=1 Cpar=1n
+.ENDS BUF_BASIC_GEN
+*$
+.SUBCKT D_D1 1 2
+D1 1 2 DD1
+.MODEL DD1 D ( IS=1e-15 TT=10p Rs=0.05 N=.1 )
+.ENDS D_D1
+*$
+.SUBCKT CESR IN OUT
++ PARAMs:  C=100u ESR=0.01 X=2 IC=0
+C	IN OUT  {C*X} Rser={ESR/X} IC={IC}
+.ENDS CESR
+*$
+.SUBCKT LDCR IN OUT
++ PARAMs:  L=1u DCR=0.01 IC=0
+L	IN out  {L} Rser={DCR} IC={IC}
+.ENDS LDCR
+*$
+**Reset has higher priority in this latch
+.SUBCKT SRLATCHRHP_BASIC_GEN S R Q QB PARAMS: VDD=1 VSS=0 VTHRESH=0.5
+BGQ 0 Qint I=IF(V(R) > {VTHRESH},-5,IF(V(S)>{VTHRESH},5, 0))
+CQint Qint 0 1n
+RQint Qint 0 1000MEG
+D_D10 Qint MY5 D_D1
+V1 MY5 0 {VDD}
+D_D11 MYVSS Qint D_D1
+V2 MYVSS 0 {VSS}
+EQ Qqq 0 Qint 0 1
+X3 Qqq Qqqd1 BUF_BASIC_GEN PARAMS: VDD={VDD} VSS={VSS} VTHRESH={VTHRESH}
+RQq Qqqd1 Q 1
+BEQb Qbr 0 V=IF( V(Q) > {VTHRESH}, {VSS},{VDD})
+RQb Qbr QB 1
+Cdummy1 Q 0 1n
+Cdummy2 QB 0 1n
+.IC V(Qint) {VSS}
+.MODEL D_D1 D ( IS=1e-15 TT=10p Rs=0.05 N=.1 )
+.ENDS SRLATCHRHP_BASIC_GEN
+*$
+.SUBCKT RISING_ONESHOT IN OUT PARAMS: PULSE=100n VDD=1 VSS=0 VTHRESH=0.5
+D_D1         INT IN DD
+C_C1         0 INT  1n
+X_U22         INT IN_B_DELAYED INV_BASIC_GEN PARAMS: VDD={VDD} VSS={VSS}
++  VTHRESH={VTHRESH}
+R_R1         IN INT  {PULSE/(0.693 * 1E-9)}
+X_U1         IN IN_B_DELAYED OUT AND2_BASIC_GEN PARAMS: VDD={VDD} VSS={VSS}
++  VTHRESH={VTHRESH}
+.MODEL DD D( IS=1F N=0.01 TT = 10p )
+.ENDS RISING_ONESHOT
+.ENDS LM3478_TRANS

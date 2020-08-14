@@ -1,0 +1,107 @@
+* V2.0 Helmut Sennewald   02/22/04
+*
+*
+* The Rechargable Battery
+*------------------------
+*
+* Possible Parameters
+* -------------------
+* VCELL   nominal cell voltage in volt, e.g. 1.2
+* CAPAH   cell capacity in Ah(ampere*hours), e.g. 1.8
+* R_SER   series resistance in Ohms, e.g 0.2 
+* SOC     state of charge (0..1, 0=empty, 1=full)
+* CHEFF   charging effeciency, e.g 0.7  means you need 1/0.7 times the 
+*         ampere*hours to charge fully
+* SELFDC  self discharge per hour, e.g. 0.00028 if 20%/per month
+
+*
+* I started with an old article from S.C.Hageman about a SPICE model for
+* NIMH batteries. It's the model "NIMH" - PSpice Nickel-Metal-Hydride 
+* battery discharge simulator. Optimized for 4/5A and AA Standard Cells
+* and discharge rates from 0C to 5C. It's for discharge only.
+
+* First I did some little changes on this discharge model.
+* Later, I started with further development to include a charging model
+* the battery too. The result is the new model NIMH_AA. 
+
+
+
+*  Ext+     Ext-  Soc  Rate_d
+*    ^       ^     ^    ^   
+*    |       |     |    |   
+*    |       |     |    +-- Instantaneous discharge rate, 1V=C
+*    |       |     +------ State of battery charge 1V=100%
+*    +-------+----------- +/- Cell connections (Floating)
+*
+*
+*
+.SUBCKT NIMH_AA  Ext+  Ext-  Soc  Rate_d 
+*
+.PARAM VCELL=1.2
+.PARAM CAPAH=1.8
+.PARAM R_SER=0.2
+.PARAM SOC=1
+.PARAM CHEFF=0.7
+.PARAM SELFDC=0.00028
+
+.IC V(Charge)={SOC}
+.NODESET V(Charge)={SOC}
+.PARAM R_DIS={VCELL/(SELFDC*CAPAH)}
+
+R_Cell Ext+ Cell+ {R_SER}
+V_Sense Ext- Cell- 0
+R_dis Cell+ Cell- {R_DIS}
+
+* Charge to voltage translation with E-TABLE
+* The last table entry (1.1 -10) together with the clamped reverse voltage(D2)
+* defines the battery voltage in reverse mode. If this entry is omitted,
+* then the battery will clamp to zero volts.
+E_Cell Cell+ Cell- TABLE { V(SODC) } = 
++(0.0 1.3346) (0.0293 1.3042)(0.0426 1.2942) (0.0689 1.2841)   
++(0.13 1.2733) (0.436 1.2633) (0.512 1.2532) (0.580 1.2432) 
++(0.646 1.2331) (0.702 1.2231) (0.7583 1.2130)(8.0324E-01 1.2030) 
++(0.831 1.1929) (0.851 1.1828) (0.908 1.1425) (0.948 1.0919) 
++(0.980 0.987) (0.99 0.9352) (0.995 0.8272) (0.996 0.741)
++(0.997 0.647)(0.998 0.514) (0.999 0.33) (1.0000 0.0) (1.1 -10)
+
+* Actual rate of discharge by external load.
+*  E.g. 0.2 means a full battery battery would last 5hours(=1/0.2).
+E_Rate N001 0 VALUE = { IF( (I(V_sense)>0 & V(Cell+,Cell-)>0), 
++ I(V_Sense)/CAPAH, CHEFF*I(V_Sense)/CAPAH ) }
+R2 N001 Rate_d 1
+C1 Rate_d 0 1
+
+* State of charge is actually just a 1 to 1 transform of "Charge"
+E_Rate1 Soc 0 TABLE { V(Charge) } = (-1,-1) (1,1)
+
+* Higher capacity for discharge current below 0.2*C
+E_LowRate LowRate 0 TABLE { V(Rate_d) } = (0,0) (0.001,0.15) (0.1,0.1) (0.2,0)
+R3 LowRate 0 1G
+G_LowRate 0 Charge VALUE = { IF( (I(V_sense)>0 & V(Cell+,Cell-))>0,
++ V(LowRate)*I(V_Sense), 0) }
+
+* Lower capacity for discharge current above  0.2*C
+E_LostRate LostRate 0 TABLE { V(Rate_d) } = (0.2,0.0) (1.0,0.1) (5,0.2)
+R5 LostRate 0 1G
+G_HighRate Charge 0 VALUE = { IF( I(V_sense)>0 & V(Cell+,Cell-)>0,
++ V(LostRate)*I(V_Sense), 0) }
+
+* The charge model
+* Overcharge and discharge clamped with diodes
+C_CellCapacity Charge 0 { 3600 * CAPAH }
+R1 Charge 0 1MEG
+V2 N003 0 0.993
+D1 Charge N003 DFULL
+D2 0 Charge DREV
+G_DisCharge Charge 0 VALUE = { IF( I(V_Sense)>0 ^ (V(Cell+,Cell-)<0),
++ I(V_Sense), I(V_Sense)*CHEFF) }
+
+* State of Discharge = 1-SOC
+E_Invert SODC 0 TABLE { V(Soc) } = (-1,2) (0,1) (1,0)
+R4 SODC 0 1G
+
+.model DFULL  D(Is=1e-6 N=0.02)
+.model DREV  D(Is=1e-8 N=0.02)
+.ends
+
+

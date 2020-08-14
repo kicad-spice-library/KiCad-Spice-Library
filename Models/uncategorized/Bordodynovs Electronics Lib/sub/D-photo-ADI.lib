@@ -1,0 +1,3036 @@
+********************************************************************************
+* http://www.analog.com/designtools/en/photodiode/
+********************************************************************************
+
+********************************************************************************
+* http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html
+********************************************************************************
+*
+* LICENSE AGREEMENT
+* 
+* IMPORTANT NOTICE. Read this Agreement carefully before downloading or using this spice model. BY DOWNLOADING OR USING THIS SPICE MODEL IN ANY WAY YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTAND AND AGREE TO THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THESE TERMS OR IF YOU DO NOT HAVE THE AUTHORITY DESCRIBED BELOW, DO NOT DOWNLOAD THIS SPICE MODEL, DO NOT USE THIS SPICE MODEL IN ANY WAY, AND PROMPTLY DELETE OR DESTROY ANY COPIES OF THIS SPICE MODEL IN YOUR POSSESSION
+* 
+* If You are entering into this Agreement on behalf of a company or other organization, You represent that You have the authority to bind it to this Agreement and commit funds on its behalf, and the terms "You" and "Your" will refer to that company or organization.
+* 
+* Analog Devices SPICE Model Library
+* 
+* Copyright 1995-2012 by Analog Devices, Inc.
+* 
+* The information in this SPICE Model is protected under United States copyright laws. ADI hereby grants You a nonexclusive, nontransferable license to use this SPICE Model as long as You abide by the terms of this Agreement.
+* 
+* You may not sell, loan, rent, lease, or license the SPICE Model, in whole, in part, or in modified form, to anyone outside Your company. You may modify this SPICE Model to suit Your specific applications, and You may make copies of this SPICE Model for use within Your company.
+* 
+* You may include copies of Analog Devices' SPICE models with any software you sell or distribute. However, you may not make changes to the redistributed copies of Analog Devices SPICE models other than to:
+* 
+*     1. Include comments.
+*     2. Change nomenclature so that it will run on Your company's software. No changes may be made that affect the performance or function of the model.
+* 
+* Analog Devices includes SPICE models in its library that have been developed by third parties. These models may not be redistributed.
+* 
+* This SPICE Model is provided AS IS, WHERE IS, AND WITH NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+* 
+* ADI'S LIABILITY FOR DAMAGES TO YOU FOR ANY CAUSE WHATSOEVER, REGARDLESS OF THE FORM OF ANY CLAIM OR ACTION, SHALL NOT EXCEED ONE HUNDRED US DOLLARS ($100.00 US). IN NO EVENT SHALL ADI BE LIABLE FOR ANY LOSS OF DATA, PROFITS OR USE OF THE SPICE MODEL, OR FOR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL OR OTHER INDIRECT DAMAGES ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE SPICE MODEL.
+* 
+* This Agreement shall be governed by and construed in accordance with the laws of the Commonwealth of Massachusetts, without regard to its choice of law provisions. The parties agree that the United Nations Convention on Contracts for the International Sale of Goods is hereby excluded in its entirety from this Agreement. The sole jurisdiction and venue for all actions related to the subject matter hereof shall be the state and federal courts located in Suffolk County, Massachusetts.
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPV10NF.cir
+********************************************************************************
+*
+* BPV10NF SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (8/2012) - PR - correct data and part number
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPV10NF           A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* BPV10NF from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 1.785k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=10p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPV22NF.cir
+********************************************************************************
+*
+* BPV22NF SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPV22NF           A   C   P  PARAMS: Spec=1.0 Sensy=0.6
+* 
+*
+* BPV22NF from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPV23F.cir
+********************************************************************************
+*
+* BPV23F SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPV23F            A   C   P  PARAMS: Spec=1.0 Sensy=0.6
+* 
+*
+* BPV23F from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 50k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=48p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPV23NF.cir
+********************************************************************************
+*
+* BPV23NF SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPV23NF           A   C   P  PARAMS: Spec=1.0 Sensy=0.6
+* 
+*
+* BPV23NF from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 50k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=48p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPW34.cir
+********************************************************************************
+*
+* BPW34 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPW34             A   C   P  PARAMS: Spec=1.0 Sensy=0.62
+* 
+*
+* BPW34 from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 14.3k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=72p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPW34FA.cir
+********************************************************************************
+*
+* BPW34FA SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPW34FA           A   C   P  PARAMS: Spec=1.0 Sensy=0.65
+* 
+*
+* BPW34FA from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 14.3k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=16 IBV=0.1n
++ CJO=72p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPW34FAS.cir
+********************************************************************************
+*
+* BPW34FAS SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPW34FAS          A   C   P  PARAMS: Spec=1.0 Sensy=0.65
+* 
+*
+* BPW34FAS from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 14.3k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=16 IBV=0.1n
++ CJO=72p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/BPW34FASR.cir
+********************************************************************************
+*
+* BPW34FASR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT BPW34FASR         A   C   P  PARAMS: Spec=1.0 Sensy=0.65
+* 
+*
+* BPW34FASR from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 14.3k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=16 IBV=0.1n
++ CJO=72p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/HSDL-5400.cir
+********************************************************************************
+*
+* HSDL-5400 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT HSDL_5400         A   C   P  PARAMS: Spec=1.0 Sensy=0.5
+* 
+*
+* HSDL-5400 from Lite-on
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 5.37k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=40 IBV=0.1n
++ CJO=5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/HSDL-5420.cir
+********************************************************************************
+*
+* HSDL-5420 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT HSDL_5420         A   C   P  PARAMS: Spec=1.0 Sensy=0.5
+* 
+*
+* HSDL-5420 from Lite-on
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 5.37k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=40 IBV=0.1n
++ CJO=5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/LTR-516AD.cir
+********************************************************************************
+*
+* LTR-516AD SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT LTR_516AD         A   C   P  PARAMS: Spec=1.0 Sensy=0.5
+* 
+*
+* LTR-516AD from Lite-on
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 35.7k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=30n RS=0.1 N=1.986196 BV=30 IBV=0.1n
++ CJO=25p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/OP906.cir
+********************************************************************************
+*
+* OP906 from Optek SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (9/2012) - PR - add Optek to first line
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT OP906             A   C   P  PARAMS: Spec=1.0 Sensy=0.5
+* 
+*
+* OP906 from Optek
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=4p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/OP950.cir
+********************************************************************************
+*
+* OP950 from Optek SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (9/2012) - PR - add Optek to first line
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT OP950             A   C   P  PARAMS: Spec=1.0 Sensy=0.5
+* 
+*
+* OP950 from Optek
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=4p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/OP999.cir
+********************************************************************************
+*
+* OP999 from Optek SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (9/2012) - PR - add Optek to first line
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT OP999             A   C   P  PARAMS: Spec=1.0 Sensy=0.5
+* 
+*
+* OP999 from Optek
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=4p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PD15-22B-TR8.cir
+********************************************************************************
+*
+* PD15-22B/TR8 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT PD15_22B_TR8    A   C   P PARAMS: Spec=1.0 Sensy=0.34
+* 
+*
+* PD15-22B/TR8 from Everlight
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 7.142k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=10n RS=0.1 N=1.986196 BV=32 IBV=0.1n
++ CJO=6p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PD15-22C-TR8.cir
+********************************************************************************
+*
+* PD15-22C/TR8 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT PD15_22C_TR8    A   C   P PARAMS: Spec=1.0 Sensy=0.34
+* 
+*
+* PD15-22C/TR8 from Everlight
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 7.142k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=10n RS=0.1 N=1.986196 BV=32 IBV=0.1n
++ CJO=6p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PD70-01B-TR7.cir
+********************************************************************************
+*
+* PD70-01B/TR7 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT PD70_01B_TR7    A   C   P PARAMS: Spec=1.0 Sensy=0.34
+* 
+*
+* PD70-01B/TR7 from Everlight
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 35.7k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5n RS=0.1 N=1.986196 BV=32 IBV=0.1n
++ CJO=25p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PD93-21C-TR8.cir
+********************************************************************************
+*
+* PD93-21C/TR8 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT PD93_21C_TR8   A   C   P PARAMS: Spec=1.0 Sensy=0.34
+* 
+*
+* PD93-21C/TR8 from Everlight
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 4.285k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=10n RS=0.1 N=1.986196 BV=32 IBV=0.1n
++ CJO=5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PD95-21B-TR10.cir
+********************************************************************************
+*
+* PD95-21B/TR10 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT PD95-21B/TR10   A   C   P PARAMS: Spec=1.0 Sensy=0.34
+* 
+*
+* PD95_21B_TR10 from Everlight
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 4.285k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=10n RS=0.1 N=1.986196 BV=32 IBV=0.1n
++ CJO=5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PDB-C134.cir
+********************************************************************************
+*
+* PDB-C134 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                  anode
+*                  |   cathode
+*                  |   |   light input as a voltage
+*                  |   |   |
+*                  |   |   |
+*                  |   |   |
+*                  |   |   |
+.SUBCKT PDB_C134   A   C   P  PARAMS: Spec=1.0 Sensy=0.54
+* 
+*
+* PDB-C134 from Advanced Photonix
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 7.142k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=6p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PDB-C134F.cir
+********************************************************************************
+*
+* PDB-C134F SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.3 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                   anode
+*                   |   cathode
+*                   |   |   light input as a voltage
+*                   |   |   |
+*                   |   |   |
+*                   |   |   |
+*                   |   |   |
+.SUBCKT PDB_C134F   A   C   P  PARAMS: Spec=1.0 Sensy=0.58
+* 
+*
+* PDB-C134F from Advanced Photonix
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 7.142k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=6p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PDB-C139.cir
+********************************************************************************
+*
+* PDB-C139 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                   anode
+*                   |   cathode
+*                   |   |   light input as a voltage
+*                   |   |   |
+*                   |   |   |
+*                   |   |   |
+*                   |   |   |
+.SUBCKT PDB_C139    A   C   P  PARAMS: Spec=1.0 Sensy=0.53
+* 
+*
+* PDB-C134F from Advanced Photonix
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 35.714k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=18p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PDB-C142.cir
+********************************************************************************
+*
+* PDB-C142 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                   anode
+*                   |   cathode
+*                   |   |   light input as a voltage
+*                   |   |   |
+*                   |   |   |
+*                   |   |   |
+*                   |   |   |
+.SUBCKT PDB_C142    A   C   P  PARAMS: Spec=1.0 Sensy=0.53
+* 
+*
+* PDB-C142 from Advanced Photonix
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 35.714k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5n RS=0.1 N=1.986196 BV=15 IBV=0.1n
++ CJO=18p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PDB-C152SM.cir
+********************************************************************************
+*
+* PDB-C152SM SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                     anode
+*                     |   cathode
+*                     |   |   light input as a voltage
+*                     |   |   |
+*                     |   |   |
+*                     |   |   |
+*                     |   |   |
+.SUBCKT PDB_C152SM    A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* PDB-C152SM from Advanced Photonix
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 35.714k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=10n RS=0.1 N=1.986196 BV=15 IBV=0.1n
++ CJO=2.5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/PDB-C156.cir
+********************************************************************************
+*
+* PDB-C156 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                  anode
+*                  |   cathode
+*                  |   |   light input as a voltage
+*                  |   |   |
+*                  |   |   |
+*                  |   |   |
+*                  |   |   |
+.SUBCKT PDB_C156   A   C   P  PARAMS: Spec=1.0 Sensy=0.54
+* 
+*
+* PDB-C156 from Advanced Photonix
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 10.714k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=30 IBV=0.1n
++ CJO=10p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-1010BQ.cir
+********************************************************************************
+*
+* S1227-1010BQ SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT S1227_1010BQ      A   C   P  PARAMS: Spec=1.0 Sensy=0.36
+* 
+*
+* S1227-1010BQ from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 5M
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=0.05n RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=3000p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-1010BR.cir
+********************************************************************************
+*
+* S1227-1010BR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT S1227_1010BR      A   C   P  PARAMS: Spec=1.0 Sensy=0.43
+* 
+*
+* S1227-1010BR from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 5M
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=0.05n RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=3000p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-16BQ.cir
+********************************************************************************
+*
+* S1227-16BQ SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT S1227_16BQ      A   C   P  PARAMS: Spec=1.0 Sensy=0.36
+* 
+*
+* S1227-16BQ from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 357k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5p RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=170p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-16BR.cir
+********************************************************************************
+*
+* S1227-16BR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                       anode
+*                       |   cathode
+*                       |   |   light input as a voltage
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+*                       |   |   |
+.SUBCKT S1227_16BR      A   C   P  PARAMS: Spec=1.0 Sensy=0.43
+* 
+*
+* S1227-16BR from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 357k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5p RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=170p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-33BQ.cir
+********************************************************************************
+*
+* S1227-33BQ SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT S1227_33BQ        A   C   P  PARAMS: Spec=1.0 Sensy=0.36
+* 
+*
+* S1227-33BQ from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 357k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5p RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=160p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-33BR.cir
+********************************************************************************
+*
+* S1227-33BR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT S1227_33BR        A   C   P  PARAMS: Spec=1.0 Sensy=0.43
+* 
+*
+* S1227-33BR from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 357k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=5p RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=160p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/S1227-66BQ.cir
+********************************************************************************
+*
+* S1227-66BQ SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT S1227_66BQ        A   C   P  PARAMS: Spec=1.0 Sensy=0.36
+* 
+*
+* S1227-66BQ from HAMAMATSU
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 1.428M
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=0.02n RS=0.1 N=1.986196 BV=5 IBV=0.1n
++ CJO=950p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-203-FA.cir
+********************************************************************************
+*
+* SFH_203_FA SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_203_FA        A   C   P  PARAMS: Spec=1.0 Sensy=0.59
+* 
+*
+* SFH_203_FA from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=11p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-205-F.cir
+********************************************************************************
+*
+* SFH_205_F SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_205_F         A   C   P  PARAMS: Spec=1.0 Sensy=0.59
+* 
+*
+* SFH_205_F from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 14.28k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=20 IBV=0.1n
++ CJO=72p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-206-K.cir
+********************************************************************************
+*
+* SFH_206_K SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (8/2012) - PR - add underscore to subcircuit name
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_206_K         A   C   P  PARAMS: Spec=1.0 Sensy=0.62
+* 
+*
+* SFH_206_K from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 14.3k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=32 IBV=0.1n
++ CJO=72p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-213.cir
+********************************************************************************
+*
+* SFH_213 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_213           A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* SFH 213 from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-229-FA.cir
+********************************************************************************
+*
+* SFH 229 FA SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_229_FA        A   C   P  PARAMS: Spec=1.0 Sensy=0.6
+* 
+*
+* SFH 229 FA from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 7.14k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=50p RS=0.1 N=1.986196 BV=20 IBV=0.1n
++ CJO=13p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-2400-FA-Z.cir
+********************************************************************************
+*
+* SFH_2400FA SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (8/2012) - PR - add underscore to subcircuit name
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_2400FA        A   C   P  PARAMS: Spec=1.0 Sensy=0.62
+* 
+*
+* SFH_2400FA from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=20 IBV=0.1n
++ CJO=5p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-2500-FA-Z.cir
+********************************************************************************
+*
+* SFH 2500 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_2500          A   C   P  PARAMS: Spec=1.0 Sensy=0.7
+* 
+*
+* SFH 2500 from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=0.1n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=11p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/SFH-2505-FA-Z.cir
+********************************************************************************
+*
+* SFH 2505 FA-Z SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* 1.4 (12/2012) - PR - replaced - with _ in model name.
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT SFH_2505_FA_Z     A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* SFH 2505 FA-Z from OSRAM
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 3.57k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=0.1n RS=0.1 N=1.986196 BV=50 IBV=0.1n
++ CJO=11p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD1000.cir
+********************************************************************************
+*
+* TEMD1000 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD1000          A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* TEMD1000 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 2.857k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=1.8p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD1020.cir
+********************************************************************************
+*
+* TEMD1020 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD1020          A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* TEMD1020 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 2.857k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=1.8p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD1030.cir
+********************************************************************************
+*
+* TEMD1030 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.1 (8/2012) - PR - correct part number
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD1030          A   C   P  PARAMS: Spec=1.0 Sensy=0.55
+* 
+*
+* TEMD1030 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 2.857k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=1n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=1.8p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD5010X01.cir
+********************************************************************************
+*
+* TEMD5010X01 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD5010X01       A   C   P  PARAMS: Spec=1.0 Sensy=0.73
+* 
+*
+* TEMD5010X01 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD5020X01.cir
+********************************************************************************
+*
+* TEMD5020X01 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD5020X01       A   C   P  PARAMS: Spec=1.0 Sensy=0.79
+* 
+*
+* TEMD5020X01 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 50k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=48p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD5110X01.cir
+********************************************************************************
+*
+* TEMD5110X01 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD5110X01       A   C   P  PARAMS: Spec=1.0 Sensy=0.73
+* 
+*
+* TEMD5110X01 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD5510FX01.cir
+********************************************************************************
+*
+* TEMD5510FX01 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD5510FX01      A   C   P  PARAMS: Spec=1.0 Sensy=0.346
+* 
+*
+* TEMD5510FX01 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 1.428M
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=16 IBV=0.1n
++ CJO=1600p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/TEMD6010FX01.cir
+********************************************************************************
+*
+* TEMD6010FX01 SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT TEMD6010FX01      A   C   P  PARAMS: Spec=1.0 Sensy=0.346
+* 
+*
+* TEMD6010FX01 from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 57.14k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=0.1n RS=0.1 N=1.986196 BV=16 IBV=0.1n
++ CJO=60p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/VBP104FAS.cir
+********************************************************************************
+*
+* VBP104FAS SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT VBP104FAS         A   C   P  PARAMS: Spec=1.0 Sensy=0.79
+* 
+*
+* VBP104FAS from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 50k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=48p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/VBP104FASR.cir
+********************************************************************************
+*
+* VBP104FASR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT VBP104FASR        A   C   P  PARAMS: Spec=1.0 Sensy=0.79
+* 
+*
+* VBP104FASR from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 50k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=48p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/VBPW34FAS.cir
+********************************************************************************
+*
+* VBPW34FAS SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT VBPW34FAS        A   C   P  PARAMS: Spec=1.0 Sensy=0.73
+* 
+*
+* VBPW34FAS from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/VBPW34FASR.cir
+********************************************************************************
+*
+* VBPW34FASR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT VBPW34FASR       A   C   P  PARAMS: Spec=1.0 Sensy=0.73
+* 
+*
+* VBPW34FASR from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/VBPW34S.cir
+********************************************************************************
+*
+* VBPW34S SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT VBPW34S           A   C   P  PARAMS: Spec=1.0 Sensy=0.79
+* 
+*
+* VBPW34S from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+
+********************************************************************************
+* http://www.analog.com/media/en/designtools/photodiode/models/VBPW34SR.cir
+********************************************************************************
+*
+* VBPW34SR SPICE Macro-model        
+* Description: Photodiode
+* Generic Desc: Silicon, PIN type
+* Developed by: P Rako
+* Revision History: 
+* 1.0 (8/2012) - PR - initial release
+* 1.2 (9/2012) - PR - put new line before +
+* Copyright 2012 by Analog Devices, Inc.
+*
+* Refer to http://www.analog.com/Analog_Root/static/techSupport/designTools/spiceModels/license/spice_general.html 
+* for License Statement. Use of this model indicates your acceptance
+* of the terms and provisions in the License Statement.
+* 
+*
+* BEGIN Notes:
+* 
+* Not Modeled:
+* Temperature effects
+* Noise
+* 
+* Parameters modeled include:  
+* Junction capacitance over reverse bias
+* Rise/fall time
+* Accepts external parameter for sensitivity (Sensy)
+* Accepts external parameter for light spectrum (Spec)
+* END Notes
+*
+* Node Assignments
+*                         anode
+*                         |   cathode
+*                         |   |   light input as a voltage
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+*                         |   |   |
+.SUBCKT VBPW34SR          A   C   P  PARAMS: Spec=1.0 Sensy=0.79
+* 
+*
+* VBPW34SR from Vishay
+* A = Anode
+* C = Cathode
+* P = (light)Power as a voltage input
+Rdummy P 0 1G
+Rswt P LP 71.43k
+Cswt LP 0 1p
+DPD A C PhotoDet
+GPD C A TABLE {V(LP)* Spec * Sensy} (0,0) (1,1)
+.MODEL PhotoDet D IS=2n RS=0.1 N=1.986196 BV=60 IBV=0.1n
++ CJO=70p VJ=0.455536 M=0.418717 TT=500n ISR=6p NR=100
+.ends
+

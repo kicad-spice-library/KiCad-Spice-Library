@@ -1,0 +1,39 @@
+*
+*	VACTROL			Date: 02/07/2004
+.subckt Led_Ldr A K Ldr1 Ldr2
+R2 Na 0 1
+B1 0 Na I=I(Dled)*1k
+Dled A K QTLP690C
+C1 Nb 0 1n
+G1 0 Nc Nb 0 Table=((0,1e-3) (0.003,1e-3) (0.01,5e-3) (0.02,14e-3) (0.04,33e-3) (0.1,1e-1 (0.3,0.25) (0.6,0.45e) (1.0,0.65) (1.5,0.85) (2.0,1) (4.0,1.5) (6.0,1.8) (8.0,1.95) (10,2))
+R3 Nc 0 1
+B2 Ldr1 Ldr2 I=1m*V(Nd)*V(Ldr1,Ldr2)
+C2 Ldr1 Ldr2 10p
+C3 Nd 0 10u
+R5 Na Nb 1k
+R1 Nc Nd 5k
+B3 Nc Nd I=sqrt(abs(V(Nb,Nd)))*V(Nb,Nd)*1m
+.model QTLP690C D(Is=1e-22 Rs=6 N=1.5 Cjo=50p Xti=100 Iave=160m Vpk=5 mfg=Fairchild type=LED)
+.ends
+*	Solinex NSL-32SR2	Date: Apr 4, 2011
+.subckt Nsl32Sr2 A K Ldr1 Ldr2
+R2 Na 0 1
+B1 0 Na I=I(Dled)*1k
+Dled A K QTLP690C
+C1 N1 0 1n
+R3 Nc 0 1
+B2 Ldr1 Ldr2 I=1m*V(Nd)*V(Ldr1,Ldr2)
+C2 Ldr1 Ldr2 10p
+C3 Nd 0 1µ
+R5 Na N1 1k
+R1 N2 Nd {Rf}
+B4 0 Nc I=log(V(Nb)+1)*6
+CjoD1 A K 50p
+Voff Nb N1 33.33µ
+D2 Nc N2 D
+R4 Nc Nd {Rb}
+.model D D(Is=3.5n N=1.9)
+.param Rf=10k
+.param Rb=1/(1/5k-1/Rf)
+.model QTLP690C D(Is=1e-22 Rs=6 N=1.5 Cjo=50p Xti=100 Iave=160m Vpk=5 mfg=Fairchild type=LED)
+.ends

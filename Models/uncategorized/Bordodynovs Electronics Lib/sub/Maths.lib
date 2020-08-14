@@ -1,0 +1,48 @@
+* Basic Maths behavioural macro functions - Tony Casey 2008
+.subckt sum 1 2 3
+B1 3 0 V={Gain}*(V(1)+V(2))
+.param Gain=1
+.ends sum
+*
+.subckt diff 1 2 3
+B1 3 0 V={Gain}*(V(1)-V(2))
+.param Gain=1
+.ends diff
+*
+.subckt mult 1 2 3
+B1 3 0 V=V(1)*V(2)
+.ends mult
+*
+.subckt div 1 2 3
+B1 3 0 V=V(1)/V(2)
+.ends div
+*
+.subckt hlimit 1 2
+*
+B1 2 0 V=limit({min},V(1),{max})
+.param min=-1 max=1
+.ends hlimit
+*
+.subckt Int 1 2
+B1 2 0 I=-2*pi*{F0}*V(1)
+C1 2 10 1 Rser=1e-99
+R1 2 0 {1/2/pi/Fp}
+R2 10 0 {1/2/pi/Fz}
+V1 In 0 AC 1
+.ic V(2)=0
+.param F0=1k Fp=F0/1e99 Fz=F0*1e99
+.ends Int
+*
+.subckt slimit 1 2
+B1 2 0 V={0.5*(max-min)}*tanh((V(1)-{0.5*(max+min)})/{0.5*(max-min)})+{0.5*(max+min)}
+.param max=1 min=-1
+.ends slimit
+*
+.subckt Deriv 1 2
+B1 0 2 I=V(1)/2e-9/pi/{F0}
+L1 2 0 1e-9 Rser={2*pi*Fz*1e-9}
+R1 2 0 {2e-9*pi*Fp}
+.param F0=1k Fp=F0*1e99 Fz=F0/1e99
+.ends Deriv
+*
+

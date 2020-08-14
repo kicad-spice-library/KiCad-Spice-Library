@@ -1,0 +1,469 @@
+* trafos.lib
+.subckt TrafoLin 1 2 3 4  
+LP 1 2 {LP} 
+LS 3 4 {LS}
+KT LP LS {KT}
+.ends TrafoLin
+*-----------------------------------------------------------------------------
+.SUBCKT TRAF150W 1 2 3 4 5 6 
+*
+L1 1 2 {L1}  Rser={R1}
+L2 3 4 {L2}  Rser={R2}
+L3 5 6 {L3}  Rser={R3}
+K123 L1 L2 L3 {K}
+*
+.ENDS TRAF150W
+*
+*
+*
+*Ideal transformers subcircuits.
+*Design by Christophe Basso
+*Adapted for LTSpice by Yuri Krivtsov
+*Last modified April 2008
+***************************************
+
+.SUBCKT XFMR1 1 2 3 4 PARAMS: {RATIO}=1
+RP 1 2 1MEG
+E1 5 4 1 2 {RATIO}
+F1 1 2 VM  {RATIO}
+RS 6 3 1U
+VM 5 6 
+.ENDS XFMR1
+
+.SUBCKT XFMR2 1 2 3 4 10 11 PARAMS: {RATIO1}=1 {RATIO2}=1
+RP 1 2 1MEG
+E1 5 4 1 2 {RATIO1}
+F1 1 2 VM1 {RATIO1}
+RS1 6 3 1U
+VM1 5 6
+E2 20 11 1 2 {RATIO2}
+F2 2 1 VM2 {RATIO2}
+RS2 21 10 1U
+VM2 20 21 
+.ENDS XFMR2
+
+.SUBCKT XFMR-TAP 1 2 3 4 5 PARAMS: {RATIOT}=1
+* RATIO is the ratio of the output voltage across each tap V(3,4) or V(4,5)
+* divided by the input voltage V(1,2). The voltage gain across each tap is
+* RATIO and the gain across both taps is 2*RATIO.
+E1 7 8 1 2 {RATIOT}
+F1 1 2 VM1 {RATIOT}
+RP 1 2 1MEG
+RS 6 3 1U
+VM1 7 6
+E2 9 5 1 2 {RATIOT} 
+F2 1 2 VM2 {RATIOT}
+R5 8 4 1U
+VM2 9 8
+.ENDS XFMR-TAP
+*
++-----------------------------------------------------------------------------
+.SUBCKT OPT 1 2 3 4 5 6 7 8 9  ; PARAMETERS FOR 500C:
++PARAMS: LPRIM=88 LLKG=0.005 RPRIM=240 CPRIM=0.99nF LRATIO={4/6600}
+
+* 500C: LPRIM=88 LLKG=.010 RPRIM=250 CPRIM=1.04NF LRATIO={4/6600}
+
+* LPRIM  IS THE TOTAL PRIMARY L (VARIES WITH MEASUREMENT).
+* LLKG   IS THE LEAKAGE L (MEASURABLE: CONSISTENT).
+* RPRIM  IS THE TOTAL PRIMARY R
+* CPRIM  IS THE MEASURED PRIMARY CAPACITANCE.
+* LRATIO IS THE INDUCTANCE RATIO: (4 OHMS)/(PRIMARY Z).
+
+.PARAM QFCTR={LPRIM/LLKG}  ; Q-FACTOR.
+CS1 1 5    {CPRIM}     ; PRIMARY CAPACITANCE
+RS1 1 5    300K        ; SHUNT R FOR HIGH FREQUENCY EFFECTS.
+LP1 1 12   {LPRIM*.09} ; PRIMARY
+RP1 12 2   {RPRIM*.5}
+LP2 2 3    {LPRIM*.04} 
+LP3 3 4    {LPRIM*.04}
+LP4 4 45   {LPRIM*.09}
+RP4 45 5   {RPRIM*.5}
+LP5 7 6    {.34315*LPRIM*LRATIO} ; 8-16  OHM WINDING: (2-SQRT(2))^2
+LP6 8 7    {.17157*LPRIM*LRATIO} ; 4-8   OHM WINDING: (SQRT(2)-1)^2
+LP7 9 8    {LPRIM*LRATIO}        ; COM-4 OHM WINDING
+KALL LP1 LP2 LP3 LP4 LP5 LP6 LP7 {1-1/(2*QFCTR)}  ; COUPLING
+.ENDS OPT
+*-----------------------------------------------------------------------------
+* Subcircuit for Parmeko mains transformer model 6000/71
+*
+* Primary 230/240V AC
+*
+* Secondary 318V AC @ 300mA DC
+*           6.3V AC @ 5A
+*
+* D.Munro - 10/4/97
+*
+* 10/04/97  Initial model
+*
+* 02/05/97  Model changed to take out leaked inductance/capacitance etc.
+*           Also "leak" resistors put in to stop error messages when windings
+*           were left unconnected.
+*
+*
+* Pin 1   Mains neutral
+*     2   Mains 230V tap
+*     3   Mains 240V tap
+*
+*     4,5 318V AC
+*     6,7 6.3V AC
+*
+.SUBCKT 6K71 1 2 3 4 5 6 7
+*
+* Primary
+*
+Rpri1   1       10      5.7
+Lpri1   10      2       5.1H
+Rpri2   2       11      0.5
+Lpri2   11      3       10mH
+Rleak1  0       1       1000MEG
+Rleak2  0       2       1000MEG
+Rleak3  0       3       1000MEG
+*
+* HV Secondary
+*
+Rsec1   4       20      18
+Lsec1   20      21      4.8H
+Rsec2   21      22      7.5
+Lsec2   22      5       1.17H
+Rleak4  0       4       1000MEG
+Rleak5  0       5       1000MEG
+*
+* Heater secondary
+*
+Rsec3   6       30      0.025
+Lsec3   30      31      1.09mH
+Rsec4   31      32      0.025
+Lsec4   32      7       1.09mH
+Rleak6  0       6       1000MEG
+Rleak7  0       7       1000MEG
+*
+* Coupling
+*
+K1      Lpri1 Lpri2 Lsec1 Lsec2 Lsec3 Lsec4 0.997
+.ENDS
+* Transformer Specified With Inductance Per Coil
+* "Primary" inductance    L1, series resistor R1
+* "Secondary" inductance  L2, series resistor R2
+* "Secondary" inductance  L3, series resistor R3
+* Coupling factor       K123 <=1
+* Ideal transformer voltage ratio = SQRT(L2/L1), SQRT(L3/L1)
+*------------------------------------------------------------------------------
+*
+* Trace Elliot Velocette 12R Mains Transformer
+* Part no. 73 TRAN 15W VG2
+*
+* [1] Brown ---. || .--- Purple		 [5]
+*              ) || (
+*        120V  ) || (  28V
+*              ) || .--- Purple          [6]
+* [2] Blue  ---. || .--- Red		 [7]
+*                || (
+* [3] Brown ---. || (
+*              ) || (  313V
+*        120V  ) || (
+*              ) || .--- Black           [8]
+* [4] Blue  ---. ||
+*		 || .--- Grey		 [9]
+*		 || (
+*		 || .--- Green	6.3V CT	 [10]
+*		 || (
+*		 || .--- Grey		 [11]
+*
+.SUBCKT tracevg2 1 2 3 4 5 6 7 8 9 10 11
+*
+* Primary
+*
+Lleak1  1       20      10mH
+Lpri1   20      21      120H
+Rpri1   21      2       13.0
+Lleak2  3       22      10mH
+Lpri2   22      23      120H
+Rpri2   23      4       11.7
+*
+* Secondary (28V off load)
+*
+Lsec28	5	25	6.5H
+Rsec28  25      6	2.6
+*
+* Secondary (313V off load)
+*
+Lsec313	7	26	816.4H
+Rsec313 26	8	75.5
+*
+* Secondary (7.3V off load, centre tapped)
+*
+Lsec73a	9	27	111mH
+Rsec73a 27	10	0.15
+Rsec73b	10	28	0.15
+Lsec73b	28	11	111mh
+Kcoup   Lpri1 LPri2 Lsec28 Lsec313 Lsec73a Lsec73b 1.0
+.ENDS 
+*---------------------------------------------------------------
+*
+* Trace Elliot 15W output transformer, 8k primary, 16/8 ohm sec.
+* Part no. 73 TRAN 15W OP
+*
+* [1] Red   ---. ||
+*              ) || .--- Green (16 ohm)  [4]
+*              ) || (
+*              ) || (
+* [2] White ---. || .--- Yellow (8 ohm)  [5]
+*              ) || (
+*              ) || (
+*              ) || .--- Brown           [6]
+* [3] Blue  ---. ||
+*
+.SUBCKT trace15 1 2 3 4 5 6
+*
+* Primary
+*
+Lleak1  1       20      2mH
+Lpri1   20      21      150H
+Rpri1   21      2       186
+Cpri1   1       2       120p
+Lleak2  2       22      2mH
+Lpri2   22      23      150H
+Rpri2   23      3       201
+Cpri2   2       3       120p
+*
+* Secondary
+*
+Lleak3  5       24	10uH
+Lsec1   24      25      0.6H
+Rsec1   25      6       0.8
+Lleak4  4	    27	10uH
+Lsec2	  27      28	0.3H
+Rsec2	  28	    5	      0.4
+
+Kcoup   Lpri1 LPri2 Lsec1 Lsec2 1.0
+.ENDS 
+*-------------------------------------------------------------------
+*
+* Trace Elliot 50W output transformer, part 73-TRAN-50WOP
+*
+* D.Munro 10/4/97
+*
+* Pin 1   anode'
+*     2   HT
+*     3   anode''
+*
+*     4,5 output 16 ohm
+*
+* Note that altough the transformer is tapped 4/8/16 ohms, only the
+* 16 ohm output is modelled.
+*
+.SUBCKT trace50 1 2 3 4 5
+L12	in1	in2	41.02m
+C1_1	in2	2	-797.5p
+Rdc1	in1	N61	60.55
+Lmag	in1	2	99.45
+Rcore	in1	2	2.458Meg
+Rac1	N61	1	63.93
+Lac1	N61	1	0.1083
+L23	in2	in3	78.28m
+C2_23	3	5	831.3p
+C3_23	3	N43	503.0p
+Efwd2	N82	3	in2	2	1.000
+Vsens2	N82	N42	
+Ffbk2	in2	2	Vsens2	1.000
+C1_2	N82	3	251.9p
+Rdc2	N42	N62	61.68
+Rac2	N62	2	62.58
+Lac2	N62	2	0.2074
+Efwd3	N83	5	in3	2	0.1352
+Vsens3	N83	N43	
+Ffbk3	in3	2	Vsens3	0.1352
+C1_3	N83	5	2.426p
+Rdc3	N43	N63	0.8561
+Rac3	N63	4	1.501
+Lac3	N63	4	694.1u
+.ENDS
+*---------------------------------------------------------------------
+.SUBCKT PAT-4006-CFB 1 2 3 4 5 6 7 8 9 10 11
+* PLITRON PAT-4006-CFB OUTPUT TRANSFORMER 2KOHM UL PRIMARY
+* OL NUMBERS CORRESPOND TO TRANSFORMER SCHEMATIC.
+.PARAM PRIML=392.5     ; TOTAL PRIMARY L (FROM SPECS).
+.PARAM LRATIO={5/2000} ; INDUCTANCE RATIO: (5 OHMS)/(PRIMARY).
+.PARAM QFCTR=400000     ; Q-FACTOR: PRIMARY SHUNT L/LEAKAGE L.
+LP1 1 2   {PRIML*.09}     ; PRIMARY
+LP2 2 3   {PRIML*.04}
+LP3 3 4   {PRIML*.04}
+LP4 4 5   {PRIML*.09}   
+CP1 1 5   .342NF      ; CAPACITANCE FROM SPECS
+LP5 8 7   {PRIML*LRATIO/4}  ; 1/2 SPEAKER SECONDARY
+LP6 7 6   {PRIML*LRATIO/4}  ; " "
+LP7 11 10 {PRIML*LRATIO}    ; 1/2 FBK WINDING
+LP8 10 9  {PRIML*LRATIO}    ; " "
+KALL LP1 LP2 LP3 LP4 LP5 LP6 LP7 LP8 .9999987 ; 1-1/(2*403600) AWESOME!
+.ENDS
+
+.SUBCKT DYNA_OUTPUT_XFRMR 1 2 3 4 5 6 7 8 9  ; PARAMETERS FOR MARK 3:
++PARAMS: LPRIM=60 LLKG=.040 RPRIM=125 CPRIM=1.04NF LRATIO={4/4300}
+
+* ERIC BARBOUR ARTICLE:  ~233H TOTAL PRIMARY L FOR MARK 3.
+* MARK 3: LPRIM=60 LLKG=.040 RPRIM=125 CPRIM=1.04NF LRATIO={4/4300}
+
+* LPRIM  IS THE TOTAL PRIMARY L (VARIES WITH MEASUREMENT).
+* LLKG   IS THE LEAKAGE L (MEASURABLE: CONSISTENT).
+* RPRIM  IS THE TOTAL PRIMARY R.
+* CPRIM  IS THE MEASURED PRIMARY CAPACITANCE.
+* LRATIO IS THE INDUCTANCE RATIO: (4 OHMS)/(PRIMARY Z).
+
+.PARAM QFCTR={LPRIM/LLKG}  ; Q-FACTOR.
+CS1 1 5    {CPRIM}     ; PRIMARY CAPACITANCE
+RS1 1 5    300K        ; SHUNT R FOR HIGH FREQUENCY EFFECTS.
+LP1 1 12   {LPRIM*.09} ; .7164H  ; PRIMARY
+RP1 12 2   {RPRIM*.5}
+LP2 2 3    {LPRIM*.04} ; .3184H
+LP3 3 4    {LPRIM*.04}
+LP4 4 45   {LPRIM*.09}
+RP4 45 5   {RPRIM*.5}
+LP5 7 6    {.34315*LPRIM*LRATIO} ; 8-16  OHM WINDING: (2-SQRT(2))^2
+LP6 8 7    {.17157*LPRIM*LRATIO} ; 4-8   OHM WINDING: (SQRT(2)-1)^2
+LP7 9 8    {LPRIM*LRATIO}        ; COM-4 OHM WINDING
+KALL LP1 LP2 LP3 LP4 LP5 LP6 LP7 {1-1/(2*QFCTR)}  ; COUPLING
+.ENDS
+**********************************************************************
+* This is the push pull output transformer file
+* for valve amplifiers.
+*
+* Americans please note that Raa (Resistance Anode to Anode) is equiverlent to
+* your Rpp (Resistance Plate to Plate)
+*
+* Formula taken from the electronics designers handbook 1957 4-10
+*
+* Raa = Rp1 + Rp2 + 4(Rl+Ro)(Np/Ns)^2
+*
+* Np  = Number of turns in one-half primary winding
+* Ns  = Number of turns in secondry winding
+* Rp1 = resistance of primary winding connected to V1
+* Rp2 = resistance of primary winding connected to V2
+* Rl  = resistance of load on the secondry winding
+* Ro  = resistance of secondry winding
+*
+* Neglecting transformer resistance we can simplify to
+*
+* Raa = 4Rl(Np/Ns)^2
+*
+* I have used simplified formulas, and chosen winding resistances that 
+* tie to the winding resistances of the push pull output transformers 
+* on the Sowter transformers website. These models have been tested with
+* large number of simulations of Ampeg, Gibson, Hiwatt, Marshall, Laney, 
+* Selmar and Kelly guitar amplifiers. 
+*
+* The output valves include the following combinations
+*
+* 1, 2 and 3 pairs of 6550A's (100, 200 and 300 Watts output)
+* 1 and 2 pairs of EL34's     (50, 70, 100 and 152 Watts output) 
+* 1 and 2 pairs of 7027A's    (50, 74, 100 and 158 Watts output)
+*
+* Netlist (c)2006 Suusi Malcolm-Brown feel free to copy and use for any reason
+* excepting spam 
+*
+* Feedback to Suusi Malcolm-Brown smalcolmbrown@yahoo.co.uk
+*
+**********************************************************************
+*
+*	16 and 8 ohm output
+*
+* This file is couples to pushpull.asy
+* 
+*   1   L1    2   L2    3
+*   |  _____  |  _____  |
+*   --|_____|---|_____|--
+*      
+*      _____     _____  
+*   --|_____|---|_____|--
+*   |         |         |
+*   4  L3     5   L4     6
+*
+.SUBCKT pushpull 1 2 3 4 5 6
+.param La = (Raa/(8*4))
+.param Lb = 1
+.Param Lc = 0.18
+.param Ra1 = Raa/50
+L1 1 2 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L2 2 3 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L3 4 5 {lb} Rser=0.22 Rpar=1Meg 
+L4 5 6 {Lc} Rser=0.08 Rpar=1Meg 
+K1 L1 L2 L3 L4 0.995
+.ENDS
+* 
+**********************************************************************
+*
+*	16 ohm output impedence
+*
+* This file is couples to pushpull_16.asy 
+*
+*   1   L1    2   L2    3
+*   |  _____  |  _____  |
+*   --|_____|---|_____|--
+*      
+*           _____    
+*        --|_____|--
+*        |         |
+*        4   L3    5
+*
+.SUBCKT pushpull_16 1 2 3 4 5
+.param La = (Raa/(16*4))
+.param Lb = 1
+.param Ra1 = Raa/50
+L1 1 2 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L2 2 3 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L3 4 5 {lb} Rser=0.22 Rpar=1Meg 
+K1 L1 L2 L3 0.995
+.ENDS
+* 
+**********************************************************************
+*
+*	8 ohm output impedence
+*
+* This file is couples to pushpull_8.asy
+*
+*   1   L1    2   L2    3
+*   |  _____  |  _____  |
+*   --|_____|---|_____|--
+*      
+*           _____    
+*        --|_____|--
+*        |         |
+*        4   L3    5
+*
+.SUBCKT pushpull_8 1 2 3 4 5
+.param La = (Raa/(8*4))
+.param Lb = 1
+.param Ra1 = Raa/50
+L1 1 2 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L2 2 3 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L3 4 5 {lb} Rser=0.22 Rpar=1Meg 
+K1 L1 L2 L3 0.995
+.ENDS
+*
+**********************************************************************
+* 
+*	A generic pushpull output transformer allowing the user 
+*   to define custom output impedenced.   
+*
+* This file is couples to pushpull_generic.asy
+*
+*
+*   1   L1    2   L2    3
+*   |  _____  |  _____  |
+*   --|_____|---|_____|--
+*      
+*           _____    
+*        --|_____|--
+*        |         |
+*        4   L3    5
+*
+.SUBCKT pushpull_A 1 2 3 4 5
+.param La = (Raa/(Rl*4))
+.param Lb = 1
+.param Ra1 = Raa/50
+L1 1 2 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L2 2 3 {La} Rser={Ra1} Rpar=1Meg Cpar=240p
+L3 4 5 {lb} Rser=0.22 Rpar=1Meg 
+K1 L1 L2 L3 0.995
+*
+**********************************************************************
+*

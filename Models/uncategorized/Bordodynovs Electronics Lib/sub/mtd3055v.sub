@@ -1,0 +1,475 @@
+*******************************************************************************
+*                                                                             *
+*                                                                             *
+*                                                                             *
+*        #############################################################        *
+*        #                                                           #        *
+*        #                         MTD3055V                          #        *
+*        #                                                           #        *
+*        #                 Motorola TMOS Power FET                   #        *
+*        #                        12 AMPERES                         #        *
+*        #                         60 VOLTS                          #        *
+*        #                    RDS(on) = .15 OHMS                     #        *
+*        #                     Package = TO220                       #        * 
+*        #                                                           #        *
+*        #               This model was developed by                 #        *
+*        #                      Analogy, Inc.                        #        *
+*        #                    9205 SW Gemini Dr.                     #        *
+*        #                   Beaverton, OR  97005                    #        *
+*        #               Copyright 1994 Analogy, Inc.                #        *
+*        #                  All Rights Reserved                      #        *
+*        #                                                           #        *
+*        #    The content of this model is subject to change         #        *
+*        #    without notice and may not be modified or altered      #        *
+*        #    without permission from Motorola, Inc.  This model     #        *
+*        #    has been carefully checked and is believed to be       #        *
+*        #    accurate, however neither Analogy nor Motorola         #        *
+*        #    assume liability for the use of this model or the      #        *
+*        #    results obtained from using it.                        #        *
+*        #                                                           #        *
+*        #    For more information regarding modeling services,      #        *
+*        #    model libraries or simulation products, please         #        *
+*        #    Analogy, Inc. (503) 626-9700.                          #        *
+*        #                                                           #        *
+*        #############################################################        *
+*                                                                             *
+*                                                                             *
+*                                                                             *
+*******************************************************************************
+* There are four simulation models provided on this disk for the MTD3055V 
+* power mosfet.  Three of the models are for use with SPICE based simulators 
+* and the fourth model is for use with the SABER(TM) simulator from Analogy.
+*
+* The three SPICE models have identical parameter values and model structure 
+* however the syntax is slightly modified in each model to support a variety 
+* of SPICE simulators. The SPICE model is based on the available elements 
+* in SPICE based electrical simulators and may have limited accuracy and 
+* convergence capabilities due to fundamental limitations in SPICE based 
+* simulators. Specifically, this model DOES NOT produce an accurate prediction 
+* of some non-linear capacitance effects, non-linear leakage characteristics, 
+* soft-knee breakdown, weak inversion characteristics, body diode forward and 
+* reverse recovery  mechanisms, and maximum device ratings.
+*
+* The SABER model is a more accurate model that includes all non-linear 
+* capacitances, non-linear leakage characteristics, soft-knee breakdown, weak 
+* inversion characteristics, body diode forward and reverse recovery mechanisms, 
+* and maximum stress ratings. The model is available for use with the SABER(tm) 
+* simulator from Analogy and is written in MAST(tm), an Analog Hardware 
+* Description Language (AHDL). The SABER model is well suited for power circuit 
+* simulation. 
+********************************************************************************
+*
+********************************************************************************
+*
+* The model for this device is a subcircuit and can be used in the one of the
+* following formats in any spice compatible simulator.
+*
+* This model file contains 3 subcircuits with correct syntax for SPICE2G.6, 
+* SPICE3C/D.X, HSPICE(tm) and PSPICE(tm). The user must call the proper subcircuit
+* in their netlist depending on the simulator they are using, e.g.:
+*
+* X<name> Nodes<N1, N2, N3> Model_Name
+*
+* where X<name> is the circuit specific name, Nodes<N1, N2, N3> are the
+* connection points for the device and Model_Name is the name of the model
+* provided in this model file.
+*
+* There are 3 nodes for this device.
+* The first is the Drain, the second is the Gate, and the third is the Source.
+* The Model_Name is: mtd3055vG for Berkley 2G.6 and compatible simulators.
+*                    mtd3055vD for Berkley 3C.X, 3D.X and HSPICE(tm) simulators.
+*                    mtd3055vP for Microsim PSPICE(tm) simulator. 
+* Example: X1 1 2 3 mtd3055vX
+* 
+******* BERKLEY 2G.6 AND COMPATIBLE SIMULATORS *****************************
+**************************  INSTANTIATION   **********************************
+.subckt mtd3055vG  10 20 30 
+*
+* 10 = Drain 20 = Gate 30 = Source
+*
+******************************************************************************
+*
+*------------------------ EXTERNAL PARASITICS --------------------------------
+* PACKAGE INDUCTANCE
+*
+LDRAIN  10  11  4.5e-09
+LGATE   20  21  7.5e-09
+LSOURCE 30  31  7.5e-09
+*
+* RESISTANCES
+* 
+RDRAIN1    4  11 0.05751 TC=0.01579,4.41418e-05
+RDRAIN2    4   5 1e-06 TC=0.01579,4.41418e-05 
+RSOURCE   31   6 0.038 TC=-0.006098,-7.82742e-06
+RDBODY     8  30 0.0166  TC=0.001077,-1.19455e-06
+*
+RGATE      21   2 5
+*
+*--------------------------------------------------------------------------
+*
+*--------------- CAPACITANCES AND BODY DIODE ------------------------------
+*
+DBODY       8  11 DBODY
+DGD         3  11 DGD
+CGDMAX      2   3 9e-10
+RGDMAX      2   3 1e+08
+CGS         2   6 3.824e-10 
+*
+*--------------------------------------------------------------------------
+*
+*----------------------- CORE MOSFET --------------------------------------
+*
+M1       5  2  6  6  MAIN
+*
+*--------------------------------------------------------------------------
+*
+.MODEL MAIN NMOS  ( 
++LEVEL   = 3
++VTO     = 3.387
++KP      = 4.42
++GAMMA   = 2
++PHI     = 0.6
++LAMBDA  = 0.001
++RD      = 0
++RS      = 0
++CBD     = 0
++CBS     = 0
++IS      = 1e-14
++PB      = 0.8
++CGSO    = 0
++CGDO    = 0
++CGBO    = 0
++RSH     = 0
++CJ      = 0
++MJ      = 0.5
++CJSW    = 0
++MJSW    = 0.33
++JS      = 1e-14
++TOX     = 1e-07
++NSUB    = 1e+15
++NSS     = 0
++NFS     = 3.5e+11
++TPG     = 1
++XJ      = 0
++LD      = 0
++UO      = 600
++UCRIT   = 10000
++UEXP    = 0
++UTRA    = 0
++VMAX    = 0
++NEFF    = 1
++KF      = 0
++AF      = 1
++FC      = 0.5
++DELTA   = 0
++THETA   = 0
++ETA     = 0
++KAPPA   = 0.2)
+*
+*--------------------------------------------------------------------------
+*
+.MODEL DGD D  ( 
++IS      = 1e-15
++RS      = 0
++N       = 1000
++TT      = 0
++CJO     = 3.902e-10
++VJ      = 0.1831
++M       = 0.6195
++EG      = 1.11
++XTI     = 3
++KF      = 0
++AF      = 1
++FC      = 0.5
++BV      = 10000
++IBV     = 0.001)
+*
+*--------------------------------------------------------------------------
+*
+.MODEL DBODY D  ( 
++IS      = 2.913e-13
++RS      = 0
++N       = 1.014
++TT      = 5e-08
++CJO     = 4.47e-10
++VJ      = 0.7897
++M       = 0.4506
++EG      = 1.11
++XTI     = 4
++KF      = 0
++AF      = 1
++FC      = 0.5
++BV      = 77.89
++IBV     = 0.00025)
+.ENDS
+***** BERKLEY 3C.X, 3D.X AND HSPICE(tm) SIMULATORS ***************************
+**************************  INSTANTIATION   **********************************
+.subckt mtd3055vC 10 20 30 
+*
+* 10 = Drain 20 = Gate 30 = Source
+*
+******************************************************************************
+*
+*------------------------ EXTERNAL PARASITICS --------------------------------
+* PACKAGE INDUCTANCE
+*
+LDRAIN  10  11  4.5e-09
+LGATE   20  21  7.5e-09
+LSOURCE 30  31  7.5e-09
+*
+* RESISTANCES
+*
+RDRAIN1    4  11 0.05751 RDRAIN
+RDRAIN2    4   5 1e-06 RDRAIN
+RSOURCE   31   6 0.038 RSOURCE 
+RDBODY     8  30 0.0166  RDBODY
+*
+RGATE      21   2 5
+*
+*--------------------------------------------------------------------------
+*
+*--------------- CAPACITANCES AND BODY DIODE ------------------------------
+*
+DBODY       8  11 DBODY
+DGD         3  11 DGD
+CGDMAX      2   3 9e-10
+RGDMAX      2   3 1e+08
+CGS         2   6 3.824e-10 
+*
+*--------------------------------------------------------------------------
+*
+*----------------------- CORE MOSFET --------------------------------------
+*
+M1       5  2  6  6  MAIN
+*
+*--------------------------------------------------------------------------
+*
+*.MODEL RDRAIN  R  (
+*+TC1     = 0.01579
+*+TC2     = 4.41418e-05)
+*
+*.MODEL RSOURCE  R  (
+*+TC1     = -0.006098
+*+TC2     = -7.82742e-06)
+*
+*.MODEL RDBODY  R  (
+*+TC1     = 0.001077
+*+TC2     = -1.19455e-06)
+*
+*
+.MODEL MAIN NMOS  ( 
++LEVEL   = 3
++VTO     = 3.387
++KP      = 4.42
++GAMMA   = 2
++PHI     = 0.6
++LAMBDA  = 0.001
++RD      = 0
++RS      = 0
++CBD     = 0
++CBS     = 0
++IS      = 1e-14
++PB      = 0.8
++CGSO    = 0
++CGDO    = 0
++CGBO    = 0
++RSH     = 0
++CJ      = 0
++MJ      = 0.5
++CJSW    = 0
++MJSW    = 0.33
++JS      = 1e-14
++TOX     = 1e-07
++NSUB    = 1e+15
++NSS     = 0
++NFS     = 3.5e+11
++TPG     = 1
++XJ      = 0
++LD      = 0
++UO      = 600
++UCRIT   = 10000
++UEXP    = 0
++UTRA    = 0
++VMAX    = 0
++NEFF    = 1
++KF      = 0
++AF      = 1
++FC      = 0.5
++DELTA   = 0
++THETA   = 0
++ETA     = 0
++KAPPA   = 0.2)
+*
+*--------------------------------------------------------------------------
+*
+.MODEL DGD D  ( 
++IS      = 1e-15
++RS      = 0
++N       = 1000
++TT      = 0
++CJO     = 3.902e-10
++VJ      = 0.1831
++M       = 0.6195
++EG      = 1.11
++XTI     = 3
++KF      = 0
++AF      = 1
++FC      = 0.5
++BV      = 10000
++IBV     = 0.001)
+*
+*--------------------------------------------------------------------------
+*
+.MODEL DBODY D  ( 
++IS      = 2.913e-13
++RS      = 0
++N       = 1.014
++TT      = 5e-08
++CJO     = 4.47e-10
++VJ      = 0.7897
++M       = 0.4506
++EG      = 1.11
++XTI     = 4
++KF      = 0
++AF      = 1
++FC      = 0.5
++BV      = 77.89
++IBV     = 0.00025)
+.ENDS
+***** MICROSIM PSPICE(tm) SIMULATORS *****************************************
+**************************  INSTANTIATION   **********************************
+.subckt mtd3055vP 10 20 30 
+*
+* 10 = Drain 20 = Gate 30 = Source
+*
+******************************************************************************
+*
+*------------------------ EXTERNAL PARASITICS --------------------------------
+* PACKAGE INDUCTANCE
+*
+LDRAIN  10  11  4.5e-09
+LGATE   20  21  7.5e-09
+LSOURCE 30  31  7.5e-09
+*
+* RESISTANCES
+*
+RDRAIN1    4  11 RDRAIN 0.05751
+RDRAIN2    4   5 RDRAIN 1e-06
+RSOURCE   31   6 RSOURCE 0.038  
+RDBODY     8  30 RDBODY  0.0166
+*
+RGATE      21   2 5
+*
+*--------------------------------------------------------------------------
+*
+*--------------- CAPACITANCES AND BODY DIODE ------------------------------
+*
+DBODY       8  11 DBODY
+DGD         3  11 DGD
+CGDMAX      2   3 9e-10
+RGDMAX      2   3 1e+08
+CGS         2   6 3.824e-10 
+*
+*--------------------------------------------------------------------------
+*
+*----------------------- CORE MOSFET --------------------------------------
+*
+M1       5  2  6  6  MAIN
+*
+*--------------------------------------------------------------------------
+*
+.MODEL RDRAIN RES  (
++TC1    = 0.01579
++TC2    = 4.41418e-05)
+*
+.MODEL RSOURCE RES  (
++TC1    = -0.006098
++TC2    = -7.82742e-06)
+*
+.MODEL RDBODY RES  (
++TC1    = 0.001077
++TC2    = -1.19455e-06)
+*
+*
+.MODEL MAIN NMOS  ( 
++LEVEL   = 3
++VTO     = 3.387
++KP      = 4.42
++GAMMA   = 2
++PHI     = 0.6
++LAMBDA  = 0.001
++RD      = 0
++RS      = 0
++CBD     = 0
++CBS     = 0
++IS      = 1e-14
++PB      = 0.8
++CGSO    = 0
++CGDO    = 0
++CGBO    = 0
++RSH     = 0
++CJ      = 0
++MJ      = 0.5
++CJSW    = 0
++MJSW    = 0.33
++JS      = 1e-14
++TOX     = 1e-07
++NSUB    = 1e+15
++NSS     = 0
++NFS     = 3.5e+11
++TPG     = 1
++XJ      = 0
++LD      = 0
++UO      = 600
++UCRIT   = 10000
++UEXP    = 0
++UTRA    = 0
++VMAX    = 0
++NEFF    = 1
++KF      = 0
++AF      = 1
++FC      = 0.5
++DELTA   = 0
++THETA   = 0
++ETA     = 0
++KAPPA   = 0.2)
+*
+*--------------------------------------------------------------------------
+*
+.MODEL DGD D  ( 
++IS      = 1e-15
++RS      = 0
++N       = 1000
++TT      = 0
++CJO     = 3.902e-10
++VJ      = 0.1831
++M       = 0.6195
++EG      = 1.11
++XTI     = 3
++KF      = 0
++AF      = 1
++FC      = 0.5
++BV      = 10000
++IBV     = 0.001)
+*
+*--------------------------------------------------------------------------
+*
+.MODEL DBODY D  ( 
++IS      = 2.913e-13
++RS      = 0
++N       = 1.014
++TT      = 5e-08
++CJO     = 4.47e-10
++VJ      = 0.7897
++M       = 0.4506
++EG      = 1.11
++XTI     = 4
++KF      = 0
++AF      = 1
++FC      = 0.5
++BV      = 77.89
++IBV     = 0.00025)
+.ENDS
+
+
+

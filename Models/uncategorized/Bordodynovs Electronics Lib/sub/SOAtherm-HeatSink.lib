@@ -1,0 +1,88 @@
+* Copyright (c) 2016 Linear Technology Corporation.  All rights reserved.
+* Author: Dan Eddleman
+*
+*SOAtherm Heat Sink Model
+***************************************************************
+
+.subckt copper Tc Tinterface Tfin 
+R_theta Tfin Ambient {Rtheta}
+V1 Ambient 0 {Tambient}
+R_interface Tinterface Tc {Rinterface}
+*O§HeatSink Tinterface 0 Tfin 0 Copper
+.param depth_mm={Volume_mm3/Area_Contact_mm2}
+.param r_per_mm={2.5/Area_Contact_mm2}
+.param c_per_mm={400*8.96e-6*Area_Contact_mm2}
+.param depth0=depth_mm/pow(2,10)
+.param depth1=depth0*2
+.param depth2=depth1*2
+.param depth3=depth2*2
+.param depth4=depth3*2
+.param depth5=depth4*2
+.param depth6=depth5*2
+.param depth7=depth6*2
+.param depth8=depth7*2
+.param depth9=depth8*2+depth0
+r0 Tinterface n0 {r_per_mm*depth0}
+c0 n0 0  {c_per_mm*depth0}
+r1 n0 n1 {r_per_mm*depth1}
+c1 n1 0  {c_per_mm*depth1}
+r2 n1 n2 {r_per_mm*depth2}
+c2 n2 0  {c_per_mm*depth2}
+r3 n2 n3 {r_per_mm*depth3}
+c3 n3 0  {c_per_mm*depth3}
+r4 n3 n4 {r_per_mm*depth4}
+c4 n4 0  {c_per_mm*depth4}
+r5 n4 n5 {r_per_mm*depth5}
+c5 n5 0  {c_per_mm*depth5}
+r6 n5 n6 {r_per_mm*depth6}
+c6 n6 0  {c_per_mm*depth6}
+r7 n6 n7 {r_per_mm*depth7}
+c7 n7 0  {c_per_mm*depth7}
+r8 n7 n8 {r_per_mm*depth8}
+c8 n8 0  {c_per_mm*depth8}
+r9 n8 Tfin {r_per_mm*depth9}
+c9 Tfin 0  {c_per_mm*depth9}
+
+.param Tambient=85 Depth_mm=10 Area_Contact_mm2=100 Rtheta=10 Rinterface={100/Area_Contact_mm2}
+.ends copper_test
+
+.subckt aluminum Tc Tinterface Tfin 
+R_theta Tfin Ambient {Rtheta}
+V1 Ambient 0 {Tambient}
+R_interface Tinterface Tc {Rinterface}
+.param depth_mm={Volume_mm3/Area_Contact_mm2}
+.param r_per_mm={1/(0.22*Area_Contact_mm2)}
+.param c_per_mm={896*2.7e-6*Area_Contact_mm2}
+.param depth0=depth_mm/pow(2,10)
+.param depth1=depth0*2
+.param depth2=depth1*2
+.param depth3=depth2*2
+.param depth4=depth3*2
+.param depth5=depth4*2
+.param depth6=depth5*2
+.param depth7=depth6*2
+.param depth8=depth7*2
+.param depth9=depth8*2+depth0
+r0 Tinterface n0 {r_per_mm*depth0}
+c0 n0 0  {c_per_mm*depth0}
+r1 n0 n1 {r_per_mm*depth1}
+c1 n1 0  {c_per_mm*depth1}
+r2 n1 n2 {r_per_mm*depth2}
+c2 n2 0  {c_per_mm*depth2}
+r3 n2 n3 {r_per_mm*depth3}
+c3 n3 0  {c_per_mm*depth3}
+r4 n3 n4 {r_per_mm*depth4}
+c4 n4 0  {c_per_mm*depth4}
+r5 n4 n5 {r_per_mm*depth5}
+c5 n5 0  {c_per_mm*depth5}
+r6 n5 n6 {r_per_mm*depth6}
+c6 n6 0  {c_per_mm*depth6}
+r7 n6 n7 {r_per_mm*depth7}
+c7 n7 0  {c_per_mm*depth7}
+r8 n7 n8 {r_per_mm*depth8}
+c8 n8 0  {c_per_mm*depth8}
+r9 n8 Tfin {r_per_mm*depth9}
+c9 Tfin 0  {c_per_mm*depth9}
+
+.param Tambient=85 Depth_mm=10 Area_Contact_mm2=100 Rtheta=10 Rinterface={100/Area_Contact_mm2}
+.ends aluminum

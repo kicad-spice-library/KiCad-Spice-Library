@@ -1,0 +1,122 @@
+* [Disclaimer] (C) Copyright Texas Instruments Incorporated 1999 All rights reserved
+* Texas Instruments Incorporated hereby grants the user of this SPICE Macro-model a
+* non-exclusive, nontransferable license to use this SPICE Macro-model under the following
+* terms. Before using this SPICE Macro-model, the user should read this license. If the
+* user does not accept these terms, the SPICE Macro-model should be returned to Texas
+* Instruments within 30 days. The user is granted this license only to use the SPICE
+* Macro-model and is not granted rights to sell, load, rent, lease or license the SPICE
+* Macro-model in whole or in part, or in modified form to anyone other than user. User may
+* modify the SPICE Macro-model to suit its specific applications but rights to derivative
+* works and such modifications shall belong to Texas Instruments. This SPICE Macro-model is
+* provided on an "AS IS" basis and Texas Instruments makes absolutely no warranty with
+* respect to the information contained herein. TEXAS INSTRUMENTS DISCLAIMS AND CUSTOMER
+* WAIVES ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY OR
+* FITNESS FOR A PARTICULAR PURPOSE. The entire risk as to quality and performance is with
+* the Customer. ACCORDINGLY, IN NO EVENT SHALL THE COMPANY BE LIABLE FOR ANY DAMAGES,
+* WHETHER IN CONTRACT OR TORT,INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL, CONSEQUENTIAL,
+* EXEMPLARY, OR PUNITIVE DAMAGES ARISING OUT OF THE USE OR APPLICATION OF THE SPICE
+* Macro-model provided in this package. Further, Texas Instruments reserves the right to
+* discontinue or make changes without notice to any product herein to improve reliability,
+* function, or design. Texas Instruments does not convey any license under patent rights or
+* any other intellectual property rights, including those of third parties.
+*
+* THS6012 DRIVER SUBCIRCUIT
+* HIGH SPEED, CURRENT FEEDBACK, OPERATIONAL AMPLIFIER
+* WRITTEN 12/10/99
+* TEMPLATE=X^@REFDES %IN+ %IN- %Vcc+ %Vcc- %OUT @MODEL
+* CONNECTIONS:      NON-INVERTING INPUT
+*                   | INVERTING INPUT
+*                   | | POSITIVE POWER SUPPLY
+*                   | | | NEGATIVE POWER SUPPLY
+*                   | | | | OUTPUT
+*                   | | | | |
+*                   | | | | |
+*                   | | | | |
+.SUBCKT THS6012     1 2 3 4 5
+*
+* INPUT *
+Q1	31 32 2 NPN_IN 0.25
+QD1	32 32 1 NPN_IN 0.25
+Q2	7 15 2 PNP_IN 0.5
+QD2	15 15 1 PNP_IN 0.5
+CIN    2 0 0.5p
+
+* INPUT PROTECTION *
+QP1   4 1 15 PNP 0.0625
+QP2   3 1 32 NPN 0.0625
+
+* SECOND STAGE *
+Q3	17 31 11 PNP 0.25
+Q4	16 7 13 NPN 0.125
+QD3	17 30 30 PNP 1.8
+QD4	30 30 16 NPN 1.8
+C1	30 0  2.3p
+F1	3 31 VF1 1
+VF1	33 34 0V
+F2	7 4 VF2 1
+VF2	35 6 0V
+F3	3 12 VF3 1
+VF3	34 11 0V
+F4	14 4 VF4 1
+VF4	13 35 0V
+
+* OUTPUT BUFFER *
+E1	18 0 17 0 1
+E2	19 0 16 0 1
+R1	14 18 25
+R2	19 12 25
+
+* OUTPUT *
+Q5	3 14 28 NPN 50
+Q6	4 12 29 PNP 50
+L3	28 10  40n
+R7	10 5  0.7
+L4	29 22  40n
+R6	22 5  0.7
+RC     5 55 12
+CO     55 0  16p
+
+* QUIESCENT CURRENT DRAW OVER TEMP *
+RB    3 4  Rt 8k
+
+* BIAS SOURCES *
+G1	3 32 3 4 1.6e-6
+G2	15 4 3 4 1.6e-6
+I1     3 32  DC 175e-6
+I2    15 4  DC 175e-6
+V1	3 33 0.83
+V2	6 4 0.83
+
+* TRANSISTOR MODELS *
+.MODEL NPN_IN NPN
++ IS=170E-18 BF=100 NF=1 VAF=100 IKF=0.0389 ISE=7.6E-18
++ NE=1.13489 BR=1.11868 NR=1 VAR=4.46837 IKR=8 ISC=8E-15
++ NC=1.8 RB=50 RE=0.1220 RC=50 CJE=120.2E-15 VJE=1.0888 MJE=0.381406
++ VJC=0.589703 MJC=0.265838 FC=0.1 CJC=133.8E-15 XTF=272.204 TF=12.13E-12
++ VTF=10 ITF=0.294 TR=3E-09 XTB=1 XTI=5 KF=2E-15
+
+.MODEL NPN NPN
++ IS=170E-18 BF=100 NF=1 VAF=100 IKF=0.0389 ISE=7.6E-18
++ NE=1.13489 BR=1.11868 NR=1 VAR=4.46837 IKR=8 ISC=8E-15
++ NC=1.8 RB=250 RE=0.1220 RC=200 CJE=120.2E-15 VJE=1.0888 MJE=0.381406
++ VJC=0.589703 MJC=0.265838 FC=0.1 CJC=133.8E-15 XTF=272.204 TF=12.13E-12
++ VTF=10 ITF=0.147 TR=3E-09 XTB=1 XTI=5
+
+.MODEL PNP_IN PNP
++ IS=296E-18 BF=100 NF=1 VAF=100 IKF=0.021 ISE=494E-18
++ NE=1.49168 BR=0.491925 NR=1 VAR=2.35634 IKR=8 ISC=8E-15
++ NC=1.8 RB=50 RE=0.1220 RC=50 CJE=120.2E-15 VJE=0.940007 MJE=0.55
++ VJC=0.588526 MJC=0.55 FC=0.1 CJC=133.8E-15 XTF=141.135 TF=12.13E-12
++ VTF=6.82756 ITF=0.267 TR=3E-09 XTB=1 XTI=5 KF=2E-15
+
+.MODEL PNP PNP
++ IS=296E-18 BF=100 NF=1 VAF=100 IKF=0.021 ISE=494E-18
++ NE=1.49168 BR=0.491925 NR=1 VAR=2.35634 IKR=8 ISC=8E-15
++ NC=1.8 RB=250 RE=0.1220 RC=200 CJE=120.2E-15 VJE=0.940007 MJE=0.55
++ VJC=0.588526 MJC=0.55 FC=0.1 CJC=133.8E-15 XTF=141.135 TF=12.13E-12
++ VTF=6.82756 ITF=0.267 TR=3E-09 XTB=1 XTI=5
+
+.MODEL Rt RES TC1=-0.005
+
+.ENDS
+*$

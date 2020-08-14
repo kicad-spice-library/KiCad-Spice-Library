@@ -1,0 +1,20 @@
+*** CFL.lib for  ***
+*
+* CFL.lib -- Library for GE 13W 120V 60Hz CFL (FLE13HT3/2/SW)
+
+.subckt CFL_ a b c d o
+.param a=8120 b=10m c=1.09 d=3G8 e=3 f=4.23 tau=1m Rf=4.2
+Ra a 1 {Rf/2} ; half of filament
+Rb b 1 {Rf/2} ; half of filament
+Rc c 2 {Rf/2} ; half of filament
+Rd d 2 {Rf/2} ; half of filament
+R1 1 3 R=limit(1,1G, a/(V(p)+b)**c-1 + I(V1)**2*d/(V(p)+e)**f )*10
+C1 1 3 2p ; stray capacitance also aids convergence
+V1 3 2 0 ; current sense
+Bp 0 p I=V(1,2)*I(V1)*5 ; power in arc through tube
+Cp 0 p {tau} ic=0 Rpar=1 ; gas ionization time constant
+Bf 0 o I=(V(a,1)**2+V(1,b)**2+V(c,2)**2+V(2,d)**2)/Rf/2 NoJacob
+Bo 0 o I=I(R1)*V(1,3) NoJacob
+Co 0 o 0m5 Rpar=1
+.ends CFL_
+

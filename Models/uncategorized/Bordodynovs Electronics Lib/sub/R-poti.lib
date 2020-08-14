@@ -1,0 +1,154 @@
+* IEC 60393-1:2008/JIS C 5260-1:2014 Potentiometers
+; * rotary potentiometer (pot)
+; * slide potentiometer (fader)
+; * pre-set potentiometer (trimmer) 
+; 
+;      c/3
+;       |   W
+;   CW |/| 1.0
+;      |\|<--- b/2
+;    * |/| 0.0
+;       |
+;      a/1
+; 
+; Resistance law (taper) and code letter:
+; * linear law (lin):
+;   - linear curve: 0B
+;   - S-shaped curve:
+;     + piecewise-linear (PWL): 1B/2B/3B
+;     + mirrored symmetrical exponential curve: 4B/5B
+; * logarithmic law (log) for (logarithmic) levels:
+;   - exponential curve:
+;     + clockwise (CW/pos(itive)/right-handed): 10A/15A
+;     + anti/counter-clockwise (CCW/neg(ative)/left-handed/reverse/inverse/anti-): 10C/15C
+; * sine/cosine law (sin/cos):
+;   - power of sine/cosine curve
+; 
+; Parameters:
+; * W:     travel/moving contact (wiper) position
+;   - 0.0    a/1/CCW/left/-/0%/0-position/dot
+;   - 0.5    mid-travel/center/50% (default)
+;   - 1.0    c/3/CW/right/+/100%
+; * R:     nominal total resistance
+;   - 100k   between a/1 and c/3
+; * Rmin:  residual/terminal/minimum resistance
+;   - 1p     close to ideal 0
+;   - 1      (default)
+; * B:     slope for linear/(3-)piecewise-linear
+;   - 0      ideal linear (default)
+;   - 1      JIS S-curve approximation (tone)
+;   - 3      JIS S-curve approximation (volume)
+; * L:     mid-travel/center voltage ratio for log law (with S=1.0)
+;   - 0.10   MIL/-20dB/10% (default)
+;   - 0.15   JIS/audio/15%
+; * S:     symmetry of S-curve for log law
+;   - 0.0    anti/counter-clockwise reverse logarithmic (upper part only)
+;   - 0.5    symmetric S-shaped curve
+;   - 1.0    clockwise logarithmic (lower part only/default)
+; * PWL:   number of piecewise-linear breakpoints for log law
+;   - 0      continuous (default)
+;   - 1      breakpoint at 2/3 travel
+;   - 2      breakpoints at 1/3 and 2/3 travel
+; * dB:    mid-travel/center voltage ratio in dB for log law
+;   - -20    MIL/10% (default)
+; * dB:    mid-travel/center voltage ratio in dB for sin/cos law
+;   - -3     stereo compatible pan pot (default)
+;   - -4.5   mono/stereo compromise pan pot
+;   - -6     mono compatible pan pot (sin**2)
+
+; global default value for parameter
+.param potentiometer.Rmin = 1
+
+; idealized linear law (default: 0B)
+; piecewise-linear approximated JIS S-curve with 2 breakpoints
+.subckt lin a b c R=R W=0.50 Rmin=potentiometer.Rmin B=0
++  travel = limit(W, 0, 1)                                 ; CW wiper position
+.param midslope = (102*travel-7*B) / (102-14*B)            ; S-curve middle segment 
+.param ratio    = limit(midslope, travel/5, (travel+4)/5)  ; first/last segments fit mid of log 5B
+Xlin0B a b c lin0B R=R ratio=ratio Rmin=Rmin
+.ends lin
+
+; idealized logarithmic law (default: 10A)
+; (symmetric/reverse) exponential curve (optionally PWL approximated)
+.subckt log a b c R=R W=0.50 Rmin=potentiometer.Rmin S=1.00 dB=-20 L=10**(dB/20) PWL=0
++  travel = limit(W, 0, 1)     ; CW wiper position
+.param a = (1 - 1/L)**2        ; exp curve fitting parameter
+.func loglaw(x)                ; CW logarithmic law
++  if(L == 0.5, x,             ; ideal linear
++  if(L <= 0.0, 0,             ; "mute"
++  if(L >= 1.0, 1,             ; "bypass"
++  (a**x - 1) / (a - 1)        ; else exponential function
++  )))
+.param brkpnt = loglaw(1/3)    ; value at first PWL breakpoint
+.func PWLlog(x)                ; select PWL by number of breakpoints
++  if(PWL == 1, table(x, 0, 0,              2/3, L*4/3,      1, 1),
++  if(PWL == 2, table(x, 0, 0, 1/3, brkpnt, 2/3, L*2-brkpnt, 1, 1),
++  loglaw(x)                   ; else no breakpoints
++  ))
+.param ratio =                 ; ratio of voltage divider
++  if(travel > S | S == 0,     ; S-curve change-over:
++    1-(1-S)*PWLlog((1-travel)/(1-S)), ; upper part (CCW/reverse)
++         S *PWLlog(   travel /   S )) ; lower part (CW)
+Xlin0B a b c lin0B R=R ratio=ratio Rmin=Rmin
+.ends log
+
+; CW sine law (default: -3dB/stereo pan pot L)
+.subckt sin a b c R=R W=0.50 Rmin=potentiometer.Rmin dB=-3
++  travel = limit(W, 0, 1)     ; CW/L wiper position
+.param s = dB/-3               ; sin curve fitting exponent
+.param ratio =                 ; CW sine law
++  if(s >= 1/0, 0,             ; "mute"
++  if(s <=   0, 1,             ; "bypass"
++  sin(travel*pi/2)**s         ; else power of sine
++  ))
+Xlin0B a b c lin0B R=R ratio=ratio Rmin=Rmin
+.ends sin
+
+; CCW cosine law (default: -3dB/stereo pan pot R)
+.subckt cos a b c R=R W=0.50 Rmin=potentiometer.Rmin dB=-3
++  travel = 1-limit(W, 0, 1)   ; CCW/R wiper position
+Xsin a b c sin R=R travel=travel Rmin=Rmin dB=dB
+.ends cos
+
+; ideal linear law 0B (MIL A)
+.subckt lin0B a b c R=R W=0.50 Rmin=potentiometer.Rmin
++  ratio = limit(W, 0, 1)      ; travel (wiper position)
+.param Rab = Rmin + ratio * (R - 2*Rmin)
+Rab a b {Rab}
+Rbc b c {R-Rab}
+.ends lin0B
+
+; CW linear law 3B (PWL approximated JIS S-curve)
+.subckt lin3B a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlin a b c lin R=R W=W Rmin=Rmin B=3
+.ends lin3B
+
+; CW linear law 4B (JIS symmetric log S-curve)
+.subckt lin4B a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlog a b c log R=R W=W Rmin=Rmin S=0.50 L=0.15
+.ends lin4B
+
+; CW linear law 5B (JIS symmetric log S-curve)
+.subckt lin5B a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlog a b c log R=R W=W Rmin=Rmin S=0.50 L=0.10
+.ends lin5B
+
+; CW logarithmic law 10A (MIL C)
+.subckt log10A a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlog a b c log R=R W=W Rmin=Rmin S=1.00 L=0.10
+.ends log10A
+
+; CCW reverse logarithmic law 10C (MIL F)
+.subckt log10C a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlog a b c log R=R W=W Rmin=Rmin S=0.00 L=0.10
+.ends log10C
+
+; CW logarithmic law 15A (audio)
+.subckt log15A a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlog a b c log R=R W=W Rmin=Rmin S=0.90 L=0.13062976920086110612
+.ends log15A
+
+; CCW reverse logarithmic law 15C (reverse audio)
+.subckt log15C a b c R=R W=0.50 Rmin=potentiometer.Rmin
+Xlog a b c log R=R W=W Rmin=Rmin S=0.10 L=0.13062976920086110612
+.ends log15C

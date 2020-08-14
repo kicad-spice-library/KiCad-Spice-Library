@@ -1,0 +1,9 @@
+*FUSE:Fuse Subcircuit Parameters
+*CURRENT    = Fuse current
+*RESISTANCE = Inernal resistance
+
+.SUBCKT FUSE 1 2 PARAMS: CURRENT=1 RESISTANCE=1m
+SW1 1 2 3 0 SMOD OFF
+BNLV 3 0 V=(abs(v(1,2)))
+.MODEL SMOD SW (VT={(CURRENT*RESISTANCE)} RON=1g ROFF={RESISTANCE})
+.ENDS FUSE

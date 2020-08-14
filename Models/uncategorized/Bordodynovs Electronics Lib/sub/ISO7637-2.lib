@@ -1,0 +1,148 @@
+* Copyright (c) 2017 Linear Technology Corporation.  All rights reserved.
+* Author: Dan Eddleman
+*
+* Automotive Transient Models (ISO-7637-2)
+***************************************************************
+
+.subckt Pulse1_12V + -
+.param  Ua = 13.5
+.param  Us = -150
+.param  Ri = 10
+.param  td = 2m
+.param  tr = 1u
+.param  t1 = 0.5
+.param  t2  = 200m
+.param  t3 = 50us
+.param  t0 = 1m
+R2 + - {Ri}
+I1 - + EXP(0 {Us/Ri} {t0+t3} {tr/2.2} {t0+t3+(5*tr)} {td/2.305} {t1})
+I2 - + PULSE({Ua/Ri} 0 {t0} 1u 1u {t2} {t1})
+.ends Pulse1_12V
+
+.subckt Pulse1_24V + -
+.param  Ua = 27
+.param  Us = -600
+.param  Ri = 50
+.param  td = 1m
+.param  tr = 3u
+.param  t1 = 0.5
+.param  t2  = 200m
+.param  t3 = 50us
+.param  t0 = 1m
+R2 + - {Ri}
+I1 - + EXP(0 {Us/Ri} {t0+t3} {tr/2.2} {t0+t3+(5*tr)} {td/2.305} {t1})
+I2 - + PULSE({Ua/Ri} 0 {t0} 1u 1u {t2} {t1})
+.ends Pulse1_24V
+
+.subckt Pulse2a_12V + -
+.param Ua = 13.5
+.param Us = 112
+.param Ri = 2
+.param td = 50u
+.param tr = 1u
+.param t1 = 0.2
+.param t0 = 1m
+R1 + - {Ri}
+I3 - + EXP({Ua/Ri} {(Ua+Us)/Ri} {t0} {tr/2.2} {t0+(2*tr)} {td/2.305} {t1})
+.ends Pulse2a_12V
+
+
+.subckt Pulse2a_24V + -
+.param Ua = 27
+.param Us = 112
+.param Ri = 2
+.param td = 50u
+.param tr = 1u
+.param t1 = 0.2
+.param t0 = 1m
+R1 + - {Ri}
+I3 - + EXP({Ua/Ri} {(Ua+Us)/Ri} {t0} {tr/2.2} {t0+(2*tr)} {td/2.305} {t1})
+.ends Pulse2a_24V
+
+.subckt Pulse2b_12V + -
+.param Ua = 13.5
+.param Us = 10
+.param Ri = 0.05
+.param td = 0.2
+.param tr = 1m
+.param t12 = 1m
+.param t6=1m
+.param t0 = 1m
+.param ton=1
+.param trep = 5
+R1 + - {Ri}
+I3 - + EXP(0 {Us/Ri} {t0+t12+t6} {tr/2.2} {t0+t12+(2*tr)} {td/2.305} {trep})
+I1 - + PULSE({Ua/Ri} 0 {t0} {t12} {t12} {trep-ton} {trep})
+.ends Pulse2b_12V
+
+.subckt Pulse2b_24V + -
+.param Ua = 27
+.param Us = 20
+.param Ri = 0.05
+.param td = 0.2
+.param tr = 1m
+.param t12 = 1m
+.param t6=1m
+.param t0 = 1m
+.param ton=1
+.param trep = 5
+R1 + - {Ri}
+I3 - + EXP(0 {Us/Ri} {t0+t12+t6} {tr/2.2} {t0+t12+(2*tr)} {td/2.305} {trep})
+I1 - + PULSE({Ua/Ri} 0 {t0} {t12} {t12} {trep-ton} {trep})
+.ends Pulse2b_24V
+
+.subckt Pulse3a_12V + -
+.param  Ua = 13.5V
+.param  Us = -220V
+.param  Ri = 50
+.param  td = 150ns
+.param  tr = 5ns
+.param  t1 = 100u
+.param  t4 = 10ms
+.param  t5 = 90ms
+.param  t0 =  1ms
+R2 + - {Ri}
+I1 - + EXP({Ua/Ri} {(Us+Ua)/Ri} {t0} {tr/2.2} {t0+(2*tr)} {td/2.305} {t1} {t4/t1} {(t4+t5)})
+.ends Pulse3a_12V
+
+.subckt Pulse3a_24V + -
+.param  Ua = 27V
+.param  Us = -300V
+.param  Ri = 50
+.param  td = 150ns
+.param  tr = 5ns
+.param  t1 = 100u
+.param  t4 = 10ms
+.param  t5 = 90ms
+.param  t0 =  1ms
+R2 + - {Ri}
+I1 - + EXP({Ua/Ri} {(Us+Ua)/Ri} {t0} {tr/2.2} {t0+(2*tr)} {td/2.305} {t1} {t4/t1} {(t4+t5)})
+.ends Pulse3a_24V
+
+.subckt Pulse3b_12V + -
+.param  Ua = 13.5
+.param  Us = 150
+.param  Ri = 50
+.param  td = 150n
+.param  tr = 5n
+.param  t1 = 100u
+.param  t4 = 10m
+.param  t5 = 90m
+.param  t0 =  1m
+R1 + - {Ri}
+I2 - + EXP({Ua/Ri} {(Us+Ua)/Ri} {t0} {tr/2.2} {t0+(2*tr)} {td/2.305} {t1} {t4/t1} {(t4+t5)})
+.ends Pulse3b_12V
+
+.subckt Pulse3b_24V + -
+.param  Ua = 27
+.param  Us = 300
+.param  Ri = 50
+.param  td = 150n
+.param  tr = 5n
+.param  t1 = 100u
+.param  t4 = 10m
+.param  t5 = 90m
+.param  t0 =  1m
+R1 + - {Ri}
+I2 - + EXP({Ua/Ri} {(Us+Ua)/Ri} {t0} {tr/2.2} {t0+(2*tr)} {td/2.305} {t1} {t4/t1} {(t4+t5)})
+.ends Pulse3b_24V

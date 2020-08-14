@@ -1,0 +1,28 @@
+.subckt BP5131D D GND_ CS
+m:1 d n002 cs cs MOP
+su11 n002 n001 u1:n002 n002 u1:q 
+su12 gnd_ n002 n002 u1:n002 u1:q 
+au11 cs n003 0 0 0 0 u1:n002 0 ota g=0.001 ref=0 iout=0.000159154943091895 cout=1.59154943091895e-009 en=0 enk=0 in=0 ink=0 vhigh=1e308 vlow=-1e308
+cu13 n002 gnd_ 1p
+cu14 n001 n002 1p
+ru12 u1:n002 gnd_ 200000000 noiseless
+ru11 n001 u1:n002 200000000 noiseless
+ru13 n001 n003 1000000000 noiseless
+ru14 n001 cs 1000000000 noiseless
+ru15 cs gnd_ 1000000000 noiseless
+ru16 n003 gnd_ 1000000000 noiseless
+gu11 0 u1:n002 gnd_ u1:n002 table(0 0 10 0.000318309886183791)
+gu12 u1:n002 0 u1:n002 n001 table(0 0 10 0.000318309886183791)
+su21 n001 d gnd_ u2:30 u2:reg 
+ru2 n001 u2:30 1k
+ru2x gnd_ n001 1gig
+cu2 u2:30 gnd_ 1e-009 
+du31 n003 gnd_ u3:myd 
+du32 gnd_ n003 u3:dp 
+r:1 n001 n003 1meg
+.model MOP vdmos vto=3 kp=1 rd=4 rg=1k cgdmax=6.38e-10 cgdmin=5.00p cjo=2.26e-11 is=9e-14 rb=0.1 tt=3u cgs=1.93e-10 BV=500 nbv=10 ibv=10u ksubthres=0.1
+.model u3:dp d(ron=1 roff=1g vfwd=0.6)
+.model u3:myd d(ron=10 roff=1260000 vfwd=0.5995)
+.model u2:reg sw level=2 vt=-9 vh=-4m ron=1 roff=1g ilimit=0.0001 vser=0.5 
+.model u1:q sw(ron=10 roff=10meg vt=0 vh=-.1 vser=0 ilimit=0.0025 noiseless)
+.ends BP5131D

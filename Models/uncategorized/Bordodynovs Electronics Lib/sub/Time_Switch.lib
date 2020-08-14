@@ -1,0 +1,12 @@
+* Time controlled switch Jim Meech FEB 2006
+* parameter TURN_ON controls the time that the switch is turned on at.
+* parameter TURN_OFF controls the time that the switch is turned off at.
+.SUBCKT TCS 1 2 3 4
+B1 N001 0 V=IF(TIME<{TURN_ON},0,IF(TIME<{TURN_OFF},1,0))
+S1 1 2 N001 0 SWNO
+S3 3 4 N001 0 SWNC
+.PARAM TURN_ON =1
+.PARAM TURN_OFF =2
+.model SWNC SW(Ron=1000000MEG Roff=0.001 Vt=0.5 Lser=10n )
+.model SWNO SW(Ron=.001 Roff=1000000Meg Vt=0.5 Lser=10n )
+.ends TCS

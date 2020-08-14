@@ -1,0 +1,103 @@
+* OPA2604
+*****************************************************************************
+* (C) Copyright 2011 Texas Instruments Incorporated. All rights reserved.                                            
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: Analog eLab Design Center, Texas Instruments Inc.
+* Part: OPA2604
+* Date: 01JUL2011
+* Model Type: ALL IN ONE
+* Simulator: PSPICE
+* Simulator Version: 16.0.0.p001
+* EVM Order Number: N/A
+* EVM Users Guide: N/A
+* Datasheet: SBOS006
+*
+* Model Version: 1.0
+* Updates:
+*
+* Version 1.0 : 
+* Release to Web
+*
+*****************************************************************************
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OUTPUT
+*                | | | | |
+.SUBCKT OPA2604 1 2 3 4 5
+C1   11 12 22.85E-12
+C2    6  7 32.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 POLY(2) (3,0) (4,0) 0 .5 .5
+FB    7 99 POLY(5) VB VC VE VLP VLN 0 418.4E3 -40E3 40E3 40E3 -40E3
+GA    6  0 11 12 2.011E-3
+GCM   0  6 10 99 20.11E-9
+ISS   3 10 DC 800.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 10 JX
+J2   12  64 10 JX
+G11 2 4 POLY(4) (10,2) (11,2) (4,2) (66,0) 0 1E-12 1E-12 1E-12 6E-6
+G21 1 4 POLY(4) (10,1) (12,1) (4,1) (68,0) 0 1E-12 1E-12 1E-12 6E-6
+R2    6  9 100.0E3
+RD1   4 11 497.4
+RD2   4 12 497.4
+RO1   8  5 25
+RO2   7 99 75
+*  RP    3  4 6.294E3
+RSS  10 99 250.0E3
+VB    9  0 DC 0
+VC    3 53 DC 3
+VE   54  4 DC 3
+VLIM  7  8 DC 0
+VLP  91  0 DC 50
+VLN   0 92 DC 50
+* OUTPUT SUPPLY MIRROR
+FQ3   0 20 POLY(1) VLIM 0  1
+DQ1  20 21 DX
+DQ2  22 20 DX
+VQ1  21  0 0
+VQ2  22  0 0
+FQ1   3  0 POLY(1) VQ1  3.45E-3  1
+FQ2   0  4 POLY(1) VQ2  3.45E-3 -1
+* QUIESCIENT CURRENT
+RQ    3  4  6.0E4
+* DIFF INPUT CAPACITANCE
+CDIF  1  2  8.0E-12
+* COMMON MODE INPUT CAPACITANCE
+C1CM  1  99 5.0E-12
+C2CM  2  99 5.0E-12
+* INPUT VOLTAGE NOISE
+VN1 61 0  0.6
+VN2 0  62 0.6
+DN1 61 63 DY
+DN2 63 62 DY
+EN 64 1  63 0 1
+* INPUT CURRENT NOISE
+RN1 0 65 60.3865
+RN2 65 66 60.3865
+RN3 66 0 120.773
+RN4 0 67 60.3865
+RN5 67 68 60.3865
+RN6 68 0 120.773
+.MODEL DY D(IS=133.62E-18 AF=1 KF=11.726E-18)
+.MODEL DX D(IS=800.0E-18)
+.MODEL JX PJF(IS=12.50E-12 BETA=2.528E-3 VTO=-1)
+.ENDS

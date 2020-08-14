@@ -1,0 +1,460 @@
+* HEF4000.lib
+* Transistor output in the model.
+*
+* Developer Bordodynov Alexander
+*
+* M - number of parallel gates
+
+* HEF4000B
+* HEF4000B_INV
+* HEF4069UB
+* HEF4001B
+* HEF4071B
+* HEF4011B
+* HEF4081B
+* HEF4030B
+* HEF4070B 
+* HEF4049B
+* HEF4050B
+* HEF40106B
+* HEF4093B
+* HEF4013B
+
+.subckt currcross Vdd Vss in m1=1
+R1 in vss 1T
+B1 Vdd Vss i=a*(V(in,vss)>vt)*(V(in,vss)<(V(vdd,vss)-vt))*(-abs(v(in,vss)-V(vdd,vss)/2)+V(vdd,vss)/2-vt)**2
+.param Vt=1.5 a=0.11m*m1
+.ends
+
+.subckt hef4007n d g s p
+M d g s p hef4007_n w=50u l=6u ad=450p as=500p
+.ends 
+.subckt hef4007p d g s p
+M d g s p hef4007_p w=110u l=6u ad=1.2n as=1.5n
+
+.ends 
+
+
+.model hef4007_n NMOS
++LEVEL = 3
++KP    = 42u
++VTO   = 1.5
++TOX   = 55n
++NSUB  = 3.3E16
++GAMMA = 2
++PHI   = 0.65
++VMAX  = 150E3
++RS    = 40
++RD    = 40
++XJ    = 1.5u
++LD    = 1.2u
++Theta=0.1
++ETA   = 4
+
+.model hef4007_p PMOS
++LEVEL = 3
++KP    = 25u
++VTO   = -1.6
++TOX   = 55n
++NSUB  = 2.8E15
++GAMMA = 1.
++PHI   = 0.65
++VMAX  = 970E3
++RS    = 80
++RD    = 80
++XJ    = 1.25u
++LD    = 1u
++Theta=0.15
++ETA   =7
+
+.subckt HEF4000B a b c out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+D5 C VDD di
+D6 VSS C di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+x3 vdd vss c currcross m1={m}
+B1 VSS  y i=if( (v(a,vss)>0.5*v(vdd,vss))|(v(b,vss)>0.5*v(vdd,vss)|(v(c,vss)>0.5*v(vdd,vss))),0,v(vdd,vss)) Rpar=1
+cb1 vss y 1n
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.25m, 5,0.7m, 10,1.4m, 15,2.1m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+Cc C VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron={100/M}
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+.subckt  HEF4000B_INV a out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+R a o 700
+Ca o VSS 10p Rpar=1G
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS 10p Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model Hefn vdmos vto=1.7  kp={speed*0.9m} lambda=15m  rs={60/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={speed*0.9m} lambda=45m  rs={80/speed} mtriode=1
+.ENDS
+
+.subckt HEF4069UB a out VDD VSS params:  speed=1
+D1 A VDD di
+D2 VSS A di
+R a o 700
+Ca o VSS {10p*M} Rpar=1G
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {10p*M} Rpar=1G
+.model di d vfwd=0.5 ron={100/M}
+.model Hefn vdmos vto=1.3  kp={speed*1.1m*M} lambda=15m  rs={50/speed/m} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.5  kp={speed*1.1m*M} lambda=45m  rs={70/speed/m} mtriode=1
+.ENDS
+
+.subckt HEF4001B a b out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+B1 VSS  y i=if( (v(a,vss)>0.5*v(vdd,vss))|(v(b,vss)>0.5*v(vdd,vss)),0,v(vdd,vss)) Rpar=1
+cb1 vss y 1n
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.3m, 5,0.9m, 10,3m, 15,4m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+
+
+.subckt HEF4071B a b out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+B1 VSS y i=if( (v(a,vss)>0.5*v(vdd,vss))|(v(b,vss)>0.5*v(vdd,vss)),v(vdd,vss),0) Rpar=1
+cb1 vss y 1n
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.3m, 5,1m, 10,4m, 15,6m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+.subckt HEF4011B a b out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+B1 VSS y i=if( (v(a,vss)>0.5*v(vdd,vss))&(v(b,vss)>0.5*v(vdd,vss)),0,v(vdd,vss)) Rpar=1
+cb1 Vss y 1n
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.3m, 5,0.9m, 10,3m, 15,4m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron=100 Roff=1G
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+.subckt HEF4081B a b out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+B1 VSS y V=if( (v(a,vss)>0.5*v(vdd,vss))&(v(b,vss)>0.5*v(vdd,vss)),v(vdd,vss),0) Rpar=1
+cb1 Vss y 1n 
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.3m, 5,0.9m, 10,4.6m, 15,6.5m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+.subckt HEF4030B a b out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+B1 VSS y i=if( (v(a,vss)>0.5*v(vdd,vss))^(v(b,vss)>0.5*v(vdd,vss)),v(vdd,vss),0) Rpar=1
+cb1 Vss y 1n
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.15m, 5,0.44m, 10,1.7m, 15,2.4m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+.subckt HEF4070B a b out VDD VSS params: M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+D3 B VDD di
+D4 VSS B di
+x1 vdd vss a currcross m1={m}
+x2 vdd vss b currcross m1={m}
+B1 VSS y i=if( (v(a,vss)>0.5*v(vdd,vss))^(v(b,vss)>0.5*v(vdd,vss)),v(vdd,vss),0) Rpar=1
+cb1 Vss y 1n
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.15m, 5,0.44m, 10,1.7m, 15,2.4m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+Cb B VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*10p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS
+
+.subckt HEF4049B a out VDD VSS params: M=1 speed=1
+D2 VSS A di
+x1 vdd vss a currcross m1={m}
+B1 VSS y i=if( (v(a,vss)>0.5*v(vdd,vss)), 0,v(vdd,vss)) Rpar=1
+cb1 Vss y 1n 
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.5m, 5,1.4m, 10,4m, 15,8m) Rpar=100K
+Ct z VSS {5p/speed}
+Ca A VSS {M*5p} Rpar=1G
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*9p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*20p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.1  kp={M*speed*0.3m} lambda=15m  mtriode=2.5  rs={180/M/speed} 
+.model p vdmos pchan vto=-1.  kp={M*speed*1.5m} lambda=45m  mtriode=1 rs={80/M/speed} 
+.model Hefn vdmos vto=1.1  kp={M*speed*7.2m} lambda=15m  rs={5/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1 
+.ENDS
+
+
+
+
+.subckt HEF4050B a  out VDD VSS params: M=1 speed=1
+D2 VSS A di
+Ca A VSS {M*5p} Rpar=1G
+M1 O a VSS VSS n
+M2 O a VDD VDD p
+Co o vss {M*12p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*20p} Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model n vdmos vto=1.1  kp={M*speed*0.3m} lambda=15m  mtriode=2.5  rs={180/M/speed} 
+.model p vdmos pchan vto=-1.  kp={M*speed*0.3m} lambda=45m  mtriode=1 rs={240/M/speed} 
+.model Hefn vdmos vto=1.1  kp={M*speed*5.4m} lambda=15m  rs={80/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1 
+.ENDS
+
+.subckt HEF40106B a out VDD VSS  M=1 speed=1
+D1 A VDD di
+D2 VSS A di
+Ca A VSS {M*5p} Rpar=1G
+bh vss h i=if((v(a,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,3,10,5.8,15,8.3) ),0,v(vdd,vss)) Rpar=1
+cbh vss h 1n
+bl vss l i=if((v(a,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,2.2,10,4.5,15,6.5) ),0,v(vdd,vss)) Rpar=1
+cbl vss h 1n
+sh h y0 y vss swh
+sl l y0 y vss swl
+.model swh sw vt=1.5 ron=1k roff=1G
+.model swl sw vt=1.5 ron=1G roff=1k
+Cg y0 vss {5p/speed}
+B1 y VSS v=if((v(y0,vss)>0.5*v(vdd,vss)),v(vdd,vss),0)
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.18m, 5,0.7m, 10,2.9m, 15,4.5m) Rpar=100K
+Ct z VSS {5p/speed}
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*20p} Rpar=1G
+.model di d vfwd=0.5 ron={100/M}
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.ENDS HEF40106B
+
+.subckt HEF4093B a b out VDD VSS  M=1 speed=1
+*a
+D1a A VDD di
+D2a VSS A di
+Ca A VSS {M*5p} Rpar=1G
+bha ha vss v=if((v(a,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,3,10,5.8,15,8.3) ),0,v(vdd,vss))
+bla la vss v=if((v(a,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,2.2,10,4.5,15,6.5) ),0,v(vdd,vss))
+sha ha y0a ya vss swh
+sla la y0a ya vss swl
+Cga y0a vss {5p/speed}
+B1a ya VSS v=if((v(y0a,vss)>0.5*v(vdd,vss)),v(vdd,vss),0)
+*b
+D1b b VDD di
+D2b VSS b di
+Cb b VSS {M*5p} Rpar=1G
+bhb hb vss v=if((v(b,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,3,10,5.8,15,8.3) ),0,v(vdd,vss))
+blb lb vss v=if((v(b,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,2.2,10,4.5,15,6.5) ),0,v(vdd,vss))
+shb hb y0b yb vss swh
+slb lb y0b yb vss swl
+Cgb y0b vss {5p/speed}
+B1b yb VSS v=if((v(y0b,vss)>0.5*v(vdd,vss)),v(vdd,vss),0)
+*
+B1 y VSS V=if( (v(ya,vss)>0.5*v(vdd,vss))|(v(yb,vss)>0.5*v(vdd,vss)),v(vdd,vss),0) 
+B2 y z I=tanh(v(y,z))*tbl(V(vdd,vss), 1.7,0, 3,0.3m, 5,0.9m, 10,3m, 15,4m) Rpar=100K
+Ct z VSS {5p/speed}
+M1 O z VSS VSS n
+M2 O z VDD VDD p
+Co o vss {M*3p}
+M3 OUT o VSS VSS HEFn
+M4 OUT o VDD VDD HEFp
+C4 OUT VSS {M*20p} Rpar=1G
+.model di d vfwd=0.5 ron={100/M}
+.model n vdmos vto=1.7  kp={M*speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={M*speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={M*speed*0.9m} lambda=15m  rs={60/M/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={M*speed*0.9m} lambda=45m  rs={80/M/speed} mtriode=1
+.model swh sw vt=1.5 ron=1k roff=1G
+.model swl sw vt=1.5 ron=1G roff=1k
+.ENDS HEF4093B
+
+
+.SUBCKT HEF4013B  S C D R Q QN  VDD Vss  speed=1
+*
+D1 C VDD di
+D2 VSS C di
+D3 s VDD di
+D4 VSS s di
+D5 d VDD di
+D6 VSS d di
+D7 r VDD di
+D8 VSS r di
+C1 s vss 5p
+C2 c vss 5p
+C3 d vss 5p
+C4 r vss 5p
+* S
+Bs Si 0 V=if( (v(s,vss)>0.5*v(vdd,vss)),5,0) 
+Bsp  si sp I=tanh(v(si,sp))*tbl(V(vdd,vss), 1.7,0, 3,0.2m, 5,0.8m, 10,1.9m, 15,4.8m) Rpar=100K
+Cst Sp 0 {5p/speed}
+* R
+BR1 Ri 0 V=if( (v(r,vss)>0.5*v(vdd,vss)), 5,0)
+Brp  ri rp I=tanh(v(ri,rp))*tbl(V(vdd,vss), 1.7,0, 3,0.2m, 5,0.8m, 10,1.9m, 15,4.8m) Rpar=100K
+Crt rp 0 {5p/speed} 
+* C
+bh h 0 v=if((v(c,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,3,10,5.8,15,8.3) ),0,5)
+bl l 0 v=if((v(c,vss)> tbl(v(vdd,vss),0,0,3.3,1.7,5,2.2,10,4.5,15,6.5) ),0,5) 
+sh h y0 y 0 swl
+sl l y0 y 0 swh 
+Cg y0 0 {2p/speed}
+B1 y 0 v=if((v(y0)>0.5),0,5)
+B2 y cp I=tanh(v(y,cp))*tbl(V(vdd,vss), 1.7,0, 3,0.09m, 5,0.37m, 10,1.2m, 15,4.8m) Rpar=100K
+Ct Cp 0 {5p/speed}
+* D
+BD Di 0 V=if( (v(d,vss)>0.5*v(vdd,vss)), 5,0)
+Bdp  Di Dp I=tanh(v(di,dp))*tbl(V(vdd,vss), 1.7,0, 3,0.3m, 5,0.9m, 10,2m, 15,3m) Rpar=100K
+Cdt Dp 0 {5p/speed}
+*
+A1     Dp 0 Cp  Sp Rp  QNi Qi 0  DFLOP  tripdt=5n td=5n Vhigh=5
+*
+* Q
+Bq Qi1 vss V=if( (v(qi)>2.5),V(vdd,vss),0)
+Bqp  Qi1 Qii I=tanh(v(Qi1,qii))*tbl(V(vdd,vss), 1.7,0, 3,0.5m, 5,1.6m, 10,3.2m, 15,4.8m) Rpar=100K
+Cqt Qii vss {5p/speed}
+M1 O Qii VSS VSS n
+M2 O Qii VDD VDD p
+Co o vss 3p
+M3 Q o VSS VSS HEFn
+M4 Q o VDD VDD HEFp
+C42 Q VSS 10p Rpar=1G
+* QN
+Bq1 QNi1 vss V=if( (v(qni)>2.5),V(vdd,vss),0)
+Bqp1  QNi1 QNii I=tanh(v(qni1,qnii))*tbl(V(vdd,vss), 1.7,0, 3,0.5m, 5,1.6m, 10,3.2m, 15,4.8m) Rpar=100K
+Cqt1 QNii vss {5p/speed} 
+M5 O1 QNii VSS VSS n
+M6 O1 QNii VDD VDD p
+Co1 o1 vss 3p
+M7 QN o1 VSS VSS HEFn
+M8 QN o1 VDD VDD HEFp
+C41 QN VSS 10p Rpar=1G
+.model di d vfwd=0.5 ron=100
+.model swh sw vt=2 ron=1k roff=1G
+.model swl sw vt=2 ron=1G roff=1k
+.model n vdmos vto=1.7  kp={speed*0.3m} lambda=15m  mtriode=2.5
+.model p vdmos pchan vto=-1.6  kp={speed*0.3m} lambda=45m  mtriode=1
+.model Hefn vdmos vto=1.7  kp={speed*0.9m} lambda=15m  rs={60/speed} mtriode=2.5
+.model Hefp vdmos pchan vto=-1.6  kp={speed*0.9m} lambda=45m  rs={80/speed} mtriode=1
+.ends
+

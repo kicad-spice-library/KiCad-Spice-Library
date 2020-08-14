@@ -1,0 +1,777 @@
+*-----------------------------------------------------------------------------
+*
+*** Voltage comparators
+*
+* The parameters in this comparator library were derived from data sheets for
+* each parts.  The macromodel used was developed by MicroSim Corporation, and
+* is produced by the "Parts" option to PSpice.
+*
+* Although we do not use it, another comparator macro model is described in:
+*
+*       An Integrated-Circuit Comparator Macromodel
+*         by Ian Getreu, Andreas Hadiwidjaja, and Johan Brinch
+*       IEEE Journal of Solid-State Circuits, Vol. SC-11, no. 6, Dec. 1976
+*
+* This reference covers the considerations that go into duplicating the
+* behavior of voltage comparators.
+*
+* The comparators are modelled at room temperature.  The macro model does not
+* track changes with temperature.  This library file contains models for
+* nominal, not worst case, devices.
+*$
+*
+*-----------------------------------------------------------------------------
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | open collector output
+*                | | | | | output ground
+*                | | | | | |
+.subckt LM111    1 2 3 4 5 6
+*
+  f1    9  3 v1 1
+  iee   3  7 dc 100.0E-6
+  vi1  21  1 dc .45
+  vi2  22  2 dc .45
+  q1    9 21  7 qin
+  q2    8 22  7 qin
+  q3    9  8  4 qmo
+  q4    8  8  4 qmi
+.model qin PNP(Is=800.0E-18 Bf=833.3)
+.model qmi NPN(Is=800.0E-18 Bf=1002)
+.model qmo NPN(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=118.8E-9)
+  e1   10  6  9  4  1
+  v1   10 11 dc 0
+  q5    5 11  6 qoc
+.model qoc NPN(Is=800.0E-18 Bf=34.49E3 Cjc=1E-15 Tf=364.6E-12 Tr=79.34E-9)
+  dp    4  3 dx
+  rp    3  4 6.122E3
+.model dx  D(Is=800.0E-18 Rs=1)
+*
+.ends
+*$
+*-----------------------------------------------------------------------------
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | open collector output
+*                | | | | | output ground
+*                | | | | | |
+.subckt LM119    1 2 3 4 5 6
+*
+  f1    3  9 v1 1
+  iee   7  4 dc 100.0E-6
+  q1    9  2  7 qin
+  q2    8  1  7 qin
+  q3    9  8  3 qmo
+  q4    8  8  3 qmi
+.model qin NPN(Is=800.0E-18 Bf=333.3)
+.model qmi PNP(Is=800.0E-18 Bf=1002)
+.model qmo PNP(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=59.42E-9)
+  e1   10  6  3  9  1
+  v1   10 11 dc 0
+  q5    5 11  6 qoc
+.model qoc NPN(Is=800.0E-18 Bf=41.38E3 Cjc=1E-15 Tf=23.91E-12 Tr=24.01E-9)
+  dp    4  3 dx
+  rp    3  4 5.556E3
+.model dx  D(Is=800.0E-18 Rs=1)
+*
+.ends
+*$
+*-----------------------------------------------------------------------------
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | open collector output
+*                | | | | | output ground
+*                | | | | | |
+.subckt LM211    1 2 3 4 5 6
+*
+  x_lm211 1 2 3 4 5 6 LM111
+*
+* the LM211 is identical to the LM111, but has a more limited temp. range
+*
+.ends
+*$
+*-----------------------------------------------------------------------------
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | open collector output
+*                | | | | | output ground
+*                | | | | | |
+.subckt LM311    1 2 3 4 5 6
+*
+f1    9  3 v1 1
+iee   3  7 dc 100.0E-6
+vi1  21  1 dc .45
+vi2  22  2 dc .45
+q1    9 21  7 qin
+q2    8 22  7 qin
+q3    9  8  4 qmo
+q4    8  8  4 qmi
+.model qin PNP(Is=800.0E-18 Bf=500)
+.model qmi NPN(Is=800.0E-18 Bf=1002)
+.model qmo NPN(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=124.2E-9)
+e1   10  6  9  4  1
+v1   10 11 dc 0
+q5    5 11  6 qoc
+.model qoc NPN(Is=800.0E-18 Bf=206.9E3 Cjc=1E-15 Tf=7.855E-12 Tr=83.83E-9)
+dp    4  3 dx
+rp    3  4 7.087E3
+.model dx  D(Is=800.0E-18)
+*
+.ends
+*$
+*-----------------------------------------------------------------------------
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | open collector output
+*                | | | | | output ground
+*                | | | | | |
+.subckt LM319    1 2 3 4 5 6
+*
+  x_lm319 1 2 3 4 5 6 LM119
+*
+* the LM319 is identical to the LM119, but has a more limited temp. range
+*
+.ends
+*$
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | open collector output
+*                | | | | |
+.subckt LM139    1 2 3 4 5
+*vÁLIDO PARA: LM139 LM193 LM239 LM293 LM339 LM393 LM3302
+  f1    9  3 v1 1
+  iee   3  7 dc 100.0E-6
+  vi1  21  1 dc .75
+  vi2  22  2 dc .75
+  q1    9 21  7 qin
+  q2    8 22  7 qin
+  q3    9  8  4 qmo
+  q4    8  8  4 qmi
+.model qin PNP(Is=800.0E-18 Bf=2.000E3)
+.model qmi NPN(Is=800.0E-18 Bf=1002)
+.model qmo NPN(Is=800.0E-18 Bf=1000 Cjc=1E-15 Tr=475.4E-9)
+  e1   10  4  9  4  1
+  v1   10 11 dc 0
+  q5    5 11  4 qoc
+.model qoc NPN(Is=800.0E-18 Bf=20.69E3 Cjc=1E-15 Tf=3.540E-9 Tr=472.8E-9)
+  dp    4  3 dx
+  rp    3  4 37.50E3
+.model dx  D(Is=800.0E-18 Rs=1)
+*
+.ends
+.subckt LM193    1 2 3 4 5
+*
+  x_lm193 1 2 3 4 5 LM139
+*
+* the LM193 is identical to the LM139, but in a different package
+*
+.ends
+.subckt LM239    1 2 3 4 5
+*
+  x_lm239 1 2 3 4 5 LM139
+*
+* the LM239 is identical to the LM139, but has a more limited temp. range
+*
+.ends
+.subckt LM293    1 2 3 4 5
+*
+  x_lm293 1 2 3 4 5 LM139
+*
+* the LM293 is identical to the LM239, but in a different package
+*
+.ends
+.subckt LM339    1 2 3 4 5
+*
+  x_lm339 1 2 3 4 5 LM139
+*
+* the LM339 is identical to the LM139, but has a more limited temp. range
+*
+.ends
+*
+* LM339 VOLTAGE COMPARATOR "MACROMODEL" SUBCIRCUIT
+* CREATED USING PARTS VERSION 4.03 ON 03/07/90 AT 14:17
+* REV (N/A)
+* CONNECTIONS:   NON-INVERTING INPUT
+*                | INVERTING INPUT
+*                | | POSITIVE POWER SUPPLY
+*                | | | NEGATIVE POWER SUPPLY
+*                | | | | OPEN COLLECTOR OUTPUT
+*                | | | | |
+.SUBCKT LM_339    1 2 3 4 5
+*
+  F1    9  3 V1 1
+  IEE   3  7 DC 100.0E-6
+  VI1  21  1 DC .75
+  VI2  22  2 DC .75
+  Q1    9 21  7 QIN
+  Q2    8 22  7 QIN
+  Q3    9  8  4 QMO
+  Q4    8  8  4 QMI
+.MODEL QIN PNP(IS=800.0E-18 BF=2.000E3)
+.MODEL QMI NPN(IS=800.0E-18 BF=1002)
+.MODEL QMO NPN(IS=800.0E-18 BF=1000 CJC=1E-15 TR=807.4E-9)
+  E1   10  4  9  4  1
+  V1   10 11 DC 0
+  Q5    5 11  4 QOC
+.MODEL QOC NPN(IS=800.0E-18 BF=20.29E3 CJC=1E-15 TF=942.6E-12 TR=543.8E-9)
+  DP    4  3 DX
+  RP 3  4 46.3E3
+.MODEL DX  D(IS=800.0E-18)
+*
+.ENDS
+
+* Model for packaged LM339 devices
+* 14-pin DIP, 4 comparators per package
+* CONNECTIONS:      Output 2
+*                   | Output 1
+*                   | | Positive Power Supply 
+*                   | | | Input 1 Inverting
+*                   | | | | Input 1 Non-Inverting
+*                   | | | | | Input 2 Inverting
+*                   | | | | | | Input 2 Non-Inverting
+*                   | | | | | | | Input 3 Inverting
+*                   | | | | | | | | Input 3 Non-inverting
+*                   | | | | | | | | | Input 4 Inverting
+*                   | | | | | | | | | |  Input 4 Non-inverting
+*                   | | | | | | | | | |  |  Negative Power Supply (or Gnd)
+*                   | | | | | | | | | |  |  |  Output 4
+*                   | | | | | | | | | |  |  |  |  Output 3
+*                   | | | | | | | | | |  |  |  |  |
+.SUBCKT LM339_DIP14 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1 5  4  3 12 2  LM_339
+X2 7  6  3 12 1  LM_339
+X3 9  8  3 12 14 LM_339
+X4 11 10 3 12 13 LM_339
+.ENDS
+*
+.subckt LM393    1 2 3 4 5
+*
+  x_lm393 1 2 3 4 5 LM139
+*
+* the LM393 is identical to the LM339, but in a different package
+*
+.ends
+.subckt LM3302   1 2 3 4 5
+*
+  x_lm3302 1 2 3 4 5 LM139
+*
+* the LM3302 is identical to the LM139, but has a more limited temp. range
+*
+.ends
+.SUBCKT LM139/TEMP 1 2 3 4 5
+X6 3 34 LED
+RE 3 35 8.4K
+RS1 34 4 30.5K
+Q8 7 34 35 QKI
+DV1 21 1 DX
+DV2 22 2 DX
+Q1 9 21 7 QIN
+Q2 8 22 7 QIN
+Q3 9 9 4 QMO
+Q4 8 9 4 QMO
+Q7 11 190 19 QKI
+Q6 11 8 4 QN
+.MODEL QN NPN(
++         IS = 0.8F
++         BF = 250
++         NF = 1
++        VAF = 9.9999E+13
++        IKF = 9.9999E+13
++        ISE = 0
++         NE = 1.5
++         BR = 1
++         NR = 1
++        VAR = 9.9999E+13
++        IKR = 9.9999E+13
++        ISC = 0
++         NC = 2
++         RB = 0
++        IRB = 9.9999E+13
++        RBM = 0
++         RE = 0
++         RC = 0
++        CJE = 0
++        VJE = .75
++        MJE = .33
++         TF = 7.5N
++        XTF = 0
++        VTF = 9.9999E+13
++        ITF = 0
++        PTF = 0
++        CJC = 0
++        VJC = .75
++        MJC = .33
++       XCJC = 1
++         TR = 350N
++        CJS = 0
++        VJS = .75
++        MJS = 0
++        XTB = 0
++         EG = 1.11
++        XTI = 3
++         KF = 0
++         AF = 1
++         FC = .5
++ )
+RE1  3 19  8.4K
+RS2 190 4 30.5K
+XLED2 3 190 LED
+Q5 5 11 4 QOC
+.MODEL QOC NPN(
++         IS = 0.8F
++         BF = 20290
++         NF = 1
++        VAF = 9.9999E+13
++        IKF = 9.9999E+13
++        ISE = 0
++         NE = 1.5
++         BR = 1
++         NR = 1
++        VAR = 9.9999E+13
++        IKR = 9.9999E+13
++        ISC = 0
++         NC = 2
++         RB = 0
++        IRB = 9.9999E+13
++        RBM = 0
++         RE = 0
++         RC = 0
++        CJE = 0
++        VJE = .75
++        MJE = .33
++         TF = 20N
++        XTF = 0
++        VTF = 9.9999E+13
++        ITF = 0
++        PTF = 0
++        CJC = 1E-15
++        VJC = .75
++        MJC = .33
++       XCJC = 1
++         TR = 543.8E-9
++        CJS = 0
++        VJS = .75
++        MJS = 0
++        XTB = 0
++         EG = 1.11
++        XTI = 3
++         KF = 0
++         AF = 1
++         FC = .5
++ )
+.MODEL QIN PNP(
++         IS = 0.8F
++         BF = 200
++         NF = 1
++        VAF = 9.9999E+13
++        IKF = 9.9999E+13
++        ISE = 0
++         NE = 1.5
++         BR = 1
++         NR = 1
++        VAR = 9.9999E+13
++        IKR = 9.9999E+13
++        ISC = 0
++         NC = 2
++         RB = 0
++        IRB = 9.9999E+13
++        RBM = 0
++         RE = 0
++         RC = 0
++        CJE = 0
++        VJE = .75
++        MJE = .33
++         TF = 0
++        XTF = 0
++        VTF = 9.9999E+13
++        ITF = 0
++        PTF = 0
++        CJC = 1E-15
++        VJC = .75
++        MJC = .33
++       XCJC = 1
++         TR = 0
++        CJS = 0
++        VJS = .75
++        MJS = 0
++        XTB = 0
++         EG = 1.11
++        XTI = 3
++         KF = 0
++         AF = 1
++         FC = .5
++ )
+.MODEL QMO NPN(
++         IS = 0.8F
++         BF = 200
++         NF = 1
++        VAF = 9.9999E+13
++        IKF = 9.9999E+13
++        ISE = 0
++         NE = 1.5
++         BR = 1
++         NR = 1
++        VAR = 9.9999E+13
++        IKR = 9.9999E+13
++        ISC = 0
++         NC = 2
++         RB = 0
++        IRB = 9.9999E+13
++        RBM = 0
++         RE = 0
++         RC = 0
++        CJE = 0
++        VJE = .75
++        MJE = .33
++         TF = 0
++        XTF = 0
++        VTF = 9.9999E+13
++        ITF = 0
++        PTF = 0
++        CJC = 1E-15
++        VJC = .75
++        MJC = .33
++       XCJC = 1
++         TR = 807.4E-9
++        CJS = 0
++        VJS = .75
++        MJS = 0
++        XTB = 0
++         EG = 1.11
++        XTI = 3
++         KF = 0
++         AF = 1
++         FC = .5
++ )
+.MODEL QKI PNP(
++         IS = 0.8F
++         BF = 1000
++         NF = 1
++        VAF = 9.9999E+13
++        IKF = 9.9999E+13
++        ISE = 0
++         NE = 1.5
++         BR = 1
++         NR = 1
++        VAR = 9.9999E+13
++        IKR = 9.9999E+13
++        ISC = 0
++         NC = 2
++         RB = 0
++        IRB = 9.9999E+13
++        RBM = 0
++         RE = 0
++         RC = 0
++        CJE = 0
++        VJE = .75
++        MJE = .33
++         TF = 0
++        XTF = 0
++        VTF = 9.9999E+13
++        ITF = 0
++        PTF = 0
++        CJC = 1E-15
++        VJC = .75
++        MJC = .33
++       XCJC = 1
++         TR = 0
++        CJS = 0
++        VJS = .75
++        MJS = 0
++        XTB = 0
++         EG = 1.11
++        XTI = 3
++         KF = 0
++         AF = 1
++         FC = .5
++ )
+.MODEL DX D(
++         IS = 0.8F
++         RS = 0.0001
++          N = 1
++         TT = 0
++        CJO = 1E-15
++         VJ = 1
++          M = .5
++         EG = 1.11
++        XTI = 3
++         KF = 0
++         AF = 1
++         FC = .5
++         BV = 9.9999E+13
++        IBV = .001
++ )
+.subckt LED A B
+D1 A C  LXHL-B5Chalf
+D2 C B  LXHL-B5Chalf
+.model LXHL-B5Chalf   D(Is=1.0e-20 Rs=0.5  N=2.6  Cjo=2n Eg=3.55 TRS1=0.004)
+.ends
+*.model LED D(Is=3e-22 N=1.5 RS=10 Eg=2.3 Cjo=10p)
+*.ends
+.ENDS LM139/TEMP
+*
+* Model from Jim Thompson's website
+* http://www.analog-innovations.com/subcircuits.html
+**** LM339 Subcircuit ****
+*******************************************
+***** NODES: IN+ IN- OUT Vee **************
+*.SUBCKT LM339 1   2   3   4     
+.SUBCKT LM339_jim 1   2   100   4   3           
+Rin1 1 0 1E8                                 
+Rin2 2 0 1E8                                 
+E 5 4 1 2 7    ; GAIN, 7 => x105 V/mV
+Re 5 4 1E8
+L1 5 12 375U        ;
+R1 12 13 6.125K     ;
+C1 13 4 10P         ;
+L2 13 14 375U       ;
+R2 14 15 6.125K     ; DELAY (LUMPED LINE)
+C2 15 4 10P         ;
+L3 15 16 375U       ;
+R3 16 6 6.125K      ;
+C3 6 4 10P          ;
+G 7 4 6 4 1
+Rg 7 4 10K                                 
+D1 8 7 D                                   
+D2 8 10 D                                  
+D3 7 9 D                                   
+D4 10 9 D                                  
+Ilim 9 8 6m ; OUTPUT SINK CAPABILTY     
+Rilim 9 8 1E8                              
+D5 4 10 D                                  
+Rd5 4 10 1E8                               
+Q 3 10 4 N                                 
+Co 3 4 5P                                  
+.MODEL D D                                 
+.MODEL N NPN(BF=1)                         
+.ENDS LM339_jim
+*
+** Standard Linear Ics Macromodels, 1993. 
+** CONNECTIONS :
+* 1 INVERTING INPUT
+* 2 NON-INVERTING INPUT
+* 3 OUTPUT
+* 4 POSITIVE POWER SUPPLY
+* 5 NEGATIVE POWER SUPPLY
+*.SUBCKT LM193 1 3 2 4 5 (analog)
+.SUBCKT LM193A 2 1 4 5 3 **********************************************************
+.MODEL MDTH D IS=1E-11 KF=1.050321E-32 CJO=10F
+* INPUT STAGE
+CIP 2 5 1.000000E-12
+CIN 1 5 1.000000E-12
+EIP 102 0 2 0 1
+VIO 10 102 438.3U
+EIN 16 0 1 0 1
+RIP 10 11 6.500000E+01
+RIN 15 16 6.500000E+01
+RIS 11 15 1.939046E+02
+DIP 11 12 MDTH 400E-12
+DIN 15 14 MDTH 400E-12
+VOFP 12 13 DC 0.000000E+00
+VOFN 13 14 DC 0
+IPOL 13 0 100E-06
+CPS 11 15 5.5E-09
+DINN 17 13 MDTH 400E-12
+VIN 17 5 0.000000e+00
+DINR 15 18 MDTH 400E-12
+VIP 4 18 1.500000E+00
+FCP 4 5 VOFP 0.175 
+FCN 5 4 VOFN 0.175 
+FIBP 2 0 VOFN 2.000000E-08
+FIBN 0 1 VOFP 2.000000E-08
+* AMPLIFYING STAGE
+RG1 5 19 2.85E+05
+RG2 4 19 2.85E+05
+DOP 19 25 MDTH 400E-12
+VOP 4 25 1.097
+DON 24 19 MDTH 400E-12
+VON 24 5 1.097
+FIP 0 19 VOFP -104 
+FIN 0 19 VOFN -104
+EOUT 26 5 19 5 1 
+.MODEL NMOD NPN(IS=0.1E-09 BF=4000)
+RBOUT 27 26 800K
+QOUT 103 27 28 28 NMOD
+REOUT 28 5 20
+RSOUT 3 0 1E+12
+VNUL 3 103 0
+DSTOP 32 103 MDTH 400E-12
+HSTOP 32 33 VNUL 135
+VSTOP 33 5 0.5
+.ENDS
+*
+* MAX9119 MACROMODEL
+* ------------------------------
+* Revision 0, 9/2003
+* ------------------------------
+* The MAX9119 family of nanopower comparators in space saving SC70 packages feature
+* Beyond-the-Rails inputs and operate from supply as low as +1.8V and draw an ultra 
+* low supply current of only 450nA. 
+* ------------------------------
+* Connections
+*          1  = OUT
+*          2  = VEE
+*          3  = IN+
+*          4  = IN-  
+*          5  = VCC
+***************************
+.SUBCKT MAX9119 1 2 3 4 5
+ XCOMP 3 4 1 2 5 COMP
+.ENDS
+***************************
+
+***************************
+.SUBCKT COMP 10 18 55 23 56
+* 10 = VCC
+* 18 = VEE
+* 55 = IN+
+* 23 = IN-
+* 56 = OUT
+*****************
+VS1 10 11 0V    
+RNC1 11 12 200K
+RNC2 11 13 200K
+IPBIAS 11 14 500NA
+RBIAS 14 25 10G
+RPE1 15 14 10M
+RPE2 16 14 10M
+Q1 20 22 15 QPA
+Q2 21 23 16 QPB
+Q3 12 22 19 QNA
+Q4 13 23 24 QNB
+RNE1 19 17 10M
+RNE2 24 17 10M
+INBIAS 17 18 500NA
+RPC1 20 18 200K
+RPC2 21 18 200K
+FSUP 18 10 VS1 1 
+VOS 29 30 1M
+EPSRR 30 67 10 18 0.1M
+ECMRR 67 55 14 18 0.5M
+*INPUT PROTECTION DIODES 
+DIN1 55 73 DA
+DIN2 74 55 DA
+DIN3 23 73 DA
+DIN4 74 23 DA
+VINL1 73 10 0.25
+VINL2 18 74 0.25
+*****************
+EG 25 18 10 18 0.5 
+*****************
+*INPUT REFERED HYSTERISIS
+GH 25 26 21 20 1
+RH 25 26 1MEG
+CH 26 27 10P
+DL1 26 27 DA  
+VL1 27 25 1V
+DL2 28 26 DA
+VL2 25 28 1V
+EHYST 22 29 26 25 2M
+*****************
+*PROPAGATION DELAY 
+GPS1 25 69 26 25 10M
+RPS1 69 25 1MEG
+DPS1 69 70 DA
+VPS1 70 71 0.35
+EPS1 71 25 66 65 184M 
+DPS2 72 69 DA
+VPS2 25 72 1V
+GPS2 25 33 69 25 916.4U
+CS3 69 25 0.1P
+CP 33 25 10N
+DPS3 31 33 DA
+VPS3 25 31 1V
+DPS4 33 32 DA
+VPS4 32 25 1V
+********* 
+EP2 34 25 33 25 1
+EHP 35 34 37 25 283M
+RP3 35 36 1K
+VIS1 36 25 0V
+FP1 25 37 VIS1 10
+RP4 37 25 1MEG
+DP3 37 38 DA
+DP4 39 37 DA
+VP1 38 25 1V
+VP2 25 39 1V
+CP1 37 25 10P
+*****************
+*OUTPUT VOLTAGE LIMITS
+GOUT 25 40 37 25 1M
+ROUT 40 25 5K
+DOL1 40 41 DA
+DOL2 42 40 DA
+EOL1 41 25 10 18 0.5 
+EOL2 25 42 10 18 0.5
+COL 40 25 1P
+*****************
+*RISE AND FALL TIMES
+EOUT1 43 25 40 25 1
+DT1 43 44 DA
+DT2 45 43 DA
+RT1 44 46 8K
+RT2 45 46 1K
+CT1 46 25 65P
+*****************
+*OUTPUT CURRENT LIMIT
+EOUT2 47 25 46 25 1
+ROUT2 47 48 40
+DCL1 48 49 DB
+DCL2 50 48 DB
+DCL3 51 49 DB
+DCL4 50 51 DB
+ICL 49 50 3M
+*SUPPLY VOLTAGE DEPENDENT CURRENT LIMIT 
+GCL 49 50 52 53 10M 
+EVR 52 25 10 18 1
+RVR 52 53 1MEG
+DVR 53 54 DA
+VVR 54 25 1.8V
+*****************
+*SUPPLY CURRENT
+ISUP 10 18 450NA
+VIS2 51 56 0V
+FSUP1 25 57 VIS2 1
+DSUP1 25 57 DB
+DSUP2 57 58 DB 
+VIS3 58 25 0V
+FSUP2 10 18 VIS3 1
+*****************
+*SUPPLY VOLTAGE LIMITS
+DBIAS 18 14 DA
+EMAX 59 25 10 18 1
+DMAX 59 60 DA
+RMAX 60 61 1K
+VMAX 61 25 5.5V
+FMAX 14 18 VMAX 0.1
+******
+EMIN 62 25 10 18 1
+DMIN 63 62 DA
+RMIN 64 63 1K
+VMIN 64 25 1.8V
+FMIN 14 18 VMIN -0.1
+******************
+EREF1 65 25 10 18 1
+RREF1 65 66 1MEG
+VREF1 66 25 5V
+**********************************************************
+.MODEL QPA PNP(IS=800E-18 BF=3600)
+.MODEL QNA NPN(IS=800E-18 BF=3600)
+.MODEL QPB PNP(IS=800E-18 BF=2220)
+.MODEL QNB NPN(IS=800E-18 BF=2220)
+.MODEL DA D(N=0.1M)
+.MODEL DB D(IS=100E-14)
+**********************************************************
+.ENDS

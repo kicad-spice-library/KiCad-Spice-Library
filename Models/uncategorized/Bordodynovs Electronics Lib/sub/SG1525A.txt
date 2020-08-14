@@ -1,0 +1,464 @@
+
+* Silicon General
+* SG1525A Regulating Pulse Width Modulator
+*
+* block symbol definitions
+.subckt SG1525A +VIN COMP CT DISCH -EA +EA RT SHUTDOWN SOFT-START SYNC VC VEE OSC_OUT OUTPUTA OUTPUTB 5.1
+XU3 _POR BLANKING _TQ REF TQ _TQ REF VEE 74HCDFF VCC=5 SPEED=1.0 TRIPDT=1e-9
+XX3 BLANKING DISCH OSC_OUT CT REF RT SYNC VEE RAMP oscblk
+XU4 S BLANKING SRQ _SRQ REF VEE 74HCSRFF VCC=5 SPEED=1.0 TRIPDT=1e-9
+XX2 REF VCC1 VEE UVLO uvlockoutblk
+C1 REF RC 0.0047µ V=25 Irms=160m Rser=0.444602 Lser=0 mfg="KEMET" pn="C1812C103K3RAC" type="X7R"
+R1 RC VEE 10k
+XU1 RCO _POR REF VEE 74HC14 VCC=5 SPEED=1.0 TRIPDT=1e-9 VCC=5 SPEED=1.0 TRIPDT=1e-9
+R2 RCO RC 10k
+XU2 _POR POR REF VEE 74HC14 VCC=5 SPEED=1.0 TRIPDT=1e-9 VCC=5 SPEED=1.0 TRIPDT=1e-9
+R3 ERR_AMP COMP 100
+R4 _SRQ VEE 1e6
+XX5 +EA -EA REF ERR_AMP VCC1 VEE eampblk
+XX4 BLANKING SRQ UVLO REF VCC1 VEE VC OUTPUTA TQ noroutblk
+XX7 BLANKING SRQ UVLO REF VCC1 VEE VC OUTPUTB _TQ noroutblk
+V3 5.1 REF 0
+XX6 SSIO REF RAMP SHUTDOWN SOFT-START VEE ERR_AMP CMP SSIO cmpblkis
+XX1 +VIN VEE VCC1 REF brefblk
+XU5 POR CMP UVLO S REF VEE 74HCOR3 VCC=5 SPEED=1.0 TRIPDT=1e-9
+
+
+.subckt oscblk OSC DISC CLOCK Ct REF Rt SYNC VEE RAMP
+Q1 35 36 37 0 NP {N}
+Q2 34 35 REF 0 PN {N}
+Q3 35 35 REF 0 PN {N}
+Q4 33 32 REF 0 PN {N}
+Q5 32 32 REF 0 PN {N}
+Q6 Rt 31 REF 0 PN {N*1}
+Q7 31 31 REF 0 PN {N*1}
+Q8 Ct Rt 31 0 PN {N*1}
+Q9 32 Ct 37 0 NP {N}
+Q10 41 40 VEE 0 NP {N}
+Q11 41 42 VEE 0 NP {N}
+R1 36 41 2k
+Q14 DISC 43 VEE 0 NP {N*10}
+Q15 DISC 44 43 0 NP {N*3}
+R2 OSC 44 23k
+C1 DISC 44 5p Rser=0.001 Rpar=10G
+R3 40 VEE 1k
+R6 REF 36 7.4k
+R7 36 VEE 14k
+R8 43 VEE 1k
+Q17 33 34 VEE 0 NP {N}
+Q18 34 34 VEE 0 NP {N}
+R10 33 42 25k
+Q19 REF 33 OSC 0 NP {N*2}
+R9 OSC VEE 3k
+R11 CLOCK OSC 250
+R4 40 SYNC 2k
+V3 37 47 0
+Q12 39 38 Ct 0 NP {N}
+Q13 35 38 Ct 0 NP {N}
+D1 OSC 39 DM
+Q20 Rt 31 REF 0 PN {N*1}
+Q21 31 31 REF 0 PN {N*1}
+Q22 Ct Rt 31 0 PN {N*1}
+V1 RAMP Ct 0
+R12 REF 38 3.4k
+R13 38 VEE 1.7k
+XU1 47 VEE CLD0400
+.param N=0.2
+.model Dm D(1S=1e-12)
+.ends oscblk
+
+.subckt uvlockoutblk ref VCC1 VEE uvlo
+A1 21 VCC1 0 0 0 0 lo 0 SCHMITT vt=0.5 vh=0.11 tau=50n tripdt=10n td=200n
+B1 21 VEE V=7v*V(1)
+R1 VCC1 VEE 1G
+V1 1 VEE 1
+R3 lo VEE 1G
+B2 23 VEE V=V(lo)*V(REF)*V(1)
+R4 23 22 100
+C1 22 VEE 10p
+R2 REF VEE 1G
+R5 UVLO 23 10
+.ends uvlockoutblk
+
+.subckt eampblk IN+ IN- REF OUT VCC VEE
+Q25 VCC IN- 53 0 NP {N}
+Q26 52 IN+ 53 0 NP {N}
+Q27 51 51 VCC 0 PN {N}
+Q28 54 52 51 0 PN {N}
+Q29 52 51 VCC 0 PN {N}
+D1 VEE 54 DZ
+D2 54 REF DM
+R1 OUT 54 1k
+XU1 53 VEE CLD0200
+XU2 54 VEE CLD0100
+.param N=0.2
+.model Dm D(1S=1e-12)
+.model DZ D(BV=5.8)
+.ends eampblk
+
+.subckt noroutblk OSC PWM UV REF VIN VEE VC OUT FF
+Q6 VC 43 44 0 NP {N*20}
+Q7 VC 44 OUT 0 NP {N*200}
+R10 OUT 44 5k
+Q21 44 44 43 0 NP {N}
+Q22 OUT OUT 43 0 NP {N}
+Q5 43 50 51 0 NP {N*8}
+Q8 OUT 51 VEE 0 NP {N*80}
+Q4 50 49 VEE 0 NP {N}
+Q3 49 45 VEE 0 NP {N}
+Q2 49 47 VEE 0 NP {N}
+Q1 49 48 VEE 0 NP {N}
+R3 48 OSC 5k
+R4 47 UV 10k
+R5 45 PWM 10k
+Q10 49 46 VEE 0 NP {N}
+R1 46 FF 10k
+R9 51 VEE 2k
+XU1 REF 49 CLD0500
+XU2 VIN 50 CLD0250
+XU3 VIN 43 CLD2000
+.param N=1
+.model Dm D(1S=1e-12)
+.ends noroutblk
+
+.subckt cmpblkis SSI REF RMP SD SS VEE EA OUT SSO
+Q10 VEE EA 63 0 PN {N}
+Q11 66 63 64 0 PN {N}
+Q12 66 68 VEE 0 NP {N}
+R1 69 68 500
+R2 67 69 2k
+Q13 67 72 VEE 0 NP {N}
+R3 70 67 500
+Q14 71 70 VEE 0 NP {N}
+Q5 VEE RMP 65 0 PN {N}
+Q7 71 65 64 0 PN {N}
+Q1 OUT 71 VEE 0 NP {N}
+R4 OUT 67 5k
+Q2 VEE SS 63 0 PN {N}
+R5 73 VEE 5k
+Q3 SS 74 73 0 NP {N}
+R6 SD 74 10k
+R7 VEE SD 50k
+R8 SSI 72 10k
+Q4 74 74 75 0 NP {N}
+Q6 75 75 VEE 0 NP {N}
+Q8 66 66 67 0 NP {N}
+R9 SSO SS 1k
+XU1 REF SS CLD0050
+XU2 REF 63 CLD0030
+XU3 REF 64 CLD0060
+XU4 REF 65 CLD0030
+XU5 REF OUT CLD0500
+.param N=0.2
+.model Dm D(1S=1e-12)
+.MODEL DM2 D (IS=18.000E-5
+.ends cmpblkis
+
+.subckt brefblk VCC VEE VCC1 5.1
+E1 VCC1 VEE VCC VEE 1
+A1 VCC1 REF 0 0 0 0 5.1 0 SCHMITT vt=0 vh={vh} tau={tau} tripdt={tdt} vhigh=5.100 td={td} Rout=1m
+B3 REF VEE V=V(1)*7.0v
+V1 1 VEE 1
+R1 VCC1 VEE 1e8
+.param tau=10n tdt=2n td=200n vh=3m
+.ends brefblk
+
+.model NP NPN (
++ is=1.26e-17
++ bf=394
++ br=0.7
++ ise=0
++ ikf=0.0027
++ ikr=0.0072
++ ne=1.5
++ nc=1.5
++ tf=2.27e-10
++ tr=2.27e-9
++ cje=7.71e-14
++ cjc=5.47e-14
++ vje=0.88
++ vjc=0.74
++ mje=0.42
++ mjc=0.41
++ cjs=2.82e-13
++ vjs=0.67
++ mjs=0.44
++ vaf=29
++ var=7.3
++ rc=87.34
++ rb=621.33
++ re=1.587
++ xtb=1.58936
++ eg=1.17
++ fc=0.5
++ xti=3.5
++ xcjc=0.13
++)
+
+.model PN PNP (
++ is=2.18e-16
++ bf=391
++ br=0.862
++ ise=1.58e-16
++ ikf=0.0003
++ ikr=0.0009
++ ne=1.34
++ nc=1.5
++ tf=5.7e-9
++ tr=9.7e-8
++ cje=1.14e-13
++ cjc=5.8e-13
++ vje=0.74
++ vjc=0.74
++ mje=0.41
++ mjc=0.41
++ cjs=0
++ vjs=1
++ mjs=1
++ vaf=29
++ var=19.9
++ rc=188
++ rb=91.7
++ re=7
++ xtb=0.811
++ eg=1.17
++ fc=0.5
++ xti=3.5
++ xcjc=0.8
++ xtf=0.205
++ itf=0
++ vtf=1.03
++)
+
+* Custom current regulators - eetech00@yahoo.com
+*********
+.SUBCKT CLD0030 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0030X
+.MODEL CLD0030X NJF VTO=-0.52 BETA=.115M LAMBDA=0.1M BETATCE=0.29 VTOTC=-.0022
++ IS=100.58F PB=0.8 FC=.5 RS=165 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0050 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0050X
+.MODEL CLD0050X NJF VTO=-0.52 BETA=.19M LAMBDA=0.1M BETATCE=0.38 VTOTC=-.0028
++ IS=100.58F PB=0.8 FC=.5 RS=180 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0060 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0060X
+.MODEL CLD0060X NJF VTO=-0.52 BETA=.23M LAMBDA=0.1M BETATCE=0.40 VTOTC=-.0030
++ IS=100.58F PB=0.8 FC=.5 RS=190 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0100 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0100X
+.MODEL CLD0100X NJF VTO=-0.52 BETA=.41M LAMBDA=0.1M BETATCE=0.78 VTOTC=-.0048
++ IS=100.58F PB=0.8 FC=.5 RS=235 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0200 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0200X
+.MODEL CLD0200X NJF VTO=-1.03 BETA=.21M LAMBDA=0.1M BETATCE=-.06
++ IS=100.58F PB=0.8 FC=.5 RS=265 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0250 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0250X
+.MODEL CLD0250X NJF VTO=-1.11 BETA=.23M LAMBDA=0.1M BETATCE=-.08
++ IS=100.58F PB=0.8 FC=.5 RS=265 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0400 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0400X
+.MODEL CLD0400X NJF VTO=-1.19 BETA=.34M LAMBDA=0.1M BETATCE=-.10
++ IS=100.58F PB=0.8 FC=.5 RS=250 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD0500 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD0500X
+.MODEL CLD0500X NJF VTO=-1.23 BETA=.414M LAMBDA=0.1M BETATCE=-.13
++ IS=100.58F PB=0.8 FC=.5 RS=265 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+.SUBCKT CLD2000 1     2
+*Connections    Anode Cathode
+JFET 1 2 2 CLD2000X
+.MODEL CLD2000X NJF VTO=-3.15 BETA=.28M LAMBDA=0.1M BETATCE=-.62 VTOTC=-.003
++ IS=100.58F PB=0.8 FC=.5 RS=220 RD=2.5 CGS=1.57P CGD=6.78P
+.ENDS
+*********
+*
+* LTspice "UniversalOpamp2" Level 2
+.subckt level.2 1 2 3 4 5
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 N002 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} incm={incm} incmk={incmk} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R2 N002 4 {2*Rout} noiseless
+R1 3 N002 {2*Rout} noiseless
+R3 3 1 {2*Rin} noiseless
+R4 3 2 {2*Rin} noiseless
+R5 2 4 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+G1 0 N002 4 N002 table(0 0 10 {2*slew*Cout})
+G2 N002 0 N002 3 table(0 0 10 {2*slew*Cout})
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless level=2 epsilon={Rail/10})
+.param Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0
+.param en=0 enk=0 in=0 ink=0 incm=0 incmk=0 Rin=1G
+.ends level.2
+*
+* Digital Devices from 74HC_v.lib
+* 
+* Schmitt-inverter gate
+* tpd 41n/15n/12n
+* tr 19n/7n/6n
+* VT+ 1.18/2.38/3.14
+* VT- 0.52/1.4/1.89
+.SUBCKT 74HC14  A Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(15-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN  A Ai  VCC VGND  74HC_IN_S_1  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+*
+A1  Ai 0 0 0 0  Yi 0 0  BUF  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+* Schmitt-input; 1/3*Vcc -> 2/3*Vcc -> 1/3*Vcc
+.SUBCKT  74HC_IN_S_1  in out  VCC VGND  vcc3={vcc2}  speed3={speed2}  tripdt3={tripdt2}
+.param Cval = 0.55e-12*4/({vcc3}-0.5)*{speed3}
+.param vt1=1.89/4.5
+.param vh1=0.49/4.5
+.param gain=(1/{vcc3})
+*
+*D1 0   in  DIO1
+*D2 in VCC  DIO1
+R1 in out10 10k
+C1 out10 VGND {Cval}
+R2 in VGND 1e8
+**E1 out20 0 out10 VGND {gain}
+*B1 out20 0 V=LIMIT(0,V(out10,VGND)*{gain},1)
+B1 out20 0 V=LIMIT(0,V(out10,VGND)/max(V(VCC,VGND),1),1)
+AE1  out20 0 0 0 0  0 out 0  SCHMITT  vt={vt1} vh={vh1} vhigh=1  tripdt={tripdt3}
+.ends
+*
+* Standard output driver
+.SUBCKT  74HC_OUT_1X  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param trise1=6e-9*4.0/({vcc3}-0.5)*{speed3}
+.param Rout=60*4.0/({vcc3}-0.5)*{speed3}
+*
+AE1  in 0 0 0 0  0 out10 0  BUF  tripdt={tripdt3}  trise={trise1}
+*
+*E1 out20 VGND out10 0 {vcc3}
+B1 out20 VGND V=V(out10)*V(VCC,VGND)
+Rout out20 out {Rout}
+*D1 0   out  DIO2
+*D2 out VCC  DIO2
+.ends
+*
+.MODEL DIO2 D(Is=1e-12 Rs=10)
+*
+* Custom Digital Devices made from 74HC_v.lib
+*
+* Custom 3-input OR gate made from 74HC32 - eetech00@yahoo.com
+* tpd 22n/8n/6n
+* tr 19n/7n/6n
+.SUBCKT 74HCOR3  A B C Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(8-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+*
+A1  Ai Bi Ci 0 0  0 Yi 0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends 74HCOR3
+*
+* Custom 74HC S/R Flip Flop (new device) - eetech00@yahoo
+* tpd 25n/9n/7n
+* tr 19n/7n/6n
+.SUBCKT 74HCSRFF  S R Qno Qio  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(9-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  S Sni  VCC VGND  74HC_IN_1 vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2  R Rni  VCC VGND  74HC_IN_1 vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+*
+* A1  Ani Bni 0 0 0  Yi Yni 0  OR  tripdt={tripdt1}  td={td1}
+A1 Sni Rni 0 0 0 Qi Qni 0 SRFLOP
+*
+XOUTi  Qi Qio  VCC VGND  74HC_OUT_3X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTni  Qni Qno  VCC VGND  74HC_OUT_3X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends 74HCSRFF
+*
+* Custom DFF made from 74HC74 - eetech00@yahoo.com
+* D-filp-flop with asynchronous set and reset
+* CP->Q Tpd 47n/17n/14n
+* R/S->Q Tpd 52n/19n/15n
+* CP/R/S Tw 19n/7n/6n
+* D->CP Ts 6n/2n/2n
+* D->CP Th -6n/-2n/-2n
+* R,S Trem 3n/1n/1n
+.SUBCKT 74HCDFF  S C D R Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(17-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(19-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(17+2-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  S Si  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN3  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN4  R Ri  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+*
+ACDEL  Ci 0 0  0  0   0   Cp 0  BUF  tripdt={tripdt1}  td={td1}
+ADDEL  Di 0 0  0  0   0   Dp 0  BUF  tripdt={tripdt1}  td={td3}
+ARINV  Ri 0 0  0  0   Rn  0  0  BUF  tripdt={tripdt1}  td={td2}
+ASINV  Si 0 0  0  0   Sn  0  0  BUF  tripdt={tripdt1}  td={td2}
+A1     Di 0 Cp Sn Rn  QNi Qi 0  DFLOP  tripdt={tripdt1} td={td4}
+*
+XOUT1  Qi  Q   VCC VGND  74HC_OUT_3X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  QNi QN  VCC VGND  74HC_OUT_3X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends 74HCDFF
+*
+.SUBCKT  74HC_IN_1  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param Cval = 0.55e-12*4/({vcc3}-0.5)*{speed3}
+.param vt1=0.5
+.param gain=(1/{vcc3})
+*
+*D1 0   in  DIO1
+*D2 in VCC  DIO1
+R1 in out10 10k
+C1 out10 VGND {Cval}
+R2 in VGND 1e8
+**E1 out20 0 out10 VGND {gain}
+*B1 out20 0 V=LIMIT(0,V(out10,VGND)*{gain},1)
+B1 out20 0 V=LIMIT(0,V(out10,VGND)/max(V(VCC,VGND),1),1)
+AE1  out20 0 0 0 0  0 out 0  BUF  ref={vt1}  vhigh=1  tripdt={tripdt3}
+.ends
+*
+* Custom Very Strong output driver
+.SUBCKT  74HC_OUT_3X  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param trise1=6e-9*4.0/({vcc3}-0.5)*{speed3}
+.param Rout=12*4.0/({vcc3}-0.5)*{speed3}
+*
+AE1  in 0 0 0 0  0 out10 0  BUF  tripdt={tripdt3}  trise={trise1}
+*
+*E1  out20 VGND out10 0 {vcc3}
+B1 out20 VGND V=V(out10)*V(VCC,VGND)
+Rout  out20 out {Rout}
+*D1 0   out  DIO2
+*D2 out VCC  DIO2
+.ends
+.ends SG1525A
+*

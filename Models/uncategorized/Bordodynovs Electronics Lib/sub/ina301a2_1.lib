@@ -1,0 +1,409 @@
+* Two lines added to fix floating nodes
+* R7 7 VO 1000T ; @@@ floating node
+* ROUTx OUTx IN 1000T ; @@@ floating node
+*
+* INA301A2
+*****************************************************************************
+* (C) Copyright 2012 Texas Instruments Incorporated. All rights reserved.                                            
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+** Released by: WEBENCH(R) Design Center, Texas Instruments Inc.
+* Part: INA301A2
+* Date: 9/7/16
+* Model Type: All In One
+* Simulator: Pspice
+* Simulator Version: 16.2
+* EVM Order Number: N/A 
+* EVM Users Guide: N/A
+* Datasheet: SBOS713 - December 2015
+*
+* Model Version: 1.0
+*
+*****************************************************************************
+*
+* Updates:     
+*
+* Version 1.0 : Release to Web
+*
+*****************************************************************************
+* Notes: 
+* 1. The following op amp parameters are reflected in the model: 
+*    Aol, VOS, VCM, CMRR. IIB, Gain, BW, Noise
+* 2. The op amp slew rate is less than the value in the data sheet.
+* 3. The following comparator parameters are reflected in the data sheet:
+*    Slew rate limited prop delay, hysteresis, VOS
+* 4. This ALERT pin in this model supports only TRANSPARENT mode 
+*    and does not support LATCH mode.
+******************************************************************************
+*
+*$
+.SUBCKT INA301A2_1 INP INN OUT VS GND LIMIT ALERT        
+E_E1         N18718 GND LIMIT GND 1
+I_U1_I2         U1_VSN_WOCM GND DC 78uAdc  
+E_U1_E6         U1_N102128 U1_VSN_WOCM U1_CMIN 0 1
+R_U1_R10         INP U1_N102134  1 TC=0,0 
+E_U1_E7         U1_VINP_MID U1_VSP_WOCM U1_VMID 0 1
+E_U1_E3         U1_CMIN 0 INP U1_N69569 0.5
+R_U1_R11         INN U1_N102128  1 TC=0,0 
+E_U1_E1         U1_VMID 0 VS U1_N69815 0.5
+E_U1_E4         U1_N69569 0 0 INN 1
+E_U1_E2         U1_N69815 0 0 GND 1
+E_U1_E8         U1_VINN_MID U1_VSN_WOCM U1_VMID 0 1
+R_U1_R8         GND U1_N102134  540k TC=0,0 
+R_U1_R2         U1_VINP_MID U1_OPA_INP  5k TC=0,0 
+X_U1_U1         U1_OPA_INP U1_OPA_INN VS GND OUT INA301A2_OPA 
+R_U1_R9         U1_N102128 GND  540k TC=0,0 
+R_U1_R3         U1_VINN_MID U1_OPA_INN  5k TC=0,0 
+R_U1_R4         U1_OPA_INP GND  250e3 TC=3e-6,0 
+E_U1_E5         U1_N102134 U1_VSP_WOCM U1_CMIN 0 1.000005
+I_U1_I1         U1_VSP_WOCM GND DC 78uAdc  
+R_U1_R5         U1_OPA_INN OUT  250e3 TC=3e-6,0 
+R_U2_R2         N18718 U2_N01953  10e3 TC=0,0 
+V_U2_V1         OUT U2_N03089 1.5e-3
+X_U2_U1         COMP_OUT U2_N01953 U2_N03089 VS GND COMPARATOR 
+R_U2_R1         U2_N01953 COMP_OUT  1e6 TC=0,0 
+R_R2         COMP_OUT N18746  10k TC=0,0 
+X_U3         VS LIMIT VS LIMIT VS GND LIMIT_I 
+X_S1    N18746 GND ALERT GND DEV_A2_SCH_S1 
+C_C1         0 N18746  75p  TC=0,0
+.ENDS
+*$
+*
+.subckt DEV_A2_SCH_S1 1 2 3 4  
+S_S1         3 4 1 2 _S1
+RS_S1         1 2 1G
+.MODEL         _S1 VSWITCH Roff=1e6 Ron=1.0 Voff=2.0V Von=1.0V
+.ends DEV_A2_SCH_S1
+*
+* PSpice Model Editor - Version 16.2.0
+*$
+.SUBCKT INA301A2_OPA VIP VIN VDD VSS VO
+R7 7 VO 1000T ; @@@ floating node
+XU1        VIP VIN 23 22 GNDF  INPUT
++ PARAMS: RICM = 1G RIDM = 100e6 CICM = 1000f CIDM = 1000f
+XU2        23 20  VNOISE
++ PARAMS: NLF = 100 FLW = 0.1 NVR = 48
+XU3        12 20  VOFFS
++ PARAMS: VOFF = 75u
+XU4        VDD VSS 22 21 GNDF  PSRR
++ PARAMS: PSRRP = 140 FPSRRP = 2 PSRRN = 140 FPSRRN = 2
+XU5        21 13 GNDF  CMRR
++ PARAMS: CMRR = 120 FCMRR = 2
+XU6        12 13 VDD VSS  IBIAS
++ PARAMS: IBIASP = 1p IBIASN = 1p
+XU7        VDD VSS  IQ
++ PARAMS: IQQ = 500u
+XU8        VDD VSS 12 13 14 15 GNDF  CMR
++ PARAMS: VMAX = 0 VMIN = 0
+XU9        14 15 11 GNDF  GBW_SLEW_SE
++ PARAMS: AOL = 120 GBW = 4MEG SRP = 2MEG SRN = 2MEG IT = 1M
+XU10        11 10 GNDF  TF
+XU11        VDD VSS 10 9 VIMON GNDF  VCLAMP_W_CLAW
++ PARAMS: VMAXIO = 0.05 VMINIO = 0.005
+XU12        9 7 GNDF  ZOUT
+XU13        7 VO VIMON  OUT_CURRENT_CLAMP
++ PARAMS: IMAX = 10m IMIN = 10m
+*+ PARAMS: IMAX = 9m IMIN = 9m
+XU14        VDD VSS VIMON  ILOAD
+XU0        VDD VSS GNDF GND_FLOAT
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT INPUT   VIP  VIN  VOP  VON  GNDF 
++ PARAMS: RICM = 1G RIDM = 10K CICM = 100F  CIDM = 100F
+V1          VIP VOP 0
+V2          VIN VON 0
+C1          VOP GNDF {CICM} 
+C2          VON GNDF {CICM}
+C3          VOP VON {CIDM}
+G1          VOP GNDF VALUE =  {V(VOP,GNDF)/RICM}
+G2          VON GNDF VALUE = {V(VON,GNDF)/RICM} 
+G3          VOP VON VALUE = {V(VOP,VON)/RIDM} 
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+* BEGIN PROG NSE NANO VOLT/RT-HZ
+.SUBCKT VNOISE  1 2 PARAMS: NLF = 10 FLW = 4  NVR = 4.6
+* BEGIN SETUP OF NOISE GEN - NANOVOLT/RT-HZ
+* INPUT THREE VARIABLES
+* SET UP VNSE 1/F
+********************
+* NV/RHZ AT 1/F FREQ
+* NLF
+********************
+* FREQ FOR 1/F VAL
+* FLW
+********************
+* SET UP VNSE FB
+* NV/RHZ FLATBAND
+* NVR
+********************
+* END USER INPUT
+* START CALC VALS
+.PARAM GLF={PWR(FLW,0.25)*NLF/1164}
+.PARAM RNV={1.184*PWR(NVR,2)}
+.MODEL DVN D KF={PWR(FLW,0.5)/1E11} IS=1.0E-16
+* END CALC VALS
+I1 0 7 10E-3
+I2 0 8 10E-3
+D1 7 0 DVN
+D2 8 0 DVN
+E1 3 6 7 8 {GLF}
+R1 3 0 1E9
+R2 3 0 1E9
+R3 3 6 1E9
+E2 6 4 5 0 10
+R4 5 0 {RNV}
+R5 5 0 {RNV}
+R6 3 4 1E9
+R7 4 0 1E9
+E3 1 2 3 4 1
+C1 1 0 1E-15
+C2 2 0 1E-15
+C3 1 2 1E-15
+.ENDS
+*$
+* END PROG NSE NANOV/RT-HZ
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT VOFFS VP  VN 
++ PARAMS: VOFF = 0
+V1  VP  VN {VOFF}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+.SUBCKT PSRR   VDD  VSS  VI  VO  GNDF 
++ PARAMS: PSRRP = 130 FPSRRP = 1.6
++ PSRRN = 130 FPSRRN = 1.6
+.PARAM PI = 3.141592
+.PARAM RPSRRP = 1
+.PARAM GPSRRP = {PWR(10,-PSRRP/20)/RPSRRP}
+.PARAM LPSRRP = {RPSRRP/(2*PI*FPSRRP)}
+.PARAM RPSRRN = 1
+.PARAM GPSRRN = {PWR(10,-PSRRN/20)/RPSRRN}
+.PARAM LPSRRN = {RPSRRN/(2*PI*FPSRRN)}
+G1  GNDF 1 VDD GNDF {GPSRRP}
+R1  1 2 {RPSRRP}
+L1  2 GNDF {LPSRRP}
+G2  GNDF 3 VSS GNDF {GPSRRN}
+R2  3 4 {RPSRRN}
+L2  4 GNDF {LPSRRN}
+E1  VO VI VALUE = {V(1,GNDF) + V(3,GNDF)}
+C3  VDD VSS 10P
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+.SUBCKT CMRR   VI  VO  GNDF PARAMS: CMRR = 130 FCMRR = 1.6K
+.PARAM PI = 3.141592
+.PARAM RCMRR = 1
+.PARAM GCMRR = {PWR(10,-CMRR/20)/RCMRR}
+.PARAM LCMRR = {RCMRR/(2*PI*FCMRR)}
+G1  GNDF 1 VI GNDF {GCMRR}
+R1  1 2 {RCMRR}
+L1  2 GNDF {LCMRR}
+E1  VI VO 1 GNDF 1
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT IBIAS VIP  VIM  VDD  VSS
++ PARAMS: IBIASP = 1e-12 IBIASN = 1e-12
+IBP  VDD  VIP  {IBIASP}
+IBN  VSS  VIM  {IBIASN}
+.ENDS
+*$
+**************************************
+**  				    **
+**         		            ** 
+**      			    **          
+**     		             	    **
+**************************************
+.SUBCKT IQ  VDD VSS
++ PARAMS: IQQ = 1M  IOFF = 1P
+G1 VDD VSS VALUE = {IQQ + IOFF*0}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+.SUBCKT CMR   VDD  VSS  VIP  VIM  VOP VOM  GNDF 
++ PARAMS: VMAX = 0 VMIN = 0
+ECLAMPP  VOP GNDF VALUE = {LIMIT(V(VIP,GNDF),V(VDD,GNDF) - VMAX, V(VSS,GNDF) + VMIN)}
+ECLAMPM  VOM GNDF VALUE = {LIMIT(V(VIM,GNDF),V(VDD,GNDF) - VMAX, V(VSS,GNDF) + VMIN)}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT GBW_SLEW_SE  VIP  VIM  VO  GNDF 
++ PARAMS: Aol = 120  GBW = 3Meg  SRP = 2Meg  SRN = 2Meg IT = 1M
+.PARAM PI = 3.141592
+.PARAM IP = {IF(SRP <= SRN,IT,IT*(SRP/SRN))}
+.PARAM IN = {IF(SRN <= SRP,-IT,-IT*(SRN/SRP))}
+.PARAM Cc = {IF(SRP <= SRN,IT/SRP,IT/SRN)}
+.PARAM fp = {GBW/PWR(10,Aol/20)}
+.PARAM Rc = {1/(2*PI*Cc*fp)}
+.PARAM Gc = {PWR(10,Aol/20)/Rc}
+G1          GNDF VO VALUE = {IF(V(VIP,VIM) >= 200M,IP,IF(V(VIP,VIM) <= -200M,IN,Gc*V(VIP,VIM)))}
+C1          VO GNDF {Cc}
+R1          VO GNDF {Rc}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+.SUBCKT  TF  VI  VO  GNDF
++ PARAMS: A = 1
+E1    VO  GNDF  VI  GNDF  {A}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+.SUBCKT VCLAMP_W_CLAW  VDD  VSS  VI  VO VIMON  GNDF
++ PARAMS: VMAXIO = 0 VMINIO = 0
+EPCLIP	VDD_CLP 0  VALUE = {IF(0 <= 
++ V(VIMON) & V(VIMON) <= 2.25M,V(VDD,GNDF) - 131.1111*V(VIMON) - VMAXIO,
++  IF(2.25M < V(VIMON) & V(VIMON) <= 
++ 4.76M,V(VDD,GNDF) - 121.5139*V(VIMON) - 21.5936M - VMAXIO,
++  IF(4.76M < V(VIMON) & V(VIMON) <= 
++ 6.56M,V(VDD,GNDF) - 222.2222*V(VIMON) + 457.7778M - VMAXIO,
++  IF(6.56M < V(VIMON) & V(VIMON) <= 
++ 8M,V(VDD,GNDF) - 625*V(VIMON) + 3.1 - VMAXIO,
++  IF(8M < V(VIMON) & V(VIMON) < 
++ 9M,V(VDD,GNDF) - 900*V(VIMON) + 5.3 - VMAXIO,V(VDD,GNDF) - VMAXIO)))))}
+ENCLIP	VSS_CLP 0  VALUE = {IF(0 >= V(VIMON) & V(VIMON) >= 
++ -2.25M,V(VSS,GNDF) - 132*V(VIMON) + VMINIO,
++  IF(-2.25M > V(VIMON) & V(VIMON) >= 
++ -4.76M,V(VSS,GNDF) - 159.3625*V(VIMON) - 61.5657M + VMINIO,
++  IF(-4.76M > V(VIMON) & V(VIMON) >= 
++ -6.56M,V(VSS,GNDF) - 222.2222*V(VIMON) - 360.7778M + VMINIO,
++  IF(-6.56M > V(VIMON) & V(VIMON) >= 
++ -8M,V(VSS,GNDF) - 625*V(VIMON) - 3.003 + VMINIO,
++  IF(-8M > V(VIMON) & V(VIMON) > 
++ -9M,V(VSS,GNDF) - 900*V(VIMON) - 5.203 + VMINIO,V(VSS,GNDF) + VMINIO)))))}
+ECLAMP  VO GNDF VALUE = {LIMIT(V(VI,GNDF), V(VDD_CLP), V(VSS_CLP))}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  **
+**                                  **
+**                                  **
+**************************************
+.SUBCKT  ZOUT  VI  VO  GNDF
++ PARAMS: RO = 50
+G1    GNDF  VO  VI  GNDF  {1/RO}
+G2    VO  GNDF  VALUE = {V(VO,GNDF)/RO}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT OUT_CURRENT_CLAMP  IN  OUT  VIMON
++PARAMS: RSER = 1 IMAX = 10M  IMIN = 10M
+ROUTx OUTx IN 1000T ; @@@ floating node
+HSENS  VIMON 0 VSENS 1
+VSENS  OUTy OUT  0
+GRESP  OUTx OUTy VALUE = {LIMIT(V(OUTx,OUT)/RSER,IMAX,-IMIN)}
+;GRESN  IN OUTx VALUE = {-V(IN,OUTx)/RSER}
+.ENDS
+*$
+**************************************
+**  				    **
+**         		            ** 
+**      			    **          
+**     		             	    **
+**************************************
+.SUBCKT ILOAD  VDD VSS VIMON
+G1 VDD 0 VALUE = {IF(V(VIMON) >= 0,V(VIMON),0)}
+G2 0 VSS VALUE = {IF(V(VIMON) < 0,V(VIMON),0)}
+.ENDS
+*$
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT GND_FLOAT  VDD VSS GNDF 
+EGNDF  GNDF 0 VALUE = {(V(VDD)+V(VSS))*0.5}
+*EGNDF  GNDFx 0 VALUE = {(V(VDD)+V(VSS))*0.5}
+*GGNDF  GNDFx GNDF VALUE = {V(GNDFx,GNDF)*1U}
+*CGNDF  GNDF  0    10U
+.ENDS
+*$
+*
+.SUBCKT COMPARATOR OUT INP INN VCC VEE 
+emid nmid 0 VALUE = {(V(VCC) + V(VEE))/2}
+eout out nmid VALUE = {IF(V(INP) >= V(INN),V(VCC,nmid),V(VEE,nmid))}
+.ends
+*$
+**************************************
+**                                  **
+**                                  ** 
+**                                  **          
+**                                  **
+**************************************
+.SUBCKT LIMIT_I IN OUT VC1 VC2 VCC VEE
+.PARAM m = -180u
+.PARAM b = 80u
+GOUT IN OUT VALUE = {IF(V(VC1,VC2) >= 0.1,80u,0)}
+*GOUT IN OUT VALUE = {max(V(IN,OUT)/6000,V(IN,OUT)/((V(VC1,VC2)/80u)))}
+*GOUT IN OUT VALUE = {max(V(IN,OUT)/((V(VC1,VC2)/80u))}
+*IOUT IN OUT 80u
+*GOUT IN OUT VALUE = {-max(0,b + m*V(VC1,VC2))}
+*GOUT IN OUT VALUE = {-min(80u,m*V(VC1,VC2)+b)}     V(VC1,VC2)/5400
+.ENDS
+*$
+

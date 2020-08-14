@@ -1,0 +1,514 @@
+* SCR behavioral model
+* Duane Hanselman 2007-08-21
+.subckt SCRB A G C
+D1 n1 G D
+WSCR A n1 V1 Iswitch
+V1 G C 0
+.model D D
+.model Iswitch CSW(Ron=0.1 Roff=1MEG It=1m)
+.ends
+*				Anode
+*				| Cathode
+*				|	| Trigger
+*				|  	|	|
+.subckt Scr_Edn	1	2	3
+*
+* Models used by the SCR model:
+.model STH VSwitch	(ROn=0.1,VOff=0.5)
+.model DLG D	(Rs =25m)
+*
+* We assume that the SCR in the on state is equivalent to 0.1 ohm:
+SSCR	1 4 5 0 STH
+VSCR	4 2	0V
+*
+* Trigger to cathode impedance is a 1k ohm resistance  for simplification:
+RTrig	3 2 1k
+*
+* The following circuit locks in the on state when a 1mA current flows
+* through the gate to the cathode with a positive anode to cathode voltage.
+* This circuit locks in the off state when the current through ths SCR tends
+* to become negative:
+VPlus 6 0 2V
+SiTrig	6 5 3 2	STH
+CState 5 0 	1uF IC=0
+DLogic 5 8	DLG
+HCur 8 0 poly(1) VSCR 1 10000
+*
+* The potential of node 5 reflects the state of the SCR. It is less than 1V
+* for the off state and between 1V and 2V in the on state.
+.ends
+*Default SCR - pin order: A G K
+.SUBCKT XSCR  1 2 3
+Q1 2 4 1 QPSCR AREA=.67 OFF
+Q2 4 2 3 QNSCR AREA=.67
+Q3 5 4 1 QPSCR AREA=.33 OFF
+Q4 4 5 3 QNSCR AREA=.33
+RBN 2 5 40
+.MODEL QNSCR NPN(TF=400NS TR=1.6US CJC=75PF CJE=175PF XTB=2.5
++ IS=1E-14 ISE=3E-9 NE=2 BF=100 BR=25 ISC=3E-9 NC=2)
+.MODEL QPSCR PNP(TF=90NS TR=180NS CJC=75PF CJE=80PF XTB=2.5 
++ IS=1E-14 ISE=3E-9 NE=2 BF=50 BR=25 ISC=3E-9 NC=2 RE=.03)
+.ENDS XSCR
+
+* IR 1200V If=110A tq=16us: A G K
+.SUBCKT XS19CF 1 3 2
+S1 1 5 6 2 SMOD
+RG 3 4 50
+VX 4 2 DC 0
+VY 5 7 DC 0
+DT 7 2 DMOD
+RT 6 2 1
+CT 6 2 10UF
+BF1 2 6 I=50*I(VX)+11*I(VY)
+.MODEL SMOD SW(VT=1 RON=0.0105 ROFF=100E5)
+.MODEL DMOD D(IS=2.2E-15 BV=1200 TT=0 CJO=0)
+.ENDS XS18CF
+
+*Motorola 200V If=1.6A Igt=.2mA Vgt=.8V: A G K
+.SUBCKT 2N2326   1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    40MEG
+RR  1 4    26.6MEG
+RGK 6 5    2.25k
+RG  2 6    51.9
+RK  3 5    43.3M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=.64F IBV=1U BV=200 RS=6MEG)
+.MODEL ZR   D (IS=.64F IBV=1U BV=266)
+.MODEL ZGK  D (IS=.64F IBV=1U BV=5)
+.MODEL POUT PNP (IS=640F BF=1 CJE=1.34N)
+.MODEL NOUT NPN (IS=640F BF=100 RC=.173
++ CJE=1.34N CJC=268P TF=80.1N TR=11.4U)
+.ENDS X2N2326
+
+*300V  8A
+.SUBCKT 2N4171  1 2 3
+*    TERMINALS:   A G K
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    600K
+RR  1 4    400K
+RGK 6 5    112
+RG  2 6    4.61
+RK  3 5    8.13M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=3.2F IBV=100U BV=300 RS=90K)
+.MODEL ZR   D (IS=3.2F IBV=100U BV=400)
+.MODEL ZGK  D (IS=3.2F IBV=100U BV=5)
+.MODEL POUT PNP (IS=3.2P BF=1 CJE=670P)
+.MODEL NOUT NPN (IS=3.2P BF=100 RC=32.5M
++ CJE=670P CJC=134P TF=179N TR=25.5U)
+.ENDS X2N4171 
+* C106A  SCR  A G K  MCE  7-17-95
+*MCE  100V  4A  pkg:TO-225AA
+.SUBCKT C106A   1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    22.2MEG
+RR  1 4    14.8MEG
+RGK 6 5    1.12K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=900N BV=100 RS=3.33MEG)
+.MODEL ZR   D (IS=1.6F IBV=900N BV=133)
+.MODEL ZGK  D (IS=1.6F IBV=900N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=418P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=418P CJC=83.7P TF=214N TR=68U)
+.ENDS XC106A
+
+* C106B  SCR  A G K  MCE  7-17-95
+*MCE  200V  4A  pkg:TO-225AA
+.SUBCKT C106B   1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    44.4MEG
+RR  1 4    29.6MEG
+RGK 6 5    1.12K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=900N BV=200 RS=6.67MEG)
+.MODEL ZR   D (IS=1.6F IBV=900N BV=266)
+.MODEL ZGK  D (IS=1.6F IBV=900N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=418P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=418P CJC=83.7P TF=214N TR=68U)
+.ENDS XC106B
+
+* C106D  SCR  A G K  MCE  7-17-95
+*MCE  400V  4A  pkg:TO-225AA
+.SUBCKT C106D   1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    88.9MEG
+RR  1 4    59.2MEG
+RGK 6 5    1.12K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=900N BV=400 RS=13.3MEG)
+.MODEL ZR   D (IS=1.6F IBV=900N BV=533)
+.MODEL ZGK  D (IS=1.6F IBV=900N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=418P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=418P CJC=83.7P TF=214N TR=68U)
+.ENDS XC106D
+
+* C106F  SCR  A G K  MCE  7-17-95
+*MCE  50V  4A  pkg:TO-225AA
+.SUBCKT C106F   1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    11.1MEG
+RR  1 4    7.4MEG
+RGK 6 5    1.12K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=900N BV=50 RS=1.66MEG)
+.MODEL ZR   D (IS=1.6F IBV=900N BV=66.6)
+.MODEL ZGK  D (IS=1.6F IBV=900N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=418P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=418P CJC=83.7P TF=214N TR=68U)
+.ENDS XC106F
+
+* C106M  SCR  A G K  MCE  7-17-95
+*MCE 600V  4A  pkg:TO-225AA
+.SUBCKT C106M   1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    133MEG
+RR  1 4    88.9MEG
+RGK 6 5    1.12K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=900N BV=600 RS=20MEG)
+.MODEL ZR   D (IS=1.6F IBV=900N BV=800)
+.MODEL ZGK  D (IS=1.6F IBV=900N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=418P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=418P CJC=83.7P TF=214N TR=68U)
+.ENDS XC106M
+
+*GE     A G K
+.SUBCKT C149M10 1 2 3
+RGATE 2 5 20
+VGS 5 1 0
+SCRSW 3 4 6 1 SWMOD
+CSWITCH 3 4 450PF
+VAS 4 1 0
+FSENSE 1 6 POLY(2) VGS VAS 0 50 11
+RSENSE 6 1 1
+CR 6 1 10UF
+.MODEL SWMOD SW RON=0.0125 ROFF=103000 VT=1 VH=0
+*.MODEL SSCR VSWITCH (RON=0.0125 ROFF=103000 VON=1 VOFF=0)
+.ENDS XC149M10
+
+
+* MCR100-3  SCR  A G K  MCE  7-17-95
+*MCE MCR100-3 100V  800mA  pkg:TO-226AA
+.SUBCKT MCR100-3 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    20MEG
+RR  1 4    13.3MEG
+RGK 6 5    6.25K
+RG  2 6    9.17
+RK  3 5    81.3M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=.32F IBV=1U BV=100 RS=3MEG)
+.MODEL ZR   D (IS=.32F IBV=1U BV=133)
+.MODEL ZGK  D (IS=.32F IBV=1U BV=5)
+.MODEL POUT PNP (IS=320F BF=1 CJE=67P)
+.MODEL NOUT NPN (IS=320F BF=100 RC=.325
++ CJE=67P CJC=13.4P TF=56.6N TR=8.06U)
+.ENDS XMCR1003
+
+* MCR100-4  SCR  A G K  MCE  7-17-95
+*MCE MCR100-4 200V  800mA  pkg:TO-226AA
+.SUBCKT MCR100-4 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    40MEG
+RR  1 4    26.6MEG
+RGK 6 5    6.25K
+RG  2 6    9.17
+RK  3 5    81.3M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=.32F IBV=1U BV=200 RS=6MEG)
+.MODEL ZR   D (IS=.32F IBV=1U BV=266)
+.MODEL ZGK  D (IS=.32F IBV=1U BV=5)
+.MODEL POUT PNP (IS=320F BF=1 CJE=67P)
+.MODEL NOUT NPN (IS=320F BF=100 RC=.325
++ CJE=67P CJC=13.4P TF=56.6N TR=8.06U)
+.ENDS XMCR1004
+
+* MCR100-6  SCR  A G K  MCE  7-17-95
+*MCE MCR100-6 400V  800mA  pkg:TO-226AA
+.SUBCKT MCR100-6 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    80MEG
+RR  1 4    53.3MEG
+RGK 6 5    6.25K
+RG  2 6    9.17
+RK  3 5    81.3M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=.32F IBV=1U BV=400 RS=12MEG)
+.MODEL ZR   D (IS=.32F IBV=1U BV=533)
+.MODEL ZGK  D (IS=.32F IBV=1U BV=5)
+.MODEL POUT PNP (IS=320F BF=1 CJE=67P)
+.MODEL NOUT NPN (IS=320F BF=100 RC=.325
++ CJE=67P CJC=13.4P TF=56.6N TR=8.06U)
+.ENDS XMCR1006
+
+* MCR100-8  SCR  A G K  MCE  7-17-95
+*MCE MCR100-8 600V  800mA  pkg:TO-226AA
+.SUBCKT MCR100-8 1 2 3
+*    TERMINALS:  A G K
+*  600 Volt  .8 Amp  SCR  07-17-1995
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    120MEG
+RR  1 4    80MEG
+RGK 6 5    6.25K
+RG  2 6    9.17
+RK  3 5    81.3M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=.32F IBV=1U BV=600 RS=18MEG)
+.MODEL ZR   D (IS=.32F IBV=1U BV=800)
+.MODEL ZGK  D (IS=.32F IBV=1U BV=5)
+.MODEL POUT PNP (IS=320F BF=1 CJE=67P)
+.MODEL NOUT NPN (IS=320F BF=100 RC=.325
++ CJE=67P CJC=13.4P TF=56.6N TR=8.06U)
+.ENDS XMCR1008
+
+* MCR106-2  SCR  A G K  MCE  7-17-95
+*MCE MCR106-2  60V  4A  pkg:TO-225AA
+.SUBCKT MCR106-2 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    15MEG
+RR  1 4    10MEG
+RGK 6 5    6.25K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=800N BV=60 RS=2.25MEG)
+.MODEL ZR   D (IS=1.6F IBV=800N BV=80)
+.MODEL ZGK  D (IS=1.6F IBV=800N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=60.3P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=60.3P CJC=12P TF=126N TR=18U)
+.ENDS XMCR1062
+
+* MCR106-3  SCR  A G K  MCE  7-17-95
+*MCE MCR106-3  100V  4A  pkg:TO-225AA
+.SUBCKT MCR106-3 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    25MEG
+RR  1 4    16.6MEG
+RGK 6 5    6.25K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=800N BV=100 RS=3.75MEG)
+.MODEL ZR   D (IS=1.6F IBV=800N BV=133)
+.MODEL ZGK  D (IS=1.6F IBV=800N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=60.3P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=60.3P CJC=12P TF=126N TR=18U)
+.ENDS XMCR1063
+
+* MCR106-4  SCR  A G K  MCE  7-17-95
+*MCE MCR106-4  200V  4A  pkg:TO-225AA
+.SUBCKT MCR106-4 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    50MEG
+RR  1 4    33.3MEG
+RGK 6 5    6.25K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=800N BV=200 RS=7.5MEG)
+.MODEL ZR   D (IS=1.6F IBV=800N BV=266)
+.MODEL ZGK  D (IS=1.6F IBV=800N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=60.3P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=60.3P CJC=12P TF=126N TR=18U)
+.ENDS XMCR1064
+
+* MCR106-6  SCR  A G K  MCE  7-17-95
+*MCE MCR106-6  400V  4A  pkg:TO-225AA
+.SUBCKT MRC106-6 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    100MEG
+RR  1 4    66.6MEG
+RGK 6 5    6.25K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=800N BV=400 RS=15MEG)
+.MODEL ZR   D (IS=1.6F IBV=800N BV=533)
+.MODEL ZGK  D (IS=1.6F IBV=800N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=60.3P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=60.3P CJC=12P TF=126N TR=18U)
+.ENDS XMRC1066
+
+* MCR106-8  SCR  A G K  MCE  7-17-95
+*MCE MCR106-8  600V  4A  pkg:TO-225AA
+.SUBCKT MRC106-8 1 2 3
+QP  6 4 1  POUT OFF
+QN  4 6 5  NOUT OFF
+RF  6 4    150MEG
+RR  1 4    100MEG
+RGK 6 5    6.25K
+RG  2 6    46.2
+RK  3 5    16.2M
+DF  6 4    ZF
+DR  1 4    ZR
+DGK 6 5    ZGK
+.MODEL ZF   D (IS=1.6F IBV=800N BV=600 RS=22.5MEG)
+.MODEL ZR   D (IS=1.6F IBV=800N BV=800)
+.MODEL ZGK  D (IS=1.6F IBV=800N BV=6)
+.MODEL POUT PNP (IS=1.6P BF=1 CJE=60.3P)
+.MODEL NOUT NPN (IS=1.6P BF=100 RC=65M
++ CJE=60.3P CJC=12P TF=126N TR=18U)
+.ENDS XMRC1068
+*
+.SUBCKT MCR08MT1 anode gate cathode PARAMS:
+**************************************
+*    Model Generated by EVAL LAB     *
+*          July 23, 2003            *
+*   Copyright(c) On Semiconductor    *
+*         All Rights Reserved        *
+*Commercial Use or Resale Restricted *
+**************************************
+*SCR
+*MODEL FORMAT: PSpice
++ Vdrm=600v     Vrrm=600v     Idrm=10u
++ Ih=2.5ma        dVdt=10e6
+* Vgt must be greater than 0.65v
++ Igt=6.5ua      Vgt=0.66v
++ Vtm=1.4v      Itm=1.0
++ Ton=2u        Toff=15u
+
+* Where:
+* Vdrm =>  Forward breakover voltage
+* Vrrm =>  Reverse breakdown voltage
+* Idrm =>  Peak blocking current
+* Ih   =>  Holding current
+* dVdt =>  Critical value for dV/dt triggering
+* Igt  =>  Gate trigger current
+* Vgt  =>  Gate trigger voltage
+* Vtm  =>  On-state voltage
+* Itm  =>  On-state current
+* Ton  =>  Turn-on time
+* Toff =>  Turn-off time
+
+* Main conduction path
+Scr      anode   anode0  control 0       Vswitch ; controlled switch
+Dak1     anode0  anode2  Dakfwd  OFF             ; SCR is initially off
+Dka      cathode anode0  Dkarev  OFF
+VIak     anode2  cathode                         ; current sensor
+
+* dVdt Turn-on
+Emon     dvdt0   0       TABLE {v(anode,cathode)} (0 0) (2000 2000)
+CdVdt    dvdt0   dvdt1   100pfd                  ; displacement current
+Rdlay    dvdt1   dvdt2   1k
+VdVdt    dvdt2   cathode DC 0.0
+EdVdt    condvdt 0       TABLE {i(vdVdt)-100p*dVdt}  (0 0 ) (.1m 10)
+RdVdt    condvdt 0       1meg
+
+* Gate
+Rseries  gate    gate1   {(Vgt-0.65)/Igt}
+Rshunt   gate1   gate2   {0.65/Igt}
+Dgkf     gate1   gate2   Dgk
+VIgf     gate2   cathode                         ; current sensor
+
+* Gate Turn-on
+Egate1   gate4   0       TABLE {i(Vigf)-0.95*Igt} (0 0) (1m 10)
+Rgate1   gate4   0       1meg
+Egon1    congate 0       TABLE {v(gate4)*v(anode,cathode)} (0 0) (10 10)
+Rgon1    congate 0       1meg
+
+* Main Turn-on
+EItot    Itot    0       TABLE {i(VIak)+5E-5*i(VIgf)/Igt} (0 0) (2000 2000)
+RItot    Itot    0       1meg
+Eprod    prod    0       TABLE {v(anode,cathode)*v(Itot)} (0 0) (1 1)
+Rprod    prod    0       1meg
+Elin     conmain 0       TABLE
++        {10*(v(prod) - (Vtm*Ih))/(Vtm*Ih)} (0 0) (2 10)
+Rlin     conmain 0       1meg
+
+* Turn-on/Turn-off control
+Eonoff   contot  0       TABLE
++        {v(congate)+v(conmain)+v(condvdt)} (0 0) (10 10)
+
+* Turn-on/Turn-off delays
+Rton    contot  dlay1   825
+Dton    dlay1   control Delay
+Rtoff   contot  dlay2   {290*Toff/Ton}
+Dtoff   control dlay2   Delay
+Cton    control 0       {Ton/454}
+
+* Reverse breakdown
+Dbreak  anode   break1  Dbreak
+Dbreak2 cathode break1  Dseries
+
+* Controlled switch model
+.MODEL Vswitch vswitch
++ (Ron = {(Vtm-0.7)/Itm}, Roff = {Vdrm*Vdrm/(Vtm*Ih)},
++  Von = 5.0,             Voff = 1.5)
+
+* Diodes
+.MODEL  Dgk     D       (Is=1E-16 Cjo=50pf Rs=5)
+.MODEL  Dseries D       (Is=1E-14)
+.MODEL  Delay   D       (Is=1E-12 Cjo=5pf  Rs=0.01)
+.MODEL  Dkarev  D       (Is=1E-10 Cjo=5pf  Rs=0.01)
+.MODEL  Dakfwd  D       (Is=4E-11 Cjo=5pf)
+.MODEL  Dbreak  D       (Ibv=1E-7 Bv={1.1*Vrrm} Cjo=5pf Rs=0.5)
+
+* Allow the gate to float if required
+Rfloat  gate    cathode 1e10
+
+.ENDS

@@ -1,0 +1,27 @@
+* FQA33N10 100V N-CHANNEL DMOSFET ELECTRICAL PARAMETERS
+*------------------------------------------------------------------------------------
+.SUBCKT  FQA33N10  20  10  30
+Rg      10   1    1
+M1      2    1    3    3    DMOS    L=1u   W=1u
+.MODEL DMOS NMOS (VTO={3.88*{-0.00063*TEMP+1.01575}}  KP={26.6*{-0.000082*TEMP+1.00205}}
++ THETA=0.056  VMAX=0.92E5  LEVEL=3) 
+Cgs     1    3    1088p
+Rd      20   4    24m      TC=0.0087
+Dds     3    4    DDS
+.MODEL     DDS    D(BV={100*{0.001*TEMP+0.975}}  M=0.5    CJO=258p    VJ=0.8)
+Dbody   3    20   DBODY
+.MODEL   DBODY    D(IS=2.5E-12   N=1.0   RS=3.6m   EG=1.14   TT=80n)
+Ra      4    2    8m       TC=0.0087
+Rs      3    5    0.8m    
+Ls      5    30   2.6n
+M2      1    8    6    6   INTER
+E2      8    6    4    1    2
+.MODEL   INTER    NMOS(VTO=0     KP=10     LEVEL=1)
+Cgdmax  7    4    2075p
+Rcgd    7    4    10meg
+Dgd     6    4    DGD
+Rdgd    4    6    10meg
+.MODEL     DGD    D(M=0.76     CJO=2075p     VJ=0.45)
+M3      7    9    1    1   INTER
+E3      9    1    4    1   -2
+.ENDS FQA33N10

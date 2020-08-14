@@ -1,0 +1,33 @@
+* LM358A behavioral model for LTspice
+.subckt LM358As in+ in- Vcc Vee Out
+.param GBW=1e6 Avol=3e5 Slew=5e5 Vos=0
+D1 B- in- Dp
+D2 B+ in+ Dp
+C1 Vcc B+ 1p
+C2 Vcc B- 1p
+D3 Vcc B+ Ib
+D4 Vcc B- Ib
+D5 Vee B+ Ds
+D6 Vee B- Ds
+A1 B- B+ Vee Vee Vee Vee x Vee OTA G={Avol/Ro} ref={Vos} Iout={slew*Co}
++ Rout={Ro} Cout={Co} Vhigh=50 Vlow=0
+D7 x Vcc Di
+S1 Out Vcc x Out Qn
+S2 Vee Out Out x Qp
+D8 Out Vee 50uA
+C3 Out Vcc 5p
+C4 Vee Out 5p
+D9 Out Vcc Ds
+D10 Vee Out Ds
+I1 Vcc Vee TBL(0 0 2 0m3 32 0m6 35 1)
+.model Dp d Is=1f Rs=1k Cjo=3p
+.model Ib d Ilimit=20n Ron=1k Roff=5e7 Vfwd=0.5 Epsilon=0.15 noiseless
+.model Ds d Ron=1 Epsilon=10 noiseless
+.model Di d Ron=1 Epsilon=1m noiseless
+.model Qn SW level=2 noiseless epsilon=0.5
++ Ron=20 Roff=1e8 Vt=1.1 Vh=-.3 Vser=1 ilimit=45m
+.model Qp SW level=2 noiseless epsilon=0.5
++ Ron=40 Roff=1e7 Vt=0.55 Vh=-50m Vser=50m ilimit=35m
+.param Ro=1e6 Co={Avol/GBW/2/pi/Ro}
+.model 50uA d Ilimit=50u Ron=500 Roff=1G Vfwd=10m Epsilon=10m noiseless
+.ends LM358As

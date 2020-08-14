@@ -1,0 +1,21 @@
+.subckt g3vm-101 1 2 3 4 5 6
+D1 1 N003 LED
+Vam N003 2 0
+C1 1 2 {Cin}
+R1 3 0 1T
+D2 N001 5 PHO n=12
+M1 6 N002 5 5 NMOS1
+M2 4 N002 5 5 NMOS1
+B1 5 N001 I=k*i(Vam)
+D3 N001 N002 D1
+Q1 5 N001 N002 0 PNP1
+R2 5 N001 1Meg
+C2 6 1 0.4p Rpar=2Gig
+C3 4 2 0.4p Rpar=2Gig
+.model LED D(Is=1e-16 Rs=3 N=1.5 Eg=1.8  TT=100n ibv=10u bv=5)
+.model NMOS1 VDMOS(Vto=3 Kp={5/RON} Rd={0.85*RON} Cgs={50p/RON} Cjo={50p/RON} RDS=100Meg)
+.model PHO D(Is=1p  N=1  CJ=50p TT=100n)
+.param Ron=50m Ton=2m Toff=0.1m k=1m Cin=70p
+.model PNP1 PNP BF=7 Cje=1p tf=1n
+.model D1 D is=1p  tt=1n
+.ends g3vm-101

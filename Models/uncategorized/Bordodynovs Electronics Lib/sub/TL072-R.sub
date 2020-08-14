@@ -1,0 +1,46 @@
+.subckt TL072-R INP INN VSP VSN OUT
+Q8 VSP Q11_C Q8_E 0 N1 10
+Q9 Q11_C Q10_E Q9_E 0 N1
+R8 INN Q13_D 500G
+R9 VSP R9_N 75 
+I1 Q16_B VSN 400u
+Q16 Q16_B Q16_B VSP 0 P1
+J$Q14 Q14_D INP Q12_C PJ
+Q12 Q12_C Q16_B R9_N 0 P1
+J$Q13 Q13_D INN Q12_C PJ
+Q10 Q11_C Q11_C Q10_E 0 N1
+Q11 Q11_C Q16_B VSP 0 P1
+R10 OUT R5_N 128
+R11 INP Q14_D 500G
+C1 Q9_E Q14_D 18p
+D1 VSN Q16_B IDEAL
+D2 Q14_D Q9_E IDEAL
+Q2 Q14_D Q3_E Q2_E 0 N1
+R4 Q5_E VSN 800 
+R5 Q8_E R5_N 64
+Q3 VSP Q13_D Q3_E 0 N1
+R6 R5_N R6_N 64
+Q1 Q13_D Q3_E Q1_E 0 N1
+R7 Q10_E Q9_E 1K
+R1 Q1_E VSN 1.08k
+Q7 VSN Q9_E R6_N 0 P1 10
+Q4 VSP Q14_D Q4_E 0 N1
+R2 Q2_E VSN 1.08k
+R3 Q4_E VSN 100k
+Q5 Q9_E Q4_E Q5_E 0 N1
+
+** Note that this model has nominally better offset
+** and CMRR than real devices as the input transistors
+** are perfectly matched.
+
+** It is recommended that offset effects are simulated using
+** Monte Carlo analysis. The tolerance model below has been
+** designed to give an accurate distribution
+
+.model PJ PJF BETA={GAUSS(0.01)*200u} VTO={GAUSS(0.003)*(-2)} kf=0.7e-17 af=1 isr=1e-11
+
+.model N1 NPN IS=1e-15 BF=200 IKF=0.05 TF=0.5n CJC=0.5p VAF=200
+.model P1 PNP IS=2e-15 BF=100 IKF=0.01 TF=2n CJC=1p VAF=50
+
+.model IDEAL D (IS=1p) CJO=0.02p
+.ends

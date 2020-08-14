@@ -1,0 +1,348 @@
+* Source File: lm2679fixblk.asc,lm2679adjblk.asc
+* Developer: ETech (eetech00@yahoo.com) 
+* Created: Jul 03 2016
+* Revision: NA
+*
+* This LM2679 spice behavioural model was tested
+* with LTSpice. Temperature is not modelled.
+* 
+* Texas Instruments
+* LM2679 SIMPLE SWITCHER Power Converter 260KHz 5A Step-Down Voltage Regulator
+*
+* LM2679-3.3
+.subckt LM267903 IADJ FB IN OUT VGND CB SS
+.param R2=4.32k
+X1Reg IADJ FB IN OUT VGND CB SS lm2679fixblk params: R2={R2}
+.ends LM267903
+*
+* LM2679-5.0
+.subckt LM267905 IADJ FB IN OUT VGND CB SS
+.param R2=7.83k
+X1Reg IADJ FB IN OUT VGND CB SS lm2679fixblk params: R2={R2}
+.ends LM267905
+*
+* LM2679-12.0
+.subckt LM267912 IADJ FB IN OUT VGND CB SS
+.param R2=22.3k
+X1Reg IADJ FB IN OUT VGND CB SS lm2679fixblk params: R2={R2}
+.ends LM267912
+
+* LM2679-ADJ
+.subckt LM2679ADJ IADJ FB IN OUT VGND CB SS
+X1Reg IADJ FB IN OUT VGND CB SS lm2679adjblk
+.ends LM2679ADJ
+
+* block symbol definitions
+.subckt lm2679fixblk IADJ FB IN OUT VGND CB SS
+A2 ramp err 0 0 0 0 pwm 0 SCHMITT Vt=0 Vh=1m Td={TD} TRISE={TRISE} Vhigh={HIGH} VLow={LOW}
+VIOUTN VGND outn 0
+XX5 pwm dcmax ilim1 0 0 clk 0 0 0 0 NC_03 q latchblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX8 fbin outn errout errampblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH=3.2 LOW=0.6 Td={TD}
+XX1 IN _on/off vs NC_04 reg NC_05 NC_06 NC_07 outn onoffblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX4 clk dcmax ramp reg freq dclim oscdclim params: HIGH=3.2 LOW=0.6
+B1 freq outn V=((V(ilim2)/0.05)/100)*260k
+B2 dclim outn V={DUTYMAX}
+XX7 ilim1 vs SS outn softstblk
+B3 err outn V=Limit({LOW},{HIGH},IF(V(SS) <V(errout), V(SS), V(errout)))
+XX3 q sw OUT NC_08 pwrswblk
+XX9 CB vs reg cbootblk
+XX2 reg IADJ vs sw cl outn ilim1 ilim2 iladjblk
+R1 fbin VGND 2.5k
+R2 FB fbin {R2}
+.param TD=4n
+.param TRISE=1n
+ 
+.param SDLOW=0.60
+.param SDHIGH=1.30
+ 
+.param HIGH=5
+.param LOW=300m
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0u
+.param VTRISE=1u
+.param SR=0.01
+ 
+.param ILIM1=7.0
+.param ILIM2=8.26
+.param DUTYMAX=0.91
+.param R2=7.83k
+.ends lm2679fixblk
+
+.subckt lm2679adjblk IADJ FB IN OUT VGND CB SS
+A2 ramp err 0 0 0 0 pwm 0 SCHMITT Vt=0 Vh=1m Td={TD} TRISE={TRISE} Vhigh={HIGH} VLow={LOW}
+VIOUTN VGND outn 0
+XX5 pwm dcmax ilim1 0 0 clk 0 0 0 0 NC_03 q latchblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX8 FB outn errout errampblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH=3.2 LOW=0.6 Td={TD}
+XX1 IN _on/off vs NC_04 reg NC_05 NC_06 NC_07 outn onoffblk params: TRISE={TRISE} VTSU={VTSU} VTRISE={VTRISE} HIGH={HIGH} LOW={LOW} Td={TD}
+XX4 clk dcmax ramp reg freq dclim oscdclim params: HIGH=3.2 LOW=0.6
+B1 freq outn V=((V(ilim2)/0.05)/100)*260k
+B2 dclim outn V={DUTYMAX}
+XX7 ilim1 vs SS outn softstblk
+B3 err outn V=Limit({LOW},{HIGH},IF(V(SS) <V(errout), V(SS), V(errout)))
+XX3 q sw OUT NC_08 pwrswblk
+XX9 CB vs reg cbootblk
+XX2 reg IADJ vs sw cl outn ilim1 ilim2 iladjblk
+.param TD=4n
+.param TRISE=1n
+ 
+.param SDLOW=0.60
+.param SDHIGH=1.30
+ 
+.param HIGH=5
+.param LOW=300m
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0u
+.param VTRISE=1u
+.param SR=0.01
+ 
+.param ILIM1=7.0
+.param ILIM2=8.26
+.param DUTYMAX=0.91
+.ends lm2679adjblk
+
+.subckt latchblk r1 r2 r3 r4 r5 s1 s2 s3 s4 s5 _q q
+A2 r1 r2 r3 r4 r5 0 rst 0 OR Td={TD+1n} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+A3 s1 s2 s3 s4 s5 0 set 0 OR Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+B1 q 0 V=V(1)*IF(V(q_out)>{HIGH}*0.5,{HIGH},{LOW})
+C1 10 0 10p
+R1 q 10 100
+B2 _q 0 V=V(1)*IF(V(_q_out)>{HIGH}*0.5,{HIGH},{LOW})
+C2 20 0 10p
+R2 _q 20 100
+R3 _q_out 0 1e8
+R4 q_out 0 1e8
+R5 r2 0 1e8
+R6 r3 0 1e8
+R7 r4 0 1e8
+R8 r5 0 1e8
+R9 r1 0 1e8
+R10 s2 0 1e8
+R11 s3 0 1e8
+R12 s4 0 1e8
+R13 s5 0 1e8
+R14 s1 0 1e8
+*V2 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE})
+V2 1 0 pwl 0 {VTINI} {VTSU} {VTINI} {VTSU+VTRISE} {VTON}
+A1 set rst 0 0 0 _q_out q_out 0 SRFLOP Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW} IC=0
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=0
+.param SR=0.01
+.ends latchblk
+
+.subckt errampblk in+ in- errout
+C1 errout 10 476p
+R1 10 fb_abs 177k
+C2 errout fb_abs 6.9p
+B1 fb_abs 0 V=V(1)*abs(V(fb_eout))
+*V1 1 0 PULSE({VTINI} {VTON} {VTSU} {VTRISE})
+V1 1 0 pwl 0 {VTINI} {VTSU} {VTINI} {VTSU+VTRISE} {VTON}
+E1 fb_eout 0 in+ in- 1
+R4 fb_eout 0 1E8
+C3 in- in+ 1p Rser=10m
+XX1 ref fb_abs errout 0 oa params: VH={HIGH} VL={LOW} GAIN=10MEG POLE=2500 VTSU={VTSU} VTRISE={VTRISE} TRISE={TRISE}
+B2 ref 0 V=V(1)*1.210V
+B3 in+ in- I=V(1)*5nA
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=0
+.param SR=0.01
+.ends errampblk
+
+.subckt onoffblk vin on/_off vout ref7R9 ref5R0 ref2R1 ref1R4 ref1R21 vgnd
+EVINX VINX1 VGND VIN VGND 1
+VVINX VINX1 VINX 0
+FVINX VIN VGND VVINX 1
+I1 VINX ON/_OFF 20µ
+DZ1 VGND ON/_OFF DZEN
+A2 5R0 R5r0 0 0 0 0 ref5R0 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B2 R5r0 VGND V=V(1)*5.0V
+A1 7R9 R7r9 0 0 0 0 ref7R9 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B1 R7r9 VGND V=V(1)*7.9V
+R1 VINX 7R9 100e3
+R2 7R9 5R0 2.9e6
+R3 5R0 2R1 2.9e6
+*V2 1 VGND PULSE({VTINI} {VTON} {VTSU} {VTRISE})
+V2 1 VGND pwl 0 {VTINI} {VTSU} {VTINI} {VTSU+VTRISE} {VTON}
+A5 ON/_OFF R1r4 0 0 0 0 ref1R4 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B5 R1r4 VGND V=V(1)*1.4V
+S1 VINX vout swp VGND SW
+A6 0 ref7R9 0 ref1R4 0 0 swp 0 AND Td={TD} Trise={TRISE} VHigh={HIGH} VLow={LOW}
+A3 2R1 R2r1 0 0 0 0 ref2R1 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B3 R2r1 VGND V=V(1)*2.1V
+R4 2R1 1R21 890e3
+A4 1R21 R1r21 0 0 0 0 ref1R21 0 SCHMITT Vt=0 Vh=2m Vhigh={HIGH} VLow={LOW} Trise={TRISE} Td={TD}
+B4 R1r21 VGND V=V(1)*1.21V
+R5 1R21 VGND 1.21e6
+R6 ref5R0 VGND 1e8
+R7 ref2R1 VGND 1e8
+R8 ref1R21 VGND 1e8
+.param TD=2n
+.param TRISE=1n
+  
+.param HIGH=2.5
+.param LOW=1u
+ 
+.param VTINI=0
+.param VTON=1
+.param VTSU=0
+.param VTRISE=0
+.param SR=0.01
+.model SW SW(Roff=1G Ron=.001 Vt={HIGH*0.5} Vh=-10m)
+.MODEL DZEN D(RS=3.5305 BV=6.9294 CJO=313.27P TT=50N M=.33 VJ=.75 IS=1E-11
++ N=1.27 IBV=20mA)
+.ends onoffblk
+
+.subckt oscdclim clk dcmax saw ena fin dclim
+BPwm pwm 0 V=if(V(sine)<V(refsaw),1,0)*V(1)
+A1 freq amp 0 0 0 0 N001 0 MODULATOR mark=1 space=0
+Voffset sine N001 0
+BRamp ramp 0 V=if(time<P(V(Freq)),time/P(V(Freq))*1,0)*V(1)*V(1)
+BSaw saw 0 V=idtmod(VP()/P(V(Freq)),0,VP(),VV())*V(1)
+BSquare sq 0 V=if(V(sine)<V(ref),0,1)*V(1)
+BTriangle tri 0 V=abs((1*{2}/pi)*arcsin(sin((1*pi/P(V(Freq)))*time)))*V(1)
+R1 sine 0 1G
+BAmp amp 0 V=350mV
+BFreq freq 0 V=Limit(0.1,1e6,V(Fin))
+BRef ref 0 V=100n
+A2 sq pw 0 0 0 0 ton 0 SCHMITT trise=1n vt=0 tripdt=2n
+BPWidth pw 0 V=V(refsaw)*358
+BClock clk 0 V=if(V(ton)>0.5v,{HIGH},{LOW})*v(1)
+*V1 1 0 PULSE(0 1 0 1u)
+V1 1 0 pwl(0 0 1u 1 )
+R2 Fin 0 1G
+R3 ena 0 1G
+BDCMax dcmax 0 V=if(V(dcmton)>0.5v,{HIGH},{LOW})*v(1)
+A3 dcmx dcmp 0 0 0 dcmton 0 0 SCHMITT trise=1n vt=0 tripdt=2n
+BDCMP dcmp 0 V=V(refsaw)
+BDCMX dcmx 0 V=Limit(0.01, 0.99, V(dclim))
+R4 dclim 0 1G
+BDCMN dcmn 0 V=Limit(0.01, 0.99, 0.01)
+B1 refsaw 0 V=idtmod(V(Fin),0,1)
+R5 ramp 0 1G
+R6 pwm 0 1G
+R7 tri 0 1G
+.func P (F) {1/F}
+.param HIGH=3.2
+.param LOW=0.6
+.func VP () {(LOW*V(DCMX)-HIGH*V(DCMN)+HIGH-LOW)/(V(DCMX)-V(DCMN))}
+.func VV () {(LOW-V(DCMN)*VP())/(1-V(DCMN))}
+.ends oscdclim
+
+.subckt softstblk iin vin ss vgnd
+CSS ss vgnd 26.37p
+DSS ss 361 DSS
+R1 vin vgnd 1E8
+B2 vgnd ss I=IF (V(vin)> 3.3, IF(V(ss)< {HIGH}, 3.7E-6, {LOW}), {LOW})
+B1 361 vgnd V=IF(V(iin)> 1.1, {LOW}, {HIGH})
+R2 iin vgnd 1E8
+.MODEL DSS D RS=10k
+.param HIGH=5
+.param LOW=0
+.ends softstblk
+
+.subckt pwrswblk pwm_in pwr_in output g_in
+E1 drv output pwm_in 0 2.2
+R2 drv g_in {Rg}
+R3 g_in output {Rgs}
+R1 pwm_in 0 1e8
+M1 pwr_in g_in output output DMOS
+.param Rg=55
+.param Rgs={Rg*10}
+.model DMOS VDMOS
++ (
++ Rg=28 Vto=1.8772 Rd=50m Rs=60m Rb=25m
++ Kp=12.5 Lambda=0.05 Cgdmin=10p Cgdmax=120p
++ A=0.6 Cgso=158p Is=5.9569p N=1.111
++ Cjo=95.567p M=467.79m Vj=781.56m TT=27n
++ mfg=Rohm Vds=60 Ron=120m Qg=2.7n
++ )
+.ends pwrswblk
+
+.subckt cbootblk cb in psin
+JFET1 in cb cb JREG1MA
+D1 psIn cb DZEN
+.MODEL DZEN D(RS=8.4831 BV=9.8303 CJO=233.41P TT=50N M=.33 VJ=.75 IS=1E-11
++ N=1.27 IBV=20mA)
+.MODEL JREG1MA NJF (VTO=-1.35 BETA=.67m LAMBDA=1.0m RD=49
++ RS=125 IS=1.56F PB=1 FC=.5 CGS=5P CGD=3.8P)
+.ends cbootblk
+
+.subckt iladjblk reg iadj psen nsen cl vgnd ilim1 ilim2
+VICL iadj Ref 0
+B1 Ref vgnd V=If(V(Reg)> {HIGH}*0.5, 1.21, 0)
+R3 Ref N001 200
+C3 N001 vgnd 10p
+R4 CL N002 200
+C4 N002 vgnd 10p
+B4 CL vgnd V=IF(37125*(-1)*I(VICL)/1.21> 7.1 ,7.1 ,37125*(-1)*I(VICL)/1.21)
+R5 reg vgnd 1e8
+VSENSE psen nsen 0
+R1 ilim1 101 200
+C1 101 vgnd 1n
+B2 ilim1 vgnd V = IF (I(VSENSE) > V(CL) , {HIGH} , {LOW})
+R2 ilim2 33 200
+C2 33 vgnd 1n
+B3 ilim2 vgnd V=IF( I(VSENSE) >1.18*V(CL) ,{HIGH}-(I(VSENSE)*.12*.3) ,{HIGH})
+.param ILIM1=8.26
+.param ILIM2=7.1
+.param S=37125
+ 
+.param HIGH=5
+.param LOW=0.3
+.func getCL () {{S}/(V(Ref)/I(VICL))}
+.ends iladjblk
+
+.subckt oa 1 2 3 4
+RP1 11 4 {GAIN/100u}
+RIN 2 1 8MEG
+D15 4 11 DCLAMP
+CP1 11 4 {1/(6.28*(GAIN/100u)*POLE)}
+D14 5A 13 DMOD
+Q1 4 13 16 0 QPMOD
+*ISINK 13 4 PULSE(0 {ISINK} {VTSU} {VTRISE})
+ISINK 13 4 pwl(0 0 {VTSU} 0 {VTSU+VTRISE} {ISINK})
+*ISRC 7 3 PULSE(0 {ISOURCE} {VTSU} {VTRISE})
+ISRC 7 3 pwl(0 0 {VTSU} 0 {VTSU+VTRISE} {ISOURCE})
+*V4 3 16 PULSE(0 {VL} {VTSU} {VTRISE}) Rser={SR}
+V4 3 16 pwl(0 0 {VTSU} 0 {VTSU+VTRISE} {VL}) Rser={SR}
+*V1 7 4 PULSE(0 {VH} {VTSU} {VTRISE}) Rser={SR}
+V1 7 4 pwl(0 0 {VTSU} 0 {VTSU+VTRISE} {VH}) Rser={SR}
+D12 3 7 DMOD
+G1 4 11 1 2 100µ
+E1 5 4 11 4 1
+R9 5A 5 5
+.MODEL QPMOD PNP()
+.MODEL DCLAMP D (RS=10 BV={VH+0.06} IBV=10m)
+.MODEL DMOD D (TT=1N CJO=10P)
+.param ISINK=15m
+.param ISOURCE=500u
+.param VH=2.5
+.param VL=100m
+.param POLE=30
+.param GAIN=31622
+.param TD=2n
+.param TRISE=1n
+ 
+.param VTSU=20u
+.param VTRISE=1u
+.param SR=0.1
+.ends oa

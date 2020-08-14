@@ -1,0 +1,39 @@
+.subckt 74hc365_v _OE1 A1 A2 A3 DGND Y1 Y2 Y3 _OE2 A4 A5 A6 VCC Y4 Y5 Y6
+XX1 E A1 Dgnd Y1 VCC cell365v
+XX2 E A4 Dgnd Y4 VCC cell365v
+XX3 E A2 Dgnd Y2 VCC cell365v
+XX4 E A5 Dgnd Y5 VCC cell365v
+XX5 E A3 Dgnd Y3 VCC cell365v
+XX6 E A6 Dgnd Y6 VCC cell365v
+D1 Dgnd _OE1 Di
+D2 _OE1 VCC Di
+C1 _OE1 Dgnd 3.5p
+D3 Dgnd _OE2 Di
+D4 _OE2 VCC Di
+C2 _OE2 Dgnd 3.5p
+B1 Dgnd E I=if(v(_OE1,dgnd)<0.5*v(vcc,dgnd) | v(_OE2,dgnd)<0.5*v(vcc,dgnd),v(vcc,dgnd),0) Rpar=1 Cpar=10n
+.model di d Vfwd=0.5 Ron=10
+.ends 74hc365_v
+
+.subckt cell365v E in DGND OUT VCC
+S1 N002 VCC VCC N001 SWm
+S2 DGND N002 N001 DGND SWm
+S4 a VCC VCC in SWi
+S5 DGND a in DGND SWi
+C1 a DGND 4p
+C2 OUT DGND 10p
+C3 VCC OUT 10p
+C4 VCC a 4p
+R1 OUT N002 R=tri(v(E,dgnd)/limit(1,V(VCC,DGND),7))
+R2 0 E 1G
+C5 in DGND 3.5p
+B1 DGND N001 I=if(v(a,dgnd)>0.5*v(vcc,dgnd),v(vcc,dgnd),0) Rpar=1 Cpar=1n
+D1 DGND in Di
+D2 in VCC Di
+D3 DGND OUT Di
+D4 OUT VCC Di
+.model SWm sw Level=2 Vt=1.5 Vh=-150m Ron=20 Roff=100Meg ilimit=50mA
+.model SWi sw Level=2 Vt=1.5 Vh=-150m Ron=200 Roff=1000Meg ilimit=5mA
+.model di d Vfwd=0.4 Ron=3
+.func tri(x)=inv(x)*1G+1
+.ends cell365v

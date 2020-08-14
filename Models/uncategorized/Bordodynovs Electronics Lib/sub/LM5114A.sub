@@ -1,0 +1,124 @@
+﻿* PSpice Model Editor - Version 16.2.0
+*$
+* LM5114A
+*****************************************************************************
+*  (C) Copyright 2013 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer
+*****************************************************************************
+*
+** Released by: WEBENCH Design Center, Texas Instruments Inc.
+* Part: LM5114A
+* Date: 18FEB2013
+* Model Type: TRANSIENT
+* Simulator: PSPICE 
+* Simulator Version: 16.2.0.p001
+* EVM Order Number: LM5114 EVAL BOARD
+* EVM Users Guide: SNVA625–January 2012
+* Datasheet: SNVS790D–JANUARY 2012–REVISED AUGUST 2012
+*
+* Model Version: Final 1.00
+*
+*****************************************************************************
+* Updates:
+*
+* Final 1.00
+* Release to Web.
+*****************************************************************************
+.SUBCKT LM5114A  IN INB  VDD P_OUT N_OUT VSS
+V_V2         N16505370 VSS 3.8
+E_ABM4         N16515305 0 VALUE { 0.34*V(VDD)    }
+X_U3         INB N16505719 N16515305 N16504880 COMPHYS_BASIC_GEN PARAMS: VDD=1
++  VSS=0 VTHRESH=0.5
+E_ABM3         N16505719 0 VALUE { 0.67*V(VDD)    }
+X_U5         UVLO N14509334 N3 N16510505 AND3_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+X_U1         VDD N16505370 N165112383 UVLO COMPHYS_BASIC_GEN PARAMS: VDD=1
++  VSS=0 VTHRESH=0.5
+X_S1    N14508796 VSS VDD P_OUT LM5114A_S1 
+T_T1         N16510505 VSS N16508556 VSS Z0=1000 TD=10n  
+E_ABM1         N16505537 0 VALUE { 0.67*V(VDD)    }
+X_U2         IN N16505537 N16514778 N14509334 COMPHYS_BASIC_GEN PARAMS: VDD=1
++  VSS=0 VTHRESH=0.5
+X_U4         N16504880 N3 INV_BASIC_GEN PARAMS: VDD=1 VSS=0 VTHRESH=500E-3
+R_R1         VSS N16508556  1k TC=0,0 
+V_V1         N165112383 VSS 0.4
+X_S2    N14508796 VSS N_OUT VSS LM5114A_S2 
+E_ABM2         N16514778 0 VALUE { 0.34*V(VDD)    }
+X_U6         N16508556 N14508796 INV_BASIC_GEN PARAMS: VDD=1 VSS=0
++  VTHRESH=500E-3
+.ENDS LM5114A
+*$
+.SUBCKT LM5114A_S1 1 2 3 4  
+S_S1         3 4 1 2 _S1
+RS_S1         1 2 1G
+.MODEL         _S1 VSWITCH Roff=1e6 Ron=3.85 Voff=0.6 Von=0.4
+.ENDS LM5114A_S1
+*$
+.SUBCKT LM5114A_S2 1 2 3 4  
+S_S2         3 4 1 2 _S2
+RS_S2         1 2 1G
+.MODEL         _S2 VSWITCH Roff=1e6 Ron=0.66 Voff=0.4 Von=0.6
+.ENDS LM5114A_S2
+*$
+.SUBCKT COMPHYS_BASIC_GEN INP INM HYS OUT PARAMS: VDD=1 VSS=0 VTHRESH=0.5	
+EIN INP1 INM1 INP INM 1 
+EHYS INP1 INP2 VALUE { IF( V(1) > {VTHRESH},-V(HYS),0) }
+EOUT OUT 0 VALUE { IF( V(INP2)>V(INM1), {VDD} ,{VSS}) }
+R1 OUT 1 1
+C1 1 0 5n
+RINP1 INP1 0 1K
+.ENDS COMPHYS_BASIC_GEN
+*$
+.SUBCKT AND3_BASIC_GEN A B C Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5 
+E_ABMGATE    YINT 0 VALUE {{IF(V(A) > {VTHRESH}  &  
++ V(B) > {VTHRESH} &
++ V(C) > {VTHRESH},{VDD},{VSS})}}
+RINT YINT Y 1
+CINT Y 0 1n
+.ENDS AND3_BASIC_GEN
+*$
+.SUBCKT INV_BASIC_GEN A  Y PARAMS: VDD=1 VSS=0 VTHRESH=0.5 
+E_ABMGATE    YINT 0 VALUE {{IF(V(A) > {VTHRESH} , 
++ {VSS},{VDD})}}
+RINT YINT Y 1
+CINT Y 0 1n
+.ENDS INV_BASIC_GEN
+*$
+.SUBCKT POWERMOS G D S PARAMS: RDSON=16m Ciss=1375p Crss=70p Coss=340p VSP=3.5 RG=1
+* This is a simple model for Power MOSFET.
+* The parameters modeled are
+* - RDSon,
+* - Input Capacitance,
+* - Reverse capacitance,
+* - Output capacitance,
+* - Switching point voltage (Gate voltage where the FET starts switching),
+* - Gate Resistance
+C_C1         S Da  {Coss} IC=0
+R_R1         Da D  10
+C_C2         Ga D  {Crss}  IC=0
+R_R2         G Ga {RG}
+C_C3         Ga S  {Ciss} IC=0
+D_D1         S Db Dbreak
+R_R3         Db D 1m
+S_switchM         D S Ga S _switchM
+RS_switchM         Ga S 100Meg
+.MODEL         _switchM VSWITCH Roff=100e6 Ron={RDSON} Voff=1.1 Von={VSP}
+.model Dbreak D Is=1e-14 Cjo=.1pF Rs=.01
+.ENDS POWERMOS
+*$
+.MODEL DIODE D
++ RS=.5
++ CJO=100.00E-15
++ M=.3333
++ VJ=.75
++ ISR=100.00E-12
++ BV=100
++ IBV=100.00E-6
++ TT=5.0000E-9
+*$

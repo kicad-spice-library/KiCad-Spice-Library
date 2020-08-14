@@ -1,0 +1,422 @@
+
+.Subckt 555sw 1 2 3 4 5 6 7 8
+r1 ref33 1 5k
+r2 5 ref33 5k
+r3 8 5 5k
+Sdis 1 7 Disdrv 1 Std
+SH 8 3 drv 1 Sout
+SL 3 1 1 drv Sout
+r4 1 8 4k
+Vp V+ 1 1
+Vn 1 V- 1
+Sca V+ S 6 5 Scp
+R6_1 6 1 1e8
+Scb V+ R ref33 2 Scp
+R2_1 2 1 1e7
+Srst halt 1 4 1 Std
+Rnot halt V+ 10k
+Snora V+ A V+ Q Std
+Snorb A drv V+ halt Std
+Snorc V+ B V+ S Std
+Snord B _Q V+ Q Std
+Snore V+ C V+ _Q Std
+Snorf C Q V+ R Std
+Sora Disdrv V+ halt 1 Std
+Sorb V+ Disdrv Q 1 Std
+Ror Disdrv V- 10k
+Rnor1 drv V- 10k
+Rnor2 _Q 1 10k
+Rnor3 Q 1 9k9
+Cor Disdrv V- 5p
+Cnot halt 1 2p
+Cnor1 drv V- 5p
+Cnor2 _Q 1 5p
+Cnor3 Q 1 5p
+R4_1 4 1 1e5
+Rcpa S 1 10k
+Rcpb R 1 10k
+.model Std Sw(Ron=10 Roff=1g Vt=.5 Vh=.4 )
+.model Sout Sw(Ron=5 Roff=1e6 Vt=0 Vh=.8)
+.model Scp Sw(Ron=1 Roff=1g Vt=0 Vh=1m)
+.Ends
+.Subckt 555bc 1 2 3 4 5 6 7 8
+r1 ref33 1 5k
+r2 5 ref33 5k
+r3 8 5 5k
+Sdis 1 7 Disdrv 1 Std
+SH 8 3 drv 1 Sout
+SL 3 1 1 drv Sout
+r4 1 8 4k
+Vp V+ 1 1
+Vn 1 V- 1
+R2_1 2 1 1e7
+Srst halt 1 4 1 Std
+Rnot halt V+ 10k
+Snora V+ A V+ Q Std
+Snorb A drv V+ halt Std
+Snorc V+ B V+ S Std
+Snord B _Q V+ Q Std
+Snore V+ C V+ _Q Std
+Snorf C Q V+ R Std
+Sora Disdrv V+ halt 1 Std
+Sorb V+ Disdrv Q 1 Std
+Ror Disdrv V- 10k
+Rnor1 drv V- 10k
+Rnor2 _Q 1 10k
+Rnor3 Q 1 9k9
+Cor Disdrv V- 5p
+Cnot halt 1 2p
+Cnor1 drv V- 5p
+Cnor2 _Q 1 5p
+Cnor3 Q 1 5p
+R4_1 4 1 1e5
+R6_1 6 1 1e8
+Bcp1 S 1 V=u(V(6,5))
+Bcp2 R 1 V=u (V(ref33,2))
+.model Std Sw(Ron=10 Roff=1g Vt=.5 Vh=.4 )
+.model Sout Sw(Ron=5 Roff=1e6 Vt=0 Vh=.8)
+.Ends
+.Subckt 5b1sw555 1 2 3 4 5 6 7 8
+r1 ref33 1 5k
+r2 5 ref33 5k
+r3 5 8 5k
+Sds 1 7 _Q 1 Dis
+r4 8 1 4k
+R2_1 1 2 1e7
+Bcp1 S 1 V=u(V(6,5))
+Bcp2 R 1 V=u (V(ref33,2))
+BFfa Q 1 V=1-u(V(S)+V(_Q))
+R6_1 6 1 1e8
+BffOr _Q 1 V=.999999-(V(Q)+V(R))+1-u(v(4)-.5)
+BOut Nout 1 V=V(Q)*V(8)
+Rout 3 Nout 5
+R4_1 4 1 1e5
+.model Dis Sw(Ron=10 Roff=1g Vt=.75 Vh=.2)
+.Ends
+.Subckt 4b3sw555 1 2 3 4 5 6 7 8
+r1 ref33 1 5k
+r2 5 ref33 5k
+r3 8 5 5k
+Sds 1 7 _Q 1 Sdis
+SH 8 3 Q 1 Sout
+SL 3 1 1 Q Sout
+r4 8 1 4k
+R2_1 2 1 1e7
+Bcp1 S 1 V=u(V(6,5))
+Bcp2 R 1 V=u(V(ref33,2))
+BfOr _Q 1 V=.9999-((V(Q)+.5)+V(R))+1-u(v(4)-.5)
+BFfa Q 1 V=.5-u(V(S)+V(_Q))
+R6_1 6 1 1e8
+R4_1 4 1 1e5
+.model Sdis Sw(Ron=10 Roff=1g Vt=.75 Vh=.2)
+.model Sout Sw(Ron=5 Roff=1e6 Vt=0 Vh=.4)
+.Ends
+.subckt Neo555 1 2 3 4 5 6 7 8
+r1 ref33 1 5k
+r2 5 ref33 5k
+r3 5 8 5k
+Sds 1 7 _Q 1 Dis
+r4 8 1 4k
+r2_1 1 2 1e7
+Bcp1 S 1 V=u(V(6,5))
+Bcp2 R 1 V=u (V(ref33,2))
+BFfa Q 1 V=1-u(V(S)+V(_Q))
+r6_1 6 1 1e8
+BffOr _Q 1 V=1-(V(Q)+V(R))+1-u(v(4)-.5)
+BOut Nout 8 V=(V(Q)*V(8))-V(8)
+Rout 3 Nout 5
+r4_1 4 1 1e5
+.model Dis Sw(Ron=10 Roff=1e8 Vt=.5)
+* V=.999999-(V(N_Q)+V(R))+1-u(v(4)-.5) (Spice)
+* .model Dis Sw(Ron=10 Roff=1e8 Vt=.75 Vh=.2)
+.Ends
+*		*		*		*		*	 NE555	*		*		*		*		*		*		*
+.subckt NE555 1 2 3 4 5 6 7 8
+A1 N001 2 1 1 1 1 N003 1 SCHMITT Vt=0 Vh=1m
+R1 N001 1 5K
+R2 5 N001 5K
+R3 8 5 5K
+S1 1 7 N012 1 DS
+A2 N006 N003 1 1 1 1 N004 1 SRFLOP Trise=100n tripdt=10n
+A3 6 5 1 1 1 1 N006 1 SCHMITT Vt=0 Vh=1m
+S2 8 3 N010 1 OS
+S3 3 1 1 N010 OS
+A6 1 N013 1 N004 1 1 N012 1 OR Ref=.5 Vlow=-1 Trise=100n
+R7 8 1 4K
+R9 2 1 1G
+R10 6 1 1G
+A4 1 N004 1 N013 1 N010 1 1 OR ref=.5 Vlow=-1 Trise=100n
+A5 4 1 1 1 1 N013 1 1 SCHMITT Vt=.7 Vh=1m
+I1 8 4 .4m load
+D1 4 1 DR
+.model DS SW(Ron=6 Roff=.75G Vt=.5 Vh=-.4)
+.model OS SW(Ron=6 Roff=1Meg Vt=0 Vh=-.8)
+.model DR D(Ron=150K Roff=1T Vfwd=1.6)
+.ends
+*		*		*		*		*		*		*		*		*		*		*		*		*
+*	TLC555, TLC556 and NE555 Timer models.
+*	The new TLC models are based on the NE555 model from Mike Engelhardt.
+*	Changes: Reset threshhold changed to 1.1V.
+*	Ron of switches changed according to TI and NS data sheet.
+*	Warning: These values depend on the supply voltage.
+*	They are calculated from the 15V values by an formula(approximation).
+*	R1, R2, R5 changed to 100k according to NS data sheet.
+*	R7 changed to 16k for correct power dissipation.
+*	I1 and D1 removed
+*	Helmut Sennewald, 8/24/2003
+*		*		*		TLC555		*		*		*
+*
+*      1 GND     VDD   8
+*      2 TRIG    DISCH 7
+*      3 OUT     THRES 6
+*      4 RESET    CONT 5
+*
+.subckt TLC555 1 2 3 4 5 6 7 8  vdd1={VDD} RonX1={RONX}
+.param Ron_d=RonX1*(1+7*(14.3/{vdd1-0.7})**0.75)
+.param Ron_oh=RonX1*(10+60*(14.3/{vdd1-0.7})**0.75)
+.param Ron_ol=RonX1*(2+15*(14.3/{vdd1-0.7})**0.75)
+A1 N001 2 1 1 1 1 N003 1 SCHMITT Vt=0 Vh=1m 
+R1 N001 1 100K
+R2 5 N001 100K
+R3 8 5 100K
+S1 1 7 N012 1 DS
+A2 N006 N003 1 1 1 1 N004 1 SRFLOP Trise=100n tripdt=10n
+A3 6 5 1 1 1 1 N006 1 SCHMITT Vt=0 Vh=1m
+S2 8 3 N010 1 OH
+S3 3 1 1 N010 OL
+A6 1 N013 1 N004 1 1 N012 1 OR Ref=.5 Vlow=-1 Trise=100n
+R7 8 1 16K
+R8 4 1 1G
+R9 2 1 1G
+R10 6 1 1G
+A4 1 N004 1 N013 1 N010 1 1 OR ref=.5 Vlow=-1 Trise=100n
+A5 4 1 1 1 1 N013 1 1 SCHMITT Vt=1.1 Vh=1m
+* Ron depends on VDD.
+.model DS SW(Ron={Ron_d} Roff=1G Vt=.5 Vh=-.4)
+.model OH SW(Ron={Ron_oh} Roff=1Meg Vt=0 Vh=-.8)
+.model OL SW(Ron={Ron_ol} Roff=1Meg Vt=0 Vh=-.8)
+*   Values for VDD=15V from TI data sheet. 
+*.model DS SW(Ron=7 Roff=1G Vt=.5 Vh=-.4)
+*.model OH SW(Ron=80 Roff=1Meg Vt=0 Vh=-.8)
+*.model OL SW(Ron=13 Roff=1Meg Vt=0 Vh=-.8)
+*   Values for VDD=5V from TI data sheet. 
+*.model DS SW(Ron=15 Roff=1G Vt=.5 Vh=-.4)
+*.model OH SW(Ron=200 Roff=1Meg Vt=0 Vh=-.8)
+*.model OL SW(Ron=25 Roff=1Meg Vt=0 Vh=-.8)
+*   Values for VDD=2V from TI data sheet.
+*.model DS SW(Ron=30 Roff=1G Vt=.5 Vh=-.4)
+*.model OH SW(Ron=330 Roff=1Meg Vt=0 Vh=-.8)
+*.model OL SW(Ron=70 Roff=1Meg Vt=0 Vh=-.8)
+.ends TLC555
+* ----------------------------
+* Connections
+*      1 = GND
+*      2 = TRIGGERB
+*      3 = OUTPUT
+*      4 = RESETB
+*      5 = CONTROL VOLTAGE
+*      6 = THRESHOLD
+*      7 = DISCHARGE
+*      8 = VCC
+*Parameters which are modeled.
+* 1) Full timer functionality
+* 2) Supply bias current and load current
+* 3) Output rise/fall times
+* 4) Reset threshold
+* 5) Output VOL/VOH
+* 6) Discharge voltage with current   
+**************************
+.SUBCKT ICM7555 1 2 3 4 5 6 7 8
+ XOPAMP 1 2 3 4 5 6 7 8 ICM7555_S
+.ENDS
+**************************
+.SUBCKT ICM7555_S 18 11 12 13 14 15 16 10
+*****************************************
+*COMPARATORS
+ES1 A11 18 10 18 1
+IABIAS A11 A12 10UA 
+MA1 A13 A16 A12 A11 MOSP
+MA2 A14 A15 A12 A11 MOSP
+VAOS A17 A16 0.5M    
+RAD1 A13 18 10K
+RAD2 A14 18 10K
+DAC3 A15 10 DA
+DAC4 18 A15 DA
+GCA1 18 A20 A13 A14 1000M
+RCA1 A20 18 100K
+VCA1 A21 18 1V
+DCA1 A20 A21 DY
+DCA2 18 A20 DY
+**************
+IBBIAS A11 B12 10UA 
+MB1 B13 B16 B12 A11 MOSP
+MB2 B14 B15 B12 A11 MOSP
+VBOS B17 B16 0.5M    
+RBD1 B13 18 10K    
+RBD2 B14 18 10K
+DBC1 B16 10 DA    
+DBC2 18 B16 DA
+GCB1 18 B20 B13 B14 100M
+RCB1 B20 18 100K
+VCB1 B21 18 1V
+DCB1 B20 B21 DY
+DCB2 18 B20 DY
+**************
+RB1 10 B22 60K
+RB2 B22 B23 60K
+RB3 B23 18 60K
+VR1 B23 A15 0
+VR2 B22 B17 0
+VIN1 A17 11 0
+VIN2 B15 15 0
+VIN3 B22 14 0
+*******************************************
+*SR LATCH
+EL1 A25 18 10 18 1
+RLA A25 A26 10K
+CLA A26 18 1P
+MLA1 A26 A27 18 18 MOSN
+MLA2 A26 A28 18 18 MOSN
+RLB A25 B26 10K
+CLB B26 18 1P
+MLB1 B26 B27 18 18 MOSN
+MLB2 B26 B28 18 18 MOSN
+MLB3 B26 B29 18 18 MOSN
+VFB1 B27 A26 0
+VFB2 A27 B26 0
+EFB1 A28 18 POLY(2) A20 18 10 18 0 0 0 0 1
+EFB2 B28 18 POLY(2) B20 18 10 18 0 0 0 0 1
+****************************
+*PD
+EPD1 B33 18 B26 18 1
+RPD1 B33 B34 10K
+CPD1 B34 18 50P
+*OUTPUT
+MO1 B30 B34 A25 A25 MOSPA 
+MO2 B30 B34 18 18 MOSNA
+MO3 B31 B30 A25 A25 MOSPA
+MO4 B31 B30 18 18 MOSNA
+CO1 B31 18 0.1P
+CO2 B30 18 0.1P
+VO1 B31 12 0 
+*DISCHARGE
+MD1 16 B30 18 18 MOSNA
+*RESET
+RRST B29 A25 20K
+MRST B29 13 18 18 MOSN
+RRSTB 13 18 50G
+*SUPPLY CURRENT
+ISUP 10 18 12.3U
+FSUP 18 A36 VO1 1
+DSUP1 18 A36 DZ
+DSUP2 A36 A37 DZ
+RSUP A37 18 1
+GSUP 10 18 A37 18 1
+*******************************************
+.MODEL DA D(IS=100E-14 RS=0.5k)
+.MODEL MOSP PMOS(VTO=-0.7 KP=12.57E-4)
+.MODEL MOSN NMOS(VTO=0.7 KP=12.57E-3)
+.MODEL MOSPA PMOS(VTO=-2.0 KP=78.5E-4)
+.MODEL MOSNA NMOS(VTO=2.0 KP=78.5E-4)
+.MODEL DX D(IS=100E-14)
+.MODEL DZ D(N=10M)
+.MODEL DY D(IS=100E-14 N=0.1M)
+*******************************************
+.ENDS
+*		*		*		*		*		*		*		*		*		*		*
+* Device's based spice models:
+*Subcircuito del LM555, traducido del diagrama esquemático
+*que hay en la hoja de datos de Thomson por Robertugo_2005:
+.SUBCKT LM555 1 2 3 4 5 6 7 8
+Q1 N5 5 N7 1 NP
+Q2 N1 6 N6 1 NP
+Q3 N1 N6 N8 1 NP
+Q4 N5 N7 N8 1 NP
+Q5 7 N16 1 1 NP
+Q6 N17 N14 1 1 NP
+Q7 N1 N1 N3 1 PN
+Q8 N17 N1 N2 1 PN
+Q9 1 N5 N2 1 PN
+Q10 N5 N5 N4 1 PN
+Q11 N11 N20 N9 1 PN
+R1 8 N3 4.7K
+R2 8 N2 830
+R3 8 N4 4.7K
+R4 8 N9 1K
+R5 8 5 5K
+R6 8 N22 6.8K
+Q13 1 2 N10 1 PN
+Q14 N14 N10 N11 1 PN
+Q15 N13 N12 N11 1 PN
+Q16 N13 N15 N12 1 PN
+R7 N14 1 100K
+R8 N13 1 100K
+R9 N15 5 5K
+R10 N15 1 5K
+R11 N8 1 10K
+Q17 N16 4 N18 1 PN
+Q18 N19 N17 1 1 NP
+R12 N18 N20 5K
+Q19 N20 N20 8 1 PN
+Q20 N21 N20 8 1 PN
+Q21 N21 N19 1 1 NP
+R13 N17 N21 4.7K
+Q22 8 N22 N23 1 NP
+Q23 N22 N21 N24 1 NP
+Q24 8 N23 3 1 NP
+R14 3 N23 3.9K
+Q25 3 N25 1 1 NP
+R15 N25 N24 220
+R16 1 N24 4.7K
+R17 N24 N16 100
+D2 3 N22 D
+D1 N18 N19 D
+.MODEL NP NPN(BF=125 Cje=.5p Cjc=.5p Rb=500)
+.MODEL PN LPNP(BF=25 Cje=.3p Cjc=1.5p Rb=250)
+.MODEL D D(Is=1e-12 Cjo=1p Rs=5
+.ENDS
+*		*		*		*		*		*		*		*		*		*		*
+*		*		*		TLC556		*		*		*		*
+*
+*      1 DISCH1       VDD 14
+*      2 THRES1    DISCH2 13
+*      3 CONT1     THRES2 12
+*      4 RESET1     CONT2 11    
+*      5 OUT1      RESET2 10
+*      6 TRIG1       OUT2  9
+*      7 GND        TRIG2  8  
+*
+.subckt NE556 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1  7 6 5  4  3  2  1 14  NE555
+X2  7 8 9 10 11 12 13 14  NE555
+.ends
+*
+.subckt TLC556 1 2 3 4 5 6 7 8 9 10 11 12 13 14  vdd1={VDD} RonX1={RONX}
+X1  7 6 5  4  3  2  1 14  TLC555 vdd={vdd1} ronx={ronx1}
+X2  7 8 9 10 11 12 13 14  TLC555 vdd={vdd1} ronx={ronx1}
+.ends
+*
+.subckt 556Swf 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1  7 6 5  4  3  2  1 14  555Swf
+X2  7 8 9 10 11 12 13 14  555Swf
+.ends
+*
+.subckt 556Bcf 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1  7 6 5  4  3  2  1 14  555Bcf
+X2  7 8 9 10 11 12 13 14  555Bcf
+.ends
+*
+.subckt 5B1Sw556 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1  7 6 5  4  3  2  1 14  5B1Sw555
+X2  7 8 9 10 11 12 13 14  5B1Sw555
+.ends
+*
+.subckt 4B3Sw556 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1  7 6 5  4  3  2  1 14  4B3Sw555
+X2  7 8 9 10 11 12 13 14  4B3Sw555
+.ends
+*
+.subckt LM556 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+X1  7 6 5  4  3  2  1 14  LM555
+X2  7 8 9 10 11 12 13 14  LM555
+.ends

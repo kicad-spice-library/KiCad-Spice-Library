@@ -1,0 +1,94 @@
+*
+* LTspice subcircuit for SN74LVC1G5x / NC7SZ5x
+*
+* Author: Nick de Smith with substantial input from Helmut Sennewald
+* Date  : 21st May 2009
+*
+*  All parts have been divided into three sections.
+*  
+*  >--| FILTER/LEVEL |----| 1V-LOGIC Axx |----| OUTPUT LEVEL |-->
+*
+*
+* Address all complaints etc. to nick@desmith.net
+*
+* Internal nodes: Nnn (nn = 00..19)
+*
+*               Pin: 1   2   3   4   5   6    
+.subckt SN74LVC1G57 In1 GND In0  Y  VCC In2 vcc1={vcc} speed1={speed} tripdt1={tripdt}
+X01 In1 GND In0  Y NY  VCC In2 SN74LVC1G5x vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+.ends SN74LVC1G57
+
+*               Pin: 1   2   3   4   5   6    
+.subckt SN74LVC1G58 In1 GND In0  NY VCC In2 vcc1={vcc} speed1={speed} tripdt1={tripdt}
+X01 In1 GND In0  Y NY  VCC In2 SN74LVC1G5x vcc2={vcc1} speed2={speed1} tripdt2={tripdt1}
+.ends SN74LVC1G58
+
+* tpd 12n/7n//4n/3n
+* tr 8n/5n//3n/2n
+*               Pin: 1   2   3   4 /4   5   6    
+.subckt SN74LVC1G5x In1 GND In0  Y NY  VCC In2 vcc3={vcc2} speed3={speed2} tripdt3={tripdt2}
+.param td1=1e-9*4.0/({vcc3}-0.5)*{speed3}
+
+XIN1 In0 N01 VCC GND 74LVC1G_IN_S_2 vcc4={vcc3} speed4={speed3} tripdt4={tripdt3} 
+XIN2 In1 N02 VCC GND 74LVC1G_IN_S_2 vcc4={vcc3} speed4={speed3} tripdt4={tripdt3} 
+XIN3 In2 N03 VCC GND 74LVC1G_IN_S_2 vcc4={vcc3} speed4={speed3} tripdt4={tripdt3} 
+
+*    1   2   3   4   5  inv out  8  device
+A01 N01 N03  0   0   0   0  N04  0  and       tripdt={tripdt3} td={td1}
+A02 N02 N03  0   0   0  N05  0   0  or        tripdt={tripdt3} td={td1}
+A03 N04 N05  0   0   0  N06 N07  0  or        tripdt={tripdt3} td={td1}
+
+XOUT1 N06 NY VCC GND 74LVC1G_OUT_1X vcc4={vcc3} speed4={speed3} tripdt4={tripdt3}
+XOUT2 N07  Y VCC GND 74LVC1G_OUT_1X vcc4={vcc3} speed4={speed3} tripdt4={tripdt3}
+.ends SN74LVC1G5x
+
+* Standard output driver
+.subckt 74LVC1G_OUT_1X in out VCC GND vcc5={vcc4} speed5={speed4} tripdt5={tripdt4}
+.param trise1=2e-9*4.0/({vcc5}-0.5)*{speed5}
+.param Rout=20*4.0/({vcc5}-0.5)*{speed5}
+
+*   1   2   3   4   5  inv out  8  device
+AE1 in  0   0   0   0   0 out10 0  BUF  tripdt={tripdt5}  trise={trise1}
+*
+E1 out20 GND out10 0 {vcc5}
+Rout out20 out {Rout}
+*D1 0   out  DIO2 
+*D2 out VCC  DIO2
+.ends
+
+* Non Inverting Schmitt-input 
+.subckt 74LVC1G_IN_1_2 in out VCC GND vcc5={vcc4} speed5={speed4} tripdt5={tripdt4} 
+.param Cval = 0.1e-12*4/({vcc5}-0.5)*{speed5} ; 0.2e-12=2ns
+.param vt1=1.79/4.5
+.param vh1=0.38/4.5
+.param gain=(1/{vcc5})
+*
+*D1 0   in  DIO1 
+*D2 in VCC  DIO1
+R1 in out10 10k
+C1 out10 GND {Cval}
+R2 in GND 1e8
+*E1 out20 0 out10 VGND {gain}
+B1 out20 0 V=LIMIT(0,V(out10,GND)*{gain},1)
+*    1    2   3   4   5  inv out  8  device
+AE1 out20 0   0   0   0   0  out  0  schmitt  vt={vt1} vh={vh1} vhigh=1 tripdt={tripdt5}
+.ends
+
+
+* Inverting Schmitt-input 
+.subckt 74LVC1G_IN_S_2 in out VCC GND vcc5={vcc4} speed5={speed4} tripdt5={tripdt4} 
+.param Cval = 0.1e-12*4/({vcc5}-0.5)*{speed5} ; 0.2e-12=2ns
+.param vt1=1.79/4.5
+.param vh1=0.38/4.5
+.param gain=(1/{vcc5})
+*
+*D1 0   in  DIO1 
+*D2 in VCC  DIO1
+R1 in out10 10k
+C1 out10 GND {Cval}
+R2 in GND 1e8
+*E1 out20 0 out10 GND {gain}
+B1 out20 0 V=LIMIT(0,V(out10,GND)*{gain},1)
+*    1    2   3   4   5  inv out  8  device
+AE1 out20 0   0   0   0  out  0   0  schmitt vt={vt1} vh={vh1} vhigh=1 tripdt={tripdt5}
+.ends

@@ -1,0 +1,13 @@
+.SUBCKT PWMVM a c p d params: 
+*
+* auto toggling between DCM and CCM, voltage-mode
+*
+Xd d dc limit params: clampH=0.99 clampL=16m
+EVcp 6 p Value = { (V(dc)/(V(dc)+V(d2)))*V(a,p) }
+GIap a p Value = { (V(dc)/(V(dc)+V(d2)))*I(VM) }
+Ed2 d2X 0 value = { (2*{L}*{Fs}*I(VM)/(V(dc)*V(a,c)+1u)) - V(dc) }
+Xd2 d2X dc d2 limit2
+VM 6 c
+*
+.ENDS
+********

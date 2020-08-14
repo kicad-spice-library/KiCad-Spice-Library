@@ -1,0 +1,169 @@
+* PSpice Model Editor - Version 16.2.0
+*LM5106
+*****************************************************************************
+*  (C) Copyright 2017, 2014 Texas Instruments Incorporated. All rights reserved.
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+** Released by: WEBENCH Design Center,Texas Instruments Inc.
+* Part: LM5106
+* Date: 03MAR2017
+* Model Type: TRANSIENT
+* Simulator: PSPICE
+* Simulator Version: 16.2.0.p001
+* EVM Order Number:
+* EVM Users Guide:
+* Datasheet: SNVS424B-JANUARY 2006-REVISED OCTOBER 2009
+*
+*
+* Model Version: Final 1.2
+*
+*****************************************************************************
+*
+* Updates:
+* Final 1.20
+*<Made this change to the model>
+*       1. Internal boot diode has been removed.
+*
+*
+* Final 1.10
+*<Made this change to the model>
+*       1. Added VSS as internal reference to IN,EN and VDD as per datasheet
+*
+* Final 1.00
+* Release to Web
+*
+*****************************************************************************
+.SUBCKT LM5106_TRANS VDD HB HO HS RDT EN IN VSS LO
+*Input side pull down resistor
+rin  in vss 200k
+*non-inverting schmitt trigger
+esch_input 10 0 value={if(v(in,vss)>1.8,12,0)}
+*inverter
+einverter 50 0 value={if(v(10)<6,12,0)}
+* vdd internal voltage
+evdd vddint 0 value={v(vdd,vss)}
+*Enable side pull down resistor
+renable  en vss 200k
+* Enable Input
+e_enable en_out 0 value={if(v(en,vss)>1.8,12,0)}
+T_EN   en_del 0  en_out 0 zo=1000 td=4n
+R_EN   en_del 0 1000
+*uvlo for vdd supply voltage
+xuvlo_vdd vddint vdout COMPHYST_VD
+* High and Low side data
+eand_hi 11 0 value={if(v(10)>6 & v(en_del)>6 & v(vdout)>6,12,0)}
+eand_lo 51 0 value={if(v(50)>6 & v(en_del)>6 & v(vdout)>6,12,0)}
+*bootstrap diode** This internal boot diode is removed as it is not connected internally
+*dbst  vdd hb dboot
+*.model dboot d (is=6.304P n=1.392 rs=0.8)
+RB HB 0 1E12
+ebst hbs 0 value={v(hb,hs)}
+*uvlo for bootstrap
+xuvlo_bst hbs bstout COMPHYST_BST
+*input to the high side gate driver
+eand2 12 0 value={if(v(11)>6 & v(y)>6 & v(bstout)>6,12,0)}
+T1    13 0  12 0 zo=1000 td=32n
+Rterm1 13 0 1000
+*** high side driver
+rdummy1 hs hs1 1
+cdummy1 hs1 0  100p
+ehsvdd hbs_vdd 0  value={v(hbs)+v(hs1)}
+xhighside  13 ho hbs_vdd hs HIGHSIDE_DRIVER
+*input to the lo side gate driver
+enad3 52 0 value={if(v(x)>6 & v(51)>6,12,0)}
+T2    53 0 52 0 zo=1000 td=32n
+Rterm2 53 0 1000
+*** low side driver
+xlowside 53 lo vdd vss LOWSIDE_DRIVER
+*Leading Edge Delay
+xdeadtimer 13 53 RDT X Y DEADTIME
+.ENDS LM5106_TRANS
+*$
+.SUBCKT COMPHYST_VD IN OUT
+e12 out 0 value ={if((v(out)<6 & v(in)>7.15 ) | ( v(out)>6 & v(in)>6.65) ,12,0) }
+.ENDS COMPHYST_VD
+*$
+.SUBCKT COMPHYST_BST IN OUT
+e12 out 0 value ={ if((v(out)<6 & v(in)>6.8 ) | ( v(out)>6 & v(in)>6.4 ) ,12,0) }
+.ENDS COMPHYST_BST
+*$
+.SUBCKT INV IN VOUT VDD VSS
+e12 vout vss value ={if(v(in)>6,0,v(vdd,vss))}
+.ENDS INV
+*$
+.SUBCKT HIGHSIDE_DRIVER IN HO VDD_HS VSS_HS
+xinv in ho_inv vdd_hs vss_hs INV
+m1 ho ho_inv vdd_hs vdd_hs _m1
+m2 ho ho_inv vss_hs vss_hs _m2
+.model _m1 pmos w=500u l=0.6u
+.model _m2 nmos w=750u l=0.6u
+.ENDS HIGHSIDE_DRIVER
+*$
+.SUBCKT LOWSIDE_DRIVER IN LO VDD_LS VSS_LS
+xinv IN lo_inv vdd_ls vss_ls INV
+m1 lo lo_inv vdd_ls vdd_ls _m1
+m2 lo lo_inv vss_ls vss_ls _m2
+.model _m1 pmos w=500u l=0.6u
+.model _m2 nmos w=750u l=0.6u
+.ENDS LOWSIDE_DRIVER
+*$
+.SUBCKT DEADTIME HO LO RT HO_OUT LO_OUT
+v1 1 0 dc=3
+rlimit 1 101 2k
+vdummy 101 rt
+e2 10 0 table {i(vdummy)} (0,0) (19.7u, 35.4u) (21.0u,37.9u) (22.6u,40.7u)
++(24.6u,44.3u) (26.8u,48.5u)(29.4u,53.2u)(32.4u,58.9u)(36.4u,66.2u)
++(40.9u,74.5u)(47.9u,88.3u) (56.5u,106.3u)(70.3u,133.7u)
++(93.0u,180.1u)(135.6u,284.3u) (250.0u,657.0u)
+vref 5 0 dc=2
+vvdd 8 0 dc=12
+g1ho 0 3_ho value={i(vdummy)+v(10)}
+c1ho 3_ho 0 22.10p
+s1ho 3_ho 0 ho 0 _s1ho
+.model _s1ho vswitch ron=1 roff=10meg von=1 voff=0
+s2ho 8 ho_out 3_ho 5 _s2ho
+.model _s2ho vswitch ron=1 roff=10meg von=0.1 voff=-0.1
+r_s2ho ho_out 0 1k
+g1lo 0 3_lo value={i(vdummy)+v(10)}
+c1lo 3_lo 0 22.10p
+s1lo 3_lo 0 lo 0 _s1lo
+.model _s1lo vswitch ron=1 roff=10meg von=1 voff=0
+s2lo 8 lo_out 3_lo 5  _s2lo
+.model _s2lo vswitch ron=1 roff=10meg von=0.1 voff=-0.1
+r_s2lo lo_out 0 1k
+.ENDS DEADTIME
+*$
+.SUBCKT POWERMOS G D S PARAMS: RDSON=16m Ciss=1375p Crss=70p Coss=340p VSP=3.5 RG=1
+* This is a simple model for Power MOSFET.
+* The parameters modeled are
+* - RDSon,
+* - Input Capacitance,
+* - Reverse capacitance,
+* - Output capacitance,
+* - Switching point voltage (Gate voltage where the FET starts switching),
+* - Gate Resistance
+C_C1         S Da  {Coss} IC=0
+R_R1         Da D  10
+C_C2         Ga D  {Crss}  IC=0
+R_R2         G Ga {RG}
+C_C3         Ga S  {Ciss} IC=0
+D_D1         S Db Dbreak
+R_R3         Db D 1m
+S_switchM         D S Ga S _switchM
+RS_switchM         Ga S 100Meg
+.MODEL         _switchM VSWITCH Roff=100e6 Ron={RDSON} Voff=1.1 Von={VSP}
+.model Dbreak D Is=1e-14 Cjo=.1pF Rs=0.01
+.ENDS POWERMOS
+*$
+.SUBCKT D_D1 1 2
+D1 1 2 DD1
+.MODEL DD1 D( IS=1e-15 TT=10p Rs=0.05 N=0.1  )
+.ENDS D_D1
+*$

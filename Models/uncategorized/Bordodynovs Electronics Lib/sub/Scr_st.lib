@@ -1,0 +1,734 @@
+*  File     : standard_sensitive_scr_pspice.LIB 
+*  Revision : 8.0            
+*  Date     : January 31th,2014
+*
+**********************************************************************
+* Please Read Carefully:
+*Information in this document is provided solely in connection with ST products. STMicroelectronics NV and its subsidiaries (“ST”) reserve the
+*right to make changes, corrections, modifications or improvements, to this document, and the products and services described herein at any
+*time, without notice.
+*All ST products are sold pursuant to ST’s terms and conditions of sale.
+*Purchasers are solely responsible for the choice, selection and use of the ST products and services described herein, and ST assumes no
+*liability whatsoever relating to the choice, selection or use of the ST products and services described herein.
+*No license, express or implied, by estoppel or otherwise, to any intellectual property rights is granted under this document. If any part of this
+*document refers to any third party products or services it shall not be deemed a license grant by ST for the use of such third party products
+*or services, or any intellectual property contained therein or considered as a warranty covering the use in any manner whatsoever of such
+*third party products or services or any intellectual property contained therein.
+*UNLESS OTHERWISE SET FORTH IN ST’S TERMS AND CONDITIONS OF SALE ST DISCLAIMS ANY EXPRESS OR IMPLIED
+*WARRANTY WITH RESPECT TO THE USE AND/OR SALE OF ST PRODUCTS INCLUDING WITHOUT LIMITATION IMPLIED
+*WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE (AND THEIR EQUIVALENTS UNDER THE LAWS
+*OF ANY JURISDICTION), OR INFRINGEMENT OF ANY PATENT, COPYRIGHT OR OTHER INTELLECTUAL PROPERTY RIGHT.
+*UNLESS EXPRESSLY APPROVED IN WRITING BY AN AUTHORIZED ST REPRESENTATIVE, ST PRODUCTS ARE NOT
+*RECOMMENDED, AUTHORIZED OR WARRANTED FOR USE IN MILITARY, AIR CRAFT, SPACE, LIFE SAVING, OR LIFE SUSTAINING
+*APPLICATIONS, NOR IN PRODUCTS OR SYSTEMS WHERE FAILURE OR MALFUNCTION MAY RESULT IN PERSONAL INJURY,
+*DEATH, OR SEVERE PROPERTY OR ENVIRONMENTAL DAMAGE. ST PRODUCTS WHICH ARE NOT SPECIFIED AS "AUTOMOTIVE
+*GRADE" MAY ONLY BE USED IN AUTOMOTIVE APPLICATIONS AT USER’S OWN RISK.
+*Resale of ST products with provisions different from the statements and/or technical features set forth in this document shall immediately void
+*any warranty granted by ST for the ST product or service described herein and shall not create or extend in any manner whatsoever, any
+*liability of ST.
+*ST and the ST logo are trademarks or registered trademarks of ST in various countries.
+*Information in this document supersedes and replaces all information previously supplied.
+*The ST logo is a registered trademark of STMicroelectronics. All other names are the property of their respective owners.
+*© 2008 STMicroelectronics - All rights reserved
+*STMicroelectronics group of companies
+*Australia - Belgium - Brazil - Canada - China - Czech Republic - Finland - France - Germany - Hong Kong - India - Israel - Italy - Japan -
+*Malaysia - Malta - Morocco - Singapore - Spain - Sweden - Switzerland - United Kingdom - United States of America
+*www.st.com                              
+**********************************************************************
+*	
+***********************************************************************
+* 		 	Thyristor PSpice Models                       *
+***********************************************************************
+* Note :
+*
+*	This thyristor model simulates:
+*	-Igt MAX of the specification
+*   -Il  Typ of the specification
+*   -Ih  Typ of the specification
+*   -VDRM
+*   -VRRM
+*   -Power dissipation is realistic and correspond to a typical SCR
+*
+*   All these parameters are constant, and don't vary neither 
+*   with temperature nor other parameters. 
+*
+*   For a correct SCR behavior, the "Maximum step size" must be below 
+*   or equal 20µs.
+*
+*
+*$
+.subckt SCR_ST A K G PARAMS:
++ Vdrm=400v     
++ Igt=20ma
++ Ih=6ma        
++ Rt=0.01
+*
+* Vdrm : Repetitive forward off-state voltage
+* Ih   : Holding current 
+* Igt  : Gate trigger current 
+* Rt   : Dynamic on-state resistance
+*
+*********************************
+* Power circuit *
+*********************************
+*
+****************************
+*Switch circuit*
+****************************
+* Q1 & Q2 Conduction
+S_S3         A Plip1 positive 0 Smain
+*RS_S3        positive 0 1G
+D_DAK1         Plip1 Plip2 Dak 
+R_Rlip         Plip1 Plip2  1k
+V_Viak         Plip2 K DC 0 AC 0 
+*
+****************************
+*Gate circuit*
+****************************
+R_Rgk         G K  10G  
+D_DGKd        G Pg2 Dgk 
+V_Vig         Pg2 K DC 0 AC 0 
+R_Rlig        G Pg2  1k  
+*
+****************************
+*Interface circuit*
+****************************
+* positive pilot
+R_Rp              Controlp positive  2.2  
+C_Cp              0 positive  1u 
+E_IF15OR3         Controlp 0 VALUE {IF(  ( (V(CMDIG)>0.5) | (V(CMDILIH)>0.5) |
++ (V(CMDVdrm)>0.5) ),400,0 )}
+* 
+*
+*
+*
+*********************************
+* Pilots circuit *
+*********************************
+****************************
+* Pilot Gate     *
+****************************
+E_IF1IG         CMDIG 0 VALUE {IF((((I(V_Vig))>(Igt-1u)))& (((V(A)-V(K))>0)),1,0 )}
+*
+****************************
+* Pilot IHIL     *
+****************************
+*
+E_IF10IL         inIL 0 VALUE {IF( ((I(V_Viak))>(Ih/2)),1,0 )}
+E_IF5IH          inIH 0 VALUE {IF( ((I(V_Viak))>(Ih/3)),1,0 )} 
+*
+* Flip_flop IHIL
+E_IF6DIHIL         SDIHIL 0 VALUE {IF(
++ (V(inIL)*V(inIH)+V(inIH)*(1-V(inIL))*(V(CMDILIH)) )>0.5,1,0)}
+C_CIHIL            CMDILIH 0  1n  
+R_RIHIL            SDIHIL CMDILIH  1K  
+R_RIHIL2           CMDILIH 0  100Meg  
+*
+****************************
+* Pilot VDRM     *
+****************************
+E_IF8Vdrm           inVdrm 0 VALUE {IF( ((V(A)-V(K))>(Vdrm*1.3)),1,0 )}
+E_IF9IHVDRM         inIhVdrm 0 VALUE {IF( I(V_Viak)>(Vdrm*1.3)/1.2meg
++ ,1,0)}
+* Flip_flop VDRM
+E_IF7DVDRM         SDVDRM 0 VALUE {IF(
++ (V(inVdrm)+(1-V(inVdrm))*V(inIhVdrm)*V(CMDVdrm) )>0.5,1,0)}
+C_CVdrm            CMDVdrm 0  1n  
+R_RVdrm            SDVDRM CMDVdrm  100  
+R_RVdrm2           CMDVdrm 0  100Meg  
+*
+****************************
+* Switch Model *
+****************************
+.MODEL Smain VSWITCH Roff=1.2meg Ron={Rt} Voff=0 Von=100
+****************
+* Diodes Model *
+****************
+.MODEL  Dak D( Is=3E-12 Cjo=5pf) 
+.MODEL  Dgk D( Is=1E-16 Cjo=50pf Rs=5 Bv=12V Ibv=100uA) 
+.ends 
+*
+*********************************************************************
+* 				SCR PSpice Library                  *
+*********************************************************************
+*********************************************************************
+* 				Standard SCRs			    *
+*********************************************************************
+*
+*$
+.subckt BTW68-800 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=50ma
++ Ih=75ma        
++ Rt=0.0085
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt BTW68-600 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=50ma
++ Ih=75ma        
++ Rt=0.0085
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt BTW68-1200 A K G
+X1 A K G SCR_ST params:
++ Vdrm=1200v     
++ Igt=50ma
++ Ih=75ma        
++ Rt=0.0085
+* 2010 / ST / Rev 0
+.ends
+*$
+.subckt BTW69-1200 A K G
+X1 A K G SCR_ST params:
++ Vdrm=1200v     
++ Igt=50ma
++ Ih=100ma        
++ Rt=0.0085
+* 2013 / ST / Rev 1
+.ends
+*$
+.subckt BTW69-800 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=80ma
++ Ih=150ma        
++ Rt=0.0085
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt BTW69-600 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=80ma
++ Ih=150ma        
++ Rt=0.0085
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt BTW67-1000 A K G
+X1 A K G SCR_ST params:
++ Vdrm=1000v     
++ Igt=80ma
++ Ih=150ma        
++ Rt=0.0085
+* 2010 / ST / Rev 0
+.ends
+*$
+.subckt BTW67-600 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=80ma
++ Ih=150ma        
++ Rt=0.0085
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt XL0840 A K G
+X1 A K G SCR_ST params:
++ Vdrm=400v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0405N A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=50ua
++ Ih=5ma        
++ Rt=0.1
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0405M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=50ua
++ Ih=5ma        
++ Rt=0.1
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0402N A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.1
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0402M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.1
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0205N A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=50ua
++ Ih=5ma        
++ Rt=0.2
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0205M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=50ua
++ Ih=5ma        
++ Rt=0.2
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0202M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.2
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X00602 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.245
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X00619 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.245
+* 2010 / ST / Rev 0
+.ends
+*$
+.subckt TYN606 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.06
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN816 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=25ma
++ Ih=40ma        
++ Rt=0.023
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN812T A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=5ma
++ Ih=15ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN812 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN840 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=35ma
++ Ih=75ma        
++ Rt=0.01
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN640 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=35ma
++ Ih=75ma        
++ Rt=0.01
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN1225 A K G
+X1 A K G SCR_ST params:
++ Vdrm=1200v     
++ Igt=40ma
++ Ih=50ma        
++ Rt=0.014
+* 2012 / ST / Rev 0
+.ends
+*$
+.subckt TYN825 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=40ma
++ Ih=50ma        
++ Rt=0.014
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN625 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=40ma
++ Ih=50ma        
++ Rt=0.014
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TXN625 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=40ma
++ Ih=50ma        
++ Rt=0.014
+* 2011 / ST / Rev 0
+.ends
+*$
+.subckt TYN616 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=25ma
++ Ih=40ma        
++ Rt=0.023
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN612T A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=5ma
++ Ih=15ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN612 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN612M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=5ma
++ Ih=20ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN608 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.046
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN810 A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.035
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN610 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.035
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN1012T A K G
+X1 A K G SCR_ST params:
++ Vdrm=1000v     
++ Igt=5ma
++ Ih=15ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TYN1012 A K G
+X1 A K G SCR_ST params:
++ Vdrm=1000v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TS820-600 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.046
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TS420-600 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.09
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TS1220-600 A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN815-800B A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.046
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN815-600B A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.046
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN805-600B A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=5ma
++ Ih=25ma        
++ Rt=0.046
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN2540-800G A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=40ma
++ Ih=50ma        
++ Rt=0.014
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN2540-600G A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=40ma
++ Ih=50ma        
++ Rt=0.014
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1625-600G A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=25ma
++ Ih=40ma        
++ Rt=0.023
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1625-1000G A K G
+X1 A K G SCR_ST params:
++ Vdrm=1000v     
++ Igt=25ma
++ Ih=40ma        
++ Rt=0.023
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1515-600B A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.025
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1215-800H A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1215-800G A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1215-800B A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1205T-600B A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=5ma
++ Ih=15ma        
++ Rt=0.03
+* 2010 / ST / Rev 0
+.ends
+*$
+.subckt TN1215-600H A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1215-600G A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=30ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt TN1215-600B A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=15ma
++ Ih=40ma        
++ Rt=0.03
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0118M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=5ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0118D A K G
+X1 A K G SCR_ST params:
++ Vdrm=400v     
++ Igt=5ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0111M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=25ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0111D A K G
+X1 A K G SCR_ST params:
++ Vdrm=400v     
++ Igt=25ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0102M A K G
+X1 A K G SCR_ST params:
++ Vdrm=600v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0102D A K G
+X1 A K G SCR_ST params:
++ Vdrm=400v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.6
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt P0102BL A K G
+X1 A K G SCR_ST params:
++ Vdrm=200v     
++ Igt=200ua
++ Ih=6ma        
++ Rt=1
+* 2008 / ST / Rev 0
+.ends
+*$
+.subckt X0202N A K G
+X1 A K G SCR_ST params:
++ Vdrm=800v     
++ Igt=200ua
++ Ih=5ma        
++ Rt=0.2
+* 2008 / ST / Rev 1
+.ends
+*$
+.subckt TS110-7 A K G
+X1 A K G SCR_ST params:
++ Vdrm=700v     
++ Igt=100ua
++ Ih=2ma        
++ Rt=0.2
+* 2013 / ST / Rev 0
+.ends
+*$

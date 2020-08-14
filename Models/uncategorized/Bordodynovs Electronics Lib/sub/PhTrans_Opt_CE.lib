@@ -1,0 +1,331 @@
+*    irradiance (1 mV represents 1 mW/cm2)                      *
+*    For default (no light), set both optical inputs to         *
+*    ground (0) = 0VDC                                          *  
+
+* parameter SENS:                                               *
+*    the subcircuit also contains a parameter that may          *
+*    be changed/handed over by the user:                        *
+*    SENS = rel. spectral sensitivity in % for the wavelength   *
+*           of interest normalized to the peak rel. sensitivity *
+*    default = 100 (%). Needs to be adapted according to        *
+*              datasheet for wavelength of interest             *
+*              For standard IR phototransistor 100(%) works     * 
+*              typ. well for 850-950 nm                         *
+*              For ambient light sensors 100(%) refers to       *
+*              around 550 nm                                    *
+*    RESP = photocurrent / irradiance,                          *
+*              e.g. 50uA/1mW/cm2 = 50e-3 (mA/(mW/cm2))          * 
+*              usually this parameter don’t need to be changed  *
+*              *1e-2 to compensate for percentage in SENS       * 
+*    LENS = lens-factor, defaut = 1 for no lens                 *
+*---------------------------------------------------------------*
+* The model includes parameters for:                            * 
+*    1) forward direction (Vcollector > Vemitter)               *
+* The model has limited accuracy for:                           *
+*    2) near-saturation and saturation condition                *
+*    3) base transit time (dynamic behavor)                     *
+*    4) noise                                                   *
+*    5) intrinsic optical-electrical conversion frequ. response *
+
+
+*F049
+**** SFH3410 SENS=100 at 570nm, lens=1 
+*** 11/9/2011
+.subckt SFH3410 Opt Coll Emit
++params: SENS=100 resp=1e-5 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F049
+.MODEL F049 NPN (IS=6.12e-15 BF=480 NF=1.053 VAF=25.6
++ ISE=6.12E-15 NE=2 RE=19.8 RC=13
++ CJE=3.98E-12 MJE=0.234 VJE=0.696 FC=0.5 CJC=7.07E-11
++ MJC=0.312 VJC=0.539 TF=1e-13)
+.ends
+
+**** SFH3710 SENS=100 at 570nm, lens=1 
+*** 11/9/2011
+.subckt SFH3710 Opt Coll Emit
++params: SENS=100 resp=1e-5 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F049
+.MODEL F049 NPN (IS=6.12e-15 BF=480 NF=1.053 VAF=25.6
++ ISE=6.12E-15 NE=2 RE=19.8 RC=13
++ CJE=3.98E-12 MJE=0.234 VJE=0.696 FC=0.5 CJC=7.07E-11
++ MJC=0.312 VJC=0.539 TF=1e-13)
+.ends
+
+**** SFH3310 SENS=100 at 570nm, lens=1 
+*** 11/9/2011
+.subckt SFH3310 Opt Coll Emit
++params: SENS=100 resp=1e-5 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F049
+.MODEL F049 NPN (IS=6.12e-15 BF=480 NF=1.053 VAF=25.6
++ ISE=6.12E-15 NE=2 RE=19.8 RC=13
++ CJE=3.98E-12 MJE=0.234 VJE=0.696 FC=0.5 CJC=7.07E-11
++ MJC=0.312 VJC=0.539 TF=1e-13)
+.ends
+
+
+
+**** SFH309 SENS=100 at 860nm, lens=11 
+*** 11/9/2011
+.subckt SFH309 Opt Coll Emit
++params: SENS=100 resp=7.18e-6 lens=11
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F092
+.MODEL F092 NPN(IS=22.500E-15 BF=714.44 NF=1.0100 VAF=93.200
++ IKF=10.010E-3 ISE=22.500E-15 NE=1.7206 VAR=300 NK=.2987 RE=59.2
++ CJE=9.212E-12 MJE=0.286 VJE=0.627 FC=0.5 CJC=8.735E-12
++ MJC=0.275 VJC=0.467 TF=0.1E-9)
+.ends
+
+**** SFH320 SENS=100 at 980nm, lens=1 
+*** 11/9/2011
+.subckt SFH320 Opt Coll Emit
++params: SENS=100 resp=7.18e-6 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F092
+.MODEL F092 NPN(IS=22.500E-15 BF=714.44 NF=1.0100 VAF=93.200
++ IKF=10.010E-3 ISE=22.500E-15 NE=1.7206 VAR=300 NK=.2987 RE=59.2
++ CJE=9.212E-12 MJE=0.286 VJE=0.627 FC=0.5 CJC=8.735E-12
++ MJC=0.275 VJC=0.467 TF=0.1E-9)
+.ends
+
+**** SFH3211 SENS=100 at 980nm, lens=1 
+*** 11/9/2011
+.subckt SFH3211 Opt Coll Emit
++params: SENS=100 resp=7.18e-6 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F092
+.MODEL F092 NPN(IS=22.500E-15 BF=714.44 NF=1.0100 VAF=93.200
++ IKF=10.010E-3 ISE=22.500E-15 NE=1.7206 VAR=300 NK=.2987 RE=59.2
++ CJE=9.212E-12 MJE=0.286 VJE=0.627 FC=0.5 CJC=8.735E-12
++ MJC=0.275 VJC=0.467 TF=0.1E-9)
+.ends
+
+**** SFH3219 SENS=100 at 990nm, lens=4 
+*** 11/9/2011
+.subckt SFH3219 Opt Coll Emit
++params: SENS=100 resp=7.18e-6 lens=4
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F092
+.MODEL F092 NPN(IS=22.500E-15 BF=714.44 NF=1.0100 VAF=93.200
++ IKF=10.010E-3 ISE=22.500E-15 NE=1.7206 VAR=300 NK=.2987 RE=59.2
++ CJE=9.212E-12 MJE=0.286 VJE=0.627 FC=0.5 CJC=8.735E-12
++ MJC=0.275 VJC=0.467 TF=0.1E-9)
+.ends
+
+**** SFH325 SENS=100 at 980nm, lens=1 
+*** 11/9/2011
+.subckt SFH325 Opt Coll Emit
++params: SENS=100 resp=7.18e-6 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F092
+.MODEL F092 NPN(IS=22.500E-15 BF=714.44 NF=1.0100 VAF=93.200
++ IKF=10.010E-3 ISE=22.500E-15 NE=1.7206 VAR=300 NK=.2987 RE=59.2
++ CJE=9.212E-12 MJE=0.286 VJE=0.627 FC=0.5 CJC=8.735E-12
++ MJC=0.275 VJC=0.467 TF=0.1E-9)
+.ends
+
+*F144
+**** SFH314 SENS=100 at 850nm, lens=2.8 
+*** 11/9/2011
+.subckt SFH314 Opt Coll Emit
++params: SENS=100 resp=2.5e-5 lens=2.8
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F144
+.MODEL F144 NPN (IS=6.02e-14 BF=510 NF=1.043 VAF=229
++ IKF=61E-3 ISE=6.02E-14 NE=2 RE=2.84 
++ CJE=1.96E-11 MJE=0.336 VJE=0.671 FC=0.5 CJC=3.87E-11
++ MJC=0.445 VJC=0.539 TF=0.1e-13)
+.ends
+
+**** SFH3400 SENS=100 at 850nm, lens=1 
+*** 11/9/2011
+.subckt SFH3400 Opt Coll Emit
++params: SENS=100 resp=2.5e-5 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F144
+.MODEL F144 NPN (IS=6.02e-14 BF=510 NF=1.043 VAF=229
++ IKF=61E-3 ISE=6.02E-14 NE=2 RE=2.84 
++ CJE=1.96E-11 MJE=0.336 VJE=0.671 FC=0.5 CJC=3.87E-11
++ MJC=0.445 VJC=0.539 TF=0.1e-13)
+.ends
+
+**** SFH313 SENS=100 at 850nm, lens=10 
+*** 11/9/2011
+.subckt SFH313 Opt Coll Emit
++params: SENS=100 resp=2.5e-5 lens=10
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F144
+.MODEL F144 NPN (IS=6.02e-14 BF=510 NF=1.043 VAF=229
++ IKF=61E-3 ISE=6.02E-14 NE=2 RE=2.84 
++ CJE=1.96E-11 MJE=0.336 VJE=0.671 FC=0.5 CJC=3.87E-11
++ MJC=0.445 VJC=0.539 TF=0.1e-13)
+.ends
+
+**** SFH3201 SENS=100 at 850nm, lens=1 
+*** 11/9/2011
+.subckt SFH3201 Opt Coll Emit
++params: SENS=100 resp=2.5e-5 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F144
+.MODEL F144 NPN (IS=6.02e-14 BF=510 NF=1.043 VAF=229
++ IKF=61E-3 ISE=6.02E-14 NE=2 RE=2.84 
++ CJE=1.96E-11 MJE=0.336 VJE=0.671 FC=0.5 CJC=3.87E-11
++ MJC=0.445 VJC=0.539 TF=0.1e-13)
+.ends
+
+**** SFH3500 SENS=100 at 850nm, lens=10 
+*** 11/9/2011
+.subckt SFH3500 Opt Coll Emit
++params: SENS=100 resp=2.5e-5 lens=10
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F144
+.MODEL F144 NPN (IS=6.02e-14 BF=510 NF=1.043 VAF=229
++ IKF=61E-3 ISE=6.02E-14 NE=2 RE=2.84 
++ CJE=1.96E-11 MJE=0.336 VJE=0.671 FC=0.5 CJC=3.87E-11
++ MJC=0.445 VJC=0.539 TF=0.1e-13)
+.ends
+
+**** F351 SENS=100 at 880nm
+*** SFH 3010, SENS = 100 at 860 nm, lens = 1 
+*** 11/9/2011
+.subckt SFH3010 Opt Coll Emit
++params: SENS=100 resp=3.16e-6 lens=1
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F351
+.MODEL F351 NPN (IS=21E-15 BF=898 NF=1.02 VAF=62 IKF=81.2E-3
++ ISE=21E-15 NE=1.998 VAR=300 NK=0.595 CJE=5.4E-12 MJE=0.3
++ VJE=0.627 FC=0.5 CJC=7.1E-12 MJC=0.306 VJC=0.503 TF=2.000E-9)
+.ends
+
+*** SFH 3600, SENS = 100 at 990 nm, lens = 8 
+*** 11/9/2011
+.subckt SFH3600 Opt Coll Emit
++params: SENS=100 resp=3.16e-6 lens=8  
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F351
+.MODEL F351 NPN (IS=21E-15 BF=898 NF=1.02 VAF=62 IKF=81.2E-3
++ ISE=21E-15 NE=1.998 VAR=300 NK=0.595 CJE=5.4E-12 MJE=0.3
++ VJE=0.627 FC=0.5 CJC=7.1E-12 MJC=0.306 VJC=0.503 TF=2.000E-9)
+.ends
+
+*** SFH 3605, SENS = 100 at 990 nm, lens = 8 
+*** 11/9/2011
+.subckt SFH3605 Opt Coll Emit
++params: SENS=100 resp=3.16e-6 lens=8
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F351
+.MODEL F351 NPN (IS=21E-15 BF=898 NF=1.02 VAF=62 IKF=81.2E-3
++ ISE=21E-15 NE=1.998 VAR=300 NK=0.595 CJE=5.4E-12 MJE=0.3
++ VJE=0.627 FC=0.5 CJC=7.1E-12 MJC=0.306 VJC=0.503 TF=2.000E-9)
+.ends
+
+*** SFH 3204, SENS = 100 at 920 nm, lens = 3 
+*** 11/9/2011
+.subckt SFH3204 Opt Coll Emit
++params: SENS=100 resp=3.16e-6 lens=3
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F351
+.MODEL F351 NPN (IS=21E-15 BF=898 NF=1.02 VAF=62 IKF=81.2E-3
++ ISE=21E-15 NE=1.998 VAR=300 NK=0.595 CJE=5.4E-12 MJE=0.3
++ VJE=0.627 FC=0.5 CJC=7.1E-12 MJC=0.306 VJC=0.503 TF=2.000E-9)
+.ends
+
+*** SFH 3015, SENS = 100 at 870 nm, lens = 11 
+*** 11/9/2011
+.subckt SFH3015 Opt Coll Emit
++params: SENS=100 resp=3.16e-6 lens=11
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F351
+.MODEL F351 NPN (IS=21E-15 BF=898 NF=1.02 VAF=62 IKF=81.2E-3
++ ISE=21E-15 NE=1.998 VAR=300 NK=0.595 CJE=5.4E-12 MJE=0.3
++ VJE=0.627 FC=0.5 CJC=7.1E-12 MJC=0.306 VJC=0.503 TF=2.000E-9)
+.ends
+
+**** SFH300 SENS=100 at 880nm, lens=6.2 
+*** 11/9/2011
+.subckt SFH300 Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=6.2
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+**** SFH305 SENS=100 at 850nm, lens=2.5 
+*** 11/9/2011
+.subckt SFH305 Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=2.5
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+**** SFH3100 SENS=100 at 920nm, lens=7 
+*** 11/9/2011
+.subckt SFH3100 Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=7
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+**** LPT80 SENS=100 at 880nm, lens=3 
+*** 11/9/2011
+.subckt LPT80 Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=3
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+*
+**** BPX8x SENS=100 at 850nm, lens=2.5 
+*** 11/9/2011
+.subckt BPX8x Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=2.5
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+**** BPX81 SENS=100 at 850nm, lens=2.5 
+*** 11/9/2011
+.subckt BPX81 Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=2.5
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+**** SFH310 SENS=100 at 880nm, lens=8 
+*** 11/9/2011
+.subckt SFH310 Opt Coll Emit
++params: SENS=100 resp=2.13e-5 lens=8
+Bi Emit Base i=v(Opt)*{SENS*resp*lens} Rpar=10G
+Q001 Coll Base Emit F431
+.MODEL F431 NPN (IS=20.000E-15 BF=223.74 NF=1.0100 VAF=315
++ IKF=.93501 ISE=41.698E-15 NE=1.9980 VAR=300 RE=34.400 RC=17.600
++ CJE=25.058E-12 MJE=0.332 VJE=0.678 FC=0.5 CJC=2.0000E-12
++ MJC=0.350 VJC=0.545 TF=6.5E-9)
+.ends
+
+

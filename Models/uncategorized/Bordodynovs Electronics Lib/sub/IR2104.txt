@@ -1,0 +1,35 @@
+.SUBCKT IR2104 VCC IN _SD com VB HO VS LO
+D1 In Vcc Dd
+D2 Com In Dd
+D3 HO VB Dd
+D4 VS HO Dd
+D5 VS VB 25V
+C2 VB HO 22p
+C3 HO VS 22p Rpar=100k
+S1 HO VB 4 0 SH
+S2 HO VS 5 0 SL
+A2 VB VS 0 0 0 0 3 0 SCHMITT Vt=8.9 Vh=.35
+C1 In Com 10p Rpar=1e6
+D6 Com VB 625V
+D7 _SD Vcc Dd
+D8 Com _SD Dd
+A4 _SD Com 0 0 0 0 6 0 SCHMITT Vt=1.9 Vh=1 Trise=120n Tripdt=25n
+A5 Vcc Com 0 0 0 0 7 0 SCHMITT Vt=8.9 Vh=.35
+C4 _SD Com 10p Rpar=1e6
+S3 LO Vcc 8 0 SH
+S4 LO Com 9 0 SL
+D9 LO Vcc Dd
+D10 Com LO Dd
+D11 Com Vcc 25V
+C5 Vcc LO 22p
+C6 LO Com 22p Rpar=100k
+A3 3 1 0 6 7 5 4 0 AND Trise=100n Tripdt=20n
+A6 7 6 0 2 0 9 8 0 AND Trise=100n Tripdt=20n
+A1 In Com 0 0 0 2 1 0 SCHMITT Vt=1.9 Vh=1 Trise=1110n Tfall=100n Tripdt=50n
+.model D D
+.model 25V D(Ron=.5 Vfwd=.5 Vrev=25.2 Roff=25e4)
+.model 625V D(Ron=.5 Vfwd=.5 Vrev=625 Roff=12e6)
+.model Dd D(Ron=.5 Vfwd=.5)
+.model SH SW(Vt=.5 Vh=-.5 Ron=42 Ilimit=.21)
+.model SL SW(Vt=.5 Vh=-.5 Ron=20 Ilimit=.36)
+.ends

@@ -1,0 +1,224 @@
+*******************************************************************
+*---------- Total Harmonic Distortion Analyzer --------------------
+*--------- version 1.0 with no additional filters -----------------
+*--------- to be used with "THD_Analyzer.asy" symbol --------------
+*--------- Analysis is limited to the first 10 harmonics ----------
+*******************************************************************
+* Created by Eugene Dvoskin http://www.audio-perfection.com/
+*------------------------------------------------------------------
+* Inspired by "jfet_amp_disto_plot" by  Helmut Sennewald, "Audio Distortion Analyser" by Tony Casey
+* and "Fundamental Null Distortion Residual" by jcx from http://www.diyaudio.com/forums/software-tools/101810-spice-simulation-37.html#post1333137
+*******************************************************************
+********** Frequency & Amplitude Sweep ***********
+**************************************************
+*===================================================
+* Frequency sweep. Comment .STEP for amplitude sweep.
+* -------------- Uncomment .STEP for frequency sweep.
+*---------------------------------------------------
+*                 Start frequency
+*                    |  Stop frequency
+*                    |     |  Number of points per decade
+*                    |     |    |
+*.STEP dec param Fg  20    20k   3
+*.STEP param Fg list 20 1k 20k  ; may be used instead of previous one
+*----------------------------------------
+* Generator amplitude for frequency sweep
+*----------------------------------------
+.param    Ag=0.1v
+*----------------------------------------
+**************************************
+*===================================================
+* Amplitude sweep. Comment .STEP for frequency sweep
+* -------------- Uncomment .STEP for amplitude sweep.
+*---------------------------------------------------
+*                 Start amplitude
+*                    |   Stop amplitude
+*                    |        |  Number of points per decade
+*                    |        |     |
+*.STEP dec param Ag  0.0001   0.28   2
+*.STEP param Ag list 0.01 0.1  1 ; may be used instead of previous one
+.step param ag list 1m 5m 10m 25m
+*----------------------------------------
+* Generator frequency for amplitude sweep
+*----------------------------------------
+.param    Fg=1000
+*----------------------------------------
+;
+************************************************
+******* Transient analysis parameters **********
+*===============================================
+* Do not edit, until you know what you are doing
+*-----------------------------------------------
+; These parameters are highly affecting measurement resolution and simulation time
+.param MaxTimestep=400u/Fg ; use 400u/Fg as a good compromise, use 100u/Fg to increase measurement resolution
+.param AnalysisTime= StrobeTime+IntegrationTime
+.param IntegrationTime=10/Fg ; n periods of measurement time, integer number
+.param SettlingTime=10m; skipping some time if required to analyze steady state
+.param StrobeLength=10/Fg ; sampling time, strongly affects fundamental removal, integer number
+.param StrobeTime=SettlingTime+StrobeLength; end of strobe
+*-----------------------------------------------
+*
+*---- Disabling Compression & increasing precision-----
+.option plotwinsize=0
+.options measdgt 15
+.options numdgt=15
+*------------------------------------------------------
+*
+*----Defining global nodes to measure subcircuit voltages
+.global Analyzer_In Ref_S Ref_C Gen H1SF H1CF H2SF H2CF H3SF H3CF H4SF H4CF H5SF H5CF
++ H6SF H6CF H7SF H7CF H8SF H8CF H9SF H9CF H10SF H10CF Is_s Is_c
+ + TimeScale S_Time E_Time
+*------------------------------------------------------
+*
+***************************************************
+.SUBCKT THD_Analyzer Generator_Out Analyzer_In Notch
+*-------------------------------------------
+*---  Generator ----------------------------
+*-------------------------------------------
+Vgen Gen 0 SINE(0 {Ag} {Fg} 0 0 0)
+Vi_sense Gen Generator_Out 0 ; Input Current Sensing
+*-------------------------------------------
+*---  Analyzer -----------------------------
+*-------------------------------------------
+*--- Strobes for sequencing ---
+B_strobe Strobe 0 V=u(time-{SettlingTime})*u({StrobeTime}-time)
+B_time TimeScale 0 V=1*time ; to set the timescale
+B_StrobeTime S_Time 0 V={StrobeTime}
+B_EndTime E_Time 0 V={AnalysisTime}
+B_meastime MeasTime 0 V=u(time-{StrobeTime})
+*--- Fundamental -----
+B_sin Ref_S 0 V=idt(V(Analyzer_In)*sin(2*pi*time*Fg)*V(Strobe))/({StrobeTime}-{SettlingTime})
+B_cos Ref_C 0 V=idt(V(Analyzer_In)*cos(2*pi*time*Fg)*V(Strobe))/({StrobeTime}-{SettlingTime})
+*---------------------
+B_average Aver 0 V=idt(V(Analyzer_In)*V(Strobe))/({StrobeTime}-{SettlingTime})
+B_recovered Rec_Fund 0 V=2*((V(Ref_S)*sin(2*pi*time*Fg))+(V(Ref_C)*cos(2*pi*time*Fg)))
+*--- Harmonics to measure -----
+B_notch Notch 0 V=(V(Analyzer_In)-V(Aver)-V(Rec_Fund))*V(MeasTime)
+*--- Input impedace ----
+B_Isource_s Is_s 0 I=idt(I(Vi_sense)*sin(2*pi*time*Fg)*V(Strobe))/({StrobeTime}-{SettlingTime})
+B_Isource_c Is_c 0 I=idt(I(Vi_sense)*cos(2*pi*time*Fg)*V(Strobe))/({StrobeTime}-{SettlingTime})
+R_s Is_s 0 1
+R_c Is_c 0 1
+*--- 2 harmonic  -----
+B_H2S H2SF 0 V=idt(V(Notch)*sin(4*pi*time*Fg))/{IntegrationTime}
+B_H2C H2CF 0 V=idt(V(Notch)*cos(4*pi*time*Fg))/{IntegrationTime}
+*--- 3 harmonic  -----
+B_H3S H3SF 0 V=idt(V(Notch)*sin(6*pi*time*Fg))/{IntegrationTime}
+B_H3C H3CF 0 V=idt(V(Notch)*cos(6*pi*time*Fg))/{IntegrationTime}
+*--- 4 harmonic  -----
+B_H4S H4SF 0 V=idt(V(Notch)*sin(8*pi*time*Fg))/{IntegrationTime}
+B_H4C H4CF 0 V=idt(V(Notch)*cos(8*pi*time*Fg))/{IntegrationTime}
+*--- 5 harmonic  -----
+B_H5S H5SF 0 V=idt(V(Notch)*sin(10*pi*time*Fg))/{IntegrationTime}
+B_H5C H5CF 0 V=idt(V(Notch)*cos(10*pi*time*Fg))/{IntegrationTime}
+*--- 6 harmonic  -----
+B_H6S H6SF 0 V=idt(V(Notch)*sin(12*pi*time*Fg))/{IntegrationTime}
+B_H6C H6CF 0 V=idt(V(Notch)*cos(12*pi*time*Fg))/{IntegrationTime}
+*--- 7 harmonic  -----
+B_H7S H7SF 0 V=idt(V(Notch)*sin(14*pi*time*Fg))/{IntegrationTime}
+B_H7C H7CF 0 V=idt(V(Notch)*cos(14*pi*time*Fg))/{IntegrationTime}
+*--- 8 harmonic  -----
+B_H8S H8SF 0 V=idt(V(Notch)*sin(16*pi*time*Fg))/{IntegrationTime}
+B_H8C H8CF 0 V=idt(V(Notch)*cos(16*pi*time*Fg))/{IntegrationTime}
+*--- 9 harmonic  -----
+B_H9S H9SF 0 V=idt(V(Notch)*sin(18*pi*time*Fg))/{IntegrationTime}
+B_H9C H9CF 0 V=idt(V(Notch)*cos(18*pi*time*Fg))/{IntegrationTime}
+*--- 10 harmonic  -----
+B_H10S H10SF 0 V=idt(V(Notch)*sin(20*pi*time*Fg))/{IntegrationTime}
+B_H10C H10CF 0 V=idt(V(Notch)*cos(20*pi*time*Fg))/{IntegrationTime}
+.ENDS
+
+
+*---- Data Processing ---------------------
+.meas aH1S find V(Ref_S) when V(TimeScale)=V(S_Time)
+.meas aH1C find V(Ref_C) when V(TimeScale)=V(S_Time)
+.meas AvH2S find V(H2SF) when V(TimeScale)= V(E_Time)
+.meas AvH2C find V(H2CF) when V(TimeScale)= V(E_Time)
+.meas AvH3S find V(H3SF) when V(TimeScale)= V(E_Time)
+.meas AvH3C find V(H3CF) when V(TimeScale)= V(E_Time)
+.meas AvH4S find V(H4SF) when V(TimeScale)= V(E_Time)
+.meas AvH4C find V(H4CF) when V(TimeScale)= V(E_Time)
+.meas AvH5S find V(H5SF) when V(TimeScale)= V(E_Time)
+.meas AvH5C find V(H5CF) when V(TimeScale)= V(E_Time)
+.meas AvH6S find V(H6SF) when V(TimeScale)= V(E_Time)
+.meas AvH6C find V(H6CF) when V(TimeScale)= V(E_Time)
+.meas AvH7S find V(H7SF) when V(TimeScale)= V(E_Time)
+.meas AvH7C find V(H7CF) when V(TimeScale)= V(E_Time)
+.meas AvH8S find V(H8SF) when V(TimeScale)= V(E_Time)
+.meas AvH8C find V(H8CF) when V(TimeScale)= V(E_Time)
+.meas AvH9S find V(H9SF) when V(TimeScale)= V(E_Time)
+.meas AvH9C find V(H9CF) when V(TimeScale)= V(E_Time)
+.meas AvH10S find V(H10SF) when V(TimeScale)= V(E_Time)
+.meas AvH10C find V(H10CF) when V(TimeScale)= V(E_Time)
+.meas I_in_S find V(is_s) when V(TimeScale)= V(S_Time)
+.meas I_in_C find V(is_c) when V(TimeScale)= V(S_Time)
+*-------------------------------------------
+.meas Fundamental_Out_V_RMS param sqrt(2)*hypot(aH1S,aH1C)
+.meas GAIN param sqrt(2)*Fundamental_Out_V_RMS/Ag
+.meas GAIN_dB param 20*log10(GAIN)
+.meas Phase_deg param atan(aH1C/aH1S)
+.meas Z_in_mod param 0.5*Ag/(hypot(I_in_S,I_in_C))
+.meas Z_in_ph_deg param (-1)*atan(I_in_C/I_in_S)
+.meas H2 param sqrt(2)*hypot(AvH2S,AvH2C)*100/Fundamental_Out_V_RMS
+.meas H3 param sqrt(2)*hypot(AvH3S,AvH3C)*100/Fundamental_Out_V_RMS
+.meas H4 param sqrt(2)*hypot(AvH4S,AvH4C)*100/Fundamental_Out_V_RMS
+.meas H5 param sqrt(2)*hypot(AvH5S,AvH5C)*100/Fundamental_Out_V_RMS
+.meas H6 param sqrt(2)*hypot(AvH6S,AvH6C)*100/Fundamental_Out_V_RMS
+.meas H7 param sqrt(2)*hypot(AvH7S,AvH7C)*100/Fundamental_Out_V_RMS
+.meas H8 param sqrt(2)*hypot(AvH8S,AvH8C)*100/Fundamental_Out_V_RMS
+.meas H9 param sqrt(2)*hypot(AvH9S,AvH9C)*100/Fundamental_Out_V_RMS
+.meas H10 param sqrt(2)*hypot(AvH10S,AvH10C)*100/Fundamental_Out_V_RMS
+.meas THD_persent param sqrt(H2*H2+H3*H3+H4*H4+H5*H5+H6*H6+H7*H7+H8*H8+H9*H9+H10*H10)
+.meas THD_dB param 20*log10(THD_persent/100)
+*------------------------------------ Instructions: -------------------------------------------------
+*  Place THD_Analyzer.asy symbol and Analyser_Controls.txt files in the same directory,
+*  where you are saving schematic (DUT schematic), that you would like to analyze.
+*  Put SPICE directives ".inc Analyzer_Controls.txt" and
+*  ".tran 0 {AnalysisTime} {SettlingTime} {MaxTimestep}"  in DUT schematic .
+*  Edit "Analyzer_Controls.txt" (this file)  to enable (uncomment)
+*  appropriate sweep (amplitude  or frequency ) and save this file.
+*  Setup  ".param   Ag=xxx"  as amplitude for  frequency sweep
+*  or ".param   Fg=xxx" as frequency  for  amplitude  sweep.
+*  Run the simulation. After simulation is complete, go to View menu
+*  and open SPICE Error Log or use Ctrl+L command.
+*  Click with right mouse button on opened Log file.
+*  Execute "Plot .step'ed .meas data" command. Right mouse button click on opened plot
+*  and use Add Trace or Ctrl+A and select the data that you want to plot.
+*  You may want to double click on axis to change axis limits or switch to logarithmic scale.
+*  ---------
+*  Notch output shows residual components, after fundamental removal.
+*  Please note that fundamental may not be removed completely.
+*  This is not necessarily affecting resolution of measurements as soon as additional
+*  synchronous filtering is used to measure amplitude of harmonics.
+*  Increasing SettlingTime and StrobeLength,  or (and) decreasing MaxTimestep
+*  would likely improve fundamental rejection.
+*  ---------
+*  Generator output is DC coupled and has 0 Ohm output impedance.
+*  Use external AC coupling and appropriate series resistor if required,
+*  to ensure proper operation of simulated circuit.
+*-----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

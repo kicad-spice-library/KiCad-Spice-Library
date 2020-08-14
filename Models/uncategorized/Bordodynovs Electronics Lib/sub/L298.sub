@@ -1,0 +1,85 @@
+* Source File: L298Blk.asc
+* Developed: ETech (eetech00@yahoo.com)
+* Created: Jan 13 2017
+* Revision: NA
+*
+* This L298 spice behavioral model was tested
+* with LTSpice. Temperature is not modeled.
+*
+* ST Microelectronics
+* L298 DUAL FULL-BRIDGE DRIVER
+*
+* block symbol definitions
+.subckt L298 ENA ENB IN1 IN2 IN3 IN4 OUT1 OUT2 OUT3 OUT4 SENA SENB VGND VS VSS
+V1 1 VGND 1
+XX9 50 40 OUT1 SENA VGND VS2 dvroutchanblk
+XX10 70 60 OUT2 SENA VGND VS2 dvroutchanblk
+XX11 90 80 OUT3 SENB VGND VS2 dvroutchanblk
+XX12 110 100 OUT4 SENB VGND VS2 dvroutchanblk
+B1 VSS1 VGND V=V(1)*If(V(VSS)>4.49,V(VSS),0)
+R4 VSS VGND 1e8
+E1 VSS2 VGND VSS1 VGND 1
+C1 10 VGND 10p
+R1 VSS1 10 100
+B2 VS1 VGND V=V(1)*If(V(VS)>(V(VSS)+2.5),V(VS),0)
+R5 VS VGND 1e8
+E2 VS2 VGND VS1 VGND 1
+C2 20 VGND 10p
+R2 VS1 20 100
+B3 REF2R3 VGND V=V(1)*If(V(VSS)>4.49,2.3,0)
+E3 2R3 VGND REF2R3 VGND 1
+C3 30 VGND 10p
+R3 REF2R3 30 100
+XX1 IN1 2R3 40 VSS2 VGND dvrinchanblk
+XX2 ENA 2R3 50 VSS2 VGND dvrinchanblk
+XX3 IN2 2R3 60 VSS2 VGND dvrinchanblk
+XX4 ENA 2R3 70 VSS2 VGND dvrinchanblk
+XX5 IN3 2R3 80 VSS2 VGND dvrinchanblk
+XX6 ENB 2R3 90 VSS2 VGND dvrinchanblk
+XX7 IN4 2R3 100 VSS2 VGND dvrinchanblk
+XX8 ENB 2R3 110 VSS2 VGND dvrinchanblk
+**
+
+.subckt dvroutchanblk ENA IN OUT SENSE VGND VS1
+Q1 VS1 OUT1 OUT 0 2N3055
+Q2 OUT OUT2 SENSE 0 2N3055
+A1 0 ENA 0 INA 0 0 IN1 0 AND tau={tau} tripdt={tdt}
+A2 0 _INA 0 ENA 0 0 IN2 0 AND tau={tau} tripdt={tdt}
+AE1 IN 0 0 0 0 _INA INA 0 BUF tau={tau} tripdt={tdt}
+XX4 IN1 OUT1 VGND VS1 outbuf
+XX5 IN2 OUT2 VGND VS1 outbuf
+.param tau = 50n
+.param tdt = 10n
+.ends dvroutchanblk
+
+.subckt dvrinchanblk IN- IN+ OUT VCC VGND
+B1 HYS IN+ V=If(V(OUT1)>((V(HI)+V(LO))*0.5),{VHYS},0)*V(1)
+B2 4 VGND V=If(V(HYS,IN-)>0,V(HI),V(LO))*V(1)
+R3 OUT1 4 10
+C2 OUT1 VGND 10p
+R2 IN+ VGND 1G
+R5 VCC VGND 1G
+V2 VCC HI 0
+V3 LO VGND 0
+V1 1 VGND 1
+C1 1 VGND 10p
+B3 5 VGND V=If(V(OUT1)>(V(HI)*0.5),0,1)*V(1)
+R4 OUT 5 10
+C3 OUT VGND 10p
+R1 IN- VGND 1G
+.param VHYS=800m
+.ends dvrinchanblk
+
+.subckt outbuf IN OUT VGND VS
+S1 VS OUT CTL _CTL SW1 OFF
+A1 IN 0 0 0 0 _CTL CTL 0 BUF tau={tau} tripdt={tdt}
+R2 OUT VGND 2k
+.param Rout=1m
+.param Ron1=10 Ilim1=6.8m
+.model SW1 SW Ron={Ron1} Vt=.5 Vh=-0.3
+.IC V(CTL)=0
+.param tau = 50n
+.param tdt = 10n
+.ends outbuf
+
+.ends L298

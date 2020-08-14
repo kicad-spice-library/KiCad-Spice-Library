@@ -1,0 +1,97 @@
+** Transfer Functions
+
+.subckt Proportional Y U
+E1 Y 0 U 0 {K}
+.param K=1
+.ends Proportional
+
+.subckt Derivative Y U
+G1 0 N001 U 0 1
+L1 N001 0 {T} Rser=0
+E1 Y 0 N001 0 1
+.param T=1
+.ends Derivative
+
+.subckt Integral Y U
+G1 0 N001 U 0 1
+C1 N001 0 1
+R1 N001 N002 1 ; workaround to avoid a warning that node N001 is floating
+E1 N002 0 N001 0 1 ; workaround
+E2 Y 0 N001 0 {1/T}
+.param T=1 Y0=0
+.ic V(N001)={Y0*T}
+.ends Integral
+
+.subckt LimitedIntegral Y U
+B1 Y 0 V=idt(V(U),if(V(Y)>=Ymax,Ymax,if(V(Y)<=Ymin,Ymin,Y0))*T,((V(Y)>=Ymax)&(V(U)>0))|((V(Y)<=Ymin)&(V(U)<0)))/T tripdt={tripdt} tripdv={tripdv}
+.param T=1 Y0=0 Ymin=-1T Ymax=1T
+.param tripdt=1e300 tripdv=1
+.ends LimitedIntegral
+
+.subckt 0thOrderHold Y U
+B1 Y 0 V=idt((V(U)-delay(V(U),T)),Y0*i*T)/(i*T) tripdt={tripdt} tripdv={tripdv}
+.param T=1 i=1 Y0=0
+.param tripdt=1e300 tripdv=1
+.ends 0thOrderHold
+
+.subckt 1stOrderLag Y U
+E1 N001 0 U 0 1
+L1 N001 N002 {T} Rser=0
+R1 N002 0 1
+E2 Y 0 N002 0 {K}
+.param K=1 T=1
+.ends 1stOrderLag
+
+.subckt 2ndOrderLag Y U
+E1 N001 0 U 0 1
+R1 N001 N002 {R1}
+L1 N002 N003 {L1} Rser=0
+C1 N003 0 {C1}
+E2 Y 0 N003 0 {K}
+.param K=1 w=1 z=1
+.param L1=1/w C1=1/w R1=2*z
+.ends 2ndOrderLag
+
+.subckt DeadTime Y U
+B1 Y 0 V=delay(V(U),T) tripdt={tripdt} tripdv={tripdv}
+.param T=1
+.param tripdt=1e300 tripdv=1
+.ends DeadTime
+
+.subckt LaggedDerivative Y U
+E1 N001 0 U 0 1
+R1 N001 N002 1
+L1 N002 0 {i*T} Rser=0
+E2 Y 0 N002 0 {1/i}
+.param i=1 T=1
+.ends LaggedDerivative
+
+.subckt 2ndOrderHighPassFilter Y U
+E1 N001 0 U 0 1
+R1 N001 N002 {R1}
+C1 N002 N003 {C1}
+L1 N003 0 {L1} Rser=0
+E2 Y 0 N003 0 {K}
+.param K=1 w=1 z=1
+.param L1=1/w C1=1/w R1=2*z
+.ends 2ndOrderHighPassFilter
+
+.subckt 2ndOrderBandPassFilter Y U
+E1 N001 0 U 0 1
+L1 N001 N002 {L1} Rser=0
+C1 N002 N003 {C1}
+R1 N003 0 {R1}
+E2 Y 0 N003 0 {K}
+.param K=1 w=1 z=1
+.param L1=1/w C1=1/w R1=2*z
+.ends 2ndOrderBandPassFilter
+
+.subckt 2ndOrderBandStopFilter Y U
+E1 N001 0 U 0 1
+R1 N001 N002 {R1}
+C1 N002 N003 {C1}
+L1 N003 0 {L1} Rser=0
+E2 Y 0 N002 0 {K}
+.param K=1 w=1 z=1
+.param L1=1/w C1=1/w R1=2*z
+.ends 2ndOrderBandStopFilter

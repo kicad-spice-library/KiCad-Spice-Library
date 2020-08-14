@@ -1,0 +1,295 @@
+* UCCx813-3 and UCCx803
+
+.SUBCKT UCC3803 COMP FB CS CT GND DRV VCC VREF 
+XUV VCC uvlout UVLOX2 PARAMS: VON=4.1 VOFF=3.6 ; UVLO Setting
+SX5 ct gnd 52 0 SSWITCH 
+.MODEL SSWITCH VSWITCH RON=125 ROFF=10MEG VON=4 VOFF=2
+*EBD 26 drv Value= { IF ( V(39) > 2.5 & V(Tog) > 2.5 & V(16) > 2.5 &
+*+ V(vref) > 3.8 , 5 , -5 ) }; Driver Setting 95% of Vref, 3.8 or 4.75
+EBD 26 gnd Value= { IF ( V(39) > 2.5 & V(Tog) > 2.5 & V(16) > 2.5 &
++ V(vref) > 3.8 , 5 , -5 ) }; Driver Setting 95% of Vref, 3.8 or 4.75
+XDRIVE VCC GND 26 drv FETOUTC4X ; FETOUTC4X 2845OUT
+*Mtop VCC 26 drv drv _NMOS 
+*.MODEL _NMOS NMOS KP=1 RD=10 VTO=2
+GBIcc VCC gnd Value= { IF ( V(uvlout) > 3 , (500u+I(VR2)) , 100u ) }
+XVccZen gnd VCC ZEN13p5
+EBRefOsc 1 gnd Value={ 0.625*V(Vref) } ; Osc Midpoint Setting 50% or 62.5%
+EBpul oscout 0 Value= { IF (V(puls)>2 , 5 , 100m ) }
+*Mbot gnd 26 drv drv _PMOS 
+*.MODEL _PMOS PMOS KP=1 RD=10 VTO=-2
+XTog 65 27 Tog OR2380x 
+X1 20 ct 11 COMPAR380x 
+X3 ct 1 17 COMPAR380x 
+Vosc 20 gnd DC=200m
+Rdum 0 35 100k
+X7 16 ctrst INV380x 
+X8 16 17 38 AND2380x 
+X6 ctrst 11 6 OR2380x 
+Rcs CS gnd 1Meg
+EBCSLEB CSLEB gnd Value= { IF (V(LEB) > 3 , V(CS,GND) , 0 ) }
+XLEBD 39 LEB UTD380x
+RDumm2 43 0 100k
+EBComp 44 gnd Value= { IF ((V(comp)-0.78)*0.6 > 1 , 1 , IF ( (V(comp)-0.78)*0.6 < 10m , 10m , (V(comp)-0.78)*0.6 ) ) }
+EBEARef 45 gnd Value= { V(vref)/2 }
+X13 32 33 34 53 LATCH380x 
+X14 36 33 37 56 LATCH380x 
+R17 53 0 100k
+R18 56 0 100k
+X16 57 41 33 AND2380x 
+X17 ctimer 59 36 COMPAR380x 
+X18 60 ctimer 41 COMPARHYS 
+Vssu 59 0 DC=4
+Vssl 60 0 DC=500m
+X19 32 57 INV380x 
+Ctim ctimer 0 80n
+Qtim ctimer 61 0 QN380x 
+.MODEL QN380x NPN BF=105 BR=4 CJC=12.2P CJE=35.5P IKF=.5
++ IKR=.225 IS=15.2F ISE=8.2P NE=2 NF=1 NR=1 RB=1.49 RC=.149
++ RE=.373 TF=500P TR=85N VAF=98.5 VAR=20 XTB=1.5
+Rtim 61 29 10k
+Dtim ctimer vref _DCLAMP 
+.MODEL _DCLAMP D N=10m
+EBctim vss 0 Value= { IF (V(ctimer) < 100m , 100m , V(ctimer) ) }
+Vcsleb 64 0 DC=1.5
+GBtim vref ctimer Value= { IF ( V(vref) > 3.8 , 80u , 0 ) } ; SS Setting 95% of Vref, 3.8 or 4.75
+X20 63 uvlout 32 NAND2380x 
+X21 34 16 INV380x 
+X12 34 37 29 AND2380x 
+RSref 47 vref 360
+XROSC ct 66 rstosc COMPAR380x 
+Vrstosc 66 gnd DC=2.45
+XHD oscout 19 39 43 LATCH_HD 
+X29 38 6 3 35 LATCH_HD 
+X99DC CSLEB 44 15 COMPAR380x 
+Cpuls 3 puls 1n
+Rpuls puls 0 100
+Dpuls 0 puls _DCLAMP 
+X4 64 CSLEB 63 COMPARCS ; COMPARX1 
+X10 ctrst 3 52 OR2380x 
+XEA 45 FB comp gnd vss AMP3802 
+XRstHD 15 rstosc 12 19 OR3 
+X0DC 69 comp 12 COMPARX1 
+Vpwm 69 gnd DC=780m
+XTFF 52 70 0 0 70 27 FFLOP380x 
+Drout 46 gnd _D 
+.MODEL _D D N=0.1
+VTog 65 0 DC=5 ; Set VTog to zero for 49% 01, 04, 05, 5V for 99% 00, 02, 03
+Vrout vref 46 DC=3.93 ; Either 3.93 or 4.93
+Dreflo uvlout 18 _D7_mod 
+.MODEL _D7_mod D BV=100V CJO=4PF IS=1u M=.45 N=0.1 RS=.8
++ TT=6E-09 VJ=.6V
+Rreflo 18 vref 4k
+R5kpd uvlout gnd 500k
+Qreflo gnd uvlout 18 _PNP 
+.MODEL _PNP PNP BF=500
+VR2 uvlout 47
+
+*$
+.SUBCKT UVLOX2  1   2  PARAMS: VON=4.1 VOFF=3.6
+*            VIN OUT
+S1 1 3 1 0 SUVLO
+RUV 3 0 100K
+EB1 4 0 Value= { IF ( V(3) > 3V , V(1) , 0 ) }
+RD 4 2 100
+CD 2 0 100P
+.MODEL SUVLO VSWITCH RON=1 ROFF=1E6 VT={((VON-VOFF)/2) + VOFF} VH={(VON-VOFF)/2}
+.ENDS 
+*$
+.SUBCKT UVLO_G 1   2  30 PARAMS: VON=12 VOFF=10
+*             VIN OUT Gnd
+S1 1 3 1 30 SUVLO
+RUV 3 30 100K
+EB1 4 0 Value= { IF ( V(3,30) > 5V , 5V , 0 ) }
+RD 4 2 100
+CD 2 0 100P
+.MODEL SUVLO VSWITCH RON=1 ROFF=100E6 VT={((VON-VOFF)/2) + VOFF} VH={(VON-VOFF)/2}
+; VON = VT+VH = 15.0 VOFF = VT-VH = 7.6V
+.ENDS UVLO_G
+*$
+.SUBCKT ZEN13p5 1 2
+D1 1 2 DZEN
+.MODEL DZEN D(RS=7.3771 BV=13.432 CJO=620.01P TT=20N N=2 IS=1E-9 IBV=9.2593M)
+.ENDS
+*$
+.SUBCKT FFLOP380x 1 2 11 12 5 6
+*                CLK D R S QBAR Q
+X1 7 4 2 8 NAND380x0 
+X2 8 3 10 9 NAND380x0 
+X3 1 8 10 7 NAND380x1 
+X4 4 9 1 10 NAND380x0 
+X5 4 7 6 5 NAND380x1 
+X6 5 10 3 6 NAND380x0 
+X7 11 4 INV380x1 
+X8 12 3 INV380x1 
+.ENDS
+*$
+.SUBCKT NAND380x0 1 2 3 4 
+EB1 5 0 VALUE = { IF ( (V(1)>1.5V) & (V(2)>1.5V) & (V(3)>1.5V), 0.3, 3.5 ) }
+R1 5 4 400
+C1 4 0 20P IC=0
+.ENDS
+*$
+.SUBCKT NAND380x1 1 2 3 4 
+EB1 5 0 VALUE = { IF ( (V(1)>1.5V) & (V(2)>1.5V) & (V(3)>1.5V), 0.3, 3.5 ) }
+R1 5 4 400
+C1 4 0 20P IC=3.5
+.ENDS
+*$
+.SUBCKT INV380x1 1 2
+EB1 4 0 Value= { IF ( V(1)>2.5 , 0 , 5V ) }
+RD 4 2 100
+CD 2 0 10P IC={3.5}
+.ENDS 
+*$
+.SUBCKT INV380x 1 2
+EB1 4 0 Value= { IF ( V(1)>2.5 , 0 , 5V ) }
+RD 4 2 100
+CD 2 0 10P
+.ENDS 
+*$
+.SUBCKT OR2380x 1 2 3
+EB1 4 0 Value= { IF ( (V(1)>2.5) | (V(2)>2.5) , 5V , 100m ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS 
+*$
+.SUBCKT AND2380x 1 2 3
+EB1 4 0 Value= { IF ( (V(1)>2.5) & (V(2)>2.5) , 5V , 100m ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS 
+*$
+.SUBCKT UTD380x 1 2 
+*Parameters K=GAIN TD=DELAY
+RIN 1 0 1E15
+E1 3 0 1 0 1
+T1 3 0 2 0 Z0=1 TD=100n
+R1 2 0 1
+.ENDS
+*$
+.SUBCKT LATCH380x 6 8 2 1
+*                 S R Q Qb
+EBQB   10 0 Value= { IF ((V(8)<2.5) & (V(2)>2.5) , 100m , 5 ) }
+EBQ    20 0 Value= { IF ((V(6)<2.5) & (V(1)>2.5) , 100m , 5 ) }
+RD1   10 1 100
+CD1   1 0 10p IC=5
+RD2   20 2 100
+CD2   2 0 10p IC=100m
+.ENDS 
+*$
+.SUBCKT COMPARHYS NINV INV OUT PARAMS: VHIGH=5 VLOW=100m VHYS=50m
+EB2 HYS NINV Value= { IF ( V(OUT) > (VHIGH+VLOW)/2 , VHYS , 0 ) }
+EB1 4 0 Value= { IF ( V(HYS,INV) > 0 , VHIGH , VLOW ) }
+RO 4 OUT 100
+CO OUT 0 100PF
+.ENDS
+*$
+.SUBCKT NAND2380x 1 2 3
+EB1 4 0 Value= { IF ( (V(1)>2.5) & (V(2)>2.5) , 100m , 5V ) }
+RD 4 3 100
+CD 3 0 10P
+.ENDS 
+*$
+.SUBCKT LATCH_HD S R Q QN PARAMS: VHIGH=5 VLOW=100m
+X1 Sin R Q QN LMlatch380x
+X2 S 6 Sin AND2BLM 
+X3 R 6 INVBLM
+.ENDS
+*$
+.SUBCKT LMlatch380x set reset Q Qbar
+EB1 5 0 Value={ IF ( v(set) + v(Q) < .5 , 5 , 0 ) } 
+EB2 7 0 Value={ IF ( (v(reset) + v(Qbar)) *(1- v(set) )< .5 , 5 , 0 ) }
+R1 set 0 1g
+R2 reset 0 1g
+R3 5 Qbar 1
+C1 Qbar 0 1n ; 10p
+R4 7 Q 1
+C2 Q 0 1n ; 10p
+.ENDS
+*$
+.SUBCKT AND2BLM 1 2 3
+* A B Out
+EB1 4 0 VALUE = { IF ( V(1)>800m & V(2) > 800m , 5, 0 ) }
+RD 4 3 1
+CD 3 0 0.087NF
+.ENDS
+*$
+.SUBCKT INVBLM 1 2
+* in out
+E1 3 0 VALUE = { IF ( V(1)>800mV, 0, 5 ) }
+RD 3 2 1
+CD 2 0 0.087NF
+.ENDS
+*$
+.SUBCKT AMP3802 20 8  3  21  SS
+*               +  - OUT GND VSS
+.PARAM ISINK=3m
+.PARAM ISOURCE=500u
+.PARAM VLOW=10m
+.PARAM POLE=200
+.PARAM GAIN=10k
+RIN 20 8 8MEG
+CP1 11 21 {1/(6.28*(GAIN/100U)*POLE)}
+E1 OUT 21 11 21 1
+Rfil2 OUT OUT1 100
+Cfil2 OUT1 0 318p
+Rfil3 OUT1 OUT2 50
+Cfil3 OUT2 0 100p
+R9 OUT2 2 5
+D14 2 13 DMOD
+IS 13 21 {ISINK/100} ; mA
+Q1 21 13 16 QPMOD
+ISRC 7 3 {ISOURCE}   ; uA
+D12 3 7 DMOD
+D15 21 11 DCLAMP
+G1 21 11 20 8 100U
+EB1 7 21 Value = { V(SS)-0.7 }
+V4 3 16 {VLOW-38MV}
+RP1 11 21 {GAIN/100U}
+.MODEL QPMOD PNP
+.MODEL DCLAMP D (RS=10 BV=10 IBV=0.01)
+.MODEL DMOD D (TT=1N CJO=10P)
+.ENDS
+*$
+.SUBCKT OR3 1 2 3 5
+EB1 4 0 Value= { IF ( (V(1)>2.5) | (V(2)>2.5) | (V(3)>2.5) , 5V , 100m ) }
+RD 4 5 100
+CD 5 0 10P
+.ENDS 
+*$
+.SUBCKT COMPARCS NINV INV OUT PARAMS: VHIGH=5 VLOW=100m
+EB1 4 0 Value= { IF ( V(NINV,INV) > 0 , VHIGH , VLOW ) }
+RO 4 OUT 100
+CO OUT 0 1NF
+.ENDS
+*$
+.SUBCKT COMPAR380x NINV INV OUT PARAMS: VHIGH=5 VLOW=100m
+EB1 4 0 Value= { IF ( V(NINV,INV) > 0 , VHIGH , VLOW ) }
+RO 4 OUT 100
+CO OUT 0 100PF
+.ENDS
+*$
+.SUBCKT COMPARX1 NINV INV OUT PARAMS: VHIGH=5 VLOW=100m
+EB1 4 0 Value= { IF ( V(NINV,INV) > 0 , VHIGH , VLOW ) }
+RO 4 OUT 100
+CO OUT 0 10PF
+.ENDS
+
+
+.SUBCKT FETOUTC4X  Vcc  Gnd In Out
+*                  Vcc  -V  IN OUT
+* simplify with b element with 5.5 ohms make it stiff vcc and zero
+Rm1 Vcc Out 10MEG
+M1 Vcc 3 Out Out _NMOS 
+.MODEL _NMOS NMOS KP=1 NSUB=1E9 RD=10 VTO=3
+Rm2 Out Gnd 10MEG
+M2 Gnd 3 Out Out _PMOS 
+.MODEL _PMOS PMOS KP=1 RD=5.5 VTO=-3 NSUB=1E9
+EB1 2 Out Value= { IF ( V(In,Gnd) > 2 , 5 , -5 ) }
+R1 2 3 200
+C2 3 Gnd 10p
+C3 3 Vcc 10p
+R2 3 Gnd 10Meg
+.ENDS FETOUTC4X 
+.ENDS
+

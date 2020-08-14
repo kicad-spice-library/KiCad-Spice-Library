@@ -1,0 +1,20 @@
+.subckt Vtl5c2 A K Ldr1 Ldr2
+B1 Tab Ldr2 I=if(V(l1)>0,V(Tab,Ldr2)/RLdr(V(l1),b,a,Rs),0)
+Rdark Tab Ldr2 1e6
+C1 l1 0 100n
+C2 Tab Ldr2 3.5p
+D1 nd N1 Dsw
+R2 N2 l1 35k
+D2 N1 N2 Dsw
+D3 A N3 QTLP690C
+H1 N1 0 Vs 1
+Vs N3 K 0
+B2 Ldr1 Tab I=if(V(l1)>0,V(Ldr1,Tab)/RLdr(V(l1),b,a,Rs),0)
+Rdark1 Ldr1 Tab 1e6
+C3 Ldr1 Tab 3.5p
+B3 l1 nd I=V(l1,nd)**1.4/22.5k
+.model dsw D(Ron=1 Roff=1G Vfwd=0)
+.param b=3.156 a=1.197 Rs=264.7
+.func RLdr(i,b,a,Rs) {b/i**a+Rs}
+.model QTLP690C D(Is=1e-22 Rs=6 N=1.5 Cjo=50p Xti=100 Iave=160m Vpk=5 mfg=Fairchild type=LED)
+.ends

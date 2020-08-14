@@ -1,0 +1,1776 @@
+* Copyright (c) 2014 Linear Technology Corporation.  All rights reserved.
+* Author: Dan Eddleman
+*
+*Combined NMOS/DanThermSpirito Model
+***************************************************************
+.subckt BSC009NE2LS D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=1.00E+01 Iexponent=3.00E-01 R6=3.18E-02 C6=1.77E-04 R5=1.01E-01  C5=2.77E-04 R4=2.74E-01  C4=1.60E-03 R3=8.49E-01  C3=8.83E-03 R2=7.34E-02  C2=3.30E-03 R1=1.05E-03  C1=1.82E-03
+
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends BSC009NE2LS
+***************************************************************
+.subckt BSC070N10NS3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=40 Cheatsink=0.00E+00 
+.param Imult=3.00E+01 Iexponent=4.00E-01 R6=2.33E-02 C6=2.41E-04 R5=7.10E-02  C5=3.96E-04 R4=2.05E-01  C4=1.17E-03 R3=7.67E-01  C3=9.78E-03 R2=6.26E-02  C2=1.85E-03 R1=9.33E-02  C1=8.95E-10
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends BSC070N10NS3
+***************************************************************
+.subckt BSC600N25NS3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=5.00E+01 Iexponent=4.00E-01 R6=2.15E-02 C6=2.91E-04 R5=5.20E-02  C5=4.57E-04 R4=2.15E-01  C4=1.78E-03 R3=6.76E-01  C3=1.11E-02 R2=1.02E-01  C2=2.38E-03 R1=9.39E-03  C1=9.72E-04
+
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends BSC600N25NS3
+***************************************************************
+.subckt BSZ16DN25NS D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=60 Cheatsink=0 
+.param Imult=7.00E+01 Iexponent=3.00E-01 R6=7.24E-02 C6=9.71E-05 R5=1.36E-01  C5=1.36E-05 R4=6.85E-01  C4=9.13E-04 R3=1.06E+00  C3=1.22E-03 R2=1.17E-01  C2=4.97E-09 R1=5.17E-03  C1=8.87E-10
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends BSZ16DN25NS
+***************************************************************
+.subckt BSZ42DN25NS D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=60 Cheatsink=0 
+.param Imult=1.20E+02 Iexponent=3.00E-01 R6=1.70E-01 C6=4.14E-05 R5=2.37E-01  C5=2.53E-05 R4=2.19E+00  C4=3.42E-04 R3=7.36E-01  C3=1.60E-03 R2=1.10E-01  C2=7.69E-09 R1=1.34E-01  C1=9.73E-10
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends BSZ42DN25NS
+***************************************************************
+.subckt FDB3632 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=43 Cheatsink=0 
+.param Imult=3.80E+01 Iexponent=3.00E-01 R6=2.42E-03 C6=1.21E-03 R5=2.95E-02  C5=6.20E-05 R4=2.03E-01  C4=2.69E-03 R3=2.34E-01  C3=3.21E-02 R2=5.94E-02  C2=1.81E-01 R1=2.47E-03  C1=8.25E-08
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends FDB3632
+***************************************************************
+.subckt IPB015N04N D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=62 Cheatsink=0 
+.param Imult=8.00E+00 Iexponent=3.00E-01 R6=1.33E-02 C6=5.28E-04 R5=2.29E-02  C5=4.20E-04 R4=1.15E-01  C4=4.36E-03 R3=2.49E-01  C3=2.11E-02 R2=2.00E-01  C2=2.25E-01 R1=1.56E-02  C1=2.23E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB015N04N
+***************************************************************
+.subckt IPB019N06L3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=62 Cheatsink=0 
+.param Imult=2.50E+01 Iexponent=4.00E-01 R6=1.25E-02 C6=5.65E-04 R5=1.91E-02  C5=4.18E-04 R4=1.30E-01  C4=4.19E-03 R3=2.36E-01  C3=2.12E-02 R2=2.46E-01  C2=2.28E-01 R1=8.48E-03  C1=1.08E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB019N06L3
+***************************************************************
+.subckt IPB027N10N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=40 Cheatsink=0 
+.param Imult=2.50E+01 Iexponent=4.00E-01 R6=1.07E-02 C6=6.55E-04 R5=1.39E-02  C5=1.58E-03 R4=7.35E-02  C4=3.57E-03 R3=2.54E-01  C3=2.06E-02 R2=1.75E-01  C2=2.05E-01 R1=3.67E-03  C1=1.02E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB027N10N3
+***************************************************************
+.subckt IPB035N08N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=40 Cheatsink=0
+.param Imult=3.00E+01 Iexponent=4.00E-01 R6=1.36E-02 C6=4.13E-04 R5=3.30E-02  C5=7.58E-04 R4=1.48E-01  C4=2.71E-03 R3=2.88E-01  C3=1.74E-02 R2=2.70E-01  C2=2.08E-01 R1=1.09E-02  C1=1.31E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB035N08N3
+***************************************************************
+.subckt IPB065N15N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=62 Cheatsink=0 
+.param Imult=5.00E+01 Iexponent=3.00E-01 R6=7.42E-03 C6=8.42E-04 R5=1.73E-02  C5=1.18E-03 R4=7.88E-02  C4=3.05E-03 R3=2.60E-01  C3=2.02E-02 R2=1.51E-01  C2=1.90E-01 R1=1.23E-03  C1=7.94E-04
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB065N15N3
+***************************************************************
+.subckt IPB072N15N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=62 Cheatsink=0 
+.param Imult=5.00E+01 Iexponent=3.00E-01 R6=7.42E-03 C6=8.42E-04 R5=1.73E-02  C5=1.18E-03 R4=7.88E-02  C4=3.05E-03 R3=2.60E-01  C3=2.02E-02 R2=1.51E-01  C2=1.90E-01 R1=1.23E-03  C1=7.94E-04
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB072N15N3
+***************************************************************
+.subckt IPB200N25N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+
+.param Tambient=85 RthetaJA=40 Cheatsink=0
+.param Imult=3.50E+01 Iexponent=4.00E-01 R6=8.62E-03 C6=7.98E-04 R5=1.60E-02 C5=4.00E-04 R4=9.32E-02 C4=5.36E-03 R3=1.89E-01 C3=2.12E-02 R2=1.98E-01 C2=2.26E-01 R1=2.86E-02 C1=3.72E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB200N25N3
+***************************************************************
+.subckt IPB600N25N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=40 Cheatsink=0
+.param Imult=5.00E+01 Iexponent=4.00E-01 R6=2.15E-02 C6=2.91E-04 R5=5.20E-02  C5=4.57E-04 R4=2.15E-01  C4=1.43E-03 R3=6.76E-01  C3=1.11E-02 R2=1.02E-01  C2=2.58E-01 R1=9.39E-03  C1=1.90E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPB600N25N3
+***************************************************************
+.subckt IPD600N25N3 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=5.00E+01 Iexponent=4.00E-01 R6=2.15E-02 C6=2.91E-04 R5=5.20E-02  C5=4.57E-04 R4=2.15E-01  C4=1.43E-03 R3=6.76E-01  C3=1.11E-02 R2=1.02E-01  C2=2.21E-02 R1=9.39E-03  C1=1.90E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPD600N25N3
+***************************************************************
+.subckt IPT004N03L D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=40 Cheatsink=0 
+.param Imult=8.00E+00 Iexponent=4.00E-01 R6=9.48E-03 C6=7.42E-04 R5=1.39E-02  C5=5.18E-04 R4=8.87E-02  C4=3.16E-03 R3=1.65E-01  C3=2.11E-02 R2=2.34E-01  C2=5.02E-02 R1=2.56E-03  C1=3.06E-04
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IPT004N03L
+***************************************************************
+.subckt IRFH5104 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=35 Cheatsink=0 
+.param Imult=1.50E+01 Iexponent=3.00E-01 R6=4.95E-03 C6=5.43E-04 R5=8.38E-02  C5=6.99E-06 R4=4.60E-01  C4=9.36E-04 R3=4.75E-01  C3=8.69E-03 R2=1.98E-01  C2=1.67E-03 R1=1.20E-02  C1=2.54E-07
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IRFH5104
+***************************************************************
+.subckt IRFH5207 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=35 Cheatsink=0 
+.param Imult=1.50E+01 Iexponent=3.00E-01 R6=3.25E-03 C6=5.48E-04 R5=9.86E-02  C5=9.13E-06 R4=4.20E-01  C4=9.53E-04 R3=5.56E-01  C3=8.06E-03 R2=6.00E-02  C2=3.78E-03 R1=9.13E-02  C1=2.65E-07
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IRFH5207
+***************************************************************
+.subckt IRFH5300 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=35 Cheatsink=0 
+.param Imult=1.50E+01 Iexponent=3.00E-01 R6=4.47E-03 C6=9.94E-04 R5=1.16E-02  C5=1.05E-04 R4=2.98E-01  C4=1.21E-03 R3=1.64E-01  C3=1.05E-03 R2=4.23E-02  C2=2.92E-08 R1=9.03E-03  C1=9.92E-10
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IRFH5300
+***************************************************************
+.subckt IRFH5306 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=35 Cheatsink=0 
+.param Imult=4.00E+01 Iexponent=3.00E-01 R6=4.35E-02 C6=5.92E-05 R5=2.30E-01  C5=1.63E-04 R4=7.73E-01  C4=2.33E-04 R3=2.90E+00  C3=2.07E-03 R2=8.67E-01  C2=7.98E-04 R1=4.51E-01  C1=9.65E-10
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IRFH5306
+***************************************************************
+.subckt IRFH5406 D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=35 Cheatsink=0 
+.param Imult=3.00E+01 Iexponent=3.00E-01 R6=7.78E-03 C6=3.05E-04 R5=1.33E-01  C5=4.73E-06 R4=9.26E-01  C4=3.02E-04 R3=1.28E+00  C3=4.69E-03 R2=3.01E-01  C2=6.11E-02 R1=2.66E-01  C1=5.81E-08
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IRFH5406
+***************************************************************
+.subckt IXTQ88N30P-70VDS-MAX D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=1.00E+03 Iexponent=1.00E-01 R6=4.44E-03 C6=1.97E-03 R5=2.01E-03  C5=1.28E-02 R4=2.00E-02  C4=1.92E-03 R3=1.30E-01  C3=5.79E-02 R2=6.80E-02  C2=1.03E+00 R1=1.28E-03  C1=2.72E-02
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IXTQ88N30P-70VDS-MAX
+***************************************************************
+.subckt IXTQ170N10P D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=4.00E+01 Iexponent=3.00E-01 R6=2.54E-03 C6=2.70E-03 R5=3.97E-03  C5=3.98E-03 R4=2.75E-02  C4=9.56E-03 R3=1.03E-01  C3=5.82E-02 R2=4.30E-02  C2=8.93E-01 R1=3.44E-02  C1=4.91E-02
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends IXTQ170N10P
+***************************************************************
+.subckt PSMN1R530BLE D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0.00E+00
+.param Imult=3.50E+01 Iexponent=4.00E-01 R6=7.40E-03 C6=8.45E-04 R5=1.57E-02  C5=2.23E-03 R4=4.25E-02  C4=2.47E-03 R3=2.60E-01  C3=2.69E-02 R2=6.10E-03  C2=2.03E-01 R1=3.65E-02  C1=9.37E-10
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends PSMN1R530BLE
+***************************************************************
+.subckt PSMN2R030YLE D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0.00E+00 
+.param Imult=5.00E+01 Iexponent=3.00E-01 R6=1.73E-02 C6=1.06E-04 R5=9.51E-04  C5=4.31E-03 R4=1.19E-01  C4=1.13E-04 R3=2.68E-01  C3=1.23E-02 R2=7.72E-02  C2=3.45E-04 R1=1.16E-01  C1=2.04E-08
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends PSMN2R030YLE
+***************************************************************
+.subckt PSMN3R430BLE D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0.00E+00
+.param Imult=5.00E+01 Iexponent=4.00E-01 R6=2.11E-02 C6=3.33E-04 R5=3.88E-02  C5=5.44E-04 R4=1.76E-01  C4=2.48E-03 R3=5.18E-01  C3=1.45E-02 R2=2.68E-02  C2=2.05E-01 R1=9.50E-03  C1=2.35E-03
+ 
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends PSMN3R430BLE
+***************************************************************
+.subckt PSMN4R8100BSE D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=3.00E+01 Iexponent=2.50E-01 R6=7.35E-03 C6=9.56E-04 R5=1.29E-02  C5=2.14E-03 R4=4.61E-02  C4=4.67E-03 R3=2.54E-01  C3=2.95E-02 R2=2.10E-02  C2=2.09E-01 R1=1.40E-03  C1=8.18E-03
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends PSMN4R8100BSE
+***************************************************************
+.subckt PSMN7R6100BSE D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=3.00E+01 Iexponent=4.00E-01 R6=1.02E-02 C6=6.88E-04 R5=1.75E-02  C5=1.41E-03 R4=7.59E-02  C4=2.42E-03 R3=3.17E-01  C3=2.37E-02 R2=8.63E-02  C2=2.49E-01 R1=8.83E-02  C1=1.92E-02
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends PSMN7R6100BSE
+***************************************************************
+.subckt UserDefined D G S D2 G2 S2 Tj Tc
+
+* The following two lines are customized for each DanTherm model * 
+.param Tambient=85 RthetaJA=50 Cheatsink=0 
+.param Imult=0 Iexponent=0 R6=0 C6=0 R5=0 C5=0 R4=0 C4=0 R3=0 C3=0 R2=0 C2=0 R1=0 C1=0
+
+* The remaining lines do not change between models
+
+.ic V(Spirito)=0 V(N006)=0 V(N007)=0 V(N008)=0 V(N009)=0 V(N010)=0
++ V(Tj)=Tambient V(N001)=Tambient V(N002)=Tambient V(N003)=Tambient V(N004)=Tambient V(N005)=Tambient 
++ V(Tc)=Tambient V(T1)={Tambient}
+
+*Case-to-Ambient RthetaJA resistance
+RthetaJA Tambient Tc {RthetaJA}
+*Ambient temperature voltage source
+VTambient Tambient 0 {Tambient}
+*PCB thermal capacity (heatsinking)
+Cheatsink Tc 0 {Cheatsink}
+
+*Drain current sense
+Vsense D D2 0
+
+*Short G2 to G, S2 to S
+VshortG G2 G 0
+VshortS S2 S 0
+
+*DanTherm RC thermal model configuration parameters
+R6 T1 N001 {R6}
+C6 T1 0 {C6}
+R5 N001 N002 {R5}
+C5 N001 0 {C5}
+R4 N002 N003 {R4}
+C4 N002 0 {C4}
+R3 N003 N004 {R3}
+C3 N003 0 {C3}
+R2 N004 N005 {R2}
+C2 N004 0 {C2}
+R1 N005 Tc {R1}
+C1 N005 0 {C1}
+
+*Same DanTherm RC thermal model configuration parameters repeated for Spirito calculations. 
+R7 Spirito N006 {R6}
+C7 Spirito 0 {C6}
+R8 N006 N007 {R5}
+C8 N006 0 {C5}
+R9 N007 N008 {R4}
+C9 N007 0 {C4}
+R10 N008 N009 {R3}
+C10 N008 0 {C3}
+R11 N009 N010 {R2}
+C11 N009 0 {C2}
+R12 N010 0 {R1}
+C12 N010 0 {C1}
+
+*Behavioral components that calculate MOSFET temperature rise.
+BI1 0 T1 I=ABS(I(Vsense))*ABS(V(D2,S))
+BI2 0 Spirito I=ABS(V(D2,S))*pwr(I(Vsense),{Iexponent})/{Imult}
+B2 Tj 0 V=V(Tc) + V(T1,Tc)/(1-Min(V(Spirito),0.99))
+
+.ends UserDefined

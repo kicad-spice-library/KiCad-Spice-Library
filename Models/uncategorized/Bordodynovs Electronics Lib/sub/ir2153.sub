@@ -1,0 +1,43 @@
+* Model IR2153
+* (C)TAU 2009, (C) KaV 2010
+.subckt IR2153 Vcc Rt Ct COM VB HO VS LO
+R5 ARB3_N1 Rt 100
+Rdead ARB3_N2 ARB4_OUT 1k
+Cdead ARB3_N2 COM 1.8n  
+RdlyH CdlyH_P ARB5_OUT 1k
+CdlyH CdlyH_P COM 910p  
+RdlyL CdlyL_P ARB3_OUT 1k
+CdlyL CdlyL_P COM 910p  
+GARB1 Vcc COM VALUE={(75u+500u*(V(Vcc,COM)>8)+5m*exp(10*(V(Vcc,COM)-15.6)))*(V(Vcc,COM)>1)}
+
+* Micropower startup VCC supply current 75u 
+* Quiescent VCC supply current 500u;  
+* VCC zener clamp voltage 15.6V On ICC = 5mA
+
+EARB2 ARB3_N1 COM VALUE={V(ARB7_N1,COM)*(((V(Ct,COM)<(V(ARB7_N1,COM)*2/3)) & (V(ARB3_N1,COM)>4)) | ((V(Ct,COM)<(V(ARB7_N1,COM)/3)) & (V(ARB3_N1,COM)<3)))}
+
+EARB3 ARB3_OUT COM VALUE={5*( V(ARB3_N1,COM)>8 & V(ARB3_N2,COM)>2.5 )* (V(ARB3_N3,COM)>2.5)} 
+EARB4 ARB4_OUT COM VALUE={5*( V(ARB3_N1,COM)>0.1 & V(Ct,COM)>V(ARB3_N1,COM)/3)} 
+EARB5 ARB5_OUT COM VALUE={5*( V(ARB3_N1,COM)<8 & V(ARB3_N2,COM)<2.5 & V(ARB7_N1,COM)>1)}
+EARB6 ARB7_N1 COM VALUE={V(Vcc,COM)*((V(Vcc,COM)>8 & V(ARB7_N1,COM)>0.2)|(V(Vcc,COM)>9 & V(ARB7_N1,COM)<0.1))}
+* VCC undervoltage lockout Hysteresis
+
+EARB7 ARB3_N3 COM VALUE={4*( V(Ct,COM)>V(ARB7_N1,COM)/6)} ; * for Inhibit LO in SD mode 
+GARB8 Ct COM VALUE={(V(ARB7_N1,COM)<1)*0.8m*( V(Ct,COM)>0.1)}; * ICTUV UV-mode CT pin pulldown current 0.8mA
+
+.IC V(Ct)=0 V(LO)=0; * V(Vs)=0; * V(COM)
+S1 HO VS CdlyH_P COM SVL
+S2 VB HO CdlyH_P COM SVH
+S3 Vcc LO CdlyL_P COM SVH
+S4 LO COM CdlyL_P COM SVL
+D1 LO Vcc DM
+D2 COM LO DM
+D3 HO VB DM
+D4 VS HO DM
+
+.MODEL SVH VSWITCH (RON=35 ROFF=1Meg VON=2.5 VOFF=2.45)   
+.MODEL SVL VSWITCH (RON=18 ROFF=.1meg VON=2.45 VOFF=2.5) 
+.model DM D(Ron=1 Roff=1Meg Vfwd=.5 Vrev=25)
+
+.ends IR2153
+

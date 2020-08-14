@@ -1,0 +1,2556 @@
+*  74hc.lib
+*
+*  74HCxxx Model libraray for LTSPICE from www.linear.com/software
+*  
+*
+*  Revision 0.55 08/20/2003   
+*  Revision 0.56 08/21/2003     
+*  Revision 0.57 02/04/2005  
+*  Revision 0.58 03/28/2005   
+*  Revision 0.59 03/29/2005   
+*
+*
+*  All parts have been divided into three sections.
+*  
+*  >--| FILTER/LEVEL |----| 1V-LOGIC Axx |----| OUTPUT LEVEL |-->
+*
+*  Delays are given for Vcc = 2V/4.5V/6V (HC) from the
+*  Philips data sheets. http://www.philipslogic.com
+*
+*  Delays are given for Vcc = 2V/4.5V/6V .
+*  Used delay:  Td = (Tpd-Tr/2)*(4.5-0.5)/(Vcc-0.5)
+*  The gate delay has to be set to tpd minus 3ns for the input filter
+*  and another minus 3ns for Trise/2
+*    td1 = tpd  - 3ns - 3ns 
+*
+*
+*
+* 2-input NAND gate
+* tpd 25n/9n/7n
+* tr 19n/7n/6n
+.SUBCKT 74HC00  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt} 
+.param td1=1e-9*(9-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*  tripdt=1n
+A1  Ai Bi 0 0 0  Yi 0 0  AND  tripdt={tripdt1}  td={td1} 
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2-input NOR gate
+* tpd 25n/9n/7n
+* tr 19n/7n/6n
+.SUBCKT 74HC02  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(9-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi 0 0 0  Yi 0 0  OR  tripdt={tripdt1}  td={td1}  
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2-input NAND gate with open drain output
+* tpd 28n/10n/8n
+* tr 19n/7n/6n
+.SUBCKT 74HC03  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt} 
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*  tripdt=1n
+A1  Ai Bi 0 0 0  Yi 0 0  AND  tripdt={tripdt1}  td={td1} 
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_OD_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Inverter gate
+* tpd 25n/9n/7n
+* tr 19n/7n/6n
+.SUBCKT 74HC04  A Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(9-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai 0 0 0 0  Yi 0 0  BUF  tripdt={tripdt1}  td={td1}  
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2-input AND gate
+* tpd 25n/9n/7n
+* tr 19n/7n/6n
+.SUBCKT 74HC08  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(9-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi 0 0 0  0 Yi 0  AND  tripdt={tripdt1}  td={td1}  
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 3-input NAND gate
+* tpd 30n/11n/9n
+* tr 19n/7n/6n
+.SUBCKT 74HC10  A B C Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(11-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci 0 0  Yi 0 0  AND  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 3-input AND gate
+* tpd 32n/12n/10n
+* tr 19n/7n/6n
+.SUBCKT 74HC11  A B C Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(12-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci 0 0  0 Yi 0  AND  tripdt={tripdt1}  td={td1}
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Schmitt-inverter gate
+* tpd 41n/15n/12n
+* tr 19n/7n/6n
+* VT+ 1.18/2.38/3.14
+* VT- 0.52/1.4/1.89
+.SUBCKT 74HC14  A Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(15-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN  A Ai  VCC VGND  74HC_IN_S_1  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai 0 0 0 0  Yi 0 0  BUF  tripdt={tripdt1}  td={td1}
+* 
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4-input NAND gate
+* tpd 28n/10n/8n
+* tr 19n/7n/6n
+.SUBCKT 74HC20  A B C D Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci Di 0  Yi 0 0  AND  tripdt={tripdt1}  td={td1} 
+* 
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4-input AND gate
+* tpd 33n/12n/10n
+* tr 19n/7n/6n
+.SUBCKT 74HC21  A B C D Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(12-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci Di 0  0 Yi 0  AND  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 3-input NOR gate
+* tpd 28n/10n/8n
+* tr 19n/7n/6n
+.SUBCKT 74HC27  A B C Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci 0 0  Yi 0 0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 8-input NAND gate
+* tpd 41n/15n/12n
+* tr 19n/7n/6n
+.SUBCKT 74HC30  A B C D E F G H Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(15-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  E Ei  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  F Fi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7  G Gi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8  H Hi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci Di Ei  0  y1 0  AND  tripdt={tripdt1} 
+A2  Fi Gi Hi y1 0   Yi 0  0  AND  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2-input OR gate
+* tpd 22n/8n/6n
+* tr 19n/7n/6n
+.SUBCKT 74HC32  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(8-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi 0 0 0  0 Yi 0  OR  tripdt={tripdt1}  td={td1}
+* 
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2x3-input AND NOR gate
+* tpd 36n/13n/10n ?=74HC58?
+* tr 19n/7n/6n
+.SUBCKT 74HC51  A B C D E F Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(13-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  E Ei  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  F Fi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci 0 0  0 y1 0  AND  tripdt={tripdt1}  
+A2  Di Ei Fi 0 0  0 y2 0  AND  tripdt={tripdt1} 
+A3  y1 y2 0  0 0  Yi 0 0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2x3-input AND OR gate
+* tpd 36n/13n/10n 
+* tr 19n/7n/6n
+.SUBCKT 74HC58  A B C D E F Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(13-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  E Ei  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XFILT6  F Fi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi Ci 0 0  0 y1 0  AND  tripdt={tripdt1}  
+A2  Di Ei Fi 0 0  0 y2 0  AND  tripdt={tripdt1} 
+A3  y1 y2 0  0 0  0 Yi 0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT  Yi Y VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* D-filp-flop with asynchronous set and reset
+* CP->Q Tpd 47n/17n/14n
+* R/S->Q Tpd 52n/19n/15n
+* CP/R/S Tw 19n/7n/6n
+* D->CP Ts 6n/2n/2n 
+* D->CP Th -6n/-2n/-2n
+* R,S Trem 3n/1n/1n
+.SUBCKT 74HC74  S C D R Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(17-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(19-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(17+2-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  S Si  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  D Di  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  R Ri  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+ACDEL  Ci 0 0  0  0   0   Cp 0  BUF  tripdt={tripdt1}  td={td1} 
+ADDEL  Di 0 0  0  0   0   Dp 0  BUF  tripdt={tripdt1}  td={td3} 
+ARINV  Ri 0 0  0  0   Rn  0  0  BUF  tripdt={tripdt1}  td={td2}
+ASINV  Si 0 0  0  0   Sn  0  0  BUF  tripdt={tripdt1}  td={td2}
+A1     Di 0 Cp Sn Rn  QNi Qi 0  DFLOP  tripdt={tripdt1} td={td4}
+*
+XOUT1  Qi  Q   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4 bit magnitude comparator
+* AnBn->Qne Tpd 63n/23n/18n
+* AnBn->Qeq Tpd 58n/21n/17n
+* In->Qne   Tpd 50n/18n/14n
+* Ieq->Qeq  Tpd 39n/14n/11n (uses 18ns)
+* Tr/Tf         19n/7n/6n
+.SUBCKT 74HC85 A0 A1 A2 A3 B0 B1 B2 B3 IALB IAEB IAGB QAGB QAEB QALB VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(18-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(+3)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(+2)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A0 A0i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2  A1 A1i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN3  A2 A2i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN4  A3 A3i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN5  B0 B0i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN6  B1 B1i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN7  B2 B2i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN8  B3 B3i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN9  IALB IALBi VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN10 IAEB IAEBi VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN11 IAGB IAGBi VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+*
+XU  A0i A1i A2i A3i B0i B1i B2i B3i IALBi IAEBi IAGBi QAGBi QAEBi QALBi 74HC85_i tripdt2={tripdt1} td1a={td1} td2a={td2} td3a={td3}
+*
+*
+*
+XOUT1  QAGBi QAGB VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  QAEBi QAEB VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  QALBi QALB VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+.SUBCKT 74HC85_i A0 A1 A2 A3 B0 B1 B2 B3 IALB IAEB IAGB QAGB QAEB QALB tripdt1={tripdt2} td1b={td1a} td2b={td2a} td3b={td3a}
+*
+AA      a3  b3  0   0   0       n12 0    0   AND  tripdt={tripdt1}  td={td2b}
+AB      a3  n12 0   0   0       0   n13  0   AND  tripdt={tripdt1}
+AC      n12 b3  0   0   0       0   n14  0   AND  tripdt={tripdt1}
+AD      n13 n14 0   0   0       n15 0    0   OR  tripdt={tripdt1}
+*
+AE      a2  b2  0   0   0       n16 0    0   AND  tripdt={tripdt1}  td={td2b}
+AF      a2  n16 0   0   0       0   n19  0   AND  tripdt={tripdt1}
+AG      n16 b2  0   0   0       0   n20  0   AND  tripdt={tripdt1}
+AH      n19 n20 0   0   0       n21 0    0   OR  tripdt={tripdt1}
+*
+AI      a1  b1  0   0   0       n17 0    0   AND  tripdt={tripdt1}  td={td2b}
+AJ      a1  n17 0   0   0       0   n22  0   AND  tripdt={tripdt1}
+AK      n17 b1  0   0   0       0   n23  0   AND  tripdt={tripdt1}
+AL      n22 n23 0   0   0       n24 0    0   OR  tripdt={tripdt1}
+*
+AM      a0  b0  0   0   0       n18 0    0   AND  tripdt={tripdt1}  td={td2b}
+AN      a0  n18 0   0   0       0   n25  0   AND  tripdt={tripdt1}
+AO      n18 b0  0   0   0       0   n26  0   AND  tripdt={tripdt1}
+AP      n25 n26 0   0   0       n27 0    0   OR  tripdt={tripdt1}
+*
+AQ      b3  n12 0   0   0       0   n28  0   AND  tripdt={tripdt1}
+*
+AR      b2  n16 n15 0   0       0   n29  0   AND  tripdt={tripdt1}
+AS      b1  n17 n15 n21 0       0   n30  0   AND  tripdt={tripdt1}
+AT      b0  n18 n15 n21 n24     0   n31  0   AND  tripdt={tripdt1}
+AU      n15 n21 n24 n27 IALB    0   n32  0   AND  tripdt={tripdt1}
+AV      n15 n21 n24 n27 IAEB    0   n33  0   AND  tripdt={tripdt1}
+*
+AW      IAEB n27 n24 n21 n15    0   n34  0   AND  tripdt={tripdt1}
+AX      IAGB n27 n21 n24 n15    0   n35  0   AND  tripdt={tripdt1}
+AY      n24 n21 n15 n18 a0      0   n36  0   AND  tripdt={tripdt1}
+AZ      n21 n15 n17 a1  0       0   n37  0   AND  tripdt={tripdt1}
+AAA     n15 n16 a2  0   0       0   n38  0   AND  tripdt={tripdt1}
+AAB     n12 a3  0   0   0       0   n39  0   AND  tripdt={tripdt1}
+*
+AAC     n28 n29 n30 n31 n32     0   n40  0   OR  tripdt={tripdt1}  td={td3b}
+AAH     n40 n33 0   0   0       QAGB 0   0   OR  tripdt={tripdt1}
+*
+AAD     n15 n21 IAEB n24 n27    0 QAEB   0   AND  tripdt={tripdt1}  td={td1b}
+*
+AAE     n34 n35 n36 n37 n38     0   n42  0   OR  tripdt={tripdt1}  td={td3b}
+AAI     n42 n39 0   0   0       QALB 0   0   OR  tripdt={tripdt1}
+*
+.ends
+*
+*
+*
+*
+* 2-input EXOR gate
+* tpd 39n/14n/11n 
+* tr 19n/7n/6n
+.SUBCKT 74HC86  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(14-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi 0 0 0  0 Yi 0  XOR  tripdt={tripdt1}  td={td1}  
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* JK-flipflop with asynchronous set and reset; neg. edge
+* CP->Q Tpd 52n/19n/15n
+* R/S->Q Tpd 52n/19n/15n
+* CP/R/S Tw 22n/8n/6n
+* D->CP Ts 22n/8n/6n 
+* D->CP Th -6n/-2n/-2n
+* R,S->CP Trem 19n/7n/6n
+.SUBCKT 74HC107  J C K R Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(19-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  J Ji  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  K Ki  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  R Ri  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+ACINV  Ci 0 0 0 0  Cn 0 0  BUF  tripdt={tripdt1}
+ARINV  Ri 0 0 0 0  Rn 0 0  BUF  tripdt={tripdt1}
+AKINF  Ki 0 0 0 0  Kn 0 0  BUF  tripdt={tripdt1}
+AJINF  Ji 0 0 0 0  Jn 0 0  BUF  tripdt={tripdt1}
+* Ji=1, Ki=0    Q=1
+* Ji=1, Ki=1    Q=toggle
+* Ji=0, Ki=0    Q=no change
+* Ji=0, Ki=1    Q=0  
+A11   Ji Kn 0   0 0  0 D1 0  AND  tripdt={tripdt1}
+A10   Ji Ki QNi 0 0  0 D2 0  AND  tripdt={tripdt1}
+A01   Jn Kn Qi  0 0  0 D3 0  AND  tripdt={tripdt1} 
+AOR3  D1 D2 D3  0 0  0 Di 0  OR  tripdt={tripdt1}
+AFP   Di 0 Cn 0 Rn  QNi Qi 0  DFLOP  tripdt={tripdt1}  td={td1} 
+*
+XOUT1  Qi Q    VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* JK-flipflop with asynchronous set and reset; pos. edge
+* CP->Q Tpd 50n/18n/14n
+* R/S->Q Tpd 41n/15n/12n
+* CP/R/S Tw 19n/7n/6n
+* D->CP Ts 17n/6n/5n 
+* D->Cp Th -6n/-2n/-2n
+* R/S->CP Trem 19n/7n/6n
+.SUBCKT 74HC109  S J C K R Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(18-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*   A1 j k c s r qn q 0 JKFLOP td={td1}
+XIN1  S Si  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  J Ji  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  K Ki  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  R Ri  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+ARINV  Ri 0 0 0 0  Rn 0 0  BUF  tripdt={tripdt1}
+ASINV  Si 0 0 0 0  Sn 0 0  BUF  tripdt={tripdt1}
+AKINF  Ki 0 0 0 0  Kn 0 0  BUF  tripdt={tripdt1}
+AJINF  Ji 0 0 0 0  Jn 0 0  BUF  tripdt={tripdt1}
+* Ji=1, Ki=1    Q=1
+* Ji=1, Ki=0    Q=toggle
+* Ji=0, Ki=1    Q=no change
+* Ji=0, Ki=0    Q=0  
+A11   Ji Ki 0   0 0  0 D1 0  AND  tripdt={tripdt1}
+A10   Ji Kn QNi 0 0  0 D2 0  AND  tripdt={tripdt1}
+A01   Jn Ki Qi  0 0  0 D3 0  AND  tripdt={tripdt1} 
+AOR3  D1 D2 D3  0 0  0 Di 0  OR  tripdt={tripdt1}
+AFP   Di 0 Ci Sn Rn  QNi Qi 0  DFLOP  tripdt={tripdt1}  td={td1} 
+*
+XOUT1  Qi Q    VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* JK-flipflop with asynchronous set and reset; neg. edge
+* CP->Q Tpd 55n/20n/16n
+* R/S->Q Tpd 58n/21n/17n
+* CP/R/S Tw 22n/8n/6n
+* J,K->CP Ts 19n/7n/6n 
+* J,K->CP Th -11n/-4n/-3n
+* R Trem 22n/8n/6n  
+* S Trem -19n/-7n/-6n
+.SUBCKT 74HC112  S J C K R Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(20-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*   A1 j k c s r qn q 0 JKFLOP td={td1}
+XIN1  S Si  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  J Ji  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  C Ci  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  K Ki  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  R Ri  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+ACINV  Ci 0 0 0 0  Cn 0 0  BUF  tripdt={tripdt1}
+ARINV  Ri 0 0 0 0  Rn 0 0  BUF  tripdt={tripdt1}
+ASINV  Si 0 0 0 0  Sn 0 0  BUF  tripdt={tripdt1}
+AKINF  Ki 0 0 0 0  Kn 0 0  BUF  tripdt={tripdt1}
+AJINF  Ji 0 0 0 0  Jn 0 0  BUF  tripdt={tripdt1}
+* Ji=1, Ki=0    Q=1
+* Ji=1, Ki=1    Q=toggle
+* Ji=0, Ki=0    Q=no change
+* Ji=0, Ki=1    Q=0  
+A11   Ji Kn 0   0 0  0 D1 0  AND  tripdt={tripdt1}
+A10   Ji Ki QNi 0 0  0 D2 0  AND  tripdt={tripdt1}
+A01   Jn Kn Qi  0 0  0 D3 0  AND  tripdt={tripdt1} 
+AOR3  D1 D2 D3  0 0  0 Di 0  OR  tripdt={tripdt1}
+AFP   Di 0 Cn Sn Rn  QNi Qi 0  DFLOP  tripdt={tripdt1}  td={td1} 
+*
+XOUT1  Qi  Q   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* (DUAL) RETRIGGERABLE MONOSTABLE MULTIVIBRATOR
+* Pulse Width Tw = 0.5 * R * C
+* tpd R,A,B->Q     30n
+* Tpulse 75n, C=0, Rext=5k
+.SUBCKT 74HC123  A B CLR  CGND RC  Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param egain=1/{vcc1}
+.param td5=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(2)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINA    A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB    B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINCLR  CLR CLRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINRC1  RC RCi  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+* Model of a 74HC123 derived  from SGS-Thomson data sheet.
+* Helmut Sennewald, 13.9.2002
+A4 DHIGH 0 N014 0 N004 N006 N005 0 DFLOP   tripdt={tripdt1}  td={td5}
+A3 0 N015 N016 N023 0  N014 0 0 OR  tripdt={tripdt1}  td={td5}
+A1 Ai 0 0 0 0          0 N015 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A2 Bi 0 0 0 0          N016 0 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A6 0 N008 0 N006 0     N007 0 0  AND  tripdt={tripdt1}  td={td5}
+A5 0 N009 0 N007 0     N008 0 0  AND  tripdt={tripdt1}  td={td5}
+A14 0 N003 0 N021 0    N004 0 0  AND  tripdt={tripdt1}  td={td2}
+A13 0 N003 0 N005 0    0 N030 0  AND  tripdt={tripdt1}  td={td5}
+A12 N005 0 0 0 0       N012 0 0  BUF  tripdt={tripdt1}  td={td5}
+A21 0 N010 0 N011 0    0 N009 0  OR  tripdt={tripdt1}  td={td5}
+A22 0 N005 0 N007 0    N010 0 0  OR  tripdt={tripdt1}  td={td5}
+A11 0 N013 0 N012 0    0 N003 0  OR  tripdt={tripdt1}  td={td5}
+A7 0 N007 0 N018 0     QNi Qi 0  AND  tripdt={tripdt1}  td={td5}
+A20 RCi 0 0 0 0        N011 0 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.44 Vh=0.2m 
+A10 RCi 0 0 0 0        0 N013 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.1 Vh=0.2m 
+A32 0 N006 0 N021 0    N022 0 0  OR  tripdt={tripdt1}  td={td5}
+A31 0 N022 0 N023 0    N021 0 0  OR  tripdt={tripdt1}  td={td2}
+A33 N021 0 0 0 0       N019 0 0  BUF  tripdt={tripdt1}  td={td5}
+A30 CLRi 0 0 0 0       N023 0 0  BUF  tripdt={tripdt1}  td={td5}
+A34 0 N007 0 N006 0    N020 0 0  AND  tripdt={tripdt1}  td={td5}
+A35 0 N020 0 N018 0    N017 0 0  OR  tripdt={tripdt1}  td={td5}
+A36 0 N017 0 N019 0    N018 0 0  OR  tripdt={tripdt1}  td={td5}
+M10 RC N001 VGND VGND NMOS1
+M30 RC N024 VCC VCC PMOS1
+D1 RC VCC DIO1
+D2 VGND RC DIO1
+R10 N001 N002 100
+R30 N024 N029 100
+R3 CGND VGND 1
+E4 RCi 0 RC VGND {egain}
+E7 N029 VCC N018 0 {vcc1}
+E8 N002 VGND N030 0 {vcc1}
+V1 DHIGH 0 DC 1
+.MODEL NMOS1 NMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=1
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL PMOS1 PMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=-1 
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL DIO1 D (IS=10p RS=10 N=1.75 M=0.4 Cjo=6p TT=20n)
+*
+XOUT0  Qi  Q   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* (DUAL) RETRIGGERABLE MONOSTABLE MULTIVIBRATOR
+* Pulse Width Tw = R * C
+* tpd R,A,B->Q     30n
+* Tpulse 75n, C=0, Rext=5k
+.SUBCKT 74HC123A  A B CLR  CGND RC  Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param egain=1/{vcc1}
+.param td5=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(2)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINA    A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB    B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINCLR  CLR CLRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINRC1  RC RCi  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+* Model of a 74HC123A derived  from SGS-Thomson data sheet.
+* Helmut Sennewald, 13.9.2002
+A4 DHIGH 0 N014 0 N004 N006 N005 0 DFLOP   tripdt={tripdt1}  td={td5}
+A3 0 N015 N016 N023 0  N014 0 0 OR  tripdt={tripdt1}  td={td5}
+A1 Ai 0 0 0 0          0 N015 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A2 Bi 0 0 0 0          N016 0 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A6 0 N008 0 N006 0     N007 0 0  AND  tripdt={tripdt1}  td={td5}
+A5 0 N009 0 N007 0     N008 0 0  AND  tripdt={tripdt1}  td={td5}
+A14 0 N003 0 N021 0    N004 0 0  AND  tripdt={tripdt1}  td={td2}
+A13 0 N003 0 N005 0    0 N030 0  AND  tripdt={tripdt1}  td={td5}
+A12 N005 0 0 0 0       N012 0 0  BUF  tripdt={tripdt1}  td={td5}
+A21 0 N010 0 N011 0    0 N009 0  OR  tripdt={tripdt1}  td={td5}
+A22 0 N005 0 N007 0    N010 0 0  OR  tripdt={tripdt1}  td={td5}
+A11 0 N013 0 N012 0    0 N003 0  OR  tripdt={tripdt1}  td={td5}
+A7 0 N007 0 N018 0     QNi Qi 0  AND  tripdt={tripdt1}  td={td5}
+A20 RCi 0 0 0 0        N011 0 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.66 Vh=0.2m 
+A10 RCi 0 0 0 0        0 N013 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.1 Vh=0.2m 
+A32 0 N006 0 N021 0    N022 0 0  OR  tripdt={tripdt1}  td={td5}
+A31 0 N022 0 N023 0    N021 0 0  OR  tripdt={tripdt1}  td={td2}
+A33 N021 0 0 0 0       N019 0 0  BUF  tripdt={tripdt1}  td={td5}
+A30 CLRi 0 0 0 0       N023 0 0  BUF  tripdt={tripdt1}  td={td5}
+A34 0 N007 0 N006 0    N020 0 0  AND  tripdt={tripdt1}  td={td5}
+A35 0 N020 0 N018 0    N017 0 0  OR  tripdt={tripdt1}  td={td5}
+A36 0 N017 0 N019 0    N018 0 0  OR  tripdt={tripdt1}  td={td5}
+M10 RC N001 VGND VGND NMOS1
+M30 RC N024 VCC VCC PMOS1
+D1 RC VCC DIO1
+D2 VGND RC DIO1
+R10 N001 N002 100
+R30 N024 N029 100
+R3 CGND VGND 1
+E4 RCi 0 RC VGND {egain}
+E7 N029 VCC N018 0 {vcc1}
+E8 N002 VGND N030 0 {vcc1}
+V1 DHIGH 0 DC 1
+.MODEL NMOS1 NMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=1
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL PMOS1 PMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=-1 
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL DIO1 D (IS=10p RS=10 N=1.75 M=0.4 Cjo=6p TT=20n)
+*
+XOUT0  Qi  Q   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Tristate buffer
+* Tpd 30n/11n/9n
+* Tr 14n/5n/4n 
+* Toe 41n/14n/12n
+.SUBCKT 74HC125  A OE Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(11-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(14+4-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A  Ai   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  OE OEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1   Ai  0 0 0 0  0  Yi 0  BUF  tripdt={tripdt1}  td={td1}  
+AOE  OEi 0 0 0 0  OEn 0 0  BUF  tripdt={tripdt1}  td={td2}
+*
+XOUT  OEn Yi Y  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2-Schmitt-input NAND gate
+* tpd 36n/13n/10n
+* tr 19n/7n/6n
+* VT+ 1.18/2.38/3.14
+* VT- 0.63/1.67/2.26
+.SUBCKT 74HC132  A B Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(13-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A Ai  VCC VGND  74HC_IN_S_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  B Bi  VCC VGND  74HC_IN_S_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+A1  Ai Bi 0 0 0  Yi 0 0  AND  tripdt={tripdt1}  td={td1}  
+*
+XOUT  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 3 to 8 line decoder; low ouput
+* A->Y Tpd 41n/15n/12n
+* E->Y Tpd 47n/17n/14n
+* tr 19n/7n/6n
+.SUBCKT 74HC138  A0 A1 A2 E1 E2 E3 Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(15-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(17-15)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A0 A0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  A1 A1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  A2 A2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  E1 E1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  E2 E2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  E3 E3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AE1  E1i 0 0 0 0  E1n 0 0  BUF  tripdt={tripdt1} 
+AE2  E2i 0 0 0 0  E2n 0 0  BUF  tripdt={tripdt1} 
+AE0  E1n E2n E3i 0 0  0 EN 0  AND  tripdt={tripdt1}  td={td2}
+A0N  A0i 0 0 0 0  A0n 0 0  BUF  tripdt={tripdt1} 
+A1N  A1i 0 0 0 0  A1n 0 0  BUF  tripdt={tripdt1} 
+A2N  A2i 0 0 0 0  A2n 0 0  BUF  tripdt={tripdt1} 
+AY0  A0n A1n A2n EN 0  Y0i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY1  A0i A1n A2n EN 0  Y1i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY2  A0n A1i A2n EN 0  Y2i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY3  A0i A1i A2n EN 0  Y3i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY4  A0n A1n A2i EN 0  Y4i 0 0  AND  tripdt={tripdt1}  td={td1}
+AY5  A0i A1n A2i EN 0  Y5i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY6  A0n A1i A2i EN 0  Y6i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY7  A0i A1i A2i EN 0  Y7i 0 0  AND  tripdt={tripdt1}  td={td1} 
+*
+XOUT1  Y0i Y0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Y1i Y1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Y2i Y2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Y3i Y3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  Y4i Y4  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  Y5i Y5  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  Y6i Y6  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT8  Y7i Y7  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2 to 4 line decoder
+* A->Y Tpd 39n/14n/11n
+* E->Y Tpd 33n/12n/10n
+* tr 19n/7n/6n
+.SUBCKT 74HC139  A0 A1 EN Y0 Y1 Y2 Y3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(14-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(12-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A0 A0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  A1 A1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  EN ENi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEN  ENi 0 0 0 0  ENn 0   0  BUF  tripdt={tripdt1}  td={td2}
+A0N  A0i 0 0 0 0  A0n A0p 0  BUF  tripdt={tripdt1}  td={td1} 
+A1N  A1i 0 0 0 0  A1n A1p 0  BUF  tripdt={tripdt1}  td={td1} 
+AY0  A0n A1n ENn 0 0  Y0i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY1  A0p A1n ENn 0 0  Y1i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY2  A0n A1p ENn 0 0  Y2i 0 0  AND  tripdt={tripdt1}  td={td1} 
+AY3  A0p A1p ENn 0 0  Y3i 0 0  AND  tripdt={tripdt1}  td={td1} 
+*
+XOUT1  Y0i Y0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Y1i Y1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Y2i Y2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Y3i Y3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 8 to 1 multiplexer
+* In->Y Tpd 52n/19n/15n In-YN 58n/21n/17n
+* Sn->Y Tpd 61n/22n/18n Sn-YN 61n/22n/18n
+* En->Y Tpd 41n/15n/12n En-YN 47n/17n/14n
+* tr 19n/7n/6n
+.SUBCKT 74HC151  EN S0 S1 S2 I0 I1 I2 I3 I4 I5 I6 I7 Y W  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(19-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(22-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(15-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td5=1e-9*(2)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   EN ENi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2   S0 S0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   S1 S1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   S2 S2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   I0 I0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   I1 I1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   I2 I2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   I3 I3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   I4 I4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  I5 I5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN11  I6 I6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN12  I7 I7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEN  ENi 0 0 0 0  ENn 0   0  BUF  tripdt={tripdt1}  td={td4} 
+AS0  S0i 0 0 0 0  S0n S0p 0  BUF  tripdt={tripdt1}  td={td3}
+AS1  S1i 0 0 0 0  S1n S1p 0  BUF  tripdt={tripdt1}  td={td3}
+AS2  S2i 0 0 0 0  S2n S2p 0  BUF  tripdt={tripdt1}  td={td3}
+*
+AI0  I0i 0 0 0 0  0 I0p 0  BUF  tripdt={tripdt1}  td={td2}
+AI1  I1i 0 0 0 0  0 I1p 0  BUF  tripdt={tripdt1}  td={td2}
+AI2  I2i 0 0 0 0  0 I2p 0  BUF  tripdt={tripdt1}  td={td2}
+AI3  I3i 0 0 0 0  0 I3p 0  BUF  tripdt={tripdt1}  td={td2}
+AI4  I4i 0 0 0 0  0 I4p 0  BUF  tripdt={tripdt1}  td={td2}
+AI5  I5i 0 0 0 0  0 I5p 0  BUF  tripdt={tripdt1}  td={td2}
+AI6  I6i 0 0 0 0  0 I6p 0  BUF  tripdt={tripdt1}  td={td2}
+AI7  I7i 0 0 0 0  0 I7p 0  BUF  tripdt={tripdt1}  td={td2}
+*
+AY0  S0n S1n S2n ENn I0p  0 Y0i 0  AND  tripdt={tripdt1} 
+AY1  S0p S1n S2n ENn I1p  0 Y1i 0  AND  tripdt={tripdt1} 
+AY2  S0n S1p S2n ENn I2p  0 Y2i 0  AND  tripdt={tripdt1} 
+AY3  S0p S1p S2n ENn I3p  0 Y3i 0  AND  tripdt={tripdt1} 
+AY4  S0n S1n S2p ENn I4p  0 Y4i 0  AND  tripdt={tripdt1} 
+AY5  S0p S1n S2p ENn I5p  0 Y5i 0  AND  tripdt={tripdt1} 
+AY6  S0n S1p S2p ENn I6p  0 Y6i 0  AND  tripdt={tripdt1} 
+AY7  S0p S1p S2p ENn I7p  0 Y7i 0  AND  tripdt={tripdt1} 
+A1   Y0i Y1i Y2i Y3i 0    0 Yx  0  OR  tripdt={tripdt1}
+A2   Y4i Y5i Y6i Y7i Yx   0 Yi  0  OR  tripdt={tripdt1}   td={td1}
+A3   Yi  0   0   0   0    Wi 0  0  BUF  tripdt={tripdt1}  td={td5}
+*
+XOUT1  Yi Y  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Wi W  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Dual 4 to 1 multiplexer
+* In->Y Tpd 47n/17n/14n 
+* Sn->Y Tpd 50n/18n/14n
+* En->Y Tpd 33n/12n/10n 
+* tr 19n/7n/6n
+.SUBCKT 74HC153  S0 S1 EA I0A I1A I2A I3A EB I0B I1B I2B I3B YA YB  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(17-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(18-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(12-10)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   S0  S0i   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   S1  S1i   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   EA  EAi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   EB  EBi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   I0A I0Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   I1A I1Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   I2A I2Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   I3A I3Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   I0B I0Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  I1B I1Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN11  I2B I2Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN12  I3B I3Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEA  EAi 0 0 0 0  EAn 0 0  BUF  tripdt={tripdt1}  td={td4} 
+AEB  EBi 0 0 0 0  EBn 0 0  BUF  tripdt={tripdt1}  td={td4} 
+*
+AS0  S0i 0 0 0 0  S0n S0p 0  BUF  tripdt={tripdt1}  td={td3}
+AS1  S1i 0 0 0 0  S1n S1p 0  BUF  tripdt={tripdt1}  td={td3}
+*
+AI0A I0Ai 0 0 0 0  0 I0Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI1A I1Ai 0 0 0 0  0 I1Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI2A I2Ai 0 0 0 0  0 I2Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI3A I3Ai 0 0 0 0  0 I3Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI0B I0Bi 0 0 0 0  0 I0Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI1B I1Bi 0 0 0 0  0 I1Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI2B I2Bi 0 0 0 0  0 I2Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI3B I3Bi 0 0 0 0  0 I3Bp 0  BUF  tripdt={tripdt1}  td={td2}
+*
+AYA0  S0n S1n EAn I0Ap 0  0 Y0Ai 0  AND  tripdt={tripdt1} 
+AYA1  S0p S1n EAn I1Ap 0  0 Y1Ai 0  AND  tripdt={tripdt1} 
+AYA2  S0n S1p EAn I2Ap 0  0 Y2Ai 0  AND  tripdt={tripdt1} 
+AYA3  S0p S1p EAn I3Ap 0  0 Y3Ai 0  AND  tripdt={tripdt1} 
+AYA   Y0Ai Y1Ai Y2Ai Y3Ai 0  0 YAi 0  OR  tripdt={tripdt1}  td={td1}
+*
+AYB0  S0n S1n EBn I0Bp 0  0 Y0Bi 0  AND  tripdt={tripdt1} 
+AYB1  S0p S1n EBn I1Bp 0  0 Y1Bi 0  AND  tripdt={tripdt1} 
+AYB2  S0n S1p EBn I2Bp 0  0 Y2Bi 0  AND  tripdt={tripdt1} 
+AYB3  S0p S1p EBn I3Bp 0  0 Y3Bi 0  AND  tripdt={tripdt1} 
+AYB   Y0Bi Y1Bi Y2Bi Y3Bi 0  0 YBi 0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT1  YAi YA  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  YBi YB  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Quad 2 to 1 multiplexer
+* In->Y Tpd 36n/13n/10n 
+* Sn->Y Tpd 41n/15n/12n
+* En->Y Tpd 39n/14n/11n 
+* tr 19n/7n/6n
+.SUBCKT 74HC157  EN S I0A I0B I1A I1B I2A I2B I3A I3B Y0 Y1 Y2 Y3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(13-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(15-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(14-10)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  EN ENi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  S Si      VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  I0A I0Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  I1A I1Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  I2A I2Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  I3A I3Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7  I0B I0Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8  I1B I1Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9  I2B I2Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10 I3B I3Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEN  ENi 0 0 0 0  ENn 0  0  BUF  tripdt={tripdt1}  td={td4} 
+AS   Si  0 0 0 0  Sn  Sp 0  BUF  tripdt={tripdt1}  td={td3}
+*
+AI0A I0Ai 0 0 0 0  0 I0Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI1A I1Ai 0 0 0 0  0 I1Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI2A I2Ai 0 0 0 0  0 I2Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI3A I3Ai 0 0 0 0  0 I3Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI0B I0Bi 0 0 0 0  0 I0Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI1B I1Bi 0 0 0 0  0 I1Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI2B I2Bi 0 0 0 0  0 I2Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI3B I3Bi 0 0 0 0  0 I3Bp 0  BUF  tripdt={tripdt1}  td={td2}
+*
+AY0A  Sn ENn I0Ap 0 0  0 Y0Ai 0  AND  tripdt={tripdt1} 
+AY0B  Sp ENn I0Bp 0 0  0 Y0Bi 0  AND  tripdt={tripdt1}
+AY0   Y0Ai Y0Bi 0 0 0  0 Y0i  0  OR  tripdt={tripdt1}  td={td1}
+*
+AY1A  Sn ENn I1Ap 0 0  0 Y1Ai 0  AND  tripdt={tripdt1} 
+AY1B  Sp ENn I1Bp 0 0  0 Y1Bi 0  AND  tripdt={tripdt1}
+AY1   Y1Ai Y1Bi 0 0 0  0 Y1i  0  OR  tripdt={tripdt1}  td={td1}
+*
+AY2A  Sn ENn I2Ap 0 0  0 Y2Ai 0  AND  tripdt={tripdt1} 
+AY2B  Sp ENn I2Bp 0 0  0 Y2Bi 0  AND  tripdt={tripdt1}
+AY2   Y2Ai Y2Bi 0 0 0  0 Y2i  0  OR  tripdt={tripdt1}  td={td1}
+*
+AY3A  Sn ENn I3Ap 0 0  0 Y3Ai 0  AND  tripdt={tripdt1} 
+AY3B  Sp ENn I3Bp 0 0  0 Y3Bi 0  AND  tripdt={tripdt1}
+AY3   Y3Ai Y3Bi 0 0 0  0 Y3i  0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT1  Y0i Y0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Y1i Y1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Y2i Y2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Y3i Y3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4 bit counter with asynchronous reset
+* CP->Qn Tpd 61n/22n/18n
+* CP->Tc Tpd 69n/25n/20n
+* MR->Qn Tpd 63n/23n/18n
+* MR->TC Tpd 63n/23n/18n
+* CET->TC Tpd 33n/12n/10n
+* CP Tw 22n/8n/6n
+* MR Tw 19n/7n/6n
+* MR->CP Trem 19n/7n/6n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC161  MR PE CEP CET CP D0 D1 D2 D3 Q0 Q1 Q2 Q3 TC  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(22-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(23-22)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(12-25+23-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(10)*4.0/({vcc1}-0.5)*{speed1}
+.param td5=1e-9*(25-23)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  MR MRi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  PE PEi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  CEP CEPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  CET CETi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  CP CPi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  D0 D0i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7  D1 D1i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8  D2 D2i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9  D3 D3i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+XU  MRi PEi CEPi CETi CPi D0i D1i D2i D3i Q0i Q1i Q2i Q3i TCi  74HC161_i  tripdt2={tripdt1} td1a={td1} td2a={td2} td3a={td3} td4a={td4} td5a={td5}
+*
+*
+XOUT1  Q0i Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q1i Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Q2i Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Q3i Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  TCi TC  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+.SUBCKT 74HC161_i  MR PE CEP CET CP D0 D1 D2 D3 Q0 Q1 Q2 Q3 TC  tripdt1={tripdt2} td1b={td1a} td2b={td2a} td3b={td3a} td4b={td4a} td5b={td5a}
+AMRN    mr   0   0   0   0   mrn  0   0  BUF  tripdt={tripdt1}  td={td2b}
+ACPTN   cep  cet 0   0   0   cptn 0   0  AND  tripdt={tripdt1} 
+ACP     cp   0   0   0   0   0  cpi   0  BUF  tripdt={tripdt1}
+ACET    cet  0   0   0   0   0 cetp   0  BUF  tripdt={tripdt1}  td={td3b}
+*
+APEN    pe   0   0   0   0   pen  pei 0  BUF  tripdt={tripdt1}
+*
+ANOR0   cptn 0   0   0   0   n0   0   0  BUF  tripdt={tripdt1} 
+ANOR1   cptn q0n 0   0   0   n1   0   0  OR  tripdt={tripdt1} 
+ANOR2   cptn q0n q1n 0   0   n2   0   0  OR  tripdt={tripdt1} 
+ANOR3   cptn q0n q1n q2n 0   n3   0   0  OR  tripdt={tripdt1} 
+*
+AEXR0   n0   q0n 0   0   0   x0   0   0  XOR  tripdt={tripdt1}  
+AEXR1   n1   q1n 0   0   0   x1   0   0  XOR  tripdt={tripdt1}  
+AEXR2   n2   q2n 0   0   0   x2   0   0  XOR  tripdt={tripdt1} 
+AEAND   n3   q3n 0   0   0   0    x3a 0  AND  tripdt={tripdt1}
+AENOR   n3   q3n 0   0   0   x3b  0   0  OR  tripdt={tripdt1}
+AEOR    x3a  x3b 0   0   0   0    x3  0  OR  tripdt={tripdt1}  
+*
+AAND0a  d0   pen 0   0   0   0    a0a 0  AND  tripdt={tripdt1}
+AAND0b  x0   pei 0   0   0   0    a0b 0  AND  tripdt={tripdt1}
+AORD    a0a  a0b 0   0   0   0    d0f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+AAND1a  d1   pen 0   0   0   0    a1a 0  AND  tripdt={tripdt1}
+AAND1b  x1   pei 0   0   0   0    a1b 0  AND  tripdt={tripdt1}
+AOR1D   a1a  a1b 0   0   0   0    d1f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+AAND2a  d2   pen 0   0   0   0    a2a 0  AND  tripdt={tripdt1}
+AAND2b  x2   pei 0   0   0   0    a2b 0  AND  tripdt={tripdt1}
+AOR2D   a2a  a2b 0   0   0   0    d2f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+AAND3a  d3   pen 0   0   0   0    a3a 0  AND  tripdt={tripdt1}
+AAND3b  x3   pei 0   0   0   0    a3b 0  AND  tripdt={tripdt1}
+AOR3D   a3a  a3b 0   0   0   0    d3f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+ANDTC   cetp  q0  q1  q2  q3  0    tc  0  AND  tripdt={tripdt1}  td={td5b}
+*
+AFF0    d0f  0   cpi 0  mrn  q0n  q0  0  DFLOP  tripdt={tripdt1}  td={td1b}
+AFF1    d1f  0   cpi 0  mrn  q1n  q1  0  DFLOP  tripdt={tripdt1}  td={td1b}
+AFF2    d2f  0   cpi 0  mrn  q2n  q2  0  DFLOP  tripdt={tripdt1}  td={td1b}
+AFF3    d3f  0   cpi 0  mrn  q3n  q3  0  DFLOP  tripdt={tripdt1}  td={td1b}
+*
+*ABUF0  q0i 0 0 0 0  0 q0 0  BUF  tripdt={tripdt1}
+*ABUF1  q1i 0 0 0 0  0 q1 0  BUF  tripdt={tripdt1}
+*ABUF2  q2i 0 0 0 0  0 q2 0  BUF  tripdt={tripdt1}
+*ABUF3  q3i 0 0 0 0  0 q3 0  BUF  tripdt={tripdt1}
+.ends 
+*
+*
+*
+* 4 bit counter with synchronous reset
+* CP->Qn Tpd 55n/20n/18n
+* CP->Tc Tpd 69n/25n/20n
+* CET->TC Tpd 36n/13n/10n
+* MR,Dn->CP Ts 17n/6n/5n 
+* PE->CP Ts 22n/8n/6n
+* CEP,CET->CP Ts 58n/21n/17n
+* CEP,CET,PE,MR,CET,CEP->CP Th -14n/-5n/-4n
+* CP Tw 17n/6n/5n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC163  MR PE CEP CET CP D0 D1 D2 D3 Q0 Q1 Q2 Q3 TC  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(20-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(13-25+20-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(10)*4.0/({vcc1}-0.5)*{speed1}
+.param td5=1e-9*(25-20)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  MR MRi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  PE PEi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  CEP CEPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  CET CETi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  CP CPi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  D0 D0i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7  D1 D1i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8  D2 D2i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9  D3 D3i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+XU  MRi PEi CEPi CETi CPi D0i D1i D2i D3i Q0i Q1i Q2i Q3i TCi  74HC163_i  tripdt2={tripdt1}  td1a={td1} td3a={td3} td4a={td4} td5a={td5}
+*
+XOUT1  Q0i Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q1i Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Q2i Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Q3i Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  TCi TC  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+*
+.ends
+*
+*
+.SUBCKT 74HC163_i  MR PE CEP CET CP D0 D1 D2 D3 Q0 Q1 Q2 Q3 TC  tripdt1={tripdt2} td1b={td1a} td3b={td3a} td4b={td4a} td5b={td5a}
+AMRN    mr   0   0   0   0   mrn  0   0  BUF  tripdt={tripdt1} 
+ACPTN   cep  cet 0   0   0   cptn 0   0  AND  tripdt={tripdt1}  
+ACP     cp   0   0   0   0   0    cpi 0  BUF  tripdt={tripdt1}
+ACET    cet  0   0   0   0   0 cetp   0  BUF  tripdt={tripdt1}  td={td3b}
+*
+APEN    pe   mrn 0   0   0   pen  0   0  OR  tripdt={tripdt1}
+APEP    pen  mrn 0   0   0   pei  0   0  OR  tripdt={tripdt1}
+*
+ANOR0   cptn 0   0   0   0   n0   0   0  BUF  tripdt={tripdt1} 
+ANOR1   cptn q0n 0   0   0   n1   0   0  OR  tripdt={tripdt1} 
+ANOR2   cptn q0n q1n 0   0   n2   0   0  OR  tripdt={tripdt1} 
+ANOR3   cptn q0n q1n q2n 0   n3   0   0  OR  tripdt={tripdt1} 
+*
+AEXR0   n0   q0n 0   0   0   x0   0   0  XOR  tripdt={tripdt1}  
+AEXR1   n1   q1n 0   0   0   x1   0   0  XOR  tripdt={tripdt1}  
+AEXR2   n2   q2n 0   0   0   x2   0   0  XOR  tripdt={tripdt1}  
+AEAND   n3   q3n 0   0   0   0    x3a 0  AND  tripdt={tripdt1}
+AENOR   n3   q3n 0   0   0   x3b  0   0  OR  tripdt={tripdt1}
+AEOR    x3a  x3b 0   0   0   0    x3  0  OR  tripdt={tripdt1}  
+*
+AAND0a  d0   pen 0   0   0   0    a0a 0  AND  tripdt={tripdt1}
+AAND0b  x0   pei 0   0   0   0    a0b 0  AND  tripdt={tripdt1}
+AORD    a0a  a0b 0   0   0   0    d0f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+AAND1a  d1   pen 0   0   0   0    a1a 0  AND  tripdt={tripdt1}
+AAND1b  x1   pei 0   0   0   0    a1b 0  AND  tripdt={tripdt1}
+AOR1D   a1a  a1b 0   0   0   0    d1f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+AAND2a  d2   pen 0   0   0   0    a2a 0  AND  tripdt={tripdt1}
+AAND2b  x2   pei 0   0   0   0    a2b 0  AND  tripdt={tripdt1}
+AOR2D   a2a  a2b 0   0   0   0    d2f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+AAND3a  d3   pen 0   0   0   0    a3a 0  AND  tripdt={tripdt1}
+AAND3b  x3   pei 0   0   0   0    a3b 0  AND  tripdt={tripdt1}
+AOR3D   a3a  a3b 0   0   0   0    d3f 0  OR  tripdt={tripdt1}  td={td4b}
+*
+ANDTC   cetp  q0 q1  q2  q3   0    tc  0  AND  tripdt={tripdt1}  td={td5b}  
+*
+AFF0    d0f  0   cpi 0  0    q0n  q0  0  DFLOP  tripdt={tripdt1}  td={td1b}
+AFF1    d1f  0   cpi 0  0    q1n  q1  0  DFLOP  tripdt={tripdt1}  td={td1b}
+AFF2    d2f  0   cpi 0  0    q2n  q2  0  DFLOP  tripdt={tripdt1}  td={td1b}
+AFF3    d3f  0   cpi 0  0    q3n  q3  0  DFLOP  tripdt={tripdt1}  td={td1b}
+*
+*ABUF0  q0i 0 0 0 0  0 q0 0  BUF  tripdt={tripdt1}
+*ABUF1  q1i 0 0 0 0  0 q1 0  BUF  tripdt={tripdt1}
+*ABUF2  q2i 0 0 0 0  0 q2 0  BUF  tripdt={tripdt1}
+*ABUF3  q3i 0 0 0 0  0 q3 0  BUF  tripdt={tripdt1}
+.ends 
+*
+*
+*
+* 8 bit serial-in/parallel-out shift register
+* CP->Qn Tpd 41n/15n/12n
+* MR->Qn Tpd 39n/14n/11n
+* Dn->CP Ts 8n/3n/2n 
+* Dn->CP Th -6n/-2n/-2n 
+* CP Tw 14n/5n/4n
+* MR Tw 17n/6n/5n
+* MR->CP Trem 17n/6n/5n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC164  CP MR DSA DSB Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(15-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  CP CPi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  MR MRi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  DSA DSAi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  DSB DSBi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AMR  MRi  0    0 0 0  MRn 0  0  BUF  tripdt={tripdt1}
+ADI  DSAi DSBi 0 0 0  0   Di 0  AND  tripdt={tripdt1}
+*
+AFF0  Di  0  CPi 0  MRn 0 Q0i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF1  Q0i 0  CPi 0  MRn 0 Q1i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF2  Q1i 0  CPi 0  MRn 0 Q2i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF3  Q2i 0  CPi 0  MRn 0 Q3i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF4  Q3i 0  CPi 0  MRn 0 Q4i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF5  Q4i 0  CPi 0  MRn 0 Q5i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF6  Q5i 0  CPi 0  MRn 0 Q6i  0  DFLOP  tripdt={tripdt1}  td={td1}
+AFF7  Q6i 0  CPi 0  MRn 0 Q7i  0  DFLOP  tripdt={tripdt1}  td={td1}
+*
+XOUT1  Q0i Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q1i Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Q2i Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Q3i Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  Q4i Q4  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  Q5i Q5  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  Q6i Q6  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT8  Q7i Q7  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 8 bit parallel-in/serial-out shift register
+* CP,CE->Qn Tpd 52n/19n/15n
+* PL->Qn Tpd 50n/18n/14n
+* Dn->CP,CE Ts 11n/4n/3n 
+* Dn->PL Ts 22n/8n/6n 
+* CP Tw 17n/6n/5n
+* PL Tw 14n/5n/4n
+* PL->CP,CE Trem 22n/8n/6n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC165  PL CE CP DS D0 D1 D2 D3 D4 D5 D6 D7 Q7 Q7B  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(19-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(10)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   PL PLi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   CE CEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   CP CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   DS DSi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   D0 D0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   D1 D1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   D2 D2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   D3 D3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   D4 D4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  D5 D5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN11  D6 D6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN12  D7 D7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+APL  PLi 0   0   0 0  PLn PLp 0  BUF  tripdt={tripdt1}
+ACE  CEi 0   0   0 0  CEn 0   0  BUF  tripdt={tripdt1}
+ACP  CPi 0   0   0 0  CPn 0   0  BUF  tripdt={tripdt1}
+ADS  DSi 0   0   0 0  0   DSp 0  BUF  tripdt={tripdt1}
+ACK  CEn CPn PLp 0 0  CKi 0   0  AND  tripdt={tripdt1}
+*
+AS0  PLn D0i 0   0   0    S0n S0p 0  AND  tripdt={tripdt1}
+AR0  PLn S0n 0   0   0    0   R0p 0  AND  tripdt={tripdt1}
+AF0  DSp 0   CKi S0p R0p  0   Q0p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS1  PLn D1i 0   0   0    S1n S1p 0  AND  tripdt={tripdt1}
+AR1  PLn S1n 0   0   0    0   R1p 0  AND  tripdt={tripdt1}
+AF1  Q0p 0   CKi S1p R1p  0   Q1p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS2  PLn D2i 0   0   0    S2n S2p 0  AND  tripdt={tripdt1}
+AR2  PLn S2n 0   0   0    0   R2p 0  AND  tripdt={tripdt1}
+AF2  Q1p 0   CKi S2p R2p  0   Q2p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS3  PLn D3i 0   0   0    S3n S3p 0  AND  tripdt={tripdt1}
+AR3  PLn S3n 0   0   0    0   R3p 0  AND  tripdt={tripdt1}
+AF3  Q2p 0   CKi S3p R3p  0   Q3p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS4  PLn D4i 0   0   0    S4n S4p 0  AND  tripdt={tripdt1}
+AR4  PLn S4n 0   0   0    0   R4p 0  AND  tripdt={tripdt1}
+AF4  Q3p 0   CKi S4p R4p  0   Q4p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS5  PLn D5i 0   0   0    S5n S5p 0  AND  tripdt={tripdt1}
+AR5  PLn S5n 0   0   0    0   R5p 0  AND  tripdt={tripdt1}
+AF5  Q4p 0   CKi S5p R5p  0   Q5p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS6  PLn D6i 0   0   0    S6n S6p 0  AND  tripdt={tripdt1}
+AR6  PLn S6n 0   0   0    0   R6p 0  AND  tripdt={tripdt1}
+AF6  Q5p 0   CKi S6p R6p  0   Q6p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AS7  PLn D7i 0   0   0    S7n S7p 0  AND  tripdt={tripdt1}
+AR7  PLn S7n 0   0   0    0   R7p 0  AND  tripdt={tripdt1}
+AF7  Q6p 0   CKi S7p R7p  Q7n Q7p 0  DFLOP  tripdt={tripdt1}  td={td1}
+*
+XOUT1  Q7p Q7   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q7n Q7B  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 8 bit parallel-in/serial-out shift register
+* CP->Qn Tpd 50n/18n/14n
+* MR->Qn Tpd 47n/17n/14n
+* Dn,CE->CP Ts 14n/5n/4n 
+* Dn,CE->CP Th -8n/-3n/-2n 
+* PE->CP Ts 33n/12n/10n
+* PE->CP Th -28n/-10n/-8n
+* CP Tw 17n/6n/5n
+* MR Tw 25n/9n/7n
+* MR->CP Trem -19n/-7n/-6n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC166  MR PE CE CP DS D0 D1 D2 D3 D4 D5 D6 D7 Q7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(18-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   MR MRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   PE PEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   CE CEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   CP CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   DS DSi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   D0 D0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   D1 D1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   D2 D2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   D3 D3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  D4 D4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN11  D5 D5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN12  D6 D6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN13  D7 D7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEP  CEi CPi 0 0 0  0   CKi 0  OR  tripdt={tripdt1}
+APE  PEi 0   0 0 0  PEn PEp 0  BUF  tripdt={tripdt1} 
+AMR  MRi 0   0 0 0  MRn 0   0  BUF  tripdt={tripdt1}   
+*
+AL0  PEn D0i 0 0 0  0 DL0 0  AND  tripdt={tripdt1}
+AS0  PEp DSi 0 0 0  0 DS0 0  AND  tripdt={tripdt1}
+AD0  DL0 DS0 0 0 0  0 D0p 0  OR  tripdt={tripdt1}
+AF0  D0p 0   CKi 0 MRn  0 Q0p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AL1  PEn D1i 0 0 0  0 DL1 0  AND  tripdt={tripdt1}
+AS1  PEp Q0p 0 0 0  0 DS1 0  AND  tripdt={tripdt1}
+AD1  DL1 DS1 0 0 0  0 D1p 0  OR  tripdt={tripdt1}
+AF1  D1p 0 CKi 0 MRn  0 Q1p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AL2  PEn D2i 0 0 0  0 DL2 0  AND  tripdt={tripdt1}
+AS2  PEp Q1p 0 0 0  0 DS2 0  AND  tripdt={tripdt1}
+AD2  DL2 DS2 0 0 0  0 D2p 0  OR  tripdt={tripdt1}
+AF2  D2p 0 CKi 0 MRn  0 Q2p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AL3  PEn D3i 0 0 0  0 DL3 0  AND  tripdt={tripdt1}
+AS3  PEp Q2p 0 0 0  0 DS3 0  AND  tripdt={tripdt1}
+AD3  DL3 DS3 0 0 0  0 D3p 0  OR  tripdt={tripdt1}
+AF3  D3p 0 CKi 0 MRn  0 Q3p 0  DFLOP  tripdt={tripdt1}  td={td2}
+* 
+AL4  PEn D4i 0 0 0  0 DL4 0  AND  tripdt={tripdt1}
+AS4  PEp Q3p 0 0 0  0 DS4 0  AND  tripdt={tripdt1}
+AD4  DL4 DS4 0 0 0  0 D4p 0  OR  tripdt={tripdt1}
+AF4  D4p 0 CKi 0 MRn  0 Q4p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AL5  PEn D5i 0 0 0  0 DL5 0  AND  tripdt={tripdt1}
+AS5  PEp Q4p 0 0 0  0 DS5 0  AND  tripdt={tripdt1}
+AD5  DL5 DS5 0 0 0  0 D5p 0  OR  tripdt={tripdt1}
+AF5  D5p 0 CKi 0 MRn  0 Q5p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AL6  PEn D6i 0 0 0  0 DL6 0  AND  tripdt={tripdt1}
+AS6  PEp Q5p 0 0 0  0 DS6 0  AND  tripdt={tripdt1}
+AD6  DL6 DS6 0 0 0  0 D6p 0  OR  tripdt={tripdt1}
+AF6  D6p 0 CKi 0 MRn  0 Q6p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+AL7  PEn D7i 0 0 0  0 DL7 0  AND  tripdt={tripdt1}
+AS7  PEp Q6p 0 0 0  0 DS7 0  AND  tripdt={tripdt1}
+AD7  DL7 DS7 0 0 0  0 D7p 0  OR  tripdt={tripdt1}
+AF7  D7p 0 CKi 0 MRn  0 Q7p 0  DFLOP  tripdt={tripdt1}  td={td1}
+*
+XOUT  Q7p Q7  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4 bit parallel-in/parallel-out shift register
+* CP->Qn Tpd 47n/17n/14n
+* MR->Qn Tpd 39nn/14n/11n
+* Dn->CP Ts 17n/6n/5n 
+* Dn->CP Th -14n/-5n/-4n 
+* S0,S1->CP Ts 22n/8n/6n
+* S0,S1->CP Th -11n/-4n/-3n
+* Dsr,Dsl->CP Ts 19n/7n/6n    
+* Dsr,Dsl->Cp Th -17n/-6n/-5n  
+* MR->CP Trem 17n/6n/5n
+* CP Tw 17n/6n/5n
+* MR Tw 17n/6n/5n
+* Qn Tr/Tf 19n/7n/6n
+.SUBCKT 74HC194  MR S0 S1 CP DSR D0 D1 D2 D3 DSL Q0 Q1 Q2 Q3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(17-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(14-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(6+5)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   MR MRi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   S0 S0i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   S1 S1i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   CP CPi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   DSR DSRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   DSL DSLi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   D0 D0i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   D1 D1i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   D2 D2i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  D3 D3i    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AS0  S0i 0 0 0 0  S0n S0p 0  OR  tripdt={tripdt1}
+AS1  S1i 0 0 0 0  S1n S1p 0  BUF  tripdt={tripdt1} 
+AMR  MRi 0 0 0 0  MRn 0   0  BUF  tripdt={tripdt1}  td={td3}   
+ACK  CPi 0 0 0 0  0   CKi 0  BUF  tripdt={tripdt1}  td={td1}
+*
+*    S1 S0 
+*    H  H   load
+*    L  H   shift right
+*    H  L   shift left
+*    L  L   hold
+*
+A0a  S1p S0p D0i  0   0  0 Y0a 0  AND  tripdt={tripdt1}
+A0b  S1n S0p DSRi 0   0  0 Y0b 0  AND  tripdt={tripdt1}
+A0c  S1p S0n Q1p  0   0  0 Y0c 0  AND  tripdt={tripdt1}
+A0d  S1n S0n Q0p  0   0  0 Y0d 0  AND  tripdt={tripdt1}
+AD0  Y0a Y0b Y0c  Y0d 0  0 D0p 0  OR   tripdt={tripdt1}  td={td4}
+AF0  D0p 0  CKi   0 MRn  0 Q0p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+A1a  S1p S0p D1i  0   0  0 Y1a 0  AND  tripdt={tripdt1}
+A1b  S1n S0p Q0p  0   0  0 Y1b 0  AND  tripdt={tripdt1}
+A1c  S1p S0n Q2p  0   0  0 Y1c 0  AND  tripdt={tripdt1}
+A1d  S1n S0n Q1p  0   0  0 Y1d 0  AND  tripdt={tripdt1}
+AD1  Y1a Y1b Y1c  Y1d 0  0 D1p 0  OR   tripdt={tripdt1}  td={td4}
+AF1  D1p 0  CKi   0 MRn  0 Q1p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+A2a  S1p S0p D2i  0   0  0 Y2a 0  AND  tripdt={tripdt1}
+A2b  S1n S0p Q1p  0   0  0 Y2b 0  AND  tripdt={tripdt1}
+A2c  S1p S0n Q3p  0   0  0 Y2c 0  AND  tripdt={tripdt1}
+A2d  S1n S0n Q2p  0   0  0 Y2d 0  AND  tripdt={tripdt1}
+AD2  Y2a Y2b Y2c  Y2d 0  0 D2p 0  OR   tripdt={tripdt1}  td={td4}
+AF2  D2p 0  CKi   0 MRn  0 Q2p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+A3a  S1p S0p D3i  0   0  0 Y3a 0  AND  tripdt={tripdt1}
+A3b  S1n S0p Q2p  0   0  0 Y3b 0  AND  tripdt={tripdt1}
+A3c  S1p S0n DSLi 0   0  0 Y3c 0  AND  tripdt={tripdt1}
+A3d  S1n S0n Q3p  0   0  0 Y3d 0  AND  tripdt={tripdt1}
+AD3  Y3a Y3b Y3c  Y3d 0  0 D3p 0  OR  tripdt={tripdt1}  td={td4}
+AF3  D3p 0  CKi   0 MRn  0 Q3p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+XOUT1  Q0p Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q1p Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Q2p Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Q3p Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4 bit parallel-in/parallel-out shift register
+* CP->Qn Tpd 50n/18n/14n
+* MR->Qn Tpd 41nn/15n/12n
+* J->CP Ts 33n/12n/10n 
+* K,PE,Dn->CP Ts 25n/9n/7n 
+* J,K,PE,Dn->CP Th -8n/-3n/-2n 
+* MR->CP Trem 17n/6n/5n
+* CP Tw 17n/6n/5n
+* MR Tw 11n/4n/3n
+* Qn Tr/Tf 19n/7n/6n
+.SUBCKT 74HC195  MR PE CP J K D0 D1 D2 D3 Q0 Q1 Q2 Q3 Q3B  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(18-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(15-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(9+6)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   MR MRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   PE PEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   CP CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   J Ji    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   K Ki    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   D0 D0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   D1 D1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   D2 D2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   D3 D3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AMR  MRi 0 0 0 0  MRn 0   0  BUF  tripdt={tripdt1}  td={td3}   
+APE  PE  0 0 0 0  PEn PEp 0  BUF  tripdt={tripdt1}
+ACK  CPi 0 0 0 0  0   CKi 0  BUF  tripdt={tripdt1}  td={td1}
+*
+*    J  K* 
+*    H  H   shift, set first stage       H   q0 q1 q2
+*    L  L   shift, reset first stage     L   q0 q1 q2
+*    H  L   shift, toggle first stage    q0\ q0 q1 q2 
+*    L  H   shift, retain first stage    q0  q0 q1 q2 
+*
+A0a  PEp Q0n Ji  0 0    Y0a 0 0  AND  tripdt={tripdt1}
+A0b  PEp Q0p Ki  0 0    Y0b 0 0  AND  tripdt={tripdt1}
+A0c  PEn D0i 0   0 0    Y0c 0 0  AND  tripdt={tripdt1}
+AD0  Y0a Y0b Y0c 0 0    D0n 0 0  AND  tripdt={tripdt1}  td={td4} 
+AF0  D0n 0   CKi 0 MRn  Q0n Q0p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+A1a  PEp Q0p 0   0 0    Y1a 0 0  AND  tripdt={tripdt1}
+A1b  PEn D1i 0   0 0    Y1b 0 0  AND  tripdt={tripdt1}
+AD1  Y1a Y1b 0   0 0    D1n 0 0  AND  tripdt={tripdt1}  td={td4} 
+AF1  D1n 0   CKi 0 MRn  Q1n Q1p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+A2a  PEp Q1p 0   0 0    Y2a 0 0  AND  tripdt={tripdt1}
+A2b  PEn D2i 0   0 0    Y2b 0 0  AND  tripdt={tripdt1}
+AD2  Y2a Y2b 0   0 0    D2n 0 0  AND  tripdt={tripdt1}  td={td4} 
+AF2  D2n 0   CKi 0 MRn  Q2n Q2p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+A3a  PEp Q2p 0   0 0    Y3a 0 0  AND  tripdt={tripdt1}
+A3b  PEn D3i 0   0 0    Y3b 0 0  AND  tripdt={tripdt1}
+AD3  Y3a Y3b 0   0 0    D3n 0 0  AND  tripdt={tripdt1}  td={td4} 
+AF3  D3n 0   CKi 0 MRn  Q3n Q3p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+XOUT1  Q0p Q0   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q1p Q1   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Q2p Q2   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Q3p Q3   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  Q3n Q3B  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* (DUAL) NON-RETRIGGERABLE MONOSTABLE MULTIVIBRATOR
+* Pulse Width Tw = 0.7 * R * C
+* tpd R,A,B->Q     30n
+* Tpulse 75n, C=0, Rext=5k
+.SUBCKT 74HC221  A B CLR  CGND RC  Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param egain=1/{vcc1}
+.param td5=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(2)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINA    A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB    B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINCLR  CLR CLRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINRC1  RC RCi  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+* Model of a 74HC123A derived  from SGS-Thomson data sheet.
+* Helmut Sennewald, 13.9.2002
+* Feedback added (A3r, A7r) for 74HC221, A20,A21 adj., 28.3.2005
+A4 DHIGH 0 N014 0 N004 N006 N005 0 DFLOP   tripdt={tripdt1}  td={td5}
+A3 0 N015 N016 N023 0  nor1 0 0 OR  tripdt={tripdt1}  td={td5/2}
+A3r 0 nor1 Qri 0  0    0 N014 0 OR  tripdt={tripdt1}  td={td5/2}
+A1 Ai 0 0 0 0          0 N015 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A2 Bi 0 0 0 0          N016 0 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A6 0 N008 0 N006 0     N007 0 0  AND  tripdt={tripdt1}  td={td5}
+A5 0 N009 0 N007 0     N008 0 0  AND  tripdt={tripdt1}  td={td5}
+A14 0 N003 0 N021 0    N004 0 0  AND  tripdt={tripdt1}  td={td2}
+A13 0 N003 0 N005 0    0 N030 0  AND  tripdt={tripdt1}  td={td5}
+A12 N005 0 0 0 0       N012 0 0  BUF  tripdt={tripdt1}  td={td5}
+A21 0 N010 0 N011 0    0 N009 0  OR  tripdt={tripdt1}  td={td5}
+A22 0 N005 0 N007 0    N010 0 0  OR  tripdt={tripdt1}  td={td5}
+A11 0 N013 0 N012 0    0 N003 0  OR  tripdt={tripdt1}  td={td5}
+A7 0 N007 0 N018 0     QNi Qi 0  AND  tripdt={tripdt1}  td={td5}
+A7r 0 N007 0 N018 0    0  Qri 0  AND  tripdt={tripdt1}  td={td5/2}
+A20 RCi 0 0 0 0        N011 0 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.542 Vh=0.2m 
+A10 RCi 0 0 0 0        0 N013 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.1 Vh=0.2m 
+A32 0 N006 0 N021 0    N022 0 0  OR  tripdt={tripdt1}  td={td5}
+A31 0 N022 0 N023 0    N021 0 0  OR  tripdt={tripdt1}  td={td2}
+A33 N021 0 0 0 0       N019 0 0  BUF  tripdt={tripdt1}  td={td5}
+A30 CLRi 0 0 0 0       N023 0 0  BUF  tripdt={tripdt1}  td={td5}
+A34 0 N007 0 N006 0    N020 0 0  AND  tripdt={tripdt1}  td={td5}
+A35 0 N020 0 N018 0    N017 0 0  OR  tripdt={tripdt1}  td={td5}
+A36 0 N017 0 N019 0    N018 0 0  OR  tripdt={tripdt1}  td={td5}
+M10 RC N001 VGND VGND NMOS1
+M30 RC N024 VCC VCC PMOS1
+D1 RC VCC DIO1
+D2 VGND RC DIO1
+R10 N001 N002 100
+R30 N024 N029 100
+R3 CGND VGND 1
+E4 RCi 0 RC VGND {egain}
+E7 N029 VCC N018 0 {vcc1}
+E8 N002 VGND N030 0 {vcc1}
+V1 DHIGH 0 DC 1
+.MODEL NMOS1 NMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=1
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL PMOS1 PMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=-1 
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL DIO1 D (IS=10p RS=10 N=1.75 M=0.4 Cjo=6p TT=20n)
+*
+XOUT0  Qi  Q   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* (DUAL) NON-RETRIGGERABLE MONOSTABLE MULTIVIBRATOR
+* Pulse Width Tw = R * C
+* tpd R,A,B->Q     30n
+* Tpulse 75n, C=0, Rext=5k
+.SUBCKT 74HC221A  A B CLR  CGND RC  Q QN  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param egain=1/{vcc1}
+.param td5=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(2)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINA    A Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB    B Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINCLR  CLR CLRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINRC1  RC RCi  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+* Model of a 74HC123A derived  from SGS-Thomson data sheet.
+* Helmut Sennewald, 13.9.2002
+* Feedback added (A3r, A7r) for 74HC221, 28.3.2005
+A4 DHIGH 0 N014 0 N004 N006 N005 0 DFLOP   tripdt={tripdt1}  td={td5}
+A3 0 N015 N016 N023 0  nor1 0 0 OR  tripdt={tripdt1}  td={td5/2}
+A3r 0 nor1 Qri 0  0    0 N014 0 OR  tripdt={tripdt1}  td={td5/2}
+A1 Ai 0 0 0 0          0 N015 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A2 Bi 0 0 0 0          N016 0 0  SCHMITT  Vt=0.46 Vh=0.02  tripdt={tripdt1}  td={td5}
+A6 0 N008 0 N006 0     N007 0 0  AND  tripdt={tripdt1}  td={td5}
+A5 0 N009 0 N007 0     N008 0 0  AND  tripdt={tripdt1}  td={td5}
+A14 0 N003 0 N021 0    N004 0 0  AND  tripdt={tripdt1}  td={td2}
+A13 0 N003 0 N005 0    0 N030 0  AND  tripdt={tripdt1}  td={td5}
+A12 N005 0 0 0 0       N012 0 0  BUF  tripdt={tripdt1}  td={td5}
+A21 0 N010 0 N011 0    0 N009 0  OR  tripdt={tripdt1}  td={td5}
+A22 0 N005 0 N007 0    N010 0 0  OR  tripdt={tripdt1}  td={td5}
+A11 0 N013 0 N012 0    0 N003 0  OR  tripdt={tripdt1}  td={td5}
+A7 0 N007 0 N018 0     QNi Qi 0  AND  tripdt={tripdt1}  td={td5}
+A7r 0 N007 0 N018 0    0  Qri 0  AND  tripdt={tripdt1}  td={td5/2}
+A20 RCi 0 0 0 0        N011 0 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.66 Vh=0.2m 
+A10 RCi 0 0 0 0        0 N013 0  SCHMITT  tripdt={tripdt1}  td={td5}  Vt=0.1 Vh=0.2m 
+A32 0 N006 0 N021 0    N022 0 0  OR  tripdt={tripdt1}  td={td5}
+A31 0 N022 0 N023 0    N021 0 0  OR  tripdt={tripdt1}  td={td2}
+A33 N021 0 0 0 0       N019 0 0  BUF  tripdt={tripdt1}  td={td5}
+A30 CLRi 0 0 0 0       N023 0 0  BUF  tripdt={tripdt1}  td={td5}
+A34 0 N007 0 N006 0    N020 0 0  AND  tripdt={tripdt1}  td={td5}
+A35 0 N020 0 N018 0    N017 0 0  OR  tripdt={tripdt1}  td={td5}
+A36 0 N017 0 N019 0    N018 0 0  OR  tripdt={tripdt1}  td={td5}
+M10 RC N001 VGND VGND NMOS1
+M30 RC N024 VCC VCC PMOS1
+D1 RC VCC DIO1
+D2 VGND RC DIO1
+R10 N001 N002 100
+R30 N024 N029 100
+R3 CGND VGND 1
+E4 RCi 0 RC VGND {egain}
+E7 N029 VCC N018 0 {vcc1}
+E8 N002 VGND N030 0 {vcc1}
+V1 DHIGH 0 DC 1
+.MODEL NMOS1 NMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=1
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL PMOS1 PMOS ( LEVEL=3  W=500e-6  L=1E-6  VTO=-1 
++ VMAX=1E6  RS=10  RD=10  CJ=0.002  MJ=0.4 
++THETA=1E-6 ETA=0.01  KAPPA=2.2)
+.MODEL DIO1 D (IS=10p RS=10 N=1.75 M=0.4 Cjo=6p TT=20n)
+*
+XOUT0  Qi  Q   VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  QNi QN  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+*  3 to 8 line decoder; high ouput
+* A->Y Tpd 47n/17n/14n
+* E->Y Tpd 50n/19n/15n
+* tr 19n/7n/6n
+.SUBCKT 74HC238  A0 A1 A2 E1 E2 e3 Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(17-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(19-17)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A0 A0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  A1 A1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  A2 A2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  E1 E1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  E2 E2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  E3 E3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AE1  E1i 0 0 0 0  E1n 0 0  BUF  tripdt={tripdt1} 
+AE2  E2i 0 0 0 0  E2n 0 0  BUF  tripdt={tripdt1} 
+AE0  E1n E2n E3i 0 0  0 EN 0  AND  tripdt={tripdt1}  td={td2}
+*
+A0N  A0i 0 0 0 0  A0n 0 0  BUF  tripdt={tripdt1} 
+A1N  A1i 0 0 0 0  A1n 0 0  BUF  tripdt={tripdt1} 
+A2N  A2i 0 0 0 0  A2n 0 0  BUF  tripdt={tripdt1} 
+*
+AY0  A0n A1n A2n EN 0  0 Y0i 0  AND  tripdt={tripdt1}  td={td1} 
+AY1  A0i A1n A2n EN 0  0 Y1i 0  AND  tripdt={tripdt1}  td={td1} 
+AY2  A0n A1i A2n EN 0  0 Y2i 0  AND  tripdt={tripdt1}  td={td1} 
+AY3  A0i A1i A2n EN 0  0 Y3i 0  AND  tripdt={tripdt1}  td={td1} 
+AY4  A0n A1n A2i EN 0  0 Y4i 0  AND  tripdt={tripdt1}  td={td1}
+AY5  A0i A1n A2i EN 0  0 Y5i 0  AND  tripdt={tripdt1}  td={td1} 
+AY6  A0n A1i A2i EN 0  0 Y6i 0  AND  tripdt={tripdt1}  td={td1} 
+AY7  A0i A1i A2i EN 0  0 Y7i 0  AND  tripdt={tripdt1}  td={td1} 
+*
+XOUT1  Y0i Y0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Y1i Y1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Y2i Y2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Y3i Y3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  Y4i Y4  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  Y5i Y5  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  Y6i Y6  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT8  Y7i Y7  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Bidirectional octal buffer with 3-state
+* An->Bn, Bn->An Tpd 25n/9n/7n    
+* OE->An,Bn Ton 30n/11n/9n         
+* OE->An,Bn Toff 41n/15n/12n     
+* An, Bn Tr/Tf 14n/5n/4n        
+* Output type is bus driver
+.SUBCKT 74HC245  OE DR A0 A1 A2 A3 A4 A5 A6 A7 B0 B1 B2 B3 B4 B5 B6 B7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(9-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(15-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINO   OE OEi  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND   DR DRi  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+XINA0  A0 A0i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINA1  A1 A1i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINA2  A2 A2i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINA3  A3 A3i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINA4  A4 A4i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINA5  A5 A5i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINA6  A6 A6i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XINA7  A7 A7i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+XINB0  B0 B0i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB1  B1 B1i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB2  B2 B2i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB3  B3 B3i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB4  B4 B4i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB5  B5 B5i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB6  B6 B6i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINB7  B7 B7i  VCC VGND  74HC_IN_0  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AOE  OEi 0      0 0 0  OEn  0    0  BUF  tripdt={tripdt1}  td={td2}    
+ADR  DRi 0      0 0 0  DRn  DRp  0  BUF  tripdt={tripdt1}  td={td2}  
+AEA  OEn DRp 0 0 0  0   EAp 0  AND  tripdt={tripdt1} 
+AEB  OEn DRn 0 0 0  0   EBp 0  AND  tripdt={tripdt1} 
+*
+AA0  A0i 0 0 0 0  0 A0p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA1  A1i 0 0 0 0  0 A1p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA2  A2i 0 0 0 0  0 A2p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA3  A3i 0 0 0 0  0 A3p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA4  A4i 0 0 0 0  0 A4p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA5  A5i 0 0 0 0  0 A5p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA6  A6i 0 0 0 0  0 A6p 0  BUF  tripdt={tripdt1}  td={td1} 
+AA7  A7i 0 0 0 0  0 A7p 0  BUF  tripdt={tripdt1}  td={td1} 
+*
+AB0  B0i 0 0 0 0  0 B0p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB1  B1i 0 0 0 0  0 B1p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB2  B2i 0 0 0 0  0 B2p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB3  B3i 0 0 0 0  0 B3p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB4  B4i 0 0 0 0  0 B4p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB5  B5i 0 0 0 0  0 B5p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB6  B6i 0 0 0 0  0 B6p 0  BUF  tripdt={tripdt1}  td={td1} 
+AB7  B7i 0 0 0 0  0 B7p 0  BUF  tripdt={tripdt1}  td={td1} 
+*
+XOUTA0  EAp A0p B0  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA1  EAp A1p B1  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA2  EAp A2p B2  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA3  EAp A3p B3  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA4  EAp A4p B4  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA5  EAp A5p B5  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA6  EAp A6p B6  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTA7  EAp A7p B7  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+*
+XOUTB0  EBp B0p A0  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB1  EBp B1p A1  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB2  EBp B2p A2  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB3  EBp B3p A3  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB4  EBp B4p A4  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB5  EBp B5p A5  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB6  EBp B6p A6  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB7  EBp B7p A7  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 8 to 1 multiplexer with tristate
+* In->Y Tpd 50n/18n/14n In-YN 55n/20n/16n
+* Sn->Y Tpd 66n/24n/19n Sn-YN 69n/25n/20n
+* En->Y Tpd 39n/14n/11n En-YN 39n/14n/11n
+* tr 19n/7n/6n
+.SUBCKT 74HC251  OE S0 S1 S2 I0 I1 I2 I3 I4 I5 I6 I7 Y W  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(18-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(24-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(14-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td5=1e-9*(1)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   OE OEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+XIN2   S0 S0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   S1 S1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   S2 S2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   I0 I0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   I1 I1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   I2 I2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   I3 I3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   I4 I4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  I5 I5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN11  I6 I6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN12  I7 I7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEN  OEi 0 0 0 0  OEn 0   0  BUF  tripdt={tripdt1}  td={td4} 
+AS0  S0i 0 0 0 0  S0n S0p 0  BUF  tripdt={tripdt1}  td={td3}
+AS1  S1i 0 0 0 0  S1n S1p 0  BUF  tripdt={tripdt1}  td={td3}
+AS2  S2i 0 0 0 0  S2n S2p 0  BUF  tripdt={tripdt1}  td={td3}
+*
+AI0  I0i 0 0 0 0  0 I0p 0  BUF  tripdt={tripdt1}  td={td2}
+AI1  I1i 0 0 0 0  0 I1p 0  BUF  tripdt={tripdt1}  td={td2}
+AI2  I2i 0 0 0 0  0 I2p 0  BUF  tripdt={tripdt1}  td={td2}
+AI3  I3i 0 0 0 0  0 I3p 0  BUF  tripdt={tripdt1}  td={td2}
+AI4  I4i 0 0 0 0  0 I4p 0  BUF  tripdt={tripdt1}  td={td2}
+AI5  I5i 0 0 0 0  0 I5p 0  BUF  tripdt={tripdt1}  td={td2}
+AI6  I6i 0 0 0 0  0 I6p 0  BUF  tripdt={tripdt1}  td={td2}
+AI7  I7i 0 0 0 0  0 I7p 0  BUF  tripdt={tripdt1}  td={td2}
+*
+AY0  S0n S1n S2n 0 I0p  0 Y0i 0  AND  tripdt={tripdt1} 
+AY1  S0p S1n S2n 0 I1p  0 Y1i 0  AND  tripdt={tripdt1} 
+AY2  S0n S1p S2n 0 I2p  0 Y2i 0  AND  tripdt={tripdt1} 
+AY3  S0p S1p S2n 0 I3p  0 Y3i 0  AND  tripdt={tripdt1} 
+AY4  S0n S1n S2p 0 I4p  0 Y4i 0  AND  tripdt={tripdt1} 
+AY5  S0p S1n S2p 0 I5p  0 Y5i 0  AND  tripdt={tripdt1} 
+AY6  S0n S1p S2p 0 I6p  0 Y6i 0  AND  tripdt={tripdt1} 
+AY7  S0p S1p S2p 0 I7p  0 Y7i 0  AND  tripdt={tripdt1} 
+A1   Y0i Y1i Y2i Y3i 0    0 Yx  0  OR  tripdt={tripdt1}
+A2   Y4i Y5i Y6i Y7i Yx   0 Yi  0  OR  tripdt={tripdt1}   td={td1}
+A3   Yi  0   0   0   0    Wi 0  0  BUF  tripdt={tripdt1}  td={td5}
+*
+XOUTY  OEn Yi Y  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTW  OEn Wi W  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Dual 4 to 1 multiplexer
+* In->Y Tpd 55n/20n/16n 
+* Sn->Y Tpd 58n/21n/17n 
+* En->Y Tpd 41n/15n/12n
+* tr 14n/5n/4n
+.SUBCKT 74HC253  S0 S1 EA I0A I1A I2A I3A EB I0B I1B I2B I3B YA YB  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(20-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(21-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(15-10)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   S0  S0i   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   S1  S1i   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   EA  EAi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   EB  EBi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   I0A I0Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   I1A I1Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   I2A I2Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   I3A I3Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   I0B I0Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  I1B I1Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN11  I2B I2Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN12  I3B I3Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEA  EAi 0 0 0 0  EAn 0 0  BUF  tripdt={tripdt1}  td={td4} 
+AEB  EBi 0 0 0 0  EBn 0 0  BUF  tripdt={tripdt1}  td={td4} 
+AEA1  EAi 0 0 0 0  EAn1 0 0  BUF  tripdt={tripdt1}  td={td3} 
+AEB1  EBi 0 0 0 0  EBn1 0 0  BUF  tripdt={tripdt1}  td={td3} 
+*
+AS0  S0i 0 0 0 0  S0n S0p 0  BUF  tripdt={tripdt1}  td={td3}
+AS1  S1i 0 0 0 0  S1n S1p 0  BUF  tripdt={tripdt1}  td={td3}
+*
+AI0A I0Ai 0 0 0 0  0 I0Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI1A I1Ai 0 0 0 0  0 I1Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI2A I2Ai 0 0 0 0  0 I2Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI3A I3Ai 0 0 0 0  0 I3Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI0B I0Bi 0 0 0 0  0 I0Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI1B I1Bi 0 0 0 0  0 I1Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI2B I2Bi 0 0 0 0  0 I2Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI3B I3Bi 0 0 0 0  0 I3Bp 0  BUF  tripdt={tripdt1}  td={td2}
+*
+AYA0  S0n S1n EAn1 I0Ap 0  0 Y0Ai 0  AND  tripdt={tripdt1} 
+AYA1  S0p S1n EAn1 I1Ap 0  0 Y1Ai 0  AND  tripdt={tripdt1} 
+AYA2  S0n S1p EAn1 I2Ap 0  0 Y2Ai 0  AND  tripdt={tripdt1} 
+AYA3  S0p S1p EAn1 I3Ap 0  0 Y3Ai 0  AND  tripdt={tripdt1} 
+AYA   Y0Ai Y1Ai Y2Ai Y3Ai 0  0 YAi 0  OR  tripdt={tripdt1}  td={td1}
+*
+AYB0  S0n S1n EBn1 I0Bp 0  0 Y0Bi 0  AND  tripdt={tripdt1} 
+AYB1  S0p S1n EBn1 I1Bp 0  0 Y1Bi 0  AND  tripdt={tripdt1} 
+AYB2  S0n S1p EBn1 I2Bp 0  0 Y2Bi 0  AND  tripdt={tripdt1} 
+AYB3  S0p S1p EBn1 I3Bp 0  0 Y3Bi 0  AND  tripdt={tripdt1} 
+AYB   Y0Bi Y1Bi Y2Bi Y3Bi 0  0 YBi 0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUTA  EAn YAi YA  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUTB  EBn YBi YB  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Quad 2 to 1 multiplexer
+* In->Y Tpd 36n/13n/10n 
+* Sn->Y Tpd 47n/17n/14n 
+* En->Y Tpd 41n/15n/12n
+* tr 14n/5n/4n
+.SUBCKT 74HC257  EN S I0A I0B I1A I1B I2A I2B I3A I3B Y0 Y1 Y2 Y3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(10-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(13-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(17-10)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(15-10)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1   EN ENi    VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2   S Si      VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3   I0A I0Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4   I1A I1Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5   I2A I2Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6   I3A I3Ai  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN7   I0B I0Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN8   I1B I1Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN9   I2B I2Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN10  I3B I3Bi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AEN  ENi 0 0 0 0  ENn 0  0  BUF  tripdt={tripdt1}  td={td4} 
+AS   Si  0 0 0 0  Sn  Sp 0  BUF  tripdt={tripdt1}  td={td3}
+*
+AI0A I0Ai 0 0 0 0  0 I0Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI1A I1Ai 0 0 0 0  0 I1Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI2A I2Ai 0 0 0 0  0 I2Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI3A I3Ai 0 0 0 0  0 I3Ap 0  BUF  tripdt={tripdt1}  td={td2}
+AI0B I0Bi 0 0 0 0  0 I0Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI1B I1Bi 0 0 0 0  0 I1Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI2B I2Bi 0 0 0 0  0 I2Bp 0  BUF  tripdt={tripdt1}  td={td2}
+AI3B I3Bi 0 0 0 0  0 I3Bp 0  BUF  tripdt={tripdt1}  td={td2}
+*
+AY0A  Sn 0 I0Ap 0 0  0 Y0Ai 0  AND  tripdt={tripdt1} 
+AY0B  Sp 0 I0Bp 0 0  0 Y0Bi 0  AND  tripdt={tripdt1}
+AY0   Y0Ai Y0Bi 0 0 0  0 Y0i  0  OR  tripdt={tripdt1}  td={td1}
+*
+AY1A  Sn 0 I1Ap 0 0  0 Y1Ai 0  AND  tripdt={tripdt1} 
+AY1B  Sp 0 I1Bp 0 0  0 Y1Bi 0  AND  tripdt={tripdt1}
+AY1   Y1Ai Y1Bi 0 0 0  0 Y1i  0  OR  tripdt={tripdt1}  td={td1}
+*
+AY2A  Sn 0 I2Ap 0 0  0 Y2Ai 0  AND  tripdt={tripdt1} 
+AY2B  Sp 0 I2Bp 0 0  0 Y2Bi 0  AND  tripdt={tripdt1}
+AY2   Y2Ai Y2Bi 0 0 0  0 Y2i  0  OR  tripdt={tripdt1}  td={td1}
+*
+AY3A  Sn 0 I3Ap 0 0  0 Y3Ai 0  AND  tripdt={tripdt1} 
+AY3B  Sp 0 I3Bp 0 0  0 Y3Bi 0  AND  tripdt={tripdt1}
+AY3   Y3Ai Y3Bi 0 0 0  0 Y3i  0  OR  tripdt={tripdt1}  td={td1}
+*
+XOUT0  ENn Y0i Y0  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  ENn Y1i Y1  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  ENn Y2i Y2  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  ENn Y3i Y3  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Octal D-type flipflop with reset; positive edge triggered
+* CP->Qn Tpd 41n/15n/13n
+* MR->Qn Tpd 44nn/16n/14n
+* Dn->CP Ts 11n/4n/3n 
+* Dn->CP Th -6n/-2n/-2n 
+* MR->CP Trem -6n/-2n/-2n
+* CP Tw 14n/5n/4n
+* MR Tw 17n/6n/5n
+* Qn Tr/Tf 19n/7n/6n
+.SUBCKT 74HC273  MR CP D0 D1 D2 D3 D4 D5 D6 D7 Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(15-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(16-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(15-5+4-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINR   MR MRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINC   CP CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND0  D0 D0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND1  D1 D1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND2  D2 D2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND3  D3 D3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND4  D4 D4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND5  D5 D5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND6  D6 D6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND7  D7 D7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AMR  MRi 0 0 0 0  MRn 0 0  BUF  tripdt={tripdt1}  td={td3} 
+ACK  CPi 0 0 0 0  0 CKi 0  BUF  tripdt={tripdt1}  td={td1} 
+*
+AD0  D0i 0 0 0 0  0 D0p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD1  D1i 0 0 0 0  0 D1p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD2  D2i 0 0 0 0  0 D2p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD3  D3i 0 0 0 0  0 D3p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD4  D4i 0 0 0 0  0 D4p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD5  D5i 0 0 0 0  0 D5p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD6  D6i 0 0 0 0  0 D6p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD7  D7i 0 0 0 0  0 D7p 0  BUF  tripdt={tripdt1}  td={td4} 
+*  
+AF0  D0p 0 CKi 0 MRn  0 Q0p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF1  D1p 0 CKi 0 MRn  0 Q1p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF2  D2p 0 CKi 0 MRn  0 Q2p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF3  D3p 0 CKi 0 MRn  0 Q3p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF4  D4p 0 CKi 0 MRn  0 Q4p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF5  D5p 0 CKi 0 MRn  0 Q5p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF6  D6p 0 CKi 0 MRn  0 Q6p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF7  D7p 0 CKi 0 MRn  0 Q7p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+XOUT0  Q0p Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  Q1p Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  Q2p Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  Q3p Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  Q4p Q4  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  Q5p Q5  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  Q6p Q6  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  Q7p Q7  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 4 bit full adder
+* An->Sn Tpd 69n/25n/20n        29n
+* An->Co Tpd 63n/23n/18n        28n
+* Ci->S0 52n/19n/15n            18n
+* Ci->S3 Tpd 74n/27n/22n        31n 
+* Ci->Co Tpd 63n/23n/18n        27n
+* tr 19n/7n/6n                   7n
+.SUBCKT 74HC283  A0 A1 A2 A3 B0 B1 B2 B3 CI S0 S1 S2 S3 CO  VCC VGND  vcc1={vcc} speed1={speed} tripdt1b={tripdt}
+.param td1=1e-9*(25-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  A0 A0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b} 
+XIN2  A1 A1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b} 
+XIN3  A2 A2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b} 
+XIN4  A3 A3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b} 
+XIN5  B0 B0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b}
+XIN6  B1 B1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b}
+XIN7  B2 B2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b}
+XIN8  B3 B3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b}
+XIN9  CI CIi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1b}
+*
+XLOGIC  A0i A1i A2i A3i B0i B1i B2i B3i CIi S0i S1i S2i S3i COi  74HC283_i  tripdt2={tripdt1b} td1a={td1}
+*
+XOUT1  S0i S0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1b}
+XOUT2  S1i S1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1b}
+XOUT3  S2i S2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1b}
+XOUT4  S3i S3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1b}
+XOUT5  COi CO  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1b}
+.ends
+*
+*
+.SUBCKT  74HC283_i A0 A1 A2 A3 B0 B1 B2 B3 CI S0 S1 S2 S3 CO  tripdt1={tripdt2} td1b={td1a}
+A1CIN   ci 0  0 0 0  ci1n   0    0  BUF  tripdt={tripdt1}
+A1OR0   a0 b0 0 0 0  or10n  or10 0  OR  tripdt={tripdt1}
+A1AND0  a0 b0 0 0 0  and10n 0    0  AND  tripdt={tripdt1}
+A1OR1   a1 b1 0 0 0  or11n  or11 0  OR  tripdt={tripdt1}
+A1AND1  a1 b1 0 0 0  and11n 0    0  AND  tripdt={tripdt1}
+A1OR2   a2 b2 0 0 0  or12n  or12 0  OR  tripdt={tripdt1}
+A1AND2  a2 b2 0 0 0  and12n 0    0  AND  tripdt={tripdt1}
+A1OR3   a3 b3 0 0 0  or13n  or13 0  OR  tripdt={tripdt1}
+A1AND3  a3 b3 0 0 0  and13n 0    0  AND  tripdt={tripdt1}
+*
+A2INV0  ci1n 0      0 0 0  ci2n  0 0  BUF  tripdt={tripdt1}
+A2AND0  or10 and10n 0 0 0  0 and20 0  AND  tripdt={tripdt1}
+A4XOR0  ci2n and20  0 0 0  0    s0 0  XOR  tripdt={tripdt1}  td={td1b}
+*
+A2AND1A  ci1n   and10n 0 0 0  0 and21a 0  AND  tripdt={tripdt1}
+A2AND1B  or11   and11n 0 0 0  0 and21b 0  AND  tripdt={tripdt1}
+A3OR1    and21a or10n  0 0 0  or31n  0 0  OR  tripdt={tripdt1}
+A4XOR1   or31n  and21b 0 0 0  0     s1 0  XOR  tripdt={tripdt1}  td={td1b}
+*
+A2AND2A  ci1n   and10n and11n 0 0  0 and22a 0  AND  tripdt={tripdt1}
+A2AND2B  and11n or10n  0      0 0  0 and22b 0  AND  tripdt={tripdt1}
+A2AND2C  or12   and12n 0      0 0  0 and22c 0  AND  tripdt={tripdt1}
+A3OR2    and22a and22b or11n  0 0  or32n  0 0  OR  tripdt={tripdt1}
+A4XOR2   or32n  and22c 0      0 0  0     s2 0  XOR  tripdt={tripdt1}  td={td1b}
+*
+A2AND3A  ci1n   and10n and11n and12n 0  0 and23a 0  AND  tripdt={tripdt1}
+A2AND3B  and11n and12n or10n  0      0  0 and23b 0  AND  tripdt={tripdt1}
+A2AND3C  and12n or11n  0      0      0  0 and23c 0  AND  tripdt={tripdt1}
+A2AND3D  or13   and13n 0      0      0  0 and23d 0  AND  tripdt={tripdt1}
+A3OR3    and23a and23b and23c or12n  0  or33n  0 0  OR  tripdt={tripdt1}
+A4XOR3   or33n  and23d 0      0      0  0     s3 0  XOR  tripdt={tripdt1}  td={td1b}
+*
+A2AND4A  ci1n  and10n and11n and12n and13n  0 and24a 0  AND  tripdt={tripdt1}
+A2AND4B  and11n and12n and13n or10n 0       0 and24b 0  AND  tripdt={tripdt1}
+A2AND4C  and12n and13n or11n 0      0       0 and24c 0  AND  tripdt={tripdt1}
+A2AND4D  and13n or12n  0     0      0       0 and24d 0  AND  tripdt={tripdt1}
+A3OR4    and24a and24b and24c and24d or13n  co  0    0  OR  tripdt={tripdt1}  td={td1b}
+.ends
+*
+*
+*
+* Octal D-type transparent latch with tristate
+* Dn->Qn Tpd 41n/15n/12n     
+* LE->Qn Tpd 50n/18n/14n    
+* OE->Qn Ton 44n/16n/13n    
+* OE->Qn Toff 47n/17n/14n    
+* Dn->LE Ts 14n/5n/4n       
+* Dn->LE Th -8n/-3n/-2n     
+* LE Tw 17n/6n/5n           
+* Qn Tr/Tf 14n/5n/4n        
+* Output type is bus driver
+.SUBCKT 74HC373  OE LE D0 D1 D2 D3 D4 D5 D6 D7 Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(18-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(17-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(15-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINR   OE OEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINC   LE LEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND0  D0 D0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND1  D1 D1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND2  D2 D2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND3  D3 D3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND4  D4 D4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND5  D5 D5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND6  D6 D6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND7  D7 D7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AOE  OEi 0 0 0 0  OEn 0 0  BUF  tripdt={tripdt1}  td={td3}    
+ALE  LEi 0 0 0 0  0 LEp 0  BUF  tripdt={tripdt1}  td={td1}  
+*
+AD0  D0i 0 0 0 0  D0n D0p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD1  D1i 0 0 0 0  D1n D1p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD2  D2i 0 0 0 0  D2n D2p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD3  D3i 0 0 0 0  D3n D3p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD4  D4i 0 0 0 0  D4n D4p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD5  D5i 0 0 0 0  D5n D5p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD6  D6i 0 0 0 0  D6n D6p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD7  D7i 0 0 0 0  D7n D7p 0  BUF  tripdt={tripdt1}  td={td4} 
+*
+AS0  D0p LEp 0 0 0  0 S0p 0  AND  tripdt={tripdt1}  
+AR0  D0n LEp 0 0 0  0 R0p 0  AND  tripdt={tripdt1}  
+AS1  D1p LEp 0 0 0  0 S1p 0  AND  tripdt={tripdt1}  
+AR1  D1n LEp 0 0 0  0 R1p 0  AND  tripdt={tripdt1}  
+AS2  D2p LEp 0 0 0  0 S2p 0  AND  tripdt={tripdt1}  
+AR2  D2n LEp 0 0 0  0 R2p 0  AND  tripdt={tripdt1}  
+AS3  D3p LEp 0 0 0  0 S3p 0  AND  tripdt={tripdt1}  
+AR3  D3n LEp 0 0 0  0 R3p 0  AND  tripdt={tripdt1}  
+AS4  D4p LEp 0 0 0  0 S4p 0  AND  tripdt={tripdt1}  
+AR4  D4n LEp 0 0 0  0 R4p 0  AND  tripdt={tripdt1}  
+AS5  D5p LEp 0 0 0  0 S5p 0  AND  tripdt={tripdt1}  
+AR5  D5n LEp 0 0 0  0 R5p 0  AND  tripdt={tripdt1}  
+AS6  D6p LEp 0 0 0  0 S6p 0  AND  tripdt={tripdt1}  
+AR6  D6n LEp 0 0 0  0 R6p 0  AND  tripdt={tripdt1}  
+AS7  D7p LEp 0 0 0  0 S7p 0  AND  tripdt={tripdt1}  
+AR7  D7n LEp 0 0 0  0 R7p 0  AND  tripdt={tripdt1}  
+*
+AF0  S0p R0p 0 0 0  0 Q0p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF1  S1p R1p 0 0 0  0 Q1p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF2  S2p R2p 0 0 0  0 Q2p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF3  S3p R3p 0 0 0  0 Q3p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF4  S4p R5p 0 0 0  0 Q4p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF5  S5p R5p 0 0 0  0 Q5p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF6  S6p R6p 0 0 0  0 Q6p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+AF7  S7p R7p 0 0 0  0 Q7p 0  SRFLOP  tripdt={tripdt1}  td={td2}
+*
+XOUT0  OEn Q0p Q0  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  OEn Q1p Q1  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  OEn Q2p Q2  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  OEn Q3p Q3  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  OEn Q4p Q4  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  OEn Q5p Q5  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  OEn Q6p Q6  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  OEn Q7p Q7  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* Octal D-type flipflop with tristate; positive edge triggered
+* CP->Qn Tpd 50n/18n/14n    
+* OE->Qn Ton 41n/15n/12n    
+* OE->Qn Toff 50n/18n/14n    
+* Dn->CP Ts 14n/5n/4n         
+* Dn->CP Th -6n/-2n/-2n     
+* CP Tw 19n/7n/6n           
+* Qn Tr/Tf 14n/5n/4n         
+* Output type is bus driver
+.SUBCKT 74HC374  OE CP D0 D1 D2 D3 D4 D5 D6 D7 Q0 Q1 Q2 Q3 Q4 Q5 Q6 Q7  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(18-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(17-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(18-5+5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XINR   OE OEi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XINC   CP CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND0  D0 D0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND1  D1 D1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND2  D2 D2i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND3  D3 D3i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND4  D4 D4i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND5  D5 D5i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND6  D6 D6i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIND7  D7 D7i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+AOE  OEi 0 0 0 0  OEn 0 0  BUF  tripdt={tripdt1}  td={td3}    
+ACK  CPi 0 0 0 0  0 CKi 0  BUF  tripdt={tripdt1}  td={td1}  
+*
+AD0  D0i 0 0 0 0  0 D0p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD1  D1i 0 0 0 0  0 D1p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD2  D2i 0 0 0 0  0 D2p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD3  D3i 0 0 0 0  0 D3p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD4  D4i 0 0 0 0  0 D4p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD5  D5i 0 0 0 0  0 D5p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD6  D6i 0 0 0 0  0 D6p 0  BUF  tripdt={tripdt1}  td={td4} 
+AD7  D7i 0 0 0 0  0 D7p 0  BUF  tripdt={tripdt1}  td={td4} 
+*
+AF0  D0p 0 CKi 0 0  0 Q0p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF1  D1p 0 CKi 0 0  0 Q1p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF2  D2p 0 CKi 0 0  0 Q2p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF3  D3p 0 CKi 0 0  0 Q3p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF4  D4p 0 CKi 0 0  0 Q4p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF5  D5p 0 CKi 0 0  0 Q5p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF6  D6p 0 CKi 0 0  0 Q6p 0  DFLOP  tripdt={tripdt1}  td={td2}
+AF7  D7p 0 CKi 0 0  0 Q7p 0  DFLOP  tripdt={tripdt1}  td={td2}
+*
+XOUT0  OEn Q0p Q0  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  OEn Q1p Q1  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  OEn Q2p Q2  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  OEn Q3p Q3  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  OEn Q4p Q4  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  OEn Q5p Q5  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  OEn Q6p Q6  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  OEn Q7p Q7  VCC VGND  74HC_OUT_TS_2X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+* 2 x /2 and /5 counter
+* CP0->Q0 Tpd 47n/17n/14n
+* CP1->Q1 Tpd 50n/18n/14n
+* CP1->Q2 Tpd 74n/27n/22n
+* CP1->Q3 Tpd 50n/18n/14n
+* MR->Qn Tpd 52n/19n/15n
+* MR->CP Trem 22n/8n/6n 
+* CP Tw 19n/7n/6n
+* MR Tw 28n/10n/8n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC390  1MR 1CP0 1CP1 1Q0 1Q1 1Q2 1Q3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(17-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(18-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(27-18)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(19-17)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  1MR  1MRi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  1CP0 1CP0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  1CP1 1CP1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+XU1  1MRi 1CP0i 1CP1i 1Q0i 1Q1i 1Q2i 1Q3i  74HC390_i  tripdt2={tripdt1} td1a={td1} td2a={td2} td3a={td3} td4a={td4} 
+*
+XOUT1  1Q0i 1Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  1Q1i 1Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  1Q2i 1Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  1Q3i 1Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+* The full packaged IC.
+.SUBCKT 74HC390_a  1MR 1CP0 1CP1 1Q0 1Q1 1Q2 1Q3 2MR 2CP0 2CP1 2Q0 2Q1 2Q2 2Q3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(17-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(18-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(27-18)*4.0/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(19-17)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  1MR  1MRi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  1CP0 1CP0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  1CP1 1CP1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN4  2MR  2MRi   VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN5  2CP0 2CP0i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN6  2CP1 2CP1i  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+*
+XU1  1MRi 1CP0i 1CP1i 1Q0i 1Q1i 1Q2i 1Q3i  74HC390_i  tripdt2={tripdt1} td1a={td1} td2a={td2} td3a={td3} td4a={td4} 
+XU2  2MRi 2CP0i 2CP1i 2Q0i 2Q1i 2Q2i 2Q3i  74HC390_i  tripdt2={tripdt1} td1a={td1} td2a={td2} td3a={td3} td4a={td4}
+*
+XOUT1  1Q0i 1Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  1Q1i 1Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  1Q2i 1Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  1Q3i 1Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  2Q0i 2Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  2Q1i 2Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  2Q2i 2Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT8  2Q3i 2Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+.SUBCKT 74HC390_i  MR CP0 CP1 Q0 Q1 Q2 Q3  tripdt1={tripdt2} td1b={td1a} td2b={td2a} td3b={td3a} td4b={td4a} 
+A0N     cp0 0 0 0 0  cp0n 0 0  BUF  tripdt={tripdt1} 
+A1N     cp1 0 0 0 0  cp1n 0 0  BUF  tripdt={tripdt1} 
+AMR     mr  0 0 0 0  0  mri 0  BUF  tripdt={tripdt1}  td={td4b} 
+AFF0    qn0i 0 cp0n 0 mri  qn0i q0i 0  DFLOP  tripdt={tripdt1}  td={td1b}
+ANOR31  cp1n mri q3i  0 0  0 cp11 0  OR  tripdt={tripdt1} 
+AFF1    qn1i 0 cp11 0 mri  qn1i q1i 0  DFLOP  tripdt={tripdt1}  td={td2b} 
+AFF2    qn2i 0 qn1i 0 mri  qn2i q2i 0  DFLOP  tripdt={tripdt1}  td={td3b} 
+AAND    q1i  q2i 0    0 0  0 and1 0  AND  tripdt={tripdt1} 
+ANOR2   and1 q3i 0    0 0  nor2 0 0  OR  tripdt={tripdt1} 
+ANOR33  nor2 mri cp1n 0 0  0 cp13 0  OR  tripdt={tripdt1}  
+AFF3    qn3i 0 cp13 0 mri  qn3i q3i 0  DFLOP  tripdt={tripdt1} td={td2b} 
+ABUF0   q0i 0 0 0 0  0 q0 0  BUF  tripdt={tripdt1}
+ABUF1   q1i 0 0 0 0  0 q1 0  BUF  tripdt={tripdt1}
+ABUF2   q2i 0 0 0 0  0 q2 0  BUF  tripdt={tripdt1}
+ABUF3   q3i 0 0 0 0  0 q3 0  BUF  tripdt={tripdt1}
+.ends 
+*
+*
+*
+* 2 x /16 counter
+* CP->Q0 Tpd 41n/15n/12n
+* Qn->Qn+1 Tpd 14n/5n/4n
+* MR->Qn Tpd 39n/14n/11n
+* MR->CP Trem 3n/1n/1n 
+* CP Twmin 17n/6n/5n
+* MR Twmin 19n/7n/6n
+* Tr/Tf 19n/7n/6n
+.SUBCKT 74HC393  1MR 1CP 1Q0 1Q1 1Q2 1Q3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1a={tripdt}
+.param td1=1e-9*(15-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(14-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  1MR 1MRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1a} 
+XIN2  1CP 1CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1a} 
+*
+XU1  1MRi 1CPi 1Q0i 1Q1i 1Q2i 1Q3i  74HC393_i  tripdt2={tripdt1a} td1a={td1} td2a={td2} td3a={td3} 
+*
+XOUT1  1Q0i 1Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT2  1Q1i 1Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT3  1Q2i 1Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT4  1Q3i 1Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+.ends
+*
+*
+* The full packaged IC.
+.SUBCKT 74HC393_A  1MR 1CP 1Q0 1Q1 1Q2 1Q3 2MR 2CP 2Q0 2Q1 2Q2 2Q3  VCC VGND  vcc1={vcc} speed1={speed} tripdt1a={tripdt}
+.param td1=1e-9*(15-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+.param td2=1e-9*(5)*4.0/({vcc1}-0.5)*{speed1}
+.param td3=1e-9*(14-5-3-3)*4.0/({vcc1}-0.5)*{speed1}
+*
+XIN1  1MR 1MRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1a} 
+XIN2  1CP 1CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1a} 
+XIN3  2MR 2MRi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1a} 
+XIN4  2CP 2CPi  VCC VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1a} 
+*
+XU1  1MRi 1CPi 1Q0i 1Q1i 1Q2i 1Q3i  74HC393_i  tripdt2={tripdt1a} td1a={td1} td2a={td2} td3a={td3} 
+XU2  2MRi 2CPi 2Q0i 2Q1i 2Q2i 2Q3i  74HC393_i  tripdt2={tripdt1a} td1a={td1} td2a={td2} td3a={td3}  
+*
+XOUT1  1Q0i 1Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT2  1Q1i 1Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT3  1Q2i 1Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT4  1Q3i 1Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT5  2Q0i 2Q0  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT6  2Q1i 2Q1  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT7  2Q2i 2Q2  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+XOUT8  2Q3i 2Q3  VCC VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1a}
+.ends
+*
+*
+.SUBCKT 74HC393_i  MR CP Q0 Q1 Q2 Q3   tripdt1={tripdt2} td1b={td1a} td2b={td2a} td3b={td3a}
+AMR   mr  0 0   0 0    0  mrp 0  BUF  tripdt={tripdt1}  td={td3b}
+ACP   cp  0 0   0 0    cpn  0 0  BUF  tripdt={tripdt1}  td={td1b}   
+AFF0  qn0 0 cpn 0 mrp  qn0 q0 0  DFLOP  tripdt={tripdt1}  td={td2b}
+AFF1  qn1 0 qn0 0 mrp  qn1 q1 0  DFLOP  tripdt={tripdt1}  td={td2b}
+AFF2  qn2 0 qn1 0 mrp  qn2 q2 0  DFLOP  tripdt={tripdt1}  td={td2b}
+AFF3  qn3 0 qn2 0 mrp  qn3 q3 0  DFLOP  tripdt={tripdt1}  td={td2b}
+.ends
+*
+*
+*
+* 5-stage Johnson counter
+* tpd 23ns
+* tr 20n
+.SUBCKT 74HC4017 MR CP1 CP0 O0 O1 O2 O3 O4 O5 O6 O7 O8 O9 O59  VDD VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+.param td1=1e-9*(22-8-3-3)*4/({vcc1}-0.5)*{speed1}
+.param td4=1e-9*(8)*4/({vcc1}-0.5)*{speed1}
+*
+XIN1  MR  MRi   VDD VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN2  CP1 CP1i  VDD VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1} 
+XIN3  CP0 CP0i  VDD VGND  74HC_IN_1  vcc2={vcc1}  speed2={speed1}  tripdt2={tripdt1}
+*
+AR   MRi  0 0 0 0  0  MRp 0  BUF  tripdt={tripdt1}  td={td1}
+AC1  CP1i 0 0 0 0  CP1n 0 0  BUF  tripdt={tripdt1}  td={td1}
+AC0  CP0i 0 0 0 0  0 CP0p 0  BUF  tripdt={tripdt1}  td={td1}
+ACP  CP1n CP0p 0 0 0  0 CPp 0  AND  tripdt={tripdt1}
+*
+AFF1  Q5n 0 CPp 0 MRp  Q1n Q1p 0  DFLOP  tripdt={tripdt1} td={td4}
+AFF2  Q1p 0 CPp 0 MRp  Q2n Q2p 0  DFLOP  tripdt={tripdt1} td={td4}
+AOR   Q1p Q3p 0 0 0    0   Yor 0  OR     tripdt={tripdt1}
+AAND  Yor Q2p 0 0 0    0   D3p 0  AND    tripdt={tripdt1}
+AFF3  D3p 0 CPp 0 MRp  Q3n Q3p 0  DFLOP  tripdt={tripdt1} td={td4}
+AFF4  Q3p 0 CPp 0 MRp  Q4n Q4p 0  DFLOP  tripdt={tripdt1} td={td4}
+AFF5  Q4p 0 CPp 0 MRp  Q5n Q5p 0  DFLOP  tripdt={tripdt1} td={td4}
+*
+ANOR0  Q5p Q1p 0 0 0  O0n 0 0  OR  tripdt={tripdt1}  
+ANOR1  Q2p Q1n 0 0 0  O1n 0 0  OR  tripdt={tripdt1} 
+ANOR2  Q2n Q3p 0 0 0  O2n 0 0  OR  tripdt={tripdt1}  
+ANOR3  Q4p Q3n 0 0 0  O3n 0 0  OR  tripdt={tripdt1}
+ANOR4  Q5p Q4n 0 0 0  O4n 0 0  OR  tripdt={tripdt1}
+ANOR5  Q1n Q5n 0 0 0  O5n 0 0  OR  tripdt={tripdt1}
+ANOR6  Q1p Q2n 0 0 0  O6n 0 0  OR  tripdt={tripdt1}
+ANOR7  Q2p Q3n 0 0 0  O7n 0 0  OR  tripdt={tripdt1}
+ANOR8  Q4n Q3p 0 0 0  O8n 0 0  OR  tripdt={tripdt1}
+ANOR9  Q4p Q5n 0 0 0  O9n 0 0  OR  tripdt={tripdt1}
+A59    Q5n 0   0 0 0  0 O59n 0  BUF  tripdt={tripdt1}
+*
+XOUT0  O0n O0  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT1  O1n O1  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT2  O2n O2  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT3  O3n O3  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT4  O4n O4  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT5  O5n O5  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT6  O6n O6  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT7  O7n O7  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT8  O8n O8  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT9  O9n O9  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+XOUT59  O59n O59  VDD VGND  74HC_OUT_1X  vcc2={vcc1} speed2={speed1}  tripdt2={tripdt1}
+.ends
+*
+*
+*
+*
+*================================================================
+*
+*   INPUT FILTERS
+*
+.MODEL DIO1 D(Is=1e-12 Rs=100)
+*
+.SUBCKT  74HC_IN_0  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2} 
+.param vt1=0.5
+.param gain=(1/{vcc3})
+*
+D1 0   in  DIO1 
+D2 in VCC  DIO1
+R2 in VGND 1e8
+E1 out20 0 in VGND {gain}
+AE1  out20 0 0 0 0  0 out 0  BUF  ref={vt1}  vhigh=1  tripdt={tripdt3}
+.ends
+*
+*
+.SUBCKT  74HC_IN_1  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2} 
+.param Cval = 0.55e-12*4/({vcc3}-0.5)*{speed3}
+.param vt1=0.5
+.param gain=(1/{vcc3})
+*
+D1 0   in  DIO1 
+D2 in VCC  DIO1
+R1 in out10 10k
+C1 out10 VGND {Cval}
+R2 in VGND 1e8
+*E1 out20 0 out10 VGND {gain}
+B1 out20 0 V=LIMIT(0,V(out10,VGND)*{gain},1)
+AE1  out20 0 0 0 0  0 out 0  BUF  ref={vt1}  vhigh=1  tripdt={tripdt3}
+.ends
+*
+*
+* Schmitt-input; 1/3*Vcc -> 2/3*Vcc -> 1/3*Vcc
+.SUBCKT  74HC_IN_S_1  in out  VCC VGND  vcc3={vcc2}  speed3={speed2}  tripdt3={tripdt2} 
+.param Cval = 0.55e-12*4/({vcc3}-0.5)*{speed3}
+.param vt1=1.89/4.5
+.param vh1=0.49/4.5
+.param gain=(1/{vcc3})
+*
+D1 0   in  DIO1 
+D2 in VCC  DIO1
+R1 in out10 10k
+C1 out10 VGND {Cval}
+R2 in VGND 1e8
+*E1 out20 0 out10 VGND {gain}
+B1 out20 0 V=LIMIT(0,V(out10,VGND)*{gain},1)
+AE1  out20 0 0 0 0  0 out 0  SCHMITT  vt={vt1} vh={vh1} vhigh=1  tripdt={tripdt3}
+.ends
+*
+*
+*======================================================================
+*
+* OUTPUT DRIVERS, LEVEL TRANSLATORS
+*
+* 
+* Tristate switch
+.MODEL SW_HC1 SW(Vt=0.5 Ron=1 Roff=1e6)
+.MODEL SW_HC2 SW(Vt=0.5 Ron=1 Roff=1e6)
+*
+.MODEL DIO2 D(Is=1e-12 Rs=10)
+*
+* Standard output driver
+.SUBCKT  74HC_OUT_1X  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param trise1=6e-9*4.0/({vcc3}-0.5)*{speed3}
+.param Rout=60*4.0/({vcc3}-0.5)*{speed3}
+*
+AE1  in 0 0 0 0  0 out10 0  BUF  tripdt={tripdt3}  trise={trise1}
+*
+E1 out20 VGND out10 0 {vcc3}
+Rout out20 out {Rout}
+D1 0   out  DIO2 
+D2 out VCC  DIO2
+.ends
+*
+*
+*
+* Strong output driver
+.SUBCKT  74HC_OUT_2X  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param trise1=6e-9*4.0/({vcc3}-0.5)*{speed3}
+.param Rout=30*4.0/({vcc3}-0.5)*{speed3}
+*
+AE1  in 0 0 0 0  0 out10 0  BUF  tripdt={tripdt3}  trise={trise1}
+*
+E1  out20 VGND out10 0 {vcc3}
+Rout  out20 out {Rout}
+D1 0   out  DIO2 
+D2 out VCC  DIO2
+.ends
+*
+*
+*
+* Tristate output driver
+.SUBCKT  74HC_OUT_TS_2X  en in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param trise1=6e-9*4.0/({vcc3}-0.5)*{speed3}
+.param Rout=30*4.0/({vcc3}-0.5)*{speed3}
+*
+A1  in 0 0 0 0  0 out10 0  BUF  tripdt={tripdt3}  trise={trise1}
+*
+E1  out20 VGND out10 0 {vcc3}
+Rout  out20 out30 {Rout}
+SW1  out30 out en 0 SW_HC1
+D1 0   out  DIO2 
+D2 out VCC  DIO2
+.ends
+*
+*
+*
+* Open drain output driver 
+.SUBCKT  74HC_OUT_OD_1X  in out  VCC VGND  vcc3={vcc2} speed3={speed2}  tripdt3={tripdt2}
+.param trise1=6e-9*4.0/({vcc3}-0.5)*{speed3}
+.param Rout=60*4.0/({vcc3}-0.5)*{speed3}
+*
+A1  in 0 0 0 0   out10 0 0  BUF  tripdt={tripdt3}  trise={trise1}
+*
+Rout  out30 VGND {Rout}
+SW1  out30 out out10 0 SW_HC2
+ *Alternative real output stage from 74HCU04 would replace Rout and SW1
+ *E1  out20 VGND out10 0 {vcc3}
+ *Rout  out20 out30 {Rout}
+ *MN1 out out30 VGND VGND  MHCNEN W=140U L=2.4U AD=200P AS=300P PD=10U PS=130U
+ *MN2 out out30 VGND VGND  MHCNEN W=140U L=2.4U AD=200P AS=300P PD=10U PS=130U
+ *MN3 out out30 VGND VGND  MHCNEN W=140U L=2.4U AD=200P AS=300P PD=10U PS=130U
+D1 0   out  DIO2 
+D2 out VCC  DIO2
+.ends
+*
+*
+*
+*============================================================================
+*
+* A hopefully real transistor level based model of the 74HCU04. The model 
+* comes directly from philips. http://www.philipslogic.com/support/spice/
+* This a unbuffered inverter which is often used in LC or crystal oscillators.
+* Inverter, unbuffered
+* Original Philips model used.
+.SUBCKT 74HCU04  A Y  VCC VGND  vcc1={vcc} speed1={speed} tripdt1={tripdt}
+*Rin  A A1  200
+*Cin  A1 VGND  3p
+*XAY  A1 Y VCC VGND 74HC04_INV0
+XAY  A Y VCC VGND 74HC04_INV0
+.ends
+*
+*
+.SUBCKT 74HC04_INV0  2  3  80 90
+*IN=2, OUT=3, VCC=80, GND=90
+XINP  20  25  50  60    74HC_INP0N
+XOUTP 25  30  50  60    74HC_OUTPN
+L1  80  50   6.87NH
+L2  60  90   6.87NH
+L3   2  20   5.97NH
+L4  30   3   5.97NH
+C1  50  90   1.5P
+C2  60  90   1.5P
+C3  20  90   1.5P
+C4  3   90   1.5P
+.ENDS
+*
+.SUBCKT 74HC_INP0N  2  3  50  60
+*IN=2, OUT=3, VCC=50, GND=60
+R1  2  3  100
+MP1 3 50 50 50  MHCPEN W=20U L=2.4U AD=100P AS=100P PD=40U PS= 20U
+MN1 3 60 60 60  MHCNEN W=35U L=2.4U AD=260P AS=260P PD=70U PS= 20U
+.ENDS
+*
+.SUBCKT 74HC_OUTPN 2  3  50  60
+*IN=2, OUT=3, VCC=50, GND=60
+R1  2 4 100
+MP1 3 4 50 50  MHCPEN W=360U L=2.4U AD=400P AS=400P PD=10U PS=180U
+MN1 3 4 60 60  MHCNEN W=140U L=2.4U AD=200P AS=300P PD=10U PS=130U
+R2  4 5 50
+MP2 3 5 50 50  MHCPEN W=360U L=2.4U AD=400P AS=400P PD=10U PS=180U
+MN2 3 5 60 60  MHCNEN W=140U L=2.4U AD=200P AS=200P PD=10U PS=130U
+R3  5 6 50
+MP3 3 6 50 50  MHCPEN W=360U L=2.4U AD=400P AS=400P PD=10U PS=180U
+MN3 3 6 60 60  MHCNEN W=140U L=2.4U AD=200P AS=200P PD=10U PS=130U
+.ENDS
+************************************************
+*         NOMINAL N-Channel Transistor         *
+*            UCB-3 Parameter Set               *
+*         HIGH-SPEED CMOS Logic Family         *
+*                10-Jan.-1995                  *
+************************************************
+.Model MHCNEN NMOS (
++LEVEL = 3
++KP    = 45.3E-6
++VTO   = 0.72
++TOX   = 51.5E-9
++NSUB  = 2.8E15
++GAMMA = 0.94
++PHI   = 0.65
++VMAX  = 150E3
++RS    = 40
++RD    = 40
++XJ    = 0.11E-6
++LD    = 0.52E-6
++DELTA = 0.315
++THETA = 0.054
++ETA   = 0.025
++KAPPA = 0.0
++WD    = 0.0 )
+
+***********************************************
+*        NOMINAL P-Channel transistor         *
+*           UCB-3 Parameter Set               *
+*         HIGH-SPEED CMOS Logic Family        *
+*               10-Jan.-1995                  *
+***********************************************
+.Model MHCPEN PMOS (
++LEVEL = 3
++KP    = 22.1E-6
++VTO   = -0.71
++TOX   = 51.5E-9
++NSUB  = 3.3E16
++GAMMA = 0.92
++PHI   = 0.65
++VMAX  = 970E3
++RS    = 80
++RD    = 80
++XJ    = 0.63E-6
++LD    = 0.23E-6
++DELTA = 2.24
++THETA = 0.108
++ETA   = 0.322
++KAPPA = 0.0
++WD    = 0.0 )
+
+

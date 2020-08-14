@@ -1,0 +1,98 @@
+*
+* CD4047B for LTSPICE from www.linear.com/software
+*  
+* Revision 0.01 01/19/2011    
+*
+* Usage:
+*          Include cd4000.lib
+*          Include this cd4047B.sub
+*          Correct if necessary VDD param in CD4047B symbol properties (default to 5V)
+*
+* Design and timings are derived from the datasheet of HEF4047B (Philips Semiconductors, January 1995)
+*   (http://www.ee.ctu.edu.tw/material/data%20sheet/hef4047b.pdf)
+* Uses input filters and output drivers from cd4000.lib
+*
+* Raanan H. JAN 19, 2011
+*
+*
+* CD4047B Monostable/astable multivibrator (retriggerable)
+*
+.SUBCKT CD4047B xCt xRt xRCt xAstable _xAstable xNegTrig xPosTrig xReTrig xExtRst xQ _xQ xOscOut VDD VGND  vdd1={vdd} speed1={speed} tripdt1={tripdt}
+*
+* Internal propagation delays. These were set to approximate IC input-output delays from datasheet.
+*
+.param tdFlop=      50e-9*5/{vdd1}*{speed1}
+.param tdNand=      35e-9*5/{vdd1}*{speed1}
+.param tdNor=       35e-9*5/{vdd1}*{speed1}
+.param tdBuf=       10e-9*5/{vdd1}*{speed1}
+.param tdExtRstBuf= 30e-9*5/{vdd1}*{speed1}
+*
+* Capacitor discharged at startup. Otherwise LTSpice requires UIC flag to run.
+*
+.IC V(xRCt)=0
+*
+* Input Filters (VGND-VDD to 0-1V)
+*
+XIN1 xRCt       iRCt      VDD VGND CD40_IN_0 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN2 xAstable   iAstable  VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN3 _xAstable  _iAstable VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN4 xPosTrig   iPosTrig  VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN5 xNegTrig   iNegTrig  VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN6 xReTrig    iReTrig   VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN7 xExtRst    iExtRst   VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN8 VDD        iLOGIC_1  VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XIN9 VGND       iLOGIC_0  VDD VGND CD40_IN_1 vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+*
+* IC logic in 0-1V
+*
+A1 iPosTrig 0 0 0 0 N007 0 0 BUF                tripdt={tripdt1} Td={tdBuf}
+A2 N007 iNegTrig N009 0 0 N010 0 0 OR           tripdt={tripdt1} Td={tdNor}
+A4 iLOGIC_1 0 N014 0 N019 0 N009 0 DFLOP        tripdt={tripdt1} Td={tdFlop}
+A5 _iAstable 0 0 0 0 N003 0 0 BUF               tripdt={tripdt1} Td={tdBuf}
+A6 iAstable N003 N010 N011 0 N012 0 0 OR        tripdt={tripdt1} Td={tdNor}
+A7 N012 N014 0 0 0 N011 0 0 OR                  tripdt={tripdt1} Td={tdNor}
+A8 N012 0 0 0 0 N001 0 0 BUF                    tripdt={tripdt1} Td={tdBuf}
+A9 iRCt 0 0 0 0 N005 0 0 BUF                    tripdt={tripdt1} Td={tdBuf}
+A10 N005 0 0 0 0 N006 0 0 BUF                   tripdt={tripdt1} Td={tdBuf}
+A11 N006 N001 0 0 0 N008 0 0 AND                tripdt={tripdt1} Td={tdNand}
+A12 N008 0 0 0 0 iCt 0 0 BUF                    tripdt={tripdt1} Td={tdBuf}
+A13 iCt 0 0 0 0 iRt 0 0 BUF                     tripdt={tripdt1} Td={tdBuf}
+A14 N008 0 0 0 0 iOscOut 0 0 BUF                tripdt={tripdt1} Td={tdBuf}
+A15 N014 0 0 0 0 iQ 0 0 BUF                     tripdt={tripdt1} Td={tdBuf}
+A16 N016 0 0 0 0 _iQ 0 0 BUF                    tripdt={tripdt1} Td={tdBuf}
+A17 N008 0 0 0 0 N013 0 0 BUF                   tripdt={tripdt1} Td={tdBuf}
+A18 N017 0 N013 iReTrig N028 N024 N021 0 DFLOP  tripdt={tripdt1} Td={tdFlop}
+A21 N021 0 0 0 0 N014 0 0 BUF                   tripdt={tripdt1} Td={TdBuf}
+A22 N024 0 0 0 0 N016 0 0 BUF                   tripdt={tripdt1} Td={tdBuf}
+A26 iReTrig 0 0 0 0 N026 0 0 BUF                tripdt={tripdt1} Td={tdBuf}
+A27 N026 0 0 0 0 N023 0 0 BUF                   tripdt={tripdt1} Td={tdBuf}
+A19 iLOGIC_0 0 N013 N020 N014 N015 N022 0 DFLOP tripdt={tripdt1} Td={tdFlop}
+A20 N015 N016 0 0 0 N017 0 0 AND                tripdt={tripdt1} Td={tdNand}
+A24 N016 0 N023 0 N025 0 N020 0 DFLOP           tripdt={tripdt1} Td={tdFlop}
+A29 iExtRst 0 0 0 0 0 N028 0 BUF                tripdt={tripdt1} Td={tdExtRstBuf}
+*
+* The following OR gates are used artificially to model a dual reset flipflop.
+*
+A3 N007 iNegTrig 0 0 0 0 N019 0 OR              tripdt={tripdt1} Td=0
+A25 N014 N022 0 0 0 0 N025 0 OR                 tripdt={tripdt1} Td=0
+*
+* Capacitor Idle-Charge Transistors.
+* The design originally used PMOS but that didn't simulate for me so I used PNP for now.
+* TODO - write CD40 output driver for PMOS
+*
+XU13 N001 N002 VDD VGND CD40_OUT_1X vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+Q2 N004 P001 VDD 0 PNP1
+R2 P001 N002 1meg
+Q1 VDD N004 xRCt 0 NPN1
+.model NPN1 NPN(Bf=100)
+.model PNP1 PNP(Bf=100)
+*
+* Output Drivers (0-1V to VGND-VDD)
+*
+XOut1 iCt      xCt        VDD VGND CD40_OUT_1X vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XOut2 iRt      xRt        VDD VGND CD40_OUT_1X vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XOut3 iOscOut  xOscOut    VDD VGND CD40_OUT_1X vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XOut4 iQ       xQ         VDD VGND CD40_OUT_1X vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+XOut5 _iQ      _xQ        VDD VGND CD40_OUT_1X vdd2={vdd1} speed2={speed1} tripdt2={tripdt1}
+*
+.ends

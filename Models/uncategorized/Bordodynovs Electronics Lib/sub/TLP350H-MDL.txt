@@ -1,0 +1,33 @@
+*PINOUT
+*               + LED ANODE
+*               |   + LED CATHODE
+*               |   |   + POSITIVE POWER
+*               |   |   |   + OUTPUT
+*               |   |   |   |  + POWER COMMON
+*               |   |   |   |  |
+.SUBCKT TLP350  A   K  VC  VO VG
+B1 VXX1 0 V=LIMIT(400*I(V1),0,1)
+R1 N004 0 100K
+B2 N005 VG V=IF(V(Q)*V(VC,VG)/30,MIN(V(Q)*V(VC,VG),34),0)
+R2 VO N005 2
+A1 N004 0 0 0 0 0 N001 0 SCHMITT Vt=.375 Vh=.225
+D1 A N006 IRLED
+V1 N006 K 0
+R4 VC VG 1G
+R3 Q N002 385
+C2 Q 0 10p
+D2 N001 N002 Dideal
+.model Dideal d Vfwd=7m
+R6 N002 N001 290
+R7 N004 N003 500
+C3 N004 0 100p
+R8 N003 VXX1 500
+D3 N004 N003 DIDEAL
+*
+************ MODELS USED ***************
+*
+.MODEL IRLED D (IS=44P RS=42M N=3.25 BV=4 IBV=10U
++ CJO=35P VJ=.75 M=.333 TT=4.32U)
+*
+.ENDS TLP350
+*

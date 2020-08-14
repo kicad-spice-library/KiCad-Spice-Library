@@ -1,0 +1,22 @@
+* Copyright © Linear Technology Corp. 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005.  All rights reserved.
+*
+.subckt 1pole 1 2 3 4 5
+S1 5 3 N002 5 Q
+S2 4 5 5 N002 Q
+A1 2 1 0 0 0 0 N002 0 OTA G={Avol/Rout} ref={Vos} Iout={slew*Cout} Cout={Cout} en={en} enk={enk} in={in} ink={ink} Vhigh=1e308 Vlow=-1e308
+C3 5 4 1p
+C4 3 5 1p
+R2 N002 4 {2*Rout} noiseless
+R1 3 N002 {2*Rout} noiseless
+R3 3 1 {2*Rin} noiseless
+R4 3 2 {2*Rin} noiseless
+R5 2 4 {2*Rin} noiseless
+R6 1 4 {2*Rin} noiseless
+G1 0 N002 4 N002 table(0 0 10 {2*slew*Cout})
+G2 N002 0 N002 3 table(0 0 10 {2*slew*Cout})
+.param Rout=100Meg
+.param Cout={Avol/GBW/2/pi/Rout}
+.model Q SW(Ron=10 Roff=10Meg Vt=0 Vh=-.1 Vser={Rail} ilimit={Ilimit} noiseless)
+.param Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0
+.param en=0 enk=0 in=0 ink=0 Rin=500Meg
+.ends 1pole

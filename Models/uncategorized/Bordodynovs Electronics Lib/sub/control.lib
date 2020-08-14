@@ -1,0 +1,372 @@
+*	-----------------------------------------------------------------------------------------------------
+*	Control library for LTSpice			KM 2008
+*	-----------------------------------------------------------------------------------------------------
+*	The models and results are believed to be accurate, but the author cannot take any 
+*	responsibility for possible damage caused by mistakes or inaccuracies.
+*	The content on this site is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+*	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*	Use with SwitcherCAD III program, best to turn 'Skip initial operating point solution' option ON when 
+*	doing transient simulation.
+*	
+*	See http://home.scarlet.be/kpm/
+*	-----------------------------------------------------------------------------------------------------
+
+*	PID controller
+*	with dampened differentator for real world behavior and better convergence
+*	Vo(s)/Vi(s) = Kp[ 1 + 1/(Ti.s) + Td.s/(1 + dampfactor.Td.s)] 
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with real world devices
+*	Kp : proportional gain constant
+*	Ti : intergration time constant
+*	Td : differentation time constant
+*	dampfactor : higher value means more damping. When a unit step is applied to IN the differentiator term 
+*	will contribute a 1/dampfactor Dirac pulse to OUT
+.subckt pid IN OUT GND
+Gin 1 GND IN GND 1
+Rp 1 2 {Kp}
+Ci 2 3 {Ti/Kp}
+Ld 3 GND {Kp*Td} Cpar=0
+Rdamp 3 GND {1/dampfactor}
+Rdummy 1 GND 1E30
+Gout OUT GND 1 GND TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	PID controller serial implementation
+*	with dampened differentator for real world behavior and better convergence
+*	Vo(s)/Vi(s) = Kp[ 1 + Td.s/(1 + dampfactor.Td.s)].[1 + 1/(Ti.s)] 
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with real world devices
+*	Kp : proportional gain constant
+*	Ti : intergration time constant
+*	Td : differentation time constant
+*	dampfactor : higher value means more damping. When a unit step is applied to IN the differentiator term 
+*	will contribute a 1/dampfactor Dirac pulse to OUT
+.subckt pid_serial IN OUT GND
+Gin 1 GND IN GND 1
+Rp 1 2 {Kp}
+Ld 2 GND {Kp*Td} Cpar=0
+Rdamp 2 GND {1/dampfactor}
+G1 3 GND 1 GND 1
+Rp2 3 4 {Kp}
+Ci 4 GND {Ti/Kp}
+Rdummy 3 GND 1E30
+Gout GND OUT 3 GND TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	subtractor
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with real world devices
+.subckt sub IN+ IN- OUT GND
+Gout OUT GND IN- IN+ TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	summator
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt sum IN1 IN2 OUT GND
+Gin1 1 GND IN1 GND 1
+Gin2 1 GND IN2 GND 1
+Rsum 1 GND 1
+Gout OUT GND 1 GND TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	limiter
+*	parameters:
+*	limit_low : the output will not go lower then limit_low, the output will saturate as with 
+*	real world devices
+*	limit_high : the output will not go lower then limit_high, the output will saturate as with 
+*	real world devices
+.subckt lim IN OUT GND
+Gout GND OUT IN GND TABLE=({limit_low},{limit_low},{limit_high},{limit_high})
+Rout OUT GND 1
+.ends
+
+*	Gain with limiter
+*	parameters:
+*	gain : linear gain factor
+*	limit_low : the output will not go lower then limit_low, the output will saturate as with 
+*	real world devices
+*	limit_high : the output will not go lower then limit_high, the output will saturate as with 
+*	real world devices
+.subckt gain_lim IN OUT GND
+Gin GND 1 IN GND {sgn(gain)}
+Rin 1 GND 1
+Gout GND OUT 1 GND TABLE=({limit_low/abs(gain)},{limit_low},{limit_high/abs(gain)},{limit_high})
+Rout OUT GND 1
+.ends
+
+*	1st order phase lag
+*	Vo(s)/V(I(s) = K / [1 + Tc.s]
+*	parameters:
+*	K : linear gain factor
+*	Tc : time constant
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt lag1 IN OUT GND
+Gin 1 GND IN GND 1
+R1 1 GND {K}
+Ci 1 GND {Tc/K}
+Gout OUT GND 1 GND TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	2nd order phase lag
+*	Vo(s)/V(I(s) = K / [1 + 2.Damping.s/wo + (s/wo)**2 ]
+*	parameters:
+*	K : linear gain factor
+*	wo : natural circular frequency in RAD/s
+*	Damping : damping factor, value of 1 is critically damped, lower then 1 is under-damped, ..
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt lag2 IN OUT GND
+Gin 1 GND IN GND {K*1000}
+Rshunt 1 GND 1m
+R1 1 2 1k
+L1 2 3  {1k/(2*Damping*wo)} Cpar=0 Rser=0 Rpar=1E30
+C1 3 GND {2*Damping/(1k*wo)} Rser=0 Lser=0 Rpar=1E30 Cpar=0
+Gout OUT GND 3 GND TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	absolute value
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt abs IN OUT GND
+Gout GND OUT IN GND TABLE=({-limit},{limit},0,0,{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	pulse width modulator
+*	
+*	Parameters:
+*	f : frequency of generated PWM signal
+*	Vhigh : High level of generated PWM signal
+*	Vlow : Low level of generated PWM signal
+*	Range : range in which the input signal may vary, 0V gives 0% duty-cycle, 
+*		<Range> V gives 100% duty-cycle
+*		When the input signal goes outside Range, there is no problem only the duty-cycle 
+*		saturates to 0% or 100%
+.subckt pwm IN OUT GND
+Bout GND OUT I=if(((Time-floor(Time*f)/f)*Range*f) < v(IN,GND), Vhigh, Vlow)
+Rout OUT GND 1
+.ends
+
+*	pulse width modulator with complementary outputs
+*	
+*	Parameters:
+*	f : frequency of generated PWM signal
+*	Vhigh : High level of generated PWM signal
+*	Vlow : Low level of generated PWM signal
+*	Range : range in which the input signal may vary, 0V gives 0% duty-cycle, 
+*		<Range> V gives 100% duty-cycle
+*		When the input signal goes outside Range, there is no problem only the duty-cycle 
+*		saturates to 0% or 100%
+.subckt pwm2 IN OUT OUTN GND GNDN 
+Bin GND 1 I=if(((Time-floor(Time*f)/f)*Range*f) < v(IN,GND), 1, 0)
+Rin 1 GND 1
+Bout GNDN OUTN I=if(absdelay(v(1,GND),deadtime)*v(1,GND) > .5, Vhigh, Vlow)
+Rout GNDN OUTN 1
+B2 GND 2 I=(1-v(1,GND))
+R2 GND 2 1
+Bout2 GND OUT I=if(absdelay(v(2,GND),deadtime)*v(2,GND) > .5, Vhigh, Vlow)
+Rout2 GND OUT 1
+.ends
+
+
+*	SPDT switch
+*	Parameters:
+*	Threshold : switching level of the CONTR signal at which the switches react
+.subckt spdt T1 T2 COM CONTR GND
+S1 T1 COM CONTR GND swmodel1
+S2 T2 COM GND CONTR swmodel2
+.model swmodel1 SW(Ron=1m Roff=1000Meg Vt={Threshold} Vh=10m)
+.model swmodel2 SW(Ron=1m Roff=1000Meg Vt={-Threshold} Vh=10m)
+.ends
+
+*	linear amplifier
+*	Parameters:
+*	gain: linear gain factor
+.subckt amp IN OUT GND
+Gout GND OUT IN GND {gain}
+Rout OUT GND 1
+.ends
+
+*	2nd power
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt sqr IN OUT GND
+Bin GND 1 I=V(IN,GND)*V(IN,GND)
+Rin 1 GND 1
+Gout GND OUT 1 GND TABLE=(0,0,{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	square root
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt sqrt IN OUT GND
+Bin GND 1 I=sqrt(V(IN,GND))
+Rin 1 GND 1
+Gout GND OUT 1 GND TABLE=(0,0,{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	soft limiter
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt lim_soft IN OUT GND
+Bout GND OUT I={limit*tanh(V(IN,GND)/scale)}
+Rout OUT GND 1
+.ends
+
+*	multiplier
+*	OUT = A * B in four quadrants
+*	parameters:
+*	limit : the output is limited between +limit and -limit, the output will saturate as with 
+*	real world devices
+.subckt mult A B OUT GND
+Bin GND 1 I=V(A,GND)*V(B,GND)
+Rin 1 GND 1
+Gout GND OUT 1 GND TABLE=({-limit},{-limit},{limit},{limit})
+Rout OUT GND 1
+.ends
+
+*	comparator with linear zone
+*	parameters:
+*	linearzone : when the input is between +linearzone and -linearzone, comparator behaves linearly
+*	Vhigh : High level of generated signal
+*	Vlow : Low level of generated signal
+.subckt comp IN+ IN- OUT GND
+Gout GND OUT IN+ IN- TABLE=({-linearzone},{Vlow},{+linearzone},{Vhigh})
+Rout OUT GND 1
+.ends
+
+*	integrator
+*	Parameters:
+*	Ti : integration time constant
+.subckt int IN OUT GND
+Gin GND 1 IN GND 1
+Cint 1 GND {Ti} 
+Gout GND OUT 1 GND 1
+Rout OUT GND 1
+.ends
+
+*	Dampened differentiator
+*	dampened differentator for real world behavior and better convergence
+*	Vo(s)/Vi(s) = Td.s/(1 + dampfactor.Td.s)
+*	parameters:
+*	Td : differentation time constant
+*	dampfactor : higher value means more damping. When a unit step is applied to IN the differentiator term 
+*	will contribute a 1/dampfactor Dirac pulse to OUT
+.subckt diff IN OUT GND
+Gin GND 1 IN GND 1
+Ldiff 1 GND {Td} 
+Rdamp 1 GND {1/dampfactor}
+Gout GND OUT 1 GND 1
+Rout OUT GND 1
+.ends
+
+*	comparator with hysteresis
+*	parameters:
+*	hysteresis : when the difference of the inputs reaches <hysteresis>, the output changes state
+*	Vhigh : High level of output signal
+*	Vlow : Low level of output signal
+.subckt comphys IN+ IN- OUT GND
+Bhyst IN+ A V=-hysteresis*V(1,GND)
+Gin GND 1 A IN- TABLE=({-1u},-1,{+1u},1)
+Rin 1 GND 1
+Gout GND OUT 1 GND TABLE=({-1u},{Vlow},{+1u},{Vhigh})
+Rout OUT GND 1
+.ends
+
+*	Transport lag
+*	The output signal is a copy of the input signal but delayed in time by <delay> seconds
+.subckt transport IN OUT GND
+Gin GND 1 IN GND 2
+R1 1 GND 1
+T1 1 GND 2 GND Zo=1 Td={delay}
+Rterm 2 GND 1
+Gout GND OUT 2 GND 1
+Rout OUT GND 1
+.ends
+
+*	setpoint
+*	generates a constant voltage of <value> volts, alternative for the V source
+.subckt const OUT GND
+Iout GND OUT {value}
+Rout OUT GND 1
+.ends
+
+*	unit step
+.subckt ustep OUT GND
+Iout GND OUT PWL(0,0,{tstep-trise/2},0,{tstep+trise/2},1)
+Rout OUT GND 1
+.ends
+
+*	unit ramp
+.subckt uramp OUT GND
+I1 1 GND DC {slope}
+C1 1 GND 1
+Gout OUT GND 1 GND 1
+Rout GND OUT 1
+.ends
+
+*	trimmer
+*	Parameters:
+*	position : wiper position between 0.0 and 1.0
+*	Rvalue : total resistance value
+.subckt trimmer T1 T2 WIPER
+Rupper T1 WIPER {(1-position)*Rvalue+1m}
+Rlower T2 WIPER {position*Rvalue+1m}
+.ends
+
+*	R-2R DAC
+*	no parameters
+.subckt dac OUT GND D0 D1 D2 D3 D4 D5 D6 D7 
+R7 D7 8 200K
+R6 D6 7 200K
+R5 D5 6 200K
+R4 D4 5 200K
+R3 D3 4 200K
+R2 D2 3 200K
+R1 D1 2 200K
+R0 D0 1 200K
+R9 8 7 100k
+R10 7 6 100k
+R11 6 5 100k
+R12 5 4 100k
+R13 4 3 100k
+R14 3 2 100k
+R15 2 1 100k
+R16 1 0 200k
+Gout GND OUT 8 0 1
+Rout OUT GND 1
+.ends
+
+*	Block to measure open and closed loop gain according a proposal of Helmut Sennewald from http://tech.groups.yahoo.com/group/LTspice/
+*	parameters:
+*	OPL=1 for open loop AC simulation,
+*	OPL=0 for all types of closed loop simulations
+.subckt measure_loop IN OUT GND
+G1 1 GND IN GND 1m
+*	OPL=1 allows only DC (very very low f) to reach the output for DC operating point setting
+C1 1 GND {10000*OPL + 1f}  
+R1 1 GND 1000
+G2 OUT GND 1 GND 1
+R2 OUT GND 1
+I1 OUT GND AC 1 * injecting AC test signal
+.ends
+
+
+
+ 
