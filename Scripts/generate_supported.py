@@ -33,6 +33,7 @@ def read_file(file):
 
 # Function to extract models from spice file
 def extrac_models(path, content, extract, debug = False):
+    relativePath = path[str(path).index(folder)+len(folder):]
     if (isinstance(extract, list)):
         extract = tuple(extract)
     for line in content.splitlines():
@@ -45,10 +46,10 @@ def extrac_models(path, content, extract, debug = False):
                 if debug: print(model)
                 if not model in supported: # It is the first time we see this model
                     supported[model] = list()
-                    supported[model].append(path) # Add to supported with the path to find it
+                    supported[model].append(relativePath) # Add to supported with the path to find it
                 else: # It is a duplicate...
-                    if not path in supported[model]: # ...but from a different file
-                        supported[model].append(path) # So we add it
+                    if not relativePath in supported[model]: # ...but from a different file
+                        supported[model].append(relativePath) # So we add it
 
 # Separate file by extension
 for root, dirs, files in os.walk(folder):

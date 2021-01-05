@@ -13,8 +13,12 @@ supported = dict()
 
 # Print the models and the file in which it is located
 def print_match(part):
-    path = ', '.join(p[p.index(folder_name)+len(folder_name):] for p in supported[part])
-    print('{} found in {}'.format(part, path))
+    try:
+        paths = ['- {0}'.format(i) for i in supported[part]]
+        print(part + ' found in')
+        print(*paths, sep = '\n')
+    except Exception as e:
+        print('Error processing {}: '.format(part), e)
 
 # Get similar models
 def get_similar(string):
