@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#! /bin/env python
+# # -*- coding: utf-8 -*-
 """
 This script generate Supported.txt and Supported.pickle
 basing on the models found in the lib and mod files
