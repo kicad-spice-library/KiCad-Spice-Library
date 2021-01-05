@@ -6,9 +6,9 @@ and also from which file it cames
 
 import os, pickle, sys
 
-supported_pickle_path = os.path.dirname(os.getcwd()) + '/Supported.pickle'
-supported_txt_path = os.path.dirname(os.getcwd()) + '/Supported.txt'
-folder_name = os.path.basename(os.path.dirname(os.getcwd()))
+root_path = os.path.dirname(os.path.realpath(__file__)) + '/..'
+supported_pickle_path = root_path + '/Supported.pickle'
+supported_txt_path = root_path + '/Supported.txt'
 supported = dict()
 
 # Print the models and the file in which it is located
