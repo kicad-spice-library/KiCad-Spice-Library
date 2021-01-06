@@ -7,10 +7,11 @@ basing on the models found in the lib and mod files
 
 import os, re, pickle
 
-root_path = os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..')
-folder = root_path + '/Models/'
-supported_txt_path = root_path + '/Supported.txt'
-supported_pickle_path = root_path + '/Supported.pickle'
+
+root_path = os.path.join(os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')))
+folder = os.path.join(root_path, 'Models')
+supported_txt_path = os.path.join(root_path, 'Supported.txt')
+supported_pickle_path = os.path.join(root_path, 'Supported.pickle')
 
 supported = dict()
 
