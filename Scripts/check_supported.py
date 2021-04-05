@@ -64,7 +64,7 @@ with open(supported_txt_path, 'r') as file:
 if len(sys.argv) > 1:
     for s in sys.argv[1:]:
         print("Searching for " + s)
-        search(s)
+        search(s.lower())
 else:
     # Part to search
     print('Write \'exit\' when you want to stop')
