@@ -19,7 +19,10 @@ our $checkSupportedScript=catfile($basePath,'check_supported.py');
 
 # Define regular expressions 
 our $commentsRegex='(?<comments>(?:(?<=\n)\s*#[^\R*]\R))*';
-our $modelRegex='(?<model>\.model\s+_NAME_\s+(?<type>\S+)\([^)]*\))';
+our $continuedNoParenLines='(?:(?<=\n)\+[^\R*()]\R)*'; # Note: regex not validated yet.
+our $modelParenRegex='(?:\.model\s+_NAME_\s+(?<type>\S+)\s*\([^)]*\))';
+our $modelLineRegex='(?:\.model\s+_NAME_\s+(?<type>\S+)\s*[^()]*?\R'.$continuedNoParenLines.')';
+our $modelRegex="(?<model>$modelParenRegex|$modelLineRegex)";
 our $allRegex="(?<matched>${commentsRegex}[ \t]*(?:$modelRegex)\s*?)";
 
 # Extract a "model" from a file
@@ -37,7 +40,7 @@ sub extractFromFile {
    my $model;
    my $regex=$allRegex;
    my $quotedName=quotemeta($name);
-   $regex=~s/_NAME_/$quotedName/; # Match literal string
+   $regex=~s/_NAME_/$quotedName/g; # Match literal string
 
    # Extract the model from the file
    if($fileContent=~/$regex/is) {
