@@ -119,5 +119,5 @@ foreach my $modelSpec ( @models ) {
   my $absFile=catfile($modelPath,$file);
 
   my $model=extractFromFile($modelName,$absFile);
-  print "* $modelName - Extracted from '$file'\n$model\n";
+  print "*\n* $modelName - Extracted from '$file'\n*\n$model\n";
 }
