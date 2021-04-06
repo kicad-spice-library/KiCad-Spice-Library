@@ -16,6 +16,13 @@ This script check if a given part is between the supported modules. If yes it sa
 
 In the future it could be easily turned into a command line interface script or maybe a KiCad plugin
 
+### extractModels.pl
+This script extracts the models for the requested components from the libraries.
+You can redirect it to a file like 'localSpice.lib' in your KiCAD project to have a local copy to reference.  This avoids several side effects (libraries that are too big, libraries with invalid characters, duplicate models).
+You can add the models you need to 'spiceModel.lst' so that you can automate the extraction in a script.
+
+Run the script without parameters for help.
+
 ### generate_supported.py
 This script generate the list of supported modules, it should be run only when new files are added to the repo
 
