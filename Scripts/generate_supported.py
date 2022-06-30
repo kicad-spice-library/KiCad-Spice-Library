@@ -1,4 +1,4 @@
-#! /bin/env python
+#! /usr/bin/env python
 # # -*- coding: utf-8 -*-
 """
 This script generate Supported.txt and Supported.pickle
