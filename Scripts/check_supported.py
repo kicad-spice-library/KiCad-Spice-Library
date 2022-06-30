@@ -1,4 +1,4 @@
-#! /bin/env python
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This script check if a given part is between the supported modules
