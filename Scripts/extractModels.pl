@@ -23,7 +23,8 @@ our $continuedNoParenLines='(?:(?<=\n)\+[^\R*()]\R)*'; # Note: regex not validat
 our $modelParenRegex='(?:\.model\s+_NAME_\s+(?<type>\S+)\s*\([^)]*\))';
 our $modelLineRegex='(?:\.model\s+_NAME_\s+(?<type>\S+)\s*[^()]*?\R'.$continuedNoParenLines.')';
 our $modelRegex="(?<model>$modelParenRegex|$modelLineRegex)";
-our $allRegex="(?<matched>${commentsRegex}[ \t]*(?:$modelRegex)\s*?)";
+our $subcktRegex='(?<subckt>^\.subckt\s+_NAME_\s+.*?^\.ends\s+_NAME_\s*)';
+our $allRegex="(?<matched>${commentsRegex}[ \t]*((?:$modelRegex)\s*?)|$subcktRegex)";
 
 # Extract a "model" from a file
 sub extractFromFile {
@@ -43,7 +44,7 @@ sub extractFromFile {
    $regex=~s/_NAME_/$quotedName/g; # Match literal string
 
    # Extract the model from the file
-   if($fileContent=~/$regex/is) {
+   if($fileContent=~/$regex/ism) {
       $model=$+{matched}; 
    }
    
