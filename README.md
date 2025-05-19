@@ -31,6 +31,24 @@ NOTE: Right now I am extracting the `.model` and `.subckt` from `*.lib` and `*.m
 ### downloader.py
 This script downloaded all the 1803 files from http://espice.ugr.es/espice/src/modelos_subckt/ and saved them. It is not needed anymore and is here only for reference
 
+### GUI Application: SPICE Model Viewer
+A cross-platform Tkinter app (`form_spice.py`) provides a user-friendly interface:
+
+1. **Search tab**:
+   - Enter a SPICE model name (e.g. `2n2222`).
+   - See all matching variants and library paths.
+   - Extract, export, or copy the full `.lib` file.
+   - Automatically highlights the top-priority variant (Manufacturer > `spice_complete` > `uncategorized`).
+2. **Configuration tab**:
+   - Persistently set the path to your `Scripts` directory and your output folder.
+   - Settings are saved to `Scripts/config.json` and reloaded on startup.
+
+**To launch the GUI**:
+```bash
+$ cd Scripts
+$ python form_spice.py
+```
+
 ## Supported.pickle
 This file is a [python serialized dictionary](https://docs.python.org/3/library/pickle.html) where every key is a model and the items are path to libraries where that model is defined. It is not made to be read by humans, use [Supported.txt](Supported.txt) instead
 
