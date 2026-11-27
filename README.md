@@ -1,35 +1,35 @@
 # KiCad Spice Library
-This organization and repo is born from the need of having an easy way to find Spice models. It is not made by KiCad or Spice themself but it is user powered
+This repo was created for easy access to Spice models. It is not made by KiCad nor Spice but is user developed.
 
 There are a total of 50.093 models
 
 ## Modules
-In this folder there are all the modules and libraries, I tried to organize them with a minimum of logic but better approaches then mine are really welcome
+In this folder there are various modules and libraries sorted by either device type or manufacturer. This sorting is arbitrary and is open to change!
 
 ## Supported.txt
-This is the list of supported parts in a human readable way, useful if you wish to do a quick search
+This is the list of supported parts in a human readable way which is useful if you wish to do a quick search.
 
 ## Scripts
 
 ### check_supported.py
-This script check if a given part is between the supported modules. If yes it says us from which file it cames so we can easily add to our Spice simulation. It also contain a simple but working wrong-spell checks. See the examples at the end of the README
+This script checks if a given part exists in the supported modules. If yes, it says from which file it came so you can easily add it to our Spice simulation. It also contain a simple spell check mechanism. See the examples at the end of the README.
 
-In the future it could be easily turned into a command line interface script or maybe a KiCad plugin
+In the future this could be easily turned into a command line interface script or a KiCad plugin.
 
 ### extractModels.pl
 This script extracts the models for the requested components from the libraries.
-You can redirect it to a file like 'localSpice.lib' in your KiCAD project to have a local copy to reference.  This avoids several side effects (libraries that are too big, libraries with invalid characters, duplicate models).
-You can add the models you need to 'spiceModel.lst' so that you can automate the extraction in a script.
+You can redirect it to a file like `localSpice.lib` in your KiCAD project to have a local copy to reference.  This avoids several side effects (libraries that are too big, libraries with invalid characters, duplicate models, etc.).
+You can add the models you need to `spiceModel.lst` so that you can automate the extraction in a script.
 
 Run the script without parameters for help.
 
 ### generate_supported.py
 This script generate the list of supported modules, it should be run only when new files are added to the repo
 
-NOTE: Right now I am extracting the `.model` and `.subckt` from `*.lib` and `*.mod` files, the `.subckt` from `*.fam` files and the models from `EESchema-LIBRARY Version 2.x` so maybe there are some hidden modules around
+NOTE: Right now I am extracting the `.model` and `.subckt` from `*.lib` and `*.mod` files, the `.subckt` from `*.fam` files and the models from `EESchema-LIBRARY Version 2.x` so maybe there are some hidden modules around.
 
 ### downloader.py
-This script downloaded all the 1803 files from http://espice.ugr.es/espice/src/modelos_subckt/ and saved them. It is not needed anymore and is here only for reference
+This script downloaded all 1803 files from http://espice.ugr.es/espice/src/modelos_subckt/ and saved them. It is not needed anymore and is here only for reference.
 
 ### GUI Application: SPICE Model Viewer
 A cross-platform Tkinter app (`form_spice.py`) provides a user-friendly interface:
@@ -50,15 +50,15 @@ $ python form_spice.py
 ```
 
 ## Supported.pickle
-This file is a [python serialized dictionary](https://docs.python.org/3/library/pickle.html) where every key is a model and the items are path to libraries where that model is defined. It is not made to be read by humans, use [Supported.txt](Supported.txt) instead
+This file is a [python serialized dictionary](https://docs.python.org/3/library/pickle.html) where every key is a model and the items are path to libraries where that model is defined. It is not made to be read by humans, use [Supported.txt](Supported.txt) instead.
 
 # License
-I do not own any license for the files inside the `Modules` folder, if you find any of them that breaks a license open an issue or send a message and it would be removed as soon as possible. All library, modules and other are released with their own license. The GPL3 is related only to the files in the `Scripts` folder
+I do not own any license for the files inside the `Modules` folder. If you find any of them that break a license, open an issue or send a message and it will be removed as soon as possible. All libraries, modules, and other are released with their own license. The GPL3 license is only for files in the `Scripts` folder.
 
 # Contribuite
-Do a pull request, add a library, module, whatever in the category that suit better in [Modules](/Modules) or improve the python scripts
+Make a pull request with a new library, module, or addition to a category in the [Models](/Models) or improve the python scripts.
 
-I would like to accept in the organization other KiCad or Spice fans to keep this page going on, if you would like to partecipate open an issue
+I would like more KiCad and Spice fans to add to this repository so if you would like to participate, open an issue or a pull request!
 
 # Resources
 - http://espice.ugr.es/espice/src/modelos_subckt/
